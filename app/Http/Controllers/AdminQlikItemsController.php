@@ -144,7 +144,11 @@
 	        | $this->script_js = "function() { ... }";
 	        |
 	        */
-	        $this->script_js = NULL;
+	        $this->script_js =
+					  "$(function() {
+							console.log('test');
+					    $('.myIframe').css('height', $(window).height()+'px').css('width', '100%');
+					  });";
 
 
             /*
@@ -320,7 +324,80 @@
 
 
 
-	    //By the way, you can still create your own method in here... :)
+	    // #RAMA custom methods
+
+			//look at qlik item's content
+			public function content_view($qlik_item_id) {
+				//Create an Auth
+			  if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+				//get qlik ticket
+
+				//UserId
+				$user = 'customerhive';
+				//User Directory
+				$password = 'PLATFORMQ';
+				//base path to call
+				$QRSurl = 'https://platformq.dasycloud.com:4243';
+				$xrfkey = "0123456789abcdef";
+				//Path to call (with xrfkey parameter added)
+				$endpoint = "/qps/ticket?xrfkey=".$xrfkey;
+				//Location of QRS client certificate and certificate key, assuming key is included separately
+				$base_path = '/var/www/customerhive/storage/app/';
+				$QRSCertfile = $base_path."certificates/client.pem";
+				$QRSCertkeyfile = $base_path."certificates/client_key.pem";
+				// #RAMA no password
+				// $QRSCertkeyfilePassword = "Passw0rd!";
+
+				//Set up the required headers
+				$headers = array(
+					'Accept: application/json',
+					'Content-Type: application/json',
+					'x-qlik-xrfkey: '.$xrfkey,
+					'X-Qlik-User: UserDirectory='.$password.';UserId='.$user
+				);
+
+				//Create Connection using Curl
+				$ch = curl_init($QRSurl.$endpoint);
+
+				curl_setopt($ch, CURLOPT_VERBOSE, true);
+				// curl_setopt($ch, CURLOPT_POST, true);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+				curl_setopt($ch, CURLOPT_POSTFIELDS, '{
+					"UserId":"'.$user.'",
+					"UserDirectory":"'.$password.'"
+				}');
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch, CURLOPT_SSLCERT, $QRSCertfile);
+				curl_setopt($ch, CURLOPT_SSLKEY, $QRSCertkeyfile);
+				// #RAMA no password
+				// curl_setopt($ch, CURLOPT_KEYPASSWD, $QRSCertkeyfilePassword);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+				//Execute and get response
+				$raw_response = curl_exec($ch);
+				$response = json_decode($raw_response);
+				$qlik_ticket = $response->Ticket;
+				//end of get qlik ticket
+
+			  $data = [];
+			  $data['row'] = DB::table('qlik_items')->where('id',$qlik_item_id)->first();
+			  $data['page_title'] = $data['row']->title;
+
+				$qlik_sense_app_base_path = 'https://platformq.dasycloud.com';
+				$app_id = 'a92f56de-351f-4b67-a38c-8ca7147a450a';
+				$sheet_id = '1ff88551-9c4d-41e0-b790-37f4c11d3df8';
+				$qlikTicket = $qlik_ticket;
+				$item_url = $qlik_sense_app_base_path.'/single/?appid='.$app_id.'&sheet='.$sheet_id.'&opt=ctxmenu,currsel&qlikTicket='.$qlikTicket;
+
+				$data['item_url'] = $data['row']->url.'&qlikTicket='.$qlikTicket;
+
+			  $this->cbView('test',$data);
+			}
 
 
 	}

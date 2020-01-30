@@ -15,9 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('admin/qlik_items/content/1', function () {
-    return view('test');
-});
+Route::get('admin/qlik_items/content/{qlik_item_id}', 'AdminQlikItemsController@content_view');
 
 Route::get('admin/qlik_items/qliktest', function () {
     return view('qliktest');
