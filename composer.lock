@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9264c0661b26c434c786212148cbbdf1",
+    "content-hash": "67c15bfd4a76b69cd3100a95ab433093",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -115,57 +115,6 @@
                 "preload"
             ],
             "time": "2017-12-10T11:40:39+00:00"
-        },
-        {
-            "name": "crocodicstudio/crudbooster",
-            "version": "v5.4.22",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/crocodic-studio/crudbooster.git",
-                "reference": "7c345f1530b59787322005b5f3b6558686d27a0c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/crocodic-studio/crudbooster/zipball/7c345f1530b59787322005b5f3b6558686d27a0c",
-                "reference": "7c345f1530b59787322005b5f3b6558686d27a0c",
-                "shasum": ""
-            },
-            "require": {
-                "barryvdh/laravel-dompdf": "0.8.*",
-                "doctrine/dbal": "~2.3",
-                "imanghafoori/laravel-widgetize": "1.8.*",
-                "intervention/imagecache": "2.3.3",
-                "maatwebsite/excel": "~2.1.0",
-                "php": ">=5.6",
-                "unisharp/laravel-filemanager": "1.7.7"
-            },
-            "type": "project",
-            "autoload": {
-                "psr-4": {
-                    "crocodicstudio\\crudbooster\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ferry",
-                    "email": "ferry@crocodic.com"
-                }
-            ],
-            "description": "CRUDBooster Is CRUD Generator Based On Laravel Easy To Make An Advanced Backend",
-            "keywords": [
-                "admin-panel",
-                "backend",
-                "crud",
-                "crud-generator",
-                "crudbooster",
-                "generator",
-                "laravel"
-            ],
-            "time": "2019-09-02T03:45:08+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
