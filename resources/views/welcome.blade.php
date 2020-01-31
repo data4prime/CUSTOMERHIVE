@@ -74,7 +74,7 @@
                     <a href="/admin/login">Login page</a>
                     <a target="_blank" href="https://teams.microsoft.com/_#/conversations/General?threadId=19:966f94423cb5471dbe30678b97391fde@thread.skype&replyChainId=1579589656329&ctx=channel">Teams</a>
                     <a target="_blank" href="https://trello.com/b/HtxUgQ2U/cdp">Trello</a>
-                    <a target="_blank" href="https://github.com/RiccardoAmadi/cdp">Github</a>
+                    <a target="_blank" href="https://github.com/RiccardoAmadi/customerhive">Github</a>
                 </div>
             </div>
         </div>
