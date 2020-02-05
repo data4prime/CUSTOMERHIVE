@@ -150,8 +150,7 @@
 	        */
 	        $this->script_js =
 					  "$(function() {
-							console.log('test');
-					    $('.myIframe').css('height', $(window).height()+'px').css('width', '100%');
+					    $('.qi_iframe').css('height', $(window).height()+'px').css('width', '100%');
 					  });";
 
 
@@ -199,7 +198,14 @@
 	        | $this->style_css = ".style{....}";
 	        |
 	        */
-	        $this->style_css = NULL;
+	        $this->style_css = "
+					.box{
+						padding:8px
+					}
+					.qi_description{
+						margin-top:8px;
+					}
+					";
 
 
 
@@ -391,14 +397,16 @@
 			  $data = [];
 			  $data['row'] = DB::table('qlik_items')->where('id',$qlik_item_id)->first();
 			  $data['page_title'] = $data['row']->title;
+			  $data['subtitle'] = $data['row']->subtitle;
+			  $data['description'] = $data['row']->description;
 
-				$qlik_sense_app_base_path = 'https://platformq.dasycloud.com';
-				$app_id = 'a92f56de-351f-4b67-a38c-8ca7147a450a';
-				$sheet_id = '1ff88551-9c4d-41e0-b790-37f4c11d3df8';
-				$qlikTicket = $qlik_ticket;
-				$item_url = $qlik_sense_app_base_path.'/single/?appid='.$app_id.'&sheet='.$sheet_id.'&opt=ctxmenu,currsel&qlikTicket='.$qlikTicket;
+				// smontare URL per inserire app id anzichè URL per immissione qlik item
+				// $qlik_sense_app_base_path = 'https://platformq.dasycloud.com';
+				// $app_id = 'a92f56de-351f-4b67-a38c-8ca7147a450a';
+				// $sheet_id = '1ff88551-9c4d-41e0-b790-37f4c11d3df8';
+				// $item_url = $qlik_sense_app_base_path.'/single/?appid='.$app_id.'&sheet='.$sheet_id.'&opt=ctxmenu,currsel&qlikTicket='.$qlik_ticket;
 
-				$data['item_url'] = $data['row']->url.'&qlikTicket='.$qlikTicket;
+				$data['item_url'] = $data['row']->url.'&qlikTicket='.$qlik_ticket;
 
 			  $this->cbView('test',$data);
 			}
