@@ -38,7 +38,8 @@ class MenusController extends CBController
         $row = CRUDBooster::first($this->table, $id);
         $row = (Request::segment(3) == 'edit') ? $row : null;
 
-        $id_module = $id_statistic = 0;
+        //id da preselezionare nelle dropdown del form dopo la scelta del type della voce di menu
+        $id_module = $id_statistic = $id_qlik_item = 0;
 
         if ($row->type == 'Module') {
             $m = CRUDBooster::first('cms_moduls', ['path' => $row->path]);
@@ -47,6 +48,9 @@ class MenusController extends CBController
             $row->path = str_replace('statistic_builder/show/', '', $row->path);
             $m = CRUDBooster::first('cms_statistics', ['slug' => $row->path]);
             $id_statistic = $m->id;
+        } elseif ($row->type == 'Qlik item') {
+            $m = CRUDBooster::first('qlik_items', ['slug' => $row->path]);
+            $id_qlik_item = $m->id;
         }
 
         $this->script_js = "
@@ -57,23 +61,37 @@ class MenusController extends CBController
 				type_menu = (current_type)?current_type:type_menu;
 				if(type_menu == 'Module') {
 					$('#form-group-module_slug').show();
+					$('#qlik_slug').prop('required',false);
+					$('#statistic_slug').prop('required',false);
 					$('#form-group-statistic_slug,#form-group-path').hide();
+					$('#form-group-qlik_slug,#form-group-path').hide();
 					$('#module_slug').prop('required',true);
 					$('#form-group-module_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
 				}else if(type_menu == 'Statistic') {
 					$('#form-group-statistic_slug').show();
 					$('#module_slug').prop('required',false);
+					$('#qlik_slug').prop('required',false);
 					$('#form-group-module_slug,#form-group-path').hide();
+					$('#form-group-qlik_slug,#form-group-path').hide();
 					$('#statistic_slug').prop('required',true);
 					$('#form-group-statistic_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
+				}else if(type_menu == 'Qlik') {
+					$('#form-group-qlik_slug').show();
+					$('#module_slug').prop('required',false);
+					$('#statistic_slug').prop('required',false);
+					$('#form-group-module_slug,#form-group-path').hide();
+					$('#form-group-statistic_slug,#form-group-path').hide();
+					$('#qlik_slug').prop('required',true);
+					$('#form-group-qlik_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
 				}else{
 					$('#module_slug').prop('required',false);
-					$('#form-group-module_slug,#form-group-statistic_slug').hide();
+					$('#statistic_slug').prop('required',false);
+					$('#qlik_slug').prop('required',false);
+					$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
 					$('#form-group-path').show();
 				}
 
-
-				function format(icon) {          
+				function format(icon) {
 	                  var originalOption = icon.element;
 	                  var label = $(originalOption).text();
 	                  var val = $(originalOption).val();
@@ -97,7 +115,9 @@ class MenusController extends CBController
 					if(n == 'Module') {
 						$('#form-group-path').hide();
 						$('#form-group-statistic_slug').hide();
+						$('#form-group-qlik_slug').hide();
 						$('#statistic_slug,#path').prop('required',false);
+						$('#qlik_slug,#path').prop('required',false);
 
 						$('#form-group-module_slug').show();
 						$('#module_slug').prop('required',true);
@@ -105,12 +125,25 @@ class MenusController extends CBController
 					}else if (n == 'Statistic') {
 						$('#form-group-path').hide();
 						$('#form-group-module_slug').hide();
+						$('#form-group-qlik_slug').hide();
 						$('#module_slug,#path').prop('required',false);
+						$('#qlik_slug,#path').prop('required',false);
 
 						$('#form-group-statistic_slug').show();
 						$('#statistic_slug').prop('required',true);
 						$('#form-group-statistic_slug label .text-danger').remove();
 						$('#form-group-statistic_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
+					}else if (n == 'Qlik') {
+						$('#form-group-path').hide();
+						$('#form-group-module_slug').hide();
+						$('#form-group-statistic_slug').hide();
+						$('#module_slug,#path').prop('required',false);
+						$('#statistic_slug,#path').prop('required',false);
+
+						$('#form-group-qlik_slug').show();
+						$('#qlik_slug').prop('required',true);
+						$('#form-group-qlik_slug label .text-danger').remove();
+						$('#form-group-qlik_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
 					}else if (n == 'URL') {
 						$('input[name=path]').attr('placeholder','Please enter your URL');
 
@@ -119,7 +152,7 @@ class MenusController extends CBController
 						$('#form-group-path label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
 
 						$('#form-group-path').show();
-						$('#form-group-module_slug,#form-group-statistic_slug').hide();
+						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
 					}else if (n == 'Route') {
 						$('input[name=path]').attr('placeholder','Please enter the Route');
 
@@ -128,16 +161,16 @@ class MenusController extends CBController
 						$('#form-group-path label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
 
 						$('#form-group-path').show();
-						$('#form-group-module_slug,#form-group-statistic_slug').hide();					
+						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
 					}else {
-						$('#module_slug,#statistic_slug').prop('required',false);
-						
+						$('#module_slug,#statistic_slug,#qlik_slug').prop('required',false);
+
 						$('#path').prop('required',true);
 						$('#form-group-path label .text-danger').remove();
 						$('#form-group-path label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
 
 						$('#form-group-path').show();
-						$('#form-group-module_slug,#form-group-statistic_slug').hide();
+						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
 					}
 				})
 			})
@@ -170,7 +203,7 @@ class MenusController extends CBController
             "name" => "type",
             "type" => "radio",
             "required" => true,
-            'dataenum' => ['Module', 'Statistic', 'URL', 'Controller & Method', 'Route'],
+            'dataenum' => ['Module', 'Qlik', 'Statistic', 'URL', 'Controller & Method', 'Route'],
             'value' => 'Module',
         ];
 
@@ -189,6 +222,15 @@ class MenusController extends CBController
             "datatable" => "cms_statistics,name",
             "style" => "display:none",
             "value" => $id_statistic,
+        ];
+
+        $this->form[] = [
+            "label" => "Qlik",
+            "name" => "qlik_slug",
+            "type" => "select",
+            "datatable" => "qlik_items,title",
+            // "datatable_where" => "is_protected = 0",
+            "value" => $id_qlik_item,
         ];
 
         $this->form[] = [
@@ -288,10 +330,15 @@ class MenusController extends CBController
         } elseif ($postdata['type'] == 'Module') {
             $stat = CRUDBooster::first('cms_moduls', ['id' => $postdata['module_slug']]);
             $postdata['path'] = $stat->path;
+        } elseif ($postdata['type'] == 'Qlik') {
+            $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
+            //TODO cosa ve messo qui?
+            $postdata['path'] = $stat->path;
         }
 
         unset($postdata['module_slug']);
         unset($postdata['statistic_slug']);
+        unset($postdata['qlik_slug']);
 
         if ($postdata['is_dashboard'] == 1) {
             //If set dashboard, so unset for first all dashboard
