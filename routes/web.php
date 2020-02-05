@@ -17,6 +17,8 @@ Route::get('/', function () {
 
 Route::get('admin/qlik_items/content/{qlik_item_id}', 'AdminQlikItemsController@content_view');
 
+Route::get('admin/groups/members/{group_id}', 'AdminGroupsController@members');
+
 Route::get('admin/qlik_items/qliktest', function () {
     return view('qliktest');
 });
