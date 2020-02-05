@@ -159,6 +159,7 @@ return [
     'Add_New_API' => 'Add New API',
     'API_Generator' => 'API Generator',
     'Statistic_Builder' => 'Statistic Builder',
+    'Qlik_Items' => 'Qlik Items',
     'Module_Generator' => 'Module Generator',
     'settings' => 'Settings',
     'Users_Management' => 'Users Management',
@@ -193,7 +194,7 @@ return [
     'email_setting' => 'Email Setting',
     'application_setting' => 'Application Setting',
 
-    // table filter & sort 
+    // table filter & sort
     'filter_select_operator_type' => 'Select Operator Type',
     'filter_ascending' => 'ASCENDING',
     'filter_descending' => 'DESCENDING',
@@ -251,14 +252,14 @@ return [
     'privileges_module_list_update' => 'Update',
     'privileges_module_list_delete' => 'Delete',
 
-    //datamodal 
+    //datamodal
     'datamodal_select' => 'Select',
     'datamodal_search_and_enter' => 'Search and enter...',
     'datamodal_enter_to_search' => 'Enter to search',
     'datamodal_browse_data' => 'Browse Data',
     'datamodal_browse_file' => 'Browse File',
 
-    //child 
+    //child
     'table_detail' => 'Table Detail',
     'your_file_size_is_too_big' => 'Your file size is too big',
     'save_changes' => 'Save Changes',

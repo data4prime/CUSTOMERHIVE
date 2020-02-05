@@ -117,6 +117,19 @@
                     </li>
 
                     <li class='treeview'>
+                        <a href='#'><i class='fa fa-signal'></i> <span>{{ trans('crudbooster.Qlik_Items') }}</span> <i
+                                    class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
+                        <ul class='treeview-menu'>
+                            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items/add')) ? 'active' : '' }}"><a
+                                        href='{{Route("AdminQlikItemsControllerGetAdd")}}'><i class='fa fa-plus'></i>
+                                    <span>{{ trans('crudbooster.Add_New_Qlikitem') }}</span></a></li>
+                            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items')) ? 'active' : '' }}"><a
+                                        href='{{Route("AdminQlikItemsControllerGetIndex")}}'><i class='fa fa-bars'></i>
+                                    <span>{{ trans('crudbooster.List_Qlikitem') }}</span></a></li>
+                        </ul>
+                    </li>
+
+                    <li class='treeview'>
                         <a href='#'><i class='fa fa-dashboard'></i> <span>{{ trans('crudbooster.Statistic_Builder') }}</span> <i
                                     class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
                         <ul class='treeview-menu'>
