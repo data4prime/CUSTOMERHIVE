@@ -48,9 +48,10 @@ class MenusController extends CBController
             $row->path = str_replace('statistic_builder/show/', '', $row->path);
             $m = CRUDBooster::first('cms_statistics', ['slug' => $row->path]);
             $id_statistic = $m->id;
-        } elseif ($row->type == 'Qlik item') {
-            $m = CRUDBooster::first('qlik_items', ['slug' => $row->path]);
-            $id_qlik_item = $m->id;
+        } elseif ($row->type == 'Qlik') {
+            //ricava id del qlik item a cui fa riferimento questa voce di menu dal path cioè l'href della voce di menu
+            $id_qlik_item = str_replace('qlik_items/content/', '', $row->path);
+            // var_dump($id_qlik_item);exit;
         }
 
         $this->script_js = "
@@ -332,8 +333,7 @@ class MenusController extends CBController
             $postdata['path'] = $stat->path;
         } elseif ($postdata['type'] == 'Qlik') {
             $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
-            //TODO cosa ve messo qui?
-            $postdata['path'] = $stat->path;
+            $postdata['path'] = 'qlik_items/content/'.$postdata['qlik_slug'];
         }
 
         unset($postdata['module_slug']);
@@ -362,10 +362,14 @@ class MenusController extends CBController
         } elseif ($postdata['type'] == 'Module') {
             $stat = CRUDBooster::first('cms_moduls', ['id' => $postdata['module_slug']]);
             $postdata['path'] = $stat->path;
+        } elseif ($postdata['type'] == 'Qlik') {
+            $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
+            $postdata['path'] = 'qlik_items/content/'.$postdata['qlik_slug'];
         }
 
         unset($postdata['module_slug']);
         unset($postdata['statistic_slug']);
+        unset($postdata['qlik_slug']);
     }
 
     public function hook_after_delete($id)
