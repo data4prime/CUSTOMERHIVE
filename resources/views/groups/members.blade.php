@@ -3,7 +3,7 @@
 @section('content')
 <div class="box">
   <div class="box-header">
-    <br style="clear:both"/>
+    <h4>{{ $group->name }} Members</h4>
   </div>
   <div class="box-body table-responsive no-padding">
     <form id='form-table' method='post' action='{{CRUDBooster::mainpath("action-selected")}}'>

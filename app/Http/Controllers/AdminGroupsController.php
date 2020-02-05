@@ -338,9 +338,31 @@
 														->select('cms_users.id', 'cms_users.name', 'cms_users.email', 'cms_users.photo', 'cms_privileges.name as privilege')
 														->get();
 
+			  $data['group'] = \App\Group::find($group_id);
+
 				$data['group_id'] = $group_id;
 
 			  $this->cbView('groups.members',$data);
+			}
+
+			public function remove_member($group_id, $user_id){
+				//check auth update su groups
+				//TODO creaiamo permesso specifico da autorizzare e controllare per group membership?
+			  if(!CRUDBooster::isUpdate() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+				//check if group_id and user_id are int
+				if(filter_var($group_id, FILTER_VALIDATE_INT) === false OR filter_var($user_id, FILTER_VALIDATE_INT) === false) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+			  $data['members'] = DB::table('users_groups')
+														->where('group_id',$group_id)
+														->where('user_id',$user_id)
+														->delete();
+
+				return redirect('admin/groups/members/'.$group_id);
 			}
 
 	}
