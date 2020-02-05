@@ -408,7 +408,7 @@
 
 				$data['item_url'] = $data['row']->url.'&qlikTicket='.$qlik_ticket;
 
-			  $this->cbView('test',$data);
+			  $this->cbView('qlik_items.view',$data);
 			}
 
 
