@@ -31,13 +31,17 @@
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
 			$this->col[] = ["label"=>"Title","name"=>"title"];
+			$this->col[] = ["label"=>"Subtitle","name"=>"subtitle"];
+			$this->col[] = ["label"=>"Description","name"=>"description"];
 			$this->col[] = ["label"=>"Url","name"=>"url"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Title','name'=>'title','type'=>'text','validation'=>'required|string|min:3|max:70','width'=>'col-sm-10','placeholder'=>'You can only enter the letter only'];
-			$this->form[] = ['label'=>'Url','name'=>'url','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Title','name'=>'title','type'=>'text','validation'=>'required|string|min:1|max:70','width'=>'col-sm-10','placeholder'=>'Item title'];
+			$this->form[] = ['label'=>'Url','name'=>'url','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','placeholder'=>'Path to embed item'];
+			$this->form[] = ['label'=>'Subtitle','name'=>'subtitle','type'=>'text','validation'=>'string|min:1|max:70','width'=>'col-sm-10','placeholder'=>'Item subtitle'];
+			$this->form[] = ['label'=>'Description','name'=>'description','type'=>'textarea','validation'=>'string|min:1|max:200','width'=>'col-sm-10','placeholder'=>'Item description'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
@@ -127,7 +131,7 @@
 
 	        /*
 	        | ----------------------------------------------------------------------
-	        | You may use this bellow array to add statistic at dashboard
+	        | You may use this below array to add statistic at dashboard
 	        | ----------------------------------------------------------------------
 	        | @label, @count, @icon, @color
 	        |

@@ -428,8 +428,12 @@ class CRUDBooster
                 $url = action($menu->path);
                 break;
             case 'Module':
+                break;
             case 'Statistic':
                 $url = self::adminPath($menu->path);
+                break;
+            case 'Qlik':
+                $url = self::adminPath($c->path);
                 break;
         }
 
@@ -457,13 +461,12 @@ class CRUDBooster
                         $url = action($menu->path);
                         break;
                     case 'Module':
+                        break;
                     case 'Statistic':
                         $url = self::adminPath($menu->path);
                     case 'Qlik':
+                        // $url = '/admin/'.($menu->path);
                         $url = self::adminPath($menu->path);
-                        // var_dump($menu->path);
-                        // var_dump($url);
-                        // exit;
                         break;
                 }
 
@@ -494,7 +497,11 @@ class CRUDBooster
                                 $url = action($c->path);
                                 break;
                             case 'Module':
+                                break;
                             case 'Statistic':
+                                $url = self::adminPath($c->path);
+                                break;
+                            case 'Qlik':
                                 $url = self::adminPath($c->path);
                                 break;
                         }
@@ -1726,7 +1733,7 @@ class CRUDBooster
 
 	        /*
 	        | ----------------------------------------------------------------------
-	        | You may use this bellow array to add statistic at dashboard
+	        | You may use this below array to add statistic at dashboard
 	        | ----------------------------------------------------------------------
 	        | @label, @count, @icon, @color
 	        |
