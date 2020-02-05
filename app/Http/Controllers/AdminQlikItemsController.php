@@ -338,7 +338,7 @@
 
 			//look at qlik item's content
 			public function content_view($qlik_item_id) {
-				//Create an Auth
+				//check auth
 			  if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
