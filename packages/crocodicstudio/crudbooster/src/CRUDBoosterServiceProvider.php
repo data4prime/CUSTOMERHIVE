@@ -16,11 +16,11 @@ class CRUDBoosterServiceProvider extends ServiceProvider
      */
 
     public function boot()
-    {        
-                                
+    {
+
         $this->loadViewsFrom(__DIR__.'/views', 'crudbooster');
-        $this->publishes([__DIR__.'/configs/crudbooster.php' => config_path('crudbooster.php')],'cb_config');            
-        $this->publishes([__DIR__.'/localization' => resource_path('lang')], 'cb_localization');                 
+        $this->publishes([__DIR__.'/configs/crudbooster.php' => config_path('crudbooster.php')],'cb_config');
+        $this->publishes([__DIR__.'/localization' => resource_path('lang')], 'cb_localization');
         $this->publishes([__DIR__.'/database' => base_path('database')],'cb_migration');
 
         $this->publishes([
@@ -33,14 +33,14 @@ class CRUDBoosterServiceProvider extends ServiceProvider
 
         if(!file_exists(app_path('Http/Controllers/AdminCmsUsersController.php'))) {
             $this->publishes([__DIR__.'/userfiles/controllers/AdminCmsUsersController.php' => app_path('Http/Controllers/AdminCmsUsersController.php')],'cb_user_controller');
-        }        
+        }
 
         $this->publishes([
             __DIR__.'/assets'=>public_path('vendor/crudbooster')
-        ],'cb_asset');  
-                    
-        require __DIR__.'/validations/validation.php';        
-        require __DIR__.'/routes.php';                        
+        ],'cb_asset');
+
+        require __DIR__.'/validations/validation.php';
+        require __DIR__.'/routes.php';
     }
 
     /**
@@ -49,18 +49,18 @@ class CRUDBoosterServiceProvider extends ServiceProvider
      * @return void
      */
     public function register()
-    {                                   
-        require __DIR__.'/helpers/Helper.php';      
+    {
+        require __DIR__.'/helpers/Helper.php';
 
-        $this->mergeConfigFrom(__DIR__.'/configs/crudbooster.php','crudbooster');        
-        
+        $this->mergeConfigFrom(__DIR__.'/configs/crudbooster.php','crudbooster');
+
         $this->app->singleton('crudbooster', function ()
         {
             return true;
         });
 
         $this->commands([
-            commands\Mailqueues::class            
+            commands\Mailqueues::class
         ]);
 
         $this->registerCrudboosterCommand();
@@ -80,16 +80,17 @@ class CRUDBoosterServiceProvider extends ServiceProvider
         $loader->alias('Image', 'Intervention\Image\Facades\Image');
         $loader->alias('CRUDBooster', 'crocodicstudio\crudbooster\helpers\CRUDBooster');
         $loader->alias('CB', 'crocodicstudio\crudbooster\helpers\CB');
+        $loader->alias('GroupHelper', 'crocodicstudio\crudbooster\helpers\GroupHelper');
     }
-   
+
     private function registerCrudboosterCommand()
     {
         $this->app->singleton('crudboosterinstall',function() {
             return new CrudboosterInstallationCommand;
         });
-        
+
         $this->app->singleton('crudboosterupdate',function() {
             return new CrudboosterUpdateCommand;
-        });        
-    }    
+        });
+    }
 }

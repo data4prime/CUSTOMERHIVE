@@ -4,6 +4,7 @@
 	use Request;
 	use DB;
 	use CRUDBooster;
+	use GroupHelper;
 
 	class AdminQlikItemsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -344,7 +345,14 @@
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
 
-				//get qlik ticket
+				$allowed = GroupHelper::can_see_item($qlik_item_id);
+				//check if at least one of item allowed groups is in user groups
+			  if(!$allowed) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+				//produce qlik ticket
+				//get user data
 				$current_user_id = CRUDBooster::myId();
 				$current_user = \App\User::find($current_user_id);
 
