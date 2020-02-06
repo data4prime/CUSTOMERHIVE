@@ -348,9 +348,16 @@
 				$current_user = \App\User::find($current_user_id);
 
 				//UserId
-				$user = $current_user->qlik_login;
+				$qlik_login = $current_user->qlik_login;
 				//User Directory
-				$password = $current_user->user_directory;
+				$user_directory = $current_user->user_directory;
+
+				if(empty($qlik_login) OR empty($user_directory)){
+					$data['error'] = 'User credentials missing. Ask an admin to set your qlik id and user directory';
+				  $this->cbView('qlik_items.no_credentials',$data);
+					exit;
+				}
+
 				//base path to call
 				$QRSurl = 'https://platformq.dasycloud.com:4243';
 				$xrfkey = "0123456789abcdef";
@@ -368,7 +375,7 @@
 					'Accept: application/json',
 					'Content-Type: application/json',
 					'x-qlik-xrfkey: '.$xrfkey,
-					'X-Qlik-User: UserDirectory='.$password.';UserId='.$user
+					'X-Qlik-User: UserDirectory='.$user_directory.';UserId='.$qlik_login
 				);
 
 				//Create Connection using Curl
@@ -378,8 +385,8 @@
 				// curl_setopt($ch, CURLOPT_POST, true);
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 				curl_setopt($ch, CURLOPT_POSTFIELDS, '{
-					"UserId":"'.$user.'",
-					"UserDirectory":"'.$password.'"
+					"UserId":"'.$qlik_login.'",
+					"UserDirectory":"'.$user_directory.'"
 				}');
 				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
