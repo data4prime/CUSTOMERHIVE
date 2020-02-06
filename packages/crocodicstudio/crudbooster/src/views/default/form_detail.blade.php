@@ -73,7 +73,6 @@ $asset_already[] = $type;
         $placeholder = (@$form['placeholder']) ? "placeholder='".$form['placeholder']."'" : "";
         $file_location = base_path('packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/component_detail.blade.php');
         $user_location = resource_path('views/vendor/crudbooster/type_components/'.$type.'/component_detail.blade.php');
-
         ?>
 
         @if(file_exists($file_location))

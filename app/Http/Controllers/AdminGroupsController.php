@@ -342,7 +342,47 @@
 
 				$data['group_id'] = $group_id;
 
+				//add button at top of table
+				$data['index_button'][] = ['label'=>'Add member','url'=>CRUDBooster::mainpath("groups/1/add_member"),"icon"=>"fa fa-plus",'color'=>'success'];
+				$data['page_title'] = 'Add members';
+
+				//add member form
+				$data['forms'] = [];
+				$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'gm_datamodal','width'=>'col-sm-6','datamodal_table'=>'cms_users','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'group_members_modal','datamodal_select_to'=>$group_id,'required'=>true];
+				$data['forms'][] = ['label'=>'Email','name'=>'email','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-6','placeholder'=>'User email','readonly'=>true];
+				$data['action'] = CRUDBooster::mainpath($group_id."/add_member");
+				$data['return_url'] = CRUDBooster::mainpath('members/'.$group_id);
+
 			  $this->cbView('groups.members',$data);
+			}
+
+			public function add_member($group_id){
+				//check auth update su groups
+				//TODO creaiamo permesso specifico da autorizzare e controllare per group membership?
+			  if(!CRUDBooster::isUpdate() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+				$user_id = $_POST['name'];
+				$return_url = $_POST['return_url'];
+				$ref_mainpath = $_POST['ref_mainpath'];
+
+				//check if user is already in group
+				$member = \App\UsersGroup::where('group_id',$group_id)
+																		->where('user_id',$user_id)
+																		->count();
+
+				if($member == 0){
+					$add_member = new \App\UsersGroup;
+					$add_member->group_id = $group_id;
+					$add_member->user_id = $user_id;
+					$add_member->save();
+				}
+
+				//redirect
+				if(empty($return_url)){
+						$return_url = $ref_mainpath;
+				}
+				return redirect($return_url);
 			}
 
 			public function remove_member($group_id, $user_id){

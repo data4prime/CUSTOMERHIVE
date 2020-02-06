@@ -52,6 +52,10 @@
                 if (key == 'datamodal_label') {
                     $('#{{$name}} .input-label').val(val);
                 }
+                //#RAMA scrivi il valore dell'email nell'input add member
+                if (key == 'datamodal_email') {
+                    $('input[name=email]').val(val);
+                }
                 $('#' + key).val(val).trigger('change');
             })
             hideModal{{$name}}();

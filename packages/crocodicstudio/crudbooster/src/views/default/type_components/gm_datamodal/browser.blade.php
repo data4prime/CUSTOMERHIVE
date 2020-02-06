@@ -11,6 +11,20 @@
 @include('crudbooster::admin_template_plugins')
 
 <?php
+
+  //bypass CBController getModalData per custom query
+  $result = DB::table('cms_users')
+                ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                      ->from('users_groups')
+                      ->whereRaw('users_groups.group_id = '.Request::get('select_to').' AND users_groups.user_id = cms_users.id');
+            })
+            ->orderby('id', 'asc')
+            ->get();
+
+?>
+
+<?php
 $name = Request::get('name_column');
 $coloms_alias = explode(',', 'ID,'.Request::get('columns_name_alias'));
 if (count($coloms_alias) < 2) {
@@ -48,6 +62,7 @@ if (count($coloms_alias) < 2) {
             $select_data_result = [];
             $select_data_result['datamodal_id'] = $row->id;
             $select_data_result['datamodal_label'] = $row->{$columns[1]} ?: $row->id;
+            $select_data_result['datamodal_email'] = $row->email;
             $select_data = Request::get('select_to');
             if ($select_data) {
                 $select_data = explode(',', $select_data);
@@ -67,4 +82,3 @@ if (count($coloms_alias) < 2) {
     @endforeach
     </tbody>
 </table>
-<div align="center">{!! str_replace("/?","?",$result->appends(Request::all())->render()) !!}</div>

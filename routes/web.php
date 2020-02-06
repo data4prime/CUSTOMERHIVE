@@ -21,3 +21,4 @@ Route::get('admin/qlik_items/content/{qlik_item_id}', 'AdminQlikItemsController@
 //group members
 Route::get('admin/groups/members/{group_id}', 'AdminGroupsController@members');
 Route::get('admin/groups/{group_id}/remove_member/{user_id}', 'AdminGroupsController@remove_member');
+Route::post('admin/groups/{group_id}/add_member', 'AdminGroupsController@add_member');
