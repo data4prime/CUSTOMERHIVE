@@ -343,8 +343,8 @@
 				$data['group_id'] = $group_id;
 
 				//add button at top of table
-				$data['index_button'][] = ['label'=>'Add member','url'=>CRUDBooster::mainpath("groups/1/add_member"),"icon"=>"fa fa-plus",'color'=>'success'];
-				$data['page_title'] = 'Add members';
+				// $data['index_button'][] = ['label'=>'Add member','url'=>CRUDBooster::mainpath("groups/1/add_member"),"icon"=>"fa fa-plus",'color'=>'success'];
+				$data['page_title'] = $data['group']->name.' members';
 
 				//add member form
 				$data['forms'] = [];

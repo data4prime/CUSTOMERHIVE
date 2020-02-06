@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- Allow group to see item -->
-<div class="box-body table-responsive no-padding">
+<div class="box-body table-responsive">
   <div>
       @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel)
           @if(g('return_url'))

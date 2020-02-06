@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- Add member -->
-<div class="box-body table-responsive no-padding">
+<div class="box-body table-responsive">
   <div>
       @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel)
           @if(g('return_url'))
@@ -16,7 +16,7 @@
 
       <div class="panel panel-default">
           <div class="panel-heading">
-            <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! $page_title !!}</strong>
+            <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Add member</strong>
           </div>
 
           <div class="panel-body" style="padding:20px 0px 0px 0px">
