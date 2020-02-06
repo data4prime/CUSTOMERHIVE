@@ -41,6 +41,8 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		$this->form[] = array("label"=>"Password Confirmation","name"=>"password_confirmation","type"=>"password","help"=>"Please leave empty if not change");
 		# END FORM DO NOT REMOVE THIS LINE
 
+		$this->addaction = array();
+		$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('groups/[id]'),'icon'=>'fa fa-users','color'=>'info','title'=>'View groups'];
 	}
 
 	public function getProfile() {
@@ -61,5 +63,82 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 	}
 	public function hook_before_add(&$postdata) {
 	    unset($postdata['password_confirmation']);
+	}
+
+	public function groups($user_id){
+		//check auth
+		if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+		}
+
+		$data = [];
+		$data['groups'] = DB::table('users_groups')
+												->where('users_groups.user_id',$user_id)
+												->join('groups', 'groups.id', '=', 'users_groups.group_id')
+												->select('groups.id', 'groups.name', 'groups.description')
+												->get();
+
+		$data['user'] = \App\User::find($user_id);
+		$data['user_id'] = $user_id;
+
+		$data['page_title'] = $data['user']->name.' groups';
+
+		//add group form
+		$data['forms'] = [];
+		$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'user_groups_datamodal','width'=>'col-sm-6','datamodal_table'=>'groups','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'user_groups_datamodal','datamodal_select_to'=>$user_id,'required'=>true];
+		$data['forms'][] = ['label'=>'Description','name'=>'description','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-6','placeholder'=>'Group description','readonly'=>true];
+		$data['action'] = CRUDBooster::mainpath($user_id."/add_group");
+		$data['return_url'] = CRUDBooster::mainpath('groups/'.$user_id);
+
+		$this->cbView('users.groups',$data);
+	}
+
+	public function add_group($user_id){
+		//check auth update su groups
+		//TODO creaiamo permesso specifico da autorizzare e controllare per group membership?
+		if(!CRUDBooster::isUpdate() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+		}
+		$group_id = $_POST['name'];
+		$return_url = $_POST['return_url'];
+		$ref_mainpath = $_POST['ref_mainpath'];
+
+		//check if user is already in group
+		$membership = \App\UsersGroup::where('group_id',$group_id)
+																->where('user_id',$user_id)
+																->count();
+
+		if($membership == 0){
+			$add_member = new \App\UsersGroup;
+			$add_member->group_id = $group_id;
+			$add_member->user_id = $user_id;
+			$add_member->save();
+		}
+
+		//redirect
+		if(empty($return_url)){
+				$return_url = $ref_mainpath;
+		}
+		return redirect($return_url);
+	}
+
+	public function remove_group($user_id, $group_id){
+		//check auth update su groups
+		//TODO creaiamo permesso specifico da autorizzare e controllare per group membership?
+		if(!CRUDBooster::isUpdate() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+		}
+
+		//check if group_id and user_id are int
+		if(filter_var($group_id, FILTER_VALIDATE_INT) === false OR filter_var($user_id, FILTER_VALIDATE_INT) === false) {
+			CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+		}
+
+		$data['delete'] = DB::table('users_groups')
+												->where('group_id',$group_id)
+												->where('user_id',$user_id)
+												->delete();
+
+		return redirect('admin/users/groups/'.$user_id);
 	}
 }

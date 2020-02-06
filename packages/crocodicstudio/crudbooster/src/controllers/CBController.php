@@ -752,6 +752,9 @@ class CBController extends Controller
         if(Request::get('columns_name_alias')=='item_access_modal'){
           return view('crudbooster::default.type_components.item_access_datamodal.browser', $data);
         }
+        if(Request::get('columns_name_alias')=='user_groups_datamodal'){
+          return view('crudbooster::default.type_components.user_groups_datamodal.browser', $data);
+        }
         return view('crudbooster::default.type_components.datamodal.browser', $data);
     }
 

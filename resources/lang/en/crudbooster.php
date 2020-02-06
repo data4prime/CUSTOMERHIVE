@@ -113,6 +113,7 @@ return [
     'button_reset' => 'Reset',
     'button_add_to_table' => 'Add To Table',
     'button_add_member' => 'Add',
+    'button_add_group' => 'Add',
 
     'export_dialog_title' => "Export Data",
     'export_dialog_filename' => 'File Name',
