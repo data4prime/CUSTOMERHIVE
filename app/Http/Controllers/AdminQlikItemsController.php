@@ -344,11 +344,13 @@
 			  }
 
 				//get qlik ticket
+				$current_user_id = CRUDBooster::myId();
+				$current_user = \App\User::find($current_user_id);
 
 				//UserId
-				$user = 'customerhive';
+				$user = $current_user->qlik_login;
 				//User Directory
-				$password = 'PLATFORMQ';
+				$password = $current_user->user_directory;
 				//base path to call
 				$QRSurl = 'https://platformq.dasycloud.com:4243';
 				$xrfkey = "0123456789abcdef";
