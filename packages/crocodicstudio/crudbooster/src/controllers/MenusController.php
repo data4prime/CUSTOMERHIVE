@@ -230,6 +230,7 @@ class MenusController extends CBController
             "name" => "qlik_slug",
             "type" => "select",
             "datatable" => "qlik_items,title",
+            "default" => "** Select a Qlik Item",
             // "datatable_where" => "is_protected = 0",
             "value" => $id_qlik_item,
         ];

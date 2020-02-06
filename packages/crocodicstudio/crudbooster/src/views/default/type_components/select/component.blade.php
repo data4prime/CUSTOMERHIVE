@@ -1,4 +1,6 @@
-<?php $default = ! empty($form['default']) ? $form['default'] : trans('crudbooster.text_prefix_option')." ".$form['label'];?>
+<?php
+  $default = ! empty($form['default']) ? $form['default'] : trans('crudbooster.text_prefix_option')." ".$form['label'];
+?>
 @if($form['parent_select'])
     <?php
     $parent_select = (count(explode(",", $form['parent_select'])) > 1) ? explode(",", $form['parent_select']) : $form['parent_select'];
