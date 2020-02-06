@@ -747,7 +747,10 @@ class CBController extends Controller
         // #RAMA filtro le richieste con questo attributo per riuscire a richiamare custom modal,
         // TODO fa schifo
         if(Request::get('columns_name_alias')=='group_members_modal'){
-          return view('crudbooster::default.type_components.gm_datamodal.browser', $data);
+          return view('crudbooster::default.type_components.group_members_datamodal.browser', $data);
+        }
+        if(Request::get('columns_name_alias')=='item_access_modal'){
+          return view('crudbooster::default.type_components.item_access_datamodal.browser', $data);
         }
         return view('crudbooster::default.type_components.datamodal.browser', $data);
     }

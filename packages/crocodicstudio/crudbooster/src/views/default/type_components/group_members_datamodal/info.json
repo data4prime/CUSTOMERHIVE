@@ -1,6 +1,6 @@
 {
   "title": "Group Member Data Modal",
-  "type": "gm_datamodal",
+  "type": "group_members_datamodal",
   "attribute": {
     "required": {
       "datamodal_table": "table name",

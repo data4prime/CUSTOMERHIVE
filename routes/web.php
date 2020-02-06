@@ -17,8 +17,12 @@ Route::get('/', function () {
 
 //qlik items
 Route::get('admin/qlik_items/content/{qlik_item_id}', 'AdminQlikItemsController@content_view');
+//items authorization
+Route::get('admin/qlik_items/access/{qlik_item_id}', 'AdminQlikItemsController@access');
+Route::post('admin/qlik_items/{qlik_item_id}/auth', 'AdminQlikItemsController@add_authorization');
+Route::get('admin/qlik_items/{qlik_item_id}/deauth/{group_id}', 'AdminQlikItemsController@remove_authorization');
 
 //group members
 Route::get('admin/groups/members/{group_id}', 'AdminGroupsController@members');
-Route::get('admin/groups/{group_id}/remove_member/{user_id}', 'AdminGroupsController@remove_member');
 Route::post('admin/groups/{group_id}/add_member', 'AdminGroupsController@add_member');
+Route::get('admin/groups/{group_id}/remove_member/{user_id}', 'AdminGroupsController@remove_member');

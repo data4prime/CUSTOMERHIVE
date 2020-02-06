@@ -17,7 +17,7 @@
         $a['confirmation_closeOnConfirm'] = empty($a['confirmation_closeOnConfirm']) ? 'true' : 'false';
 
         $confirm_box = '
-        swal({   
+        swal({
             title: "'.$a['confirmation_title'].'",
             text: "'.$a['confirmation_text'].'",
             type: "'.$a['confirmation_type'].'",
@@ -25,8 +25,8 @@
             confirmButtonColor: "'.$a['confirmation_confirmButtonColor'].'",
             confirmButtonText: "'.$a['confirmation_confirmButtonText'].'",
             cancelButtonText: "'.$a['confirmation_cancelButtonText'].'",
-            closeOnConfirm: '.$a['confirmation_closeOnConfirm'].', }, 
-            function(){  location.href="'.$a['url'].'"});        
+            closeOnConfirm: '.$a['confirmation_closeOnConfirm'].', },
+            function(){  location.href="'.$a['url'].'"});
 
         ';
     }
@@ -94,7 +94,7 @@
 
     @if(CRUDBooster::isDelete() && $button_delete)
         <?php $url = CRUDBooster::mainpath("delete/".$row->$pk);?>
-        <a class='btn btn-xs btn-warning btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
+        <a class='btn btn-xs btn-danger btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
            onclick='{{CRUDBooster::deleteConfirm($url)}}'><i class='fa fa-trash'></i> {{trans("crudbooster.action_delete_data")}}</a>
     @endif
 
@@ -170,7 +170,7 @@
 
     @if(CRUDBooster::isDelete() && $button_delete)
         <?php $url = CRUDBooster::mainpath("delete/".$row->$pk);?>
-        <a class='btn btn-xs btn-warning btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
+        <a class='btn btn-xs btn-danger btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
            onclick='{{CRUDBooster::deleteConfirm($url)}}'><i class='fa fa-trash'></i></a>
     @endif
 

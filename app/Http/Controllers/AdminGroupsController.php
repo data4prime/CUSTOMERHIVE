@@ -348,7 +348,7 @@
 
 				//add member form
 				$data['forms'] = [];
-				$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'gm_datamodal','width'=>'col-sm-6','datamodal_table'=>'cms_users','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'group_members_modal','datamodal_select_to'=>$group_id,'required'=>true];
+				$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'group_members_datamodal','width'=>'col-sm-6','datamodal_table'=>'cms_users','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'group_members_modal','datamodal_select_to'=>$group_id,'required'=>true];
 				$data['forms'][] = ['label'=>'Email','name'=>'email','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-6','placeholder'=>'User email','readonly'=>true];
 				$data['action'] = CRUDBooster::mainpath($group_id."/add_member");
 				$data['return_url'] = CRUDBooster::mainpath('members/'.$group_id);
@@ -397,7 +397,7 @@
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
 
-			  $data['members'] = DB::table('users_groups')
+			  $data['delete'] = DB::table('users_groups')
 														->where('group_id',$group_id)
 														->where('user_id',$user_id)
 														->delete();

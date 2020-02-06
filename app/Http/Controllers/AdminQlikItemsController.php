@@ -78,6 +78,7 @@
 	        */
 	        $this->addaction = array();
 					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('content/[id]'),'icon'=>'fa fa-check','color'=>'info','title'=>'View item'];
+					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('access/[id]'),'icon'=>'fa fa-users','color'=>'warning','title'=>'Set auth'];
 
 
 	        /*
@@ -420,5 +421,74 @@
 			  $this->cbView('qlik_items.view',$data);
 			}
 
+			public function access($item_id){
+				//check auth
+			  if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+				$data['item_id'] = $item_id;
+				$data['qlik_item'] = \App\QlikItem::find($item_id);
+				$data['groups'] = \App\ItemsAllowed::where('item_id',$item_id)
+																							->join('groups','groups.id','=','items_allowed.group_id')
+																							->get();
+				$data['page_title'] = 'Authorize Access';
+
+				//add member form
+				$data['forms'] = [];
+				$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'item_access_datamodal','width'=>'col-sm-6','datamodal_table'=>'groups','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'item_access_modal','datamodal_select_to'=>$item_id,'required'=>true];
+				$data['forms'][] = ['label'=>'Description','name'=>'description','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-6','placeholder'=>'Group description','readonly'=>true];
+				$data['action'] = CRUDBooster::mainpath($item_id."/auth");
+				$data['return_url'] = CRUDBooster::mainpath('access/'.$item_id);
+
+			  $this->cbView('qlik_items.access',$data);
+			}
+
+			public function add_authorization($item_id){
+				//check auth update su groups
+				//TODO creaiamo permesso specifico da autorizzare e controllare per item access?
+			  if(!CRUDBooster::isUpdate() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+				$group_id = $_POST['name'];
+				$return_url = $_POST['return_url'];
+				$ref_mainpath = $_POST['ref_mainpath'];
+
+				//check if user is already in group
+				$access = \App\ItemsAllowed::where('item_id',$item_id)
+																		->where('group_id',$group_id)
+																		->count();
+
+				if($access == 0){
+					$add_authorization = new \App\ItemsAllowed;
+					$add_authorization->item_id = $item_id;
+					$add_authorization->group_id = $group_id;
+					$add_authorization->save();
+				}
+
+				//redirect
+				if(empty($return_url)){
+						$return_url = $ref_mainpath;
+				}
+				return redirect($return_url);
+			}
+
+			public function remove_authorization($item_id, $group_id){
+				//check auth update su groups
+				//TODO creaiamo permesso specifico da autorizzare e controllare per item access?
+			  if(!CRUDBooster::isUpdate() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+				//check if group_id and user_id are int
+				if(filter_var($group_id, FILTER_VALIDATE_INT) === false OR filter_var($item_id, FILTER_VALIDATE_INT) === false) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+			  $data['delete'] = \App\ItemsAllowed::where('item_id',$item_id)
+														->where('group_id',$group_id)
+														->delete();
+
+				return redirect('admin/qlik_items/access/'.$item_id);
+			}
 
 	}
