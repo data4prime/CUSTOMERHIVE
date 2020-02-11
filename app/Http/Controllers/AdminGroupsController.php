@@ -80,7 +80,7 @@
 	        */
 	        $this->addaction = array();
 					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('members/[id]'),'icon'=>'fa fa-users','color'=>'info','title'=>'Members'];
-
+					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('items/[id]'),'icon'=>'fa fa-shield','color'=>'warning','title'=>'Items'];
 
 	        /*
 	        | ----------------------------------------------------------------------
@@ -93,7 +93,6 @@
 	        |
 	        */
 	        $this->button_selected = array();
-
 
 	        /*
 	        | ----------------------------------------------------------------------
@@ -345,7 +344,7 @@
 
 				//add member form
 				$data['forms'] = [];
-				$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'group_members_datamodal','width'=>'col-sm-6','datamodal_table'=>'cms_users','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'group_members_modal','datamodal_select_to'=>$group_id,'required'=>true];
+				$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'group_members_datamodal','width'=>'col-sm-6','datamodal_table'=>'cms_users','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'Name','datamodal_select_to'=>$group_id,'required'=>true];
 				$data['forms'][] = ['label'=>'Email','name'=>'email','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-6','placeholder'=>'User email','readonly'=>true];
 				$data['action'] = CRUDBooster::mainpath($group_id."/add_member");
 				$data['return_url'] = CRUDBooster::mainpath('members/'.$group_id);
@@ -400,6 +399,82 @@
 														->delete();
 
 				return redirect('admin/groups/members/'.$group_id);
+			}
+
+			public function items($group_id){
+				//check auth
+			  if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+			  $data = [];
+			  $data['items'] = DB::table('items_allowed')
+														->where('items_allowed.group_id',$group_id)
+														->join('qlik_items', 'qlik_items.id', '=', 'items_allowed.item_id')
+														->get();
+
+			  $data['group'] = \App\Group::find($group_id);
+				$data['group_id'] = $group_id;
+
+				$data['page_title'] = $data['group']->name.' allowed items';
+
+				//add member form
+				$data['forms'] = [];
+				$data['forms'][] = ['label'=>'Title','name'=>'title','type'=>'group_items_datamodal','width'=>'col-sm-6','datamodal_table'=>'qlik_items','datamodal_where'=>'','datamodal_columns'=>'title','datamodal_columns_alias'=>'Item','datamodal_select_to'=>$group_id,'required'=>true];
+				$data['forms'][] = ['label'=>'Subtitle','name'=>'subtitle','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-6','placeholder'=>'Subtitle','readonly'=>true];
+				$data['action'] = CRUDBooster::mainpath($group_id."/add_item");
+				$data['return_url'] = CRUDBooster::mainpath('items/'.$group_id);
+
+			  $this->cbView('groups.items',$data);
+			}
+
+			public function add_item($group_id){
+				//check auth update su groups
+				//TODO creaiamo permesso specifico da autorizzare e controllare per group allowed item?
+			  if(!CRUDBooster::isUpdate() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+				$item_id = $_POST['title'];
+				$return_url = $_POST['return_url'];
+				$ref_mainpath = $_POST['ref_mainpath'];
+
+				//check if item is already allowed in group
+				$item = \App\ItemsAllowed::where('group_id',$group_id)
+																		->where('item_id',$item_id)
+																		->count();
+
+				if($item == 0){
+					$add_item = new \App\ItemsAllowed;
+					$add_item->group_id = $group_id;
+					$add_item->item_id = $item_id;
+					$add_item->save();
+				}
+
+				//redirect
+				if(empty($return_url)){
+						$return_url = $ref_mainpath;
+				}
+				return redirect($return_url);
+			}
+
+			public function remove_item($group_id, $item_id){
+				//check auth update su groups
+				//TODO creaiamo permesso specifico da autorizzare e controllare per group membership?
+			  if(!CRUDBooster::isUpdate() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+				//check if group_id and user_id are int
+				if(filter_var($group_id, FILTER_VALIDATE_INT) === false OR filter_var($item_id, FILTER_VALIDATE_INT) === false) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+			  $data['delete'] = DB::table('items_allowed')
+														->where('group_id',$group_id)
+														->where('item_id',$item_id)
+														->delete();
+
+				return redirect('admin/groups/items/'.$group_id);
 			}
 
 	}

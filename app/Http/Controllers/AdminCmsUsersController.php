@@ -85,7 +85,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 
 		//add group form
 		$data['forms'] = [];
-		$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'user_groups_datamodal','width'=>'col-sm-6','datamodal_table'=>'groups','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'user_groups_datamodal','datamodal_select_to'=>$user_id,'required'=>true];
+		$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'user_groups_datamodal','width'=>'col-sm-6','datamodal_table'=>'groups','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'Name','datamodal_select_to'=>$user_id,'required'=>true];
 		$data['forms'][] = ['label'=>'Description','name'=>'description','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-6','placeholder'=>'Group description','readonly'=>true];
 		$data['action'] = CRUDBooster::mainpath($user_id."/add_group");
 		$data['return_url'] = CRUDBooster::mainpath('groups/'.$user_id);

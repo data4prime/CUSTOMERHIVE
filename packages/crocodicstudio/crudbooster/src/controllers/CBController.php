@@ -746,16 +746,27 @@ class CBController extends Controller
 
         // #RAMA filtro le richieste con questo attributo per riuscire a richiamare custom modal,
         // TODO fa schifo
-        if(Request::get('columns_name_alias')=='group_members_modal'){
-          return view('crudbooster::default.type_components.group_members_datamodal.browser', $data);
+        switch (Request::get('type')) {
+          case 'group_members_datamodal':
+            return view('crudbooster::default.type_components.group_members_datamodal.browser', $data);
+            break;
+          case 'group_items_datamodal':
+            return view('crudbooster::default.type_components.group_items_datamodal.browser', $data);
+            break;
+          case 'item_access_datamodal':
+            return view('crudbooster::default.type_components.item_access_datamodal.browser', $data);
+            break;
+          case 'user_groups_datamodal':
+            return view('crudbooster::default.type_components.user_groups_datamodal.browser', $data);
+            break;
+          case 'user_groups_datamodal':
+            return view('crudbooster::default.type_components.user_groups_datamodal.browser', $data);
+            break;
+
+          default:
+            return view('crudbooster::default.type_components.datamodal.browser', $data);
+            break;
         }
-        if(Request::get('columns_name_alias')=='item_access_modal'){
-          return view('crudbooster::default.type_components.item_access_datamodal.browser', $data);
-        }
-        if(Request::get('columns_name_alias')=='user_groups_datamodal'){
-          return view('crudbooster::default.type_components.user_groups_datamodal.browser', $data);
-        }
-        return view('crudbooster::default.type_components.datamodal.browser', $data);
     }
 
     public function getUpdateSingle()

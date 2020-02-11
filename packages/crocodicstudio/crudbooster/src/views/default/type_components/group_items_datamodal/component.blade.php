@@ -52,9 +52,9 @@
                 if (key == 'datamodal_label') {
                     $('#{{$name}} .input-label').val(val);
                 }
-                //#RAMA scrivi il valore dell'email nell'input add member
-                if (key == 'datamodal_description') {
-                    $('input[name=description]').val(val);
+                //#RAMA scrivi il valore del subtitle nell'input add allowed item
+                if (key == 'datamodal_subtitle') {
+                    $('input[name=subtitle]').val(val);
                 }
                 $('#' + key).val(val).trigger('change');
             })
