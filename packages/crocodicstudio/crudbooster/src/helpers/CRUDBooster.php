@@ -526,10 +526,7 @@ class CRUDBooster
                             case 'Qlik':
                                 //controlla se utente corrente è abilitato a vedere oggetto
                                 $c->item_id = end(explode('/',$c->path));
-                                $c->$allowed = GroupHelper::can_see_item($c->item_id);
-                                if(!$c->allowed){
-                                  unset($child[$child_key]);
-                                }
+                                $c->allowed = GroupHelper::can_see_item($c->item_id);
                                 $url = self::adminPath($c->path);
                                 break;
                         }
