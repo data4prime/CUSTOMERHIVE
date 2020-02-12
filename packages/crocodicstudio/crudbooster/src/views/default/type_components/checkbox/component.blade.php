@@ -21,7 +21,7 @@
                 } else {
                     $val = $label = $d;
                 }
-                $checked = ($value && in_array($val, $value)) ? "checked" : "";
+                $checked = ($checked OR ($value && in_array($val, $value))) ? "checked" : "";
                 ?>
                 <div class="checkbox {{$disabled}}">
                     <label>
@@ -71,7 +71,7 @@
                     echo "
 												<div data-val='$val' class='checkbox $disabled'>
 												  <label>
-												    <input type='checkbox' $disabled $checked name='".$name."[]' value='".$d->id."'> ".$d->{$datatable_field}."								    
+												    <input type='checkbox' $disabled $checked name='".$name."[]' value='".$d->id."'> ".$d->{$datatable_field}."
 												  </label>
 												</div>";
                 }
@@ -86,7 +86,7 @@
                     echo "
 												<div data-val='$val' class='checkbox $disabled'>
 												  <label>
-												    <input type='checkbox' $disabled $checked name='".$name."[]' value='".$d->id."'> ".$val." 								    
+												    <input type='checkbox' $disabled $checked name='".$name."[]' value='".$d->id."'> ".$val."
 												  </label>
 												</div>";
                 }
@@ -105,7 +105,7 @@
                     echo "
 												<div data-val='$val' class='checkbox $disabled'>
 												  <label>
-												    <input type='checkbox' $disabled $checked name='".$name."[]' value='$q->value'> ".$q->label." 								    
+												    <input type='checkbox' $disabled $checked name='".$name."[]' value='$q->value'> ".$q->label."
 												  </label>
 												</div>";
                 }

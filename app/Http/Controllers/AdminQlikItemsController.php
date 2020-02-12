@@ -5,6 +5,7 @@
 	use DB;
 	use CRUDBooster;
 	use GroupHelper;
+	use Illuminate\Support\Facades\Route;
 
 	class AdminQlikItemsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -35,6 +36,8 @@
 			$this->col[] = ["label"=>"Subtitle","name"=>"subtitle"];
 			$this->col[] = ["label"=>"Help","name"=>"description"];
 			$this->col[] = ["label"=>"Url","name"=>"url"];
+			$this->col[] = ["label"=>"Width","name"=>"frame_width"];
+			$this->col[] = ["label"=>"Height","name"=>"frame_height"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
@@ -43,6 +46,11 @@
 			$this->form[] = ['label'=>'Url','name'=>'url','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','placeholder'=>'Path to embed item'];
 			$this->form[] = ['label'=>'Subtitle','name'=>'subtitle','type'=>'text','validation'=>'string|min:1|max:70','width'=>'col-sm-10','placeholder'=>'Item subtitle'];
 			$this->form[] = ['label'=>'Help','name'=>'description','type'=>'textarea','validation'=>'string|min:1|max:200','width'=>'col-sm-10','placeholder'=>'Item description'];
+			$this->form[] = ['label'=>'Full Page','name'=>'frame_full_page','type'=>'checkbox','width'=>'col-sm-1','dataenum'=>' '];
+			$this->form[] = ['label'=>'Width','name'=>'frame_width','type'=>'number','validation'=>'required|int|min:1|max:100','width'=>'col-sm-1','value'=>'100'];
+			$this->form[] = ['label'=>'','name'=>'frame_width_unit','type'=>'select','validation'=>'','width'=>'col-sm-1','dataenum'=>'px','default'=>'%'];
+			$this->form[] = ['label'=>'Height','name'=>'frame_height','type'=>'number','validation'=>'required|int|min:1|max:100','width'=>'col-sm-1','value'=>'100'];
+			$this->form[] = ['label'=>'','name'=>'frame_height_unit','type'=>'select','validation'=>'','width'=>'col-sm-1','dataenum'=>'px','default'=>'%'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
@@ -151,8 +159,59 @@
 	        |
 	        */
 	        $this->script_js =
-					  "$(function() {
-					    $('.qi_iframe').css('height', $(window).height()+'px').css('width', '100%');
+					  "
+						function checkFullPage(){
+							if(
+								$('#frame_width').val()=='100' &&
+								$('#frame_height').val()=='100' &&
+								$('#frame_width_unit').children('option:selected')[0].label == '%' &&
+								$('#frame_height_unit').children('option:selected')[0].label == '%'
+							){
+								$('input[name^=frame_full_page]').prop('checked', true);
+							}
+							else{
+								$('input[name^=frame_full_page]').prop('checked', false);
+							}
+						}
+
+						function setFullPage(){
+							console.log();
+							if($('input[name^=frame_full_page]').prop('checked')){
+								$('#frame_width').val(100);
+								$('#frame_width_unit option').filter(function() {
+								    return ($(this).text() == '%');
+								}).prop('selected', true);
+								$('#frame_height').val(100);
+								$('#frame_height_unit option').filter(function() {
+								    return ($(this).text() == '%');
+								}).prop('selected', true);
+							}
+						}
+
+						$(function() {
+							//set iframe size
+					    // $('.qi_iframe').css('height', $(window).height()+'px').css('width', '100%');
+
+							// sposta scelta unità di misura della width a fianco della dimensione
+							$('#form-group-frame_width_unit label').remove();
+							var unit_select = $('#form-group-frame_width_unit').html();
+							$('#form-group-frame_width').append(unit_select);
+							var unit_select = $('#form-group-frame_width_unit').remove();
+
+							// sposta scelta unità di misura della height a fianco della dimensione
+							$('#form-group-frame_height_unit label').remove();
+							var unit_select = $('#form-group-frame_height_unit').html();
+							$('#form-group-frame_height').append(unit_select);
+							var unit_select = $('#form-group-frame_height_unit').remove();
+
+							//metti spunta automatica su checkbox se width 100% e height 100%
+							checkFullPage();
+							$('#frame_width').change(function () {checkFullPage()});
+							$('#frame_width_unit').change(function () {checkFullPage()});
+							$('#frame_height').change(function () {checkFullPage()});
+							$('#frame_height_unit').change(function () {checkFullPage()});
+							//setta 100% 100% se spunti Full Page checkbox
+							$('input[name^=frame_full_page]').change(function () {setFullPage()});
 					  });";
 
 
@@ -204,9 +263,6 @@
 					.box{
 						padding:8px
 					}
-					.qi_description{
-						margin-top:8px;
-					}
 					";
 
 
@@ -248,7 +304,7 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
-
+					//TODO filtrare permesso gruppi
 	    }
 
 	    /*
@@ -270,7 +326,11 @@
 	    */
 	    public function hook_before_add(&$postdata) {
 	        //Your code here
-
+					$postdata['frame_width'] .= $postdata['frame_width_unit'];
+					$postdata['frame_height'] .= $postdata['frame_height_unit'];
+					unset($postdata['frame_full_page']);
+					unset($postdata['frame_width_unit']);
+					unset($postdata['frame_height_unit']);
 	    }
 
 	    /*
@@ -295,7 +355,11 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
-
+					$postdata['frame_width'] .= $postdata['frame_width_unit'];
+					$postdata['frame_height'] .= $postdata['frame_height_unit'];
+					unset($postdata['frame_full_page']);
+					unset($postdata['frame_width_unit']);
+					unset($postdata['frame_height_unit']);
 	    }
 
 	    /*
@@ -418,7 +482,6 @@
 			  $data['page_title'] = $data['row']->title;
 				$data['help'] = $data['row']->description;
 			  $data['subtitle'] = $data['row']->subtitle;
-			  $data['description'] = $data['row']->description;
 
 				// smontare URL per inserire app id anzichè URL per immissione qlik item
 				// $qlik_sense_app_base_path = 'https://platformq.dasycloud.com';
@@ -501,4 +564,30 @@
 				return redirect('admin/qlik_items/access/'.$item_id);
 			}
 
+	    public function getEdit($id)
+	    {
+	        $this->cbLoader();
+	        $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+
+	        if (! CRUDBooster::isRead() && $this->global_privilege == false || $this->button_edit == false) {
+	            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
+	                'name' => $row->{$this->title_field},
+	                'module' => CRUDBooster::getCurrentModule()->name,
+	            ]));
+	            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+	        }
+
+	        $page_menu = Route::getCurrentRoute()->getActionName();
+	        $page_title = trans(
+																"crudbooster.edit_data_page_title",
+																[
+																	'module' => CRUDBooster::getCurrentModule()->name,
+																	'name' => $row->{$this->title_field}
+																]
+															);
+	        $command = 'edit';
+	        Session::put('current_row_id', $id);
+
+	        return view('qlik_items.form', compact('id', 'row', 'page_menu', 'page_title', 'command'));
+	    }
 	}

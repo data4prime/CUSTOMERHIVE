@@ -4,7 +4,7 @@
 <div class="box">
   <h4 class="qi_subtitle">{{ $subtitle }}</h4>
   <div class="qi_iframe_container">
-      <iframe class="qi_iframe" src="{{ $item_url }}" style="border:none;width:100%;height:100%;"></iframe>
+      <iframe class="qi_iframe" src="{{ $item_url }}" style="border:none;"></iframe>
   </div>
 </div>
 @endsection
@@ -23,6 +23,7 @@
       icon = $('li.active i')[0].className;
     }
     $('#title_icon').addClass('fa '+ icon);
+
   })
 </script>
 @endpush
@@ -32,6 +33,26 @@
   #help_icon{
     font-size: 0.7em;
     vertical-align: top;
+  }
+  /*set iframe size*/
+  .qi_iframe{
+    width:{{ $row->frame_width }} !important;
+    height:{{ $row->frame_height }} !important;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 8px;
+    display: block;
+  }
+  .qi_iframe_container{
+    height: 94%;
+    width: 100%;
+  }
+  .box{
+    height: 100%;
+  }
+  #content_section{
+    height: 90vh;
+    width: 100%;
   }
 </style>
 @endpush
