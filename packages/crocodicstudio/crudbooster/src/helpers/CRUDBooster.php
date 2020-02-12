@@ -472,6 +472,7 @@ class CRUDBooster
                         break;
                     case 'Statistic':
                         $url = self::adminPath($menu->path);
+                        break;
                     case 'Qlik':
                         //controlla se utente corrente è abilitato a vedere oggetto
                         $menu->item_id = end(explode('/',$menu->path));
@@ -527,7 +528,7 @@ class CRUDBooster
                                 $c->item_id = end(explode('/',$c->path));
                                 $c->$allowed = GroupHelper::can_see_item($c->item_id);
                                 if(!$c->allowed){
-                                  unset($menu_active[$child_key]);
+                                  unset($child[$child_key]);
                                 }
                                 $url = self::adminPath($c->path);
                                 break;
@@ -545,7 +546,6 @@ class CRUDBooster
                 $menu->children = $child;
             }
         }
-
         return $menu_active;
     }
 
