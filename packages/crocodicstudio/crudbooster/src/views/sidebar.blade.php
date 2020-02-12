@@ -22,7 +22,6 @@
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu">
                 <li class="header">{{trans("crudbooster.menu_navigation")}}</li>
-                <!-- Optionally, you can add icons to the links -->
 
                 <?php $dashboard = CRUDBooster::sidebarDashboard();?>
                 @if($dashboard)

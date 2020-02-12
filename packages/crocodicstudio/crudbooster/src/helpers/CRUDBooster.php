@@ -445,9 +445,16 @@ class CRUDBooster
 
     public static function sidebarMenu()
     {
-        $menu_active = DB::table('cms_menus')->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '".self::myPrivilegeId()."')")->where('parent_id', 0)->where('is_active', 1)->where('is_dashboard', 0)->orderby('sorting', 'asc')->select('cms_menus.*')->get();
+        $menu_active = DB::table('cms_menus')
+          ->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '".self::myPrivilegeId()."')")
+          ->where('parent_id', 0)
+          ->where('is_active', 1)
+          ->where('is_dashboard', 0)
+          ->orderby('sorting', 'asc')
+          ->select('cms_menus.*')
+          ->get();
 
-        foreach ($menu_active as &$menu) {
+        foreach ($menu_active as $key => &$menu) {
 
             try {
                 switch ($menu->type) {
@@ -466,7 +473,12 @@ class CRUDBooster
                     case 'Statistic':
                         $url = self::adminPath($menu->path);
                     case 'Qlik':
-                        // $url = '/admin/'.($menu->path);
+                        //controlla se utente corrente è abilitato a vedere oggetto
+                        $menu->item_id = end(explode('/',$menu->path));
+                        $menu->allowed = GroupHelper::can_see_item($menu->item_id);
+                        if(!$menu->allowed){
+                          unset($menu_active[$key]);
+                        }
                         $url = self::adminPath($menu->path);
                         break;
                 }
@@ -480,10 +492,18 @@ class CRUDBooster
             $menu->url = $url;
             $menu->url_path = trim(str_replace(url('/'), '', $url), "/");
 
-            $child = DB::table('cms_menus')->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '".self::myPrivilegeId()."')")->where('is_dashboard', 0)->where('is_active', 1)->where('parent_id', $menu->id)->select('cms_menus.*')->orderby('sorting', 'asc')->get();
+            $child = DB::table('cms_menus')
+              ->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '".self::myPrivilegeId()."')")
+              ->where('is_dashboard', 0)
+              ->where('is_active', 1)
+              ->where('parent_id', $menu->id)
+              ->select('cms_menus.*')
+              ->orderby('sorting', 'asc')
+              ->get();
+
             if (count($child)) {
 
-                foreach ($child as &$c) {
+                foreach ($child as $child_key => &$c) {
 
                     try {
                         switch ($c->type) {
@@ -503,6 +523,12 @@ class CRUDBooster
                                 $url = self::adminPath($c->path);
                                 break;
                             case 'Qlik':
+                                //controlla se utente corrente è abilitato a vedere oggetto
+                                $c->item_id = end(explode('/',$c->path));
+                                $c->$allowed = GroupHelper::can_see_item($c->item_id);
+                                if(!$c->allowed){
+                                  unset($menu_active[$child_key]);
+                                }
                                 $url = self::adminPath($c->path);
                                 break;
                         }

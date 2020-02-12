@@ -35,6 +35,7 @@ class GroupHelper  {
 					return true;
 				}
 			}
+      return false;
     }
 
 		/**
