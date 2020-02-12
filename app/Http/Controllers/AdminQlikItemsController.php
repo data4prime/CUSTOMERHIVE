@@ -564,30 +564,58 @@
 				return redirect('admin/qlik_items/access/'.$item_id);
 			}
 
+			//overwrite default method
 	    public function getEdit($id)
 	    {
-	        $this->cbLoader();
-	        $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+				//load edit page
+        $this->cbLoader();
+        $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-	        if (! CRUDBooster::isRead() && $this->global_privilege == false || $this->button_edit == false) {
-	            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
-	                'name' => $row->{$this->title_field},
-	                'module' => CRUDBooster::getCurrentModule()->name,
-	            ]));
-	            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
-	        }
+        if (! CRUDBooster::isRead() && $this->global_privilege == false || $this->button_edit == false) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
+                'name' => $row->{$this->title_field},
+                'module' => CRUDBooster::getCurrentModule()->name,
+            ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
 
-	        $page_menu = Route::getCurrentRoute()->getActionName();
-	        $page_title = trans(
-																"crudbooster.edit_data_page_title",
-																[
-																	'module' => CRUDBooster::getCurrentModule()->name,
-																	'name' => $row->{$this->title_field}
-																]
-															);
-	        $command = 'edit';
-	        Session::put('current_row_id', $id);
+        $page_menu = Route::getCurrentRoute()->getActionName();
+        $page_title = trans(
+															"crudbooster.edit_data_page_title",
+															[
+																'module' => CRUDBooster::getCurrentModule()->name,
+																'name' => $row->{$this->title_field}
+															]
+														);
+        $command = 'edit';
+        Session::put('current_row_id', $id);
 
-	        return view('qlik_items.form', compact('id', 'row', 'page_menu', 'page_title', 'command'));
+        return view('qlik_items.form', compact('id', 'row', 'page_menu', 'page_title', 'command'));
+	    }
+
+			//overwrite default method
+	    public function getDetail($id)
+	    {
+				//load detail page
+        $this->cbLoader();
+        $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+
+        if (! CRUDBooster::isRead() && $this->global_privilege == false || $this->button_detail == false) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", [
+                'name' => $row->{$this->title_field},
+                'module' => CRUDBooster::getCurrentModule()->name,
+            ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
+        $module = CRUDBooster::getCurrentModule();
+
+        $page_menu = Route::getCurrentRoute()->getActionName();
+        $page_title = trans("crudbooster.detail_data_page_title", ['module' => $module->name, 'name' => $row->{$this->title_field}]);
+        $command = 'detail';
+
+        Session::put('current_row_id', $id);
+
+        return view('qlik_items.form', compact('row', 'page_menu', 'page_title', 'command', 'id'));
 	    }
 	}

@@ -17,7 +17,6 @@
             <div class="panel-heading">
                 <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! $page_title !!}</strong>
             </div>
-
             <div class="panel-body" style="padding:20px 0px 0px 0px">
                 <?php
                 $action = (@$row) ? CRUDBooster::mainpath("edit-save/$row->id") : CRUDBooster::mainpath("add-save");
