@@ -414,6 +414,7 @@
 
 			  $data = [];
 			  $data['row'] = DB::table('qlik_items')->where('id',$qlik_item_id)->first();
+				$data['page_icon'] = 'menu_icon';
 			  $data['page_title'] = $data['row']->title;
 			  $data['subtitle'] = $data['row']->subtitle;
 			  $data['description'] = $data['row']->description;
