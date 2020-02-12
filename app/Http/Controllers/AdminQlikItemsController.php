@@ -33,7 +33,7 @@
 			$this->col = [];
 			$this->col[] = ["label"=>"Title","name"=>"title"];
 			$this->col[] = ["label"=>"Subtitle","name"=>"subtitle"];
-			$this->col[] = ["label"=>"Description","name"=>"description"];
+			$this->col[] = ["label"=>"Help","name"=>"description"];
 			$this->col[] = ["label"=>"Url","name"=>"url"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
@@ -42,7 +42,7 @@
 			$this->form[] = ['label'=>'Title','name'=>'title','type'=>'text','validation'=>'required|string|min:1|max:70','width'=>'col-sm-10','placeholder'=>'Item title'];
 			$this->form[] = ['label'=>'Url','name'=>'url','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','placeholder'=>'Path to embed item'];
 			$this->form[] = ['label'=>'Subtitle','name'=>'subtitle','type'=>'text','validation'=>'string|min:1|max:70','width'=>'col-sm-10','placeholder'=>'Item subtitle'];
-			$this->form[] = ['label'=>'Description','name'=>'description','type'=>'textarea','validation'=>'string|min:1|max:200','width'=>'col-sm-10','placeholder'=>'Item description'];
+			$this->form[] = ['label'=>'Help','name'=>'description','type'=>'textarea','validation'=>'string|min:1|max:200','width'=>'col-sm-10','placeholder'=>'Item description'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
@@ -413,9 +413,10 @@
 				//end of get qlik ticket
 
 			  $data = [];
-			  $data['row'] = DB::table('qlik_items')->where('id',$qlik_item_id)->first();
-				$data['page_icon'] = 'menu_icon';
+			  $data['row'] = \App\QlikItem::find($qlik_item_id);
+				$data['page_icon'] = '';
 			  $data['page_title'] = $data['row']->title;
+				$data['help'] = $data['row']->description;
 			  $data['subtitle'] = $data['row']->subtitle;
 			  $data['description'] = $data['row']->description;
 

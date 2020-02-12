@@ -101,7 +101,7 @@
             @if($module)
                 <h1>
 
-                    <i id='title_icon' class='{!! $page_icon ? $page_icon : $module->icon !!}'></i> {!! ($page_title)?:$module->name !!} &nbsp;&nbsp;
+                    <i id='title_icon' class='{!! $page_icon ? $page_icon : $module->icon !!}'></i> {!! ($page_title)?:$module->name !!} @if($help) <i id="help_icon" class="fa fa-question-circle" title="{{ $help }}"></i> @endif &nbsp;&nbsp;
 
                     <!-- START BUTTON -->
 
