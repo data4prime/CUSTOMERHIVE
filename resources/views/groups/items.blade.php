@@ -16,7 +16,7 @@
 
       <div class="panel panel-default">
           <div class="panel-heading">
-            <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Allow item</strong>
+            <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Allow Item</strong>
           </div>
 
           <div class="panel-body" style="padding:20px 0px 0px 0px">
@@ -76,7 +76,7 @@
 <!-- List members -->
 <div class="box">
   <div class="box-header">
-    <h4>{{ $group->name }} Items</h4>
+    <h4>{{ $group->name }} Allowed Items</h4>
   </div>
   <div class="box-body table-responsive no-padding">
     <form id='form-table' method='post' action='{{CRUDBooster::mainpath("action-selected")}}'>
@@ -98,7 +98,7 @@
             <td>{{$item->title}}</td>
             <td>{{$item->subtitle}}</td>
             <td>{{$item->url}}</td>
-            <td>{{$member->description}}</td>
+            <td>{{$item->description}}</td>
             <td>
               @if(CRUDBooster::isDelete() && $button_edit)
               <a title='Remove' class='btn btn-danger btn-sm' href='{{CRUDBooster::mainpath("$group_id/remove_item/$item->id")}}'><i class="fa fa-trash"></i></a>

@@ -416,7 +416,7 @@
 			  $data['group'] = \App\Group::find($group_id);
 				$data['group_id'] = $group_id;
 
-				$data['page_title'] = $data['group']->name.' allowed items';
+				$data['page_title'] = $data['group']->name.' Allowed Items';
 
 				//add member form
 				$data['forms'] = [];

@@ -14,13 +14,48 @@
 
   //bypass CBController getModalData per custom query
   $result = DB::table('qlik_items')
+                //escludi dalla lista gli item su cui questo gruppo è già autorizzato
                 ->whereNotExists(function ($query) {
-                $query->select(DB::raw(1))
-                      ->from('items_allowed')
-                      ->whereRaw('items_allowed.group_id = '.Request::get('select_to').' AND items_allowed.item_id = qlik_items.id');
-            })
-            ->orderby('id', 'asc')
-            ->get();
+                  $query->select(DB::raw(1))
+                        ->from('items_allowed')
+                        ->whereRaw('items_allowed.group_id = '.Request::get('select_to').' AND items_allowed.item_id = qlik_items.id');
+                  })
+                //mostra solo gli item che l'utente corrente può vedere
+                ->join('items_allowed','qlik_items.id','=','items_allowed.item_id')
+                ->join('users_groups','users_groups.group_id','=','items_allowed.group_id')
+                ->where('users_groups.user_id','=',CRUDBooster::myId())
+                ->orderby('qlik_items.id', 'asc')
+                ->select('qlik_items.id', 'qlik_items.title', 'qlik_items.subtitle')
+                ->get();
+    if(CRUDBooster::isSuperadmin()){
+      $result = DB::table('qlik_items')
+                  //escludi dalla lista gli item su cui questo gruppo è già autorizzato
+                  ->whereNotExists(function ($query) {
+                    $query->select(DB::raw(1))
+                          ->from('items_allowed')
+                          ->whereRaw('items_allowed.group_id = '.Request::get('select_to').' AND items_allowed.item_id = qlik_items.id');
+                    })
+                  //mostra tutti gli item senza verificare i gruppi abilitati
+                  ->orderby('qlik_items.id', 'asc')
+                  ->select('qlik_items.id', 'qlik_items.title', 'qlik_items.subtitle')
+                  ->get();
+    }
+    else{
+      $result = DB::table('qlik_items')
+                  //escludi dalla lista gli item su cui questo gruppo è già autorizzato
+                  ->whereNotExists(function ($query) {
+                    $query->select(DB::raw(1))
+                          ->from('items_allowed')
+                          ->whereRaw('items_allowed.group_id = '.Request::get('select_to').' AND items_allowed.item_id = qlik_items.id');
+                    })
+                  //mostra solo gli item che l'utente corrente può vedere
+                  ->join('items_allowed','qlik_items.id','=','items_allowed.item_id')
+                  ->join('users_groups','users_groups.group_id','=','items_allowed.group_id')
+                  ->where('users_groups.user_id','=',CRUDBooster::myId())
+                  ->orderby('qlik_items.id', 'asc')
+                  ->select('qlik_items.id', 'qlik_items.title', 'qlik_items.subtitle')
+                  ->get();
+    }
 
 ?>
 
