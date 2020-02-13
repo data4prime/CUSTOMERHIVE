@@ -742,10 +742,12 @@ class CBController extends Controller
         $result->orderby($tablePK, 'desc');
 
         $data['result'] = $result->paginate(6);
+        $data['where'] = $where;
         $data['columns'] = $columns;
 
         // #RAMA filtro le richieste con questo attributo per riuscire a richiamare custom modal,
         // TODO fa schifo
+        $data['q'] = Request::get('q');
         switch (Request::get('type')) {
           case 'group_members_datamodal':
             return view('crudbooster::default.type_components.group_members_datamodal.browser', $data);

@@ -45,6 +45,8 @@ class CBBackend
                     return redirect()->action($menus->path);
                 } elseif ($menus->type == 'URL') {
                     return redirect($menus->path);
+                } elseif ($menus->type == 'Qlik') {
+                    return redirect('admin/'.$menus->path);
                 }
             }
         }

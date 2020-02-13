@@ -18,9 +18,21 @@
                 $query->select(DB::raw(1))
                       ->from('users_groups')
                       ->whereRaw('users_groups.user_id = '.Request::get('select_to').' AND users_groups.group_id = groups.id');
-            })
-            ->orderby('id', 'asc')
-            ->get();
+            });
+  if($q){
+    //filtra la lista in base alla ricerca fatta dall'utente
+    $result = $result->where(function ($query) use ($columns, $q) {
+                            foreach ($columns as $c => $col) {
+                              if ($c == 0) {
+                                $query->where($col, 'like', '%'.$q.'%');
+                              } else {
+                                $query->orWhere($col, 'like', '%'.$q.'%');
+                              }
+                            }
+                          });
+  }
+  $result = $result->orderby('id', 'asc')
+                    ->get();
 
 ?>
 

@@ -10,212 +10,211 @@
 	class AdminQlikItemsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
+				# START CONFIGURATION DO NOT REMOVE THIS LINE
+				$this->title_field = "title";
+				$this->limit = "20";
+				$this->orderby = "id,desc";
+				$this->global_privilege = false;
+				$this->button_table_action = true;
+				$this->button_bulk_action = true;
+				$this->button_action_style = "button_icon";
+				$this->button_add = true;
+				$this->button_edit = true;
+				$this->button_delete = true;
+				$this->button_detail = true;
+				$this->button_show = true;
+				$this->button_filter = true;
+				$this->button_import = false;
+				$this->button_export = false;
+				$this->table = "qlik_items";
+				# END CONFIGURATION DO NOT REMOVE THIS LINE
 
-			# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->title_field = "title";
-			$this->limit = "20";
-			$this->orderby = "id,desc";
-			$this->global_privilege = false;
-			$this->button_table_action = true;
-			$this->button_bulk_action = true;
-			$this->button_action_style = "button_icon";
-			$this->button_add = true;
-			$this->button_edit = true;
-			$this->button_delete = true;
-			$this->button_detail = true;
-			$this->button_show = true;
-			$this->button_filter = true;
-			$this->button_import = false;
-			$this->button_export = false;
-			$this->table = "qlik_items";
-			# END CONFIGURATION DO NOT REMOVE THIS LINE
+				# START COLUMNS DO NOT REMOVE THIS LINE
+				$this->col = [];
+				$this->col[] = ["label"=>"Title","name"=>"title"];
+				$this->col[] = ["label"=>"Subtitle","name"=>"subtitle"];
+				$this->col[] = ["label"=>"Help","name"=>"description"];
+				$this->col[] = ["label"=>"Url","name"=>"url"];
+				$this->col[] = ["label"=>"Width","name"=>"frame_width"];
+				$this->col[] = ["label"=>"Height","name"=>"frame_height"];
+				# END COLUMNS DO NOT REMOVE THIS LINE
 
-			# START COLUMNS DO NOT REMOVE THIS LINE
-			$this->col = [];
-			$this->col[] = ["label"=>"Title","name"=>"title"];
-			$this->col[] = ["label"=>"Subtitle","name"=>"subtitle"];
-			$this->col[] = ["label"=>"Help","name"=>"description"];
-			$this->col[] = ["label"=>"Url","name"=>"url"];
-			$this->col[] = ["label"=>"Width","name"=>"frame_width"];
-			$this->col[] = ["label"=>"Height","name"=>"frame_height"];
-			# END COLUMNS DO NOT REMOVE THIS LINE
+				# START FORM DO NOT REMOVE THIS LINE
+				$this->form = [];
+				$this->form[] = ['label'=>'Title','name'=>'title','type'=>'text','validation'=>'required|string|min:1|max:70','width'=>'col-sm-10','placeholder'=>'Item title'];
+				$this->form[] = ['label'=>'Url','name'=>'url','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','placeholder'=>'Path to embed item'];
+				$this->form[] = ['label'=>'Subtitle','name'=>'subtitle','type'=>'text','validation'=>'string|min:1|max:70','width'=>'col-sm-10','placeholder'=>'Item subtitle'];
+				$this->form[] = ['label'=>'Help','name'=>'description','type'=>'textarea','validation'=>'string|min:1|max:200','width'=>'col-sm-10','placeholder'=>'Item description'];
+				$this->form[] = ['label'=>'Full Page','name'=>'frame_full_page','type'=>'checkbox','width'=>'col-sm-1','dataenum'=>' '];
+				$this->form[] = ['label'=>'Width','name'=>'frame_width','type'=>'number','validation'=>'required|int|min:1|max:100','width'=>'col-sm-1','value'=>'100'];
+				$this->form[] = ['label'=>'','name'=>'frame_width_unit','type'=>'select','validation'=>'','width'=>'col-sm-1','dataenum'=>'px','default'=>'%'];
+				$this->form[] = ['label'=>'Height','name'=>'frame_height','type'=>'number','validation'=>'required|int|min:1|max:100','width'=>'col-sm-1','value'=>'100'];
+				$this->form[] = ['label'=>'','name'=>'frame_height_unit','type'=>'select','validation'=>'','width'=>'col-sm-1','dataenum'=>'px','default'=>'%'];
+				# END FORM DO NOT REMOVE THIS LINE
 
-			# START FORM DO NOT REMOVE THIS LINE
-			$this->form = [];
-			$this->form[] = ['label'=>'Title','name'=>'title','type'=>'text','validation'=>'required|string|min:1|max:70','width'=>'col-sm-10','placeholder'=>'Item title'];
-			$this->form[] = ['label'=>'Url','name'=>'url','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','placeholder'=>'Path to embed item'];
-			$this->form[] = ['label'=>'Subtitle','name'=>'subtitle','type'=>'text','validation'=>'string|min:1|max:70','width'=>'col-sm-10','placeholder'=>'Item subtitle'];
-			$this->form[] = ['label'=>'Help','name'=>'description','type'=>'textarea','validation'=>'string|min:1|max:200','width'=>'col-sm-10','placeholder'=>'Item description'];
-			$this->form[] = ['label'=>'Full Page','name'=>'frame_full_page','type'=>'checkbox','width'=>'col-sm-1','dataenum'=>' '];
-			$this->form[] = ['label'=>'Width','name'=>'frame_width','type'=>'number','validation'=>'required|int|min:1|max:100','width'=>'col-sm-1','value'=>'100'];
-			$this->form[] = ['label'=>'','name'=>'frame_width_unit','type'=>'select','validation'=>'','width'=>'col-sm-1','dataenum'=>'px','default'=>'%'];
-			$this->form[] = ['label'=>'Height','name'=>'frame_height','type'=>'number','validation'=>'required|int|min:1|max:100','width'=>'col-sm-1','value'=>'100'];
-			$this->form[] = ['label'=>'','name'=>'frame_height_unit','type'=>'select','validation'=>'','width'=>'col-sm-1','dataenum'=>'px','default'=>'%'];
-			# END FORM DO NOT REMOVE THIS LINE
+				# OLD START FORM
+				//$this->form = [];
+				//$this->form[] = ['label'=>'Title','name'=>'title','type'=>'text','validation'=>'required|string|min:3|max:70','width'=>'col-sm-10','placeholder'=>'You can only enter the letter only'];
+				//$this->form[] = ['label'=>'Description','name'=>'description','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+				# OLD END FORM
 
-			# OLD START FORM
-			//$this->form = [];
-			//$this->form[] = ['label'=>'Title','name'=>'title','type'=>'text','validation'=>'required|string|min:3|max:70','width'=>'col-sm-10','placeholder'=>'You can only enter the letter only'];
-			//$this->form[] = ['label'=>'Description','name'=>'description','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			# OLD END FORM
-
-			/*
-	        | ----------------------------------------------------------------------
-	        | Sub Module
-	        | ----------------------------------------------------------------------
-			| @label          = Label of action
-			| @path           = Path of sub module
-			| @foreign_key 	  = foreign key of sub table/module
-			| @button_color   = Bootstrap Class (primary,success,warning,danger)
-			| @button_icon    = Font Awesome Class
-			| @parent_columns = Sparate with comma, e.g : name,created_at
-	        |
-	        */
-	        $this->sub_module = array();
-
-
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add More Action Button / Menu
-	        | ----------------------------------------------------------------------
-	        | @label       = Label of action
-	        | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
-	        | @icon        = Font awesome class icon. e.g : fa fa-bars
-	        | @color 	   = Default is primary. (primary, warning, succecss, info)
-	        | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
-	        |
-	        */
-	        $this->addaction = array();
-					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('content/[id]'),'icon'=>'fa fa-check','color'=>'info','title'=>'View item'];
-					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('access/[id]'),'icon'=>'fa fa-users','color'=>'warning','title'=>'Set auth'];
+				/*
+        | ----------------------------------------------------------------------
+        | Sub Module
+        | ----------------------------------------------------------------------
+				| @label          = Label of action
+				| @path           = Path of sub module
+				| @foreign_key 	  = foreign key of sub table/module
+				| @button_color   = Bootstrap Class (primary,success,warning,danger)
+				| @button_icon    = Font Awesome Class
+				| @parent_columns = Sparate with comma, e.g : name,created_at
+        |
+        */
+        $this->sub_module = array();
 
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add More Button Selected
-	        | ----------------------------------------------------------------------
-	        | @label       = Label of action
-	        | @icon 	   = Icon from fontawesome
-	        | @name 	   = Name of button
-	        | Then about the action, you should code at actionButtonSelected method
-	        |
-	        */
-	        $this->button_selected = array();
+        /*
+        | ----------------------------------------------------------------------
+        | Add More Action Button / Menu
+        | ----------------------------------------------------------------------
+        | @label       = Label of action
+        | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
+        | @icon        = Font awesome class icon. e.g : fa fa-bars
+        | @color 	   = Default is primary. (primary, warning, succecss, info)
+        | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
+        |
+        */
+        $this->addaction = array();
+				$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('content/[id]'),'icon'=>'fa fa-check','color'=>'info','title'=>'View item'];
+				$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('access/[id]'),'icon'=>'fa fa-users','color'=>'warning','title'=>'Set auth'];
 
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add alert message to this module at overheader
-	        | ----------------------------------------------------------------------
-	        | @message = Text of message
-	        | @type    = warning,success,danger,info
-	        |
-	        */
-	        $this->alert        = array();
+        /*
+        | ----------------------------------------------------------------------
+        | Add More Button Selected
+        | ----------------------------------------------------------------------
+        | @label       = Label of action
+        | @icon 	   = Icon from fontawesome
+        | @name 	   = Name of button
+        | Then about the action, you should code at actionButtonSelected method
+        |
+        */
+        $this->button_selected = array();
 
 
-
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add more button to header button
-	        | ----------------------------------------------------------------------
-	        | @label = Name of button
-	        | @url   = URL Target
-	        | @icon  = Icon from Awesome.
-	        |
-	        */
-	        $this->index_button = array();
+        /*
+        | ----------------------------------------------------------------------
+        | Add alert message to this module at overheader
+        | ----------------------------------------------------------------------
+        | @message = Text of message
+        | @type    = warning,success,danger,info
+        |
+        */
+        $this->alert        = array();
 
 
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Customize Table Row Color
-	        | ----------------------------------------------------------------------
-	        | @condition = If condition. You may use field alias. E.g : [id] == 1
-	        | @color = Default is none. You can use bootstrap success,info,warning,danger,primary.
-	        |
-	        */
-	        $this->table_row_color = array();
-
-
-	        /*
-	        | ----------------------------------------------------------------------
-	        | You may use this below array to add statistic at dashboard
-	        | ----------------------------------------------------------------------
-	        | @label, @count, @icon, @color
-	        |
-	        */
-	        $this->index_statistic = array();
+        /*
+        | ----------------------------------------------------------------------
+        | Add more button to header button
+        | ----------------------------------------------------------------------
+        | @label = Name of button
+        | @url   = URL Target
+        | @icon  = Icon from Awesome.
+        |
+        */
+        $this->index_button = array();
 
 
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add javascript at body
-	        | ----------------------------------------------------------------------
-	        | javascript code in the variable
-	        | $this->script_js = "function() { ... }";
-	        |
-	        */
-	        $this->script_js =
-					  "
-						function checkFullPage(){
-							if(
-								$('#frame_width').val()=='100' &&
-								$('#frame_height').val()=='100' &&
-								$('#frame_width_unit').children('option:selected')[0].label == '%' &&
-								$('#frame_height_unit').children('option:selected')[0].label == '%'
-							){
-								$('input[name^=frame_full_page]').prop('checked', true);
-							}
-							else{
-								$('input[name^=frame_full_page]').prop('checked', false);
-							}
+        /*
+        | ----------------------------------------------------------------------
+        | Customize Table Row Color
+        | ----------------------------------------------------------------------
+        | @condition = If condition. You may use field alias. E.g : [id] == 1
+        | @color = Default is none. You can use bootstrap success,info,warning,danger,primary.
+        |
+        */
+        $this->table_row_color = array();
+
+
+        /*
+        | ----------------------------------------------------------------------
+        | You may use this below array to add statistic at dashboard
+        | ----------------------------------------------------------------------
+        | @label, @count, @icon, @color
+        |
+        */
+        $this->index_statistic = array();
+
+
+
+        /*
+        | ----------------------------------------------------------------------
+        | Add javascript at body
+        | ----------------------------------------------------------------------
+        | javascript code in the variable
+        | $this->script_js = "function() { ... }";
+        |
+        */
+        $this->script_js =
+				  "
+					function checkFullPage(){
+						if(
+							$('#frame_width').val()=='100' &&
+							$('#frame_height').val()=='100' &&
+							$('#frame_width_unit').children('option:selected')[0].label == '%' &&
+							$('#frame_height_unit').children('option:selected')[0].label == '%'
+						){
+							$('input[name^=frame_full_page]').prop('checked', true);
 						}
-
-						function setFullPage(){
-							console.log();
-							if($('input[name^=frame_full_page]').prop('checked')){
-								$('#frame_width').val(100);
-								$('#frame_width_unit option').filter(function() {
-								    return ($(this).text() == '%');
-								}).prop('selected', true);
-								$('#frame_height').val(100);
-								$('#frame_height_unit option').filter(function() {
-								    return ($(this).text() == '%');
-								}).prop('selected', true);
-							}
+						else{
+							$('input[name^=frame_full_page]').prop('checked', false);
 						}
+					}
 
-						$(function() {
-							//set iframe size
-					    // $('.qi_iframe').css('height', $(window).height()+'px').css('width', '100%');
+					function setFullPage(){
+						console.log();
+						if($('input[name^=frame_full_page]').prop('checked')){
+							$('#frame_width').val(100);
+							$('#frame_width_unit option').filter(function() {
+							    return ($(this).text() == '%');
+							}).prop('selected', true);
+							$('#frame_height').val(100);
+							$('#frame_height_unit option').filter(function() {
+							    return ($(this).text() == '%');
+							}).prop('selected', true);
+						}
+					}
 
-							// sposta scelta unità di misura della width a fianco della dimensione
-							$('#form-group-frame_width_unit label').remove();
-							var unit_select = $('#form-group-frame_width_unit').html();
-							$('#form-group-frame_width').append(unit_select);
-							var unit_select = $('#form-group-frame_width_unit').remove();
+					$(function() {
+						//set iframe size
+				    // $('.qi_iframe').css('height', $(window).height()+'px').css('width', '100%');
 
-							// sposta scelta unità di misura della height a fianco della dimensione
-							$('#form-group-frame_height_unit label').remove();
-							var unit_select = $('#form-group-frame_height_unit').html();
-							$('#form-group-frame_height').append(unit_select);
-							var unit_select = $('#form-group-frame_height_unit').remove();
+						// sposta scelta unità di misura della width a fianco della dimensione
+						$('#form-group-frame_width_unit label').remove();
+						var unit_select = $('#form-group-frame_width_unit').html();
+						$('#form-group-frame_width').append(unit_select);
+						var unit_select = $('#form-group-frame_width_unit').remove();
 
-							//metti spunta automatica su checkbox se width 100% e height 100%
-							checkFullPage();
-							$('#frame_width').change(function () {checkFullPage()});
-							$('#frame_width_unit').change(function () {checkFullPage()});
-							$('#frame_height').change(function () {checkFullPage()});
-							$('#frame_height_unit').change(function () {checkFullPage()});
-							//setta 100% 100% se spunti Full Page checkbox
-							$('input[name^=frame_full_page]').change(function () {setFullPage()});
-					  });";
+						// sposta scelta unità di misura della height a fianco della dimensione
+						$('#form-group-frame_height_unit label').remove();
+						var unit_select = $('#form-group-frame_height_unit').html();
+						$('#form-group-frame_height').append(unit_select);
+						var unit_select = $('#form-group-frame_height_unit').remove();
+
+						//metti spunta automatica su checkbox se width 100% e height 100%
+						checkFullPage();
+						$('#frame_width').change(function () {checkFullPage()});
+						$('#frame_width_unit').change(function () {checkFullPage()});
+						$('#frame_height').change(function () {checkFullPage()});
+						$('#frame_height_unit').change(function () {checkFullPage()});
+						//setta 100% 100% se spunti Full Page checkbox
+						$('input[name^=frame_full_page]').change(function () {setFullPage()});
+				  });";
 
 
-            /*
+          /*
 	        | ----------------------------------------------------------------------
 	        | Include HTML Code before index table
 	        | ----------------------------------------------------------------------

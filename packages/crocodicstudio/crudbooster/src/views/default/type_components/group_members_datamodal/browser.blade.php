@@ -12,16 +12,27 @@
 
 <?php
 
-  //bypass CBController getModalData per custom query
-  $result = DB::table('cms_users')
-                ->whereNotExists(function ($query) {
+//bypass CBController getModalData per custom query
+$result = DB::table('cms_users')
+              ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
-                      ->from('users_groups')
-                      ->whereRaw('users_groups.group_id = '.Request::get('select_to').' AND users_groups.user_id = cms_users.id');
-            })
-            ->orderby('id', 'asc')
-            ->get();
-
+                ->from('users_groups')
+                ->whereRaw('users_groups.group_id = '.Request::get('select_to').' AND users_groups.user_id = cms_users.id');
+              });
+if($q){
+  //filtra la lista in base alla ricerca fatta dall'utente
+  $result = $result->where(function ($query) use ($columns, $q) {
+                            foreach ($columns as $c => $col) {
+                              if ($c == 0) {
+                                $query->where($col, 'like', '%'.$q.'%');
+                              } else {
+                                $query->orWhere($col, 'like', '%'.$q.'%');
+                              }
+                            }
+                          });
+}
+$result = $result->orderby('id', 'asc')
+                  ->get();
 ?>
 
 <?php
@@ -34,7 +45,7 @@ if (count($coloms_alias) < 2) {
 <form method='get' action="">
     {!! CRUDBooster::getUrlParameters(['q']) !!}
     <input type="text" placeholder="{{trans('crudbooster.datamodal_search_and_enter')}}" name="q" title="{{trans('crudbooster.datamodal_enter_to_search')}}"
-           value="{{Request::get('q')}}" class="form-control">
+           value="{{$q}}" class="form-control">
 </form>
 
 <table id='table_dashboard' class='table table-striped table-bordered table-condensed' style="margin-bottom: 0px">

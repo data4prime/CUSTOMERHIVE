@@ -434,7 +434,7 @@ class CRUDBooster
                 $url = self::adminPath($menu->path);
                 break;
             case 'Qlik':
-                $url = self::adminPath($c->path);
+                $url = self::adminPath($menu->path);
                 break;
         }
 
