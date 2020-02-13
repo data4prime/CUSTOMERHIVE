@@ -85,7 +85,7 @@
         |
         */
         $this->addaction = array();
-				$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('content/[id]'),'icon'=>'fa fa-check','color'=>'info','title'=>'View item'];
+				$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('content/[id]'),'icon'=>'fa fa-search','color'=>'info','title'=>'View item'];
 				$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('access/[id]'),'icon'=>'fa fa-users','color'=>'warning','title'=>'Set auth'];
 
 
