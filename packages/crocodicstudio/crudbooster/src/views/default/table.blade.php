@@ -95,7 +95,7 @@
 
             @if($button_table_action)
                 @if(CRUDBooster::isUpdate() || CRUDBooster::isDelete() || CRUDBooster::isRead())
-                    <th width='{{$button_action_width?:"auto"}}' style="text-align:right">{{trans("crudbooster.action_label")}}</th>
+                    <th width='{{$button_action_width?:"auto"}}' style="text-align:center">{{trans("crudbooster.action_label")}}</th>
                 @endif
             @endif
         </tr>

@@ -34,7 +34,7 @@
 				$this->col[] = ["label"=>"Title","name"=>"title"];
 				$this->col[] = ["label"=>"Subtitle","name"=>"subtitle"];
 				$this->col[] = ["label"=>"Help","name"=>"description"];
-				$this->col[] = ["label"=>"Url","name"=>"url"];
+				// $this->col[] = ["label"=>"Url","name"=>"url"];
 				$this->col[] = ["label"=>"Width","name"=>"frame_width"];
 				$this->col[] = ["label"=>"Height","name"=>"frame_height"];
 				# END COLUMNS DO NOT REMOVE THIS LINE
@@ -261,6 +261,12 @@
 	        $this->style_css = "
 					.box{
 						padding:8px
+					}
+					#table_dashboard a.btn-detail{
+						display:none;
+					}
+					#table_dashboard tbody tr td:last-child .button_action{
+						text-align:center !important;
 					}
 					";
 
