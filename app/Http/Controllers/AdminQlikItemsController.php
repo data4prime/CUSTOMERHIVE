@@ -46,9 +46,9 @@
 				$this->form[] = ['label'=>'Subtitle','name'=>'subtitle','type'=>'text','validation'=>'string|min:1|max:70','width'=>'col-sm-10','placeholder'=>'Item subtitle'];
 				$this->form[] = ['label'=>'Help','name'=>'description','type'=>'textarea','validation'=>'string|min:1|max:200','width'=>'col-sm-10','placeholder'=>'Item description'];
 				$this->form[] = ['label'=>'Full Page','name'=>'frame_full_page','type'=>'checkbox','width'=>'col-sm-1','dataenum'=>' '];
-				$this->form[] = ['label'=>'Width','name'=>'frame_width','type'=>'number','validation'=>'required|int|min:1|max:100','width'=>'col-sm-1','value'=>'100'];
+				$this->form[] = ['label'=>'Width','name'=>'frame_width','type'=>'number','validation'=>'required|int|min:1|max:10000','width'=>'col-sm-1','value'=>'100'];
 				$this->form[] = ['label'=>'','name'=>'frame_width_unit','type'=>'select','validation'=>'','width'=>'col-sm-1','dataenum'=>'px','default'=>'%'];
-				$this->form[] = ['label'=>'Height','name'=>'frame_height','type'=>'number','validation'=>'required|int|min:1|max:100','width'=>'col-sm-1','value'=>'100'];
+				$this->form[] = ['label'=>'Height','name'=>'frame_height','type'=>'number','validation'=>'required|int|min:1|max:10000','width'=>'col-sm-1','value'=>'100'];
 				$this->form[] = ['label'=>'','name'=>'frame_height_unit','type'=>'select','validation'=>'','width'=>'col-sm-1','dataenum'=>'px','default'=>'%'];
 				# END FORM DO NOT REMOVE THIS LINE
 
