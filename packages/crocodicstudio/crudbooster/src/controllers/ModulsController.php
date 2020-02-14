@@ -70,7 +70,7 @@ class ModulsController extends CBController
  				$('#table_name').change(function() {
 					var v = $(this).val();
 					$('#path').val(v);
-				})	
+				})
  			})
  			";
 
@@ -184,6 +184,8 @@ class ModulsController extends CBController
     function hook_query_index(&$query)
     {
         $query->where('is_protected', 0);
+        $query->where('path','!=', 'groups');
+        $query->where('path','!=', 'qlik_items');
         $query->whereNotIn('cms_moduls.controller', ['AdminCmsUsersController']);
     }
 
