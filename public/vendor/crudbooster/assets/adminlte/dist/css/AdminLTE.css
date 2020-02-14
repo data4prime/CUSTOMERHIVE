@@ -22,7 +22,7 @@ body {
   font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 400;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 /* Layout */
 .wrapper {
@@ -190,7 +190,8 @@ a:focus {
  * ----------------------
  */
 .main-header {
-  position: relative;
+  position: fixed;
+  width:100%;
   max-height: 100px;
   z-index: 1030;
 }
