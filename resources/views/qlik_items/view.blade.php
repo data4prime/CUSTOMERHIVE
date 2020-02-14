@@ -51,7 +51,7 @@
     height: 100%;
   }
   #content_section{
-    height: 90vh;
+    height: calc(100vh - 50px - 51px - 42px);
     width: 100%;
   }
 </style>
