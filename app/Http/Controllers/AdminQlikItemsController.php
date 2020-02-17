@@ -211,6 +211,7 @@
 						$('#frame_height_unit').change(function () {checkFullPage()});
 						//setta 100% 100% se spunti Full Page checkbox
 						$('input[name^=frame_full_page]').change(function () {setFullPage()});
+
 				  });";
 
 
@@ -499,7 +500,7 @@
 			  $this->cbView('qlik_items.view',$data);
 			}
 
-			public function access($item_id){
+			public function access($item_id, $alert_id = null){
 				//check auth
 			  if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
@@ -511,6 +512,14 @@
 																							->get();
 				$data['page_title'] = 'Authorize Access';
 
+				//prendo $_GET &alert=
+				if(!empty($alert_id)){
+					//se è alert=1
+					if($alert_id=='1'){
+						//mostra messaggio di warning per tasto add premuto senza valori required
+						$data['alerts'][] = ['message'=>'<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...','type'=>'warning'];
+					}
+				}
 				//add member form
 				$data['forms'] = [];
 				$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'item_access_datamodal','width'=>'col-sm-6','datamodal_table'=>'groups','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'Name','datamodal_select_to'=>$item_id,'required'=>true];
@@ -531,6 +540,9 @@
 				$return_url = $_POST['return_url'];
 				$ref_mainpath = $_POST['ref_mainpath'];
 
+			  if(empty($group_id)) {
+					return redirect($return_url.'/alert/1');
+			  }
 				//check if user is already in group
 				$access = \App\ItemsAllowed::where('item_id',$item_id)
 																		->where('group_id',$group_id)

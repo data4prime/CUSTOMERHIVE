@@ -323,7 +323,7 @@
 
 	    }
 
-			public function members($group_id){
+			public function members($group_id, $alert_id = null){
 				//check auth
 			  if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
@@ -339,13 +339,21 @@
 
 			  $data['group'] = \App\Group::find($group_id);
 				$data['group_id'] = $group_id;
+				//prendo $_GET &alert=
+				if(!empty($alert_id)){
+					//se è alert=1
+					if($alert_id=='1'){
+						//mostra messaggio di warning per tasto add premuto senza valori required
+						$data['alerts'][] = ['message'=>'<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...','type'=>'warning'];
+					}
+				}
 
 				$data['page_title'] = $data['group']->name.' members';
 
 				//add member form
 				$data['forms'] = [];
 				$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'group_members_datamodal','width'=>'col-sm-6','datamodal_table'=>'cms_users','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'Name','datamodal_select_to'=>$group_id,'required'=>true];
-				$data['forms'][] = ['label'=>'Email','name'=>'email','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-6','placeholder'=>'User email','readonly'=>true];
+				$data['forms'][] = ['label'=>'Email','name'=>'email','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-6','placeholder'=>'User email','readonly'=>true,'required'=>true];
 				$data['action'] = CRUDBooster::mainpath($group_id."/add_member");
 				$data['return_url'] = CRUDBooster::mainpath('members/'.$group_id);
 
@@ -358,9 +366,14 @@
 			  if(!CRUDBooster::isUpdate() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
+
 				$user_id = $_POST['name'];
 				$return_url = $_POST['return_url'];
 				$ref_mainpath = $_POST['ref_mainpath'];
+
+			  if(empty($user_id)) {
+					return redirect($return_url.'/alert/1');
+			  }
 
 				//check if user is already in group
 				$member = \App\UsersGroup::where('group_id',$group_id)
@@ -401,7 +414,7 @@
 				return redirect('admin/groups/members/'.$group_id);
 			}
 
-			public function items($group_id){
+			public function items($group_id, $alert_id = null){
 				//check auth
 			  if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
@@ -416,6 +429,14 @@
 			  $data['group'] = \App\Group::find($group_id);
 				$data['group_id'] = $group_id;
 
+				//prendo $_GET &alert=
+				if(!empty($alert_id)){
+					//se è alert=1
+					if($alert_id=='1'){
+						//mostra messaggio di warning per tasto add premuto senza valori required
+						$data['alerts'][] = ['message'=>'<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...','type'=>'warning'];
+					}
+				}
 				$data['page_title'] = $data['group']->name.' Allowed Items';
 
 				//add member form
@@ -442,6 +463,10 @@
 				$item = \App\ItemsAllowed::where('group_id',$group_id)
 																		->where('item_id',$item_id)
 																		->count();
+
+			  if(empty($item_id)) {
+					return redirect($return_url.'/alert/1');
+			  }
 
 				if($item == 0){
 					$add_item = new \App\ItemsAllowed;

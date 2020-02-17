@@ -172,7 +172,8 @@
 
             @if(@$alerts)
                 @foreach(@$alerts as $alert)
-                    <div class='callout callout-{{$alert["type"]}}'>
+                    <div class='alert alert-{{$alert["type"]}} alert-dismissable'>
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                         {!! $alert['message'] !!}
                     </div>
                 @endforeach

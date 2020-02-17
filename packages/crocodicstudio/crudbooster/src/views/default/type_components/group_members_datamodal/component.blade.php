@@ -14,7 +14,7 @@
         ?>
 
         <div id='{{$name}}' class="input-group">
-            <input type="hidden" name="{{$name}}" class="input-id" value="{{$value}}">
+            <input type="hidden" name="{{$name}}" class="input-id" value="{{$value}}" {{$required?"required":""}}>
             <input type="text" class="form-control input-label {{$required?"required":""}}" {{$required?"required":""}} value="{{$datamodal_value}}" readonly>
             <span class="input-group-btn">
         <button class="btn btn-primary" onclick="showModal{{$name}}()" type="button"><i class='fa fa-search'></i> {{trans('crudbooster.datamodal_browse_data')}}</button>
