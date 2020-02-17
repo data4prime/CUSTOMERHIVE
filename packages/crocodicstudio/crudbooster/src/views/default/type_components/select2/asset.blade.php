@@ -21,5 +21,6 @@
     </style>
 @endpush
 @push('bottom')
-    <script src='<?php echo asset("vendor/crudbooster/assets/select2/dist/js/select2.full.min.js")?>'></script>
+    <!-- <script src='<?php echo asset("vendor/crudbooster/assets/select2/dist/js/select2.full.min.js")?>'></script> -->
+    <script src='<?php echo asset("vendor/crudbooster/assets/select2/dist/js/select2.full.js")?>'></script>
 @endpush

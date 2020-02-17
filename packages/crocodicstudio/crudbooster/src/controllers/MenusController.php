@@ -55,11 +55,12 @@ class MenusController extends CBController
         }
 
         $this->script_js = "
-			$(function() {
+			$( document ).ready(function() {
 				var current_id = '$id';
 				var current_type = '$row->type';
-				var type_menu = $('input[name=type]').val();
+				var type_menu = $('input[name=type][checked]').val();
 				type_menu = (current_type)?current_type:type_menu;
+				console.log(type_menu);
 				if(type_menu == 'Module') {
 					$('#form-group-module_slug').show();
 					$('#qlik_slug').prop('required',false);
@@ -106,7 +107,7 @@ class MenusController extends CBController
 	                  templateSelection: format
 	              });
 
-				$('input[name=type]').click(function() {
+				$('input[name=type]').change(function() {
 					var default_placeholder_path = 'NameController@methodName';
 					var n = $(this).val();
 					var isCheck = $(this).prop('checked');
@@ -294,19 +295,37 @@ class MenusController extends CBController
         $id_cms_privileges = Request::get('id_cms_privileges');
         $id_cms_privileges = ($id_cms_privileges) ?: CRUDBooster::myPrivilegeId();
 
-        $menu_active = DB::table('cms_menus')->where('parent_id', 0)->where('is_active', 1)->orderby('sorting', 'asc')->get();
+        $menu_active = DB::table('cms_menus')
+                            ->where('parent_id', 0)
+                            ->where('is_active', 1)
+                            ->orderby('sorting', 'asc')
+                            ->get();
 
         foreach ($menu_active as &$menu) {
-            $child = DB::table('cms_menus')->where('is_active', 1)->where('parent_id', $menu->id)->orderby('sorting', 'asc')->get();
+            $child = DB::table('cms_menus')
+                        ->where('is_active', 1)
+                        ->where('parent_id', $menu->id)
+                        ->orderby('sorting', 'asc')
+                        ->get();
+
             if (count($child)) {
                 $menu->children = $child;
             }
         }
 
-        $menu_inactive = DB::table('cms_menus')->where('parent_id', 0)->where('is_active', 0)->orderby('sorting', 'asc')->get();
+        $menu_inactive = DB::table('cms_menus')
+                            ->where('parent_id', 0)
+                            ->where('is_active', 0)
+                            ->orderby('sorting', 'asc')
+                            ->get();
 
         foreach ($menu_inactive as &$menu) {
-            $child = DB::table('cms_menus')->where('is_active', 1)->where('parent_id', $menu->id)->orderby('sorting', 'asc')->get();
+            $child = DB::table('cms_menus')
+                        ->where('is_active', 1)
+                        ->where('parent_id', $menu->id)
+                        ->orderby('sorting', 'asc')
+                        ->get();
+
             if (count($child)) {
                 $menu->children = $child;
             }
@@ -378,7 +397,8 @@ class MenusController extends CBController
 
     public function hook_after_delete($id)
     {
-        DB::table('cms_menus')->where('parent_id', $id)->delete();
+      DB::table('cms_menus_privileges')->where('id_cms_menus', $id)->delete();
+      DB::table('cms_menus')->where('parent_id', $id)->delete();
     }
 
     public function postSaveMenu()

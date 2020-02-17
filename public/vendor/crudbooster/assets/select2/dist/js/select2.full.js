@@ -1671,7 +1671,7 @@ S2.define('select2/selection/placeholder',[
     $placeholder.html(this.display(placeholder));
     $placeholder.addClass('select2-selection__placeholder')
                 .removeClass('select2-selection__choice');
-
+                console.log('test');
     return $placeholder;
   };
 

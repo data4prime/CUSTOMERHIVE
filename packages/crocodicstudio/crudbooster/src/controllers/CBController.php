@@ -1217,13 +1217,12 @@ class CBController extends Controller
                     $foreignKey2 = CRUDBooster::getForeignKey($datatable, $ro['relationship_table']);
                     $foreignKey = CRUDBooster::getForeignKey($this->table, $ro['relationship_table']);
                     DB::table($ro['relationship_table'])->where($foreignKey, $id)->delete();
-
                     if ($inputdata) {
                         foreach ($inputdata as $input_id) {
-                            $relationship_table_pk = CB::pk($row['relationship_table']);
+                            $relationship_table_pk = CB::pk($ro['relationship_table']);
                             DB::table($ro['relationship_table'])->insert([
 //                                 $relationship_table_pk => CRUDBooster::newId($ro['relationship_table']),
-                                $foreignKey => $id,
+                                $foreignKey => $lastInsertId,
                                 $foreignKey2 => $input_id,
                             ]);
                         }
