@@ -5,6 +5,7 @@
 	use DB;
 	use CRUDBooster;
 	use GroupHelper;
+	use QlikHelper;
 	use Illuminate\Support\Facades\Route;
 
 	class AdminQlikItemsController extends \crocodicstudio\crudbooster\controllers\CBController {
@@ -259,17 +260,7 @@
 	        | $this->style_css = ".style{....}";
 	        |
 	        */
-	        $this->style_css = "
-					.box{
-						padding:8px
-					}
-					#table_dashboard a.btn-detail{
-						display:none;
-					}
-					#table_dashboard tbody tr td:last-child .button_action{
-						text-align:center !important;
-					}
-					";
+	        $this->style_css = "";
 
 
 
@@ -282,7 +273,7 @@
 	        |
 	        */
 	        $this->load_css = array();
-
+					$this->load_css[] = asset("css/custom.css");
 
 	    }
 
@@ -421,66 +412,8 @@
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
 
-				//produce qlik ticket
-				//get user data
-				$current_user_id = CRUDBooster::myId();
-				$current_user = \App\User::find($current_user_id);
-
-				//UserId
-				$qlik_login = $current_user->qlik_login;
-				//User Directory
-				$user_directory = $current_user->user_directory;
-
-				if(empty($qlik_login) OR empty($user_directory)){
-					$data['error'] = 'User credentials missing. Ask an admin to set your qlik id and user directory';
-				  $this->cbView('qlik_items.no_credentials',$data);
-					exit;
-				}
-
-				//base path to call
-				$QRSurl = 'https://platformq.dasycloud.com:4243';
-				$xrfkey = "0123456789abcdef";
-				//Path to call (with xrfkey parameter added)
-				$endpoint = "/qps/ticket?xrfkey=".$xrfkey;
-				//Location of QRS client certificate and certificate key, assuming key is included separately
-				$base_path = '/var/www/customerhive/storage/app/';
-				$QRSCertfile = $base_path."certificates/client.pem";
-				$QRSCertkeyfile = $base_path."certificates/client_key.pem";
-				// #RAMA no password
-				// $QRSCertkeyfilePassword = "Passw0rd!";
-
-				//Set up the required headers
-				$headers = array(
-					'Accept: application/json',
-					'Content-Type: application/json',
-					'x-qlik-xrfkey: '.$xrfkey,
-					'X-Qlik-User: UserDirectory='.$user_directory.';UserId='.$qlik_login
-				);
-
-				//Create Connection using Curl
-				$ch = curl_init($QRSurl.$endpoint);
-
-				curl_setopt($ch, CURLOPT_VERBOSE, true);
-				// curl_setopt($ch, CURLOPT_POST, true);
-				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-				curl_setopt($ch, CURLOPT_POSTFIELDS, '{
-					"UserId":"'.$qlik_login.'",
-					"UserDirectory":"'.$user_directory.'"
-				}');
-				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($ch, CURLOPT_SSLCERT, $QRSCertfile);
-				curl_setopt($ch, CURLOPT_SSLKEY, $QRSCertkeyfile);
-				// #RAMA no password
-				// curl_setopt($ch, CURLOPT_KEYPASSWD, $QRSCertkeyfilePassword);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
-				//Execute and get response
-				$raw_response = curl_exec($ch);
-				$response = json_decode($raw_response);
-				$qlik_ticket = $response->Ticket;
-				//end of get qlik ticket
+				//get qlik ticket
+				$qlik_ticket = QlikHelper::getTicket();
 
 			  $data = [];
 			  $data['row'] = \App\QlikItem::find($qlik_item_id);
@@ -488,12 +421,6 @@
 			  $data['page_title'] = $data['row']->title;
 				$data['help'] = $data['row']->description;
 			  $data['subtitle'] = $data['row']->subtitle;
-
-				// smontare URL per inserire app id anzichè URL per immissione qlik item
-				// $qlik_sense_app_base_path = 'https://platformq.dasycloud.com';
-				// $app_id = 'a92f56de-351f-4b67-a38c-8ca7147a450a';
-				// $sheet_id = '1ff88551-9c4d-41e0-b790-37f4c11d3df8';
-				// $item_url = $qlik_sense_app_base_path.'/single/?appid='.$app_id.'&sheet='.$sheet_id.'&opt=ctxmenu,currsel&qlikTicket='.$qlik_ticket;
 
 				$data['item_url'] = $data['row']->url.'&qlikTicket='.$qlik_ticket;
 
@@ -634,5 +561,91 @@
         Session::put('current_row_id', $id);
 
         return view('qlik_items.form', compact('row', 'page_menu', 'page_title', 'command', 'id'));
+	    }
+
+	    public function GetRouteSenseHub()
+	    {
+				$this->cbLoader();
+        if (! CRUDBooster::isSuperadmin()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module' => CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
+				//get qlik ticket
+				$qlik_ticket = QlikHelper::getTicket();
+
+			  $data = [];
+
+
+				$qlik_sense_app_base_path = 'https://platformq.dasycloud.com';
+				$port = ':443';
+				$virtualproxy = '/';
+				$url = $qlik_sense_app_base_path;
+				$url .= $port;
+				$url .= $virtualproxy;
+				$url .= 'hub/?';
+				$url .= '&qlikTicket='.$qlik_ticket;
+
+				$row = new \stdClass;
+				$row->frame_width = '100%';
+				$row->frame_height = '100%';
+				$row->url = $url;
+				$row->title = 'Qlik Sense';
+				$row->subtitle = 'Hub';
+				$row->description = '';
+
+			  $data['row'] = $row;
+				$data['page_icon'] = 'qlik_icon';
+			  $data['page_title'] = $data['row']->title;
+				$data['help'] = $data['row']->description;
+			  $data['subtitle'] = $data['row']->subtitle;
+
+
+				$data['item_url'] = $data['row']->url.'&qlikTicket='.$qlik_ticket;
+
+			  $this->cbView('qlik_items.view',$data);
+	    }
+
+	    public function GetRouteSenseQMC()
+	    {
+				$this->cbLoader();
+        if (! CRUDBooster::isSuperadmin()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module' => CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
+				//get qlik ticket
+				$qlik_ticket = QlikHelper::getTicket();
+
+			  $data = [];
+
+
+				$qlik_sense_app_base_path = 'https://platformq.dasycloud.com';
+				$port = ':443';
+				$virtualproxy = '/';
+				$url = $qlik_sense_app_base_path;
+				$url .= $port;
+				$url .= $virtualproxy;
+				$url .= 'qmc/?';
+				$url .= '&qlikTicket='.$qlik_ticket;
+
+				$row = new \stdClass;
+				$row->frame_width = '100%';
+				$row->frame_height = '100%';
+				$row->url = $url;
+				$row->title = 'Qlik Sense';
+				$row->subtitle = 'qmc';
+				$row->description = '';
+
+			  $data['row'] = $row;
+				$data['page_icon'] = 'qlik_icon';
+			  $data['page_title'] = $data['row']->title;
+				$data['help'] = $data['row']->description;
+			  $data['subtitle'] = $data['row']->subtitle;
+
+
+				$data['item_url'] = $data['row']->url.'&qlikTicket='.$qlik_ticket;
+
+			  $this->cbView('qlik_items.view',$data);
 	    }
 	}

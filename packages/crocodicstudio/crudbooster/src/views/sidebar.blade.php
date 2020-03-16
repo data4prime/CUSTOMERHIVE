@@ -129,6 +129,19 @@
                     </li>
 
                     <li class='treeview'>
+                        <a href='#'><i class='fa fa-signal'></i> <span>{{ trans('crudbooster.Qlik_Development_Tools') }}</span> <i
+                                    class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
+                        <ul class='treeview-menu'>
+                            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items/add')) ? 'active' : '' }}"><a
+                                        href='{{Route("QlikServerSenseHub")}}'><img class="menu qlik_logo" src=/images/qlik_logo.png />
+                                    <span>{{ trans('crudbooster.Qlik_Sense_Hub') }}</span></a></li>
+                            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items')) ? 'active' : '' }}"><a
+                                        href='{{Route("QlikServerSenseQMC")}}'><img class="menu qlik_logo" src=/images/qlik_logo.png />
+                                    <span>{{ trans('crudbooster.Qlik_Sense_QMC') }}</span></a></li>
+                        </ul>
+                    </li>
+
+                    <li class='treeview'>
                         <a href='#'><i class='fa fa-dashboard'></i> <span>{{ trans('crudbooster.Statistic_Builder') }}</span> <i
                                     class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
                         <ul class='treeview-menu'>

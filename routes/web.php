@@ -43,3 +43,7 @@ Route::get('admin/users/groups/{user_id}/alert/{alert_id}', 'AdminCmsUsersContro
 Route::get('admin/users/groups/{user_id}', 'AdminCmsUsersController@groups');
 Route::post('admin/users/{user_id}/add_group', 'AdminCmsUsersController@add_group');
 Route::get('admin/users/{user_id}/remove_group/{group_id}', 'AdminCmsUsersController@remove_group');
+
+//Qlik Server Routes
+Route::get('admin/QlikServerSenseHub', 'AdminQlikItemsController@GetRouteSenseHub')->name('QlikServerSenseHub');
+Route::get('admin/QlikServerSenseQMC', 'AdminQlikItemsController@GetRouteSenseQMC')->name('QlikServerSenseQMC');

@@ -175,7 +175,9 @@ return [
     'Email_Templates' => 'Email Templates',
     'Log_User_Access' => 'Log User Access',
     'SUPERADMIN' => 'SUPERADMIN',
-
+    'Qlik_Development_Tools' => 'Qlik Development Tools',
+    'Qlik_Sense_Hub' => 'Qlik Sense Hub',
+    'Qlik_Sense_QMC' => 'Qlik Sense QMC',
     'click_here' => 'Click here',
 
     /*

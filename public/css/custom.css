@@ -1,0 +1,42 @@
+/*
+* Qlik Items
+*/
+#help_icon{
+  font-size: 0.7em;
+  vertical-align: top;
+}
+/*set iframe size*/
+.qi_iframe{
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 8px;
+  display: block;
+}
+.qi_iframe_container{
+  height: 94%;
+  width: 100%;
+}
+.box{
+  height: 100%;
+  padding:8px
+}
+#content_section{
+  height: calc(100vh - 50px - 51px - 42px);
+  width: 100%;
+}
+#table_dashboard a.btn-detail{
+  display:none;
+}
+#table_dashboard tbody tr td:last-child .button_action{
+  text-align:center !important;
+}
+h1 .qlik_logo{
+  width:25px;
+}
+/*
+* Sidebar menu
+*/
+.menu.qlik_logo{
+  width:14px;
+  margin-right:6px;
+}

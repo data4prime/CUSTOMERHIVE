@@ -20,9 +20,20 @@
     }
     else{
       //prendi icona
-      icon = $('li.active i')[0].className;
+      if($('li.active i')[0]){
+        icon = $('li.active i')[0].className;
+      }
+      else{
+        icon = '';
+      }
     }
     $('#title_icon').addClass('fa '+ icon);
+
+    if($('#title_icon').hasClass('qlik_icon')){
+      //prendi icona dal child
+      var qlik_logo = '<img class="qlik_logo" src=/images/qlik_logo.png />';
+      $(qlik_logo).insertBefore($('#title_icon'));
+    }
 
   })
 </script>
@@ -30,29 +41,10 @@
 
 @push('head')
 <style>
-  #help_icon{
-    font-size: 0.7em;
-    vertical-align: top;
-  }
   /*set iframe size*/
   .qi_iframe{
-    width:{{ $row->frame_width }} !important;
-    height:{{ $row->frame_height }} !important;
-    margin-left: auto;
-    margin-right: auto;
-    padding-bottom: 8px;
-    display: block;
-  }
-  .qi_iframe_container{
-    height: 94%;
-    width: 100%;
-  }
-  .box{
-    height: 100%;
-  }
-  #content_section{
-    height: calc(100vh - 50px - 51px - 42px);
-    width: 100%;
+    width: {{ $row->frame_width }} !important;
+    height: {{ $row->frame_height }} !important;
   }
 </style>
 @endpush
