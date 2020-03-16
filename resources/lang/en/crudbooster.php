@@ -173,12 +173,16 @@ return [
     'Add_New_Email' => 'Add New Email',
     'List_Email_Template' => 'List Email Template',
     'Email_Templates' => 'Email Templates',
-    'Log_User_Access' => 'Log User Access',
-    'SUPERADMIN' => 'SUPERADMIN',
+    'User_Access_Log' => 'User Access Log',
+    'SUPERADMIN' => 'Admin',
+    'UserPermissions' => 'User Permissions',
     'Qlik_Development_Tools' => 'Qlik Development Tools',
     'Qlik_Sense_Hub' => 'Qlik Sense Hub',
     'Qlik_Sense_QMC' => 'Qlik Sense QMC',
     'click_here' => 'Click here',
+    'Groups' => 'Groups',
+    'Roles' => 'Roles',
+    'Users' => 'Users',
 
     /*
      * this is for html direction to use in html and css classes like :

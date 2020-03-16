@@ -181,7 +181,7 @@ return [
     'login_register_style' => 'Estilo de página de registro',
     'email_setting' => 'Ajustes de Correo',
     'application_setting' => 'Ajustes de Aplicaciones',
-    // table filter & sort 
+    // table filter & sort
     'filter_select_operator_type' => 'Selecciona el tipo de operador',
     'filter_ascending' => 'Ascendentemente',
     'filter_descending' => 'Descendentemente',
@@ -245,7 +245,7 @@ return [
 
     'datamodal_browse_file' => 'Escoger Archivo',
 
-    //child 
+    //child
     'table_detail' => 'Tabla de Detalles',
     'your_file_size_is_too_big' => 'El tamaño del archivo es demasiado grande',
     'save_changes' => 'Guardar Cambios',

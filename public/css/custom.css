@@ -1,4 +1,10 @@
 /*
+* General
+*/
+html{
+  padding: 0px !important;
+}
+/*
 * Qlik Items
 */
 #help_icon{

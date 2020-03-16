@@ -29,7 +29,6 @@
                                 href='{{CRUDBooster::adminPath()}}' class='{{($dashboard->color)?"text-".$dashboard->color:""}}'><i class='fa fa-dashboard'></i>
                             <span>{{trans("crudbooster.text_dashboard")}}</span> </a></li>
                 @endif
-
                 @foreach(CRUDBooster::sidebarMenu() as $menu)
                     <li data-id='{{$menu->id}}' class='{{(!empty($menu->children))?"treeview":""}} {{ (Request::is($menu->url_path."*"))?"active":""}}'>
                         <a href='{{ ($menu->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$menu->url }}'
@@ -52,35 +51,58 @@
                     </li>
                 @endforeach
 
+                @if(CRUDBooster::isSuperadmin() OR CRUDBooster::myPrivilegeName() === 'Advanced' )
 
+                  <li class="header">{{ trans('crudbooster.UserPermissions') }}</li>
+
+                  <li class='treeview'>
+                      <a href='#'><i class='fa fa-key'></i> <span>{{ trans('crudbooster.Roles') }}</span> <i
+                                  class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
+                      <ul class='treeview-menu'>
+                          <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/privileges/add*')) ? 'active' : '' }}"><a
+                                      href='{{Route("PrivilegesControllerGetAdd")}}'>{{ $current_path }}<i class='fa fa-plus'></i>
+                                  <span>{{ trans('crudbooster.Add_New_Privilege') }}</span></a></li>
+                          <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/privileges')) ? 'active' : '' }}"><a
+                                      href='{{Route("PrivilegesControllerGetIndex")}}'><i class='fa fa-bars'></i>
+                                  <span>{{ trans('crudbooster.List_Privilege') }}</span></a></li>
+                      </ul>
+                  </li>
+
+                  <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/groups*')) ? 'active' : '' }}">
+                    <a href='/admin/groups'><i class='fa fa-users'></i> <span>{{ trans('crudbooster.Groups') }}</span></a>
+                  </li>
+
+                  <li class='treeview'>
+                      <a href='#'>
+                        <i class='fa fa-user'></i> <span>{{ trans('crudbooster.Users') }}</span>
+                        <i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
+                      </a>
+                      <ul class='treeview-menu'>
+                        <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/users/add*')) ? 'active' : '' }}">
+                          <a href='{{Route("AdminCmsUsersControllerGetAdd")}}'>
+                            <i class='fa fa-plus'></i>
+                            <span>{{ trans('crudbooster.add_user') }}</span>
+                          </a>
+                        </li>
+                        <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/users')) ? 'active' : '' }}">
+                          <a href='{{Route("AdminCmsUsersControllerGetIndex")}}'>
+                            <i class='fa fa-bars'></i>
+                            <span>{{ trans('crudbooster.List_users') }}</span>
+                          </a>
+                        </li>
+                      </ul>
+                  </li>
+
+                  <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/logs*')) ? 'active' : '' }}">
+                    <a href='{{Route("LogsControllerGetIndex")}}'>
+                      <i class='fa fa-flag'></i> <span>{{ trans('crudbooster.User_Access_Log') }}</span>
+                    </a>
+                  </li>
+
+                @endif
 
                 @if(CRUDBooster::isSuperadmin())
                     <li class="header">{{ trans('crudbooster.SUPERADMIN') }}</li>
-                    <li class='treeview'>
-                        <a href='#'><i class='fa fa-key'></i> <span>{{ trans('crudbooster.Privileges_Roles') }}</span> <i
-                                    class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
-                        <ul class='treeview-menu'>
-                            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/privileges/add*')) ? 'active' : '' }}"><a
-                                        href='{{Route("PrivilegesControllerGetAdd")}}'>{{ $current_path }}<i class='fa fa-plus'></i>
-                                    <span>{{ trans('crudbooster.Add_New_Privilege') }}</span></a></li>
-                            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/privileges')) ? 'active' : '' }}"><a
-                                        href='{{Route("PrivilegesControllerGetIndex")}}'><i class='fa fa-bars'></i>
-                                    <span>{{ trans('crudbooster.List_Privilege') }}</span></a></li>
-                        </ul>
-                    </li>
-
-                    <li class='treeview'>
-                        <a href='#'><i class='fa fa-users'></i> <span>{{ trans('crudbooster.Users_Management') }}</span> <i
-                                    class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
-                        <ul class='treeview-menu'>
-                            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/users/add*')) ? 'active' : '' }}"><a
-                                        href='{{Route("AdminCmsUsersControllerGetAdd")}}'><i class='fa fa-plus'></i>
-                                    <span>{{ trans('crudbooster.add_user') }}</span></a></li>
-                            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/users')) ? 'active' : '' }}"><a
-                                        href='{{Route("AdminCmsUsersControllerGetIndex")}}'><i class='fa fa-bars'></i>
-                                    <span>{{ trans('crudbooster.List_users') }}</span></a></li>
-                        </ul>
-                    </li>
 
                     <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/menu_management*')) ? 'active' : '' }}"><a
                                 href='{{Route("MenusControllerGetIndex")}}'><i class='fa fa-bars'></i>
@@ -183,8 +205,6 @@
                         </ul>
                     </li>
 
-                    <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/logs*')) ? 'active' : '' }}"><a href='{{Route("LogsControllerGetIndex")}}'><i
-                                    class='fa fa-flag'></i> <span>{{ trans('crudbooster.Log_User_Access') }}</span></a></li>
                 @endif
 
             </ul><!-- /.sidebar-menu -->
