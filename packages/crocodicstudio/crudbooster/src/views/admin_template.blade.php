@@ -26,6 +26,7 @@
     @endif
 
     <link rel='stylesheet' href='{{asset("vendor/crudbooster/assets/css/main.css").'?r='.time()}}'/>
+    <link rel='stylesheet' href="{{asset("css/custom.css").'?r='.time()}}" type="text/css"/>
 
     <!-- load css -->
     <style type="text/css">
