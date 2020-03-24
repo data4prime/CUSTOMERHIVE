@@ -223,7 +223,8 @@ return [
         'Request' => Illuminate\Support\Facades\Request::class,
         'Response' => Illuminate\Support\Facades\Response::class,
         'Route' => Illuminate\Support\Facades\Route::class,
-        'Schema' => Illuminate\Support\Facades\Schema::class,
+        // 'Schema' => Illuminate\Support\Facades\Schema::class,
+        'Schema' => App\Facades\Schema::class,
         'Session' => Illuminate\Support\Facades\Session::class,
         'Storage' => Illuminate\Support\Facades\Storage::class,
         'URL' => Illuminate\Support\Facades\URL::class,
@@ -232,4 +233,18 @@ return [
 
     ],
 
+    'reserved_column_names' => array(
+      'id',
+      'created_at',
+      'created_by',
+      'updated_at',
+      'updated_by',
+      'deleted_at',
+      'deleted_by'
+    ),
+
+    'reserved_tables_prefix' => 'cms_',
+
+    'module_generator_prefix' => 'mg_',
+    'mg_valid_data_types' => array('text', 'number', 'boolean')
 ];

@@ -7,6 +7,12 @@ use Illuminate\Support\Facades\PDF;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use crocodicstudio\crudbooster\fonts\Fontawesome;
+// #RAMA
+use App\Modules;
+use App\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use App\DynamicTable;
+use App\DynamicColumn;
 
 class ModulsController extends CBController
 {
@@ -26,6 +32,7 @@ class ModulsController extends CBController
         $this->orderby = ['is_protected' => 'asc', 'name' => 'asc'];
 
         $this->col = [];
+        // str_replace(config('app.module_generator_prefix'), '', $module->name
         $this->col[] = ["label" => "Name", "name" => "name"];
         $this->col[] = ["label" => "Table", "name" => "table_name"];
         $this->col[] = ["label" => "Path", "name" => "path"];
@@ -66,13 +73,27 @@ class ModulsController extends CBController
         $this->form[] = ['label' => 'Icon', 'name' => 'icon', 'type' => 'custom', 'html' => $custom, 'required' => true];
 
         $this->script_js = "
- 			$(function() {
- 				$('#table_name').change(function() {
-					var v = $(this).val();
-					$('#path').val(v);
-				})
- 			})
- 			";
+     			$(function() {
+     				$('#table_name').change(function() {
+    					var v = $(this).val();
+    					$('#path').val(v);
+    				})
+            $(document).ready(function() {
+              //replace module generator prefix in all td
+              $('#table_dashboard td').each(function() {
+                var cell_value = $(this).html();
+                if(cell_value.startsWith('".config('app.module_generator_prefix')."')){
+                  cell_value = cell_value.replace('".config('app.module_generator_prefix')."', '');
+                  console.log(cell_value);
+                  $(this).html(cell_value);
+                }
+                else{
+                }
+             });
+
+    				})
+     			})
+   			";
 
         $this->form[] = ["label" => "Path", "name" => "path", "required" => true, 'placeholder' => 'Optional'];
         $this->form[] = ["label" => "Controller", "name" => "controller", "type" => "text", "placeholder" => "(Optional) Auto Generated"];
@@ -256,11 +277,170 @@ class ModulsController extends CBController
         $fontawesome = Fontawesome::getIcons();
 
         $row = CRUDBooster::first($this->table, ['id' => $id]);
+        $active_tab = 1;
 
-        return view("crudbooster::module_generator.step1", compact("tables_list", "fontawesome", "row", "id"));
+        return view("crudbooster::module_generator.step1", compact("tables_list", "fontawesome", "row", "id", 'active_tab'));
     }
 
+    // triggered when on step1 click go to step2
+    // create module
+    public function postStep1()
+    {
+        $this->cbLoader();
+
+        $module = CRUDBooster::getCurrentModule();
+
+        if (! CRUDBooster::isView() && $this->global_privilege == false) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
+        //module name
+        $name = Request::get('name');
+        $table_name = Request::get('table');
+        $icon = Request::get('icon');
+        $path = Request::get('path');
+
+        if (! Request::get('id')) {
+          //create new module
+            if (DB::table('cms_moduls')->where('path', $path)->where('deleted_at', null)->count()) {
+              return redirect()->back()->with(['message' => 'Sorry the slug has already exists, please choose another !', 'message_type' => 'warning']);
+            }
+
+            $created_at = now();
+            //$this->table equals cms_moduls
+            $id = DB::table($this->table)->max('id') + 1; // id del nuovo modulo
+
+            //create a controller for the new module
+            $controller = CRUDBooster::generateController($table_name, $path);
+            DB::table($this->table)->insert(compact("controller", "name", "table_name", "icon", "path", "created_at", "id"));
+
+            //create menu
+            if ($controller && Request::get('create_menu')) {
+              $parent_menu_sort = DB::table('cms_menus')->where('parent_id', 0)->max('sorting') + 1;
+
+              $id_cms_menus = DB::table('cms_menus')->insertGetId([
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => $name,
+                'icon' => $icon,
+                'path' => $controller.'GetIndex',
+                'type' => 'Route',
+                'is_active' => 1,
+                'id_cms_privileges' => CRUDBooster::myPrivilegeId(),
+                'sorting' => $parent_menu_sort,
+                'parent_id' => 0,
+              ]);
+              DB::table('cms_menus_privileges')->insert(['id_cms_menus' => $id_cms_menus, 'id_cms_privileges' => CRUDBooster::myPrivilegeId()]);
+            }
+
+            $user_id_privileges = CRUDBooster::myPrivilegeId();
+            DB::table('cms_privileges_roles')->insert([
+              'id' => DB::table('cms_privileges_roles')->max('id') + 1,
+              'id_cms_moduls' => $id,
+              'id_cms_privileges' => $user_id_privileges,
+              'is_visible' => 1,
+              'is_create' => 1,
+              'is_read' => 1,
+              'is_edit' => 1,
+              'is_delete' => 1,
+            ]);
+
+            //Refresh Session Roles
+            $roles = DB::table('cms_privileges_roles')->where('id_cms_privileges', CRUDBooster::myPrivilegeId())->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')->get();
+            Session::put('admin_privileges_roles', $roles);
+
+            return redirect(Route("ModulsControllerGetStep2", ["id" => $id]));
+        }
+        else {
+          //update existing module
+          $id = Request::get('id');
+          DB::table($this->table)->where('id', $id)->update(compact("name", "table_name", "icon", "path"));
+
+          $row = DB::table('cms_moduls')->where('id', $id)->first();
+
+          if (file_exists(app_path('Http/Controllers/'.$row->controller.'.php'))) {
+            $response = file_get_contents(app_path('Http/Controllers/'.str_replace('.', '', $row->controller).'.php'));
+          }
+          else {
+            $response = file_get_contents(__DIR__.'/'.str_replace('.', '', $row->controller).'.php');
+          }
+
+          if (strpos($response, "# START COLUMNS") !== true) {
+            // return redirect()->back()->with(['message'=>'Sorry, is not possible to edit the module with Module Generator Tool. Prefix and or Suffix tag is missing !','message_type'=>'warning']);
+          }
+          return redirect(Route("ModulsControllerGetStep2", ["id" => $id]));
+        }
+    }
+
+    //#RAMA
     public function getStep2($id)
+    {
+        $this->cbLoader();
+
+        $module = CRUDBooster::getCurrentModule();
+
+        if (! CRUDBooster::isView() && $this->global_privilege == false) {
+          CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
+          CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
+        $module = Modules::find($id);
+
+        if($module['table_name'] == 'new'){
+          // creating new table
+          $cb_form = array();
+        }
+        else{
+          // skip table creation
+          // return redirect(Route("ModulsControllerGetStep3", ["id" => $id]));
+
+          // table edit
+          $columns = CRUDBooster::getTableStructure($module['table_name']);
+          $cb_form = $columns;
+        }
+
+        //column data types
+        //TODO add more types
+        $types = config('app.mg_valid_data_types');
+        //TODO add data size
+        //TODO add PK NN AI
+        //TODO add FK
+
+        $data = array();
+        $data['id'] = $id;
+        $data['active_tab'] = 2;
+        $data['cb_form'] = $cb_form;
+        $data['table_name'] = $module->name;
+        $data['types'] = $types;
+        $data['box_title'] = 'Table '. str_replace(config('app.module_generator_prefix'), '', $module->name);
+
+        return view('crudbooster::module_generator.step2', $data);
+    }
+
+    // after step 2 form submit create/update table
+    public function postStep2()
+    {
+        $this->cbLoader();
+
+        $request = Request::all();
+        $id = $request['id'];
+        $module = Modules::find($id);
+
+        if (! CRUDBooster::isView() && $this->global_privilege == false) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
+        $messages = $this->save_table($request);
+
+        $data = array();
+        $data["id"] = $id;
+        $data["messages"] = $messages;
+
+        return redirect(Route("ModulsControllerGetStep3", $data));
+    }
+
+    public function getStep3($id, $messages = '')
     {
         $this->cbLoader();
 
@@ -296,92 +476,17 @@ class ModulsController extends CBController
         $data['columns'] = $columns;
         $data['table_list'] = $table_list;
         $data['cb_col'] = $cb_col;
-
-        return view('crudbooster::module_generator.step2', $data);
-    }
-
-    public function postStep2()
-    {
-        $this->cbLoader();
-
-        $module = CRUDBooster::getCurrentModule();
-
-        if (! CRUDBooster::isView() && $this->global_privilege == false) {
-            CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        $data['active_tab'] = 3;
+        $messages = explode(',', $messages);
+        $data['messages'] = array();
+        for($i=0; $i<count($messages)-1;){
+          $type = $messages[$i];
+          $content = $messages[$i+1];
+          $data['messages'][] = ['type'=>$type,'content'=>$content];
+          $i += 2;
         }
 
-        $name = Request::get('name');
-        $table_name = Request::get('table');
-        $icon = Request::get('icon');
-        $path = Request::get('path');
-
-        if (! Request::get('id')) {
-
-            if (DB::table('cms_moduls')->where('path', $path)->where('deleted_at', null)->count()) {
-                return redirect()->back()->with(['message' => 'Sorry the slug has already exists, please choose another !', 'message_type' => 'warning']);
-            }
-
-            $created_at = now();
-            $id = DB::table($this->table)->max('id') + 1;
-
-            $controller = CRUDBooster::generateController($table_name, $path);
-            DB::table($this->table)->insert(compact("controller", "name", "table_name", "icon", "path", "created_at", "id"));
-
-            //Insert Menu
-            if ($controller && Request::get('create_menu')) {
-                $parent_menu_sort = DB::table('cms_menus')->where('parent_id', 0)->max('sorting') + 1;
-
-                $id_cms_menus = DB::table('cms_menus')->insertGetId([
-
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'name' => $name,
-                    'icon' => $icon,
-                    'path' => $controller.'GetIndex',
-                    'type' => 'Route',
-                    'is_active' => 1,
-                    'id_cms_privileges' => CRUDBooster::myPrivilegeId(),
-                    'sorting' => $parent_menu_sort,
-                    'parent_id' => 0,
-                ]);
-                DB::table('cms_menus_privileges')->insert(['id_cms_menus' => $id_cms_menus, 'id_cms_privileges' => CRUDBooster::myPrivilegeId()]);
-            }
-
-            $user_id_privileges = CRUDBooster::myPrivilegeId();
-            DB::table('cms_privileges_roles')->insert([
-                'id' => DB::table('cms_privileges_roles')->max('id') + 1,
-                'id_cms_moduls' => $id,
-                'id_cms_privileges' => $user_id_privileges,
-                'is_visible' => 1,
-                'is_create' => 1,
-                'is_read' => 1,
-                'is_edit' => 1,
-                'is_delete' => 1,
-            ]);
-
-            //Refresh Session Roles
-            $roles = DB::table('cms_privileges_roles')->where('id_cms_privileges', CRUDBooster::myPrivilegeId())->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')->get();
-            Session::put('admin_privileges_roles', $roles);
-
-            return redirect(Route("ModulsControllerGetStep2", ["id" => $id]));
-        } else {
-            $id = Request::get('id');
-            DB::table($this->table)->where('id', $id)->update(compact("name", "table_name", "icon", "path"));
-
-            $row = DB::table('cms_moduls')->where('id', $id)->first();
-
-            if (file_exists(app_path('Http/Controllers/'.$row->controller.'.php'))) {
-                $response = file_get_contents(app_path('Http/Controllers/'.str_replace('.', '', $row->controller).'.php'));
-            } else {
-                $response = file_get_contents(__DIR__.'/'.str_replace('.', '', $row->controller).'.php');
-            }
-
-            if (strpos($response, "# START COLUMNS") !== true) {
-                // return redirect()->back()->with(['message'=>'Sorry, is not possible to edit the module with Module Generator Tool. Prefix and or Suffix tag is missing !','message_type'=>'warning']);
-            }
-
-            return redirect(Route("ModulsControllerGetStep2", ["id" => $id]));
-        }
+        return view('crudbooster::module_generator.step3', $data);
     }
 
     public function postStep3()
@@ -457,10 +562,10 @@ class ModulsController extends CBController
 
         file_put_contents(app_path('Http/Controllers/'.$row->controller.'.php'), $file_controller);
 
-        return redirect(Route("ModulsControllerGetStep3", ["id" => $id]));
+        return redirect(Route("ModulsControllerGetStep4", ["id" => $id]));
     }
 
-    public function getStep3($id)
+    public function getStep4($id)
     {
         $this->cbLoader();
 
@@ -486,8 +591,9 @@ class ModulsController extends CBController
         foreach (glob(base_path('packages/crocodicstudio/crudbooster/src/views/default/type_components').'/*', GLOB_ONLYDIR) as $dir) {
             $types[] = basename($dir);
         }
+        $active_tab = 4;
 
-        return view('crudbooster::module_generator.step3', compact('columns', 'cb_form', 'types', 'id'));
+        return view('crudbooster::module_generator.step4', compact('columns', 'cb_form', 'types', 'id', 'active_tab'));
     }
 
     public function getTypeInfo($type = 'text')
@@ -583,10 +689,10 @@ class ModulsController extends CBController
         //CREATE FILE CONTROLLER
         file_put_contents(app_path('Http/Controllers/'.$row->controller.'.php'), $file_controller);
 
-        return redirect(Route("ModulsControllerGetStep4", ["id" => $id]));
+        return redirect(Route("ModulsControllerGetStep5", ["id" => $id]));
     }
 
-    public function getStep4($id)
+    public function getStep5($id)
     {
         $this->cbLoader();
 
@@ -609,11 +715,12 @@ class ModulsController extends CBController
             $column_datas = str_replace([' ', "\t"], '', $column_datas);
             eval($column_datas);
         }
+        $data['active_tab'] = 5;
 
-        return view('crudbooster::module_generator.step4', $data);
+        return view('crudbooster::module_generator.step5', $data);
     }
 
-    public function postStepFinish()
+    public function postStep5()
     {
         $this->cbLoader();
         $id = Request::input('id');
@@ -657,6 +764,8 @@ class ModulsController extends CBController
         $file_controller .= "\t\t\t".trim($rraw[1]);
 
         file_put_contents(app_path('Http/Controllers/'.$row->controller.'.php'), $file_controller);
+
+        // #RAMA sposta creazione tabella qui?
 
         return redirect()->route('ModulsControllerGetIndex')->with(['message' => trans('crudbooster.alert_update_data_success'), 'message_type' => 'success']);
     }
@@ -785,5 +894,300 @@ class ModulsController extends CBController
         Session::put('admin_privileges_roles', $roles);
 
         CRUDBooster::redirect(Request::server('HTTP_REFERER'), trans('crudbooster.alert_update_data_success'), 'success');
+    }
+
+    /*
+    * Create a new database table
+    *
+    *  @param Modules instance of the Modules class containing the new module being generated
+    *
+    */
+    private function save_table($request){
+
+      if (! CRUDBooster::isSuperadmin() ) {
+          CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
+          CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      }
+      $id = $request['id'];
+      $module = Modules::find($id);
+
+      $dynamic_table_name = $module->name;
+      $table_name = $dynamic_table_name;
+
+      if(substr( $module->table_name, 0, strlen(config('app.reserved_tables_prefix')) ) === config('app.reserved_tables_prefix')){
+        // editing reserved tables is forbidden
+        add_log('mg save table', 'editing reserved tables is forbidden '.$dynamic_table_name.' starts with '.config('app.reserved_tables_prefix'), 'error');
+        $message['type'] = 'danger';
+        $message['content'] = 'editing reserved tables is forbidden';
+        $messages = $message['type'].','.$message['content'].',';
+        return $messages;
+      }
+
+      if(!substr( $dynamic_table_name, 0, strlen(config('app.module_generator_prefix')) ) === config('app.module_generator_prefix')){
+        //add table name prefix to new tables
+        $table_name = config('app.module_generator_prefix') . $dynamic_table_name;
+      }
+      $table_exist = Schema::hasTable($table_name);
+
+      $dynamic_table = new DynamicTable;
+      $dynamic_table->name = $table_name;
+      $dynamic_columns = array();
+
+      //if table doesn't exists..
+      if(!$table_exist){
+        //..create new table
+
+        foreach ($request['name'] as $loop_index => $dynamic_column_name) {
+          if($request['name'][$loop_index] == ''){
+            // empty row
+            continue;
+          }
+          // create new column
+          $column = new DynamicColumn;
+          $column->name = $dynamic_column_name;
+          if(ctype_digit($dynamic_column->name)){
+            // error digit only column name is invalid
+            add_log('mg create table add column', 'digit only column name is invalid creating table '.$table_name.' column '.$dynamic_column->name, 'error');
+            $message['type'] = 'danger';
+            $message['content'] = 'Digit only column name is not accepted';
+            $messages = $message['type'].','.$message['content'].',';
+            return $messages;
+          }
+          if(Schema::hasColumn($table_name, $dynamic_column->name)){
+            // error Duplicate column name
+            add_log('mg create table add column', 'Duplicate column name '.$dynamic_column->name, 'error');
+            $message['type'] = 'danger';
+            $message['content'] = 'Duplicate column name';
+            $messages = $message['type'].','.$message['content'].',';
+            return $messages;
+          }
+          switch ($request['type'][$loop_index]) {
+            case 'text':
+              $column->type = 'string';
+              break;
+            case 'number':
+              $column->type = 'integer';
+              break;
+            case 'boolean':
+              $column->type = 'boolean';
+              break;
+
+            default:
+              $column->type = 'string';
+              break;
+          }
+          $column->validation = '';
+          $column->sorting_order = 1; //insert after?
+          $column->isNullable = 1; // true / false
+          $column->hasAI = 0; //Auto Increment true / false
+          $column->isPrimaryKey = 0; // true / false
+          $column->isRequired = 0; // true / false
+          $column->size = $request['size'][$loop_index];
+
+          $dynamic_columns[] = $column;
+        }
+
+        $dynamic_table->columns = $dynamic_columns;
+
+        //TODO validate table name: check protected table names
+
+        $result = Schema::create($table_name, function (Blueprint $table) use ($dynamic_columns) {
+          foreach ($dynamic_columns as $key => $dynamic_column) {
+            $type = $dynamic_column->type;
+            // $table->call_dynamic_method($dynamic_column->type);
+            if($type == 'integer'){
+              //integer defaults to autoincrement without second parameter set to false
+              $table->integer("{$dynamic_column->name}", false, "{$dynamic_column->size}")->nullable();
+            }
+            else{
+              $table->$type("{$dynamic_column->name}", "{$dynamic_column->size}")->nullable();
+            }
+          }
+          $table->defaults();
+        });
+
+        //update module
+        if($module->table_name == 'new'){
+          $module->table_name = $table_name;
+          $module->name = $table_name;
+          $module->path = $table_name;
+          $module->save();
+        }
+      }
+      else{
+        //edit table
+
+        $existing_table = CRUDBooster::getTableStructure($table_name);
+
+        foreach ($request['name'] as $loop_index => $dynamic_column_name) {
+          if($request['name'][$loop_index] == ''){
+            // empty row
+            continue;
+          }
+
+          // save column object
+          $column = new DynamicColumn;
+          $column->name = $dynamic_column_name;
+          switch ($request['type'][$loop_index]) {
+            case 'text':
+              $column->type = 'string';
+              break;
+            case 'number':
+              $column->type = 'integer';
+              break;
+            case 'boolean':
+              $column->type = 'boolean';
+              break;
+
+            default:
+              $column->type = 'string';
+              break;
+          }
+          $column->validation = '';
+          $column->sorting_order = 1; //insert after?
+          $column->isNullable = 1; // true / false
+          $column->hasAI = 0; //Auto Increment true / false
+          $column->isPrimaryKey = 0; // true / false
+          $column->isRequired = 0; // true / false
+          $column->size = $request['size'][$loop_index];
+
+          $dynamic_columns[] = $column;
+
+          $index = $request['index'][$loop_index];
+
+          // if $index doesn't exist in the table..
+          if(!array_key_exists($index, $existing_table)){
+            // ..add new column
+
+            if(ctype_digit($column->name)){
+              // error digit only column name is invalid
+              add_log('mg edit table add column', 'digit only column name is invalid creating table '.$table_name.' column '.$dynamic_column->name, 'error');
+              $message['type'] = 'danger';
+              $message['content'] = 'Digit only column name is not accepted';
+              $messages = $message['type'].','.$message['content'].',';
+              return $messages;
+            }
+            if(Schema::hasColumn($table_name, $column->name)){
+              // error Duplicate column name
+              add_log('mg edit table add column', 'Duplicate column name '.$column->name, 'error');
+              $message['type'] = 'danger';
+              $message['content'] = 'Duplicate column name';
+              $messages = $message['type'].','.$message['content'].',';
+              return $messages;
+            }
+            $after = $existing_table[$index-1]['name'];
+            //add new column to existing table
+            $result = Schema::table($table_name, function (Blueprint $table) use ($column, $after) {
+              $type = $column->type;
+              if($type == 'integer'){
+                //integer defaults to autoincrement without second parameter set to false
+                $table->integer("{$column->name}", false, $column->size)->nullable()->after($after);
+              }
+              else{
+                $table->$type("{$column->name}", $column->size)->nullable()->after($after);
+              }
+            });
+            $description = 'add column '.$column->name. ' after '.$existing_table[$index-1]['name'];
+            add_log('mg edit table add column', $description);
+
+            // reload table to detect multiple new columns and insert them in proper order
+            $existing_table = CRUDBooster::getTableStructure($table_name);
+          }
+          //TODO sort
+
+          // if request column name at index $loop_index is not equal table column name at the same index..
+          if($request['name'][$loop_index] !== $existing_table[$index]['name']){
+            // ..rename column
+            $source = $existing_table[$index]['name'];
+            $target = $request['name'][$loop_index];
+            if(in_array($target, config('app.reserved_column_names')) OR Schema::hasColumn($table_name, $target)){
+              // invalid column name
+              add_log('mg edit table rename column', 'invalid target column name. Renaming '.$source.' into '.$target, 'error');
+              $message['type'] = 'danger';
+              $message['content'] = 'Invalid target column name. Renaming '.$source.' into '.$target;
+              $messages = $message['type'].','.$message['content'].',';
+              return $messages;
+            }
+            if(!Schema::hasColumn($table_name, $source)){
+              // error source column not found
+              add_log('mg edit table rename column', 'source column not found. Renaming '.$source.' into '.$target, 'error');
+              $message['type'] = 'danger';
+              $message['content'] = 'Column not found renaming '.$source.' into '.$target;
+              $messages = $message['type'].','.$message['content'].',';
+              return $messages;
+            }
+            if(ctype_digit($target)){
+              // error digit only column name is invalid
+              add_log('mg edit table rename column', 'digit only column name is invalid. Renaming '.$source.' into '.$target, 'error');
+              $message['type'] = 'danger';
+              $message['content'] = 'Digit only column name is not accepted';
+              $messages = $message['type'].','.$message['content'].',';
+              return $messages;
+            }
+            $result = Schema::table($table_name, function (Blueprint $table) use ($source, $target) {
+              $table->renameColumn($source, $target);
+            });
+            add_log('mg edit table rename column', 'Rename '.$source.' into '.$target);
+            //TODO reload table?
+            $existing_table = CRUDBooster::getTableStructure($table_name);
+          }
+
+          if($request['type'][$loop_index] != $existing_table[$index]['type']){
+            $result = Schema::table($table_name, function (Blueprint $table) use ($column) {
+              $type = $column->type;
+              $table->$type("{$column->name}")->change();
+            });
+            add_log('mg edit table change column data type', 'Column '.$column->name.' from '.$existing_table[$index]['type'].' to '.$column->type);
+          }
+
+          if($request['size'][$loop_index] != $existing_table[$index]['size']){
+            $result = Schema::table($table_name, function (Blueprint $table) use ($column) {
+              $type = $column->type;
+              if($type == 'integer'){
+                //integer defaults to autoincrement without second parameter set to false
+                $table->integer("{$column->name}", false, $column->size)->change();
+              }
+              else{
+                $table->$type("{$column->name}", $column->size)->change();
+              }
+            });
+            add_log('mg edit table change column data size', 'Column '.$column->name.' from '.$existing_table[$index]['type'].' to '.$column->type);
+          }
+        }//end loop through request columns
+
+        $dynamic_table->columns = $dynamic_columns;
+
+        //loop through existing table columns
+        foreach ($existing_table as $key => $value) {
+          // if column index is missing in the request..
+          if(!in_array($key, $request['index'])){
+            // ..delete column
+            if(!Schema::hasColumn($table_name, $value['name'])){
+              // error column not found
+              add_log('mg edit table drop column', 'error column ' . $value['name']. ' not found', 'error');
+              $message['type'] = 'danger';
+              $message['content'] = 'column ' . $value['name']. ' not found';
+              $messages = $message['type'].','.$message['content'].',';
+              return $messages;
+            }
+            else{
+              $result = Schema::table($table_name, function (Blueprint $table) use ($value) {
+                $table->dropColumn("{$value['name']}");
+              });
+              add_log('mg edit table drop column', 'delete column '.$value['name']);
+            }
+          }
+        }
+
+        //TODO update table: sort columns
+      }
+
+      if(empty($messages)){
+        $message['type'] = 'success';
+        $message['content'] = 'Database updated';
+        $messages = $message['type'].','.$message['content'].',';
+      }
+
+      return $messages;
     }
 }

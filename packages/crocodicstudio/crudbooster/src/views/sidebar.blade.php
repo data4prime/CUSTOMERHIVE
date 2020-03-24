@@ -125,15 +125,20 @@
                         </ul>
                     </li>
                     <li class='treeview'>
-                        <a href='#'><i class='fa fa-th'></i> <span>{{ trans('crudbooster.Module_Generator') }}</span> <i
-                                    class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
+                        <a href='#'>
+                          <i class='fa fa-th'></i> <span>{{ trans('crudbooster.Module_Generator') }}</span> <i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
+                        </a>
                         <ul class='treeview-menu'>
-                            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/module_generator/step1')) ? 'active' : '' }}"><a
-                                        href='{{Route("ModulsControllerGetStep1")}}'><i class='fa fa-plus'></i>
-                                    <span>{{ trans('crudbooster.Add_New_Module') }}</span></a></li>
-                            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/module_generator')) ? 'active' : '' }}"><a
-                                        href='{{Route("ModulsControllerGetIndex")}}'><i class='fa fa-bars'></i>
-                                    <span>{{ trans('crudbooster.List_Module') }}</span></a></li>
+                            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/module_generator/step1')) ? 'active' : '' }}">
+                              <a href='{{Route("ModulsControllerGetStep1")}}'><i class='fa fa-plus'></i>
+                                    <span>{{ trans('crudbooster.Add_New_Module') }}</span>
+                                  </a>
+                                </li>
+                            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/module_generator')) ? 'active' : '' }}">
+                              <a href='{{Route("ModulsControllerGetIndex")}}'><i class='fa fa-bars'></i>
+                                    <span>{{ trans('crudbooster.List_Module') }}</span>
+                                  </a>
+                                  </li>
                         </ul>
                     </li>
 

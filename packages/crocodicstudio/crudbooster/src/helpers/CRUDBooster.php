@@ -1333,6 +1333,57 @@ class CRUDBooster
         return $new_result;
     }
 
+    public static function getTableStructure($table, $mode = 'standard')
+    {
+      $reserved_column_names = config('app.reserved_column_names');
+      //$columns = DB::getSchemaBuilder()->getColumnListing($table);
+      $table = CRUDBooster::parseSqlTable($table);
+      $columns = collect(DB::select('SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = :database AND TABLE_NAME = :table', [
+        'database' => $table['database'],
+        'table' => $table['table'],
+        ]))->map(function ($x) {
+          return (array) $x;
+        })->toArray();
+
+        if($mode == 'verbose'){
+          return $columns;
+        }
+        else{
+          $return = array();
+
+          foreach ($columns as $column) {
+            if(in_array($column['COLUMN_NAME'],$reserved_column_names)){
+              continue;
+            }
+            unset($filtered_column_data);
+            $filtered_column_data['name'] = $column['COLUMN_NAME'];
+            switch ($column['DATA_TYPE']) {
+              case 'varchar':
+                $filtered_column_data['type'] = 'text';
+                $filtered_column_data['size'] = $column['CHARACTER_MAXIMUM_LENGTH'];
+                break;
+              case 'int':
+                $filtered_column_data['type'] = 'number';
+                $size = str_replace('int(', '', $column['COLUMN_TYPE']);
+                $size = preg_replace('/\).*/', '', $size);
+                $filtered_column_data['size'] = $size;
+                break;
+              case 'tinyint':
+                //TODO
+                $filtered_column_data['type'] = 'boolean';
+                $filtered_column_data['size'] = 1;
+                break;
+
+              default:
+                $filtered_column_data['type'] = 'text';
+                break;
+            }
+            $return[] = $filtered_column_data;
+          }
+          return $return;
+        }
+      }
+
     public static function getNameTable($columns)
     {
         $name_col_candidate = config('crudbooster.NAME_FIELDS_CANDIDATE');
@@ -1417,8 +1468,9 @@ class CRUDBooster
 
     public static function generateController($table, $name = null)
     {
-
-        $exception = ['id', 'created_at', 'updated_at', 'deleted_at'];
+        // $exception = ['id', 'created_at', 'updated_at', 'deleted_at'];
+        // #RAMA
+        $exception = config('app.reserved_column_names');
         $image_candidate = explode(',', config('crudbooster.IMAGE_FIELDS_CANDIDATE'));
         $password_candidate = explode(',', config('crudbooster.PASSWORD_FIELDS_CANDIDATE'));
         $phone_candidate = explode(',', config('crudbooster.PHONE_FIELDS_CANDIDATE'));
@@ -1677,16 +1729,16 @@ class CRUDBooster
 
         $php .= '
 
-			/*
+	        /*
 	        | ----------------------------------------------------------------------
 	        | Sub Module
 	        | ----------------------------------------------------------------------
-			| @label          = Label of action
-			| @path           = Path of sub module
-			| @foreign_key 	  = foreign key of sub table/module
-			| @button_color   = Bootstrap Class (primary,success,warning,danger)
-			| @button_icon    = Font Awesome Class
-			| @parent_columns = Sparate with comma, e.g : name,created_at
+    			| @label          = Label of action
+    			| @path           = Path of sub module
+    			| @foreign_key 	  = foreign key of sub table/module
+    			| @button_color   = Bootstrap Class (primary,success,warning,danger)
+    			| @button_icon    = Font Awesome Class
+    			| @parent_columns = Sparate with comma, e.g : name,created_at
 	        |
 	        */
 	        $this->sub_module = array();

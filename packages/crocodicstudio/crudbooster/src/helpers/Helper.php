@@ -1,9 +1,9 @@
-<?php 
-/* 
+<?php
+/*
 | ---------------------------------------------------------------------------------------------------------------
 | Main Helper of CRUDBooster
 | Do not edit or modify this helper unless your modification will be replace if any update from CRUDBooster.
-| 
+|
 | Homepage : http://crudbooster.com
 | ---------------------------------------------------------------------------------------------------------------
 |
@@ -31,7 +31,7 @@ if(!function_exists('assetResize')) {
 	}
 }
 
-if(!function_exists('extract_unit')) {	
+if(!function_exists('extract_unit')) {
 	/*
 	Credits: Bit Repository
 	URL: http://www.bitrepository.com/extract-content-between-two-delimiters-with-php.html
@@ -50,12 +50,12 @@ if(!function_exists('extract_unit')) {
 
 
 if(!function_exists('now')) {
-	function now() {		
+	function now() {
 		return date('Y-m-d H:i:s');
 	}
 }
 
-/* 
+/*
 | --------------------------------------------------------------------------------------------------------------
 | Get data from input post/get more simply
 | --------------------------------------------------------------------------------------------------------------
@@ -84,19 +84,46 @@ if(!function_exists('rrmdir')) {
 	/*
 	* http://stackoverflow.com/questions/3338123/how-do-i-recursively-delete-a-directory-and-its-entire-contents-files-sub-dir
 	*/
-	function rrmdir($dir) { 
-	   if (is_dir($dir)) { 
-	     $objects = scandir($dir); 
-	     foreach ($objects as $object) { 
-	       if ($object != "." && $object != "..") { 
+	function rrmdir($dir) {
+	   if (is_dir($dir)) {
+	     $objects = scandir($dir);
+	     foreach ($objects as $object) {
+	       if ($object != "." && $object != "..") {
 	         if (is_dir($dir."/".$object))
 	           rrmdir($dir."/".$object);
 	         else
-	           unlink($dir."/".$object); 
-	       } 
+	           unlink($dir."/".$object);
+	       }
 	     }
-	     rmdir($dir); 
-	   } 
+	     rmdir($dir);
+	   }
 	 }
 }
 
+
+/**
+ *  insert a new log in DB
+ *
+ * @param $category String log label, should represent the topic
+ * @param $description String log descriptive content
+ * @param $type String log severity as Warning, Error, log
+ *
+ * @return $id_log integer id del nuovo log
+ */
+function add_log($category, $description, $type='log')
+{
+  //evito errore di scrittura in DB se la descrizione supera i limiti di SQL TEXT
+  $description = substr(trim(addslashes($description)), 0, 65000);
+  $log = new App\Log;
+	$log->created_at = date('Y-m-d H:i:s');
+	$log->created_by = CRUDBooster::myId();
+	$log->ip = $_SERVER['REMOTE_ADDR'];
+	$log->useragent = $_SERVER['HTTP_USER_AGENT'];
+	$log->url = Request::url();
+	$log->category = trim(addslashes($category));
+	$log->type = trim(addslashes($type));
+	$log->description = $description;
+	$log->save();
+
+	return $log->id;
+}
