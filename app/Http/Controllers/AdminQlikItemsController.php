@@ -356,6 +356,10 @@
 					unset($postdata['frame_full_page']);
 					unset($postdata['frame_width_unit']);
 					unset($postdata['frame_height_unit']);
+					//allow deleting help text
+					if(empty($postdata['description'])){
+						$postdata['description'] = '';
+					}
 	    }
 
 	    /*
@@ -393,8 +397,6 @@
 	        //Your code here
 
 	    }
-
-
 
 	    // #RAMA custom methods
 
