@@ -618,7 +618,6 @@
 
 			  $data = [];
 
-
 				$qlik_sense_app_base_path = 'https://platformq.dasycloud.com';
 				$port = ':443';
 				$virtualproxy = '/';
@@ -641,8 +640,6 @@
 			  $data['page_title'] = $data['row']->title;
 				$data['help'] = $data['row']->description;
 			  $data['subtitle'] = $data['row']->subtitle;
-
-
 				$data['item_url'] = $data['row']->url.'&qlikTicket='.$qlik_ticket;
 
 			  $this->cbView('qlik_items.view',$data);

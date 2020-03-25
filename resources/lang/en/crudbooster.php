@@ -176,7 +176,7 @@ return [
     'User_Access_Log' => 'User Access Log',
     'SUPERADMIN' => 'Admin',
     'UserPermissions' => 'User Permissions',
-    'Qlik_Development_Tools' => 'Qlik Development Tools',
+    'Qlik_Development_Tools' => 'Qlik Platform',
     'Qlik_Sense_Hub' => 'Qlik Sense Hub',
     'Qlik_Sense_QMC' => 'Qlik Sense QMC',
     'click_here' => 'Click here',
