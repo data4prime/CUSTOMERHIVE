@@ -36,14 +36,14 @@ class QlikHelper  {
       }
 
       //base path to call
-      $QRSurl = 'https://platformq.dasycloud.com:4243';
-      $xrfkey = "0123456789abcdef";
+      $QRSurl = config('app.qlik_sense_app_base_path').':'.config('app.qrs_port');
+      $xrfkey = config('app.xrfkey');
       //Path to call (with xrfkey parameter added)
-      $endpoint = "/qps/ticket?xrfkey=".$xrfkey;
+      $endpoint = config('app.ticket_request_endpoint_relative_path')."?xrfkey=".$xrfkey;
       //Location of QRS client certificate and certificate key, assuming key is included separately
-      $base_path = '/var/www/customerhive/storage/app/';
-      $QRSCertfile = $base_path."certificates/client.pem";
-      $QRSCertkeyfile = $base_path."certificates/client_key.pem";
+      $base_path = config('app.qrs_certificate_base_path');
+      $QRSCertfile = $base_path.config('app.qrs_certificate_file_relative_path');
+      $QRSCertkeyfile = $base_path.config('app.qrs_certificate_file_relative_path');
       // #RAMA no password
       // $QRSCertkeyfilePassword = "Passw0rd!";
 

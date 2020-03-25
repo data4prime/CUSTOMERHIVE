@@ -233,6 +233,7 @@ return [
 
     ],
 
+    //#RAMA vars
     'reserved_column_names' => array(
       'id',
       'created_at',
@@ -244,7 +245,20 @@ return [
     ),
 
     'reserved_tables_prefix' => 'cms_',
-
+    //module generator
     'module_generator_prefix' => env('MODULE_GENERATOR_PREFIX', 'mg_'),
-    'mg_valid_data_types' => array('text', 'number', 'boolean')
+    'mg_valid_data_types' => array('text', 'number', 'boolean'),
+    //qlik settings
+    'qlik_sense_app_base_path' => env('QLIK_SENSE_BASE_PATH', 'https://platformq.dasycloud.com'),
+    'qlik_sense_main_port' => env('QLIK_SENSE_MAIN_PORT', '443'),
+    'qlik_sense_virtual_proxy' => env('QLIK_SENSE_VIRTUAL_PROXY', '/'),
+    'qlik_sense_hub_relative_path' => env('QLIK_SENSE_HUB_RELATIVE_PATH', 'hub'),
+    'qlik_sense_qmc_relative_path' => env('QLIK_SENSE_QMC_RELATIVE_PATH', 'qmc'),
+    'xrfkey' => env('XRFKEY', '0123456789abcdef'),
+    'qrs_port' => env('QRS_PORT', '4243'),
+    'ticket_request_endpoint_relative_path' => env('TICKET_REQUEST_ENDPOINT_RELATIVE_PATH', '/qps/ticket'),
+    'qrs_certificate_base_path' => env('QRS_CERTIFICATE_BASE_PATH', '/var/www/customerhive/storage/app/'),
+    'qrs_certificate_file_relative_path' => env('QRS_CERTIFICATE_FILE_RELATIVE_PATH', 'certificates/client.pem'),
+    'qrs_certificate_key_relative_path' => env('QRS_CERTIFICATE_KEY_RELATIVE_PATH', 'certificates/client_key.pem'),
+
 ];

@@ -575,14 +575,11 @@
 
 			  $data = [];
 
-
-				$qlik_sense_app_base_path = 'https://platformq.dasycloud.com';
-				$port = ':443';
-				$virtualproxy = '/';
-				$url = $qlik_sense_app_base_path;
-				$url .= $port;
-				$url .= $virtualproxy;
-				$url .= 'hub/?';
+				$url = config('app.qlik_sense_app_base_path');
+				$url .= ':'.config('app.qlik_sense_main_port');
+				$url .= config('app.qlik_sense_virtual_proxy');
+				$url .= config('app.qlik_sense_hub_relative_path');
+				$url .= '/?';
 				$url .= '&qlikTicket='.$qlik_ticket;
 
 				$row = new \stdClass;
@@ -618,13 +615,11 @@
 
 			  $data = [];
 
-				$qlik_sense_app_base_path = 'https://platformq.dasycloud.com';
-				$port = ':443';
-				$virtualproxy = '/';
-				$url = $qlik_sense_app_base_path;
-				$url .= $port;
-				$url .= $virtualproxy;
-				$url .= 'qmc/?';
+				$url = config('app.qlik_sense_app_base_path');
+				$url .= ':'.config('app.qlik_sense_main_port');
+				$url .= config('app.qlik_sense_virtual_proxy');
+				$url .= config('app.qlik_sense_qmc_relative_path');
+				$url .= '/?';
 				$url .= '&qlikTicket='.$qlik_ticket;
 
 				$row = new \stdClass;
