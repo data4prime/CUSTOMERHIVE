@@ -245,6 +245,6 @@ return [
 
     'reserved_tables_prefix' => 'cms_',
 
-    'module_generator_prefix' => 'mg_',
+    'module_generator_prefix' => env('MODULE_GENERATOR_PREFIX', 'mg_'),
     'mg_valid_data_types' => array('text', 'number', 'boolean')
 ];
