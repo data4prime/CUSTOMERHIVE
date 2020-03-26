@@ -325,7 +325,7 @@ $(function () {
 
 <div class="box box-default">
   <div class="box-header with-border">
-    <h3 class="box-title">Form Display</h3>
+    <h3 class="box-title">Form Settings</h3>
   </div>
   <div class="box-body">
     <form method="post" autocomplete="off" action="{{Route('ModulsControllerPostStep4')}}">
@@ -335,9 +335,9 @@ $(function () {
       <table class='table-form table table-striped'>
         <thead>
           <tr>
-            <th>Label</th>
-            <th>Name</th>
-            <th>Type</th>
+            <th>Field Label</th>
+            <th>Database Column Name</th>
+            <th>Input Type</th>
             <th>Validation</th>
             <th width="90px">Width</th>
             <th width="100px">Options</th>
@@ -501,7 +501,7 @@ $(function () {
             <div class="box-footer">
               <div align="right">
                 <button type="button" onclick="location.href='{{CRUDBooster::mainpath('step3').'/'.$id}}'" class="btn btn-default">&laquo; Back</button>
-                <input type="submit" class="btn btn-primary" value="Step 3 &raquo;">
+                <input type="submit" class="btn btn-primary" value="Step 5 &raquo;">
               </div>
             </div>
           </form>

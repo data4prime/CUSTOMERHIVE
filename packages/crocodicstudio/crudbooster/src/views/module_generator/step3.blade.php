@@ -204,7 +204,7 @@
 
     <div class="box box-default">
         <div class="box-header with-border">
-            <h3 class="box-title">Table Display</h3>
+            <h3 class="box-title">List settings</h3>
         </div>
         <div class="box-body">
             @if($messages)
@@ -222,8 +222,8 @@
                 <table class="table-display table table-striped">
                     <thead>
                     <tr>
-                        <th>Column</th>
-                        <th>Name</th>
+                        <th>List Column Name</th>
+                        <th>Database Column Name</th>
                         <th colspan='2'>Join (Optional)</th>
                         <th>CallbackPHP</th>
                         <th width="90px">Width (px)</th>
@@ -322,7 +322,7 @@
         <div class="box-footer">
             <div align="right">
                 <button type="button" onclick="location.href='{{CRUDBooster::mainpath('step2').'/'.$id}}'" class="btn btn-default">&laquo; Back</button>
-                <input type="submit" class="btn btn-primary" value="Step 3 &raquo;">
+                <input type="submit" class="btn btn-primary" value="Step 4 &raquo;">
             </div>
         </div>
         </form>

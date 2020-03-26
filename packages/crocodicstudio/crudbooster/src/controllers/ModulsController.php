@@ -948,7 +948,6 @@ class ModulsController extends CBController
           }
           // create new column
           $column = new DynamicColumn;
-          $column->name = $dynamic_column_name;
           if(ctype_digit($dynamic_column->name)){
             // error digit only column name is invalid
             add_log('mg create table add column', 'digit only column name is invalid creating table '.$table_name.' column '.$dynamic_column->name, 'error');
@@ -957,6 +956,17 @@ class ModulsController extends CBController
             $messages = $message['type'].','.$message['content'].',';
             return $messages;
           }
+          //column name transformation
+          //lower case only
+          $dynamic_column_name = strtolower( trim($dynamic_column_name) );
+          //one or multiple spaces to single underscore
+          $dynamic_column_name = preg_replace('/\s+/', '_',$dynamic_column_name);
+          //spaces to underscores
+          // $dynamic_column_name = str_replace(' ', '_', $dynamic_column_name );
+          //remove all special characthers except underscore
+          $dynamic_column_name = preg_replace('/[^A-Za-z0-9\_]/', '', $dynamic_column_name);
+
+          $column->name = $dynamic_column_name;
           if(Schema::hasColumn($table_name, $dynamic_column->name)){
             // error Duplicate column name
             add_log('mg create table add column', 'Duplicate column name '.$dynamic_column->name, 'error');
