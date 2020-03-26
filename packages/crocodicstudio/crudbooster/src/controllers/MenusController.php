@@ -275,6 +275,15 @@ class MenusController extends CBController
             "dataenum" => ['1|Yes', '0|No'],
             'value' => '0',
         ];
+        $this->form[] = [
+            "label" => "Open in a new tab",
+            "name" => "new_tab",
+            "type" => "radio",
+            "required" => true,
+            "validation" => "required|integer",
+            "dataenum" => ['1|Yes', '0|No'],
+            'value' => '0',
+        ];
 
         $id_cms_privileges = Request::get('id_cms_privileges');
         $this->form[] = ["label" => "id_cms_privileges", "name" => "id_cms_privileges", "type" => "hidden", "value" => $id_cms_privileges];

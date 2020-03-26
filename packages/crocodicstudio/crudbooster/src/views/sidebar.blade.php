@@ -30,8 +30,16 @@
                             <span>{{trans("crudbooster.text_dashboard")}}</span> </a></li>
                 @endif
                 @foreach(CRUDBooster::sidebarMenu() as $menu)
+                    <?php
+                      if($menu->new_tab){
+                        $target='target="_blank"';
+                      }
+                      else{
+                        $target='';
+                      }
+                    ?>
                     <li data-id='{{$menu->id}}' class='{{(!empty($menu->children))?"treeview":""}} {{ (Request::is($menu->url_path."*"))?"active":""}}'>
-                        <a href='{{ ($menu->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$menu->url }}'
+                        <a {{ $target }} href='{{ ($menu->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$menu->url }}'
                            class='{{($menu->color)?"text-".$menu->color:""}}'>
                             <i class='{{$menu->icon}} {{($menu->color)?"text-".$menu->color:""}}'></i> <span>{{$menu->name}}</span>
                             @if(!empty($menu->children))<i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>@endif
