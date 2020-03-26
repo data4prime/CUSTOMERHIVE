@@ -311,6 +311,10 @@ class ModulsController extends CBController
             //$this->table equals cms_moduls
             $id = DB::table($this->table)->max('id') + 1; // id del nuovo modulo
 
+            if($table_name=='new'){
+              $table_name = config('app.module_generator_prefix').$name;
+            }
+
             //create a controller for the new module
             $controller = CRUDBooster::generateController($table_name, $path);
             DB::table($this->table)->insert(compact("controller", "name", "table_name", "icon", "path", "created_at", "id"));
@@ -911,22 +915,22 @@ class ModulsController extends CBController
       $id = $request['id'];
       $module = Modules::find($id);
 
-      $dynamic_table_name = $module->name;
-      $table_name = $dynamic_table_name;
+      $table_name = $module->name;
 
       if(substr( $module->table_name, 0, strlen(config('app.reserved_tables_prefix')) ) === config('app.reserved_tables_prefix')){
         // editing reserved tables is forbidden
-        add_log('mg save table', 'editing reserved tables is forbidden '.$dynamic_table_name.' starts with '.config('app.reserved_tables_prefix'), 'error');
+        add_log('mg save table', 'editing reserved tables is forbidden '.$table_name.' starts with '.config('app.reserved_tables_prefix'), 'error');
         $message['type'] = 'danger';
         $message['content'] = 'editing reserved tables is forbidden';
         $messages = $message['type'].','.$message['content'].',';
         return $messages;
       }
 
-      if(!substr( $dynamic_table_name, 0, strlen(config('app.module_generator_prefix')) ) === config('app.module_generator_prefix')){
+      if(substr( $table_name, 0, strlen(config('app.module_generator_prefix')) ) !== config('app.module_generator_prefix')){
         //add table name prefix to new tables
-        $table_name = config('app.module_generator_prefix') . $dynamic_table_name;
+        $table_name = config('app.module_generator_prefix') . $table_name;
       }
+
       $table_exist = Schema::hasTable($table_name);
 
       $dynamic_table = new DynamicTable;
@@ -982,7 +986,29 @@ class ModulsController extends CBController
           $column->hasAI = 0; //Auto Increment true / false
           $column->isPrimaryKey = 0; // true / false
           $column->isRequired = 0; // true / false
-          $column->size = $request['size'][$loop_index];
+          if(empty($request['size'][$loop_index])){
+            //set default data size based on type
+            switch ($request['type'][$loop_index]) {
+              case 'text':
+                $column->size = 255;
+                break;
+              case 'number':
+                $column->size = 11;
+                break;
+              case 'boolean':
+                $column->size = 1;
+                break;
+
+              default:
+                //shouldn't be applied, never
+                $column->size = 1;
+                break;
+            }
+          }
+          else{
+            //set user custom size
+            $column->size = $request['size'][$loop_index];
+          }
 
           $dynamic_columns[] = $column;
         }
@@ -996,8 +1022,8 @@ class ModulsController extends CBController
             $type = $dynamic_column->type;
             // $table->call_dynamic_method($dynamic_column->type);
             if($type == 'integer'){
-              //integer defaults to autoincrement without second parameter set to false
-              $table->integer("{$dynamic_column->name}", false, "{$dynamic_column->size}")->nullable();
+              //integer defaults to autoincrement without second parameter set to false if length is set as third attribute of the integer method
+              $table->integer("{$dynamic_column->name}")->length($dynamic_column->size)->nullable();
             }
             else{
               $table->$type("{$dynamic_column->name}", "{$dynamic_column->size}")->nullable();
@@ -1049,7 +1075,29 @@ class ModulsController extends CBController
           $column->hasAI = 0; //Auto Increment true / false
           $column->isPrimaryKey = 0; // true / false
           $column->isRequired = 0; // true / false
-          $column->size = $request['size'][$loop_index];
+          if(empty($request['size'][$loop_index])){
+            //set default data size based on type
+            switch ($request['type'][$loop_index]) {
+              case 'text':
+                $column->size = 255;
+                break;
+              case 'number':
+                $column->size = 11;
+                break;
+              case 'boolean':
+                $column->size = 1;
+                break;
+
+              default:
+                //shouldn't be applied, never
+                $column->size = 1;
+                break;
+            }
+          }
+          else{
+            //set user custom size
+            $column->size = $request['size'][$loop_index];
+          }
 
           $dynamic_columns[] = $column;
 
@@ -1080,8 +1128,8 @@ class ModulsController extends CBController
             $result = Schema::table($table_name, function (Blueprint $table) use ($column, $after) {
               $type = $column->type;
               if($type == 'integer'){
-                //integer defaults to autoincrement without second parameter set to false
-                $table->integer("{$column->name}", false, $column->size)->nullable()->after($after);
+                //integer defaults to autoincrement without second parameter set to false if length is set as third attribute of the integer method
+                $table->integer("{$column->name}")->length($column->size)->nullable()->after($after);
               }
               else{
                 $table->$type("{$column->name}", $column->size)->nullable()->after($after);
@@ -1144,8 +1192,8 @@ class ModulsController extends CBController
             $result = Schema::table($table_name, function (Blueprint $table) use ($column) {
               $type = $column->type;
               if($type == 'integer'){
-                //integer defaults to autoincrement without second parameter set to false
-                $table->integer("{$column->name}", false, $column->size)->change();
+                //integer defaults to autoincrement without second parameter set to false if length is set as third attribute of the integer method
+                $table->integer("{$column->name}")->length($column->size)->change();
               }
               else{
                 $table->$type("{$column->name}", $column->size)->change();

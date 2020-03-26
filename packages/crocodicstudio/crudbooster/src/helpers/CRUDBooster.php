@@ -982,7 +982,9 @@ class CRUDBooster
 
 		$pk = DB::getDoctrineSchemaManager()->listTableDetails($table)->getPrimaryKey();
 		if(!$pk) {
-		    return null;
+      //return null;
+      //#RAMA if module generator is creating a new table the table has not be created yet and the above methods can't find anything
+	    return 'id';
 		}
 		return $pk->getColumns()[0];
 	}

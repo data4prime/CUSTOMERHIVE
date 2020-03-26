@@ -215,7 +215,7 @@
               @endforeach
             @endif
 
-            <form method="post" action="{{Route('ModulsControllerPostStep3')}}">
+            <form autocomplete="off" method="post" action="{{Route('ModulsControllerPostStep3')}}">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <input type="hidden" name="id" value="{{$id}}">
 
@@ -240,7 +240,7 @@
                                   <input value='{{$c["label"]}}' type='text' name='column[]' onclick='showColumnSuggest(this)' onKeyUp='showColumnSuggestLike(this)' placeholder='Column Name' class='column form-control notfocus' value=''/>
                                 </td>
                                 <td>
-                                  <input value='{{$c["name"]}}' type='text' name='name[]' onclick='showNameSuggest(this)' onKeyUp='showNameSuggestLike(this)' placeholder='Field Name' class='name form-control notfocus' value='' autocomplete="off"/>
+                                  <input value='{{$c["name"]}}' type='text' name='name[]' onclick='showNameSuggest(this)' onKeyUp='showNameSuggestLike(this)' placeholder='Field Name' class='name form-control notfocus' autocomplete="off"/>
                                 </td>
                                 <td>
                                   <input value='{{ @explode(",",$c["join"])[0] }}' type='text' name='join_table[]' onclick='showTable(this)' onKeyUp='showTableLike(this)' placeholder='Table Name' class='join_table form-control notfocus' value=''/>
