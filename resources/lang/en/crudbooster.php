@@ -141,6 +141,7 @@ return [
     'denied_update' => 'Sorry you do not have privilege to update the data !',
     'denied_create' => 'Sorry you do not have privilege to create the data !',
     'denied_delete' => 'Sorry you do not have privilege to delete the data !',
+    'missing_item' => 'Sorry, we couldn\'t find your item!',
 
     'user_image' => 'User Image',
     'online' => 'Online',
