@@ -116,3 +116,14 @@
         <p class='help-block'>{{ @$form['help'] }}</p>
     </div>
 </div>
+@if($is_public && $name == 'public_access')
+<div class="form-group {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}">
+  <div class="col-sm-2 control-label" style="padding-top: 7px">
+    <label class="">Public URL</label>
+  </div>
+  <div class="col-sm-10">
+    <a id="copyLink" href="{{ $link }}" target="_blank">{{ $link }}</a>
+    &nbsp<button id="copyButton" class="btn btn-info">Copy</button>
+  </div>
+</div>
+@endif

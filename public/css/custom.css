@@ -46,3 +46,10 @@ h1 .qlik_logo{
   width:14px;
   margin-right:6px;
 }
+/*
+* Public page
+*/
+.public-wrapper .qi_iframe{
+  width: 100%;
+  height: 98vh;
+}

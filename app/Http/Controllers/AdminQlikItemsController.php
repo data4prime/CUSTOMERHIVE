@@ -7,6 +7,7 @@
 	use GroupHelper;
 	use QlikHelper;
 	use Illuminate\Support\Facades\Route;
+	use App\QlikItem;
 
 	class AdminQlikItemsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -35,6 +36,7 @@
 				$this->col[] = ["label"=>"Title","name"=>"title"];
 				$this->col[] = ["label"=>"Subtitle","name"=>"subtitle"];
 				$this->col[] = ["label"=>"Help","name"=>"description"];
+				$this->col[] = ["label"=>"Public","name"=>"proxy_token"];
 				// $this->col[] = ["label"=>"Url","name"=>"url"];
 				$this->col[] = ["label"=>"Width","name"=>"frame_width"];
 				$this->col[] = ["label"=>"Height","name"=>"frame_height"];
@@ -51,6 +53,7 @@
 				$this->form[] = ['label'=>'','name'=>'frame_width_unit','type'=>'select','validation'=>'','width'=>'col-sm-1','dataenum'=>'px','default'=>'%'];
 				$this->form[] = ['label'=>'Height','name'=>'frame_height','type'=>'number','validation'=>'required|int|min:1|max:10000','width'=>'col-sm-1','value'=>'100'];
 				$this->form[] = ['label'=>'','name'=>'frame_height_unit','type'=>'select','validation'=>'','width'=>'col-sm-1','dataenum'=>'px','default'=>'%'];
+				$this->form[] = ['label'=>'Enable public access','name'=>'public_access','type'=>'checkbox','width'=>'col-sm-1','dataenum'=>' '];
 				# END FORM DO NOT REMOVE THIS LINE
 
 				# OLD START FORM
@@ -213,8 +216,70 @@
 						//setta 100% 100% se spunti Full Page checkbox
 						$('input[name^=frame_full_page]').change(function () {setFullPage()});
 
-				  });";
+				  });
 
+					/**
+					* This will copy the innerHTML of an element to the clipboard
+					* @param element reference OR string
+					*/
+					var copyButton = document.getElementById('copyButton');
+					if(copyButton !== null){
+						copyButton.addEventListener('click', function(e) {
+								e.preventDefault();
+						    copyToClipboard(document.getElementById('copyLink'));
+						});
+					}
+
+					function copyToClipboard(elem) {
+						  // create hidden text element, if it doesn't already exist
+					    var targetId = '_hiddenCopyText_';
+					    var isInput = elem.tagName === 'INPUT' || elem.tagName === 'TEXTAREA';
+					    var origSelectionStart, origSelectionEnd;
+					    if (isInput) {
+					        // can just use the original source element for the selection and copy
+					        target = elem;
+					        origSelectionStart = elem.selectionStart;
+					        origSelectionEnd = elem.selectionEnd;
+					    } else {
+					        // must use a temporary form element for the selection and copy
+					        target = document.getElementById(targetId);
+					        if (!target) {
+					            var target = document.createElement('textarea');
+					            target.style.position = 'absolute';
+					            target.style.left = '-9999px';
+					            target.style.top = '0';
+					            target.id = targetId;
+					            document.body.appendChild(target);
+					        }
+					        target.textContent = elem.textContent;
+					    }
+					    // select the content
+					    var currentFocus = document.activeElement;
+					    target.focus();
+					    target.setSelectionRange(0, target.value.length);
+
+					    // copy the selection
+					    var succeed;
+					    try {
+					    	  succeed = document.execCommand('copy');
+					    } catch(e) {
+					        succeed = false;
+					    }
+					    // restore original focus
+					    if (currentFocus && typeof currentFocus.focus === 'function') {
+					        currentFocus.focus();
+					    }
+
+					    if (isInput) {
+					        // restore prior selection
+					        elem.setSelectionRange(origSelectionStart, origSelectionEnd);
+					    } else {
+					        // clear temporary content
+					        target.textContent = '';
+					    }
+					    return succeed;
+					}
+					";
 
           /*
 	        | ----------------------------------------------------------------------
@@ -310,6 +375,16 @@
 	    |
 	    */
 	    public function hook_row_index($column_index,&$column_value) {
+				//replace proxy_token with public link to qlik item
+				if($column_index == 4){
+					if(empty($column_value)){
+							$column_value = 'private';
+					}
+					else{
+						$link = QlikHelper::buildPublicUrl($column_value);
+						$column_value = '<a href="'.$link.'" target="_blank">public</a>';
+					}
+				}
 	    	//Your code here
 	    }
 
@@ -327,6 +402,11 @@
 					unset($postdata['frame_full_page']);
 					unset($postdata['frame_width_unit']);
 					unset($postdata['frame_height_unit']);
+
+					//TODO non ho ancora l'id, devo ancora crearlo!!
+					QlikHelper::toggle_public_access($postdata['public_access'], $id);
+					//avoid sql error
+					unset($postdata['public_access']);
 	    }
 
 	    /*
@@ -360,6 +440,10 @@
 					if(empty($postdata['description'])){
 						$postdata['description'] = '';
 					}
+
+					QlikHelper::toggle_public_access($postdata['public_access'], $id);
+					//avoid sql error
+					unset($postdata['public_access']);
 	    }
 
 	    /*
@@ -535,7 +619,10 @@
         $command = 'edit';
         Session::put('current_row_id', $id);
 
-        return view('qlik_items.form', compact('id', 'row', 'page_menu', 'page_title', 'command'));
+				$qlik_item = QlikItem::find($id);
+				$is_public = $qlik_item->isPublic();
+
+        return view('qlik_items.form', compact('id', 'row', 'page_menu', 'page_title', 'command', 'is_public'));
 	    }
 
 			//overwrite default method
@@ -582,7 +669,7 @@
 				$url .= config('app.qlik_sense_virtual_proxy');
 				$url .= config('app.qlik_sense_hub_relative_path');
 				$url .= '/?';
-				$url .= '&qlikTicket='.$qlik_ticket;
+				$url .= 'qlikTicket='.$qlik_ticket;
 
 				$row = new \stdClass;
 				$row->frame_width = '100%';
@@ -599,7 +686,7 @@
 			  $data['subtitle'] = $data['row']->subtitle;
 
 
-				$data['item_url'] = $data['row']->url.'&qlikTicket='.$qlik_ticket;
+				$data['item_url'] = $data['row']->url;
 
 			  $this->cbView('qlik_items.view',$data);
 	    }
@@ -637,7 +724,7 @@
 			  $data['page_title'] = $data['row']->title;
 				$data['help'] = $data['row']->description;
 			  $data['subtitle'] = $data['row']->subtitle;
-				$data['item_url'] = $data['row']->url.'&qlikTicket='.$qlik_ticket;
+				$data['item_url'] = $data['row']->url;
 
 			  $this->cbView('qlik_items.view',$data);
 	    }

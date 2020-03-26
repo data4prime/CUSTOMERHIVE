@@ -37,6 +37,7 @@
                         @else
                             @include("qlik_items.form_body")
                         @endif
+
                     </div><!-- /.box-body -->
 
                     <div class="box-footer" style="background: #F5F5F5">

@@ -32,11 +32,13 @@ foreach($forms as $index=>$form) {
   @$join = $form['join'];
   @$value = (isset($form['value'])) ? $form['value'] : '';
   //full page checked if frame size 100% x 100%
-  if($name == 'frame_full_page' AND $full_page){
-    $checked = "checked";
-  }
-  else{
-    $checked = "";
+  if($name == 'frame_full_page'){
+    if($full_page){
+      $checked = "checked";
+    }
+    else{
+      $checked = "";
+    }
   }
   //split width and height into dimension and unit
   if($name == 'frame_width' OR $name == 'frame_height'){
@@ -55,10 +57,18 @@ foreach($forms as $index=>$form) {
   else{
     @$value = (isset($row->{$name})) ? $row->{$name} : $value;
   }
-  // var_dump($name);
-  // var_dump($row->{$name});
-  // var_dump($value);
 
+  //public access checked
+  if($name == 'public_access'){
+    if($is_public){
+      $checked = "checked";
+      $qlik_item = App\QlikItem::find($row->id);
+      $link = $qlik_item->publicUrl();
+    }
+    else{
+      $checked = "";
+    }
+  }
 
   $old = old($name);
   $value = (! empty($old)) ? $old : $value;
