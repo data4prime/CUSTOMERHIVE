@@ -166,6 +166,9 @@ $(function () {
             <td>
               <input type='hidden' name='index[]' value="{{ $index }}"/>
               <input data-index="{{ $index }}" type='text' value='{{$form["name"]}}' placeholder="Input field name" class='form-control name' name='name[]' autocomplete="off"/>
+              <div class="help-block">
+                Use alphanumeric lower case characters and underscore only
+              </div>
             </td>
             <td>
               <select data-index="{{ $index }}" name="type[]" class='form-control type-select'>
