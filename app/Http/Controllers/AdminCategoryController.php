@@ -5,7 +5,7 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminProdottiController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminCategoryController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
@@ -25,21 +25,17 @@
 			$this->button_filter = true;
 			$this->button_import = false;
 			$this->button_export = false;
-			$this->table = "mg_prodotti";
+			$this->table = "mg_category";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Nome Prodotto","name"=>"nome_prodotto","width"=>"100"];
-			$this->col[] = ["label"=>"Descrizione Prodotto","name"=>"descrizione_prodotto","width"=>"500"];
-			$this->col[] = ["label"=>"Categoria Prodotto","name"=>"categoria_prodotto","join"=>"mg_category,category_name","width"=>"100"];
+			$this->col[] = ["label"=>"Category Name","name"=>"category_name","width"=>"100"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Nome Prodotto','name'=>'nome_prodotto','type'=>'text','validation'=>'required','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Descrizione Prodotto','name'=>'descrizione_prodotto','type'=>'wysiwyg','validation'=>'required','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Categoria Prodotto','name'=>'categoria_prodotto','type'=>'select','validation'=>'required','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Category Name','name'=>'category_name','type'=>'text','validation'=>'required','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
@@ -218,6 +214,7 @@
 	    */
 	    public function actionButtonSelected($id_selected,$button_name) {
 	        //Your code here
+
 	    }
 
 
