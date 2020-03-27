@@ -502,8 +502,8 @@
 
 			  $data = [];
 			  $data['row'] = \App\QlikItem::find($qlik_item_id);
-
-			  if(!empty($data['row']['deleted_at'])) {
+			  if(empty($data['row'])) {
+					//item missing or soft deleted
 					//can't access soft deleted qlik item
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.missing_item"));
 			  }

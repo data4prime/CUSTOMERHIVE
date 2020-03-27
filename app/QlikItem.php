@@ -3,12 +3,15 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use QlikHelper;
 
 class QlikItem extends Model
 {
     protected $table = 'qlik_items';
     public $timestamps = false;
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
 
 		/**
 		*	Trova i gruppi autorizzati all'item
