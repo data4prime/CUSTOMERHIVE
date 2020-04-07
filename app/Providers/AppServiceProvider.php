@@ -15,9 +15,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-      \App\QlikItem::deleting(function ($model) {
-        return false;
-      });
     }
 
     /**
