@@ -8,6 +8,7 @@
 	use QlikHelper;
 	use Illuminate\Support\Facades\Route;
 	use App\QlikItem;
+	use App\ItemsAllowed;
 
 	class AdminQlikItemsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -466,8 +467,9 @@
 	    |
 	    */
 	    public function hook_before_delete($id) {
-	        //Your code here
-
+	        //Delete items allowed on cascade
+				  $result = ItemsAllowed::where('item_id',$id)
+															->delete();
 	    }
 
 	    /*
@@ -501,7 +503,7 @@
 				$qlik_ticket = QlikHelper::getTicket();
 
 			  $data = [];
-			  $data['row'] = \App\QlikItem::find($qlik_item_id);
+			  $data['row'] = QlikItem::find($qlik_item_id);
 			  if(empty($data['row'])) {
 					//item missing or soft deleted
 					//can't access soft deleted qlik item
@@ -524,8 +526,8 @@
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
 				$data['item_id'] = $item_id;
-				$data['qlik_item'] = \App\QlikItem::find($item_id);
-				$data['groups'] = \App\ItemsAllowed::where('item_id',$item_id)
+				$data['qlik_item'] = QlikItem::find($item_id);
+				$data['groups'] = ItemsAllowed::where('item_id',$item_id)
 																							->join('groups','groups.id','=','items_allowed.group_id')
 																							->get();
 				$data['page_title'] = 'Authorize Access';
@@ -561,13 +563,13 @@
 			  if(empty($group_id)) {
 					return redirect($return_url.'/alert/1');
 			  }
-				//check if user is already in group
-				$access = \App\ItemsAllowed::where('item_id',$item_id)
+				//check if item is already in group
+				$access = ItemsAllowed::where('item_id',$item_id)
 																		->where('group_id',$group_id)
 																		->count();
 
 				if($access == 0){
-					$add_authorization = new \App\ItemsAllowed;
+					$add_authorization = new ItemsAllowed;
 					$add_authorization->item_id = $item_id;
 					$add_authorization->group_id = $group_id;
 					$add_authorization->save();
@@ -592,7 +594,7 @@
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
 
-			  $data['delete'] = \App\ItemsAllowed::where('item_id',$item_id)
+			  $data['delete'] = ItemsAllowed::where('item_id',$item_id)
 														->where('group_id',$group_id)
 														->delete();
 
