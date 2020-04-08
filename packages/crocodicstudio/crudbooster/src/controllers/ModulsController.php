@@ -1025,8 +1025,17 @@ class ModulsController extends CBController
 
         $dynamic_table->columns = $dynamic_columns;
 
-        //TODO validate table name: check protected table names
+        //table name transformation
+        //lower case only
+        $table_name = strtolower( trim($table_name) );
+        //one or multiple spaces to single underscore
+        $table_name = preg_replace('/\s+/', '_',$table_name);
+        //spaces to underscores
+        // $table_name = str_replace(' ', '_', $table_name );
+        //remove all special characthers except underscore
+        $table_name = preg_replace('/[^A-Za-z0-9\_]/', '', $table_name);
 
+        //TODO validate table name: check protected table names
         $result = Schema::create($table_name, function (Blueprint $table) use ($dynamic_columns) {
           foreach ($dynamic_columns as $key => $dynamic_column) {
             $type = $dynamic_column->type;

@@ -675,7 +675,7 @@
 				$url = config('app.qlik_sense_app_base_path');
 				$url .= ':'.config('app.qlik_sense_main_port');
 				$url .= config('app.qlik_sense_virtual_proxy');
-				$url .= config('app.qlik_sense_hub_relative_path');
+				$url .= '/hub';
 				$url .= '/?';
 				$url .= 'qlikTicket='.$qlik_ticket;
 
@@ -715,7 +715,7 @@
 				$url = config('app.qlik_sense_app_base_path');
 				$url .= ':'.config('app.qlik_sense_main_port');
 				$url .= config('app.qlik_sense_virtual_proxy');
-				$url .= config('app.qlik_sense_qmc_relative_path');
+				$url .= '/qmc';
 				$url .= '/?';
 				$url .= '&qlikTicket='.$qlik_ticket;
 

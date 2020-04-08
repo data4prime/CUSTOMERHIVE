@@ -165,7 +165,7 @@ $(function () {
           <tr>
             <td>
               <input type='hidden' name='index[]' value="{{ $index }}"/>
-              <input data-index="{{ $index }}" type='text' value='{{$form["name"]}}' placeholder="Input field name" class='form-control name' name='name[]' autocomplete="off"/>
+              <input data-index="{{ $index }}" type='text' value='{{$form["name"]}}' placeholder="Insert column name" class='form-control name' name='name[]' autocomplete="off"/>
               <div class="help-block">
                 Use alphanumeric lower case characters and underscore only
               </div>
@@ -194,7 +194,10 @@ $(function () {
           <tr id='tr-sample' style="display: none">
             <td>
               <input class="data_index" type='hidden' name='index[]' value="{{ $index }}"/>
-              <input data-index="{{ $index }}" type='text' placeholder="Input field name" class='form-control name' name='name[]' autocomplete="off"/>
+              <input data-index="{{ $index }}" type='text' placeholder="Insert column name" class='form-control name' name='name[]' autocomplete="off"/>
+              <div class="help-block">
+                Use alphanumeric lower case characters and underscore only
+              </div>
             </td>
             <td>
               <select data-index="{{ $index }}" name="type[]" class='form-control type-select'>

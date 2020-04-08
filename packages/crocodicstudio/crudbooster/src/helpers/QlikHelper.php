@@ -65,14 +65,13 @@ class QlikHelper  {
     }
 
     //base path to call
-    $QRSurl = config('app.qlik_sense_app_base_path').':'.config('app.qrs_port');
+    $QRSurl = config('app.qlik_sense_app_base_path').':'.config('app.qrs_port').config('app.qlik_sense_virtual_proxy').'/';
     $xrfkey = config('app.xrfkey');
     //Path to call (with xrfkey parameter added)
-    $endpoint = config('app.ticket_request_endpoint_relative_path')."?xrfkey=".$xrfkey;
+    $endpoint = "qps/ticket?xrfkey=".$xrfkey;
     //Location of QRS client certificate and certificate key, assuming key is included separately
-    $base_path = config('app.qrs_certificate_base_path');
-    $QRSCertfile = $base_path.config('app.qrs_certificate_file_relative_path');
-    $QRSCertkeyfile = $base_path.config('app.qrs_certificate_key_relative_path');
+    $QRSCertfile = config('app.qrs_certificate_base_path').config('app.qrs_certificate_file_relative_path');
+    $QRSCertkeyfile = config('app.qrs_certificate_base_path').config('app.qrs_certificate_key_relative_path');
     // #RAMA no password
     // $QRSCertkeyfilePassword = "Passw0rd!";
 
@@ -106,7 +105,7 @@ class QlikHelper  {
     //Execute and get response
     $raw_response = curl_exec($ch);
     $response = json_decode($raw_response);
-    
+
     return $response->Ticket;
   }
 
