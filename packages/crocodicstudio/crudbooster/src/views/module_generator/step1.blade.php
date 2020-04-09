@@ -56,11 +56,11 @@
                   </select>
                 </div>
 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="">Module Slug</label>
                     <input type="text" class="form-control" required name="path" value="{{$row->path}}">
                     <div class="help-block">Alphanumeric and underscore characters only</div>
-                </div>
+                </div> -->
         </div>
         <div class="box-footer">
 

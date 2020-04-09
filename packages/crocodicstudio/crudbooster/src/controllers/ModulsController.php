@@ -406,7 +406,6 @@ class ModulsController extends CBController
         //column data types
         //TODO add more types
         $types = config('app.mg_valid_data_types');
-        //TODO add data size
         //TODO add PK NN AI
         //TODO add FK
 
@@ -415,6 +414,7 @@ class ModulsController extends CBController
         $data['active_tab'] = 2;
         $data['cb_form'] = $cb_form;
         $data['table_name'] = $module->name;
+        $data['table_exists'] = !empty($cb_form);
         $data['types'] = $types;
         $data['box_title'] = 'Table '. str_replace(config('app.module_generator_prefix'), '', $module->name);
 

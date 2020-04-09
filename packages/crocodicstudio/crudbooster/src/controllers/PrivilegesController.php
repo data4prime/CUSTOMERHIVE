@@ -53,7 +53,23 @@ class PrivilegesController extends CBController
 
         $id = 0;
         $data['page_title'] = "Add Data";
-        $data['moduls'] = DB::table("cms_moduls")->where('is_protected', 0)->whereNull('deleted_at')->select("cms_moduls.*", DB::raw("(select is_visible from cms_privileges_roles where id_cms_moduls = cms_moduls.id and id_cms_privileges = '$id') as is_visible"), DB::raw("(select is_create from cms_privileges_roles where id_cms_moduls  = cms_moduls.id and id_cms_privileges = '$id') as is_create"), DB::raw("(select is_read from cms_privileges_roles where id_cms_moduls    = cms_moduls.id and id_cms_privileges = '$id') as is_read"), DB::raw("(select is_edit from cms_privileges_roles where id_cms_moduls    = cms_moduls.id and id_cms_privileges = '$id') as is_edit"), DB::raw("(select is_delete from cms_privileges_roles where id_cms_moduls  = cms_moduls.id and id_cms_privileges = '$id') as is_delete"))->orderby("name", "asc")->get();
+        $data['moduls'] = DB::table("cms_moduls")
+          ->where('is_protected', 0)
+          ->where('name','!=','Qlik Items')
+          ->where('name','!=','Groups')
+          ->where('name','!=','Users Management')
+          ->whereNull('deleted_at')
+          ->select(
+                "cms_moduls.*",
+                DB::raw("(select is_visible from cms_privileges_roles where id_cms_moduls = cms_moduls.id and id_cms_privileges = '$id') as is_visible"),
+                DB::raw("(select is_create from cms_privileges_roles where id_cms_moduls  = cms_moduls.id and id_cms_privileges = '$id') as is_create"),
+                DB::raw("(select is_read from cms_privileges_roles where id_cms_moduls    = cms_moduls.id and id_cms_privileges = '$id') as is_read"),
+                DB::raw("(select is_edit from cms_privileges_roles where id_cms_moduls    = cms_moduls.id and id_cms_privileges = '$id') as is_edit"),
+                DB::raw("(select is_delete from cms_privileges_roles where id_cms_moduls  = cms_moduls.id and id_cms_privileges = '$id') as is_delete")
+              )
+          ->orderby("name", "asc")
+          ->get();
+
         $data['page_menu'] = Route::getCurrentRoute()->getActionName();
 
         return view('crudbooster::privileges', $data);
@@ -123,7 +139,15 @@ class PrivilegesController extends CBController
 
         $page_title = trans('crudbooster.edit_data_page_title', ['module' => 'Privilege', 'name' => $row->name]);
 
-        $moduls = DB::table("cms_moduls")->where('is_protected', 0)->where('deleted_at', null)->select("cms_moduls.*")->orderby("name", "asc")->get();
+        $moduls = DB::table("cms_moduls")
+                      ->where('is_protected', 0)
+                      ->where('deleted_at', null)
+                      ->where('name','!=','Qlik Items')
+                      ->where('name','!=','Groups')
+                      ->where('name','!=','Users Management')
+                      ->select("cms_moduls.*")
+                      ->orderby("name", "asc")
+                      ->get();
         $page_menu = Route::getCurrentRoute()->getActionName();
 
         return view('crudbooster::privileges', compact('row', 'page_title', 'moduls', 'page_menu'));

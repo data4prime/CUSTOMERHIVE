@@ -144,9 +144,11 @@ $(function () {
     <h3 class="box-title">{{ $box_title }}</h3>
   </div>
   <div class="box-body">
+    @if($table_exists)
     <div class="alert alert-warning">
       <strong style="text-transform: capitalize">Warning!</strong> this is the data structure, editing may cause data loss or conflict with other modules.
     </div>
+    @endif
     <form method="post" action="{{ Route('ModulsControllerPostStep2') }}">
       <input type="hidden" name="_token" value="{{ csrf_token() }}">
       <input type="hidden" name="id" value="{{ $id }}">
