@@ -5,11 +5,11 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminTestController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminTest31Controller extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 	    	# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->table 			   = "mg_test";
+			$this->table 			   = "mg_test_3_1";
 			$this->title_field         = "id";
 			$this->limit               = 20;
 			$this->orderby             = "id,desc";
@@ -31,12 +31,10 @@
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 	        $this->col = [];
-			$this->col[] = array("label"=>"My Col","name"=>"my col" );
-
+	
 			# END COLUMNS DO NOT REMOVE THIS LINE
 			# START FORM DO NOT REMOVE THIS LINE
 		$this->form = [];
-		$this->form[] = ["label"=>"My Col","name"=>"my col","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 
 			# END FORM DO NOT REMOVE THIS LINE
 

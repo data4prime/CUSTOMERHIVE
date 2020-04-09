@@ -35,6 +35,7 @@
     @push('bottom')
         <script>
             var columns = {!! json_encode($columns) !!};
+            var columns_human_readable = {!! json_encode($columns_human_readable) !!};
             var tables = {!! json_encode($table_list) !!};
             function ucwords(str) {
                 return (str + '').replace(/^([a-z])|\s+([a-z])/g, function ($1) {
@@ -67,9 +68,7 @@
                 t = $(t);
                 t.next("ul").remove();
                 var list = '';
-                $.each(columns, function (i, obj) {
-                    obj = obj.replace('id_', '');
-                    obj = ucwords(obj.replace('_', ' '));
+                $.each(columns_human_readable, function (i, obj) {
                     list += "<li>" + obj + "</li>";
                 });
                 t.after("<ul class='sub'>" + list + "</ul>");
@@ -80,10 +79,8 @@
                 t.next("ul").remove();
                 if (!v) return false;
                 var list = '';
-                $.each(columns, function (i, obj) {
+                $.each(columns_human_readable, function (i, obj) {
                     if (obj.includes(v.toLowerCase())) {
-                        obj = obj.replace('id_', '');
-                        obj = ucwords(obj.replace('_', ' '));
                         list += "<li>" + obj + "</li>";
                     }
                 });

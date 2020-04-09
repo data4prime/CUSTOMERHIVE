@@ -5,48 +5,40 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminProdottiController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminTest4AController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
-
-			# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->title_field = "id";
-			$this->limit = "20";
-			$this->orderby = "id,desc";
-			$this->global_privilege = false;
-			$this->button_table_action = true;
-			$this->button_bulk_action = true;
+	    	# START CONFIGURATION DO NOT REMOVE THIS LINE
+			$this->table 			   = "mg_test_4_a";
+			$this->title_field         = "id";
+			$this->limit               = 20;
+			$this->orderby             = "id,desc";
+			$this->show_numbering      = FALSE;
+			$this->global_privilege    = FALSE;
+			$this->button_table_action = TRUE;
 			$this->button_action_style = "button_icon";
-			$this->button_add = true;
-			$this->button_edit = true;
-			$this->button_delete = true;
-			$this->button_detail = true;
-			$this->button_show = true;
-			$this->button_filter = true;
-			$this->button_import = false;
-			$this->button_export = false;
-			$this->table = "mg_prodotti";
+			$this->button_add          = TRUE;
+			$this->button_delete       = TRUE;
+			$this->button_edit         = TRUE;
+			$this->button_detail       = TRUE;
+			$this->button_show         = TRUE;
+			$this->button_filter       = TRUE;
+			$this->button_export       = FALSE;
+			$this->button_import       = FALSE;
+			$this->button_bulk_action  = TRUE;
+			$this->sidebar_mode		   = "normal"; //normal,mini,collapse,collapse-mini
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
-			$this->col = [];
-			$this->col[] = ["label"=>"Nome Prodotto","name"=>"nome_prodotto","width"=>"100"];
-			$this->col[] = ["label"=>"Descrizione Prodotto","name"=>"descrizione_prodotto","width"=>"500"];
-			$this->col[] = ["label"=>"Categoria Prodotto","name"=>"categoria_prodotto","join"=>"mg_category,category_name","width"=>"100"];
+	        $this->col = [];
+	
 			# END COLUMNS DO NOT REMOVE THIS LINE
-
 			# START FORM DO NOT REMOVE THIS LINE
-			$this->form = [];
-			$this->form[] = ['label'=>'Nome Prodotto','name'=>'nome_prodotto','type'=>'text','validation'=>'required','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Descrizione Prodotto','name'=>'descrizione_prodotto','type'=>'wysiwyg','validation'=>'required','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Categoria Prodotto','name'=>'categoria_prodotto','type'=>'select','validation'=>'required','width'=>'col-sm-10'];
+		$this->form = [];
+
 			# END FORM DO NOT REMOVE THIS LINE
 
-			# OLD START FORM
-			//$this->form = [];
-			# OLD END FORM
-
-			/*
+	        /*
 	        | ----------------------------------------------------------------------
 	        | Sub Module
 	        | ----------------------------------------------------------------------
@@ -218,6 +210,7 @@
 	    */
 	    public function actionButtonSelected($id_selected,$button_name) {
 	        //Your code here
+
 	    }
 
 

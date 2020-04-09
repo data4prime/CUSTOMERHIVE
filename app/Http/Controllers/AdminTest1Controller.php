@@ -5,40 +5,44 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminCategorieProdottiController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminTest1Controller extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
-	    	# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->table 			   = "mg_categorie prodotti";
-			$this->title_field         = "id";
-			$this->limit               = 20;
-			$this->orderby             = "id,desc";
-			$this->show_numbering      = FALSE;
-			$this->global_privilege    = FALSE;
-			$this->button_table_action = TRUE;
+
+			# START CONFIGURATION DO NOT REMOVE THIS LINE
+			$this->title_field = "id";
+			$this->limit = "20";
+			$this->orderby = "id,desc";
+			$this->global_privilege = false;
+			$this->button_table_action = true;
+			$this->button_bulk_action = true;
 			$this->button_action_style = "button_icon";
-			$this->button_add          = TRUE;
-			$this->button_delete       = TRUE;
-			$this->button_edit         = TRUE;
-			$this->button_detail       = TRUE;
-			$this->button_show         = TRUE;
-			$this->button_filter       = TRUE;
-			$this->button_export       = FALSE;
-			$this->button_import       = FALSE;
-			$this->button_bulk_action  = TRUE;
-			$this->sidebar_mode		   = "normal"; //normal,mini,collapse,collapse-mini
+			$this->button_add = true;
+			$this->button_edit = true;
+			$this->button_delete = true;
+			$this->button_detail = true;
+			$this->button_show = true;
+			$this->button_filter = true;
+			$this->button_import = false;
+			$this->button_export = false;
+			$this->table = "mg_test_1";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
-	        $this->col = [];
-	
+			$this->col = [];
+			$this->col[] = ["label"=>"Test 1","name"=>"test_1"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
-			# START FORM DO NOT REMOVE THIS LINE
-		$this->form = [];
 
+			# START FORM DO NOT REMOVE THIS LINE
+			$this->form = [];
+			$this->form[] = ['label'=>'Test 1','name'=>'test_1','validation'=>'required','width'=>'col-sm-9'];
 			# END FORM DO NOT REMOVE THIS LINE
 
-	        /*
+			# OLD START FORM
+			//$this->form = [];
+			# OLD END FORM
+
+			/*
 	        | ----------------------------------------------------------------------
 	        | Sub Module
 	        | ----------------------------------------------------------------------

@@ -5,11 +5,11 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminTest2Controller extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminTest21Controller extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 	    	# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->table 			   = "mg_test2";
+			$this->table 			   = "mg_test_2_1";
 			$this->title_field         = "id";
 			$this->limit               = 20;
 			$this->orderby             = "id,desc";

@@ -51,7 +51,6 @@ class MenusController extends CBController
         } elseif ($row->type == 'Qlik') {
             //ricava id del qlik item a cui fa riferimento questa voce di menu dal path cioè l'href della voce di menu
             $id_qlik_item = str_replace('qlik_items/content/', '', $row->path);
-            // var_dump($id_qlik_item);exit;
         }
 
         $this->script_js = "

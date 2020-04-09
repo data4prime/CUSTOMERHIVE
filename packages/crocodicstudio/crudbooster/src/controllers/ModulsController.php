@@ -13,6 +13,7 @@ use App\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use App\DynamicTable;
 use App\DynamicColumn;
+use ModuleHelper;
 
 class ModulsController extends CBController
 {
@@ -312,9 +313,8 @@ class ModulsController extends CBController
             $id = DB::table($this->table)->max('id') + 1; // id del nuovo modulo
 
             if($table_name=='new'){
-              $table_name = config('app.module_generator_prefix').$name;
+              $table_name = ModuleHelper::sql_name_encode(config('app.module_generator_prefix').$name);
             }
-
             //create a controller for the new module
             $controller = CRUDBooster::generateController($table_name, $path);
             DB::table($this->table)->insert(compact("controller", "name", "table_name", "icon", "path", "created_at", "id"));
@@ -434,7 +434,6 @@ class ModulsController extends CBController
             CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
-
         $messages = $this->save_table($request);
 
         $data = array();
@@ -459,6 +458,11 @@ class ModulsController extends CBController
 
         $columns = CRUDBooster::getTableColumns($row->table_name);
 
+        $columns_human_readable = array();
+        foreach ($columns as $column) {
+          $columns_human_readable[] = ModuleHelper::sql_name_decode($column);
+        }
+
         $tables = CRUDBooster::listTables();
         $table_list = [];
         foreach ($tables as $tab) {
@@ -478,6 +482,7 @@ class ModulsController extends CBController
         $data = [];
         $data['id'] = $id;
         $data['columns'] = $columns;
+        $data['columns_human_readable'] = $columns_human_readable;
         $data['table_list'] = $table_list;
         $data['cb_col'] = $cb_col;
         $data['active_tab'] = 3;
@@ -931,6 +936,9 @@ class ModulsController extends CBController
         $table_name = config('app.module_generator_prefix') . $table_name;
       }
 
+      //table name transformation
+      $table_name = ModuleHelper::sql_name_encode($table_name);
+
       $table_exist = Schema::hasTable($table_name);
 
       $dynamic_table = new DynamicTable;
@@ -957,14 +965,7 @@ class ModulsController extends CBController
             return $messages;
           }
           //column name transformation
-          //lower case only
-          $dynamic_column_name = strtolower( trim($dynamic_column_name) );
-          //one or multiple spaces to single underscore
-          $dynamic_column_name = preg_replace('/\s+/', '_',$dynamic_column_name);
-          //spaces to underscores
-          // $dynamic_column_name = str_replace(' ', '_', $dynamic_column_name );
-          //remove all special characthers except underscore
-          $dynamic_column_name = preg_replace('/[^A-Za-z0-9\_]/', '', $dynamic_column_name);
+          $dynamic_column_name = ModuleHelper::sql_name_encode($dynamic_column_name);
 
           $column->name = $dynamic_column_name;
           if(Schema::hasColumn($table_name, $dynamic_column->name)){
@@ -1025,16 +1026,6 @@ class ModulsController extends CBController
 
         $dynamic_table->columns = $dynamic_columns;
 
-        //table name transformation
-        //lower case only
-        $table_name = strtolower( trim($table_name) );
-        //one or multiple spaces to single underscore
-        $table_name = preg_replace('/\s+/', '_',$table_name);
-        //spaces to underscores
-        // $table_name = str_replace(' ', '_', $table_name );
-        //remove all special characthers except underscore
-        $table_name = preg_replace('/[^A-Za-z0-9\_]/', '', $table_name);
-
         //TODO validate table name: check protected table names
         $result = Schema::create($table_name, function (Blueprint $table) use ($dynamic_columns) {
           foreach ($dynamic_columns as $key => $dynamic_column) {
@@ -1072,7 +1063,7 @@ class ModulsController extends CBController
 
           // save column object
           $column = new DynamicColumn;
-          $column->name = $dynamic_column_name;
+          $column->name = ModuleHelper::sql_name_encode($dynamic_column_name);
           switch ($request['type'][$loop_index]) {
             case 'text':
               $column->type = 'string';
@@ -1163,7 +1154,7 @@ class ModulsController extends CBController
           //TODO sort
 
           // if request column name at index $loop_index is not equal table column name at the same index..
-          if($request['name'][$loop_index] !== $existing_table[$index]['name']){
+          elseif($request['name'][$loop_index] !== $existing_table[$index]['name']){
             // ..rename column
             $source = $existing_table[$index]['name'];
             $target = $request['name'][$loop_index];

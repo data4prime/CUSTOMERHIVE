@@ -1325,14 +1325,11 @@ class CRUDBooster
         })->toArray();
 
         $result = [];
-        $result = $cols;
-
-        $new_result = [];
-        foreach ($result as $ro) {
-            $new_result[] = $ro['COLUMN_NAME'];
+        foreach ($cols as $ro) {
+            $result[] = $ro['COLUMN_NAME'];
         }
 
-        return $new_result;
+        return $result;
     }
 
     public static function getTableStructure($table, $mode = 'standard')
@@ -1479,7 +1476,6 @@ class CRUDBooster
         $email_candidate = explode(',', config('crudbooster.EMAIL_FIELDS_CANDIDATE'));
         $name_candidate = explode(',', config('crudbooster.NAME_FIELDS_CANDIDATE'));
         $url_candidate = explode(',', config("crudbooster.URL_FIELDS_CANDIDATE"));
-
         $controllername = ucwords(str_replace('_', ' ', $table));
         $controllername = str_replace(' ', '', $controllername).'Controller';
         if ($name) {
