@@ -300,11 +300,16 @@ class ModulsController extends CBController
         $name = Request::get('name');
         $table_name = Request::get('table');
         $icon = Request::get('icon');
-        $path = Request::get('path');
+        $path = $table_name;
 
         if (! Request::get('id')) {
           //create new module
-            if (DB::table('cms_moduls')->where('path', $path)->where('deleted_at', null)->count()) {
+            if (
+                DB::table('cms_moduls')
+                    ->where('path', $path)
+                    ->where('deleted_at', null)
+                    ->count()
+                ) {
               return redirect()->back()->with(['message' => 'Sorry the slug has already exists, please choose another !', 'message_type' => 'warning']);
             }
 
