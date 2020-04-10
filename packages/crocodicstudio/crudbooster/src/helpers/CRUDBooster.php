@@ -1117,7 +1117,7 @@ class CRUDBooster
         return Request::server('HTTP_REFERER');
     }
 
-    public static function listTables()
+    public static function listTables($mode = 'standard')
     {
         $tables = [];
         $multiple_db = config('crudbooster.MULTIPLE_DATABASE_MODULE');
@@ -1128,13 +1128,22 @@ class CRUDBooster
             try {
                 $multiple_db[] = config('crudbooster.MAIN_DB_DATABASE');
                 $query_table_schema = implode("','", $multiple_db);
-                $tables = DB::select("SELECT CONCAT(TABLE_SCHEMA,'.',TABLE_NAME) FROM INFORMATION_SCHEMA.Tables WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA != 'mysql' AND TABLE_SCHEMA != 'performance_schema' AND TABLE_SCHEMA != 'information_schema' AND TABLE_SCHEMA != 'phpmyadmin' AND TABLE_SCHEMA IN ('$query_table_schema')");
+                $query = "SELECT CONCAT(TABLE_SCHEMA,'.',TABLE_NAME) FROM INFORMATION_SCHEMA.Tables WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA != 'mysql' AND TABLE_SCHEMA != 'performance_schema' AND TABLE_SCHEMA != 'information_schema' AND TABLE_SCHEMA != 'phpmyadmin' AND TABLE_SCHEMA IN ('$query_table_schema')";
+                if($mode == 'mg'){
+                  $query .= " AND TABLE_NAME like 'mg_%'";
+                }
+                $tables = DB::select($query);
+                $tables = DB::select();
             } catch (\Exception $e) {
                 $tables = [];
             }
         } else {
             try {
-                $tables = DB::select("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.Tables WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA = '".$db_database."'");
+              $query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.Tables WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA = '".$db_database."'";
+              if($mode == 'mg'){
+                $query .= " AND TABLE_NAME like 'mg_%'";
+              }
+              $tables = DB::select($query);
             } catch (\Exception $e) {
                 $tables = [];
             }

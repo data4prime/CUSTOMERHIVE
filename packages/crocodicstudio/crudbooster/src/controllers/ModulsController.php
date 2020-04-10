@@ -258,7 +258,7 @@ class ModulsController extends CBController
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
-        $tables = CRUDBooster::listTables();
+        $tables = CRUDBooster::listTables('mg');
         $tables_list = [];
         foreach ($tables as $tab) {
             foreach ($tab as $key => $value) {
