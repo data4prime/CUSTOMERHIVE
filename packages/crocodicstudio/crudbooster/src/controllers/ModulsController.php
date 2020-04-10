@@ -310,6 +310,7 @@ class ModulsController extends CBController
 
           if($table_name=='new'){
             $table_name = ModuleHelper::sql_name_encode(config('app.module_generator_prefix').$name);
+            $path = $table_name;
           }
 
           if (
