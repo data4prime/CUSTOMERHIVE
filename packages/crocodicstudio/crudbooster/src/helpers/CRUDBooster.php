@@ -452,7 +452,6 @@ class CRUDBooster
           ->orderby('sorting', 'asc')
           ->select('cms_menus.*')
           ->get();
-
         foreach ($menu_active as $key => &$menu) {
 
             try {

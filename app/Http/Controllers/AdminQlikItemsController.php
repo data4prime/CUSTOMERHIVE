@@ -489,9 +489,9 @@
 			//look at qlik item's content
 			public function content_view($qlik_item_id) {
 				//check auth
-			  if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
-			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
-			  }
+			  // if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			  //   CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  // }
 
 				$allowed = GroupHelper::can_see_item($qlik_item_id);
 				//check if at least one of item allowed groups is in user groups
