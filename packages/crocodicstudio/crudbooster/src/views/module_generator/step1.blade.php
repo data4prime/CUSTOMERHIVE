@@ -45,6 +45,9 @@
                 <div class="form-group">
                     <label for="">Module Name</label>
                     <input type="text" class="form-control" required name="name" value="{{$row->name}}">
+                    <div class="help-block">
+                      Symbols, special characters and accents are forbidden. Use only alphanumeric lower case characters and underscore.
+                    </div>
                 </div>
 
                 <div class="form-group">

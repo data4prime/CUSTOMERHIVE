@@ -169,7 +169,7 @@ $(function () {
               <input type='hidden' name='index[]' value="{{ $index }}"/>
               <input data-index="{{ $index }}" type='text' value='{{$form["name"]}}' placeholder="Insert column name" class='form-control name' name='name[]' autocomplete="off"/>
               <div class="help-block">
-                Use alphanumeric lower case characters and underscore only
+                Symbols, special characters and accents are forbidden. Use only alphanumeric lower case characters and underscore.
               </div>
             </td>
             <td>
@@ -198,7 +198,7 @@ $(function () {
               <input class="data_index" type='hidden' name='index[]' value="{{ $index }}"/>
               <input data-index="{{ $index }}" type='text' placeholder="Insert column name" class='form-control name' name='name[]' autocomplete="off"/>
               <div class="help-block">
-                Use alphanumeric lower case characters and underscore only
+                Symbols, special characters and accents are forbidden. Use only alphanumeric lower case characters and underscore.
               </div>
             </td>
             <td>

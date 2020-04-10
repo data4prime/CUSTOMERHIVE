@@ -304,61 +304,62 @@ class ModulsController extends CBController
 
         if (! Request::get('id')) {
           //create new module
-            if (
-                DB::table('cms_moduls')
-                    ->where('path', $path)
-                    ->where('deleted_at', null)
-                    ->count()
-                ) {
-              return redirect()->back()->with(['message' => 'Sorry the slug has already exists, please choose another !', 'message_type' => 'warning']);
-            }
+          $created_at = now();
+          //$this->table equals cms_moduls
+          $id = DB::table($this->table)->max('id') + 1; // id del nuovo modulo
 
-            $created_at = now();
-            //$this->table equals cms_moduls
-            $id = DB::table($this->table)->max('id') + 1; // id del nuovo modulo
+          if($table_name=='new'){
+            $table_name = ModuleHelper::sql_name_encode(config('app.module_generator_prefix').$name);
+          }
 
-            if($table_name=='new'){
-              $table_name = ModuleHelper::sql_name_encode(config('app.module_generator_prefix').$name);
-            }
-            //create a controller for the new module
-            $controller = CRUDBooster::generateController($table_name, $path);
-            DB::table($this->table)->insert(compact("controller", "name", "table_name", "icon", "path", "created_at", "id"));
+          if (
+              DB::table('cms_moduls')
+                  ->where('table_name', $table_name)
+                  ->where('deleted_at', null)
+                  ->count()
+              ) {
+            return redirect()->back()->with(['message' => 'Sorry '.$table_name.' already exists, please choose a different module name', 'message_type' => 'warning']);
+          }
 
-            //create menu
-            if ($controller && Request::get('create_menu')) {
-              $parent_menu_sort = DB::table('cms_menus')->where('parent_id', 0)->max('sorting') + 1;
+          //create a controller for the new module
+          $controller = CRUDBooster::generateController($table_name, $path);
+          DB::table($this->table)->insert(compact("controller", "name", "table_name", "icon", "path", "created_at", "id"));
 
-              $id_cms_menus = DB::table('cms_menus')->insertGetId([
-                'created_at' => date('Y-m-d H:i:s'),
-                'name' => $name,
-                'icon' => $icon,
-                'path' => $controller.'GetIndex',
-                'type' => 'Route',
-                'is_active' => 1,
-                'id_cms_privileges' => CRUDBooster::myPrivilegeId(),
-                'sorting' => $parent_menu_sort,
-                'parent_id' => 0,
-              ]);
-              DB::table('cms_menus_privileges')->insert(['id_cms_menus' => $id_cms_menus, 'id_cms_privileges' => CRUDBooster::myPrivilegeId()]);
-            }
+          //create menu
+          if ($controller && Request::get('create_menu')) {
+            $parent_menu_sort = DB::table('cms_menus')->where('parent_id', 0)->max('sorting') + 1;
 
-            $user_id_privileges = CRUDBooster::myPrivilegeId();
-            DB::table('cms_privileges_roles')->insert([
-              'id' => DB::table('cms_privileges_roles')->max('id') + 1,
-              'id_cms_moduls' => $id,
-              'id_cms_privileges' => $user_id_privileges,
-              'is_visible' => 1,
-              'is_create' => 1,
-              'is_read' => 1,
-              'is_edit' => 1,
-              'is_delete' => 1,
+            $id_cms_menus = DB::table('cms_menus')->insertGetId([
+              'created_at' => date('Y-m-d H:i:s'),
+              'name' => $name,
+              'icon' => $icon,
+              'path' => $controller.'GetIndex',
+              'type' => 'Route',
+              'is_active' => 1,
+              'id_cms_privileges' => CRUDBooster::myPrivilegeId(),
+              'sorting' => $parent_menu_sort,
+              'parent_id' => 0,
             ]);
+            DB::table('cms_menus_privileges')->insert(['id_cms_menus' => $id_cms_menus, 'id_cms_privileges' => CRUDBooster::myPrivilegeId()]);
+          }
 
-            //Refresh Session Roles
-            $roles = DB::table('cms_privileges_roles')->where('id_cms_privileges', CRUDBooster::myPrivilegeId())->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')->get();
-            Session::put('admin_privileges_roles', $roles);
+          $user_id_privileges = CRUDBooster::myPrivilegeId();
+          DB::table('cms_privileges_roles')->insert([
+            'id' => DB::table('cms_privileges_roles')->max('id') + 1,
+            'id_cms_moduls' => $id,
+            'id_cms_privileges' => $user_id_privileges,
+            'is_visible' => 1,
+            'is_create' => 1,
+            'is_read' => 1,
+            'is_edit' => 1,
+            'is_delete' => 1,
+          ]);
 
-            return redirect(Route("ModulsControllerGetStep2", ["id" => $id]));
+          //Refresh Session Roles
+          $roles = DB::table('cms_privileges_roles')->where('id_cms_privileges', CRUDBooster::myPrivilegeId())->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')->get();
+          Session::put('admin_privileges_roles', $roles);
+
+          return redirect(Route("ModulsControllerGetStep2", ["id" => $id]));
         }
         else {
           //update existing module
