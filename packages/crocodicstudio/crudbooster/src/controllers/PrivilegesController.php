@@ -55,9 +55,7 @@ class PrivilegesController extends CBController
         $data['page_title'] = "Add Data";
         $data['moduls'] = DB::table("cms_moduls")
           ->where('is_protected', 0)
-          ->where('name','!=','Qlik Items')
-          ->where('name','!=','Groups')
-          ->where('name','!=','Users Management')
+          ->where('name','like','mg_')
           ->whereNull('deleted_at')
           ->select(
                 "cms_moduls.*",
