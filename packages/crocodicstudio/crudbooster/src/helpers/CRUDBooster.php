@@ -1129,7 +1129,7 @@ class CRUDBooster
                 $query_table_schema = implode("','", $multiple_db);
                 $query = "SELECT CONCAT(TABLE_SCHEMA,'.',TABLE_NAME) FROM INFORMATION_SCHEMA.Tables WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA != 'mysql' AND TABLE_SCHEMA != 'performance_schema' AND TABLE_SCHEMA != 'information_schema' AND TABLE_SCHEMA != 'phpmyadmin' AND TABLE_SCHEMA IN ('$query_table_schema')";
                 if($mode == 'mg'){
-                  $query .= " AND TABLE_NAME like 'mg_%'";
+                  $query .= " AND TABLE_NAME like '".config('app.module_generator_prefix')."%'";
                 }
                 $tables = DB::select($query);
                 $tables = DB::select();
@@ -1140,7 +1140,7 @@ class CRUDBooster
             try {
               $query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.Tables WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA = '".$db_database."'";
               if($mode == 'mg'){
-                $query .= " AND TABLE_NAME like 'mg_%'";
+                $query .= " AND TABLE_NAME like '".config('app.module_generator_prefix')."%'";
               }
               $tables = DB::select($query);
             } catch (\Exception $e) {
@@ -1484,7 +1484,7 @@ class CRUDBooster
     {
         // #RAMA
         // $exception = ['id', 'created_at', 'updated_at', 'deleted_at'];
-        
+
         $exception = config('app.reserved_column_names');
         $image_candidate = explode(',', config('crudbooster.IMAGE_FIELDS_CANDIDATE'));
         $password_candidate = explode(',', config('crudbooster.PASSWORD_FIELDS_CANDIDATE'));

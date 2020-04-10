@@ -211,11 +211,141 @@ class ModulsController extends CBController
         $query->whereNotIn('cms_moduls.controller', ['AdminCmsUsersController']);
     }
 
+    public function getDelete($id)
+    {
+      $this->cbLoader();
+      $url = g('return_url') ?: CRUDBooster::referer();
+      $module = DB::table($this->table)
+                ->where($this->primary_key, $id)
+                ->first();
+
+      if (! CRUDBooster::isDelete() && $this->global_privilege == false || $this->button_delete == false) {
+        CRUDBooster::insertLog(trans("crudbooster.log_try_delete", [
+          'name' => $module->{$this->title_field},
+          'module' => CRUDBooster::getCurrentModule()->name,
+        ]));
+        CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      }
+
+      //insert log
+      CRUDBooster::insertLog(trans("crudbooster.log_delete", ['name' => $module->{$this->title_field}, 'module' => CRUDBooster::getCurrentModule()->name]));
+
+      $drop_table = true;
+      $drop_module = true;
+      //if table name start with mg_
+      if(substr($module->table_name, 0, strlen(config('app.module_generator_prefix'))) === config('app.module_generator_prefix')){
+        //might want to drop table
+      }
+      else{
+        //don't drop protected table;
+        $drop_table = false;
+        $alert = 'table is protected<br>';
+      }
+
+      //check if other modules are using this table
+      $modules_sharing_table = DB::table('cms_moduls')
+                                  ->where('table_name', $module->table_name)
+                                  ->where('deleted_at', null)
+                                  ->get();
+
+      if($modules_sharing_table->count()<=1){
+        //might want to drop table
+        // var_dump('no other modules are using this table');
+        $is_last_module_for_this_table = true;
+      }
+      else{
+        //don't drop this table, other modules use it;
+        $drop_table = false;
+        foreach ($modules_sharing_table as $module_sharing_table) {
+          //skip current module name
+          if($module_sharing_table->id!==$module->id){
+            $alert .= $module->table_name.' is also used in module '.$module_sharing_table->name.'<br>';
+          }
+        }
+        $is_last_module_for_this_table = false;
+      }
+
+      //get all modules, skip current
+      $modules_list = Modules::where('table_name','like',config('app.module_generator_prefix').'%')->get();
+      //foreach module load controller
+      foreach ($modules_list as $key => $value) {
+        //foreach column check if has a join with current module's table
+        if (file_exists(app_path('Http/Controllers/'.str_replace('.', '', $value->controller).'.php'))) {
+            $response = file_get_contents(app_path('Http/Controllers/'.$value->controller.'.php'));
+            $column_datas = extract_unit($response, "# START COLUMNS DO NOT REMOVE THIS LINE", "# END COLUMNS DO NOT REMOVE THIS LINE");
+            $column_datas = str_replace('$this->', '$cb_', $column_datas);
+            eval($column_datas);
+        }
+        //check if in the column definition there is a join with this table
+        if(strpos($column_datas,'"join"=>"'.$module->table_name)){
+          $drop_table = false;
+          // if it's the last module for this table but another module have a join referring to this table,
+          // then I can't drop the table. If I delete the module while not dropping the table,
+          // the user would have no way of dropping or editing the table, therefore i forbid deleting the module too
+          if($is_last_module_for_this_table){
+            //keep module
+            $drop_module = false;
+            $alert .= $module->table_name.' is also used in a join in module '.$value->name.'<br>';
+          }
+        }
+      }
+
+      if(!$drop_module){
+        $message = "Didn't delete module ".$module->name;
+        $message .= '<br><br>'.$alert;
+        $message_type= 'warning';
+        //stop module delete
+        CRUDBooster::redirect($url, $message, $message_type);
+        exit;
+      }
+
+      if($drop_table){
+        //Drop table
+        Schema::dropIfExists($module->table_name);
+      }
+      else{
+        $message = "Didn't delete table ".$module->table_name;
+        $message .= '<br><br>'.$alert;
+        $message_type= 'info';
+      }
+
+      $this->hook_before_delete($id);
+
+      if (CRUDBooster::isColumnExists($this->table, 'deleted_at')) {
+        DB::table($this->table)
+            ->where($this->primary_key, $id)
+            ->update(['deleted_at' => date('Y-m-d H:i:s')]);
+      }
+      else {
+        DB::table($this->table)
+            ->where($this->primary_key, $id)
+            ->delete();
+      }
+
+      $this->hook_after_delete($id);
+
+      if(empty($message)){
+        $message = trans("crudbooster.alert_delete_data_success");
+        $message_type = 'success';
+      }
+
+      CRUDBooster::redirect($url, $message, $message_type);
+    }
+
     function hook_before_delete($id)
     {
-        $modul = DB::table('cms_moduls')->where('id', $id)->first();
-        $menus = DB::table('cms_menus')->where('path', 'like', '%'.$modul->controller.'%')->delete();
-        @unlink(app_path('Http/Controllers/'.$modul->controller.'.php'));
+        //get module
+        $module = DB::table('cms_moduls')
+                      ->where('id', $id)
+                      ->first();
+
+
+        //On Cascade Delete Menu
+        $menus = DB::table('cms_menus')
+                      ->where('path', 'like', '%'.$module->controller.'%')
+                      ->delete();
+        //On Cascade Delete Controller
+        @unlink(app_path('Http/Controllers/'.$module->controller.'.php'));
     }
 
     public function getTableColumns($table)
