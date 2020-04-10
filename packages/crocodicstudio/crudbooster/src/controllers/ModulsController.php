@@ -313,18 +313,29 @@ class ModulsController extends CBController
             $path = $table_name;
           }
 
-          if (
+          if(
               DB::table('cms_moduls')
-                  ->where('table_name', $table_name)
+                  ->where('name', $name)
                   ->where('deleted_at', null)
                   ->count()
-              ) {
-            return redirect()->back()->with(['message' => 'Sorry '.$table_name.' already exists, please choose a different module name', 'message_type' => 'warning']);
+            ) {
+            $message = 'Sorry '.$table_name.' already exists, please choose a different module name';
+            return redirect()->back()->with(['message' => $message, 'message_type' => 'warning']);
           }
 
           //create a controller for the new module
-          $controller = CRUDBooster::generateController($table_name, $path);
-          DB::table($this->table)->insert(compact("controller", "name", "table_name", "icon", "path", "created_at", "id"));
+          $controller = CRUDBooster::generateController($table_name, $name);
+
+          DB::table($this->table)
+              ->insert(compact(
+                  "controller",
+                  "name",
+                  "table_name",
+                  "icon",
+                  "path",
+                  "created_at",
+                  "id"
+                ));
 
           //create menu
           if ($controller && Request::get('create_menu')) {
@@ -357,7 +368,12 @@ class ModulsController extends CBController
           ]);
 
           //Refresh Session Roles
-          $roles = DB::table('cms_privileges_roles')->where('id_cms_privileges', CRUDBooster::myPrivilegeId())->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')->get();
+          $roles = DB::table('cms_privileges_roles')
+                        ->where('id_cms_privileges', CRUDBooster::myPrivilegeId())
+                        ->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')
+                        ->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')
+                        ->get();
+
           Session::put('admin_privileges_roles', $roles);
 
           return redirect(Route("ModulsControllerGetStep2", ["id" => $id]));
@@ -365,9 +381,18 @@ class ModulsController extends CBController
         else {
           //update existing module
           $id = Request::get('id');
-          DB::table($this->table)->where('id', $id)->update(compact("name", "table_name", "icon", "path"));
+          DB::table($this->table)
+              ->where('id', $id)
+              ->update(compact(
+                  "name",
+                  "table_name",
+                  "icon",
+                  "path"
+                ));
 
-          $row = DB::table('cms_moduls')->where('id', $id)->first();
+          $row = DB::table('cms_moduls')
+                    ->where('id', $id)
+                    ->first();
 
           if (file_exists(app_path('Http/Controllers/'.$row->controller.'.php'))) {
             $response = file_get_contents(app_path('Http/Controllers/'.str_replace('.', '', $row->controller).'.php'));
@@ -420,10 +445,10 @@ class ModulsController extends CBController
         $data['id'] = $id;
         $data['active_tab'] = 2;
         $data['cb_form'] = $cb_form;
-        $data['table_name'] = $module->name;
+        $data['table_name'] = $module->table_name;
         $data['table_exists'] = !empty($cb_form);
         $data['types'] = $types;
-        $data['box_title'] = 'Table '. str_replace(config('app.module_generator_prefix'), '', $module->name);
+        $data['box_title'] = 'Table '. str_replace(config('app.module_generator_prefix'), '', $module->table_name);
 
         return view('crudbooster::module_generator.step2', $data);
     }
@@ -927,7 +952,7 @@ class ModulsController extends CBController
       $id = $request['id'];
       $module = Modules::find($id);
 
-      $table_name = $module->name;
+      $table_name = $module->table_name;
 
       if(substr( $module->table_name, 0, strlen(config('app.reserved_tables_prefix')) ) === config('app.reserved_tables_prefix')){
         // editing reserved tables is forbidden

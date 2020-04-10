@@ -146,7 +146,7 @@ $(function () {
   <div class="box-body">
     @if($table_exists)
     <div class="alert alert-warning">
-      <strong style="text-transform: capitalize">Warning!</strong> this is the data structure, editing may cause data loss or conflict with other modules.
+      <strong style="text-transform: capitalize">Warning!</strong> this is the data structure, editing may damage data.
     </div>
     @endif
     <form method="post" action="{{ Route('ModulsControllerPostStep2') }}">

@@ -375,17 +375,17 @@ class CRUDBooster
 
     public static function getCurrentModule()
     {
-	$modulepath = self::getModulePath();
+      $modulepath = self::getModulePath();
 
-	if (Cache::has('moduls_'.$modulepath)) {
-	    return Cache::get('moduls_'.$modulepath);
-	} else {
+      if (Cache::has('moduls_'.$modulepath)) {
+        return Cache::get('moduls_'.$modulepath);
+      } else {
 
-	    $module = DB::table('cms_moduls')->where('path', self::getModulePath())->first();
+        $module = DB::table('cms_moduls')->where('path', self::getModulePath())->first();
 
-	    //supply modulpath instead of $module incase where user decides to create form and custom url that does not exist in cms_moduls table.
-	    return ($module)?:$modulepath;
-	}
+        //supply modulpath instead of $module incase where user decides to create form and custom url that does not exist in cms_moduls table.
+        return ($module)?:$modulepath;
+      }
     }
 
     public static function getCurrentDashboardId()
@@ -414,7 +414,6 @@ class CRUDBooster
 
     public static function sidebarDashboard()
     {
-
         $menu = DB::table('cms_menus')->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '".self::myPrivilegeId()."')")->where('is_dashboard', 1)->where('is_active', 1)->first();
 
         switch ($menu->type) {
@@ -1474,10 +1473,18 @@ class CRUDBooster
         file_put_contents($path.'Api'.$controller_name.'Controller.php', $php);
     }
 
+    public static function makeControllerName($name)
+    {
+        $controllername = ucwords(str_replace(['_', '-'], ' ', $name));
+        $controllername = str_replace(' ', '', $controllername).'Controller';
+        return $controllername;
+    }
+
     public static function generateController($table, $name = null)
     {
-        // $exception = ['id', 'created_at', 'updated_at', 'deleted_at'];
         // #RAMA
+        // $exception = ['id', 'created_at', 'updated_at', 'deleted_at'];
+        
         $exception = config('app.reserved_column_names');
         $image_candidate = explode(',', config('crudbooster.IMAGE_FIELDS_CANDIDATE'));
         $password_candidate = explode(',', config('crudbooster.PASSWORD_FIELDS_CANDIDATE'));
@@ -1485,11 +1492,12 @@ class CRUDBooster
         $email_candidate = explode(',', config('crudbooster.EMAIL_FIELDS_CANDIDATE'));
         $name_candidate = explode(',', config('crudbooster.NAME_FIELDS_CANDIDATE'));
         $url_candidate = explode(',', config("crudbooster.URL_FIELDS_CANDIDATE"));
-        $controllername = ucwords(str_replace('_', ' ', $table));
-        $controllername = str_replace(' ', '', $controllername).'Controller';
+
         if ($name) {
-            $controllername = ucwords(str_replace(['_', '-'], ' ', $name));
-            $controllername = str_replace(' ', '', $controllername).'Controller';
+          $controllername = CRUDBooster::makeControllerName($name);
+        }
+        else{
+          $controllername = CRUDBooster::makeControllerName($table);
         }
 
         $path = base_path("app/Http/Controllers/");
