@@ -294,19 +294,25 @@ class ModulsController extends CBController
         $message = "Didn't delete module ".$module->name;
         $message .= '<br><br>'.$alert;
         $message_type= 'warning';
+        add_log('delete module', $alert, 'log');
         //stop module delete
         CRUDBooster::redirect($url, $message, $message_type);
         exit;
+      }
+      else{
+        add_log('delete module', 'Delete module '.$module->name, 'log');
       }
 
       if($drop_table){
         //Drop table
         Schema::dropIfExists($module->table_name);
+        add_log('delete module', 'Drop table '.$module->table_name, 'log');
       }
       else{
         $message = "Didn't delete table ".$module->table_name;
         $message .= '<br><br>'.$alert;
         $message_type= 'info';
+        add_log('delete module', 'Didn\'t drop table '.$module->table_name, 'log');
       }
 
       $this->hook_before_delete($id);
@@ -339,11 +345,11 @@ class ModulsController extends CBController
                       ->where('id', $id)
                       ->first();
 
-
         //On Cascade Delete Menu
         $menus = DB::table('cms_menus')
                       ->where('path', 'like', '%'.$module->controller.'%')
                       ->delete();
+
         //On Cascade Delete Controller
         @unlink(app_path('Http/Controllers/'.$module->controller.'.php'));
     }
