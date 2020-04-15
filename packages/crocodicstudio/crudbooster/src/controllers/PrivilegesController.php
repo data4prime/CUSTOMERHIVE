@@ -55,7 +55,7 @@ class PrivilegesController extends CBController
         $data['page_title'] = "Add Data";
         $data['moduls'] = DB::table("cms_moduls")
           ->where('is_protected', 0)
-          ->where('name','like',config('app.module_generator_prefix'))
+          ->where('table_name','like',config('app.module_generator_prefix').'%')
           ->whereNull('deleted_at')
           ->select(
                 "cms_moduls.*",
@@ -140,9 +140,7 @@ class PrivilegesController extends CBController
         $moduls = DB::table("cms_moduls")
                       ->where('is_protected', 0)
                       ->where('deleted_at', null)
-                      ->where('name','!=','Qlik Items')
-                      ->where('name','!=','Groups')
-                      ->where('name','!=','Users Management')
+                      ->where('table_name','like',config('app.module_generator_prefix').'%')
                       ->select("cms_moduls.*")
                       ->orderby("name", "asc")
                       ->get();

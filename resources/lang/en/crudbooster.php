@@ -184,6 +184,9 @@ return [
     'Groups' => 'Groups',
     'Roles' => 'Roles',
     'Users' => 'Users',
+    'Tenants' => 'Tenants',
+    'Add_New_Tenant' => 'Add New Tenant',
+    'List_Tenants' => 'List Tenants',
 
     /*
      * this is for html direction to use in html and css classes like :

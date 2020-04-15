@@ -64,6 +64,19 @@
                   <li class="header">{{ trans('crudbooster.UserPermissions') }}</li>
 
                   <li class='treeview'>
+                      <a href='#'><i class='fa fa-industry'></i> <span>{{ trans('crudbooster.Tenants') }}</span> <i
+                                  class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
+                      <ul class='treeview-menu'>
+                          <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/tenant/add*')) ? 'active' : '' }}"><a
+                                      href='{{Route("AdminTenantControllerGetAdd")}}'>{{ $current_path }}<i class='fa fa-plus'></i>
+                                  <span>{{ trans('crudbooster.Add_New_Tenant') }}</span></a></li>
+                          <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/tenant')) ? 'active' : '' }}"><a
+                                      href='{{Route("AdminTenantControllerGetIndex")}}'><i class='fa fa-bars'></i>
+                                  <span>{{ trans('crudbooster.List_Tenants') }}</span></a></li>
+                      </ul>
+                  </li>
+
+                  <li class='treeview'>
                       <a href='#'><i class='fa fa-key'></i> <span>{{ trans('crudbooster.Roles') }}</span> <i
                                   class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
                       <ul class='treeview-menu'>
