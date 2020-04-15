@@ -52,7 +52,11 @@ class AdminController extends CBController
             return redirect(CRUDBooster::adminPath());
         }
 
-        return view('crudbooster::login');
+        $array = explode('.', $_SERVER['HTTP_HOST']);
+
+        $tenant_url = $array[0];
+
+        return view('crudbooster::login', compact('tenant_url'));
     }
 
     public function postLogin()

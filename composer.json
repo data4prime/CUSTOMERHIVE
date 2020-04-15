@@ -6,13 +6,14 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
-        "laravel/framework": "5.3.*",
         "barryvdh/laravel-dompdf": "0.8.*",
         "doctrine/dbal": "~2.3",
+        "guzzlehttp/guzzle": "^6.5",
+        "imanghafoori/laravel-widgetize": "1.8.*",
+        "intervention/imagecache": "2.3.3",
+        "laravel/framework": "5.3.*",
         "maatwebsite/excel": "~2.1.0",
-        "unisharp/laravel-filemanager": "1.7.7",
-        "intervention/imagecache":"2.3.3",
-        "imanghafoori/laravel-widgetize": "1.8.*"
+        "unisharp/laravel-filemanager": "1.7.7"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

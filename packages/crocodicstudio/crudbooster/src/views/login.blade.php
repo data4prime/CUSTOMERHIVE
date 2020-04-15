@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{{trans("crudbooster.page_title_login")}} : {{Session::get('appname')}}</title>
+    <title>{{trans("crudbooster.page_title_login")}} : {{ $tenant_url }}</title>
     <meta name='generator' content='CRUDBooster'/>
     <meta name='robots' content='noindex,nofollow'/>
     <link rel="shortcut icon"
@@ -76,7 +76,7 @@
         <p class='login-box-msg'>{{trans("crudbooster.login_message")}}</p>
         <form autocomplete='off' action="{{ route('postLogin') }}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-            
+
             @if(!empty(config('services.google')))
 
                 <div style="margin-bottom:10px" class='row'>
@@ -89,7 +89,7 @@
                     </div>
                 </div>
             @endif
-            
+
             <div class="form-group has-feedback">
                 <input autocomplete='off' type="text" class="form-control" name='email' required placeholder="Email"/>
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
