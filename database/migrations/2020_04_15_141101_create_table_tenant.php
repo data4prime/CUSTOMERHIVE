@@ -13,7 +13,7 @@ class CreateTableTenant extends Migration
      */
     public function up()
     {
-      Schema::create('tenant', function (Blueprint $table) {
+      Schema::create('tenants', function (Blueprint $table) {
         $table->increments('id');
         $table->string('name');
         $table->string('description')->nullable();
@@ -38,6 +38,6 @@ class CreateTableTenant extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('tenant');
+      Schema::dropIfExists('tenants');
     }
 }

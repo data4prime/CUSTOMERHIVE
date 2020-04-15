@@ -67,11 +67,11 @@
                       <a href='#'><i class='fa fa-industry'></i> <span>{{ trans('crudbooster.Tenants') }}</span> <i
                                   class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
                       <ul class='treeview-menu'>
-                          <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/tenant/add*')) ? 'active' : '' }}"><a
-                                      href='{{Route("AdminTenantControllerGetAdd")}}'>{{ $current_path }}<i class='fa fa-plus'></i>
+                          <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/tenants/add*')) ? 'active' : '' }}"><a
+                                      href='{{Route("AdminTenantsControllerGetAdd")}}'>{{ $current_path }}<i class='fa fa-plus'></i>
                                   <span>{{ trans('crudbooster.Add_New_Tenant') }}</span></a></li>
-                          <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/tenant')) ? 'active' : '' }}"><a
-                                      href='{{Route("AdminTenantControllerGetIndex")}}'><i class='fa fa-bars'></i>
+                          <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/tenants')) ? 'active' : '' }}"><a
+                                      href='{{Route("AdminTenantsControllerGetIndex")}}'><i class='fa fa-bars'></i>
                                   <span>{{ trans('crudbooster.List_Tenants') }}</span></a></li>
                       </ul>
                   </li>

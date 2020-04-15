@@ -27,6 +27,9 @@ Route::get('admin/qlik_items/{qlik_item_id}/deauth/{group_id}', 'AdminQlikItemsC
 //public url to access qlik public items
 Route::get('qi/{proxy_token}', 'QlikItemsController@show');
 
+//tenant members
+Route::get('admin/tenants/members/{tenant_id}', 'AdminTenantsController@members');
+
 //group members
 Route::get('admin/groups/members/{group_id}/alert/{alert_id}', 'AdminGroupsController@members');
 Route::get('admin/groups/members/{group_id}', 'AdminGroupsController@members');

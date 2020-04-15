@@ -4,8 +4,9 @@
 	use Request;
 	use DB;
 	use CRUDBooster;
+	use \App\Tenant;
 
-	class AdminTenantController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminTenantsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
@@ -25,7 +26,7 @@
 			$this->button_filter = true;
 			$this->button_import = false;
 			$this->button_export = false;
-			$this->table = "tenant";
+			$this->table = "tenants";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
@@ -90,7 +91,7 @@
 	        |
 	        */
 	        $this->addaction = array();
-
+					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('members/[id]'),'icon'=>'fa fa-users','color'=>'info','title'=>'Members'];
 
 	        /*
 	        | ----------------------------------------------------------------------
@@ -331,12 +332,26 @@
 	    */
 	    public function hook_after_delete($id) {
 	        //Your code here
-
 	    }
 
+			public function members($tenant_id){
+				//check auth
+			  if(!CRUDBooster::isSuperadmin()) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
 
+			  $data = [];
+			  $data['members'] = DB::table('cms_users')
+														->where('cms_users.tenant',$tenant_id)
+														->select('cms_users.id', 'cms_users.name', 'cms_users.email', 'cms_users.photo')
+														->get();
 
-	    //By the way, you can still create your own method in here... :)
+			  $data['tenant'] = Tenant::find($tenant_id);
+				$data['tenant_id'] = $tenant_id;
+				$data['page_title'] = $data['tenant']->name.' members';
+
+			  $this->cbView('tenants.members',$data);
+			}
 
 
 	}
