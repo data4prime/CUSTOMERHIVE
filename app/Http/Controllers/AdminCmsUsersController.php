@@ -4,6 +4,9 @@ use Session;
 use Request;
 use DB;
 use CRUDbooster;
+use Illuminate\Support\Facades\Route;
+use \App\Tenant;
+use \App\Group;
 
 class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -28,18 +31,55 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		$this->col[] = array("label"=>"Photo","name"=>"photo","image"=>1);
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
+		// $tenants = implode(';',Tenant::all()->pluck('name')->toArray());
+		// $groups = implode(';',Group::all()->pluck('name')->toArray());
+
 		# START FORM DO NOT REMOVE THIS LINE
 		$this->form = array();
 		$this->form[] = array("label"=>"Name","name"=>"name",'required'=>true,'validation'=>'required|alpha_spaces|min:3');
 		$this->form[] = array("label"=>"Email","name"=>"email",'required'=>true,'type'=>'email','validation'=>'required|email|unique:cms_users,email,'.CRUDBooster::getCurrentId());
+		$this->form[] = array("label"=>"Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name",'required'=>true);
+		$this->form[] = array("label"=>"Primary group","name"=>"primary_group",'required'=>true,'type'=>'select','datatable'=>"groups,name",'validation'=>'required','default'=>'');
+		$this->form[] = array("label"=>"Tenant","name"=>"tenant",'required'=>true,'type'=>'select','datatable'=>"tenants,name",'validation'=>'required','default'=>'');
 		$this->form[] = array("label"=>"User directory","name"=>"user_directory",'required'=>false,'validation'=>'min:3');
 		$this->form[] = array("label"=>"Qlik login","name"=>"qlik_login",'required'=>false,'validation'=>'min:3');
 		$this->form[] = array("label"=>"Photo","name"=>"photo","type"=>"upload","help"=>"Recommended resolution is 200x200px",'required'=>false,'validation'=>'image|max:1000','resize_width'=>90,'resize_height'=>90);
-		$this->form[] = array("label"=>"Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name",'required'=>true);
-		// $this->form[] = array("label"=>"Password","name"=>"password","type"=>"password","help"=>"Please leave empty if not change");
-		$this->form[] = array("label"=>"Password","name"=>"password","type"=>"password","help"=>"Please leave empty if not change");
-		$this->form[] = array("label"=>"Password Confirmation","name"=>"password_confirmation","type"=>"password","help"=>"Please leave empty if not change");
+		$this->form[] = array("label"=>"Password","name"=>"password","type"=>"password","help"=>"Leave empty if no change is needed");
+		$this->form[] = array("label"=>"Password Confirmation","name"=>"password_confirmation","type"=>"password","help"=>"Leave empty if no change is needed");
 		# END FORM DO NOT REMOVE THIS LINE
+
+		$this->script_js = "
+			$( document ).ready(function() {
+				/*
+				* On create/edit forms, on role change, if role is admin hide primary group and tenant fields,
+				* otherwise show
+				*/
+				function role_based_validation(){
+					let role_id = $('#id_cms_privileges').val();
+					//if privilege is set to admin..
+					if(role_id == 1){
+						//hide primary group
+						$('#primary_group').parent().parent().hide();
+						$('#primary_group').attr('required',false);
+						//hide tenant
+						$('#tenant').parent().parent().hide();
+						$('#tenant').attr('required',false);
+					}
+					else{
+						//show primary group
+						$('#primary_group').parent().parent().show();
+						$('#primary_group').attr('required',true);
+						//show tenant
+						$('#tenant').parent().parent().show();
+						$('#tenant').attr('required',true);
+					}
+				}
+				//startup
+				role_based_validation();
+				//on role change
+				$('#id_cms_privileges').on('change',role_based_validation);
+			});
+		";
 
 		$this->addaction = array();
 		$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('groups/[id]'),'icon'=>'fa fa-users','color'=>'info','title'=>'View groups'];
@@ -58,12 +98,56 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		$data['row']        = CRUDBooster::first('cms_users',CRUDBooster::myId());
 		$this->cbView('crudbooster::default.form',$data);
 	}
+
 	public function hook_before_edit(&$postdata,$id) {
 		unset($postdata['password_confirmation']);
 	}
 	public function hook_before_add(&$postdata) {
 	    unset($postdata['password_confirmation']);
 	}
+
+	public function hook_before_validation() {
+			$request = Request::all();
+			//admin doesn't need primary group and tenant
+			if($request['id_cms_privileges'] == "1"){
+				$request['tenant'] = 0;
+				$request['primary_group'] = 0;
+			}
+			return $request;
+	}
+
+	//overwrite default method
+  public function getEdit($id)
+  {
+		//load edit page
+    $this->cbLoader();
+    $user = DB::table($this->table)->where($this->primary_key, $id)->first();
+
+    if (! CRUDBooster::isSuperadmin()) {
+        CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
+            'name' => $user->{$this->title_field},
+            'module' => CRUDBooster::getCurrentModule()->name,
+        ]));
+        CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+
+		$data = array();
+    $data['page_menu'] = Route::getCurrentRoute()->getActionName();
+    $data['page_title'] = trans(
+													"crudbooster.edit_data_page_title",
+													[
+														'module' => CRUDBooster::getCurrentModule()->name,
+														'name' => $user->{$this->title_field}
+													]
+												);
+    $data['command'] = 'edit';
+    Session::put('current_row_id', $id);
+
+		$data['id'] = $id;
+		$data['row'] = $user;
+
+    return view('users.form', $data);
+  }
 
 	public function groups($user_id, $alert_id = null){
 		//check auth

@@ -1,5 +1,5 @@
 <?php
-  $default = ! empty($form['default']) ? $form['default'] : trans('crudbooster.text_prefix_option')." ".$form['label'];
+  $default = isset($form['default']) ? $form['default'] : trans('crudbooster.text_prefix_option')." ".$form['label'];
 ?>
 @if($form['parent_select'])
     <?php

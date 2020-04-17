@@ -131,7 +131,7 @@ return [
     'not_logged_in' => 'You are not logged in !',
     'menu_navigation' => "Navigation",
     'table_data_not_found' => "No Data Avaliable",
-    "notice_delete_file_upload" => "* If you want to upload other file, please first delete the file.",
+    "notice_delete_file_upload" => "In order to change file, press delete first.",
     "file_broken" => "Oops looks like File was Broken !. Click Delete and Re-Upload.",
 
     'denied_access' => 'Sorry you do not have privilege to access this area !',
