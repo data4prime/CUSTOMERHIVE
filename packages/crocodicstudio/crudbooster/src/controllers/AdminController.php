@@ -48,18 +48,69 @@ class AdminController extends CBController
 
     public function getLogin()
     {
+      if(CRUDBooster::myId()){
+        return redirect(CRUDBooster::adminPath());
+      }
 
-        if (CRUDBooster::myId()) {
-            return redirect(CRUDBooster::adminPath());
-        }
+      $array = explode('.', $_SERVER['HTTP_HOST']);
 
-        $array = explode('.', $_SERVER['HTTP_HOST']);
+      //tenant specific login page
+      $tenant_domain_name = $array[0];
+      $tenant = Tenant::where('domain_name',$tenant_domain_name)->first();
+      if($tenant->favicon){
+        //tenant favicon
+        $favicon = '/'.$tenant->favicon;
+      }
+      elseif(CRUDBooster::getSetting('favicon')){
+        //default site favicon
+        $favicon = asset(CRUDBooster::getSetting('favicon'));
+      }
+      else{
+        //default crudbooster favicon
+        $favicon = asset('vendor/crudbooster/assets/logo_crudbooster.png');
+      }
 
-        //tenant specific login page
-        $tenant_domain_name = $array[0];
-        $tenant = Tenant::where('=',$tenant_domain_name);
+      if($tenant->logo){
+        //tenant logo
+        $logo = '/'.$tenant->logo;
+      }
+      elseif(CRUDBooster::getSetting('logo')){
+        //default site logo
+        $logo = asset(CRUDBooster::getSetting('logo'));
+      }
+      else{
+        //default crudbooster logo
+        $logo = asset('vendor/crudbooster/assets/logo_crudbooster.png');
+      }
 
-        return view('crudbooster::login', compact('tenant_url'));
+      if($tenant->login_background_color){
+        //tenant background_image
+        $background_color = $tenant->login_background_color;
+      }
+      elseif(CRUDBooster::getSetting('login_background_color')){
+        //default site background_image
+        $background_color = asset(CRUDBooster::getSetting('login_background_color'));
+      }
+      else{
+        //default crudbooster background_image
+        $background_color = '#dddddd';
+      }
+
+      if($tenant->login_background_image){
+        //tenant background_image
+        $background_image_src = '/'.$tenant->login_background_image;
+      }
+      elseif(CRUDBooster::getSetting('login_background_image')){
+        //default site background_image
+        $background_image_src = asset(CRUDBooster::getSetting('login_background_image'));
+      }
+      else{
+        //default crudbooster background_image
+        $background_image_src = asset('vendor/crudbooster/assets/bg_blur3.jpg');
+      }
+      $background = $background_color . " url(".$background_image_src.")";
+
+      return view('crudbooster::login', compact('tenant', 'favicon', 'logo', 'background'));
     }
 
     public function postLogin()
