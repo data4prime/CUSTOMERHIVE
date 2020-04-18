@@ -6,6 +6,7 @@
 	use CRUDBooster;
 	use \App\Tenant;
 	use Illuminate\Support\Facades\Route;
+	use TenantHelper;
 
 	class AdminTenantsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -222,10 +223,7 @@
 	        |
 	        */
 	        $this->load_css = array();
-
-
 	    }
-
 
 	    /*
 	    | ----------------------------------------------------------------------
@@ -237,9 +235,7 @@
 	    */
 	    public function actionButtonSelected($id_selected,$button_name) {
 	        //Your code here
-
 	    }
-
 
 	    /*
 	    | ----------------------------------------------------------------------
@@ -250,7 +246,6 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
-
 	    }
 
 	    /*
@@ -272,7 +267,9 @@
 	    */
 	    public function hook_before_add(&$postdata) {
 	        //Your code here
-
+					$domain_name = TenantHelper::domain_name_encode($postdata['name']);
+					$postdata['domain_name'] = $domain_name;
+					var_dump($postdata['domain_name']);exit;
 	    }
 
 	    /*
@@ -284,8 +281,7 @@
 	    */
 	    public function hook_after_add($id) {
 	        //Your code here
-
-	    }
+			}
 
 	    /*
 	    | ----------------------------------------------------------------------
@@ -297,7 +293,6 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
-
 	    }
 
 	    /*
@@ -309,7 +304,6 @@
 	    */
 	    public function hook_after_edit($id) {
 	        //Your code here
-
 	    }
 
 	    /*
@@ -321,7 +315,6 @@
 	    */
 	    public function hook_before_delete($id) {
 	        //Your code here
-
 	    }
 
 	    /*

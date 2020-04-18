@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use \App\Tenant;
 
 class AdminController extends CBController
 {
@@ -54,7 +55,9 @@ class AdminController extends CBController
 
         $array = explode('.', $_SERVER['HTTP_HOST']);
 
-        $tenant_url = $array[0];
+        //tenant specific login page
+        $tenant_domain_name = $array[0];
+        $tenant = Tenant::where('=',$tenant_domain_name);
 
         return view('crudbooster::login', compact('tenant_url'));
     }

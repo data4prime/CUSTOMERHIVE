@@ -1802,6 +1802,10 @@ class CBController extends Controller
     {
     }
 
+    public function hook_before_validation()
+    {
+    }
+
     public function hook_after_add($id)
     {
     }

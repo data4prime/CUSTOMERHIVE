@@ -24,7 +24,7 @@ class ModuleHelper  {
     $name = str_replace('ì', 'i',$name);
     $name = str_replace('ò', 'o',$name);
     $name = str_replace('ù', 'u',$name);
-    //remove all special characthers except underscore
+    //remove all special characters except underscore
     return preg_replace('/[^A-Za-z0-9\_]/', '', $name);
   }
 
