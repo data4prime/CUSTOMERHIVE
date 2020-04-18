@@ -159,7 +159,6 @@ return [
     'Add_New_API' => 'Add New API',
     'API_Generator' => 'API Generator',
     'Statistic_Builder' => 'Statistic Builder',
-    'Qlik_Items' => 'Qlik Items',
     'Module_Generator' => 'Module Generator',
     'settings' => 'Settings',
     'Users_Management' => 'Users Management',

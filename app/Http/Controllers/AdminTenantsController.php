@@ -5,6 +5,7 @@
 	use DB;
 	use CRUDBooster;
 	use \App\Tenant;
+	use Illuminate\Support\Facades\Route;
 
 	class AdminTenantsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -36,9 +37,9 @@
 			$this->col[] = ["label"=>"Description","name"=>"description"];
 			$this->col[] = ["label"=>"Logo","name"=>"logo"];
 			$this->col[] = ["label"=>"Favicon","name"=>"favicon"];
-			$this->col[] = ["label"=>"Login Background Color","name"=>"login_background_color"];
-			$this->col[] = ["label"=>"Login Background Image","name"=>"login_background_image"];
-			$this->col[] = ["label"=>"Login Font Color","name"=>"login_font_color"];
+			// $this->col[] = ["label"=>"Login Background Color","name"=>"login_background_color"];
+			// $this->col[] = ["label"=>"Login Background Image","name"=>"login_background_image"];
+			// $this->col[] = ["label"=>"Login Font Color","name"=>"login_font_color"];
 			$this->col[] = ["label"=>"Created At","name"=>"created_at"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
@@ -46,11 +47,11 @@
 			$this->form = [];
 			$this->form[] = ['label'=>'Name','name'=>'name','type'=>'text','validation'=>'required','width'=>'col-sm-9'];
 			$this->form[] = ['label'=>'Description','name'=>'description','type'=>'text','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Logo','name'=>'logo','type'=>'text','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Favicon','name'=>'favicon','type'=>'text','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Login Background Color','name'=>'login_background_color','type'=>'text','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Login Background Image','name'=>'login_background_image','type'=>'text','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Login Font Color','name'=>'login_font_color','type'=>'text','width'=>'col-sm-9'];
+			$this->form[] = ['label'=>'Logo','name'=>'logo','type'=>'upload','width'=>'col-sm-9','validation'=>'image|max:10000','help'=>'Supported types: jpg, png, gif. Max 10 MB'];
+			$this->form[] = ['label'=>'Favicon','name'=>'favicon','type'=>'upload','width'=>'col-sm-9','validation'=>'image|max:10000','help'=>'Supported types: jpg, png, gif. Max 10 MB'];
+			$this->form[] = ['label'=>'Background Color','name'=>'login_background_color','type'=>'text','width'=>'col-sm-9','help'=>'use hex format i.e.: #4287f5'];
+			$this->form[] = ['label'=>'Background Image','name'=>'login_background_image','type'=>'upload','width'=>'col-sm-9','validation'=>'image|max:10000','help'=>'Supported types: jpg, png, gif. Max 10 MB'];
+			$this->form[] = ['label'=>'Font Color','name'=>'login_font_color','type'=>'text','width'=>'col-sm-9','help'=>'use hex format i.e.: #4287f5'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
@@ -332,6 +333,27 @@
 	    */
 	    public function hook_after_delete($id) {
 	        //Your code here
+	    }
+
+	    public function getEdit($id)
+	    {
+	        $this->cbLoader();
+	        $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+
+	        if (! CRUDBooster::isSuperadmin()) {
+	            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
+	                'name' => $row->{$this->title_field},
+	                'module' => CRUDBooster::getCurrentModule()->name,
+	            ]));
+	            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+	        }
+
+	        $page_menu = Route::getCurrentRoute()->getActionName();
+	        $page_title = trans("crudbooster.edit_tenants");
+	        $command = 'edit';
+	        Session::put('current_row_id', $id);
+
+	        return view('tenants.form', compact('id', 'row', 'page_menu', 'page_title', 'command'));
 	    }
 
 			public function members($tenant_id){

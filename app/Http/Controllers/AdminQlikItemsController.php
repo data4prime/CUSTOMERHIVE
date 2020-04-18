@@ -604,7 +604,7 @@
         $this->cbLoader();
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-        if (! CRUDBooster::isRead() && $this->global_privilege == false || $this->button_edit == false) {
+        if (! CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
                 'name' => $row->{$this->title_field},
                 'module' => CRUDBooster::getCurrentModule()->name,
