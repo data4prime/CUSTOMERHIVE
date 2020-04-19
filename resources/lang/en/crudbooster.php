@@ -143,6 +143,9 @@ return [
     'denied_create' => 'Sorry you do not have privilege to create the data !',
     'denied_delete' => 'Sorry you do not have privilege to delete the data !',
     'missing_item' => 'Sorry, we couldn\'t find your item!',
+    'delete_self' => 'You can\'t delete yourself!',
+    'delete_not_empty_group' => 'You can only delete groups with no members!',
+    'delete_not_empty_tenant' => 'You can only delete tenants with no members!',
 
     'user_image' => 'User Image',
     'online' => 'Online',

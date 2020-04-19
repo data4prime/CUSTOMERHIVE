@@ -78,6 +78,12 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 	public function hook_before_validation() {
 	}
 
+	public function hook_before_delete($id){
+		if($id == CRUDBooster::myId()){
+			CRUDBooster::redirect(CRUDBooster::adminPath('users'), trans('crudbooster.delete_self'));
+		}
+	}
+
 	//overwrite default method
   public function getEdit($id)
   {

@@ -7,6 +7,7 @@
 	use \App\Tenant;
 	use Illuminate\Support\Facades\Route;
 	use TenantHelper;
+	use \App\User;
 
 	class AdminTenantsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -312,9 +313,12 @@
 	    | @id       = current id
 	    |
 	    */
-	    public function hook_before_delete($id) {
-	        //Your code here
-	    }
+			public function hook_before_delete($id){
+				$members_count = User::where('tenant', $id)->count();
+				if($members_count > 0){
+					CRUDBooster::redirect(CRUDBooster::adminPath('tenants'), trans('crudbooster.delete_not_empty_tenant'));
+				}
+			}
 
 	    /*
 	    | ----------------------------------------------------------------------

@@ -4,6 +4,7 @@
 	use Request;
 	use DB;
 	use CRUDBooster;
+	use \App\UsersGroup;
 
 	class AdminGroupsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -306,10 +307,12 @@
 	    | @id       = current id
 	    |
 	    */
-	    public function hook_before_delete($id) {
-	        //Your code here
-
-	    }
+			public function hook_before_delete($id){
+				$members_count = UsersGroup::where('group_id', $id)->count();
+				if($members_count > 0){
+					CRUDBooster::redirect(CRUDBooster::adminPath('groups'), trans('crudbooster.delete_not_empty_group'));
+				}
+			}
 
 	    /*
 	    | ----------------------------------------------------------------------

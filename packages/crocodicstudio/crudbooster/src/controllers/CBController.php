@@ -1458,7 +1458,13 @@ class CBController extends Controller
         ModuleHelper::can_delete($this, $row);
 
         //insert log
-        CRUDBooster::insertLog(trans("crudbooster.log_delete", ['name' => $row->{$this->title_field}, 'module' => CRUDBooster::getCurrentModule()->name]));
+        CRUDBooster::insertLog(
+          trans("crudbooster.log_delete",
+          [
+            'name' => $row->{$this->title_field},
+            'module' => CRUDBooster::getCurrentModule()->name
+          ]
+        ));
 
         $this->hook_before_delete($id);
 
