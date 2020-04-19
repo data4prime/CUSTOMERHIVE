@@ -48,38 +48,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		$this->form[] = array("label"=>"Password Confirmation","name"=>"password_confirmation","type"=>"password","help"=>"Leave empty if no change is needed");
 		# END FORM DO NOT REMOVE THIS LINE
 
-		$this->script_js = "
-			$( document ).ready(function() {
-				/*
-				* On create/edit forms, on role change, if role is admin hide primary group and tenant fields,
-				* otherwise show
-				*/
-				function role_based_validation(){
-					let role_id = $('#id_cms_privileges').val();
-					//if privilege is set to admin..
-					if(role_id == 1){
-						//hide primary group
-						$('#primary_group').parent().parent().hide();
-						$('#primary_group').attr('required',false);
-						//hide tenant
-						$('#tenant').parent().parent().hide();
-						$('#tenant').attr('required',false);
-					}
-					else{
-						//show primary group
-						$('#primary_group').parent().parent().show();
-						$('#primary_group').attr('required',true);
-						//show tenant
-						$('#tenant').parent().parent().show();
-						$('#tenant').attr('required',true);
-					}
-				}
-				//startup
-				role_based_validation();
-				//on role change
-				$('#id_cms_privileges').on('change',role_based_validation);
-			});
-		";
+		$this->script_js = "";
 
 		$this->addaction = array();
 		$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('groups/[id]'),'icon'=>'fa fa-users','color'=>'info','title'=>'View groups'];
@@ -103,17 +72,10 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		unset($postdata['password_confirmation']);
 	}
 	public function hook_before_add(&$postdata) {
-	    unset($postdata['password_confirmation']);
+    unset($postdata['password_confirmation']);
 	}
 
 	public function hook_before_validation() {
-			$request = Request::all();
-			//admin doesn't need primary group and tenant
-			if($request['id_cms_privileges'] == "1"){
-				$request['tenant'] = 0;
-				$request['primary_group'] = 0;
-			}
-			return $request;
 	}
 
 	//overwrite default method

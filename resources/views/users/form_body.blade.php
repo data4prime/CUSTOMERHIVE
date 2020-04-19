@@ -27,13 +27,6 @@ foreach($forms as $index=>$form) {
   @$value = (isset($form['value'])) ? $form['value'] : '';
   @$value = (isset($row->{$name})) ? $row->{$name} : $value;
 
-  //assuming privilege 1 always equals Admin
-  if( $row->id_cms_privileges == 1 AND ($name == 'tenant' OR $name == 'primary_group')){
-    continue;
-  }
-  else{
-  }
-
   $old = old($name);
   $value = (! empty($old)) ? $old : $value;
 

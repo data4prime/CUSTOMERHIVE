@@ -404,8 +404,13 @@
 					unset($postdata['frame_width_unit']);
 					unset($postdata['frame_height_unit']);
 
-					//TODO non ho ancora l'id, devo ancora crearlo!!
-					QlikHelper::toggle_public_access($postdata['public_access'], $id);
+	        //create token
+	        $token = md5(config('app.salt').$postdata['url'].$postdata['title']);
+	        //save token
+	        $postdata['proxy_token'] = $token;
+	        //save proxy enabled at
+	        $now = date('Y-m-d H:i:s');
+	        $postdata['proxy_enabled_at'] = $now;
 					//avoid sql error
 					unset($postdata['public_access']);
 	    }
