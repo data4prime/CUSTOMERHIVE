@@ -4,6 +4,7 @@ namespace crocodicstudio\crudbooster\helpers;
 use \App\User;
 use \App\Group;
 use \App\Tenant;
+use \App\UsersGroup;
 
 class UserHelper  {
 
@@ -27,5 +28,17 @@ class UserHelper  {
     $user_id = CRUDBooster::myId();
     $user = User::find($user_id);
     return $user->tenant;
+  }
+
+  /**
+  *	get current user's groups
+  *
+  * @return array[int] list of the group's ids of which current user is a member
+  */
+  public static function current_user_groups() {
+    $user_id = CRUDBooster::myId();
+    $groups = UsersGroup::where('user_id',$user_id)->pluck('group_id')->all();
+    array_push($groups,self::current_user_primary_group());
+    return $groups;
   }
 }
