@@ -236,6 +236,8 @@ return [
     //#RAMA vars
     'reserved_column_names' => array(
       'id',
+      'group',
+      'tenant',
       'created_at',
       'created_by',
       'updated_at',

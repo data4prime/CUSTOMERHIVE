@@ -24,6 +24,8 @@ class Blueprint extends BaseBlueprint
     public function defaults(): void
     {
       $this->increments('id');
+      $this->unsignedInteger('group')->nullable();
+      $this->unsignedInteger('tenant')->nullable();
       $this->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
       $this->unsignedInteger('created_by')->nullable();
       $this->dateTime('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));

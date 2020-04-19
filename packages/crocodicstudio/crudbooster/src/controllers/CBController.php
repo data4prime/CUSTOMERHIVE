@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Schema;
+use UserHelper;
 
 class CBController extends Controller
 {
@@ -1171,8 +1172,21 @@ class CBController extends Controller
         $this->validation(null, $request);
         $this->input_assignment();
 
-        if (Schema::hasColumn($this->table, 'created_at')) {
-            $this->arr['created_at'] = date('Y-m-d H:i:s');
+        // #RAMA useless, created_at is already populated by sql
+        // if (Schema::hasColumn($this->table, 'created_at')) {
+        //     $this->arr['created_at'] = date('Y-m-d H:i:s');
+        // }
+        if (Schema::hasColumn($this->table, 'created_by')) {
+            $this->arr['created_by'] = CRUDBooster::myId();
+        }
+        if (Schema::hasColumn($this->table, 'updated_by')) {
+            $this->arr['updated_by'] = CRUDBooster::myId();
+        }
+        if (Schema::hasColumn($this->table, 'group')) {
+            $this->arr['group'] = UserHelper::current_user_primary_group();
+        }
+        if (Schema::hasColumn($this->table, 'tenant')) {
+            $this->arr['tenant'] = UserHelper::current_user_tenant();
         }
 
         $this->hook_before_add($this->arr);
@@ -1453,6 +1467,9 @@ class CBController extends Controller
 
         $this->hook_before_delete($id);
 
+        if (CRUDBooster::isColumnExists($this->table, 'deleted_by')) {
+            DB::table($this->table)->where($this->primary_key, $id)->update(['deleted_by' => CRUDBooster::myId()]);
+        }
         if (CRUDBooster::isColumnExists($this->table, 'deleted_at')) {
             DB::table($this->table)->where($this->primary_key, $id)->update(['deleted_at' => date('Y-m-d H:i:s')]);
         } else {

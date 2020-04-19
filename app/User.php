@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use \App\Group;
+use \App\Tenant;
 
 class User extends Authenticatable
 {
@@ -28,4 +30,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function primary_group(){
+      return Group::find($this->primary_group);
+    }
+
+    public function tenant(){
+      return Tenant::find($this->tenant);
+    }
 }
