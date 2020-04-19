@@ -234,7 +234,7 @@ class ModulsController extends CBController
       $drop_table = true;
       $drop_module = true;
       //if table name start with mg_
-      if(substr($module->table_name, 0, strlen(config('app.module_generator_prefix'))) === config('app.module_generator_prefix')){
+      if(ModuleHelper::is_manually_generated($module->table_name)){
         //might want to drop table
       }
       else{
@@ -1100,7 +1100,7 @@ class ModulsController extends CBController
         return $messages;
       }
 
-      if(substr( $table_name, 0, strlen(config('app.module_generator_prefix')) ) !== config('app.module_generator_prefix')){
+      if(ModuleHelper::is_manually_generated($table_name)){
         //add table name prefix to new tables
         $table_name = config('app.module_generator_prefix') . $table_name;
       }

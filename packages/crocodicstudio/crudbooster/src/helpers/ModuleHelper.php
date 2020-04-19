@@ -42,4 +42,132 @@ class ModuleHelper  {
     return ucwords($name);
   }
 
+  public static function is_manually_generated($table_name) {
+    //if table name start with mg_
+    if(substr($table_name, 0, strlen(config('app.module_generator_prefix'))) === config('app.module_generator_prefix')){
+      //it's a manually generated table
+      return true;
+    }
+    return false;
+  }
+
+  /*
+  * Check if current user can view the record $row
+  *
+  * @param object $module a module instance //TODO not really a module...
+  * @param object a table row or record
+  */
+  public static function can_view($module, $row) {
+    // if it's a manually generated module..
+    if (
+      //admin can always see everything
+      !CRUDBooster::isSuperadmin() AND
+      (
+        //check correct privilege role
+        (
+          !CRUDBooster::isRead() &&
+          $module->global_privilege == false ||
+          $module->button_edit == false
+        ) OR
+        //check group/tenant
+        (
+          //check this only on manually generated modules
+          ModuleHelper::is_manually_generated($module->table) AND
+          !(
+            //..then filter on group and tenant columns
+            in_array($row->group, UserHelper::current_user_groups()) AND
+            $row->tenant == UserHelper::current_user_tenant()
+          )
+        )
+      )
+    ) {
+      //log denied access
+      CRUDBooster::insertLog(trans("crudbooster.log_try_view", [
+          'name' => $module->{$this->title_field},
+          'module' => CRUDBooster::getCurrentModule()->name,
+      ]));
+      //kick out
+      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+  }
+
+  /*
+  * Check if current user can edit the record $row
+  *
+  * @param object $module a module instance //TODO not really a module...
+  * @param object a table row or record
+  */
+  public static function can_edit($module, $row) {
+    // if it's a manually generated module..
+    if (
+      //admin can always see everything
+      !CRUDBooster::isSuperadmin() AND
+      (
+        //check correct privilege role
+        (
+          !CRUDBooster::isUpdate() &&
+          $module->global_privilege == false ||
+          $module->button_edit == false
+        ) OR
+        //check group/tenant
+        (
+          //check this only on manually generated modules
+          ModuleHelper::is_manually_generated($module->table) AND
+          !(
+            //..then filter on group and tenant columns
+            in_array($row->group, UserHelper::current_user_groups()) AND
+            $row->tenant == UserHelper::current_user_tenant()
+          )
+        )
+      )
+    ) {
+      //log denied access
+      CRUDBooster::insertLog(trans("crudbooster.log_try_add", [
+        'name' => $module->{$this->title_field},
+        'module' => CRUDBooster::getCurrentModule()->name
+      ]));
+      //kick out
+      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+  }
+
+  /*
+  * Check if current user can delete the record $row
+  *
+  * @param object $module a module instance //TODO not really a module...
+  * @param object a table row or record
+  */
+  public static function can_delete($module, $row) {
+    // if it's a manually generated module..
+    if (
+      //admin can always see everything
+      !CRUDBooster::isSuperadmin() AND
+      (
+        //check correct privilege role
+        (
+          !CRUDBooster::isDelete() &&
+          $module->global_privilege == false ||
+          $module->button_delete == false
+        ) OR
+        //check group/tenant
+        (
+          //check this only on manually generated modules
+          ModuleHelper::is_manually_generated($module->table) AND
+          !(
+            //..then filter on group and tenant columns
+            in_array($row->group, UserHelper::current_user_groups()) AND
+            $row->tenant == UserHelper::current_user_tenant()
+          )
+        )
+      )
+    ) {
+      //log denied access
+      CRUDBooster::insertLog(trans("crudbooster.log_try_delete", [
+        'name' => $module->{$this->title_field},
+        'module' => CRUDBooster::getCurrentModule()->name
+      ]));
+      //kick out
+      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+  }
 }

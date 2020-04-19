@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Schema;
 use UserHelper;
+use ModuleHelper;
 
 class CBController extends Controller
 {
@@ -258,6 +259,12 @@ class CBController extends Controller
 
         if (in_array('deleted_at', $table_columns)) {
             $result->where($this->table.'.deleted_at', null);
+        }
+        // if it's a manually generated module..
+        if (in_array('deleted_at', $table_columns) and !CRUDBooster::isSuperadmin() ) {
+          //..then filter on group and tenant columns
+          $result->whereIn($this->table.'.group', UserHelper::current_user_groups());
+          $result->where($this->table.'.tenant', UserHelper::current_user_tenant());
         }
 
         $alias = [];
@@ -1300,13 +1307,8 @@ class CBController extends Controller
         $this->cbLoader();
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-        if (! CRUDBooster::isRead() && $this->global_privilege == false || $this->button_edit == false) {
-            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
-                'name' => $row->{$this->title_field},
-                'module' => CRUDBooster::getCurrentModule()->name,
-            ]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
-        }
+        //kicks out if user shouldn't view the record $row
+        ModuleHelper::can_view($this, $row);
 
         $page_menu = Route::getCurrentRoute()->getActionName();
         $page_title = trans("crudbooster.edit_data_page_title", ['module' => CRUDBooster::getCurrentModule()->name, 'name' => $row->{$this->title_field}]);
@@ -1321,10 +1323,8 @@ class CBController extends Controller
         $this->cbLoader();
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-        if (! CRUDBooster::isUpdate() && $this->global_privilege == false) {
-            CRUDBooster::insertLog(trans("crudbooster.log_try_add", ['name' => $row->{$this->title_field}, 'module' => CRUDBooster::getCurrentModule()->name]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
-        }
+        //kicks out if user shouldn't edit the record $row
+        ModuleHelper::can_edit($this, $row);
 
         $this->validation($id);
         $this->input_assignment($id);
@@ -1360,7 +1360,7 @@ class CBController extends Controller
                         foreach ($inputdata as $input_id) {
                             $relationship_table_pk = CB::pk($ro['relationship_table']);
                             DB::table($ro['relationship_table'])->insert([
-//                                 $relationship_table_pk => CRUDBooster::newId($ro['relationship_table']),
+                                //$relationship_table_pk => CRUDBooster::newId($ro['relationship_table']),
                                 $foreignKey => $id,
                                 $foreignKey2 => $input_id,
                             ]);
@@ -1381,7 +1381,7 @@ class CBController extends Controller
                         foreach ($inputdata as $input_id) {
                             $relationship_table_pk = CB::pk($ro['relationship_table']);
                             DB::table($ro['relationship_table'])->insert([
-//                                 $relationship_table_pk => CRUDBooster::newId($ro['relationship_table']),
+                                //$relationship_table_pk => CRUDBooster::newId($ro['relationship_table']),
                                 $foreignKey => $id,
                                 $foreignKey2 => $input_id,
                             ]);
@@ -1454,13 +1454,8 @@ class CBController extends Controller
         $this->cbLoader();
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-        if (! CRUDBooster::isDelete() && $this->global_privilege == false || $this->button_delete == false) {
-            CRUDBooster::insertLog(trans("crudbooster.log_try_delete", [
-                'name' => $row->{$this->title_field},
-                'module' => CRUDBooster::getCurrentModule()->name,
-            ]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
-        }
+        //kicks out if user shouldn't view the record $row
+        ModuleHelper::can_delete($this, $row);
 
         //insert log
         CRUDBooster::insertLog(trans("crudbooster.log_delete", ['name' => $row->{$this->title_field}, 'module' => CRUDBooster::getCurrentModule()->name]));
@@ -1488,13 +1483,8 @@ class CBController extends Controller
         $this->cbLoader();
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-        if (! CRUDBooster::isRead() && $this->global_privilege == false || $this->button_detail == false) {
-            CRUDBooster::insertLog(trans("crudbooster.log_try_view", [
-                'name' => $row->{$this->title_field},
-                'module' => CRUDBooster::getCurrentModule()->name,
-            ]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
-        }
+        //kicks out if user shouldn't view the record $row
+        ModuleHelper::can_view($this, $row);
 
         $module = CRUDBooster::getCurrentModule();
 
