@@ -2,6 +2,11 @@
 
 //Loading Assets
 $asset_already = [];
+//#RAMA Add group and tenant dropdowns to edit forms in manually generated modules
+if(!empty($row) AND ModuleHelper::is_manually_generated(CRUDBooster::getCurrentModule()->table_name)){
+  $forms[] = array("label"=>"Group","name"=>"group",'required'=>true,'type'=>'select','datatable'=>"groups,name",'validation'=>'required','default'=>'');
+  $forms[] = array("label"=>"Tenant","name"=>"tenant",'required'=>true,'type'=>'select','datatable'=>"tenants,name",'validation'=>'required','default'=>'');
+}
 foreach($forms as $form) {
   $type = @$form['type'] ?: 'text';
   $name = $form['name'];
