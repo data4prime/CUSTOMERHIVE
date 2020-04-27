@@ -208,7 +208,7 @@ class ModulsController extends CBController
         $query->where('is_protected', 0);
         $query->where('path','!=', 'groups');
         $query->where('path','!=', 'qlik_items');
-        $query->where('path','!=', 'tenant');
+        $query->where('path','!=', 'tenants');
         $query->whereNotIn('cms_moduls.controller', ['AdminCmsUsersController']);
     }
 
