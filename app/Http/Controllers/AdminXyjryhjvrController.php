@@ -36,6 +36,25 @@
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'N Nfmyoo','name'=>'n_nfmyoo','validation'=>'required','width'=>'col-sm-9'];
+			//#RAMA Add group dropdown to edit forms in manually generated modules
+			//can only choose between groups in which he is a member
+			$current_user_groups = \UserHelper::current_user_allowed_groups_names();
+			list(, $action) = explode('@', \Route::getCurrentRoute()->getActionName());
+			if($action == 'getEdit'){
+				//CRUDBooster will set this up
+				//TODO... it doesn't
+				$default_group = '';
+			}
+			else{
+				//default value is the primary group (for create only. overwritten in get edit for updates)
+				$default_group = \UserHelper::current_user_primary_group_name();
+			}
+			//#RAMA delete primary group from groups because it will be added again as default value
+			if (($key = array_search($default_group, $current_user_groups)) !== false) {
+		    unset($current_user_groups[$key]);
+			}
+		  $this->form[] = array("label"=>"Group","name"=>"group",'required'=>true,'type'=>'select','dataenum'=>$current_user_groups,'validation'=>'required','default'=>$default_group);
+		  // $forms[] = array("label"=>"Tenant","name"=>"tenant",'required'=>true,'type'=>'select','datatable'=>"tenants,name",'validation'=>'required','default'=>'');
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
@@ -274,7 +293,6 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
-
 	    }
 
 	    /*
