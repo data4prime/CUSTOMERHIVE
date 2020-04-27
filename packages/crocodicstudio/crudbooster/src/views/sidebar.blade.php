@@ -89,8 +89,17 @@
                       </ul>
                   </li>
 
-                  <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/groups*')) ? 'active' : '' }}">
-                    <a href='/admin/groups'><i class='fa fa-users'></i> <span>{{ trans('crudbooster.Groups') }}</span></a>
+                  <li class='treeview'>
+                      <a href='#'><i class='fa fa-users'></i> <span>{{ trans('crudbooster.Groups') }}</span> <i
+                                  class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
+                      <ul class='treeview-menu'>
+                          <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/groups/add*')) ? 'active' : '' }}"><a
+                                      href='{{Route("AdminGroupsControllerGetAdd")}}'>{{ $current_path }}<i class='fa fa-plus'></i>
+                                  <span>{{ trans('crudbooster.Add_New_Group') }}</span></a></li>
+                          <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/groups')) ? 'active' : '' }}"><a
+                                      href='{{Route("AdminGroupsControllerGetIndex")}}'><i class='fa fa-bars'></i>
+                                  <span>{{ trans('crudbooster.List_Groups') }}</span></a></li>
+                      </ul>
                   </li>
 
                   <li class='treeview'>
