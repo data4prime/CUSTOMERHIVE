@@ -1,10 +1,27 @@
 @extends('crudbooster::admin_template')
 
 @section('content')
+
+  @if(g('return_url'))
+      <p>
+        <a title='Return' href='{{g("return_url")}}'>
+          <i class='fa fa-chevron-circle-left '></i>
+          &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
+        </a>
+      </p>
+  @else
+      <p>
+        <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
+          <i class='fa fa-chevron-circle-left '></i>
+          &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
+        </a>
+      </p>
+  @endif
+
 <!-- List members -->
 <div class="box">
   <div class="box-header">
-    <h4>{{ $page_title }}</h4>
+    <h4>{{ $content_title }}</h4>
   </div>
   <div class="box-body table-responsive no-padding">
     <form id='form-table' method='post' action='{{CRUDBooster::mainpath("action-selected")}}'>

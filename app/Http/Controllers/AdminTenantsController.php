@@ -366,7 +366,8 @@
 
 			  $data['tenant'] = Tenant::find($tenant_id);
 				$data['tenant_id'] = $tenant_id;
-				$data['page_title'] = $data['tenant']->name.' members';
+				$data['page_title'] = trans("crudbooster.Tenants");
+				$data['content_title'] = $data['tenant']->name.' members';
 
 			  $this->cbView('tenants.members',$data);
 			}
