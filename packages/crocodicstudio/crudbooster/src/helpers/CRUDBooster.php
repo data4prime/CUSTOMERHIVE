@@ -461,7 +461,7 @@ class CRUDBooster
           ->orderby('sorting', 'asc')
           ->select('cms_menus.*')
           ->get();
-          
+
         foreach ($menu_active as $key => &$menu) {
 
             try {
@@ -477,6 +477,7 @@ class CRUDBooster
                         $url = action($menu->path);
                         break;
                     case 'Module':
+                        $url = self::adminPath($menu->path);
                         break;
                     case 'Statistic':
                         $url = self::adminPath($menu->path);
