@@ -186,6 +186,8 @@ return [
     'Qlik_Sense_QMC' => 'Qlik Sense QMC',
     'click_here' => 'Click here',
     'Groups' => 'Groups',
+    'Add_New_Group' => 'Add New Group',
+    'List_Groups' => 'List Groups',
     'Roles' => 'Roles',
     'Users' => 'Users',
     'Tenants' => 'Tenants',
