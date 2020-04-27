@@ -14,6 +14,7 @@ use Illuminate\Database\Schema\Blueprint;
 use App\DynamicTable;
 use App\DynamicColumn;
 use ModuleHelper;
+use UserHelper;
 
 class ModulsController extends CBController
 {
@@ -463,6 +464,7 @@ class ModulsController extends CBController
           //create a controller for the new module
           $controller = CRUDBooster::generateController($table_name, $name);
 
+          //cms_moduls
           DB::table($this->table)
               ->insert(compact(
                   "controller",
@@ -488,6 +490,8 @@ class ModulsController extends CBController
               'id_cms_privileges' => CRUDBooster::myPrivilegeId(),
               'sorting' => $parent_menu_sort,
               'parent_id' => 0,
+              'group' => UserHelper::current_user_primary_group(),
+              'tenant' => UserHelper::current_user_tenant()
             ]);
             DB::table('cms_menus_privileges')->insert(['id_cms_menus' => $id_cms_menus, 'id_cms_privileges' => CRUDBooster::myPrivilegeId()]);
           }
@@ -1102,7 +1106,9 @@ class ModulsController extends CBController
 
       if(ModuleHelper::is_manually_generated($table_name)){
         //add table name prefix to new tables
-        $table_name = config('app.module_generator_prefix') . $table_name;
+        if(!substr( $module->table_name, 0, strlen(config('app.module_generator_prefix')) ) === config('app.module_generator_prefix')){
+          $table_name = config('app.module_generator_prefix') . $table_name;
+        }
       }
 
       //table name transformation
