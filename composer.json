@@ -13,6 +13,7 @@
         "intervention/imagecache": "2.3.3",
         "laravel/framework": "5.3.*",
         "maatwebsite/excel": "~2.1.0",
+        "tremby/laravel-git-version": "^1.2",
         "unisharp/laravel-filemanager": "1.7.7"
     },
     "require-dev": {

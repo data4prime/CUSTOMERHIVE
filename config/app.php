@@ -42,17 +42,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application Version
-    |--------------------------------------------------------------------------
-    |
-    | #RAMA
-    |
-    */
-
-    'version' => env('APP_VERSION', '1.2.0'),
-
-    /*
-    |--------------------------------------------------------------------------
     | Application URL
     |--------------------------------------------------------------------------
     |
@@ -173,6 +162,11 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+
+        /*
+         * Show version from git
+         */
+        Tremby\LaravelGitVersion\GitVersionServiceProvider::class,
 
         /*
          * Package Service Providers...
