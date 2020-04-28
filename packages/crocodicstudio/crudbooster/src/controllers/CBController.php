@@ -614,12 +614,10 @@ class CBController extends Controller
                 $html_content[] = $value;
             } //end foreach columns_table
 
-            if ($this->button_table_action):
-
-                $button_action_style = $this->button_action_style;
-                $html_content[] = "<div class='button_action' style='text-align:right'>".view('crudbooster::components.action', compact('addaction', 'row', 'button_action_style', 'parent_field'))->render()."</div>";
-
-            endif;//button_table_action
+            if ($this->button_table_action){
+              $button_action_style = $this->button_action_style;
+              $html_content[] = "<div class='button_action' style='text-align:right'>".view('crudbooster::components.action', compact('addaction', 'row', 'button_action_style', 'parent_field'))->render()."</div>";
+            }
 
             foreach ($html_content as $i => $v) {
                 $this->hook_row_index($i, $v);
@@ -1198,12 +1196,13 @@ class CBController extends Controller
 
         $this->hook_before_add($this->arr);
 
-//         $this->arr[$this->primary_key] = $id = CRUDBooster::newId($this->table); //error on sql server
+        //$this->arr[$this->primary_key] = $id = CRUDBooster::newId($this->table); //error on sql server
         $lastInsertId = $id = DB::table($this->table)->insertGetId($this->arr);
 
         //fix bug if primary key is uuid
-        if($this->arr[$this->primary_key]!=$id)
-            $id = $this->arr[$this->primary_key];
+        if($this->arr[$this->primary_key]!=$id){
+          $id = $this->arr[$this->primary_key];
+        }
 
         //Looping Data Input Again After Insert
         foreach ($this->data_inputan as $ro) {

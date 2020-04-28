@@ -79,9 +79,12 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 	}
 
 	public function hook_before_delete($id){
+		//forbid user to delete himself
 		if($id == CRUDBooster::myId()){
 			CRUDBooster::redirect(CRUDBooster::adminPath('users'), trans('crudbooster.delete_self'));
 		}
+		//cascade delete users_groups
+		UsersGroup::where('user_id',$id)->delete();
 	}
 
 	//overwrite default method
