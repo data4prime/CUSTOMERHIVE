@@ -4,7 +4,7 @@
         {{ trans('crudbooster.powered_by') }} Data Synapsi
     </div>
     <div style="margin-right:15px;" class="pull-{{ trans('crudbooster.right') }} hidden-xs">
-        {{Session::get('appname')}} {{\Tremby\LaravelGitVersion\GitVersionHelper::getVersion()}}
+        {{Session::get('appname')}} {{ config('app.version') }}
     </div>
     <!-- Default to the left -->
     <strong>{{ trans('crudbooster.copyright') }} &copy; <?php echo date('Y') ?>. {{ trans('crudbooster.all_rights_reserved') }} .</strong>

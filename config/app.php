@@ -54,6 +54,12 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
     /*
+    * #RAMA version
+    */
+
+    'version' => \crocodicstudio\crudbooster\helpers\MyHelper::version(),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------

@@ -85,6 +85,7 @@ class CRUDBoosterServiceProvider extends ServiceProvider
         $loader->alias('ModuleHelper', 'crocodicstudio\crudbooster\helpers\ModuleHelper');
         $loader->alias('TenantHelper', 'crocodicstudio\crudbooster\helpers\TenantHelper');
         $loader->alias('UserHelper', 'crocodicstudio\crudbooster\helpers\UserHelper');
+        $loader->alias('MyHelper', 'crocodicstudio\crudbooster\helpers\MyHelper');
     }
 
     private function registerCrudboosterCommand()
