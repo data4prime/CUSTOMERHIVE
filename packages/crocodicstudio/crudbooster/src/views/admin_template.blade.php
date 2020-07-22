@@ -169,7 +169,6 @@
 
         <!-- Main content -->
         <section id='content_section' class="content">
-
             @if(@$alerts)
                 @foreach(@$alerts as $alert)
                     <div class='alert alert-{{$alert["type"]}} alert-dismissable'>

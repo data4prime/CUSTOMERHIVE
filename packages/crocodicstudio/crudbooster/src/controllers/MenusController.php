@@ -208,6 +208,9 @@ class MenusController extends CBController
             'value' => 'Module',
         ];
 
+    		$this->form[] = array("label"=>"Tenant","name"=>"tenant",'required'=>true,'type'=>'select','datatable'=>"tenants,name",'validation'=>'required','default'=>'');
+    		$this->form[] = array("label"=>"Group","name"=>"group",'required'=>true,'type'=>'select','datatable'=>"groups,name",'validation'=>'required','default'=>'');
+
         $this->form[] = [
             "label" => "Module",
             "name" => "module_slug",

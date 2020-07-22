@@ -7,6 +7,7 @@ use CRUDbooster;
 use Illuminate\Support\Facades\Route;
 use \App\Tenant;
 use \App\Group;
+use \App\UsersGroup;
 
 class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CBController {
 
