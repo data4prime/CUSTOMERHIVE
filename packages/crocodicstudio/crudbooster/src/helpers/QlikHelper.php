@@ -30,7 +30,7 @@ class QlikHelper  {
   public static function toggle_public_access($input_field_value, $qlik_item_id) {
     $qlik_item = QlikItem::find($qlik_item_id);
     //get current status
-    if($input_field_value===' '){
+    if($input_field_value==='public_access'){
       //enable public access
       $qlik_item->enablePublicAccess();
     }
