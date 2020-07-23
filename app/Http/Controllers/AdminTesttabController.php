@@ -5,7 +5,7 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminToDoController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminTesttabController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
@@ -25,32 +25,28 @@
 			$this->button_filter = true;
 			$this->button_import = false;
 			$this->button_export = false;
-			$this->table = "mg_to_do";
+			$this->table = "mg_testtab";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Utente","name"=>"utente"];
-			$this->col[] = ["label"=>"Cose Da Fare","name"=>"cose_da_fare"];
-			$this->col[] = ["label"=>"Data Completamento","name"=>"data_completamento"];
+			$this->col[] = ["label"=>"Test Col 1","name"=>"test_col_1"];
+			$this->col[] = ["label"=>"Test Col 2","name"=>"test_col_2"];
+			$this->col[] = ["label"=>"Test Col 3","name"=>"test_col_3"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Utente','name'=>'utente','type'=>'text','validation'=>'required','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Cose Da_fare','name'=>'cose_da_fare','type'=>'text','validation'=>'required','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Data Inserimento','name'=>'data_inserimento','type'=>'date','validation'=>'required','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Data Completamento','name'=>'data_completamento','type'=>'date','validation'=>'date','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'To Do','name'=>'to_do','type'=>'checkbox','validation'=>'numeric','width'=>'col-sm-9'];
+			$this->form[] = ['label'=>'Test Col_1','name'=>'test_col_1','type'=>'text','width'=>'col-sm-9'];
+			$this->form[] = ['label'=>'Test Col_2','name'=>'test_col_2','type'=>'checkbox','width'=>'col-sm-9'];
+			$this->form[] = ['label'=>'Test Col_3','name'=>'test_col_3','type'=>'checkbox','width'=>'col-sm-9'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ['label'=>'Utente','name'=>'utente','type'=>'text','validation'=>'required','width'=>'col-sm-9'];
-			//$this->form[] = ['label'=>'Cose Da_fare','name'=>'cose_da_fare','type'=>'text','validation'=>'required','width'=>'col-sm-9'];
-			//$this->form[] = ['label'=>'Data Inserimento','name'=>'data_inserimento','type'=>'date','validation'=>'required','width'=>'col-sm-9'];
-			//$this->form[] = ['label'=>'Data Completamento','name'=>'data_completamento','type'=>'date','validation'=>'date','width'=>'col-sm-9'];
-			//$this->form[] = ['label'=>'To Do','name'=>'to_do','type'=>'checkbox','validation'=>'numeric','width'=>'col-sm-9'];
+			//$this->form[] = ['label'=>'Test Col_1','name'=>'test_col_1','type'=>'checkbox','width'=>'col-sm-9'];
+			//$this->form[] = ['label'=>'Test Col_2','name'=>'test_col_2','type'=>'checkbox','width'=>'col-sm-9'];
+			//$this->form[] = ['label'=>'Test Col_3','name'=>'test_col_3','type'=>'checkbox','width'=>'col-sm-9'];
 			# OLD END FORM
 
 			/*
