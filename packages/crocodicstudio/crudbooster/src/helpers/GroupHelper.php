@@ -28,7 +28,12 @@ class GroupHelper  {
 			//get user groups
 			$current_user_groups = GroupHelper::myGroups();
 			//get item allowed groups
-			$allowed_groups = \App\QlikItem::find($qlik_item_id)->allowedGroups();
+      $qlik_item = \App\QlikItem::find($qlik_item_id);
+      if(empty($qlik_item)){
+        add_log('can see item', 'qlik item not found id: '.$qlik_item_id);
+        return false;
+      }
+			$allowed_groups = $qlik_item->allowedGroups();
 			foreach ($allowed_groups as $allowed_group) {
 				if(in_array($allowed_group,$current_user_groups)){
 					//trovato un gruppo abilitato tra i gruppi di cui fa parte l'utente
