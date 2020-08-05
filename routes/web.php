@@ -27,6 +27,11 @@ Route::get('admin/qlik_items/{qlik_item_id}/deauth/{group_id}', 'AdminQlikItemsC
 //public url to access qlik public items
 Route::get('qi/{proxy_token}', 'QlikItemsController@show');
 
+//menù edit customization
+// Route::get('admin/menu_management', '\crocodicstudio\crudbooster\controllers\MenusController@getIndex');
+Route::get('admin/menu_management/edit/{id}', '\crocodicstudio\crudbooster\controllers\MenusController@customEdit')->name('MenusControllerGetEdit');
+// Route::post('/admin/menu_management/save-menu')->name('MenusControllerPostSaveMenu');
+// Route::delete('/admin/menu_management/save-menu')->name('MenusControllerGetDelete');
 //tenant members
 Route::get('admin/tenants/members/{tenant_id}', 'AdminTenantsController@members');
 

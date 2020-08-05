@@ -66,6 +66,7 @@ class MenusController extends CBController
 					$('#statistic_slug').prop('required',false);
 					$('#form-group-statistic_slug,#form-group-path').hide();
 					$('#form-group-qlik_slug,#form-group-path').hide();
+					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
 					$('#module_slug').prop('required',true);
 					$('#form-group-module_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
 				}else if(type_menu == 'Statistic') {
@@ -74,10 +75,12 @@ class MenusController extends CBController
 					$('#qlik_slug').prop('required',false);
 					$('#form-group-module_slug,#form-group-path').hide();
 					$('#form-group-qlik_slug,#form-group-path').hide();
+					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
 					$('#statistic_slug').prop('required',true);
 					$('#form-group-statistic_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
 				}else if(type_menu == 'Qlik') {
 					$('#form-group-qlik_slug').show();
+					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').show();
 					$('#module_slug').prop('required',false);
 					$('#statistic_slug').prop('required',false);
 					$('#form-group-module_slug,#form-group-path').hide();
@@ -89,6 +92,7 @@ class MenusController extends CBController
 					$('#statistic_slug').prop('required',false);
 					$('#qlik_slug').prop('required',false);
 					$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
+					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
 					$('#form-group-path').show();
 				}
 
@@ -117,6 +121,7 @@ class MenusController extends CBController
 						$('#form-group-path').hide();
 						$('#form-group-statistic_slug').hide();
 						$('#form-group-qlik_slug').hide();
+  					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
 						$('#statistic_slug,#path').prop('required',false);
 						$('#qlik_slug,#path').prop('required',false);
 
@@ -127,6 +132,7 @@ class MenusController extends CBController
 						$('#form-group-path').hide();
 						$('#form-group-module_slug').hide();
 						$('#form-group-qlik_slug').hide();
+  					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
 						$('#module_slug,#path').prop('required',false);
 						$('#qlik_slug,#path').prop('required',false);
 
@@ -142,6 +148,7 @@ class MenusController extends CBController
 						$('#statistic_slug,#path').prop('required',false);
 
 						$('#form-group-qlik_slug').show();
+  					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').show();
 						$('#qlik_slug').prop('required',true);
 						$('#form-group-qlik_slug label .text-danger').remove();
 						$('#form-group-qlik_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
@@ -154,6 +161,7 @@ class MenusController extends CBController
 
 						$('#form-group-path').show();
 						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
+  					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
 					}else if (n == 'Route') {
 						$('input[name=path]').attr('placeholder','Please enter the Route');
 
@@ -163,6 +171,7 @@ class MenusController extends CBController
 
 						$('#form-group-path').show();
 						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
+  					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
 					}else {
 						$('#module_slug,#statistic_slug,#qlik_slug').prop('required',false);
 
@@ -172,15 +181,78 @@ class MenusController extends CBController
 
 						$('#form-group-path').show();
 						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
+  					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
 					}
 				})
 			})
+
+      /**
+      * Frame width and height script
+      * fill content, full screen
+      */
+
+      function checkFullPage(){
+        if(
+          $('#frame_width').val()=='100' &&
+          $('#frame_height').val()=='100' &&
+          $('#frame_width_unit').children('option:selected')[0].label == '%' &&
+          $('#frame_height_unit').children('option:selected')[0].label == '%'
+        ){
+          $('input[name^=frame_full_page]').prop('checked', true);
+        }
+        else{
+          $('input[name^=frame_full_page]').prop('checked', false);
+        }
+      }
+
+      function setFullPage(){
+        console.log();
+        if($('input[name^=frame_full_page]').prop('checked')){
+          $('#frame_width').val(100);
+          $('#frame_width_unit option').filter(function() {
+              return ($(this).text() == '%');
+          }).prop('selected', true);
+          $('#frame_height').val(100);
+          $('#frame_height_unit option').filter(function() {
+              return ($(this).text() == '%');
+          }).prop('selected', true);
+        }
+      }
+
+      $(function() {
+        //set iframe size
+        // $('.qi_iframe').css('height', $(window).height()+'px').css('width', '100%');
+
+        // sposta scelta unità di misura della width a fianco della dimensione
+        $('#form-group-frame_width_unit label').remove();
+        var unit_select = $('#form-group-frame_width_unit').html();
+        $('#form-group-frame_width').append(unit_select);
+        var unit_select = $('#form-group-frame_width_unit').remove();
+
+        // sposta scelta unità di misura della height a fianco della dimensione
+        $('#form-group-frame_height_unit label').remove();
+        var unit_select = $('#form-group-frame_height_unit').html();
+        $('#form-group-frame_height').append(unit_select);
+        var unit_select = $('#form-group-frame_height_unit').remove();
+
+        //metti spunta automatica su checkbox se width 100% e height 100%
+        checkFullPage();
+        $('#frame_width').change(function () {checkFullPage()});
+        $('#frame_width_unit').change(function () {checkFullPage()});
+        $('#frame_height').change(function () {checkFullPage()});
+        $('#frame_height_unit').change(function () {checkFullPage()});
+        //setta 100% 100% se spunti Full Page checkbox
+        $('input[name^=frame_full_page]').change(function () {setFullPage()});
+
+      });
 			";
 
         $this->col = [];
         $this->col[] = ["label" => "Name", "name" => "name"];
         $this->col[] = ["label" => "Is Active", "name" => "is_active"];
         $this->col[] = ["label" => "Privileges", "name" => "id_cms_privileges", "join" => "cms_privileges,name"];
+				$this->col[] = ["label"=>"Width","name"=>"frame_width"];
+				$this->col[] = ["label"=>"Height","name"=>"frame_height"];
 
         $this->form = [];
         $this->form[] = [
@@ -286,6 +358,12 @@ class MenusController extends CBController
             "dataenum" => ['1|Yes', '0|No'],
             'value' => '0',
         ];
+        $this->form[] = ['label'=>'Full Screen','name'=>'frame_full_screen','type'=>'checkbox','width'=>'col-sm-1'];
+				$this->form[] = ['label'=>'Fill Content','name'=>'frame_full_page','type'=>'checkbox','width'=>'col-sm-1'];
+				$this->form[] = ['label'=>'Width','name'=>'frame_width','type'=>'number','validation'=>'required|int|min:1|max:10000','width'=>'col-sm-2','value'=>'100'];
+				$this->form[] = ['label'=>'','name'=>'frame_width_unit','type'=>'select','validation'=>'','width'=>'col-sm-2','dataenum'=>'px','default'=>'%'];
+				$this->form[] = ['label'=>'Height','name'=>'frame_height','type'=>'number','validation'=>'required|int|min:1|max:10000','width'=>'col-sm-2','value'=>'100'];
+				$this->form[] = ['label'=>'','name'=>'frame_height_unit','type'=>'select','validation'=>'','width'=>'col-sm-2','dataenum'=>'px','default'=>'%'];
 
         $id_cms_privileges = Request::get('id_cms_privileges');
         $this->form[] = ["label" => "id_cms_privileges", "name" => "id_cms_privileges", "type" => "hidden", "value" => $id_cms_privileges];
@@ -349,6 +427,24 @@ class MenusController extends CBController
         return view('crudbooster::menus_management', compact('menu_active', 'menu_inactive', 'privileges', 'id_cms_privileges', 'return_url', 'page_title'));
     }
 
+    public function customEdit($id)
+    {
+				//load edit page
+        $this->cbLoader();
+        $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+
+        if (! CRUDBooster::isSuperadmin()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
+                'name' => $row->{$this->title_field},
+                'module' => CRUDBooster::getCurrentModule()->name,
+            ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
+
+        return view('crudbooster::menus.form', compact('row', 'id'));
+    }
+
     public function hook_before_add(&$postdata)
     {
         if (! $postdata['id_cms_privileges']) {
@@ -364,12 +460,18 @@ class MenusController extends CBController
             $postdata['path'] = $stat->path;
         } elseif ($postdata['type'] == 'Qlik') {
             $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
-            $postdata['path'] = 'qlik_items/content/'.$postdata['qlik_slug'];
+            $postdata['path'] = 'qlik_items/content/'.$postdata['qlik_slug'].'?m='.$id;
         }
 
         unset($postdata['module_slug']);
         unset($postdata['statistic_slug']);
         unset($postdata['qlik_slug']);
+        //frame width and height data
+        $postdata['frame_width'] .= $postdata['frame_width_unit'];
+        $postdata['frame_height'] .= $postdata['frame_height_unit'];
+        unset($postdata['frame_full_page']);
+        unset($postdata['frame_width_unit']);
+        unset($postdata['frame_height_unit']);
 
         if ($postdata['is_dashboard'] == 1) {
             //If set dashboard, so unset for first all dashboard
@@ -383,6 +485,12 @@ class MenusController extends CBController
 
     public function hook_before_edit(&$postdata, $id)
     {
+      //frame width and height data
+        $postdata['frame_width'] .= $postdata['frame_width_unit'];
+        $postdata['frame_height'] .= $postdata['frame_height_unit'];
+        unset($postdata['frame_full_page']);
+        unset($postdata['frame_width_unit']);
+        unset($postdata['frame_height_unit']);
 
         if ($postdata['is_dashboard'] == 1) {
             //If set dashboard, so unset for first all dashboard
@@ -398,7 +506,7 @@ class MenusController extends CBController
             $postdata['path'] = $stat->path;
         } elseif ($postdata['type'] == 'Qlik') {
             $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
-            $postdata['path'] = 'qlik_items/content/'.$postdata['qlik_slug'];
+            $postdata['path'] = 'qlik_items/content/'.$postdata['qlik_slug'].'?m='.$id;
         }
 
         unset($postdata['module_slug']);

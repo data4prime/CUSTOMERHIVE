@@ -77,6 +77,7 @@
             })
         </script>
     @endpush
+
     @push('bottom')
         <script src='{{asset("vendor/crudbooster/assets/jquery-sortable-min.js")}}'></script>
         <script type="text/javascript">
@@ -228,6 +229,42 @@
 
 
         </div>
+
+
+    <?php
+
+    /* Frame size */
+    if($row->frame_width == '100%' AND $row->frame_height == '100%'){
+      $full_page = true;
+    }
+    else{
+      $full_page = false;
+    }
+
+    //full page checked if frame size 100% x 100%
+    if($name == 'frame_full_page'){
+      if($full_page){
+        $checked = "checked";
+      }
+      else{
+        $checked = "";
+      }
+    }
+    //split width and height into dimension and unit
+    if($name == 'frame_width' OR $name == 'frame_height'){
+      @$value = (isset($row->{$name})) ? (int)$row->{$name} : $value;
+    }
+    elseif($name == 'frame_width_unit' OR $name == 'frame_height_unit'){
+      if((isset($row->{substr($name, 0, -5)}))){
+        $last_char = substr($row->{substr($name, 0, -5)}, -1);
+        @$value = $last_char == '%' ? '%' : 'px';
+      }
+      else{
+        @$value = $value;
+      }
+    }
+    ?>
+
         <div class="col-sm-7">
             <div class="panel panel-primary">
                 <div class="panel-heading">

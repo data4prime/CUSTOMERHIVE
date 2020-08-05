@@ -25,22 +25,7 @@ foreach($forms as $index=>$form) {
   $name = $form['name'];
   @$join = $form['join'];
   @$value = (isset($form['value'])) ? $form['value'] : '';
-  //default behaviour
-  else{
-    @$value = (isset($row->{$name})) ? $row->{$name} : $value;
-  }
-
-  //public access checked
-  if($name == 'public_access'){
-    if($is_public){
-      $checked = "checked";
-      $qlik_item = App\QlikItem::find($row->id);
-      $link = $qlik_item->publicUrl();
-    }
-    else{
-      $checked = "";
-    }
-  }
+  @$value = (isset($row->{$name})) ? $row->{$name} : $value;
 
   $old = old($name);
   $value = (! empty($old)) ? $old : $value;
@@ -95,6 +80,38 @@ foreach($forms as $index=>$form) {
   } else {
     $header_group_class = ($header_group_class) ?: "header-group-$index";
   }
+
+
+    /* Frame size */
+    if($row->frame_width == '100%' AND $row->frame_height == '100%'){
+      $full_page = true;
+    }
+    else{
+      $full_page = false;
+    }
+
+    //full page checked if frame size 100% x 100%
+    if($name == 'frame_full_page'){
+      if($full_page){
+        $checked = "checked";
+      }
+      else{
+        $checked = "";
+      }
+    }
+    //split width and height into dimension and unit
+    if($name == 'frame_width' OR $name == 'frame_height'){
+      @$value = (isset($row->{$name})) ? (int)$row->{$name} : $value;
+    }
+    elseif($name == 'frame_width_unit' OR $name == 'frame_height_unit'){
+      if((isset($row->{substr($name, 0, -5)}))){
+        $last_char = substr($row->{substr($name, 0, -5)}, -1);
+        @$value = $last_char == '%' ? '%' : 'px';
+      }
+      else{
+        @$value = $value;
+      }
+    }
   ?>
   @if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/component.blade.php')))
   @include('crudbooster::default.type_components.'.$type.'.component')

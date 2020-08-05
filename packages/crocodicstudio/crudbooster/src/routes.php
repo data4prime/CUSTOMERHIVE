@@ -46,7 +46,7 @@ Route::group([
     'prefix' => config('crudbooster.ADMIN_PATH'),
     'namespace' => 'App\Http\Controllers',
 ], function () use ($namespace) {
- 
+
     Route::get('/',function () {
     });
     try {
@@ -67,7 +67,7 @@ Route::group([
     'namespace' => $namespace,
 ], function () {
 
-    /* DO NOT EDIT THESE below LINES */
+    /* DO NOT EDIT THESE LINES */
     if (Request::is(config('crudbooster.ADMIN_PATH'))) {
         $menus = DB::table('cms_menus')->where('is_dashboard', 1)->first();
         if (! $menus) {
