@@ -20,15 +20,27 @@ class GroupHelper  {
 		* @return boolean true se l'utente è abilitato, false altrimenti
 		*/
     public static function can_see_item($qlik_item_id) {
+
 			//super admin sempre allowed
       if(CRUDBooster::isSuperadmin()){
 				return true;
 			}
+
+      $qlik_item = \App\QlikItem::find($qlik_item_id);
+
+      //check tenant
+      if(UserHelper::current_user_tenant() !== $qlik_item->tenant){
+        return false;
+      }
+      if(UserHelper::isAdvanced()){
+        //Advanced non è limitato dal ruolo per la visibilità dei qlik item
+				return true;
+			}
+
 			//check groups
 			//get user groups
 			$current_user_groups = GroupHelper::myGroups();
 			//get item allowed groups
-      $qlik_item = \App\QlikItem::find($qlik_item_id);
       if(empty($qlik_item)){
         add_log('can see item', 'qlik item not found id: '.$qlik_item_id);
         return false;

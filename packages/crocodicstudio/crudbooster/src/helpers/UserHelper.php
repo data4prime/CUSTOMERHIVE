@@ -14,9 +14,7 @@ class UserHelper  {
   * @return int id of the group
   */
   public static function current_user_primary_group() {
-    $user_id = CRUDBooster::myId();
-    $user = User::find($user_id);
-    return $user->primary_group;
+    return UserHelper::me()->primary_group;
   }
 
   /**
@@ -25,9 +23,7 @@ class UserHelper  {
   * @return int id of the group
   */
   public static function current_user_primary_group_name() {
-    $user_id = CRUDBooster::myId();
-    $user = User::find($user_id);
-    return $user->primary_group()->name;
+    return UserHelper::me()->primary_group()->name;
   }
 
   /**
@@ -36,9 +32,7 @@ class UserHelper  {
   * @return int id of the tenant
   */
   public static function current_user_tenant() {
-    $user_id = CRUDBooster::myId();
-    $user = User::find($user_id);
-    return $user->tenant;
+    return UserHelper::me()->tenant;
   }
 
   /**
@@ -72,5 +66,19 @@ class UserHelper  {
       }
       return $result;
     }
+  }
+
+  public static function isAdvanced()
+  {
+    // TODO migliorare se aggiungiamo colonna is advanced nei ruoli in modo da
+    // non basarsi solo sull'id del ruolo
+    return CRUDBooster::me()->id_cms_privileges === 3;
+  }
+
+  public static function me()
+  {
+    $user_id = CRUDBooster::myId();
+    $user = User::find($user_id);
+    return $user;
   }
 }
