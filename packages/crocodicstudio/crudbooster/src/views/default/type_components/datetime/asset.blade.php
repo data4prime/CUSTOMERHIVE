@@ -13,12 +13,15 @@
                 timePicker: true,
                 timePickerIncrement: 1,
                 timePicker24Hour: true,
-                autoApply: false,
                 showDropdowns: true,
                 locale: {
                     format: "YYYY-MM-DD HH:mm:ss",
-                },
-
+                    cancelLabel: 'Clear'
+                }
+            });
+            $('.input_datetime').on('cancel.daterangepicker', function(ev, picker) {
+              //do something, like clearing an input
+              $('.input_datetime').val('');
             });
         });
     </script>
