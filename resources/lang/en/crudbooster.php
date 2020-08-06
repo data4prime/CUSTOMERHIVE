@@ -146,6 +146,7 @@ return [
     'delete_self' => 'You can\'t delete yourself!',
     'delete_not_empty_group' => 'You can only delete groups with no members!',
     'delete_not_empty_tenant' => 'You can only delete tenants with no members!',
+    'cant_delete_role' => 'Oops! you can\'t delete this role!',
 
     'user_image' => 'User Image',
     'online' => 'Online',

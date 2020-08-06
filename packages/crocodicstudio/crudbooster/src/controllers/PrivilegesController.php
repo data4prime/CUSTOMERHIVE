@@ -227,6 +227,16 @@ class PrivilegesController extends CBController
             ]));
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
+        if ( $id < 4 )
+        {
+          //can't delete default roles
+          CRUDBooster::insertLog(trans("crudbooster.log_try_delete", [
+              'name' => $row->{$this->title_field},
+              'module' => CRUDBooster::getCurrentModule()->name,
+          ]));
+          CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.cant_delete_role'));
+        }
+
 
         DB::table($this->table)->where($this->primary_key, $id)->delete();
         DB::table("cms_privileges_roles")->where("id_cms_privileges", $row->id)->delete();
