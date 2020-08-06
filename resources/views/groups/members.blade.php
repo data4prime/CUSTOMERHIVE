@@ -85,6 +85,7 @@
       <table class='table table-striped table-bordered'>
         <thead>
           <tr>
+            <th style="width:25px;"><!-- primary --></th>
             <th>Name</th>
             <th>Email</th>
             <th>Photo</th>
@@ -95,6 +96,11 @@
         <tbody>
           @foreach($members as $member)
           <tr>
+            <td style="text-align:center;">
+              @if($group->id == $member->primary_group)
+              <i class="fa fa-trophy success-icon" title="primary group"></i>
+              @endif
+            </td>
             <td>{{$member->name}}</td>
             <td>{{$member->email}}</td>
             <td><img width="40" src="/{{$member->photo}}" class="user-image" alt="User Image"></td>

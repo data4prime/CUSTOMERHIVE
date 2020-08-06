@@ -53,3 +53,9 @@ h1 .qlik_logo{
   width: 100%;
   height: 98vh;
 }
+
+/* user's groups */
+.success-icon{
+  color: #00a65a;
+  font-size: 2em;
+}

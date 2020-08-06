@@ -6,17 +6,25 @@
   <div>
       @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel)
           @if(g('return_url'))
-              <p><a title='Return' href='{{g("return_url")}}'><i class='fa fa-chevron-circle-left '></i>
-                      &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
+              <p>
+                <a title='Return' href='{{g("return_url")}}'>
+                  <i class='fa fa-chevron-circle-left '></i>&nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
+                </a>
+              </p>
           @else
-              <p><a title='Main Module' href='{{CRUDBooster::mainpath()}}'><i class='fa fa-chevron-circle-left '></i>
-                      &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
+              <p>
+                <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
+                  <i class='fa fa-chevron-circle-left '></i>&nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
+                </a>
+              </p>
           @endif
       @endif
 
       <div class="panel panel-default">
           <div class="panel-heading">
-            <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Add group</strong>
+            <strong>
+              <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Add group
+            </strong>
           </div>
 
           <div class="panel-body" style="padding:20px 0px 0px 0px">
@@ -85,6 +93,7 @@
       <table class='table table-striped table-bordered'>
         <thead>
           <tr>
+            <th style="width:25px;"><!-- primary --></th>
             <th>Name</th>
             <th>Description</th>
             <th></th>
@@ -93,6 +102,11 @@
         <tbody>
           @foreach($groups as $group)
           <tr>
+            <td style="text-align:center;">
+              @if($group->id == UserHelper::current_user_primary_group())
+              <i class="fa fa-trophy success-icon" title="primary group"></i>
+              @endif
+            </td>
             <td>{{$group->name}}</td>
             <td>{{$group->description}}</td>
             <td>

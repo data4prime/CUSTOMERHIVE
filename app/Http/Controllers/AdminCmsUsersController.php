@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use \App\Tenant;
 use \App\Group;
 use \App\UsersGroup;
+use \crocodicstudio\crudbooster\helpers\GroupHelper;
 
 class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -71,9 +72,11 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 
 	public function hook_before_edit(&$postdata,$id) {
 		unset($postdata['password_confirmation']);
+		GroupHelper::add($postdata['primary_group'], $id);
 	}
 	public function hook_before_add(&$postdata) {
     unset($postdata['password_confirmation']);
+		GroupHelper::add($postdata['primary_group'], $id);
 	}
 
 	public function hook_before_validation() {
@@ -88,7 +91,6 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		UsersGroup::where('user_id',$id)->delete();
 	}
 
-	//overwrite default method
   public function getEdit($id)
   {
 		//load edit page
