@@ -142,6 +142,7 @@
                     @foreach($hc as $j=>$h)
                         <td {{ $columns[$j]['style'] or ''}}>{!! $h !!}</td>
                     @endforeach
+
                 </tr>
                 @endforeach
         </tbody>

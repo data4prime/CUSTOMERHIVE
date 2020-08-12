@@ -215,7 +215,7 @@ class CBController extends Controller
 
         $module = CRUDBooster::getCurrentModule();
 
-        if (! CRUDBooster::isView() && $this->global_privilege == false) {
+        if (!CRUDBooster::isView() && !$this->global_privilege) {
             CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
@@ -261,10 +261,20 @@ class CBController extends Controller
             $result->where($this->table.'.deleted_at', null);
         }
         // if it's a manually generated module..
-        if (in_array('deleted_at', $table_columns) and !CRUDBooster::isSuperadmin() ) {
-          //..then filter on group and tenant columns
-          $result->whereIn($this->table.'.group', UserHelper::current_user_groups());
-          $result->where($this->table.'.tenant', UserHelper::current_user_tenant());
+        if (ModuleHelper::is_manually_generated($this->table) and !CRUDBooster::isSuperadmin() ) {
+          //..no filter for superadmin
+          if(UserHelper::isAdvanced())
+          {
+            //.. for advanced filter on tenant column
+            $result->where($this->table.'.tenant', UserHelper::current_user_tenant());
+          }
+          else
+          {
+            //.. for basic filter on group and tenant columns
+            $result->where($this->table.'.tenant', UserHelper::current_user_tenant());
+            $result->whereIn($this->table.'.group', UserHelper::current_user_groups());
+          }
+
         }
 
         $alias = [];
@@ -272,6 +282,10 @@ class CBController extends Controller
         $join_table_temp = [];
         $table = $this->table;
         $columns_table = $this->columns_table;
+
+        //add group and tenant columns for admins
+        $columns_table = ModuleHelper::add_default_column_headers($table, $columns_table);
+
         foreach ($columns_table as $index => $coltab) {
 
             $join = @$coltab['join'];
@@ -1171,7 +1185,6 @@ class CBController extends Controller
             ]));
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
         }
-
         $request = $this->hook_before_validation();
 
         $this->validation(null, $request);
@@ -1187,11 +1200,30 @@ class CBController extends Controller
         if (Schema::hasColumn($this->table, 'updated_by')) {
             $this->arr['updated_by'] = CRUDBooster::myId();
         }
+        //save group e tenant se la tabella li prevede
         if (Schema::hasColumn($this->table, 'group')) {
-            $this->arr['group'] = UserHelper::current_user_primary_group();
+            if(!empty($_POST['group']))
+            {
+              //salva il valore ricevuto dal form
+              $this->arr['group'] = $_POST['group'];
+            }
+            else
+            {
+              //salva il primary group dell'utente che ha salvato
+              $this->arr['group'] = UserHelper::current_user_primary_group();
+            }
         }
         if (Schema::hasColumn($this->table, 'tenant')) {
-            $this->arr['tenant'] = UserHelper::current_user_tenant();
+            if(!empty($_POST['tenant']))
+            {
+              //salva il valore ricevuto dal form
+              $this->arr['tenant'] = $_POST['tenant'];
+            }
+            else
+            {
+              //salva il tenant dell'utente che ha salvato
+              $this->arr['tenant'] = UserHelper::current_user_tenant();
+            }
         }
 
         $this->hook_before_add($this->arr);
@@ -1331,8 +1363,22 @@ class CBController extends Controller
         if (Schema::hasColumn($this->table, 'updated_at')) {
             $this->arr['updated_at'] = date('Y-m-d H:i:s');
         }
+        if (Schema::hasColumn($this->table, 'updated_by')) {
+            $this->arr['updated_by'] = CRUDBooster::myId();
+        }
+
+        //save group e tenant se la tabella li prevede
+        if (Schema::hasColumn($this->table, 'group') AND !empty($_POST['group'])) {
+            //salva il valore ricevuto dal form
+            $this->arr['group'] = $_POST['group'];
+        }
+        if (Schema::hasColumn($this->table, 'tenant') AND !empty($_POST['tenant'])) {
+            //salva il valore ricevuto dal form
+            $this->arr['tenant'] = $_POST['tenant'];
+        }
 
         $this->hook_before_edit($this->arr, $id);
+
         DB::table($this->table)
             ->where($this->primary_key, $id)
             ->update($this->arr);

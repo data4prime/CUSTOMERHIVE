@@ -10,6 +10,9 @@
     @push('bottom')
         <script type="text/javascript">
             $(function () {
+
+                var default_tenant;
+
                 $('#{{$parent}}, input:radio[name={{$parent}}]').change(function () {
                     var $current = $("#{{$form['name']}}");
                     var parent_id = $(this).val();
@@ -34,12 +37,36 @@
                     var table = datatable[0].trim('');
                     var label = datatable[1].trim('');
                     var value = "{{$value}}";
+                    var is_default_present = false;
+                    var belongs_to_tenant = true;
+                    //salvo solo all'atterraggio default_tenant e non ogni volta che la tendina tenant cambia
+                    if(typeof default_tenant == 'undefined')
+                    {
+                      default_tenant = fk_value;
+                    }
 
                     if (fk_value != '') {
-                        $current.html("<option value=''>{{trans('crudbooster.text_loading')}} {{$form['label']}}");
+                        $current.html("<option value=''>{{trans('crudbooster.text_prefix_option')}} {{$form['label']}}");
                         $.get("{{CRUDBooster::mainpath('data-table')}}?table=" + table + "&label=" + label + "&fk_name=" + fk_name + "&fk_value=" + fk_value + "&datatable_where=" + encodeURI(datatableWhere), function (response) {
                             if (response) {
-                                $current.html("<option value=''>{{$default}}");
+                                //check if default is already between the options
+                                $.each(response, function (i, obj) {
+                                  if(obj.select_label == '{{$default}}'){
+                                    is_default_present = true;
+                                  }
+                                })
+                                if(fk_value !== default_tenant)
+                                {
+                                  belongs_to_tenant = false;
+                                }
+                                //if it's not a duplicate..
+                                //and group's tenant is selected
+                                if(!is_default_present && belongs_to_tenant)
+                                {
+                                  //..add the default option
+                                  $current.html("<option value=''>{{$default}}");
+                                }
+                                //add the other options
                                 $.each(response, function (i, obj) {
                                     var selected = (value && value == obj.select_value) ? "selected" : "";
                                     $("<option " + selected + " value='" + obj.select_value + "'>" + obj.select_label + "</option>").appendTo("#{{$form['name']}}");

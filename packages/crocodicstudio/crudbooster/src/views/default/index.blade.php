@@ -40,7 +40,10 @@
                     <tr class='active'>
                         <td colspan="2"><strong><i class='fa fa-bars'></i> {{ ucwords(urldecode(g('label'))) }}</strong></td>
                     </tr>
-                    @foreach(explode(',',urldecode(g('parent_columns'))) as $c)
+                    <?php
+                    $columns = explode(',',urldecode(g('parent_columns')));
+                   ?>
+                    @foreach($columns as $c)
                         <tr>
                             <td width="25%"><strong>
                                     @if(urldecode(g('parent_columns_alias')))
@@ -68,14 +71,20 @@
                             <span class="fa fa-caret-down"></span></button>
                         <ul class="dropdown-menu">
                             @if($button_delete && CRUDBooster::isDelete())
-                                <li><a href="javascript:void(0)" data-name='delete' title='{{trans('crudbooster.action_delete_selected')}}'><i
-                                                class="fa fa-trash"></i> {{trans('crudbooster.action_delete_selected')}}</a></li>
+                              <li>
+                                <a href="javascript:void(0)" data-name='delete' title='{{trans('crudbooster.action_delete_selected')}}'>
+                                  <i class="fa fa-trash"></i> {{trans('crudbooster.action_delete_selected')}}
+                                </a>
+                              </li>
                             @endif
 
                             @if($button_selected)
                                 @foreach($button_selected as $button)
-                                    <li><a href="javascript:void(0)" data-name='{{$button["name"]}}' title='{{$button["label"]}}'><i
-                                                    class="fa fa-{{$button['icon']}}"></i> {{$button['label']}}</a></li>
+                                    <li>
+                                      <a href="javascript:void(0)" data-name='{{$button["name"]}}' title='{{$button["label"]}}'>
+                                        <i class="fa fa-{{$button['icon']}}"></i> {{$button['label']}}
+                                      </a>
+                                    </li>
                                 @endforeach
                             @endif
 

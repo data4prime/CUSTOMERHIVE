@@ -143,7 +143,6 @@
                     } else {
                         $val = $lab = $enum;
                     }
-
                     $select = ($value == $val) ? "selected" : "";
                     ?>
                     <option {{$select}} value='{{$val}}'>{{$lab}}</option>
@@ -207,6 +206,7 @@
                         foreach ($result as $r) {
                             $option_label = $r->{$select_title};
                             $option_value = $r->$select_table_pk;
+                            //TODO define $value
                             $selected = ($option_value == $value) ? "selected" : "";
                             echo "<option $selected value='$option_value'>$option_label</option>";
                         }

@@ -18,9 +18,9 @@ class UserHelper  {
   }
 
   /**
-  *	get current user's primary group
+  *	get current user's primary group name
   *
-  * @return int id of the group
+  * @return string name of the group
   */
   public static function current_user_primary_group_name() {
     return UserHelper::me()->primary_group()->name;
@@ -33,6 +33,15 @@ class UserHelper  {
   */
   public static function current_user_tenant() {
     return UserHelper::me()->tenant;
+  }
+
+  /**
+  *	get current user's tenant's name
+  *
+  * @return string tenant's name
+  */
+  public static function current_user_tenant_name() {
+    return UserHelper::me()->tenant()->name;
   }
 
   /**

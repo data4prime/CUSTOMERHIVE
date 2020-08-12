@@ -1,6 +1,9 @@
 <?php
 
 //Loading Assets
+//add group and tenant columns for admins
+$forms = ModuleHelper::add_default_form_fields($table, $forms);
+
 $asset_already = [];
 foreach($forms as $form) {
   $type = @$form['type'] ?: 'text';

@@ -143,7 +143,7 @@
                                     endif;
                                     break;
                                 case 'select':
-                                    echo "<select name='$s->name' class='form-control'><option value=''>** Please select $s->label</option>";
+                                    echo "<select name='$s->name' class='form-control'><option value=''>Select $s->label</option>";
                                     if ($dataenum):
                                         foreach ($dataenum as $enum) {
                                             $selected = ($enum == $value) ? "selected" : "";

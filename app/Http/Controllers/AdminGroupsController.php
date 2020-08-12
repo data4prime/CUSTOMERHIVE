@@ -33,6 +33,11 @@
 			$this->col = [];
 			$this->col[] = ["label"=>"Name","name"=>"name"];
 			$this->col[] = ["label"=>"Help","name"=>"description"];
+			//solo superadmin vede il tenant
+			if(CRUDBooster::isSuperadmin())
+			{
+				$this->col[] = ["label"=>"Tenant","name"=>"tenant","join"=>"tenants,name"];
+			}
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 
@@ -40,6 +45,11 @@
 			$this->form = [];
 			$this->form[] = ['label'=>'Name','name'=>'name','type'=>'text','validation'=>'required|string|min:1|max:70','width'=>'col-sm-10','placeholder'=>'You can only enter the letter only'];
 			$this->form[] = ['label'=>'Help','name'=>'description','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10'];
+			//solo superadmin vede il tenant
+			if(CRUDBooster::isSuperadmin())
+			{
+				$this->form[] = array("label"=>"Tenant","name"=>"tenant",'required'=>true,'type'=>'select','datatable'=>"tenants,name",'validation'=>'required','default'=>'');
+			}
 
 			# Users submodule
 			// #RAMA questo subform riesce ad aggiungere nuovi utenti e a mostrarli ma permette di aggiungere due volte lo stesso utente allo stesso gruppo, non riesco a mostrare un secondo campo nel form e nella tabella, non posso nascondere il tasto edit dalla tabella, fa confusione come interfaccia

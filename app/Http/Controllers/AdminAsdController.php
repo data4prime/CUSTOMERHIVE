@@ -40,7 +40,9 @@
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ['label'=>'Atest','name'=>'atest','type'=>'date','width'=>'col-sm-9'];
+			//$this->form[] = ['label'=>'Atest','name'=>'atest','type'=>'datetime','width'=>'col-sm-9'];
+			//$this->form[] = ['label'=>'Group','name'=>'group','type'=>'number','validation'=>'required','width'=>'col-sm-9'];
+			//$this->form[] = ['label'=>'Tenant','name'=>'tenant','type'=>'number','validation'=>'required','width'=>'col-sm-9'];
 			# OLD END FORM
 
 			/*

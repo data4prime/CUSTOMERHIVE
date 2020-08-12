@@ -134,10 +134,10 @@ return [
     "notice_delete_file_upload" => "In order to change file, press delete first.",
     "file_broken" => "Oops looks like File was Broken !. Click Delete and Re-Upload.",
 
-    'denied_access' => 'Sorry you do not have privilege to access this area !',
-    'denied_update' => 'Sorry you do not have privilege to update the data !',
-    'denied_create' => 'Sorry you do not have privilege to create the data !',
-    'denied_delete' => 'Sorry you do not have privilege to delete the data !',
+    'denied_access' => 'Forbidden area!',
+    'denied_update' => 'Sorry you are not allowed to update this data!',
+    'denied_create' => 'Sorry you are not allowed to create this data!',
+    'denied_delete' => 'Sorry you are not allowed to delete this data!',
 
     'user_image' => 'User Image',
     'online' => 'Online',

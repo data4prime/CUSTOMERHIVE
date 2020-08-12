@@ -131,7 +131,7 @@ class ModuleHelper  {
     }
   }
 
-  /*
+  /**
   * Check if current user can delete the record $row
   *
   * @param object $module a module instance //TODO not really a module...
@@ -170,4 +170,120 @@ class ModuleHelper  {
       CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
   }
+
+  /**
+  * Add default columns to MG_ modules index table
+  *
+  * add tenant and group columns for superadmin
+  * add group column for advanced
+  */
+  public static function add_default_column_headers($table_name, $columns)
+  {
+    //only add columns for manually generated modules
+    if(substr($table_name, 0, strlen(config('app.module_generator_prefix'))) === config('app.module_generator_prefix'))
+    {
+      $tenant_is_present = false;
+      $group_is_present = false;
+      //check if group or tenant columns are already set
+      foreach ($columns as $column) {
+        if($column['name']=="tenant")
+        {
+          $tenant_is_present = true;
+        }
+        if($column['name']=="group")
+        {
+          $group_is_present = true;
+        }
+      }
+      //only superadmin can see tenant
+      if(CRUDBooster::isSuperadmin() AND !$tenant_is_present)
+      {
+        $columns[] = ["label"=>"Tenant","name"=>"tenant","join"=>"tenants,name"];
+      }
+      //only superadmin and advanced can see group
+      if((UserHelper::isAdvanced() OR CRUDBooster::isSuperadmin()) AND !$group_is_present)
+      {
+  			$columns[] = ["label"=>"Group","name"=>"group","join"=>"groups,name"];
+      }
+    }
+    return $columns;
+  }
+
+  /**
+  * Add default fields to MG_ modules forms
+  *
+  * add tenant and group columns for superadmin
+  * add group column for advanced
+  */
+  public static function add_default_form_fields($table_name, $fields)
+  {
+    //only add fields for manually generated modules
+    if(substr($table_name, 0, strlen(config('app.module_generator_prefix'))) === config('app.module_generator_prefix'))
+    {
+      $tenant_is_present = false;
+      $group_is_present = false;
+      //check if group or tenant columns are already set in this form
+      foreach ($fields as $field) {
+        if($field['name']=="tenant")
+        {
+          $tenant_is_present = true;
+        }
+        if($field['name']=="group")
+        {
+          $group_is_present = true;
+        }
+      }
+      //only superadmin can see tenant
+      if(CRUDBooster::isSuperadmin() AND !$tenant_is_present)
+      {
+        $fields[] = [
+          'label'=>'Tenant',
+          'name'=>'tenant',
+          "type"=>"select2",
+          "datatable"=>"tenants,name",
+          'required'=>true,
+          'validation'=>'required|int|min:1',
+          'value'=>UserHelper::current_user_tenant()
+        ];
+      }
+      //only superadmin and advanced can see group
+      if((UserHelper::isAdvanced() OR CRUDBooster::isSuperadmin()) AND !$group_is_present)
+      {
+        if(CRUDBooster::isSuperadmin())
+        {
+          //superadmin vede i gruppi come cascading dropdown in base al tenant
+          $field = [
+            'label'=>'Group',
+            'name'=>'group',
+            "type"=>"select",
+            "datatable"=>"groups,name",
+            'required'=>true,
+            'validation'=>'required|int|min:1',
+            'value'=>UserHelper::current_user_primary_group(),
+            'parent_select'=>'tenant'
+          ];
+          // $field = ['label'=>'Group','name'=>'group',"type"=>"select","datatable"=>"groups,name",'required'=>true,'validation'=>'required|int|min:1','default'=>UserHelper::current_user_primary_group_name(),'value'=>UserHelper::current_user_primary_group(),'parent_select'=>'tenant'];
+        }
+        else
+        {
+          //Advanced vede solo i gruppi del proprio tenant
+          $field = [
+            'label'=>'Group',
+            'name'=>'group',
+            "type"=>"select2",
+            "datatable"=>"groups,name",
+            'required'=>true,
+            'validation'=>'required|int|min:1',
+            'default'=>UserHelper::current_user_primary_group_name(),
+            'value'=>UserHelper::current_user_primary_group(),
+            //advanced vede nella dropdown solo i gruppi del proprio tenant
+            'datatable_where'=>'tenant = '.UserHelper::current_user_tenant()
+          ];
+        }
+  			$fields[] = $field;
+      }
+    }
+    return $fields;
+  }
+
 }
