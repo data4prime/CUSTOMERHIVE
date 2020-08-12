@@ -103,14 +103,14 @@
           @foreach($groups as $group)
           <tr>
             <td style="text-align:center;">
-              @if($group->id == UserHelper::current_user_primary_group())
+              @if($group->id == UserHelper::primary_group($user->id))
               <i class="fa fa-trophy success-icon" title="primary group"></i>
               @endif
             </td>
             <td>{{$group->name}}</td>
             <td>{{$group->description}}</td>
             <td>
-              @if(CRUDBooster::isDelete() && $button_edit)
+              @if(CRUDBooster::isDelete() && $button_edit && $group->id !== UserHelper::primary_group($user->id))
               <a title='Remove' class='btn btn-danger btn-sm' href='{{CRUDBooster::mainpath("$user_id/remove_group/$group->id")}}'><i class="fa fa-trash"></i></a>
               @endif
             </td>

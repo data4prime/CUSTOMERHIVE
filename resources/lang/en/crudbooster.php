@@ -138,6 +138,7 @@ return [
     "notice_delete_file_upload" => "In order to change file, press delete first.",
     "file_broken" => "Oops looks like File was Broken !. Click Delete and Re-Upload.",
 
+    'cant_delete_primary_group' => 'Sorry, you can\'t delete user\'s primary group',
     'denied_access' => 'Sorry, you are not allowed to access this area',
     'denied_update' => 'Sorry, you are not allowed to update this data',
     'denied_create' => 'Sorry, you are not allowed to create this data',

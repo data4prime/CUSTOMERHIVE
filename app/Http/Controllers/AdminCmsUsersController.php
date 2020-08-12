@@ -9,6 +9,7 @@ use \App\Tenant;
 use \App\Group;
 use \App\UsersGroup;
 use \crocodicstudio\crudbooster\helpers\GroupHelper;
+use \crocodicstudio\crudbooster\helpers\UserHelper;
 
 class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -72,11 +73,26 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 
 	public function hook_before_edit(&$postdata,$id) {
 		unset($postdata['password_confirmation']);
-		GroupHelper::add($postdata['primary_group'], $id);
+		//se il primary group è cambiato
+		$old_primary_group_id = UserHelper::primary_group($id);
+		if($old_primary_group_id !== $postdata['primary_group'])
+		{
+			//aggiungi nuovo primary group ai gruppi di appartenenza
+			GroupHelper::add($postdata['primary_group'], $id);
+			//rimuovi vecchio primary group dai gruppi di appartenenza
+			GroupHelper::remove($old_primary_group_id, $id);
+		}
 	}
+
+	public function hook_after_edit($id) {
+	}
+
 	public function hook_before_add(&$postdata) {
     unset($postdata['password_confirmation']);
-		GroupHelper::add($postdata['primary_group'], $id);
+	}
+
+	public function hook_after_add($id) {
+		GroupHelper::add($this->arr['primary_group'], $id);
 	}
 
 	public function hook_before_validation() {
@@ -132,6 +148,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		$data = [];
 		$data['groups'] = DB::table('users_groups')
 												->where('users_groups.user_id',$user_id)
+												->where('users_groups.deleted_at',null)
 												->join('groups', 'groups.id', '=', 'users_groups.group_id')
 												->select('groups.id', 'groups.name', 'groups.description')
 												->get();

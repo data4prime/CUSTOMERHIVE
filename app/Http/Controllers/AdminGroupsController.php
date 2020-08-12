@@ -5,6 +5,7 @@
 	use DB;
 	use CRUDBooster;
 	use \App\UsersGroup;
+	use \crocodicstudio\crudbooster\helpers\UserHelper;
 
 	class AdminGroupsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -345,6 +346,7 @@
 			  $data = [];
 			  $data['members'] = DB::table('users_groups')
 														->where('users_groups.group_id',$group_id)
+														->where('users_groups.deleted_at',null)
 														->join('cms_users', 'cms_users.id', '=', 'users_groups.user_id')
 														->join('cms_privileges', 'cms_privileges.id', '=', 'cms_users.id_cms_privileges')
 														->select('cms_users.id', 'cms_users.name', 'cms_users.email', 'cms_users.photo', 'cms_privileges.name as privilege', 'cms_users.primary_group')
@@ -419,8 +421,13 @@
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
 
-			  $data['delete'] = DB::table('users_groups')
-														->where('group_id',$group_id)
+				//check if it's user's primary group
+				if(UserHelper::primary_group($user_id) == $group_id)
+				{
+					CRUDBooster::redirectBack(trans("crudbooster.cant_delete_primary_group"));
+				}
+
+			  $data['delete'] = UsersGroup::where('group_id',$group_id)
 														->where('user_id',$user_id)
 														->delete();
 

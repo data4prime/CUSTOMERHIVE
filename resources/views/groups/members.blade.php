@@ -106,7 +106,7 @@
             <td><img width="40" src="/{{$member->photo}}" class="user-image" alt="User Image"></td>
             <td>{{$member->privilege}}</td>
             <td>
-              @if(CRUDBooster::isDelete() && $button_edit)
+              @if(CRUDBooster::isDelete() && $button_edit && $group->id !== $member->primary_group)
               <a title='Remove' class='btn btn-danger btn-sm' href='{{CRUDBooster::mainpath("$group_id/remove_member/$member->id")}}'><i class="fa fa-trash"></i></a>
               @endif
             </td>

@@ -90,4 +90,15 @@ class UserHelper  {
     $user = User::find($user_id);
     return $user;
   }
+
+  /**
+  *	get user's primary group
+  *
+  * @param int id dell'utente
+  *
+  * @return int id of the group
+  */
+  public static function primary_group($user_id) {
+    return User::find($user_id)->primary_group;
+  }
 }
