@@ -42,8 +42,51 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		$this->form[] = array("label"=>"Name","name"=>"name",'required'=>true,'validation'=>'required|alpha_spaces|min:3');
 		$this->form[] = array("label"=>"Email","name"=>"email",'required'=>true,'type'=>'email','validation'=>'required|email|unique:cms_users,email,'.CRUDBooster::getCurrentId());
 		$this->form[] = array("label"=>"Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name",'required'=>true,'validation'=>'required|int|min:1');
-		$this->form[] = array("label"=>"Primary group","name"=>"primary_group",'required'=>true,'type'=>'select','datatable'=>"groups,name",'validation'=>'required','default'=>'');
-		$this->form[] = array("label"=>"Tenant","name"=>"tenant",'required'=>true,'type'=>'select','datatable'=>"tenants,name",'validation'=>'required','default'=>'');
+
+		if(CRUDBooster::isSuperadmin())
+		{
+			$this->form[] = [
+				'label'=>'Tenant',
+				'name'=>'tenant',
+				"type"=>"select2",
+				"datatable"=>"tenants,name",
+				'required'=>true,
+				'validation'=>'required|int|min:1',
+				'value'=>UserHelper::current_user_tenant()
+			];
+			//superadmin vede i gruppi come cascading dropdown in base al tenant
+			$this->form[] = [
+				'label'=>'Group',
+				'name'=>'group',
+				"type"=>"select",
+				"datatable"=>"groups,name",
+				'required'=>true,
+				'validation'=>'required|int|min:1',
+				'value'=>UserHelper::current_user_primary_group(),
+				'parent_select'=>'tenant'
+			];
+			// $field = ['label'=>'Group','name'=>'group',"type"=>"select","datatable"=>"groups,name",'required'=>true,'validation'=>'required|int|min:1','default'=>UserHelper::current_user_primary_group_name(),'value'=>UserHelper::current_user_primary_group(),'parent_select'=>'tenant'];
+		}
+		elseif(UserHelper::isAdvanced())
+		{
+			//advanced vede tenant in readonly (disabled) ma può modificare il proprio primary group
+			$this->form[] = array("label"=>"Tenant","name"=>"tenant",'required'=>true,'type'=>'select','datatable'=>"tenants,name",'default'=>'','disabled'=>true);
+			$this->form[] = [
+				'label'=>'Group',
+				'name'=>'group',
+				"type"=>"select",
+				"datatable"=>"groups,name",
+				'required'=>true,
+				'validation'=>'required|int|min:1',
+				'value'=>UserHelper::current_user_primary_group(),
+				'parent_select'=>'tenant'
+			];
+		}
+		else{
+			//per basic tenant e primary group sono campi readonly (disabled)
+			$this->form[] = array("label"=>"Tenant","name"=>"tenant",'required'=>true,'type'=>'select','datatable'=>"tenants,name",'default'=>'','disabled'=>true);
+			$this->form[] = array("label"=>"Primary group","name"=>"primary_group",'required'=>true,'type'=>'select','datatable'=>"groups,name",'default'=>'','disabled'=>true);
+		}
 		$this->form[] = array("label"=>"User directory","name"=>"user_directory",'required'=>false,'validation'=>'min:3');
 		$this->form[] = array("label"=>"Qlik login","name"=>"qlik_login",'required'=>false,'validation'=>'min:3');
 		$this->form[] = array("label"=>"Photo","name"=>"photo","type"=>"upload","help"=>"Recommended resolution is 200x200px",'required'=>false,'validation'=>'image|max:1000','resize_width'=>90,'resize_height'=>90);
