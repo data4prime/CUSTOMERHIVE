@@ -320,6 +320,7 @@ class CRUDBooster
         }
 
         $session = Session::get('admin_privileges_roles');
+
         foreach ($session as $v) {
             if ($v->path == self::getModulePath()) {
                 return (bool) $v->is_create;

@@ -79,7 +79,21 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		elseif(UserHelper::isAdvanced())
 		{
 			//advanced vede tenant in readonly (disabled) ma può modificare il proprio primary group
-			$this->form[] = array("label"=>"Tenant","name"=>"tenant",'required'=>true,'type'=>'select','datatable'=>"tenants,name",'default'=>'','disabled'=>true);
+			$this->form[] = [
+				"label"=>"Tenant",
+				"name"=>"tenant",
+				'required'=>true,
+				'type'=>'select',
+				'datatable'=>"tenants,name",
+				'default'=>'',
+				'disabled'=>true
+			];
+			//aggiungo un campo tenant hidden perchè con la tenant select disabled viene salvato uno 0
+			$this->form[] = [
+				"label"=>"Tenant",
+				"name"=>"tenant",
+				'type'=>'hidden'
+			];
 			$this->form[] = [
 				'label'=>'Group',
 				'name'=>'primary_group',
