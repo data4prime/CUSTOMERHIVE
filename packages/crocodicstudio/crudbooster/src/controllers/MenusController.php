@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\PDF;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use crocodicstudio\crudbooster\fonts\Fontawesome;
+use \crocodicstudio\crudbooster\helpers\UserHelper;
+use \App\Menu;
 
 class MenusController extends CBController
 {
@@ -54,198 +56,198 @@ class MenusController extends CBController
         }
 
         $this->script_js = "
-			$( document ).ready(function() {
-				var current_id = '$id';
-				var current_type = '$row->type';
-				var type_menu = $('input[name=type][checked]').val();
-				type_menu = (current_type)?current_type:type_menu;
-				console.log(type_menu);
-				if(type_menu == 'Module') {
-					$('#form-group-module_slug').show();
-					$('#qlik_slug').prop('required',false);
-					$('#statistic_slug').prop('required',false);
-					$('#form-group-statistic_slug,#form-group-path').hide();
-					$('#form-group-qlik_slug,#form-group-path').hide();
-					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
-					$('#module_slug').prop('required',true);
-					$('#form-group-module_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
-				}else if(type_menu == 'Statistic') {
-					$('#form-group-statistic_slug').show();
-					$('#module_slug').prop('required',false);
-					$('#qlik_slug').prop('required',false);
-					$('#form-group-module_slug,#form-group-path').hide();
-					$('#form-group-qlik_slug,#form-group-path').hide();
-					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
-					$('#statistic_slug').prop('required',true);
-					$('#form-group-statistic_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
-				}else if(type_menu == 'Qlik') {
-					$('#form-group-qlik_slug').show();
-					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').show();
-					$('#module_slug').prop('required',false);
-					$('#statistic_slug').prop('required',false);
-					$('#form-group-module_slug,#form-group-path').hide();
-					$('#form-group-statistic_slug,#form-group-path').hide();
-					$('#qlik_slug').prop('required',true);
-					$('#form-group-qlik_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
-				}else{
-					$('#module_slug').prop('required',false);
-					$('#statistic_slug').prop('required',false);
-					$('#qlik_slug').prop('required',false);
-					$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
-					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
-					$('#form-group-path').show();
-				}
-
-				function format(icon) {
-	                  var originalOption = icon.element;
-	                  var label = $(originalOption).text();
-	                  var val = $(originalOption).val();
-	                  if(!val) return label;
-	                  var \$resp = $('<span><i style=\"margin-top:5px\" class=\"pull-right ' + $(originalOption).val() + '\"></i> ' + $(originalOption).data('label') + '</span>');
-	                  return \$resp;
-	              }
-	              $('#list-icon').select2({
-	                  width: \"100%\",
-	                  templateResult: format,
-	                  templateSelection: format
-	              });
-
-				$('input[name=type]').change(function() {
-					var default_placeholder_path = 'NameController@methodName';
-					var n = $(this).val();
-					var isCheck = $(this).prop('checked');
-					console.log('Click the module type '+n);
-					$('#module_slug').prop('required',false);
-					$('input[name=path]').attr('placeholder',default_placeholder_path);
-					if(n == 'Module') {
-						$('#form-group-path').hide();
-						$('#form-group-statistic_slug').hide();
-						$('#form-group-qlik_slug').hide();
+  			$( document ).ready(function() {
+  				var current_id = '$id';
+  				var current_type = '$row->type';
+  				var type_menu = $('input[name=type][checked]').val();
+  				type_menu = (current_type)?current_type:type_menu;
+  				console.log(type_menu);
+  				if(type_menu == 'Module') {
+  					$('#form-group-module_slug').show();
+  					$('#qlik_slug').prop('required',false);
+  					$('#statistic_slug').prop('required',false);
+  					$('#form-group-statistic_slug,#form-group-path').hide();
+  					$('#form-group-qlik_slug,#form-group-path').hide();
   					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
-						$('#statistic_slug,#path').prop('required',false);
-						$('#qlik_slug,#path').prop('required',false);
-
-						$('#form-group-module_slug').show();
-						$('#module_slug').prop('required',true);
-						$('#form-group-module_slug label .text-danger').remove();
-					}else if (n == 'Statistic') {
-						$('#form-group-path').hide();
-						$('#form-group-module_slug').hide();
-						$('#form-group-qlik_slug').hide();
+  					$('#module_slug').prop('required',true);
+  					$('#form-group-module_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
+  				}else if(type_menu == 'Statistic') {
+  					$('#form-group-statistic_slug').show();
+  					$('#module_slug').prop('required',false);
+  					$('#qlik_slug').prop('required',false);
+  					$('#form-group-module_slug,#form-group-path').hide();
+  					$('#form-group-qlik_slug,#form-group-path').hide();
   					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
-						$('#module_slug,#path').prop('required',false);
-						$('#qlik_slug,#path').prop('required',false);
-
-						$('#form-group-statistic_slug').show();
-						$('#statistic_slug').prop('required',true);
-						$('#form-group-statistic_slug label .text-danger').remove();
-						$('#form-group-statistic_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
-					}else if (n == 'Qlik') {
-						$('#form-group-path').hide();
-						$('#form-group-module_slug').hide();
-						$('#form-group-statistic_slug').hide();
-						$('#module_slug,#path').prop('required',false);
-						$('#statistic_slug,#path').prop('required',false);
-
-						$('#form-group-qlik_slug').show();
+  					$('#statistic_slug').prop('required',true);
+  					$('#form-group-statistic_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
+  				}else if(type_menu == 'Qlik') {
+  					$('#form-group-qlik_slug').show();
   					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').show();
-						$('#qlik_slug').prop('required',true);
-						$('#form-group-qlik_slug label .text-danger').remove();
-						$('#form-group-qlik_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
-					}else if (n == 'URL') {
-						$('input[name=path]').attr('placeholder','Please enter your URL');
-
-						$('#path').prop('required',true);
-						$('#form-group-path label .text-danger').remove();
-						$('#form-group-path label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
-
-						$('#form-group-path').show();
-						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
+  					$('#module_slug').prop('required',false);
+  					$('#statistic_slug').prop('required',false);
+  					$('#form-group-module_slug,#form-group-path').hide();
+  					$('#form-group-statistic_slug,#form-group-path').hide();
+  					$('#qlik_slug').prop('required',true);
+  					$('#form-group-qlik_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
+  				}else{
+  					$('#module_slug').prop('required',false);
+  					$('#statistic_slug').prop('required',false);
+  					$('#qlik_slug').prop('required',false);
+  					$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
   					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
-					}else if (n == 'Route') {
-						$('input[name=path]').attr('placeholder','Please enter the Route');
+  					$('#form-group-path').show();
+  				}
 
-						$('#path').prop('required',true);
-						$('#form-group-path label .text-danger').remove();
-						$('#form-group-path label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
+  				function format(icon) {
+  	                  var originalOption = icon.element;
+  	                  var label = $(originalOption).text();
+  	                  var val = $(originalOption).val();
+  	                  if(!val) return label;
+  	                  var \$resp = $('<span><i style=\"margin-top:5px\" class=\"pull-right ' + $(originalOption).val() + '\"></i> ' + $(originalOption).data('label') + '</span>');
+  	                  return \$resp;
+  	              }
+  	              $('#list-icon').select2({
+  	                  width: \"100%\",
+  	                  templateResult: format,
+  	                  templateSelection: format
+  	              });
 
-						$('#form-group-path').show();
-						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
-  					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
-					}else {
-						$('#module_slug,#statistic_slug,#qlik_slug').prop('required',false);
+  				$('input[name=type]').change(function() {
+  					var default_placeholder_path = 'NameController@methodName';
+  					var n = $(this).val();
+  					var isCheck = $(this).prop('checked');
+  					console.log('Click the module type '+n);
+  					$('#module_slug').prop('required',false);
+  					$('input[name=path]').attr('placeholder',default_placeholder_path);
+  					if(n == 'Module') {
+  						$('#form-group-path').hide();
+  						$('#form-group-statistic_slug').hide();
+  						$('#form-group-qlik_slug').hide();
+    					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
+  						$('#statistic_slug,#path').prop('required',false);
+  						$('#qlik_slug,#path').prop('required',false);
 
-						$('#path').prop('required',true);
-						$('#form-group-path label .text-danger').remove();
-						$('#form-group-path label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
+  						$('#form-group-module_slug').show();
+  						$('#module_slug').prop('required',true);
+  						$('#form-group-module_slug label .text-danger').remove();
+  					}else if (n == 'Statistic') {
+  						$('#form-group-path').hide();
+  						$('#form-group-module_slug').hide();
+  						$('#form-group-qlik_slug').hide();
+    					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
+  						$('#module_slug,#path').prop('required',false);
+  						$('#qlik_slug,#path').prop('required',false);
 
-						$('#form-group-path').show();
-						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
-  					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
-					}
-				})
-			})
+  						$('#form-group-statistic_slug').show();
+  						$('#statistic_slug').prop('required',true);
+  						$('#form-group-statistic_slug label .text-danger').remove();
+  						$('#form-group-statistic_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
+  					}else if (n == 'Qlik') {
+  						$('#form-group-path').hide();
+  						$('#form-group-module_slug').hide();
+  						$('#form-group-statistic_slug').hide();
+  						$('#module_slug,#path').prop('required',false);
+  						$('#statistic_slug,#path').prop('required',false);
 
-      /**
-      * Frame width and height script
-      * fill content, full screen
-      */
+  						$('#form-group-qlik_slug').show();
+    					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').show();
+  						$('#qlik_slug').prop('required',true);
+  						$('#form-group-qlik_slug label .text-danger').remove();
+  						$('#form-group-qlik_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
+  					}else if (n == 'URL') {
+  						$('input[name=path]').attr('placeholder','Please enter your URL');
 
-      function checkFullPage(){
-        if(
-          $('#frame_width').val()=='100' &&
-          $('#frame_height').val()=='100' &&
-          $('#frame_width_unit').children('option:selected')[0].label == '%' &&
-          $('#frame_height_unit').children('option:selected')[0].label == '%'
-        ){
-          $('input[name^=frame_full_page]').prop('checked', true);
+  						$('#path').prop('required',true);
+  						$('#form-group-path label .text-danger').remove();
+  						$('#form-group-path label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
+
+  						$('#form-group-path').show();
+  						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
+    					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
+  					}else if (n == 'Route') {
+  						$('input[name=path]').attr('placeholder','Please enter the Route');
+
+  						$('#path').prop('required',true);
+  						$('#form-group-path label .text-danger').remove();
+  						$('#form-group-path label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
+
+  						$('#form-group-path').show();
+  						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
+    					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
+  					}else {
+  						$('#module_slug,#statistic_slug,#qlik_slug').prop('required',false);
+
+  						$('#path').prop('required',true);
+  						$('#form-group-path label .text-danger').remove();
+  						$('#form-group-path label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
+
+  						$('#form-group-path').show();
+  						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
+    					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
+  					}
+  				})
+  			})
+
+        /**
+        * Frame width and height script
+        * fill content, full screen
+        */
+
+        function checkFullPage(){
+          if(
+            $('#frame_width').val()=='100' &&
+            $('#frame_height').val()=='100' &&
+            $('#frame_width_unit').children('option:selected')[0].label == '%' &&
+            $('#frame_height_unit').children('option:selected')[0].label == '%'
+          ){
+            $('input[name^=frame_full_page]').prop('checked', true);
+          }
+          else{
+            $('input[name^=frame_full_page]').prop('checked', false);
+          }
         }
-        else{
-          $('input[name^=frame_full_page]').prop('checked', false);
+
+        function setFullPage(){
+          console.log();
+          if($('input[name^=frame_full_page]').prop('checked')){
+            $('#frame_width').val(100);
+            $('#frame_width_unit option').filter(function() {
+                return ($(this).text() == '%');
+            }).prop('selected', true);
+            $('#frame_height').val(100);
+            $('#frame_height_unit option').filter(function() {
+                return ($(this).text() == '%');
+            }).prop('selected', true);
+          }
         }
-      }
 
-      function setFullPage(){
-        console.log();
-        if($('input[name^=frame_full_page]').prop('checked')){
-          $('#frame_width').val(100);
-          $('#frame_width_unit option').filter(function() {
-              return ($(this).text() == '%');
-          }).prop('selected', true);
-          $('#frame_height').val(100);
-          $('#frame_height_unit option').filter(function() {
-              return ($(this).text() == '%');
-          }).prop('selected', true);
-        }
-      }
+        $(function() {
+          //set iframe size
+          // $('.qi_iframe').css('height', $(window).height()+'px').css('width', '100%');
 
-      $(function() {
-        //set iframe size
-        // $('.qi_iframe').css('height', $(window).height()+'px').css('width', '100%');
+          // sposta scelta unità di misura della width a fianco della dimensione
+          $('#form-group-frame_width_unit label').remove();
+          var unit_select = $('#form-group-frame_width_unit').html();
+          $('#form-group-frame_width').append(unit_select);
+          var unit_select = $('#form-group-frame_width_unit').remove();
 
-        // sposta scelta unità di misura della width a fianco della dimensione
-        $('#form-group-frame_width_unit label').remove();
-        var unit_select = $('#form-group-frame_width_unit').html();
-        $('#form-group-frame_width').append(unit_select);
-        var unit_select = $('#form-group-frame_width_unit').remove();
+          // sposta scelta unità di misura della height a fianco della dimensione
+          $('#form-group-frame_height_unit label').remove();
+          var unit_select = $('#form-group-frame_height_unit').html();
+          $('#form-group-frame_height').append(unit_select);
+          var unit_select = $('#form-group-frame_height_unit').remove();
 
-        // sposta scelta unità di misura della height a fianco della dimensione
-        $('#form-group-frame_height_unit label').remove();
-        var unit_select = $('#form-group-frame_height_unit').html();
-        $('#form-group-frame_height').append(unit_select);
-        var unit_select = $('#form-group-frame_height_unit').remove();
+          //metti spunta automatica su checkbox se width 100% e height 100%
+          checkFullPage();
+          $('#frame_width').change(function () {checkFullPage()});
+          $('#frame_width_unit').change(function () {checkFullPage()});
+          $('#frame_height').change(function () {checkFullPage()});
+          $('#frame_height_unit').change(function () {checkFullPage()});
+          //setta 100% 100% se spunti Full Page checkbox
+          $('input[name^=frame_full_page]').change(function () {setFullPage()});
 
-        //metti spunta automatica su checkbox se width 100% e height 100%
-        checkFullPage();
-        $('#frame_width').change(function () {checkFullPage()});
-        $('#frame_width_unit').change(function () {checkFullPage()});
-        $('#frame_height').change(function () {checkFullPage()});
-        $('#frame_height_unit').change(function () {checkFullPage()});
-        //setta 100% 100% se spunti Full Page checkbox
-        $('input[name^=frame_full_page]').change(function () {setFullPage()});
-
-      });
-			";
+        });
+  			";
 
         $this->col = [];
         $this->col[] = ["label" => "Name", "name" => "name"];
@@ -280,8 +282,74 @@ class MenusController extends CBController
             'value' => 'Module',
         ];
 
-    		$this->form[] = array("label"=>"Tenant","name"=>"tenant",'required'=>true,'type'=>'select','datatable'=>"tenants,name",'validation'=>'required','default'=>'');
-    		$this->form[] = array("label"=>"Group","name"=>"group",'required'=>true,'type'=>'select','datatable'=>"groups,name",'validation'=>'required','default'=>'');
+        //only superadmin can edit tenant
+        if(CRUDBooster::isSuperadmin())
+        {
+          $this->form[] = [
+            'label'=>'Tenant',
+            'name'=>'tenant',
+            "type"=>"select2",
+            "datatable"=>"tenants,name",
+            'required'=>true,
+            'validation'=>'required|int|min:1',
+            'value'=>UserHelper::current_user_tenant()//default value per creazione nuovo record
+          ];
+        }
+        elseif(UserHelper::isAdvanced())
+    		{
+    			//advanced vede tenant in readonly (disabled) ma può modificare il group
+    			$this->form[] = [
+    				"label"=>"Tenant",
+    				"name"=>"tenant",
+    				'required'=>true,
+    				'type'=>'select',
+    				'datatable'=>"tenants,name",
+    				'default'=>UserHelper::current_user_tenant_name(),
+    				'disabled'=>true
+    			];
+    			//aggiungo un campo tenant hidden perchè con la tenant select disabled viene salvato uno 0
+    			$this->form[] = [
+    				"label"=>"Tenant",
+    				"name"=>"tenant",
+    				'type'=>'hidden'
+    			];
+        }
+        //only superadmin and advanced can see group
+        if((UserHelper::isAdvanced() OR CRUDBooster::isSuperadmin()))
+        {
+          if(CRUDBooster::isSuperadmin())
+          {
+            //superadmin vede i gruppi come cascading dropdown in base al tenant
+            $this->form[] = [
+              'label'=>'Group',
+              'name'=>'group',
+              "type"=>"select",
+              "datatable"=>"groups,name",
+              'required'=>true,
+              'validation'=>'required|int|min:1',
+              'value'=>UserHelper::current_user_primary_group(),//default value per creazione nuovo record
+              'parent_select'=>'tenant'
+            ];
+            // $field = ['label'=>'Group','name'=>'group',"type"=>"select","datatable"=>"groups,name",'required'=>true,'validation'=>'required|int|min:1','default'=>UserHelper::current_user_primary_group_name(),'value'=>UserHelper::current_user_primary_group(),'parent_select'=>'tenant'];
+          }
+          else
+          {
+            //Advanced vede solo i gruppi del proprio tenant
+            $this->form[] = [
+              'label'=>'Group',
+              'name'=>'group',
+              "type"=>"select2",
+              "datatable"=>"groups,name",
+              'required'=>true,
+              'validation'=>'required|int|min:1',
+              'default'=>UserHelper::current_user_primary_group_name(),
+              'value'=>UserHelper::current_user_primary_group(),
+              //advanced vede nella dropdown solo i gruppi del proprio tenant
+              'datatable_where'=>'tenant = '.UserHelper::current_user_tenant()
+            ];
+          }
+        }
+    		// $this->form[] = array("label"=>"Group","name"=>"group",'required'=>true,'type'=>'select','datatable'=>"groups,name",'validation'=>'required','default'=>'');
 
         $this->form[] = [
             "label" => "Module",
@@ -390,6 +458,12 @@ class MenusController extends CBController
                             ->orderby('sorting', 'asc')
                             ->get();
 
+        if(!CRUDBooster::isSuperadmin())
+        {
+          //tenant admin vede nella lista solo le voci di menu del proprio tenant
+          $menu_active = $menu_active->where('tenant',UserHelper::current_user_tenant());
+        }
+
         foreach ($menu_active as &$menu) {
             $child = DB::table('cms_menus')
                         ->where('is_active', 1)
@@ -433,14 +507,22 @@ class MenusController extends CBController
         $this->cbLoader();
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-        if (! CRUDBooster::isSuperadmin()) {
+        //TODO in altri moduli qui usa isRead anzichè isUpdate
+        //forse potrei controllare qui solo isread per vedere i dettagli della voce di menu
+        //ma il form è in readonly se non ha isupdate
+        if (
+            !CRUDBooster::isSuperadmin() AND
+            !(
+              CRUDBooster::isUpdate() AND
+              $row->tenant == UserHelper::current_user_tenant()
+            )
+          ) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
                 'name' => $row->{$this->title_field},
                 'module' => CRUDBooster::getCurrentModule()->name,
             ]));
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
-
 
         return view('crudbooster::menus.form', compact('row', 'id'));
     }
@@ -485,6 +567,21 @@ class MenusController extends CBController
 
     public function hook_before_edit(&$postdata, $id)
     {
+      //solo superadmin o tenant admin con permesso di update su un menu del proprio tenant
+      //possono modificare il menu
+      if(
+          !CRUDBooster::isSuperadmin() AND
+          !(
+            CRUDBooster::isUpdate() AND
+            Menu::find($id)->tenant == UserHelper::current_user_tenant()
+          )
+        ) {
+          CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
+              'name' => $id,
+              'module' => CRUDBooster::getCurrentModule()->name,
+          ]));
+          CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      }
       //frame width and height data
         $postdata['frame_width'] .= $postdata['frame_width_unit'];
         $postdata['frame_height'] .= $postdata['frame_height_unit'];
@@ -512,6 +609,26 @@ class MenusController extends CBController
         unset($postdata['module_slug']);
         unset($postdata['statistic_slug']);
         unset($postdata['qlik_slug']);
+    }
+
+
+    public function hook_before_delete($id)
+    {
+      //solo superadmin o tenant admin con permesso di delete su un menu del proprio tenant
+      //possono eliminare il menu
+      if(
+          !CRUDBooster::isSuperadmin() AND
+          !(
+            CRUDBooster::isDelete() AND
+            Menu::find($id)->tenant == UserHelper::current_user_tenant()
+          )
+        ) {
+          CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
+              'name' => $id,
+              'module' => CRUDBooster::getCurrentModule()->name,
+          ]));
+          CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      }
     }
 
     public function hook_after_delete($id)

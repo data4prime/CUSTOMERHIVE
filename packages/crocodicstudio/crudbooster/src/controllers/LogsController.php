@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Excel;
 use Illuminate\Support\Facades\PDF;
+use \crocodicstudio\crudbooster\helpers\UserHelper;
+use \App\User;
 
 class LogsController extends CBController
 {
@@ -61,4 +63,14 @@ class LogsController extends CBController
 
         return array_diff($old_values, $new_values);
     }
+
+  	public function hook_query_index(&$query) {
+  		if(UserHelper::isAdvanced())
+  		{
+        //Advanced vede nella lista dei log solo quelli degli utenti del proprio tenant
+        $tenant_id = UserHelper::current_user_tenant();
+        $tenant_users = User::where('tenant',$tenant_id)->pluck('id');
+  			$query->whereIn('id_cms_users',$tenant_users);
+  		}
+  	}
 }

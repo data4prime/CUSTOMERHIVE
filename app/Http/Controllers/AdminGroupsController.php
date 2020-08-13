@@ -247,10 +247,13 @@
 	    | @query = current sql query
 	    |
 	    */
-	    public function hook_query_index(&$query) {
-	        //Your code here
-
-	    }
+			public function hook_query_index(&$query) {
+				if(UserHelper::isAdvanced())
+				{
+					//Advanced vede nella lista dei gruppi solo quelli del proprio tenant
+					$query->where('tenant',UserHelper::current_user_tenant());
+				}
+			}
 
 	    /*
 	    | ----------------------------------------------------------------------

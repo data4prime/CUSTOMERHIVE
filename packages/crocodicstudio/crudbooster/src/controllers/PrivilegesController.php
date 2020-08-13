@@ -56,6 +56,9 @@ class PrivilegesController extends CBController
         $data['moduls'] = DB::table("cms_moduls")
           ->where('is_protected', 0)
           ->where('table_name','like',config('app.module_generator_prefix').'%')
+          ->orWhere('table_name','groups')
+          ->orWhere('table_name','cms_users')
+          ->orWhere('table_name','cms_menus')
           ->whereNull('deleted_at')
           ->select(
                 "cms_moduls.*",
@@ -127,7 +130,7 @@ class PrivilegesController extends CBController
 
         $row = DB::table($this->table)->where("id", $id)->first();
 
-        if (! CRUDBooster::isRead() && $this->global_privilege == false) {
+        if (!CRUDBooster::isRead() && $this->global_privilege == false) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
                 'name' => $row->{$this->title_field},
                 'module' => CRUDBooster::getCurrentModule()->name,
@@ -141,6 +144,9 @@ class PrivilegesController extends CBController
                       ->where('is_protected', 0)
                       ->where('deleted_at', null)
                       ->where('table_name','like',config('app.module_generator_prefix').'%')
+                      ->orWhere('table_name','groups')
+                      ->orWhere('table_name','cms_users')
+                      ->orWhere('table_name','cms_menus')
                       ->select("cms_moduls.*")
                       ->orderby("name", "asc")
                       ->get();

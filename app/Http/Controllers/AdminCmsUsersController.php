@@ -85,7 +85,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 				'required'=>true,
 				'type'=>'select',
 				'datatable'=>"tenants,name",
-				'default'=>'',
+				'default'=>UserHelper::current_user_tenant_name(),
 				'disabled'=>true
 			];
 			//aggiungo un campo tenant hidden perchè con la tenant select disabled viene salvato uno 0
@@ -95,12 +95,13 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 				'type'=>'hidden'
 			];
 			$this->form[] = [
-				'label'=>'Group',
+				'label'=>'Primary Group',
 				'name'=>'primary_group',
 				"type"=>"select",
 				"datatable"=>"groups,name",
 				'required'=>true,
 				'validation'=>'required|int|min:1',
+				'default'=>UserHelper::current_user_primary_group_name(),
 				'value'=>UserHelper::current_user_primary_group(),
 				'parent_select'=>'tenant'
 			];
@@ -178,6 +179,14 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		}
 		//cascade delete users_groups
 		UsersGroup::where('user_id',$id)->delete();
+	}
+
+	public function hook_query_index(&$query) {
+		if(UserHelper::isAdvanced())
+		{
+			//Advanced vede nella lista degli utenti solo quelli del proprio tenant
+			$query->where('tenant',UserHelper::current_user_tenant());
+		}
 	}
 
   public function getEdit($id)

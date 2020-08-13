@@ -63,6 +63,7 @@
 
                   <li class="header">{{ trans('crudbooster.UserPermissions') }}</li>
 
+                  @if(CRUDBooster::isSuperadmin())
                   <li class='treeview'>
                       <a href='#'><i class='fa fa-industry'></i> <span>{{ trans('crudbooster.Tenants') }}</span> <i
                                   class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
@@ -88,6 +89,7 @@
                                   <span>{{ trans('crudbooster.List_Privilege') }}</span></a></li>
                       </ul>
                   </li>
+                  @endif
 
                   <li class='treeview'>
                       <a href='#'><i class='fa fa-users'></i> <span>{{ trans('crudbooster.Groups') }}</span> <i
@@ -131,12 +133,14 @@
 
                 @endif
 
-                @if(CRUDBooster::isSuperadmin())
+                @if(CRUDBooster::isSuperadmin() OR CRUDBooster::myPrivilegeName() === 'Advanced' )
                     <li class="header">{{ trans('crudbooster.SUPERADMIN') }}</li>
 
                     <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/menu_management*')) ? 'active' : '' }}"><a
                                 href='{{Route("MenusControllerGetIndex")}}'><i class='fa fa-bars'></i>
                             <span>{{ trans('crudbooster.Menu_Management') }}</span></a></li>
+
+                    @if(CRUDBooster::isSuperadmin())
                     <li class="treeview">
                         <a href="#"><i class='fa fa-wrench'></i> <span>{{ trans('crudbooster.settings') }}</span> <i
                                     class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
@@ -154,6 +158,7 @@
                             <?php endforeach;?>
                         </ul>
                     </li>
+
                     <li class='treeview'>
                         <a href='#'>
                           <i class='fa fa-th'></i> <span>{{ trans('crudbooster.Module_Generator') }}</span> <i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
@@ -247,6 +252,7 @@
                                     <span>{{ trans('crudbooster.List_Email_Template') }}</span></a></li>
                         </ul>
                     </li>
+                    @endif
 
                 @endif
 

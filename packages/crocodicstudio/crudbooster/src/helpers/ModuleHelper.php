@@ -78,12 +78,23 @@ class ModuleHelper  {
             in_array($row->group, UserHelper::current_user_groups()) AND
             $row->tenant == UserHelper::current_user_tenant()
           )
+        ) OR
+        //check tenant
+        (
+          //check this only on groups and users for advanced
+          UserHelper::isAdvanced() AND
+          (
+            $module->table == 'groups' OR
+            $module->table == 'cms_users'
+          ) AND
+          //..then filter by tenant
+          $row->tenant !== UserHelper::current_user_tenant()
         )
       )
     ) {
       //log denied access
       CRUDBooster::insertLog(trans("crudbooster.log_try_view", [
-          'name' => $module->{$this->title_field},
+          'name' => $module->table,
           'module' => CRUDBooster::getCurrentModule()->name,
       ]));
       //kick out
@@ -118,6 +129,17 @@ class ModuleHelper  {
             in_array($row->group, UserHelper::current_user_groups()) AND
             $row->tenant == UserHelper::current_user_tenant()
           )
+        ) OR
+        //check tenant
+        (
+          //check this only on groups and users for advanced
+          UserHelper::isAdvanced() AND
+          (
+            $module->table == 'groups' OR
+            $module->table == 'cms_users'
+          ) AND
+          //..then filter by tenant
+          $row->tenant !== UserHelper::current_user_tenant()
         )
       )
     ) {
@@ -158,6 +180,17 @@ class ModuleHelper  {
             in_array($row->group, UserHelper::current_user_groups()) AND
             $row->tenant == UserHelper::current_user_tenant()
           )
+        ) OR
+        //check tenant
+        (
+          //check this only on groups and users for advanced
+          UserHelper::isAdvanced() AND
+          (
+            $module->table == 'groups' OR
+            $module->table == 'cms_users'
+          ) AND
+          //..then filter by tenant
+          $row->tenant !== UserHelper::current_user_tenant()
         )
       )
     ) {
@@ -233,7 +266,7 @@ class ModuleHelper  {
           $group_is_present = true;
         }
       }
-      //only superadmin can see tenant
+      //only superadmin can edit tenant
       if(CRUDBooster::isSuperadmin() AND !$tenant_is_present)
       {
         $fields[] = [
