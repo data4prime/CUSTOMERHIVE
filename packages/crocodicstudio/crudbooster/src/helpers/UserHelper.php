@@ -84,6 +84,11 @@ class UserHelper  {
     return CRUDBooster::me()->id_cms_privileges === 3;
   }
 
+    /**
+    *	get current user
+    *
+    * @return User model
+    */
   public static function me()
   {
     $user_id = CRUDBooster::myId();
@@ -92,13 +97,62 @@ class UserHelper  {
   }
 
   /**
-  *	get user's primary group
+  *	get user's primary group id
   *
-  * @param int id dell'utente
+  * @param int user's id
   *
-  * @return int id of the group
+  * @return int primary group's id
   */
   public static function primary_group($user_id) {
     return User::find($user_id)->primary_group;
+  }
+
+  /**
+  *	get user's tenant id
+  *
+  * @param int user's id
+  *
+  * @return int tenant's id
+  */
+  public static function tenant($user_id) {
+    return User::find($user_id)->tenant;
+  }
+
+  /**
+  *	get user's primary group name
+  *
+  * @param int user's id
+  *
+  * @return string primary group's name
+  */
+  public static function primary_group_name($user_id) {
+    $group_id = UserHelper::primary_group($user_id);
+    $group = Group::find($group_id);
+    return $group->name;
+  }
+
+  /**
+  * Rimuovi tutti i gruppi di un utente
+  * Utile per aggiornare i gruppi di un utente alla modifica del tenant
+  *
+  * @param int id dell'utente
+  *
+  * @return boolean false se manca un parametro
+  * @return boolean true altrimenti
+  */
+  public static function remove_all_groups($user_id)
+  {
+    if(!is_numeric($user_id)){
+      add_log('remove all groups', 'user '.$user_id.' not found','error');
+      return false;
+    }
+
+    $result = UsersGroup::where('user_id',$user_id)
+                        ->where('deleted_at',null)
+                        ->delete();
+
+    add_log('remove all groups', 'user '.$user_id);
+
+    return $result;
   }
 }

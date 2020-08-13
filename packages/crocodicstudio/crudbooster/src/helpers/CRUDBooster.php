@@ -456,9 +456,14 @@ class CRUDBooster
           ->where('parent_id', 0)
           ->where('is_active', 1)
           ->where('is_dashboard', 0)
-          ->where('tenant', UserHelper::current_user_tenant())
-          ->whereIn('group', UserHelper::current_user_groups())
-          ->orderby('sorting', 'asc')
+          ->where('tenant', UserHelper::current_user_tenant());
+        // se l'utente corrente non è superadmin e non è advanced..
+        if(!(CRUDBooster::isSuperadmin() OR UserHelper::isAdvanced()))
+        {
+          //..allora filtra i menu visibili anche in base ai suoi gruppi
+          $menu_active = $menu_active->whereIn('group', UserHelper::current_user_groups());
+        }
+        $menu_active = $menu_active->orderby('sorting', 'asc')
           ->select('cms_menus.*')
           ->get();
 

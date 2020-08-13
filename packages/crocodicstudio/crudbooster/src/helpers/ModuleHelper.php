@@ -180,7 +180,7 @@ class ModuleHelper  {
   public static function add_default_column_headers($table_name, $columns)
   {
     //only add columns for manually generated modules
-    if(substr($table_name, 0, strlen(config('app.module_generator_prefix'))) === config('app.module_generator_prefix'))
+    if(ModuleHelper::is_manually_generated($table_name))
     {
       $tenant_is_present = false;
       $group_is_present = false;
@@ -218,7 +218,7 @@ class ModuleHelper  {
   public static function add_default_form_fields($table_name, $fields)
   {
     //only add fields for manually generated modules
-    if(substr($table_name, 0, strlen(config('app.module_generator_prefix'))) === config('app.module_generator_prefix'))
+    if(ModuleHelper::is_manually_generated($table_name))
     {
       $tenant_is_present = false;
       $group_is_present = false;
@@ -243,7 +243,7 @@ class ModuleHelper  {
           "datatable"=>"tenants,name",
           'required'=>true,
           'validation'=>'required|int|min:1',
-          'value'=>UserHelper::current_user_tenant()
+          'value'=>UserHelper::current_user_tenant()//default value per creazione nuovo record
         ];
       }
       //only superadmin and advanced can see group
@@ -259,7 +259,7 @@ class ModuleHelper  {
             "datatable"=>"groups,name",
             'required'=>true,
             'validation'=>'required|int|min:1',
-            'value'=>UserHelper::current_user_primary_group(),
+            'value'=>UserHelper::current_user_primary_group(),//default value per creazione nuovo record
             'parent_select'=>'tenant'
           ];
           // $field = ['label'=>'Group','name'=>'group',"type"=>"select","datatable"=>"groups,name",'required'=>true,'validation'=>'required|int|min:1','default'=>UserHelper::current_user_primary_group_name(),'value'=>UserHelper::current_user_primary_group(),'parent_select'=>'tenant'];

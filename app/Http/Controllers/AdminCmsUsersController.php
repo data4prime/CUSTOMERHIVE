@@ -55,17 +55,26 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 				'value'=>UserHelper::current_user_tenant()
 			];
 			//superadmin vede i gruppi come cascading dropdown in base al tenant
+			$exploded_request_uri = explode('/',parse_url($_SERVER['REQUEST_URI'])['path']);
+			$user_id = $exploded_request_uri[sizeof($exploded_request_uri)-1];
+			if($user_id !== 'profile')
+			{
+				$default = UserHelper::primary_group($user_id);
+			}
+			else
+			{
+				$default = UserHelper::current_user_primary_group();
+			}
 			$this->form[] = [
 				'label'=>'Group',
-				'name'=>'group',
+				'name'=>'primary_group',
 				"type"=>"select",
 				"datatable"=>"groups,name",
 				'required'=>true,
 				'validation'=>'required|int|min:1',
-				'value'=>UserHelper::current_user_primary_group(),
+				'value'=>$default,
 				'parent_select'=>'tenant'
 			];
-			// $field = ['label'=>'Group','name'=>'group',"type"=>"select","datatable"=>"groups,name",'required'=>true,'validation'=>'required|int|min:1','default'=>UserHelper::current_user_primary_group_name(),'value'=>UserHelper::current_user_primary_group(),'parent_select'=>'tenant'];
 		}
 		elseif(UserHelper::isAdvanced())
 		{
@@ -73,7 +82,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 			$this->form[] = array("label"=>"Tenant","name"=>"tenant",'required'=>true,'type'=>'select','datatable'=>"tenants,name",'default'=>'','disabled'=>true);
 			$this->form[] = [
 				'label'=>'Group',
-				'name'=>'group',
+				'name'=>'primary_group',
 				"type"=>"select",
 				"datatable"=>"groups,name",
 				'required'=>true,
@@ -114,16 +123,23 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		$this->cbView('crudbooster::default.form',$data);
 	}
 
-	public function hook_before_edit(&$postdata,$id) {
+	public function hook_before_edit(&$postdata,$user_id) {
 		unset($postdata['password_confirmation']);
+		//se il tenant è cambiato
+		$old_tenant_id = UserHelper::tenant($user_id);
+		if($old_tenant_id !== $postdata['tenant'])
+		{
+			//rimuovi vecchi gruppi dai gruppi di appartenenza
+			UserHelper::remove_all_groups($user_id);
+		}
 		//se il primary group è cambiato
-		$old_primary_group_id = UserHelper::primary_group($id);
+		$old_primary_group_id = UserHelper::primary_group($user_id);
 		if($old_primary_group_id !== $postdata['primary_group'])
 		{
 			//aggiungi nuovo primary group ai gruppi di appartenenza
-			GroupHelper::add($postdata['primary_group'], $id);
+			GroupHelper::add($postdata['primary_group'], $user_id);
 			//rimuovi vecchio primary group dai gruppi di appartenenza
-			GroupHelper::remove($old_primary_group_id, $id);
+			GroupHelper::remove($old_primary_group_id, $user_id);
 		}
 	}
 
