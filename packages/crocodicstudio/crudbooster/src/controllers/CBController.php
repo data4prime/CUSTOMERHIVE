@@ -765,8 +765,7 @@ class CBController extends Controller
         $data['where'] = $where;
         $data['columns'] = $columns;
 
-        // #RAMA filtro le richieste con questo attributo per riuscire a richiamare custom modal,
-        // TODO fa schifo
+        // #RAMA filtro le richieste con questo attributo per richiamare custom modal
         $data['q'] = Request::get('q');
         switch (Request::get('type')) {
           case 'group_members_datamodal':

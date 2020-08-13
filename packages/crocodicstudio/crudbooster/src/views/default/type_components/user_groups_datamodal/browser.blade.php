@@ -11,14 +11,20 @@
 @include('crudbooster::admin_template_plugins')
 
 <?php
-
+  //tenant id dell'utente di cui sto modificando i gruppi
+  $user_tenant_id = UserHelper::tenant(Request::get('select_to'));
   //bypass CBController getModalData per custom query
   $result = DB::table('groups')
                 ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                       ->from('users_groups')
-                      ->whereRaw('users_groups.user_id = '.Request::get('select_to').' AND users_groups.group_id = groups.id');
-            });
+                      ->whereRaw(
+                          'users_groups.user_id = '.Request::get('select_to').'
+                          AND users_groups.group_id = groups.id
+                          AND users_groups.deleted_at = null'
+                        );
+            })
+            ->where('groups.tenant',$user_tenant_id);
   if($q){
     //filtra la lista in base alla ricerca fatta dall'utente
     $result = $result->where(function ($query) use ($columns, $q) {
