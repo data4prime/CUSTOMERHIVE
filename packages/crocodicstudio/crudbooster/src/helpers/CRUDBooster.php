@@ -459,7 +459,7 @@ class CRUDBooster
           ->where('is_dashboard', 0)
           ->where('tenant', UserHelper::current_user_tenant());
         // se l'utente corrente non è superadmin e non è advanced..
-        if(!(CRUDBooster::isSuperadmin() OR UserHelper::isAdvanced()))
+        if(!(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin()))
         {
           //..allora filtra i menu visibili anche in base ai suoi gruppi
           $menu_active = $menu_active->whereIn('group', UserHelper::current_user_groups());

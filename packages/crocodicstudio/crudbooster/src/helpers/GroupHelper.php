@@ -34,7 +34,7 @@ class GroupHelper  {
       if(UserHelper::current_user_tenant() !== $qlik_item->tenant){
         return false;
       }
-      if(UserHelper::isAdvanced()){
+      if(UserHelper::isTenantAdmin()){
         //Advanced non è limitato dal ruolo per la visibilità dei qlik item
 				return true;
 			}

@@ -295,7 +295,7 @@ class MenusController extends CBController
             'value'=>UserHelper::current_user_tenant()//default value per creazione nuovo record
           ];
         }
-        elseif(UserHelper::isAdvanced())
+        elseif(UserHelper::isTenantAdmin())
     		{
     			//advanced vede tenant in readonly (disabled) ma può modificare il group
     			$this->form[] = [
@@ -315,7 +315,7 @@ class MenusController extends CBController
     			];
         }
         //only superadmin and advanced can see group
-        if((UserHelper::isAdvanced() OR CRUDBooster::isSuperadmin()))
+        if((UserHelper::isTenantAdmin() OR CRUDBooster::isSuperadmin()))
         {
           if(CRUDBooster::isSuperadmin())
           {

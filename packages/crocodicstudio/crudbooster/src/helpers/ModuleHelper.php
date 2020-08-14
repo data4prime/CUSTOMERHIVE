@@ -82,7 +82,7 @@ class ModuleHelper  {
         //check tenant
         (
           //check this only on groups and users for advanced
-          UserHelper::isAdvanced() AND
+          UserHelper::isTenantAdmin() AND
           (
             $module->table == 'groups' OR
             $module->table == 'cms_users'
@@ -133,7 +133,7 @@ class ModuleHelper  {
         //check tenant
         (
           //check this only on groups and users for advanced
-          UserHelper::isAdvanced() AND
+          UserHelper::isTenantAdmin() AND
           (
             $module->table == 'groups' OR
             $module->table == 'cms_users'
@@ -184,7 +184,7 @@ class ModuleHelper  {
         //check tenant
         (
           //check this only on groups and users for advanced
-          UserHelper::isAdvanced() AND
+          UserHelper::isTenantAdmin() AND
           (
             $module->table == 'groups' OR
             $module->table == 'cms_users'
@@ -234,7 +234,7 @@ class ModuleHelper  {
         $columns[] = ["label"=>"Tenant","name"=>"tenant","join"=>"tenants,name"];
       }
       //only superadmin and advanced can see group
-      if((UserHelper::isAdvanced() OR CRUDBooster::isSuperadmin()) AND !$group_is_present)
+      if((UserHelper::isTenantAdmin() OR CRUDBooster::isSuperadmin()) AND !$group_is_present)
       {
   			$columns[] = ["label"=>"Group","name"=>"group","join"=>"groups,name"];
       }
@@ -280,7 +280,7 @@ class ModuleHelper  {
         ];
       }
       //only superadmin and advanced can see group
-      if((UserHelper::isAdvanced() OR CRUDBooster::isSuperadmin()) AND !$group_is_present)
+      if((UserHelper::isTenantAdmin() OR CRUDBooster::isSuperadmin()) AND !$group_is_present)
       {
         if(CRUDBooster::isSuperadmin())
         {

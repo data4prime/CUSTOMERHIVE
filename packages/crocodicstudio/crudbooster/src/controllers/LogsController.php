@@ -65,7 +65,7 @@ class LogsController extends CBController
     }
 
   	public function hook_query_index(&$query) {
-  		if(UserHelper::isAdvanced())
+  		if(UserHelper::isTenantAdmin())
   		{
         //Advanced vede nella lista dei log solo quelli degli utenti del proprio tenant
         $tenant_id = UserHelper::current_user_tenant();

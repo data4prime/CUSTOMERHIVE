@@ -5,6 +5,7 @@ use \App\User;
 use \App\Group;
 use \App\Tenant;
 use \App\UsersGroup;
+use \App\Role;
 
 class UserHelper  {
 
@@ -77,11 +78,10 @@ class UserHelper  {
     }
   }
 
-  public static function isAdvanced()
+  public static function isTenantAdmin()
   {
-    // TODO migliorare se aggiungiamo colonna is advanced nei ruoli in modo da
-    // non basarsi solo sull'id del ruolo
-    return CRUDBooster::me()->id_cms_privileges === 3;
+    $my_role_id = CRUDBooster::me()->id_cms_privileges;
+    return Role::find($my_role_id)->is_tenantadmin == 1;
   }
 
     /**

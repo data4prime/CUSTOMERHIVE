@@ -25,15 +25,21 @@ class PrivilegesController extends CBController
         $this->col = [];
         $this->col[] = ["label" => "ID", "name" => "id"];
         $this->col[] = ["label" => "Name", "name" => "name"];
+        //serve solo per far caricare il valore e usarlo nella colonna superadmin
+        $this->col[] = ["label" => "is_tenantadmin", "name" => "is_tenantadmin", "style" => "hidden"];
         $this->col[] = [
-            "label" => "Superadmin",
+            "label" => "Privilege",
             "name" => "is_superadmin",
-            'callback_php' => '($row->is_superadmin)?"<span class=\"label label-success\">Superadmin</span>":"<span class=\"label label-default\">Standard</span>"',
+            'callback_php' => '($row->is_superadmin==1)?
+                          "<span class=\"label label-success\">Superadmin</span>":
+                          (($row->is_tenantadmin==1)?
+                          "<span class=\"label label-warning\">Tenantadmin</span>":
+                          "<span class=\"label label-default\">Standard</span>")',
         ];
 
         $this->form = [];
         $this->form[] = ["label" => "Name", "name" => "name", 'required' => true];
-        $this->form[] = ["label" => "Is Superadmin", "name" => "is_superadmin", 'required' => true];
+        $this->form[] = ["label" => "Privilege", "name" => "superprivilege", 'required' => true];
         $this->form[] = ["label" => "Theme Color", "name" => "theme_color", 'required' => true];
 
         // $this->alert[] = [
@@ -168,6 +174,19 @@ class PrivilegesController extends CBController
 
         $this->validation($id);
         $this->input_assignment($id);
+
+        // set superadmin / tenantadmin
+        $this->arr['is_superadmin'] = 0;
+        $this->arr['is_tenantadmin'] = 0;
+        switch ($this->arr['superprivilege']) {
+          case 1:
+            $this->arr['is_superadmin'] = 1;
+            break;
+          case 2:
+            $this->arr['is_tenantadmin'] = 1;
+            break;
+        }
+        unset($this->arr['superprivilege']);
 
         DB::table($this->table)->where($this->primary_key, $id)->update($this->arr);
 

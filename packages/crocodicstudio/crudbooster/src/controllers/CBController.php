@@ -263,7 +263,7 @@ class CBController extends Controller
         // if it's a manually generated module..
         if (ModuleHelper::is_manually_generated($this->table) and !CRUDBooster::isSuperadmin() ) {
           //..no filter for superadmin
-          if(UserHelper::isAdvanced())
+          if(UserHelper::isTenantAdmin())
           {
             //.. for advanced filter on tenant column
             $result->where($this->table.'.tenant', UserHelper::current_user_tenant());

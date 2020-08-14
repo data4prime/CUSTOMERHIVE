@@ -248,7 +248,7 @@
 	    |
 	    */
 			public function hook_query_index(&$query) {
-				if(UserHelper::isAdvanced())
+				if(UserHelper::isTenantAdmin())
 				{
 					//Advanced vede nella lista dei gruppi solo quelli del proprio tenant
 					$query->where('tenant',UserHelper::current_user_tenant());

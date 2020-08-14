@@ -134,7 +134,7 @@
                 @endif
 
                 @if(CRUDBooster::isSuperadmin() OR CRUDBooster::myPrivilegeName() === 'Advanced' )
-                    <li class="header">{{ trans('crudbooster.SUPERADMIN') }}</li>
+                    <li class="header">{{ trans('crudbooster.superadmin') }}</li>
 
                     <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/menu_management*')) ? 'active' : '' }}"><a
                                 href='{{Route("MenusControllerGetIndex")}}'><i class='fa fa-bars'></i>

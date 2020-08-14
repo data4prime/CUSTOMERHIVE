@@ -181,7 +181,8 @@ return [
     'List_Email_Template' => 'List Email Template',
     'Email_Templates' => 'Email Templates',
     'User_Access_Log' => 'User Access Log',
-    'SUPERADMIN' => 'Admin',
+    'superadmin' => 'Superadmin',
+    'tenantadmin' => 'Tenant Admin',
     'UserPermissions' => 'User Permissions',
     'Qlik_Development_Tools' => 'Qlik Platform',
     'Qlik_Sense_Hub' => 'Qlik Sense HUB',
@@ -248,6 +249,7 @@ return [
     // confirmation
     'confirmation_yes' => 'Yes!',
     'confirmation_no' => 'No',
+    'none' => 'None',
 
     //filemanager
     'chose_an_image' => 'Choose an image ',
@@ -264,6 +266,7 @@ return [
     'privileges_standart_user' => 'Standart user',
     'privileges_ID' => 'ID',
     'set_as_superadmin' => 'Set as Superadmin',
+    'set_privilege' => 'Set privilege',
     'chose_theme_color_select' => '** Choose Backend Theme Color',
     'chose_theme_color' => ' Theme Color',
     'privileges_configuration' => 'Privileges Configuration',

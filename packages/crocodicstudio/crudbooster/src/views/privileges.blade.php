@@ -22,22 +22,26 @@
             <form method='post' action='{{ (@$row->id)?route("PrivilegesControllerPostEditSave")."/$row->id":route("PrivilegesControllerPostAddSave") }}'>
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="box-body">
-                    <div class="alert alert-info">
+                    <!-- <div class="alert alert-info">
                         <strong>Note:</strong> To show the menu you have to create a menu at Menu Management
-                    </div>
+                    </div> -->
                     <div class='form-group'>
                         <label>{{trans('crudbooster.privileges_name')}}</label>
                         <input type='text' class='form-control' name='name' required value='{{ @$row->name }}'/>
                         <div class="text-danger">{{ $errors->first('name') }}</div>
                     </div>
-
                     <div class='form-group'>
-                        <label>{{trans('crudbooster.set_as_superadmin')}}</label>
+                        <label>{{trans('crudbooster.set_privilege')}}</label>
                         <div id='set_as_superadmin' class='radio'>
-                            <label><input required {{ (@$row->is_superadmin==1)?'checked':'' }} type='radio' name='is_superadmin'
-                                          value='1'/> {{trans('crudbooster.confirmation_yes')}}</label> &nbsp;&nbsp;
-                            <label><input {{ (@$row->is_superadmin==0)?'checked':'' }} type='radio' name='is_superadmin'
-                                          value='0'/> {{trans('crudbooster.confirmation_no')}}</label>
+                            <label>
+                              <input {{ (@$row->is_superadmin==1) ? 'checked' : '' }} type='radio' name='superprivilege' value='1'/> {{trans('crudbooster.superadmin')}}
+                            </label> &nbsp;&nbsp;
+                            <label>
+                              <input {{ (@$row->is_tenantadmin==1) ? 'checked' : '' }} type='radio' name='superprivilege' value='2'/> {{trans('crudbooster.tenantadmin')}}
+                            </label> &nbsp;&nbsp;
+                            <label>
+                              <input {{ (@$row->is_superadmin!=1 AND @$row->is_tenantadmin!=1) ? 'checked' : '' }} type='radio' name='superprivilege' value='0'/> {{trans('crudbooster.none')}}
+                            </label>
                         </div>
                         <div class="text-danger">{{ $errors->first('is_superadmin') }}</div>
                     </div>
