@@ -294,6 +294,17 @@ class MenusController extends CBController
             'validation'=>'required|int|min:1',
             'value'=>UserHelper::current_user_tenant()//default value per creazione nuovo record
           ];
+          //superadmin vede i gruppi come cascading dropdown in base al tenant
+          $this->form[] = [
+              "label" => "Group",
+              "name" => "menu_groups",
+              "type" => "select2",
+              "select2_multiple" => true,
+              "datatable" => "groups,name",
+              "relationship_table" => "menu_groups",
+              "required" => true,
+              'parent_select'=>'tenant'
+          ];
         }
         elseif(UserHelper::isTenantAdmin())
     		{
@@ -305,6 +316,7 @@ class MenusController extends CBController
     				'type'=>'select',
     				'datatable'=>"tenants,name",
     				'default'=>UserHelper::current_user_tenant_name(),
+    				'value'=>UserHelper::current_user_tenant(),
     				'disabled'=>true
     			];
     			//aggiungo un campo tenant hidden perchè con la tenant select disabled viene salvato uno 0
@@ -313,43 +325,19 @@ class MenusController extends CBController
     				"name"=>"tenant",
     				'type'=>'hidden'
     			];
-        }
-        //only superadmin and advanced can see group
-        if((UserHelper::isTenantAdmin() OR CRUDBooster::isSuperadmin()))
-        {
-          if(CRUDBooster::isSuperadmin())
-          {
-            //superadmin vede i gruppi come cascading dropdown in base al tenant
-            $this->form[] = [
-              'label'=>'Group',
-              'name'=>'group',
-              "type"=>"select",
-              "datatable"=>"groups,name",
-              'required'=>true,
-              'validation'=>'required|int|min:1',
-              'value'=>UserHelper::current_user_primary_group(),//default value per creazione nuovo record
+          //Advanced vede solo i gruppi del proprio tenant
+          $this->form[] = [
+              "label" => "Group",
+              "name" => "menu_groups",
+              "type" => "select2",
+              "select2_multiple" => true,
+              "datatable" => "groups,name",
+              "relationship_table" => "menu_groups",
+              "required" => true,
+              'datatable_where'=>'tenant = '.UserHelper::current_user_tenant(),
               'parent_select'=>'tenant'
-            ];
-            // $field = ['label'=>'Group','name'=>'group',"type"=>"select","datatable"=>"groups,name",'required'=>true,'validation'=>'required|int|min:1','default'=>UserHelper::current_user_primary_group_name(),'value'=>UserHelper::current_user_primary_group(),'parent_select'=>'tenant'];
-          }
-          else
-          {
-            //Advanced vede solo i gruppi del proprio tenant
-            $this->form[] = [
-              'label'=>'Group',
-              'name'=>'group',
-              "type"=>"select2",
-              "datatable"=>"groups,name",
-              'required'=>true,
-              'validation'=>'required|int|min:1',
-              'default'=>UserHelper::current_user_primary_group_name(),
-              'value'=>UserHelper::current_user_primary_group(),
-              //advanced vede nella dropdown solo i gruppi del proprio tenant
-              'datatable_where'=>'tenant = '.UserHelper::current_user_tenant()
-            ];
-          }
+          ];
         }
-    		// $this->form[] = array("label"=>"Group","name"=>"group",'required'=>true,'type'=>'select','datatable'=>"groups,name",'validation'=>'required','default'=>'');
 
         $this->form[] = [
             "label" => "Module",

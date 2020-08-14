@@ -90,6 +90,7 @@ foreach($forms as $index=>$form) {
     $header_group_class = ($header_group_class) ?: "header-group-$index";
   }
   ?>
+
   @if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/component.blade.php')))
   @include('crudbooster::default.type_components.'.$type.'.component')
   @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/component.blade.php')))

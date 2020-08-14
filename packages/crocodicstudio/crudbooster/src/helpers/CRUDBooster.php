@@ -461,8 +461,9 @@ class CRUDBooster
         // se l'utente corrente non è superadmin e non è advanced..
         if(!(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin()))
         {
-          //..allora filtra i menu visibili anche in base ai suoi gruppi
-          $menu_active = $menu_active->whereIn('group', UserHelper::current_user_groups());
+          //..allora filtra i menu visibili in base ai suoi gruppi
+          $menu_active = $menu_active->join('menu_groups', 'cms_menus.id', '=', 'menu_groups.menu_id')
+                                    ->whereIn('menu_groups.group_id',UserHelper::current_user_groups());
         }
         $menu_active = $menu_active->orderby('sorting', 'asc')
           ->select('cms_menus.*')
@@ -1041,6 +1042,13 @@ class CRUDBooster
     {
         $parent_table = CRUDBooster::parseSqlTable($parent_table)['table'];
         $child_table = CRUDBooster::parseSqlTable($child_table)['table'];
+        //#RAMA menu n:n groups
+        if($parent_table == 'cms_menus' AND $child_table == 'menu_groups'){
+          return 'menu_id';
+        }
+        if($parent_table == 'groups' AND $child_table == 'menu_groups'){
+          return 'group_id';
+        }
         if (Schema::hasColumn($child_table, 'id_'.$parent_table)) {
             return 'id_'.$parent_table;
         } else {

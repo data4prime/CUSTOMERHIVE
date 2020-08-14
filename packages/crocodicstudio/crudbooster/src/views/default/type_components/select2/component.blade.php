@@ -1,5 +1,4 @@
 @if($form['datatable'])
-
     @if($form['relationship_table'])
         @push('bottom')
             <script type="text/javascript">
@@ -8,6 +7,7 @@
                 })
             </script>
         @endpush
+
     @else
         @if($form['datatable_ajax'] == true)
 
@@ -116,7 +116,6 @@
     @endpush
 
 @endif
-
 <div class='form-group {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='form-group-{{$name}}' style="{{@$form['style']}}">
     <label class='control-label col-sm-2'>{{$form['label']}}
         @if($required)
@@ -227,3 +226,98 @@
 
     </div>
 </div>
+
+@push('bottom')
+@if($form['datatable'] AND $form['relationship_table'] AND $form['parent_select'])
+    <?php
+    $parent_select = (count(explode(",", $form['parent_select'])) > 1) ? explode(",", $form['parent_select']) : $form['parent_select'];
+    $parent = is_array($parent_select) ? $parent_select[0] : $parent_select;
+    $add_field = is_array($parent_select) ? $parent_select[1] : '';
+    ?>
+    @push('bottom')
+        <script type="text/javascript">
+            $(function () {
+
+                var default_tenant;
+
+                $('#{{$parent}}, input:radio[name={{$parent}}]').change(function () {
+                    var $current = $("#{{$form['name']}}");
+                    var parent_id = $(this).val();
+                    var fk_name = "{{$parent}}";
+                    var fk_value = $(this).val();
+                    var datatable = "{{$form['datatable']}}".split(',');
+                            @if(!empty($add_field))
+                    var add_field = ($("#{{$add_field}}").val()) ? $("#{{$add_field}}").val() : "";
+                            @endif
+                    var datatableWhere = "{{$form['datatable_where']}}";
+                    @if(!empty($add_field))
+                    if (datatableWhere) {
+                        if (add_field) {
+                            datatableWhere = datatableWhere + " and {{$add_field}} = " + add_field;
+                        }
+                    } else {
+                        if (add_field) {
+                            datatableWhere = "{{$add_field}} = " + add_field;
+                        }
+                    }
+                            @endif
+                    var table = datatable[0].trim('');
+                    var label = datatable[1].trim('');
+                    var value = [{{implode(',',$value)}}];
+                    var default_value = "{{ UserHelper::current_user_primary_group() }}";
+                    var is_default_present = false;
+                    var belongs_to_tenant = true;
+                    //salvo solo all'atterraggio default_tenant e non ogni volta che la tendina tenant cambia
+                    if(typeof default_tenant == 'undefined')
+                    {
+                      default_tenant = fk_value;
+                    }
+
+                    if (fk_value != '') {
+                        $current.html("<option value=''>{{trans('crudbooster.text_prefix_option')}} {{$form['label']}}");
+                        $.get("{{CRUDBooster::mainpath('data-table')}}?table=" + table + "&label=" + label + "&fk_name=" + fk_name + "&fk_value=" + fk_value + "&datatable_where=" + encodeURI(datatableWhere), function (response) {
+                            if (response) {
+                                //check if default is already between the options
+                                $.each(response, function (i, obj) {
+                                  if(obj.select_label == '{{$default}}'){
+                                    is_default_present = true;
+                                  }
+                                })
+                                if(fk_value !== default_tenant)
+                                {
+                                  belongs_to_tenant = false;
+                                }
+                                //if it's not a duplicate..
+                                //and group's tenant is selected
+                                if(!is_default_present && belongs_to_tenant)
+                                {
+                                  //..add the default option
+                                  $current.html("<option value=''>{{$default}}");
+                                }
+                                //add the other options
+                                $.each(response, function (i, obj) {
+                                  if(value.length==0){
+                                    //use default value in create
+                                    var selected = (default_value && (obj.select_value == default_value) ) ? "selected" : "";
+                                  }
+                                  else{
+                                    var selected = (value && $.inArray( obj.select_value, value ) > -1 ) ? "selected" : "";
+                                  }
+                                  $("<option " + selected + " value='" + obj.select_value + "'>" + obj.select_label + "</option>").appendTo("#{{$form['name']}}");
+                                });
+                                $current.trigger('change');
+                            }
+                        });
+                    } else {
+                        $current.html("<option value=''>{{$default}}");
+                    }
+                })
+
+                $('#{{$parent}}').trigger('change');
+                $("input[name='{{$parent}}']:checked").trigger("change");
+                $("#{{$form['name']}}").trigger('change');
+            })
+        </script>
+    @endpush
+@endif
+@endpush

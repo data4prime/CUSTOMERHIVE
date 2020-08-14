@@ -1,6 +1,5 @@
 @extends('crudbooster::admin_template')
 @section('content')
-
     @push('head')
         <style type="text/css">
             body.dragging, body.dragging * {
