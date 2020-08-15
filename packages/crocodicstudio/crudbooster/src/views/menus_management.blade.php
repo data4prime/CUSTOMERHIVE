@@ -132,8 +132,8 @@
 
             <div class="panel panel-success">
                 <div class="panel-heading">
-                    <strong>Menu Order (Active)</strong> <span id='menu-saved-info' style="display:none" class='pull-right text-success'><i
-                                class='fa fa-check'></i> Menu Saved !</span>
+                    <strong>Menu Order (Active)</strong> <span id='menu-saved-info' style="display:none" class='pull-right text-success'>
+                      <i class='fa fa-check'></i> Menu Saved !</span>
                 </div>
                 <div class="panel-body clearfix">
                     <ul class='draggable-menu draggable-menu-active'>
@@ -185,6 +185,8 @@
                                                 $privileges = DB::table('cms_menus_privileges')
                                                 ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
                                                 ->where('id_cms_menus',$child->id)->pluck('cms_privileges.name')->toArray();
+
+                                                $tenant = \App\Tenant::find($child->tenant)->name;
                                             @endphp
                                             <li data-id='{{$child->id}}' data-name='{{$child->name}}'>
                                               <div class='{{$child->is_dashboard?"is-dashboard":""}}' title="{{$child->is_dashboard?'This is setted as Dashboard':''}}">
@@ -199,7 +201,41 @@
                                                 <em class="text-muted">
                                                   <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
                                                 </em>
+                                                <em class="text-muted pull-right">
+                                                  <small><i class="fa fa-industry"></i> &nbsp; {{$tenant}}</small>
+                                                </em>
                                               </div>
+                                              <ul>
+                                                  @if($child->children)
+                                                      @foreach($child->children as $grandchild)
+                                                          @php
+                                                              $privileges = DB::table('cms_menus_privileges')
+                                                              ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
+                                                              ->where('id_cms_menus',$grandchild->id)->pluck('cms_privileges.name')->toArray();
+
+                                                              $tenant = \App\Tenant::find($grandchild->tenant)->name;
+                                                          @endphp
+                                                          <li data-id='{{$grandchild->id}}' data-name='{{$grandchild->name}}'>
+                                                            <div class='{{$grandchild->is_dashboard?"is-dashboard":""}}' title="{{$grandchild->is_dashboard?'This is setted as Dashboard':''}}">
+                                                              <i class='{{($grandchild->is_dashboard)?"icon-is-dashboard fa fa-dashboard":$grandchild->icon}}'></i>
+                                                              {{$grandchild->name}}
+                                                              <span class='pull-right'>
+                                                                <a class='fa fa-pencil' title='Edit' href='{{route("MenusControllerGetEdit",["id"=>$grandchild->id])}}?return_url={{urlencode(Request::fullUrl())}}'></a>
+                                                                &nbsp;&nbsp;
+                                                                <a title="Delete" class='fa fa-trash' onclick='{{CRUDBooster::deleteConfirm(route("MenusControllerGetDelete",["id"=>$grandchild->id]))}}' href='javascript:void(0)'></a>
+                                                              </span>
+                                                              <br/>
+                                                              <em class="text-muted">
+                                                                <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
+                                                              </em>
+                                                              <em class="text-muted pull-right">
+                                                                <small><i class="fa fa-industry"></i> &nbsp; {{$tenant}}</small>
+                                                              </em>
+                                                            </div>
+                                                          </li>
+                                                      @endforeach
+                                                  @endif
+                                              </ul>
                                             </li>
                                         @endforeach
                                     @endif
@@ -220,25 +256,108 @@
                 <div class="panel-body clearfix">
                     <ul class='draggable-menu draggable-menu-inactive'>
                         @foreach($menu_inactive as $menu)
+                            @php
+                                $privileges = DB::table('cms_menus_privileges')
+                                ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
+                                ->where('id_cms_menus',$menu->id)->pluck('cms_privileges.name')->toArray();
+
+                                $tenant = \App\Tenant::find($menu->tenant)->name;
+                            @endphp
                             <li data-id='{{$menu->id}}' data-name='{{$menu->name}}'>
-                                <div><i class='{{$menu->icon}}'></i> {{$menu->name}} <span class='pull-right'><a class='fa fa-pencil' title='Edit'
-                                                                                                                 href='{{route("MenusControllerGetEdit",["id"=>$menu->id])}}?return_url={{urlencode(Request::fullUrl())}}'></a>&nbsp;&nbsp;<a
-                                                title='Delete' class='fa fa-trash'
-                                                onclick='{{CRUDBooster::deleteConfirm(route("MenusControllerGetDelete",["id"=>$menu->id]))}}'
-                                                href='javascript:void(0)'></a></span></div>
+                                <div class='{{$menu->is_dashboard?"is-dashboard":""}}' title="{{$menu->is_dashboard?'This is setted as Dashboard':''}}">
+                                    <i class='{{($menu->is_dashboard)?"icon-is-dashboard fa fa-dashboard":$menu->icon}}'></i>
+                                     {{$menu->name}}
+                                     <span class='pull-right'>
+                                      @if(
+                                          CRUDBooster::isSuperadmin() OR
+                                          (
+                                            CRUDBooster::isUpdate() AND
+                                            $menu->tenant == UserHelper::current_user_tenant()
+                                          )
+                                        )
+                                       <a class='fa fa-pencil' title='Edit' href='{{route("MenusControllerGetEdit",["id"=>$menu->id])}}?return_url={{urlencode(Request::fullUrl())}}'></a>
+                                       @endif
+                                       &nbsp;&nbsp;
+                                      @if(
+                                          CRUDBooster::isSuperadmin() OR
+                                          (
+                                            CRUDBooster::isDelete() AND
+                                            $menu->tenant == UserHelper::current_user_tenant()
+                                          )
+                                        )
+                                      <a title='Delete' class='fa fa-trash' onclick='{{CRUDBooster::deleteConfirm(route("MenusControllerGetDelete",["id"=>$menu->id]))}}' href='javascript:void(0)'></a>
+                                      @endif
+                                    </span>
+                                    <br/>
+                                    <em class="text-muted">
+                                      <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
+                                    </em>
+                                    <em class="text-muted pull-right">
+                                      <small><i class="fa fa-industry"></i> &nbsp; {{$tenant}}</small>
+                                    </em>
+                                </div>
                                 <ul>
-                                    @if($menu->children)
-                                        @foreach($menu->children as $child)
-                                            <li data-id='{{$child->id}}' data-name='{{$child->name}}'>
-                                                <div><i class='{{$child->icon}}'></i> {{$child->name}} <span class='pull-right'><a class='fa fa-pencil'
-                                                                                                                                   title='Edit'
-                                                                                                                                   href='{{route("MenusControllerGetEdit",["id"=>$child->id])}}?return_url={{urlencode(Request::fullUrl())}}'></a>&nbsp;&nbsp;<a
-                                                                title="Delete" class='fa fa-trash'
-                                                                onclick='{{CRUDBooster::deleteConfirm(route("MenusControllerGetDelete",["id"=>$child->id]))}}'
-                                                                href='javascript:void(0)'></a></span></div>
-                                            </li>
-                                        @endforeach
-                                    @endif
+
+                                      @if($menu->children)
+                                          @foreach($menu->children as $child)
+                                              @php
+                                                  $privileges = DB::table('cms_menus_privileges')
+                                                  ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
+                                                  ->where('id_cms_menus',$child->id)->pluck('cms_privileges.name')->toArray();
+
+                                                  $tenant = \App\Tenant::find($child->tenant)->name;
+                                              @endphp
+                                              <li data-id='{{$child->id}}' data-name='{{$child->name}}'>
+                                                <div class='{{$child->is_dashboard?"is-dashboard":""}}' title="{{$child->is_dashboard?'This is setted as Dashboard':''}}">
+                                                  <i class='{{($child->is_dashboard)?"icon-is-dashboard fa fa-dashboard":$child->icon}}'></i>
+                                                  {{$child->name}}
+                                                  <span class='pull-right'>
+                                                    <a class='fa fa-pencil' title='Edit' href='{{route("MenusControllerGetEdit",["id"=>$child->id])}}?return_url={{urlencode(Request::fullUrl())}}'></a>
+                                                    &nbsp;&nbsp;
+                                                    <a title="Delete" class='fa fa-trash' onclick='{{CRUDBooster::deleteConfirm(route("MenusControllerGetDelete",["id"=>$child->id]))}}' href='javascript:void(0)'></a>
+                                                  </span>
+                                                  <br/>
+                                                  <em class="text-muted">
+                                                    <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
+                                                  </em>
+                                                  <em class="text-muted pull-right">
+                                                    <small><i class="fa fa-industry"></i> &nbsp; {{$tenant}}</small>
+                                                  </em>
+                                                </div>
+                                                <ul>
+                                                    @if($child->children)
+                                                        @foreach($child->children as $grandchild)
+                                                            @php
+                                                                $privileges = DB::table('cms_menus_privileges')
+                                                                ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
+                                                                ->where('id_cms_menus',$grandchild->id)->pluck('cms_privileges.name')->toArray();
+
+                                                                $tenant = \App\Tenant::find($grandchild->tenant)->name;
+                                                            @endphp
+                                                            <li data-id='{{$grandchild->id}}' data-name='{{$grandchild->name}}'>
+                                                              <div class='{{$grandchild->is_dashboard?"is-dashboard":""}}' title="{{$grandchild->is_dashboard?'This is setted as Dashboard':''}}">
+                                                                <i class='{{($grandchild->is_dashboard)?"icon-is-dashboard fa fa-dashboard":$grandchild->icon}}'></i>
+                                                                {{$grandchild->name}}
+                                                                <span class='pull-right'>
+                                                                  <a class='fa fa-pencil' title='Edit' href='{{route("MenusControllerGetEdit",["id"=>$grandchild->id])}}?return_url={{urlencode(Request::fullUrl())}}'></a>
+                                                                  &nbsp;&nbsp;
+                                                                  <a title="Delete" class='fa fa-trash' onclick='{{CRUDBooster::deleteConfirm(route("MenusControllerGetDelete",["id"=>$grandchild->id]))}}' href='javascript:void(0)'></a>
+                                                                </span>
+                                                                <br/>
+                                                                <em class="text-muted">
+                                                                  <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
+                                                                </em>
+                                                                <em class="text-muted pull-right">
+                                                                  <small><i class="fa fa-industry"></i> &nbsp; {{$tenant}}</small>
+                                                                </em>
+                                                              </div>
+                                                            </li>
+                                                        @endforeach
+                                                    @endif
+                                                </ul>
+                                              </li>
+                                          @endforeach
+                                      @endif
                                 </ul>
                             </li>
                         @endforeach

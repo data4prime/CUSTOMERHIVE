@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use crocodicstudio\crudbooster\fonts\Fontawesome;
 use \crocodicstudio\crudbooster\helpers\UserHelper;
+use \crocodicstudio\crudbooster\helpers\MenuHelper;
 use \App\Menu;
 
 class MenusController extends CBController
@@ -440,47 +441,8 @@ class MenusController extends CBController
         $id_cms_privileges = Request::get('id_cms_privileges');
         $id_cms_privileges = ($id_cms_privileges) ?: CRUDBooster::myPrivilegeId();
 
-        $menu_active = DB::table('cms_menus')
-                            ->where('parent_id', 0)
-                            ->where('is_active', 1)
-                            ->orderby('sorting', 'asc')
-                            ->get();
-
-        if(!CRUDBooster::isSuperadmin())
-        {
-          //tenant admin vede nella lista solo le voci di menu del proprio tenant
-          $menu_active = $menu_active->where('tenant',UserHelper::current_user_tenant());
-        }
-
-        foreach ($menu_active as &$menu) {
-            $child = DB::table('cms_menus')
-                        ->where('is_active', 1)
-                        ->where('parent_id', $menu->id)
-                        ->orderby('sorting', 'asc')
-                        ->get();
-
-            if (count($child)) {
-                $menu->children = $child;
-            }
-        }
-
-        $menu_inactive = DB::table('cms_menus')
-                            ->where('parent_id', 0)
-                            ->where('is_active', 0)
-                            ->orderby('sorting', 'asc')
-                            ->get();
-
-        foreach ($menu_inactive as &$menu) {
-            $child = DB::table('cms_menus')
-                        ->where('is_active', 1)
-                        ->where('parent_id', $menu->id)
-                        ->orderby('sorting', 'asc')
-                        ->get();
-
-            if (count($child)) {
-                $menu->children = $child;
-            }
-        }
+        $menu_active = MenuHelper::get_menu(1);
+        $menu_inactive = MenuHelper::get_menu(0);
 
         $return_url = Request::fullUrl();
 
@@ -627,23 +589,38 @@ class MenusController extends CBController
 
     public function postSaveMenu()
     {
-        $post = Request::input('menus');
+        $menu_list = Request::input('menus');
         $isActive = Request::input('isActive');
-        $post = json_decode($post, true);
+        $menu_list_decoded = json_decode($menu_list, true);
 
-        $i = 1;
-        foreach ($post[0] as $ro) {
-            $pid = $ro['id'];
-            if ($ro['children'][0]) {
-                $ci = 1;
-                foreach ($ro['children'][0] as $c) {
-                    $id = $c['id'];
-                    DB::table('cms_menus')->where('id', $id)->update(['sorting' => $ci, 'parent_id' => $pid, 'is_active' => $isActive]);
-                    $ci++;
+        $parent_counter = 1;
+        foreach ($menu_list_decoded[0] as $parent_menu) {
+            $parent_id = $parent_menu['id'];
+            if ($parent_menu['children'][0]) {
+                $child_counter = 1;
+                foreach ($parent_menu['children'][0] as $child) {
+                    $child_id = $child['id'];
+                    //#RAMA save grandchild
+                    if ($child['children'][0]) {
+                        $grandchild_counter = 1;
+                        foreach ($child['children'][0] as $grandchild) {
+                            $grandchild_id = $grandchild['id'];
+                            DB::table('cms_menus')
+                                ->where('id', $grandchild_id)
+                                ->update(['sorting' => $grandchild_counter, 'parent_id' => $child_id, 'is_active' => $isActive]);
+                            $grandchild_counter++;
+                        }
+                    }
+                    DB::table('cms_menus')
+                        ->where('id', $child_id)
+                        ->update(['sorting' => $child_counter, 'parent_id' => $parent_id, 'is_active' => $isActive]);
+                    $child_counter++;
                 }
             }
-            DB::table('cms_menus')->where('id', $pid)->update(['sorting' => $i, 'parent_id' => 0, 'is_active' => $isActive]);
-            $i++;
+            DB::table('cms_menus')
+                ->where('id', $parent_id)
+                ->update(['sorting' => $parent_counter, 'parent_id' => 0, 'is_active' => $isActive]);
+            $parent_counter++;
         }
 
         return response()->json(['success' => true]);

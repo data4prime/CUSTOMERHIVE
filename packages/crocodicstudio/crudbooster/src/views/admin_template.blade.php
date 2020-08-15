@@ -217,6 +217,30 @@
 
 @stack('bottom')
 
+<script type="text/javascript">
+//sidebar #RAMA
+$( document ).ready(function() {
+  //collapsable navigation groups
+  $('.my-collapse-sidebar').click(function(){
+    var collapse_id = $(this).data('collapse-btn');
+    var icon = $(this).children().first();
+    $content = $('li[data-collapse="'+collapse_id+'"]');
+    $content.slideToggle(500, function () {
+        //execute this after slideToggle is done
+        //change text of header based on visibility of content div
+        if($content.is(":visible")){
+          icon.removeClass('fa-plus');
+          icon.addClass('fa-minus');
+        }
+        else{
+          icon.removeClass('fa-minus');
+          icon.addClass('fa-plus');
+        }
+    });
+  })
+});
+</script>
+
 <!-- Optionally, you can add Slimscroll and FastClick plugins.
       Both of these plugins are recommended to enhance the
       user experience -->

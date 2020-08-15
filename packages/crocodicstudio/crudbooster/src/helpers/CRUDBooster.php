@@ -512,8 +512,17 @@ class CRUDBooster
             $child = DB::table('cms_menus')
               ->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '".self::myPrivilegeId()."')")
               ->where('is_dashboard', 0)
+              ->where('tenant', UserHelper::current_user_tenant())
               ->where('is_active', 1)
-              ->where('parent_id', $menu->id)
+              ->where('parent_id', $menu->id);
+            // se l'utente corrente non è superadmin e non è advanced..
+            if(!(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin()))
+            {
+              //..allora filtra i menu visibili in base ai suoi gruppi
+              $child = $child->join('menu_groups', 'cms_menus.id', '=', 'menu_groups.menu_id')
+                                        ->whereIn('menu_groups.group_id',UserHelper::current_user_groups());
+            }
+            $child = $child->orderby('sorting', 'asc')
               ->select('cms_menus.*')
               ->orderby('sorting', 'asc')
               ->get();
@@ -554,6 +563,65 @@ class CRUDBooster
 
                     $c->url = $url;
                     $c->url_path = trim(str_replace(url('/'), '', $url), "/");
+
+                    $grandchild = DB::table('cms_menus')
+                      ->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '".self::myPrivilegeId()."')")
+                      ->where('is_dashboard', 0)
+                      ->where('tenant', UserHelper::current_user_tenant())
+                      ->where('is_active', 1)
+                      ->where('parent_id', $c->id);
+                    // se l'utente corrente non è superadmin e non è advanced..
+                    if(!(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin()))
+                    {
+                      //..allora filtra i menu visibili in base ai suoi gruppi
+                      $grandchild = $grandchild->join('menu_groups', 'cms_menus.id', '=', 'menu_groups.menu_id')
+                                                ->whereIn('menu_groups.group_id',UserHelper::current_user_groups());
+                    }
+                    $grandchild = $grandchild->orderby('sorting', 'asc')
+                      ->select('cms_menus.*')
+                      ->orderby('sorting', 'asc')
+                      ->get();
+
+                    if (count($grandchild)) {
+
+                        foreach ($grandchild as $grandchild_key => &$g) {
+
+                            try {
+                                switch ($g->type) {
+                                    case 'Route':
+                                        $url = route($g->path);
+                                        break;
+                                    default:
+                                    case 'URL':
+                                        $url = $g->path;
+                                        break;
+                                    case 'Controller & Method':
+                                        $url = action($g->path);
+                                        break;
+                                    case 'Module':
+                                        break;
+                                    case 'Statistic':
+                                        $url = self::adminPath($g->path);
+                                        break;
+                                    case 'Qlik':
+                                        //controlla se utente corrente è abilitato a vedere oggetto
+                                        $g->item_id = end(explode('/',$g->path));
+                                        $g->allowed = GroupHelper::can_see_item($g->item_id);
+                                        $url = self::adminPath($g->path);
+                                        break;
+                                }
+                                $g->is_broken = false;
+                            } catch (\Exception $e) {
+                                $url = "#";
+                                $g->is_broken = true;
+                            }
+
+                            $g->url = $url;
+                            $g->url_path = trim(str_replace(url('/'), '', $url), "/");
+                        }
+                    }
+
+                    $c->children = $grandchild;
                 }
 
                 $menu->children = $child;

@@ -16,18 +16,23 @@
             </div>
         </div>
 
-
         <div class='main-menu'>
-
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu">
-                <li class="header">{{trans("crudbooster.menu_navigation")}}</li>
+                <li class="header">{{trans("crudbooster.menu_navigation")}}
+                  <div class="my-collapse-sidebar pull-right" data-collapse-btn="1">
+                    <i class="fa fa-minus"></i>
+                  </div>
+                </li>
 
                 <?php $dashboard = CRUDBooster::sidebarDashboard();?>
                 @if($dashboard)
-                    <li data-id='{{$dashboard->id}}' class="{{ (Request::is(config('crudbooster.ADMIN_PATH'))) ? 'active' : '' }}"><a
-                                href='{{CRUDBooster::adminPath()}}' class='{{($dashboard->color)?"text-".$dashboard->color:""}}'><i class='fa fa-dashboard'></i>
-                            <span>{{trans("crudbooster.text_dashboard")}}</span> </a></li>
+                    <li data-id='{{$dashboard->id}}' data-collapse="1" class="{{ (Request::is(config('crudbooster.ADMIN_PATH'))) ? 'active' : '' }}">
+                      <a href='{{CRUDBooster::adminPath()}}' class='{{($dashboard->color)?"text-".$dashboard->color:""}}'>
+                        <i class='fa fa-dashboard'></i>
+                        <span>{{trans("crudbooster.text_dashboard")}}</span>
+                      </a>
+                    </li>
                 @endif
                 @foreach(CRUDBooster::sidebarMenu() as $menu)
                     <?php
@@ -38,19 +43,36 @@
                         $target='';
                       }
                     ?>
-                    <li data-id='{{$menu->id}}' class='{{(!empty($menu->children))?"treeview":""}} {{ (Request::is($menu->url_path."*"))?"active":""}}'>
-                        <a {{ $target }} href='{{ ($menu->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$menu->url }}'
-                           class='{{($menu->color)?"text-".$menu->color:""}}'>
-                            <i class='{{$menu->icon}} {{($menu->color)?"text-".$menu->color:""}}'></i> <span>{{$menu->name}}</span>
-                            @if(!empty($menu->children))<i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>@endif
+                    <li data-id='{{$menu->id}}' data-collapse="1" class='{{(!empty($menu->children))?"treeview":""}} {{ (Request::is($menu->url_path."*"))?"active":""}}'>
+                        <a {{ $target }} href='{{ ($menu->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$menu->url }}' class='{{($menu->color)?"text-".$menu->color:""}}'>
+                            <i class='{{$menu->icon}} {{($menu->color)?"text-".$menu->color:""}}'></i>
+                            <span>{{$menu->name}}</span>
+                            @if(!empty($menu->children))
+                            <i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
+                            @endif
                         </a>
                         @if(!empty($menu->children))
                             <ul class="treeview-menu">
                                 @foreach($menu->children as $child)
                                     <li data-id='{{$child->id}}' class='{{(Request::is($child->url_path .= !ends_with(Request::decodedPath(), $child->url_path) ? "/*" : ""))?"active":""}}'>
-                                        <a href='{{ ($child->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$child->url}}'
-                                           class='{{($child->color)?"text-".$child->color:""}}'>
-                                            <i class='{{$child->icon}}'></i> <span>{{$child->name}}</span>
+                                        <a href='{{ ($child->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$child->url}}' class='{{($child->color)?"text-".$child->color:""}}'>
+                                            <i class='{{$child->icon}}'></i>
+                                            <span>{{$child->name}}</span>
+                                            @if(!empty($child->children))
+                                            <i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
+                                            @endif
+                                            @if(!empty($child->children))
+                                              <ul class="treeview-menu">
+                                                  @foreach($child->children as $grandchild)
+                                                    <li data-id='{{$grandchild->id}}' class='{{(Request::is($child->url_path .= !ends_with(Request::decodedPath(), $grandchild->url_path) ? "/*" : ""))?"active":""}}'>
+                                                      <a href='{{ ($grandchild->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$grandchild->url}}' class='{{($grandchild->color)?"text-".$grandchild->color:""}}'>
+                                                          <i class='{{$grandchild->icon}}'></i>
+                                                          <span>{{$grandchild->name}}</span>
+                                                      </a>
+                                                    </li>
+                                                  @endforeach
+                                              </ul>
+                                            @endif
                                         </a>
                                     </li>
                                 @endforeach
@@ -58,13 +80,46 @@
                         @endif
                     </li>
                 @endforeach
+                <li data-id='3' data-collapse="3" class='treeview'>
+                  <a href='#' class=''>
+                    <i class='fa fa-cog'></i>
+                    <span>test grandpa</span>
+                    <i class="fa fa-angle-right pull-right"></i>
+                    <ul class="treeview-menu">
+                      <li data-id='2' class=''>
+                        <a href='' class=''>
+                          <i class='fa fa-cog'></i>
+                          <span>test pa</span>
+                          <i class="fa fa-angle-right pull-right"></i>
+                          <ul class="treeview-menu">
+                            <li data-id='1' class=''>
+                              <a href='' class=''>
+                                <i class='fa fa-cog'></i>
+                                <span>test kid</span>
+                              </a>
+                            </li>
+                          </ul>
+                        </a>
+                      </li>
+                      <li data-id='22' class=''>
+                        <a href='' class=''>
+                          <i class='fa fa-cog'></i>
+                          <span>test pa</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
 
                 @if(CRUDBooster::isSuperadmin() OR CRUDBooster::myPrivilegeName() === 'Advanced' )
 
-                  <li class="header">{{ trans('crudbooster.UserPermissions') }}</li>
+                  <li class="header">{{ trans('crudbooster.UserPermissions') }}
+                    <div class="my-collapse-sidebar pull-right" data-collapse-btn="2">
+                      <i class="fa fa-minus"></i>
+                    </div>
+                  </li>
 
                   @if(CRUDBooster::isSuperadmin())
-                  <li class='treeview'>
+                  <li data-collapse="2" class='treeview'>
                       <a href='#'><i class='fa fa-industry'></i> <span>{{ trans('crudbooster.Tenants') }}</span> <i
                                   class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
                       <ul class='treeview-menu'>
@@ -77,7 +132,7 @@
                       </ul>
                   </li>
 
-                  <li class='treeview'>
+                  <li data-collapse="2" class='treeview'>
                       <a href='#'><i class='fa fa-key'></i> <span>{{ trans('crudbooster.Roles') }}</span> <i
                                   class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
                       <ul class='treeview-menu'>
@@ -91,7 +146,7 @@
                   </li>
                   @endif
 
-                  <li class='treeview'>
+                  <li data-collapse="2" class='treeview'>
                       <a href='#'><i class='fa fa-users'></i> <span>{{ trans('crudbooster.Groups') }}</span> <i
                                   class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
                       <ul class='treeview-menu'>
@@ -104,7 +159,7 @@
                       </ul>
                   </li>
 
-                  <li class='treeview'>
+                  <li data-collapse="2" class='treeview'>
                       <a href='#'>
                         <i class='fa fa-user'></i> <span>{{ trans('crudbooster.Users') }}</span>
                         <i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
@@ -125,7 +180,7 @@
                       </ul>
                   </li>
 
-                  <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/logs*')) ? 'active' : '' }}">
+                  <li data-collapse="2" class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/logs*')) ? 'active' : '' }}">
                     <a href='{{Route("LogsControllerGetIndex")}}'>
                       <i class='fa fa-flag'></i> <span>{{ trans('crudbooster.User_Access_Log') }}</span>
                     </a>
@@ -134,14 +189,18 @@
                 @endif
 
                 @if(CRUDBooster::isSuperadmin() OR CRUDBooster::myPrivilegeName() === 'Advanced' )
-                    <li class="header">{{ trans('crudbooster.superadmin') }}</li>
+                    <li class="header">{{ trans('crudbooster.superadmin') }}
+                      <div class="my-collapse-sidebar pull-right" data-collapse-btn="3">
+                        <i class="fa fa-minus"></i>
+                      </div>
+                    </li>
 
-                    <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/menu_management*')) ? 'active' : '' }}"><a
+                    <li data-collapse="3" class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/menu_management*')) ? 'active' : '' }}"><a
                                 href='{{Route("MenusControllerGetIndex")}}'><i class='fa fa-bars'></i>
                             <span>{{ trans('crudbooster.Menu_Management') }}</span></a></li>
 
                     @if(CRUDBooster::isSuperadmin())
-                    <li class="treeview">
+                    <li data-collapse="3" class="treeview">
                         <a href="#"><i class='fa fa-wrench'></i> <span>{{ trans('crudbooster.settings') }}</span> <i
                                     class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
                         <ul class="treeview-menu">
@@ -159,7 +218,7 @@
                         </ul>
                     </li>
 
-                    <li class='treeview'>
+                    <li data-collapse="3" class='treeview'>
                         <a href='#'>
                           <i class='fa fa-th'></i> <span>{{ trans('crudbooster.Module_Generator') }}</span> <i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
                         </a>
@@ -177,7 +236,7 @@
                         </ul>
                     </li>
 
-                    <li class='treeview'>
+                    <li data-collapse="3" class='treeview'>
                         <a href='#'><i class='fa fa-signal'></i> <span>{{ trans('crudbooster.Qlik_Items') }}</span> <i
                                     class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
                         <ul class='treeview-menu'>
@@ -190,7 +249,7 @@
                         </ul>
                     </li>
 
-                    <li class='treeview'>
+                    <li data-collapse="3" class='treeview'>
                         <a href='#'>
                           <img class="menu qlik_logo" src=/images/qlik_logo.png />
                           <span>{{ trans('crudbooster.Qlik_Development_Tools') }}</span> <i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
@@ -211,7 +270,7 @@
                         </ul>
                     </li>
 
-                    <li class='treeview'>
+                    <li data-collapse="3" class='treeview'>
                         <a href='#'><i class='fa fa-dashboard'></i> <span>{{ trans('crudbooster.Statistic_Builder') }}</span> <i
                                     class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
                         <ul class='treeview-menu'>
@@ -224,7 +283,7 @@
                         </ul>
                     </li>
 
-                    <li class='treeview'>
+                    <li data-collapse="3" class='treeview'>
                         <a href='#'><i class='fa fa-fire'></i> <span>{{ trans('crudbooster.API_Generator') }}</span> <i
                                     class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
                         <ul class='treeview-menu'>
@@ -240,7 +299,7 @@
                         </ul>
                     </li>
 
-                    <li class='treeview'>
+                    <li data-collapse="3" class='treeview'>
                         <a href='#'><i class='fa fa-envelope-o'></i> <span>{{ trans('crudbooster.Email_Templates') }}</span> <i
                                     class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
                         <ul class='treeview-menu'>

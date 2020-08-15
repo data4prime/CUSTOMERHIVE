@@ -46,6 +46,10 @@ h1 .qlik_logo{
   width:14px;
   margin-right:6px;
 }
+.my-collapse-sidebar{
+  cursor: pointer;
+}
+
 /*
 * Public page
 */
