@@ -98,31 +98,38 @@
         <select class='form-control' id="{{$name}}" data-value='{{$value}}' {{$required}} {!!$placeholder!!} {{$readonly}} {{$disabled}} name="{{$name}}">
             <option value='{{$default}}'>{{$default}}</option>
             <?php
-            if (! $form['parent_select']) {
-                if (@$form['dataquery']):
+            if (! $form['parent_select'])
+            {
+              if (@$form['dataquery'])
+              {
+                $query = DB::select(DB::raw($form['dataquery']));
+                if ($query)
+                {
+                  foreach ($query as $q)
+                  {
+                    $selected = ($value == $q->value) ? "selected" : "";
+                    echo "<option $selected value='$q->value'>$q->label</option>";
+                  }
+                }
 
-                    $query = DB::select(DB::raw($form['dataquery']));
-                    if ($query) {
-                        foreach ($query as $q) {
-                            $selected = ($value == $q->value) ? "selected" : "";
-                            echo "<option $selected value='$q->value'>$q->label</option>";
-                        }
-                    }
+              }
 
-                endif;
-
-                if (@$form['dataenum']):
+                if (@$form['dataenum']){
                     $dataenum = $form['dataenum'];
                     $dataenum = (is_array($dataenum)) ? $dataenum : explode(";", $dataenum);
 
-                    foreach ($dataenum as $d) {
+                    foreach ($dataenum as $d)
+                    {
 
                         $val = $lab = '';
-                        if (strpos($d, '|') !== FALSE) {
+                        if (strpos($d, '|') !== FALSE)
+                        {
                             $draw = explode("|", $d);
                             $val = $draw[0];
                             $lab = $draw[1];
-                        } else {
+                        }
+                        else
+                        {
                             $val = $lab = $d;
                         }
 
@@ -130,7 +137,7 @@
 
                         echo "<option $select value='$val'>$lab</option>";
                     }
-                endif;
+                }
 
                 if (@$form['datatable']):
                     $raw = explode(",", $form['datatable']);

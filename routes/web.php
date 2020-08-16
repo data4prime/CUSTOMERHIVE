@@ -57,3 +57,7 @@ Route::get('admin/users/{user_id}/remove_group/{group_id}', 'AdminCmsUsersContro
 //Qlik Server Routes
 Route::get('admin/QlikServerSenseHub', 'AdminQlikItemsController@GetRouteSenseHub')->name('QlikServerSenseHub');
 Route::get('admin/QlikServerSenseQMC', 'AdminQlikItemsController@GetRouteSenseQMC')->name('QlikServerSenseQMC');
+
+//modules
+Route::get('admin/module_generator/enable', '\crocodicstudio\crudbooster\controllers\ModulsController@enable');
+Route::post('admin/module_generator/save_enable', '\crocodicstudio\crudbooster\controllers\ModulsController@saveEnable');

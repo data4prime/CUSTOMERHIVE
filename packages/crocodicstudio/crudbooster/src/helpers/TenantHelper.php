@@ -2,6 +2,8 @@
 namespace crocodicstudio\crudbooster\helpers;
 
 use \App\Tenant;
+use \App\Modules;
+use \App\ModuleTenants;
 
 class TenantHelper  {
 
@@ -53,6 +55,26 @@ class TenantHelper  {
     else{
       return $name;
     }
+  }
+
+  /**
+  * Check if a tenant has all modules enabled
+  *
+  * @param int tenant's id
+  *
+  * @return boolean true if the module is enabled,
+  * @return boolean false otherwise
+  */
+  public static function is_bulk_enabled($tenant_id)
+  {
+    $modules_enabled_count = ModuleTenants::where('tenant_id',$tenant_id)->count();
+    $modules_count = ModuleHelper::getEditableModules()->count();
+
+    if($modules_enabled_count == $modules_count)
+    {
+      return true;
+    }
+    return false;
   }
 
 }

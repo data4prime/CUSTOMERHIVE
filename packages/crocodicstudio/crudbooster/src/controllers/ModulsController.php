@@ -8,13 +8,16 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use crocodicstudio\crudbooster\fonts\Fontawesome;
 // #RAMA
-use App\Modules;
-use App\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use App\DynamicTable;
-use App\DynamicColumn;
 use ModuleHelper;
 use UserHelper;
+use App\Modules;
+use App\Tenant;
+use App\DynamicTable;
+use App\DynamicColumn;
+use App\Facades\Schema;
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Route;
 
 class ModulsController extends CBController
 {
@@ -202,6 +205,60 @@ class ModulsController extends CBController
         ];
 
         $this->index_button[] = ['label' => 'Generate New Module', 'icon' => 'fa fa-plus', 'url' => CRUDBooster::mainpath('step1'), 'color' => 'success'];
+    }
+
+    public function getEdit($id)
+    {
+        $this->cbLoader();
+
+        $row = DB::table($this->table)->where("id", $id)->first();
+
+        //only superadmin can edit modules
+        if (!CRUDBooster::isSuperadmin()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
+                'name' => $row->{$this->title_field},
+                'module' => CRUDBooster::getCurrentModule()->name,
+            ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
+        $page_title = 'Edit Module Generator';
+
+        $module = Modules::find($id);
+
+        $page_menu = Route::getCurrentRoute()->getActionName();
+
+        $tenants = Tenant::all();
+
+        return view('crudbooster::module_generator.edit', compact('row', 'module', 'tenants', 'page_title', 'page_menu'));
+    }
+
+    function enable()
+    {
+      $this->cbLoader();
+
+      //only superadmin can edit modules
+      if (!CRUDBooster::isSuperadmin()) {
+          CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
+              'name' => $row->{$this->title_field},
+              'module' => CRUDBooster::getCurrentModule()->name,
+          ]));
+          CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      }
+
+      $modules = ModuleHelper::getEditableModules();
+      $tenants = Tenant::all();
+
+      $page_title = 'Modules Settings';
+      $page_menu = Route::getCurrentRoute()->getActionName();
+
+      return view('crudbooster::module_generator.enable', compact('modules', 'tenants', 'page_title', 'page_menu'));
+    }
+
+    function saveEnable()
+    {
+      ModuleHelper::update_enabled_tenants($_POST['module_tenant_enabler']);
+      CRUDBooster::redirect(Request::server('HTTP_REFERER'), trans('crudbooster.alert_update_data_success'), 'success');
     }
 
     function hook_query_index(&$query)
@@ -975,6 +1032,7 @@ class ModulsController extends CBController
 
         $this->arr['created_at'] = date('Y-m-d H:i:s');
         $this->arr['id'] = DB::table($this->table)->max('id') + 1;
+
         DB::table($this->table)->insert($this->arr);
 
         //Insert Menu
@@ -1068,6 +1126,8 @@ class ModulsController extends CBController
         if ($this->arr['controller'] == '') {
             $this->arr['controller'] = CRUDBooster::generateController(Request::get('table_name'), $route_basename);
         }
+        
+        ModuleHelper::update_enabled_tenants($_POST['module_tenant_enabler']);
 
         DB::table($this->table)->where($this->primary_key, $id)->update($this->arr);
 

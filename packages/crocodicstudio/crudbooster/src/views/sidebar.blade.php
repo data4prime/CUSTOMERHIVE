@@ -110,7 +110,7 @@
                     </ul>
                   </li>
 
-                @if(CRUDBooster::isSuperadmin() OR CRUDBooster::myPrivilegeName() === 'Advanced' )
+                @if(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin())
 
                   <li class="header">{{ trans('crudbooster.UserPermissions') }}
                     <div class="my-collapse-sidebar pull-right" data-collapse-btn="2">
@@ -188,7 +188,7 @@
 
                 @endif
 
-                @if(CRUDBooster::isSuperadmin() OR CRUDBooster::myPrivilegeName() === 'Advanced' )
+                @if(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin() )
                     <li class="header">{{ trans('crudbooster.superadmin') }}
                       <div class="my-collapse-sidebar pull-right" data-collapse-btn="3">
                         <i class="fa fa-minus"></i>
@@ -231,8 +231,14 @@
                             <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/module_generator')) ? 'active' : '' }}">
                               <a href='{{Route("ModulsControllerGetIndex")}}'><i class='fa fa-bars'></i>
                                     <span>{{ trans('crudbooster.List_Module') }}</span>
-                                  </a>
-                                  </li>
+                              </a>
+                            </li>
+                            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/module_generator')) ? 'active' : '' }}">
+                              <a href="/{{ config('crudbooster.ADMIN_PATH')}}/module_generator/enable">
+                                <i class='fa fa-wrench'></i>
+                                <span>Enable/Disable Modules</span>
+                              </a>
+                            </li>
                         </ul>
                     </li>
 

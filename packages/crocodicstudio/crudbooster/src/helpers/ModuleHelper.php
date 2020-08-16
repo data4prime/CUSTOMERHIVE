@@ -1,6 +1,9 @@
 <?php
 namespace crocodicstudio\crudbooster\helpers;
 
+use App\ModuleTenants;
+use App\Tenant;
+
 class ModuleHelper  {
 
   /**
@@ -317,6 +320,87 @@ class ModuleHelper  {
       }
     }
     return $fields;
+  }
+
+  /**
+  * Check if a module is enabled for a tenant
+  *
+  * @param int module's id
+  * @param int tenant's id
+  *
+  * @return boolean true if the module is enabled,
+  * @return boolean false otherwise
+  */
+  public static function is_enabled($module_id, $tenant_id)
+  {
+    $result = ModuleTenants::where('tenant_id',$tenant_id)
+                  ->where('module_id',$module_id)
+                  ->first();
+    if(empty($result))
+    {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+  * Check if a module is enabled for all tenants
+  *
+  * @param int module's id
+  *
+  * @return boolean true if the module is enabled,
+  * @return boolean false otherwise
+  */
+  public static function is_bulk_enabled($module_id)
+  {
+    $tenants_enabled_count = ModuleTenants::where('module_id',$module_id)->count();
+    $tenants_count = Tenant::count();
+
+    if($tenants_enabled_count == $tenants_count)
+    {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+  * Check if a module is enabled for all tenants
+  *
+  * @param int module's id
+  *
+  * @return boolean true if the module is enabled,
+  * @return boolean false otherwise
+  */
+  public static function update_enabled_tenants($module_tenant_data)
+  {
+    //reset the table at every save
+    $clean = ModuleTenants::query()->truncate();
+    foreach ($module_tenant_data as $module_id => $value) {
+      foreach ($value as $tenant_id => $nothing) {
+        if(!empty($module_id) AND !empty($tenant_id))
+        {
+          $insert = new ModuleTenants;
+          $insert->module_id = $module_id;
+          $insert->tenant_id = $tenant_id;
+          $insert->save();
+        }
+      }
+    }
+  }
+
+  // get a collection of the modules that can be enabled or disabled to tenants
+  public static function getEditableModules()
+  {
+    return \DB::table("cms_moduls")
+                  ->where('is_protected', 0)
+                  ->where('deleted_at', null)
+                  ->where('table_name','like',config('app.module_generator_prefix').'%')
+                  ->orWhere('table_name','groups')
+                  ->orWhere('table_name','cms_users')
+                  ->orWhere('table_name','cms_menus')
+                  ->select("cms_moduls.*")
+                  ->orderby("name", "asc")
+                  ->get();
   }
 
 }

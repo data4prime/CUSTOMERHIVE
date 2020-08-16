@@ -340,14 +340,33 @@ class MenusController extends CBController
           ];
         }
 
-        $this->form[] = [
-            "label" => "Module",
-            "name" => "module_slug",
-            "type" => "select",
-            "datatable" => "cms_moduls,name",
-            "datatable_where" => "is_protected = 0",
-            "value" => $id_module,
-        ];
+        //superadmin can see all modules
+        if(CRUDBooster::isSuperadmin())
+        {
+          $this->form[] = [
+              "label" => "Module",
+              "name" => "module_slug",
+              "type" => "select",
+              "datatable" => "cms_moduls,name",
+              "datatable_where" => "is_protected = 0",
+              "value" => $id_module,
+          ];
+        }
+        //tenantadmin can see only modules enabled for his tenant
+        elseif(UserHelper::isTenantAdmin())
+    		{
+          $this->form[] = [
+              "label" => "Module",
+              "name" => "module_slug",
+              "type" => "select",
+              "dataquery" => "SELECT cms_moduls.name as label, cms_moduls.id as value
+                              FROM cms_moduls
+                              INNER JOIN module_tenants
+                              ON module_tenants.module_id = cms_moduls.id
+                              WHERE tenant_id=".UserHelper::current_user_tenant(),
+              "value" => $id_module,
+          ];
+        }
         $this->form[] = [
             "label" => "Statistic",
             "name" => "statistic_slug",
