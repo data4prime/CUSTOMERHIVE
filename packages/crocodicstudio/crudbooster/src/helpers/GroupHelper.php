@@ -35,7 +35,7 @@ class GroupHelper  {
         return false;
       }
       if(UserHelper::isTenantAdmin()){
-        //Advanced non è limitato dal ruolo per la visibilità dei qlik item
+        //Tenantadmin non è limitato dal ruolo per la visibilità dei qlik item
 				return true;
 			}
 

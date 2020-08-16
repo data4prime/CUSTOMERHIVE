@@ -78,7 +78,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 		}
 		elseif(UserHelper::isTenantAdmin())
 		{
-			//advanced vede tenant in readonly (disabled) ma può modificare il proprio primary group
+			//Tenantadmin vede tenant in readonly (disabled) ma può modificare il proprio primary group
 			$this->form[] = [
 				"label"=>"Tenant",
 				"name"=>"tenant",
@@ -184,7 +184,7 @@ class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CB
 	public function hook_query_index(&$query) {
 		if(UserHelper::isTenantAdmin())
 		{
-			//Advanced vede nella lista degli utenti solo quelli del proprio tenant
+			//Tenantadmin vede nella lista degli utenti solo quelli del proprio tenant
 			$query->where('tenant',UserHelper::current_user_tenant());
 		}
 	}

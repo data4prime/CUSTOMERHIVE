@@ -458,7 +458,7 @@ class CRUDBooster
           ->where('is_active', 1)
           ->where('is_dashboard', 0)
           ->where('tenant', UserHelper::current_user_tenant());
-        // se l'utente corrente non è superadmin e non è advanced..
+        // se l'utente corrente non è superadmin e non è Tenantadmin..
         if(!(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin()))
         {
           //..allora filtra i menu visibili in base ai suoi gruppi
@@ -515,7 +515,7 @@ class CRUDBooster
               ->where('tenant', UserHelper::current_user_tenant())
               ->where('is_active', 1)
               ->where('parent_id', $menu->id);
-            // se l'utente corrente non è superadmin e non è advanced..
+            // se l'utente corrente non è superadmin e non è Tenantadmin..
             if(!(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin()))
             {
               //..allora filtra i menu visibili in base ai suoi gruppi
@@ -570,7 +570,7 @@ class CRUDBooster
                       ->where('tenant', UserHelper::current_user_tenant())
                       ->where('is_active', 1)
                       ->where('parent_id', $c->id);
-                    // se l'utente corrente non è superadmin e non è advanced..
+                    // se l'utente corrente non è superadmin e non è Tenantadmin..
                     if(!(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin()))
                     {
                       //..allora filtra i menu visibili in base ai suoi gruppi

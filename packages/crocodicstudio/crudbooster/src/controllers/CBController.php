@@ -265,7 +265,7 @@ class CBController extends Controller
           //..no filter for superadmin
           if(UserHelper::isTenantAdmin())
           {
-            //.. for advanced filter on tenant column
+            //.. for Tenantadmin filter on tenant column
             $result->where($this->table.'.tenant', UserHelper::current_user_tenant());
           }
           else

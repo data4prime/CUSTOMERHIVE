@@ -67,7 +67,7 @@ class LogsController extends CBController
   	public function hook_query_index(&$query) {
   		if(UserHelper::isTenantAdmin())
   		{
-        //Advanced vede nella lista dei log solo quelli degli utenti del proprio tenant
+        //Tenantadmin vede nella lista dei log solo quelli degli utenti del proprio tenant
         $tenant_id = UserHelper::current_user_tenant();
         $tenant_users = User::where('tenant',$tenant_id)->pluck('id');
   			$query->whereIn('id_cms_users',$tenant_users);

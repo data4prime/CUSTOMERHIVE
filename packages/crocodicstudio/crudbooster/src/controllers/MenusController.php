@@ -309,7 +309,7 @@ class MenusController extends CBController
         }
         elseif(UserHelper::isTenantAdmin())
     		{
-    			//advanced vede tenant in readonly (disabled) ma può modificare il group
+    			//Tenantadmin vede tenant in readonly (disabled) ma può modificare il group
     			$this->form[] = [
     				"label"=>"Tenant",
     				"name"=>"tenant",
@@ -326,7 +326,7 @@ class MenusController extends CBController
     				"name"=>"tenant",
     				'type'=>'hidden'
     			];
-          //Advanced vede solo i gruppi del proprio tenant
+          //Tenantadmin vede solo i gruppi del proprio tenant
           $this->form[] = [
               "label" => "Group",
               "name" => "menu_groups",

@@ -84,7 +84,7 @@ class ModuleHelper  {
         ) OR
         //check tenant
         (
-          //check this only on groups and users for advanced
+          //check this only on groups and users for Tenantadmin
           UserHelper::isTenantAdmin() AND
           (
             $module->table == 'groups' OR
@@ -135,7 +135,7 @@ class ModuleHelper  {
         ) OR
         //check tenant
         (
-          //check this only on groups and users for advanced
+          //check this only on groups and users for Tenantadmin
           UserHelper::isTenantAdmin() AND
           (
             $module->table == 'groups' OR
@@ -186,7 +186,7 @@ class ModuleHelper  {
         ) OR
         //check tenant
         (
-          //check this only on groups and users for advanced
+          //check this only on groups and users for Tenantadmin
           UserHelper::isTenantAdmin() AND
           (
             $module->table == 'groups' OR
@@ -211,7 +211,7 @@ class ModuleHelper  {
   * Add default columns to MG_ modules index table
   *
   * add tenant and group columns for superadmin
-  * add group column for advanced
+  * add group column for Tenantadmin
   */
   public static function add_default_column_headers($table_name, $columns)
   {
@@ -236,7 +236,7 @@ class ModuleHelper  {
       {
         $columns[] = ["label"=>"Tenant","name"=>"tenant","join"=>"tenants,name"];
       }
-      //only superadmin and advanced can see group
+      //only superadmin and Tenantadmin can see group
       if((UserHelper::isTenantAdmin() OR CRUDBooster::isSuperadmin()) AND !$group_is_present)
       {
   			$columns[] = ["label"=>"Group","name"=>"group","join"=>"groups,name"];
@@ -249,7 +249,7 @@ class ModuleHelper  {
   * Add default fields to MG_ modules forms
   *
   * add tenant and group columns for superadmin
-  * add group column for advanced
+  * add group column for Tenantadmin
   */
   public static function add_default_form_fields($table_name, $fields)
   {
@@ -282,7 +282,7 @@ class ModuleHelper  {
           'value'=>UserHelper::current_user_tenant()//default value per creazione nuovo record
         ];
       }
-      //only superadmin and advanced can see group
+      //only superadmin and Tenantadmin can see group
       if((UserHelper::isTenantAdmin() OR CRUDBooster::isSuperadmin()) AND !$group_is_present)
       {
         if(CRUDBooster::isSuperadmin())
@@ -302,7 +302,7 @@ class ModuleHelper  {
         }
         else
         {
-          //Advanced vede solo i gruppi del proprio tenant
+          //Tenantadmin vede solo i gruppi del proprio tenant
           $field = [
             'label'=>'Group',
             'name'=>'group',
@@ -312,7 +312,7 @@ class ModuleHelper  {
             'validation'=>'required|int|min:1',
             'default'=>UserHelper::current_user_primary_group_name(),
             'value'=>UserHelper::current_user_primary_group(),
-            //advanced vede nella dropdown solo i gruppi del proprio tenant
+            //Tenantadmin vede nella dropdown solo i gruppi del proprio tenant
             'datatable_where'=>'tenant = '.UserHelper::current_user_tenant()
           ];
         }
