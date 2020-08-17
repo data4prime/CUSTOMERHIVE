@@ -34,7 +34,8 @@ class MenusController extends CBController
         $this->button_import = false;
 
         $id = CRUDBooster::getCurrentId();
-        if (Request::segment(3) == 'edit') {
+        if (Request::segment(3) == 'edit')
+        {
             $id = Request::segment(4);
             Session::put('current_row_id', $id);
         }
@@ -44,20 +45,24 @@ class MenusController extends CBController
         //id da preselezionare nelle dropdown del form dopo la scelta del type della voce di menu
         $id_module = $id_statistic = $id_qlik_item = 0;
 
-        if ($row->type == 'Module') {
+        if ($row->type == 'Module')
+        {
             $m = CRUDBooster::first('cms_moduls', ['path' => $row->path]);
             $id_module = $m->id;
-        } elseif ($row->type == 'Statistic') {
+        } elseif ($row->type == 'Statistic')
+        {
             $row->path = str_replace('statistic_builder/show/', '', $row->path);
             $m = CRUDBooster::first('cms_statistics', ['slug' => $row->path]);
             $id_statistic = $m->id;
-        } elseif ($row->type == 'Qlik') {
+        } elseif ($row->type == 'Qlik')
+        {
             //ricava id del qlik item a cui fa riferimento questa voce di menu dal path cioè l'href della voce di menu
             $id_qlik_item = str_replace('qlik_items/content/', '', $row->path);
         }
 
         $this->script_js = "
-  			$( document ).ready(function() {
+  			$( document ).ready(function()
+        {
   				var current_id = '$id';
   				var current_type = '$row->type';
   				var type_menu = $('input[name=type][checked]').val();
@@ -72,7 +77,9 @@ class MenusController extends CBController
   					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
   					$('#module_slug').prop('required',true);
   					$('#form-group-module_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
-  				}else if(type_menu == 'Statistic') {
+  				}
+          else if(type_menu == 'Statistic')
+          {
   					$('#form-group-statistic_slug').show();
   					$('#module_slug').prop('required',false);
   					$('#qlik_slug').prop('required',false);
@@ -81,7 +88,9 @@ class MenusController extends CBController
   					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
   					$('#statistic_slug').prop('required',true);
   					$('#form-group-statistic_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
-  				}else if(type_menu == 'Qlik') {
+  				}
+          else if(type_menu == 'Qlik')
+          {
   					$('#form-group-qlik_slug').show();
   					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').show();
   					$('#module_slug').prop('required',false);
@@ -90,7 +99,9 @@ class MenusController extends CBController
   					$('#form-group-statistic_slug,#form-group-path').hide();
   					$('#qlik_slug').prop('required',true);
   					$('#form-group-qlik_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
-  				}else{
+  				}
+          else
+          {
   					$('#module_slug').prop('required',false);
   					$('#statistic_slug').prop('required',false);
   					$('#qlik_slug').prop('required',false);
@@ -99,7 +110,8 @@ class MenusController extends CBController
   					$('#form-group-path').show();
   				}
 
-  				function format(icon) {
+  				function format(icon)
+          {
   	                  var originalOption = icon.element;
   	                  var label = $(originalOption).text();
   	                  var val = $(originalOption).val();
@@ -107,20 +119,23 @@ class MenusController extends CBController
   	                  var \$resp = $('<span><i style=\"margin-top:5px\" class=\"pull-right ' + $(originalOption).val() + '\"></i> ' + $(originalOption).data('label') + '</span>');
   	                  return \$resp;
   	              }
-  	              $('#list-icon').select2({
+  	              $('#list-icon').select2(
+                    {
   	                  width: \"100%\",
   	                  templateResult: format,
   	                  templateSelection: format
   	              });
 
-  				$('input[name=type]').change(function() {
+  				$('input[name=type]').change(function()
+          {
   					var default_placeholder_path = 'NameController@methodName';
   					var n = $(this).val();
   					var isCheck = $(this).prop('checked');
   					console.log('Click the module type '+n);
   					$('#module_slug').prop('required',false);
   					$('input[name=path]').attr('placeholder',default_placeholder_path);
-  					if(n == 'Module') {
+  					if(n == 'Module')
+            {
   						$('#form-group-path').hide();
   						$('#form-group-statistic_slug').hide();
   						$('#form-group-qlik_slug').hide();
@@ -131,7 +146,9 @@ class MenusController extends CBController
   						$('#form-group-module_slug').show();
   						$('#module_slug').prop('required',true);
   						$('#form-group-module_slug label .text-danger').remove();
-  					}else if (n == 'Statistic') {
+  					}
+            else if (n == 'Statistic')
+            {
   						$('#form-group-path').hide();
   						$('#form-group-module_slug').hide();
   						$('#form-group-qlik_slug').hide();
@@ -143,7 +160,9 @@ class MenusController extends CBController
   						$('#statistic_slug').prop('required',true);
   						$('#form-group-statistic_slug label .text-danger').remove();
   						$('#form-group-statistic_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
-  					}else if (n == 'Qlik') {
+  					}
+            else if (n == 'Qlik')
+            {
   						$('#form-group-path').hide();
   						$('#form-group-module_slug').hide();
   						$('#form-group-statistic_slug').hide();
@@ -155,7 +174,9 @@ class MenusController extends CBController
   						$('#qlik_slug').prop('required',true);
   						$('#form-group-qlik_slug label .text-danger').remove();
   						$('#form-group-qlik_slug label').append('<span class=\"text-danger\" title=\"".trans('crudbooster.this_field_is_required')."\">*</span>');
-  					}else if (n == 'URL') {
+  					}
+            else if (n == 'URL')
+            {
   						$('input[name=path]').attr('placeholder','Please enter your URL');
 
   						$('#path').prop('required',true);
@@ -165,7 +186,9 @@ class MenusController extends CBController
   						$('#form-group-path').show();
   						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
     					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
-  					}else if (n == 'Route') {
+  					}
+            else if (n == 'Route')
+            {
   						$('input[name=path]').attr('placeholder','Please enter the Route');
 
   						$('#path').prop('required',true);
@@ -175,7 +198,9 @@ class MenusController extends CBController
   						$('#form-group-path').show();
   						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
     					$('#form-group-frame_full_page,#form-group-frame_width,#form-group-frame_height,#form-group-frame_full_screen').hide();
-  					}else {
+  					}
+            else
+            {
   						$('#module_slug,#statistic_slug,#qlik_slug').prop('required',false);
 
   						$('#path').prop('required',true);
@@ -194,7 +219,8 @@ class MenusController extends CBController
         * fill content, full screen
         */
 
-        function checkFullPage(){
+        function checkFullPage()
+        {
           if(
             $('#frame_width').val()=='100' &&
             $('#frame_height').val()=='100' &&
@@ -203,26 +229,31 @@ class MenusController extends CBController
           ){
             $('input[name^=frame_full_page]').prop('checked', true);
           }
-          else{
+          else
+          {
             $('input[name^=frame_full_page]').prop('checked', false);
           }
         }
 
-        function setFullPage(){
-          console.log();
-          if($('input[name^=frame_full_page]').prop('checked')){
+        function setFullPage()
+        {
+          if($('input[name^=frame_full_page]').prop('checked'))
+          {
             $('#frame_width').val(100);
-            $('#frame_width_unit option').filter(function() {
+            $('#frame_width_unit option').filter(function()
+            {
                 return ($(this).text() == '%');
             }).prop('selected', true);
             $('#frame_height').val(100);
-            $('#frame_height_unit option').filter(function() {
+            $('#frame_height_unit option').filter(function()
+            {
                 return ($(this).text() == '%');
             }).prop('selected', true);
           }
         }
 
-        $(function() {
+        $(function()
+        {
           //set iframe size
           // $('.qi_iframe').css('height', $(window).height()+'px').css('width', '100%');
 
@@ -380,9 +411,12 @@ class MenusController extends CBController
             "label" => "Qlik",
             "name" => "qlik_slug",
             "type" => "select",
-            "datatable" => "qlik_items,title",
             "default" => "** Select a Qlik Item",
-            // "datatable_where" => "is_protected = 0",
+            "dataquery" => "SELECT qlik_items.title as label, qlik_items.id as value
+                            FROM qlik_items
+                            INNER JOIN tenants_allowed
+                            ON tenants_allowed.item_id = qlik_items.id
+                            WHERE tenants_allowed.tenant_id=".UserHelper::current_user_tenant(),
             "value" => $id_qlik_item,
         ];
 
@@ -511,6 +545,8 @@ class MenusController extends CBController
             $postdata['path'] = $stat->path;
         } elseif ($postdata['type'] == 'Qlik') {
             $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
+            //id that this menu will be saved with
+            $id = (Menu::orderby('id','desc')->first()->id) + 1;
             $postdata['path'] = 'qlik_items/content/'.$postdata['qlik_slug'].'?m='.$id;
         }
 

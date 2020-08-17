@@ -27,6 +27,19 @@ class QlikItem extends Model
     }
 
 		/**
+		*	Trova i tenant autorizzati all'item
+		*
+		* @return array[int] lista degli id dei tenant autorizzati
+		*/
+    public function allowedTenants(){
+      //TODO belongsTo
+      $allowed_tenants = TenantsAllowed::where('item_id',$this->id)
+                                      ->pluck('tenant_id')
+                                      ->toArray();
+      return $allowed_tenants;
+    }
+
+		/**
 		*	Enable a public page which grant access to the qlik item content anonymously
 		*/
     public function enablePublicAccess() {

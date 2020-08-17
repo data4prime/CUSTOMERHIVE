@@ -5,6 +5,12 @@ use Illuminate\Support\Facades\DB;
 
 class MenuHelper  {
 
+  public static function parse_path_for_qlik_item_id($URI) {
+     $last_element = end(explode('/',$URI));
+     $last_element_exploded = explode('?',$last_element);
+     return $last_element_exploded[0];
+  }
+
   /**
   *	Get menus
   *

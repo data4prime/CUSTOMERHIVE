@@ -12,6 +12,86 @@ use App\QlikItem;
 
 class QlikHelper  {
 
+	/**
+	*	Verifica se l'utente corrente è abilitato a vedere un oggetto qlik
+	* superadmin può sempre
+  * se è public tutti possono sempre
+  * se è tenantadmin controlla solo tenants_allowed
+  * se è basic controlla anche gruppi
+	*
+	* @param int id dell'item
+	*
+	* @return boolean true se l'utente è abilitato, false altrimenti
+	*/
+  public static function can_see_item($qlik_item_id)
+  {
+
+		//super admin sempre allowed
+    if(CRUDBooster::isSuperadmin()){
+			return true;
+		}
+
+    $qlik_item = \App\QlikItem::find($qlik_item_id);
+
+    if(empty($qlik_item))
+    {
+      add_log('can see item', 'qlik item not found id: '.$qlik_item_id);
+      return false;
+    }
+    if(!MyHelper::is_int($qlik_item))
+    {
+      add_log('can see item', 'qlik item id is not int: '.$qlik_item_id);
+      return false;
+    }
+
+    if($qlik_item->isPublic())
+    {
+      //tutti possono vedere un item pubblico
+      return true;
+    }
+
+    //check tenants_allowed
+		//get user tenant
+		$current_user_tenant = UserHelper::current_user_tenant();
+		//get item allowed tenants
+		$allowed_tenants = $qlik_item->allowedTenants();
+    // var_dump($qlik_item_id);
+    // var_dump($qlik_item->isPublic());
+    // var_dump(CRUDBooster::isSuperadmin());
+    // var_dump(UserHelper::isTenantAdmin());
+    // var_dump($allowed_tenants);
+    // var_dump($current_user_tenant);
+    // exit;
+		if(in_array($current_user_tenant,$allowed_tenants)){
+			//tenant abilitato
+      if(UserHelper::isTenantAdmin()){
+        //Tenantadmin non è limitato dal gruppo per la visibilità dei qlik item
+        //è sufficente il controllo sul tenant
+  			return true;
+  		}
+		}
+    else{
+      //tenant non abilitato
+      add_log('can see item', 'tenant non abilitato qlik item id: '.$qlik_item_id);
+      return false;
+    }
+
+		//check groups
+		//get user groups
+		$current_user_groups = GroupHelper::myGroups();
+		//get item allowed groups
+		$allowed_groups = $qlik_item->allowedGroups();
+
+		foreach ($allowed_groups as $allowed_group) {
+			if(in_array($allowed_group,$current_user_groups)){
+				//trovato un gruppo abilitato tra i gruppi di cui fa parte l'utente
+				return true;
+			}
+		}
+    add_log('can see item', 'nessun gruppo dell\'utente abilitato, qlik item id: '.$qlik_item_id);
+    return false;
+  }
+
   /**
   *	Check if a qlik item is currently enabled for public access
   *
@@ -60,7 +140,7 @@ class QlikHelper  {
 
     if(empty($qlik_login) OR empty($user_directory)){
       $data['error'] = 'User credentials missing. Ask an admin to set your qlik id and user directory';
-      $this->cbView('qlik_items.no_credentials',$data);
+      CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
       exit;
     }
 

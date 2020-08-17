@@ -24,6 +24,10 @@ Route::get('admin/qlik_items/access/{qlik_item_id}/alert/{alert_id}', 'AdminQlik
 Route::get('admin/qlik_items/access/{qlik_item_id}', 'AdminQlikItemsController@access');
 Route::post('admin/qlik_items/{qlik_item_id}/auth', 'AdminQlikItemsController@add_authorization');
 Route::get('admin/qlik_items/{qlik_item_id}/deauth/{group_id}', 'AdminQlikItemsController@remove_authorization');
+Route::get('admin/qlik_items/tenant/{qlik_item_id}/alert/{alert_id}', 'AdminQlikItemsController@tenant');
+Route::get('admin/qlik_items/tenant/{qlik_item_id}', 'AdminQlikItemsController@tenant');
+Route::post('admin/qlik_items/{qlik_item_id}/add_tenant', 'AdminQlikItemsController@add_tenant');
+Route::get('admin/qlik_items/{qlik_item_id}/remove_tenant/{tenant_id}', 'AdminQlikItemsController@remove_tenant');
 //public url to access qlik public items
 Route::get('qi/{proxy_token}', 'QlikItemsController@show');
 

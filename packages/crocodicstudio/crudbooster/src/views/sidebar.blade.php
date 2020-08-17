@@ -34,7 +34,7 @@
                       </a>
                     </li>
                 @endif
-                @foreach(CRUDBooster::sidebarMenu() as $menu)
+                @foreach(CRUDBooster::sidebarMenu() as $k => $menu)
                     <?php
                       if($menu->new_tab){
                         $target='target="_blank"';
@@ -80,35 +80,6 @@
                         @endif
                     </li>
                 @endforeach
-                <li data-id='3' data-collapse="3" class='treeview'>
-                  <a href='#' class=''>
-                    <i class='fa fa-cog'></i>
-                    <span>test grandpa</span>
-                    <i class="fa fa-angle-right pull-right"></i>
-                    <ul class="treeview-menu">
-                      <li data-id='2' class=''>
-                        <a href='' class=''>
-                          <i class='fa fa-cog'></i>
-                          <span>test pa</span>
-                          <i class="fa fa-angle-right pull-right"></i>
-                          <ul class="treeview-menu">
-                            <li data-id='1' class=''>
-                              <a href='' class=''>
-                                <i class='fa fa-cog'></i>
-                                <span>test kid</span>
-                              </a>
-                            </li>
-                          </ul>
-                        </a>
-                      </li>
-                      <li data-id='22' class=''>
-                        <a href='' class=''>
-                          <i class='fa fa-cog'></i>
-                          <span>test pa</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
 
                 @if(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin())
 

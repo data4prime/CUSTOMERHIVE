@@ -16,4 +16,13 @@ class MyHelper  {
     return $version;
   }
 
+  public static function is_int($var)
+  {
+    if(filter_var($var, FILTER_VALIDATE_INT) === false AND (int)$var != $var)
+    {
+      return false;
+    }
+    return true;
+  }
+
 }

@@ -9,11 +9,14 @@
 	use Illuminate\Support\Facades\Route;
 	use App\QlikItem;
 	use App\ItemsAllowed;
+	use App\TenantsAllowed;
 	use App\Menu;
+	use MyHelper;
 
 	class AdminQlikItemsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
-	    public function cbInit() {
+	    public function cbInit()
+			{
 				# START CONFIGURATION DO NOT REMOVE THIS LINE
 				$this->title_field = "title";
 				$this->limit = "20";
@@ -85,7 +88,8 @@
         */
         $this->addaction = array();
 				$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('content/[id]'),'icon'=>'fa fa-search','color'=>'info','title'=>'View item'];
-				$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('access/[id]'),'icon'=>'fa fa-users','color'=>'warning','title'=>'Set auth'];
+				$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('access/[id]'),'icon'=>'fa fa-users','color'=>'warning','title'=>'Set group'];
+				$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('tenant/[id]'),'icon'=>'fa fa-industry','color'=>'primary','title'=>'Set tenant'];
 
 
         /*
@@ -314,11 +318,11 @@
 	    */
 	    public function hook_row_index($column_index,&$column_value) {
 				//replace proxy_token with public link to qlik item
-				if($column_index == 4){
-					if(empty($column_value)){
+				if($column_index == 4) {
+					if(empty($column_value)) {
 							$column_value = 'private';
 					}
-					else{
+					else {
 						$link = QlikHelper::buildPublicUrl($column_value);
 						$column_value = '<a href="'.$link.'" target="_blank">public</a>';
 					}
@@ -334,6 +338,7 @@
 	    |
 	    */
 	    public function hook_before_add(&$postdata) {
+				if($postdata['public_access'] == 'public_access') {
 	        //create token
 	        $token = md5(config('app.salt').$postdata['url'].$postdata['title']);
 	        //save token
@@ -341,8 +346,9 @@
 	        //save proxy enabled at
 	        $now = date('Y-m-d H:i:s');
 	        $postdata['proxy_enabled_at'] = $now;
-					//avoid sql error
-					unset($postdata['public_access']);
+				}
+				//avoid sql error
+				unset($postdata['public_access']);
 	    }
 
 	    /*
@@ -365,7 +371,8 @@
 	    | @id       = current id
 	    |
 	    */
-	    public function hook_before_edit(&$postdata,$id) {
+	    public function hook_before_edit(&$postdata,$id)
+			{
 					//allow deleting help text
 					if(empty($postdata['description'])){
 						$postdata['description'] = '';
@@ -383,9 +390,9 @@
 	    | @id       = current id
 	    |
 	    */
-	    public function hook_after_edit($id) {
+	    public function hook_after_edit($id)
+			{
 	        //Your code here
-
 	    }
 
 	    /*
@@ -395,7 +402,8 @@
 	    | @id       = current id
 	    |
 	    */
-	    public function hook_before_delete($id) {
+	    public function hook_before_delete($id)
+			{
 	        //Delete items allowed on cascade
 				  $result = ItemsAllowed::where('item_id',$id)
 															->delete();
@@ -408,17 +416,17 @@
 	    | @id       = current id
 	    |
 	    */
-	    public function hook_after_delete($id) {
+	    public function hook_after_delete($id)
+			{
 	        //Your code here
-
 	    }
 
 	    // #RAMA custom methods
 
 			//look at qlik item's content
-			public function content_view($qlik_item_id) {
-
-				$allowed = GroupHelper::can_see_item($qlik_item_id);
+			public function content_view($qlik_item_id)
+			{
+				$allowed = QlikHelper::can_see_item($qlik_item_id);
 				//check if at least one of item allowed groups is in user groups
 			  if(!$allowed) {
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
@@ -429,7 +437,8 @@
 
 			  $data = [];
 			  $data['row'] = QlikItem::find($qlik_item_id);
-			  if(empty($data['row'])) {
+			  if(empty($data['row']))
+				{
 					//item missing or soft deleted
 					//can't access soft deleted qlik item
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.missing_item"));
@@ -467,9 +476,11 @@
 				}
 			}
 
-			public function access($item_id, $alert_id = null){
+			public function access($item_id, $alert_id = null)
+			{
 				//check auth
-			  if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			  if(!CRUDBooster::isSuperadmin() )
+				{
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
 				$data['item_id'] = $item_id;
@@ -477,17 +488,19 @@
 				$data['groups'] = ItemsAllowed::where('item_id',$item_id)
 																							->join('groups','groups.id','=','items_allowed.group_id')
 																							->get();
-				$data['page_title'] = 'Authorize Access';
+				$data['page_title'] = 'Authorize Group';
 
 				//prendo $_GET &alert=
-				if(!empty($alert_id)){
+				if(!empty($alert_id))
+				{
 					//se è alert=1
-					if($alert_id=='1'){
+					if($alert_id=='1')
+					{
 						//mostra messaggio di warning per tasto add premuto senza valori required
 						$data['alerts'][] = ['message'=>'<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...','type'=>'warning'];
 					}
 				}
-				//add member form
+				//add group form
 				$data['forms'] = [];
 				$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'item_access_datamodal','width'=>'col-sm-6','datamodal_table'=>'groups','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'Name','datamodal_select_to'=>$item_id,'required'=>true];
 				$data['forms'][] = ['label'=>'Description','name'=>'description','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-6','placeholder'=>'Group description','readonly'=>true];
@@ -497,29 +510,62 @@
 			  $this->cbView('qlik_items.access',$data);
 			}
 
-			public function add_authorization($item_id){
-				//check auth update su groups
-				//TODO creaiamo permesso specifico da autorizzare e controllare per item access?
-			  if(!CRUDBooster::isUpdate() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			public function tenant($item_id, $alert_id = null)
+			{
+				//check auth
+			  if(!CRUDBooster::isSuperadmin())
+				{
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
-				$group_id = $_POST['name'];
+
+				$data['item_id'] = $item_id;
+				$data['qlik_item'] = QlikItem::find($item_id);
+				$data['tenants'] = TenantsAllowed::where('item_id',$item_id)
+																						->join('tenants','tenants.id','=','tenants_allowed.tenant_id')
+																						->get();
+				$data['page_title'] = 'Authorize Tenant';
+
+				//prendo $_GET &alert=
+				if(!empty($alert_id)){
+					//se è alert=1
+					if($alert_id=='1'){
+						//mostra messaggio di warning per tasto add premuto senza valori required
+						$data['alerts'][] = ['message'=>'<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...','type'=>'warning'];
+					}
+				}
+
+				//add tenant form
+				$data['forms'] = [];
+				$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'item_tenant_datamodal','width'=>'col-sm-6','datamodal_table'=>'tenants','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'Name','datamodal_select_to'=>$item_id,'required'=>true];
+				$data['forms'][] = ['label'=>'Description','name'=>'description','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-6','placeholder'=>'Tenant description','readonly'=>true];
+				$data['action'] = CRUDBooster::mainpath($item_id."/add_tenant");
+				$data['return_url'] = CRUDBooster::mainpath('tenant/'.$item_id);
+
+			  $this->cbView('qlik_items.tenant',$data);
+			}
+
+			public function add_tenant($item_id) {
+
+			  if(!CRUDBooster::isSuperadmin()) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+				$tenant_id = $_POST['name'];
 				$return_url = $_POST['return_url'];
 				$ref_mainpath = $_POST['ref_mainpath'];
 
-			  if(empty($group_id)) {
+			  if(empty($tenant_id)) {
 					return redirect($return_url.'/alert/1');
 			  }
-				//check if item is already in group
-				$access = ItemsAllowed::where('item_id',$item_id)
-																		->where('group_id',$group_id)
+				//check if tenant is already allowed
+				$allowed = TenantsAllowed::where('item_id',$item_id)
+																		->where('tenant_id',$tenant_id)
 																		->count();
 
-				if($access == 0){
-					$add_authorization = new ItemsAllowed;
-					$add_authorization->item_id = $item_id;
-					$add_authorization->group_id = $group_id;
-					$add_authorization->save();
+				if($allowed == 0){
+					$add_tenant = new TenantsAllowed;
+					$add_tenant->item_id = $item_id;
+					$add_tenant->tenant_id = $tenant_id;
+					$add_tenant->save();
 				}
 
 				//redirect
@@ -529,15 +575,72 @@
 				return redirect($return_url);
 			}
 
-			public function remove_authorization($item_id, $group_id){
-				//check auth update su groups
-				//TODO creaiamo permesso specifico da autorizzare e controllare per item access?
-			  if(!CRUDBooster::isUpdate() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {
+			public function remove_tenant($item_id, $tenant_id) {
+			  if(!CRUDBooster::isSuperadmin()) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+				//check if tenant_id and user_id are int
+				if(!MyHelper::is_int($tenant_id) OR !MyHelper::is_int($item_id))
+				{
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+			  $data['delete'] = TenantsAllowed::where('item_id',$item_id)
+														->where('tenant_id',$tenant_id)
+														->delete();
+
+				return redirect('admin/qlik_items/tenant/'.$item_id);
+			}
+
+			//aggiungi un gruppo a quelli autorizzati a vedere il qlik item
+			public function add_authorization($item_id)
+			{
+			  if(!CRUDBooster::isSuperadmin())
+				{
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+				$group_id = $_POST['name'];
+				$return_url = $_POST['return_url'];
+				$ref_mainpath = $_POST['ref_mainpath'];
+
+			  if(empty($group_id))
+				{
+					return redirect($return_url.'/alert/1');
+			  }
+				//check if item is already in group
+				$access = ItemsAllowed::where('item_id',$item_id)
+																		->where('group_id',$group_id)
+																		->count();
+
+				if($access == 0)
+				{
+					$add_group = new ItemsAllowed;
+					$add_group->item_id = $item_id;
+					$add_group->group_id = $group_id;
+					$add_group->save();
+				}
+
+				//redirect
+				if(empty($return_url))
+				{
+						$return_url = $ref_mainpath;
+				}
+				return redirect($return_url);
+			}
+
+			//rimuovi un gruppo da quelli autorizzati a vedere il qlik item
+			public function remove_authorization($item_id, $group_id)
+			{
+			  if(!CRUDBooster::isSuperadmin())
+				{
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
 
 				//check if group_id and user_id are int
-				if(filter_var($group_id, FILTER_VALIDATE_INT) === false OR filter_var($item_id, FILTER_VALIDATE_INT) === false) {
+				if(!MyHelper::is_int($group_id) OR !MyHelper::is_int($item_id))
+				{
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
 
@@ -548,10 +651,8 @@
 				return redirect('admin/qlik_items/access/'.$item_id);
 			}
 
-			//overwrite default method
-	    public function getEdit($id)
-	    {
-				//load edit page
+			//load edit page
+	    public function getEdit($id) {
         $this->cbLoader();
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
@@ -581,8 +682,7 @@
 	    }
 
 			//overwrite default method
-	    public function getDetail($id)
-	    {
+	    public function getDetail($id) {
 				//load detail page
         $this->cbLoader();
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
@@ -606,8 +706,7 @@
         return view('qlik_items.form', compact('row', 'page_menu', 'page_title', 'command', 'id'));
 	    }
 
-	    public function GetRouteSenseHub()
-	    {
+	    public function GetRouteSenseHub() {
 				$this->cbLoader();
         if (! CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module' => CRUDBooster::getCurrentModule()->name]));
@@ -639,15 +738,12 @@
 			  $data['page_title'] = $data['row']->title;
 				$data['help'] = $data['row']->description;
 			  $data['subtitle'] = $data['row']->subtitle;
-
-
 				$data['item_url'] = $data['row']->url;
 
 			  $this->cbView('qlik_items.view',$data);
 	    }
 
-	    public function GetRouteSenseQMC()
-	    {
+	    public function GetRouteSenseQMC() {
 				$this->cbLoader();
         if (! CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module' => CRUDBooster::getCurrentModule()->name]));

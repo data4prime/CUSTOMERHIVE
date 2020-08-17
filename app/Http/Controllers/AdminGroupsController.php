@@ -6,6 +6,7 @@
 	use CRUDBooster;
 	use \App\UsersGroup;
 	use \crocodicstudio\crudbooster\helpers\UserHelper;
+	use \crocodicstudio\crudbooster\helpers\MyHelper;
 
 	class AdminGroupsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -420,7 +421,7 @@
 			  }
 
 				//check if group_id and user_id are int
-				if(filter_var($group_id, FILTER_VALIDATE_INT) === false OR filter_var($user_id, FILTER_VALIDATE_INT) === false) {
+				if(MyHelper::is_int($group_id) OR MyHelper::is_int($user_id)) {
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
 
@@ -513,7 +514,8 @@
 			  }
 
 				//check if group_id and user_id are int
-				if(filter_var($group_id, FILTER_VALIDATE_INT) === false OR filter_var($item_id, FILTER_VALIDATE_INT) === false) {
+				if(MyHelper::is_int($group_id) OR MyHelper::is_int($item_id))
+				{
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
 

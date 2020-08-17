@@ -1,6 +1,6 @@
 {
-  "title": "Item Access Data Modal",
-  "type": "item_access_datamodal",
+  "title": "Item tenant Data Modal",
+  "type": "item_tenants_datamodal",
   "attribute": {
     "required": {
       "datamodal_table": "table name",

@@ -458,8 +458,9 @@ class CRUDBooster
           ->where('is_active', 1)
           ->where('is_dashboard', 0)
           ->where('tenant', UserHelper::current_user_tenant());
+
         // se l'utente corrente non è superadmin e non è Tenantadmin..
-        if(!(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin()))
+        if(!CRUDBooster::isSuperadmin() AND !UserHelper::isTenantAdmin())
         {
           //..allora filtra i menu visibili in base ai suoi gruppi
           $menu_active = $menu_active->join('menu_groups', 'cms_menus.id', '=', 'menu_groups.menu_id')
@@ -467,6 +468,7 @@ class CRUDBooster
         }
         $menu_active = $menu_active->orderby('sorting', 'asc')
           ->select('cms_menus.*')
+          ->distinct()// moltiplica le righe senza duplicate se item ha molti gruppi
           ->get();
 
         foreach ($menu_active as $key => &$menu) {
@@ -491,8 +493,8 @@ class CRUDBooster
                         break;
                     case 'Qlik':
                         //controlla se utente corrente è abilitato a vedere oggetto
-                        $menu->item_id = end(explode('/',$menu->path));
-                        $menu->allowed = GroupHelper::can_see_item($menu->item_id);
+                        $menu->item_id = MenuHelper::parse_path_for_qlik_item_id($menu->path);
+                        $menu->allowed = QlikHelper::can_see_item($menu->item_id);
                         if(!$menu->allowed){
                           unset($menu_active[$key]);
                         }
@@ -550,8 +552,8 @@ class CRUDBooster
                                 break;
                             case 'Qlik':
                                 //controlla se utente corrente è abilitato a vedere oggetto
-                                $c->item_id = end(explode('/',$c->path));
-                                $c->allowed = GroupHelper::can_see_item($c->item_id);
+                                $c->item_id = MenuHelper::parse_path_for_qlik_item_id($c->path);
+                                $c->allowed = QlikHelper::can_see_item($c->item_id);
                                 $url = self::adminPath($c->path);
                                 break;
                         }
@@ -605,8 +607,8 @@ class CRUDBooster
                                         break;
                                     case 'Qlik':
                                         //controlla se utente corrente è abilitato a vedere oggetto
-                                        $g->item_id = end(explode('/',$g->path));
-                                        $g->allowed = GroupHelper::can_see_item($g->item_id);
+                                        $g->item_id = MenuHelper::parse_path_for_qlik_item_id($g->path);
+                                        $g->allowed = QlikHelper::can_see_item($g->item_id);
                                         $url = self::adminPath($g->path);
                                         break;
                                 }

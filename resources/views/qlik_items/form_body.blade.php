@@ -24,14 +24,12 @@ foreach($forms as $index=>$form) {
 
   $name = $form['name'];
   @$join = $form['join'];
-  @$value = (isset($form['value'])) ? $form['value'] : '';
+  // @$value = (isset($form['value'])) ? $form['value'] : '';
   //default behaviour
-  else{
-    @$value = (isset($row->{$name})) ? $row->{$name} : $value;
-  }
+  @$value = (isset($row->{$name})) ? $row->{$name} : $value;
 
   //public access checked
-  if($name == 'public_access'){
+  if($name == 'public_access') {
     if($is_public){
       $checked = "checked";
       $qlik_item = App\QlikItem::find($row->id);
@@ -39,11 +37,12 @@ foreach($forms as $index=>$form) {
     }
     else{
       $checked = "";
+      $value = "";
     }
   }
 
   $old = old($name);
-  $value = (! empty($old)) ? $old : $value;
+  $value = (!empty($old)) ? $old : $value;
 
   $validation = array();
   $validation_raw = isset($form['validation']) ? explode('|', $form['validation']) : array();

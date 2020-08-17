@@ -142,7 +142,7 @@ class UserHelper  {
   */
   public static function remove_all_groups($user_id)
   {
-    if(!is_numeric($user_id)){
+    if(!MyHelper::is_int($user_id)){
       add_log('remove all groups', 'user '.$user_id.' not found','error');
       return false;
     }

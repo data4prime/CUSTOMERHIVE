@@ -10,7 +10,7 @@
 
         if($form['dataenum']=='' AND !@$form['datatable'] AND !$form['dataquery']){
           //se non ci sono altre etichette possibili attiva una versione semplice di checkbox
-          $checked = ($checked OR $value) ? "checked" : "";
+          $checked = (!empty($checked) OR !empty($value)) ? "checked" : "";
           ?>
           <div class="checkbox {{$disabled}}">
             <label>
