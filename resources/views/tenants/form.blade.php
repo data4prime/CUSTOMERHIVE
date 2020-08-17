@@ -51,6 +51,18 @@
             @else
             @include("tenants.form_body")
             @endif
+            <?php
+              $loginURI = TenantHelper::loginPath($row->id);
+            ?>
+            <div class="form-group header-group-0 " id="form-group-domain_name" style="">
+              <label class="control-label col-sm-2">
+                  Login Page
+              </label>
+
+              <div class="col-sm-9">
+                <a target="_blank" style="border:none;" class="form-control" href="{{ $loginURI }}">{{ $loginURI }}</a>
+              </div>
+            </div>
           </div><!-- /.box-body -->
 
           <div class="box-footer" style="background: #F5F5F5">

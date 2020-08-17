@@ -48,7 +48,7 @@ class AdminController extends CBController
 
     public function getLogin()
     {
-      if(CRUDBooster::myId()){
+      if(CRUDBooster::myId()) {
         return redirect(CRUDBooster::adminPath());
       }
 
@@ -57,7 +57,7 @@ class AdminController extends CBController
       //tenant specific login page
       $tenant_domain_name = $array[0];
       $tenant = Tenant::where('domain_name',$tenant_domain_name)->first();
-      if($tenant->favicon){
+      if($tenant->favicon) {
         //tenant favicon
         $favicon = '/'.$tenant->favicon;
       }

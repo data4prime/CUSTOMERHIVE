@@ -8,6 +8,20 @@ use \App\ModuleTenants;
 class TenantHelper  {
 
   /**
+  * Find tenant's login path
+  *
+  * @param int tenant's id
+  *
+  * @return string tenant's login page URI
+  */
+  public static function loginPath($tenant_id){
+    $admin_path = CRUDBooster::adminpath();
+    $tenant_domain_name = Tenant::find($tenant_id)->domain_name;
+    $result = preg_replace('/\/\/(\w*)\./','//'.$tenant_domain_name.'.',$admin_path);
+    return $result.'/login';
+  }
+
+  /**
   *	Encode a tenant name
   *
   * @param string name as user input

@@ -86,10 +86,10 @@ foreach($forms as $index=>$form) {
   @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/component.blade.php')))
   @include('vendor.crudbooster.type_components.'.$type.'.component')
   @else
-  <p class='text-danger'>{{$type}} is not found in type component system</p><br/>
+  <p class='text-danger'>{{ $type }} is not found in type component system</p><br/>
   @endif
   <?php
-    if($name=='favicon'){
+    if($name=='favicon') {
       ?>
       </div>
       <div class="box-header with-border">

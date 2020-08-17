@@ -7,8 +7,7 @@
     <div class="{{$col_width?:'col-sm-10'}}">
 
       <?php
-
-        if($form['dataenum']=='' AND !@$form['datatable'] AND !$form['dataquery']){
+        if($form['dataenum']=='' AND !@$form['datatable'] AND !$form['dataquery']) {
           //se non ci sono altre etichette possibili attiva una versione semplice di checkbox
           $checked = (!empty($checked) OR !empty($value)) ? "checked" : "";
           ?>
@@ -20,7 +19,7 @@
           <?php
         }
 
-        if($form['dataenum']!=''){
+        if($form['dataenum']!='') {
             @$value = explode(";", $value);
             @array_walk($value, 'trim');
             $dataenum = $form['dataenum'];
@@ -43,7 +42,7 @@
           }
         }
 
-        if (@$form['datatable']){
+        if (@$form['datatable']) {
             $datatable_array = explode(",", $form['datatable']);
             $datatable_tab = $datatable_array[0];
             $datatable_field = $datatable_array[1];
@@ -86,21 +85,22 @@
 												  </label>
 												</div>";
                 }
-            } else {
-                @$value = explode(';', $value);
+            }
+            else {
+              @$value = explode(';', $value);
 
-                foreach ($selects_data as $d) {
-                    $val = $d->{$datatable_field};
-                    $checked = (is_array($value) && in_array($val, $value)) ? "checked" : "";
-                    if ($val == '' || ! $d->id) continue;
+              foreach ($selects_data as $d) {
+                $val = $d->{$datatable_field};
+                $checked = (is_array($value) && in_array($val, $value)) ? "checked" : "";
+                if ($val == '' || ! $d->id) continue;
 
-                    echo "
-												<div data-val='$val' class='checkbox $disabled'>
-												  <label>
-												    <input type='checkbox' $disabled $checked name='".$name."[]' value='".$d->id."'> ".$val."
-												  </label>
-												</div>";
-                }
+                echo "
+										<div data-val='$val' class='checkbox $disabled'>
+										  <label>
+										    <input type='checkbox' $disabled $checked name='".$name."[]' value='".$d->id."'> ".$val."
+										  </label>
+										</div>";
+              }
             }
         }
 
