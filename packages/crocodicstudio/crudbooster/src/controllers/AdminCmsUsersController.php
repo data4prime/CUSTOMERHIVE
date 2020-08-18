@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers;
+<?php namespace crocodicstudio\crudbooster\controllers;
 
 use Session;
 use Request;
@@ -12,7 +12,7 @@ use \crocodicstudio\crudbooster\helpers\GroupHelper;
 use \crocodicstudio\crudbooster\helpers\UserHelper;
 use \crocodicstudio\crudbooster\helpers\MyHelper;
 
-class AdminCmsUsersController extends \crocodicstudio\crudbooster\controllers\CBController {
+class AdminCmsUsersController extends CBController {
 
 
 	public function cbInit() {

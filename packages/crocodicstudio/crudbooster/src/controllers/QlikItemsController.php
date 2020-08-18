@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Controllers;
+<?php namespace crocodicstudio\crudbooster\controllers;
 
 use Illuminate\Http\Request;
 use App\QlikItem;

@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+$controllers_base_path = '\crocodicstudio\crudbooster\controllers\\';
 
 Route::get('/', function () {
     //esiste ancora la view('welcome')
@@ -18,50 +19,50 @@ Route::get('/', function () {
 });
 
 //qlik items
-Route::get('admin/qlik_items/content/{qlik_item_id}', 'AdminQlikItemsController@content_view');
+Route::get('admin/qlik_items/content/{qlik_item_id}', $controllers_base_path.'AdminQlikItemsController@content_view');
 //items authorization
-Route::get('admin/qlik_items/access/{qlik_item_id}/alert/{alert_id}', 'AdminQlikItemsController@access');
-Route::get('admin/qlik_items/access/{qlik_item_id}', 'AdminQlikItemsController@access');
-Route::post('admin/qlik_items/{qlik_item_id}/auth', 'AdminQlikItemsController@add_authorization');
-Route::get('admin/qlik_items/{qlik_item_id}/deauth/{group_id}', 'AdminQlikItemsController@remove_authorization');
-Route::get('admin/qlik_items/tenant/{qlik_item_id}/alert/{alert_id}', 'AdminQlikItemsController@tenant');
-Route::get('admin/qlik_items/tenant/{qlik_item_id}', 'AdminQlikItemsController@tenant');
-Route::post('admin/qlik_items/{qlik_item_id}/add_tenant', 'AdminQlikItemsController@add_tenant');
-Route::get('admin/qlik_items/{qlik_item_id}/remove_tenant/{tenant_id}', 'AdminQlikItemsController@remove_tenant');
+Route::get('admin/qlik_items/access/{qlik_item_id}/alert/{alert_id}', $controllers_base_path.'AdminQlikItemsController@access');
+Route::get('admin/qlik_items/access/{qlik_item_id}', $controllers_base_path.'AdminQlikItemsController@access');
+Route::post('admin/qlik_items/{qlik_item_id}/auth', $controllers_base_path.'AdminQlikItemsController@add_authorization');
+Route::get('admin/qlik_items/{qlik_item_id}/deauth/{group_id}', $controllers_base_path.'AdminQlikItemsController@remove_authorization');
+Route::get('admin/qlik_items/tenant/{qlik_item_id}/alert/{alert_id}', $controllers_base_path.'AdminQlikItemsController@tenant');
+Route::get('admin/qlik_items/tenant/{qlik_item_id}', $controllers_base_path.'AdminQlikItemsController@tenant');
+Route::post('admin/qlik_items/{qlik_item_id}/add_tenant', $controllers_base_path.'AdminQlikItemsController@add_tenant');
+Route::get('admin/qlik_items/{qlik_item_id}/remove_tenant/{tenant_id}', $controllers_base_path.'AdminQlikItemsController@remove_tenant');
 //public url to access qlik public items
-Route::get('qi/{proxy_token}', 'QlikItemsController@show');
+Route::get('qi/{proxy_token}', $controllers_base_path.'QlikItemsController@show');
 
 //menù edit customization
 // Route::get('admin/menu_management', '\crocodicstudio\crudbooster\controllers\MenusController@getIndex');
-Route::get('admin/menu_management/edit/{id}', '\crocodicstudio\crudbooster\controllers\MenusController@customEdit')->name('MenusControllerGetEdit');
+Route::get('admin/menu_management/edit/{id}', $controllers_base_path.'MenusController@customEdit')->name('MenusControllerGetEdit');
 // Route::post('/admin/menu_management/save-menu')->name('MenusControllerPostSaveMenu');
 // Route::delete('/admin/menu_management/save-menu')->name('MenusControllerGetDelete');
 //tenant members
-Route::get('admin/tenants/members/{tenant_id}', 'AdminTenantsController@members');
+Route::get('admin/tenants/members/{tenant_id}', $controllers_base_path.'AdminTenantsController@members');
 
 //group members
-Route::get('admin/groups/members/{group_id}/alert/{alert_id}', 'AdminGroupsController@members');
-Route::get('admin/groups/members/{group_id}', 'AdminGroupsController@members');
-Route::post('admin/groups/{group_id}/add_member', 'AdminGroupsController@add_member');
-Route::get('admin/groups/{group_id}/remove_member/{user_id}', 'AdminGroupsController@remove_member');
+Route::get('admin/groups/members/{group_id}/alert/{alert_id}', $controllers_base_path.'AdminGroupsController@members');
+Route::get('admin/groups/members/{group_id}', $controllers_base_path.'AdminGroupsController@members');
+Route::post('admin/groups/{group_id}/add_member', $controllers_base_path.'AdminGroupsController@add_member');
+Route::get('admin/groups/{group_id}/remove_member/{user_id}', $controllers_base_path.'AdminGroupsController@remove_member');
 
 //group allowed items
-Route::get('admin/groups/items/{group_id}/alert/{alert_id}', 'AdminGroupsController@items');
-Route::get('admin/groups/items/{group_id}/alert/{alert_id}', 'AdminGroupsController@items');
-Route::get('admin/groups/items/{group_id}', 'AdminGroupsController@items');
-Route::post('admin/groups/{group_id}/add_item', 'AdminGroupsController@add_item');
-Route::get('admin/groups/{group_id}/remove_item/{item_id}', 'AdminGroupsController@remove_item');
+Route::get('admin/groups/items/{group_id}/alert/{alert_id}', $controllers_base_path.'AdminGroupsController@items');
+Route::get('admin/groups/items/{group_id}/alert/{alert_id}', $controllers_base_path.'AdminGroupsController@items');
+Route::get('admin/groups/items/{group_id}', $controllers_base_path.'AdminGroupsController@items');
+Route::post('admin/groups/{group_id}/add_item', $controllers_base_path.'AdminGroupsController@add_item');
+Route::get('admin/groups/{group_id}/remove_item/{item_id}', $controllers_base_path.'AdminGroupsController@remove_item');
 
 //user groups
-Route::get('admin/users/groups/{user_id}/alert/{alert_id}', 'AdminCmsUsersController@groups');
-Route::get('admin/users/groups/{user_id}', 'AdminCmsUsersController@groups');
-Route::post('admin/users/{user_id}/add_group', 'AdminCmsUsersController@add_group');
-Route::get('admin/users/{user_id}/remove_group/{group_id}', 'AdminCmsUsersController@remove_group');
+Route::get('admin/users/groups/{user_id}/alert/{alert_id}', $controllers_base_path.'AdminCmsUsersController@groups');
+Route::get('admin/users/groups/{user_id}', $controllers_base_path.'AdminCmsUsersController@groups');
+Route::post('admin/users/{user_id}/add_group', $controllers_base_path.'AdminCmsUsersController@add_group');
+Route::get('admin/users/{user_id}/remove_group/{group_id}', $controllers_base_path.'AdminCmsUsersController@remove_group');
 
 //Qlik Server Routes
-Route::get('admin/QlikServerSenseHub', 'AdminQlikItemsController@GetRouteSenseHub')->name('QlikServerSenseHub');
-Route::get('admin/QlikServerSenseQMC', 'AdminQlikItemsController@GetRouteSenseQMC')->name('QlikServerSenseQMC');
+Route::get('admin/QlikServerSenseHub', $controllers_base_path.'AdminQlikItemsController@GetRouteSenseHub')->name('QlikServerSenseHub');
+Route::get('admin/QlikServerSenseQMC', $controllers_base_path.'AdminQlikItemsController@GetRouteSenseQMC')->name('QlikServerSenseQMC');
 
 //modules
-Route::get('admin/module_generator/enable', '\crocodicstudio\crudbooster\controllers\ModulsController@enable');
-Route::post('admin/module_generator/save_enable', '\crocodicstudio\crudbooster\controllers\ModulsController@saveEnable');
+Route::get('admin/module_generator/enable', $controllers_base_path.'ModulsController@enable');
+Route::post('admin/module_generator/save_enable', $controllers_base_path.'ModulsController@saveEnable');

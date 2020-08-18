@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers;
+<?php namespace crocodicstudio\crudbooster\controllers;
 
 	use Session;
 	use Request;
@@ -9,7 +9,7 @@
 	use TenantHelper;
 	use \App\User;
 
-	class AdminTenantsController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminTenantsController extends CBController {
 
 	    public function cbInit() {
 

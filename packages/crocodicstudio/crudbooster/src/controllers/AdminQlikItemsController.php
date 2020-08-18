@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers;
+<?php namespace crocodicstudio\crudbooster\controllers;
 
 	use Session;
 	use Request;
@@ -13,7 +13,7 @@
 	use App\Menu;
 	use MyHelper;
 
-	class AdminQlikItemsController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminQlikItemsController extends CBController {
 
 	    public function cbInit()
 			{
@@ -446,17 +446,25 @@
 
 				//add menu settings
 				$menu = Menu::find($_GET['m']);
-				$data['row']->frame_width = $menu->frame_width;
-				$data['row']->frame_height = $menu->frame_height;
-				if($menu->frame_width == '100%' AND $menu->frame_height == '100%')
-				{
-					$data['row']->full_page = true;
-				}
-				else
-				{
+				if(empty($menu)){
+					$data['row']->frame_width = '100%';
+					$data['row']->frame_height = '100%';
 					$data['row']->full_page = false;
+					$data['row']->frame_full_screen = false;
 				}
-				$data['row']->frame_full_screen = $menu->frame_full_screen;
+				else{
+					$data['row']->frame_width = $menu->frame_width;
+					$data['row']->frame_height = $menu->frame_height;
+					if($menu->frame_width == '100%' AND $menu->frame_height == '100%')
+					{
+						$data['row']->full_page = true;
+					}
+					else
+					{
+						$data['row']->full_page = false;
+					}
+					$data['row']->frame_full_screen = $menu->frame_full_screen;
+				}
 
 				$data['page_icon'] = '';
 			  $data['page_title'] = $data['row']->title;
