@@ -1082,7 +1082,7 @@ class CBController extends Controller
                     $this->arr[$name] = $inputdata;
                 } else {
                     if (CB::isColumnNULL($this->table, $name) && $ro['type'] != 'upload') {
-                        continue;
+                        $this->arr[$name] = null;
                     } else {
                         $this->arr[$name] = "";
                     }
@@ -1358,6 +1358,7 @@ class CBController extends Controller
 
         $this->validation($id);
         $this->input_assignment($id);
+
 
         if (Schema::hasColumn($this->table, 'updated_at')) {
             $this->arr['updated_at'] = date('Y-m-d H:i:s');

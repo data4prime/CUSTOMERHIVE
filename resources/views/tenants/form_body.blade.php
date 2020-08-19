@@ -21,6 +21,7 @@ foreach($forms as $form) {
 //Loading input components
 $header_group_class = "";
 foreach($forms as $index=>$form) {
+  unset($value);
 
   $name = $form['name'];
   @$join = $form['join'];
