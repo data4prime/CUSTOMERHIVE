@@ -27,7 +27,7 @@
 @else
   <!-- default -->
   @section('content')
-  <div class="box">
+  <div class="box qi_box">
     <h4 class="qi_subtitle">{{ $subtitle }}</h4>
     <div class="qi_iframe_container">
         <iframe class="qi_iframe" src="{{ $item_url }}" style="border:none;"></iframe>

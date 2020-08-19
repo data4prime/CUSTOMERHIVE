@@ -260,12 +260,13 @@ function _init() {
       var footer_height = $('.main-footer').outerHeight() || 0;
       var neg = $('.main-header').outerHeight() + footer_height;
       var window_height = $(window).height();
-      var sidebar_height = $(".sidebar").height() || 0;
+      var sidebar_height = $(".main-sidebar").height() || 0;
       //Set the min-height of the content and sidebar based on the
       //the height of the document.
       if ($("body").hasClass("fixed")) {
         $(".content-wrapper, .right-side").css('min-height', window_height - footer_height);
-      } else {
+      }
+      else {
         var postSetWidth;
         if (window_height >= sidebar_height) {
           $(".content-wrapper, .right-side").css('min-height', window_height - neg);
