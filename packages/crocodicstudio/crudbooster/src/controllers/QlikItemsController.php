@@ -5,7 +5,7 @@ use App\QlikItem;
 
 class QlikItemsController extends Controller
 {
-  public function show($proxy_token){
+  public function show($proxy_token) {
     $qlik_item = QlikItem::where('proxy_token',$proxy_token)->first();
     if(empty($qlik_item)){
       //TODO 404 page

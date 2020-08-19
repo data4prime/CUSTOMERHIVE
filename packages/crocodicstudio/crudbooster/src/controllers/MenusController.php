@@ -414,9 +414,11 @@ class MenusController extends CBController
             "default" => "** Select a Qlik Item",
             "dataquery" => "SELECT qlik_items.title as label, qlik_items.id as value
                             FROM qlik_items
-                            INNER JOIN tenants_allowed
+                            LEFT JOIN tenants_allowed
                             ON tenants_allowed.item_id = qlik_items.id
-                            WHERE tenants_allowed.tenant_id=".UserHelper::current_user_tenant(),
+                            WHERE (tenants_allowed.tenant_id=".UserHelper::current_user_tenant()."
+                            OR qlik_items.proxy_token IS NOT NULL)
+                            AND qlik_items.deleted_at IS NULL",
             "value" => $id_qlik_item,
         ];
 

@@ -24,6 +24,7 @@ foreach($forms as $form) {
 //Loading input components
 $header_group_class = "";
 foreach($forms as $index=>$form) {
+  unset($value);
   /*
   * #RAMA add default value for group on mg_ for edit form
   */
