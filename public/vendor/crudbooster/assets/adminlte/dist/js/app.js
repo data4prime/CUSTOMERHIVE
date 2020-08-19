@@ -271,7 +271,7 @@ function _init() {
           $(".content-wrapper, .right-side").css('min-height', window_height - neg);
           postSetWidth = window_height - neg;
         } else {
-          $(".content-wrapper, .right-side").css('min-height', sidebar_height);
+          $(".content-wrapper, .right-side").css('min-height', sidebar_height + 20);
           postSetWidth = sidebar_height;
         }
 
