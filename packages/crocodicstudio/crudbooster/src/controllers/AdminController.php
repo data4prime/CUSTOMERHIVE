@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use \App\Tenant;
+use \App\Modules;
+use \App\QlikItem;
+use \App\Group;
+use \App\AccessLog;
 
 class AdminController extends CBController
 {
@@ -13,6 +17,11 @@ class AdminController extends CBController
     {
         $data = [];
         $data['page_title'] = '<strong>Dashboard</strong>';
+        //dashboard data
+        $data['modules_count']    = Modules::count();
+        $data['qlik_items_count'] = QlikItem::count();
+        $data['total_groups']     = Group::count();
+        $data['log_in_count']     = AccessLog::count();
 
         return view('crudbooster::home', $data);
     }
