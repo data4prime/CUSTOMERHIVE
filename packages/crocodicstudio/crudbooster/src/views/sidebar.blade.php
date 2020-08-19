@@ -58,7 +58,7 @@
                                         <a href='{{ ($child->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$child->url}}' class='{{($child->color)?"text-".$child->color:""}}'>
                                             <i class='{{$child->icon}}'></i>
                                             <span>{{$child->name}}</span>
-                                            @if(!empty($child->children))
+                                            @if(!empty($child->children) AND count($child->children)>0)
                                             <i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
                                             @endif
                                             @if(!empty($child->children))
