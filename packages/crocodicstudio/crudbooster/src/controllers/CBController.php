@@ -1189,10 +1189,10 @@ class CBController extends Controller
         $this->validation(null, $request);
         $this->input_assignment();
 
-        // #RAMA useless, created_at is already populated by sql
-        // if (Schema::hasColumn($this->table, 'created_at')) {
-        //     $this->arr['created_at'] = date('Y-m-d H:i:s');
-        // }
+        // #RAMA created_at should already be populated by sql
+        if (Schema::hasColumn($this->table, 'created_at')) {
+            $this->arr['created_at'] = date('Y-m-d H:i:s');
+        }
         if (Schema::hasColumn($this->table, 'created_by')) {
             $this->arr['created_by'] = CRUDBooster::myId();
         }
