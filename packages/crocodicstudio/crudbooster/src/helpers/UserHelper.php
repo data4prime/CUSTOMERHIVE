@@ -24,7 +24,33 @@ class UserHelper  {
   * @return Collection[User] list of recent users
   */
   public static function latest_users($number = 8){
-    return User::orderby('created_at','desc')->limit($number)->get();
+    $users = User::orderby('created_at','desc')->limit($number)->get();
+    foreach ($users as $key => $user) {
+      if(empty($user->photo)) {
+        $user->photo = UserHelper::default_icon($user->id);
+      }
+    }
+    return $users;
+  }
+
+  /**
+  * Get the latest users added
+  *
+  * @param int user's id
+  *
+  * @return string path to user's default icon
+  */
+  public static function default_icon($user_id = null) {
+    $user = User::find($user_id);
+    if(!empty($user_id) AND !empty($user)) {
+      if($user->isSuperAdmin()){
+        return asset('uploads/1/2020-01/admin.jpeg');
+      }
+      if($user->isTenantAdmin()){
+        return asset('uploads/1/2020-01/manager.jpeg');
+      }
+    }
+    return asset('uploads/1/2020-01/user.png');
   }
 
   /**
@@ -96,10 +122,22 @@ class UserHelper  {
     }
   }
 
-  public static function isTenantAdmin()
+  public static function isTenantAdmin($user_id = null)
   {
-    $my_role_id = CRUDBooster::me()->id_cms_privileges;
-    return Role::find($my_role_id)->is_tenantadmin == 1;
+    if(empty($user_id)){
+      //defaults to current user if no id is given
+      $user_id = CRUDBooster::myId();
+    }
+    return User::find($user_id)->isTenantAdmin();
+  }
+
+  public static function isSuperAdmin($user_id = null)
+  {
+    if(empty($user_id)){
+      //defaults to current user if no id is given
+      $user_id = CRUDBooster::myId();
+    }
+    return User::find($user_id)->isSuperAdmin();
   }
 
     /**
