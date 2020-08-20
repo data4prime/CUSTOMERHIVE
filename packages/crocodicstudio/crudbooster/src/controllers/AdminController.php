@@ -10,6 +10,7 @@ use \App\Modules;
 use \App\QlikItem;
 use \App\Group;
 use \App\AccessLog;
+use crocodicstudio\crudbooster\helpers\UserHelper;
 
 class AdminController extends CBController
 {
@@ -22,6 +23,9 @@ class AdminController extends CBController
         $data['qlik_items_count'] = QlikItem::count();
         $data['total_groups']     = Group::count();
         $data['log_in_count']     = AccessLog::count();
+
+        $data['weekly_new_users_count']   = UserHelper::new_users_count();
+        $data['latest_users']             = UserHelper::latest_users(3);
 
         return view('crudbooster::home', $data);
     }

@@ -58,5 +58,40 @@
     <!-- /.info-box -->
   </div>
   <!-- /.col -->
-</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 col-sm-6 col-xs-12">
+      <div class="box box-danger">
+        <div class="box-header with-border">
+          <h3 class="box-title">Latest Members</h3>
+
+          <div class="box-tools pull-right">
+            <span class="label label-danger">{{$weekly_new_users_count}} New Members</span>
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body no-padding">
+          <ul class="users-list clearfix">
+            <?php foreach ($latest_users as $key => $user): ?>
+            <li>
+              <img src="{{ $user->photo }}" alt="User Image">
+              <a class="users-list-name" href="#">{{ $user->name }}</a>
+              <span class="users-list-date">{{ $user->created_at }}</span>
+            </li>
+            <?php endforeach; ?>
+          </ul>
+          <!-- /.users-list -->
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer text-center">
+          <a href="/admin/users" class="uppercase">View All Users</a>
+        </div>
+        <!-- /.box-footer -->
+      </div>
+    </div>
+  </div>
 @endsection

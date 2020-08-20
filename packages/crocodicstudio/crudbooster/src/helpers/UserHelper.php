@@ -10,6 +10,24 @@ use \App\Role;
 class UserHelper  {
 
   /**
+  * Get the number of new users added this week
+  */
+  public static function new_users_count(){
+    //TODO
+    return User::count();
+  }
+
+  /**
+  * Get the latest users added
+  *
+  * @param int number of users to collect
+  * @return Collection[User] list of recent users
+  */
+  public static function latest_users($number = 8){
+    return User::orderby('created_at','desc')->limit($number)->get();
+  }
+
+  /**
   *	get current user's primary group
   *
   * @return int id of the group
