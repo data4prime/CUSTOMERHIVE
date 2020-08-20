@@ -67,7 +67,7 @@ class AdminCmsUsersController extends CBController {
 				$default = UserHelper::current_user_primary_group();
 			}
 			$this->form[] = [
-				'label'=>'Group',
+				'label'=>'Primary Group',
 				'name'=>'primary_group',
 				"type"=>"select",
 				"datatable"=>"groups,name",
