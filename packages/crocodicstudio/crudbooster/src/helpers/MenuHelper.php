@@ -23,14 +23,16 @@ class MenuHelper  {
     $menu_list = DB::table('cms_menus')
                         ->where('parent_id', 0)//menu di primo livello o parent, che non sono figli di un altro menu
                         ->where('is_active', $is_active)
-                        ->orderby('sorting', 'asc')
-                        ->get();
+                        ->orderby('sorting', 'asc');
 
     if(!CRUDBooster::isSuperadmin())
     {
       //tenant admin vede nella lista solo le voci di menu del proprio tenant
-      $menu_list = $menu_list->where('tenant',UserHelper::current_user_tenant());
+      $menu_list = $menu_list->join('menu_tenants', 'cms_menus.id', '=', 'menu_tenants.menu_id')
+                              ->where('menu_tenants.tenant_id',UserHelper::current_user_tenant());
     }
+    $menu_list = $menu_list->select('cms_menus.*')
+                            ->get();
 
     foreach ($menu_list as &$menu) {
       $children = DB::table('cms_menus')

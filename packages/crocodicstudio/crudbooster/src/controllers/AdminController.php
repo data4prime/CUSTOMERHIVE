@@ -25,7 +25,7 @@ class AdminController extends CBController
         $data['log_in_count']     = AccessLog::count();
 
         $data['weekly_new_users_count']   = UserHelper::new_users_count();
-        $data['latest_users']             = UserHelper::latest_users(3);
+        $data['latest_users']             = UserHelper::latest_users($data['weekly_new_users_count']);
 
         return view('crudbooster::home', $data);
     }

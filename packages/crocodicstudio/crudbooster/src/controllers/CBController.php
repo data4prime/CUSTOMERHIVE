@@ -722,7 +722,13 @@ class CBController extends Controller
                 $query->whereRaw($datatableWhere);
             }
             $query->select('id as select_value', $label.' as select_label');
-            $query->where($foreign_key_name, $foreign_key_value);
+            //se $foreign_key_value ha una virgola è un array
+            if(strpos($foreign_key_value,',')>-1) {
+              $query->whereIn($foreign_key_name, explode(',',$foreign_key_value));
+            }
+            else{
+              $query->where($foreign_key_name, $foreign_key_value);
+            }
             $query->orderby($label, 'asc');
 
             return response()->json($query->get());
@@ -1358,7 +1364,6 @@ class CBController extends Controller
 
         $this->validation($id);
         $this->input_assignment($id);
-
 
         if (Schema::hasColumn($this->table, 'updated_at')) {
             $this->arr['updated_at'] = date('Y-m-d H:i:s');

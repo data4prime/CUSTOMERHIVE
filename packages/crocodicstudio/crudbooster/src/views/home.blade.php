@@ -80,7 +80,7 @@
             <li>
               <img src="{{ $user->photo }}" alt="User Image">
               <a class="users-list-name" href="/admin/users/edit/{{ $user->id }}">{{ $user->name }}</a>
-              <span class="users-list-date">{{ $user->created_at }}</span>
+              <span class="users-list-date">{{ date('d-m-yy', strtotime($user->created_at)) }}</span>
             </li>
             <?php endforeach; ?>
           </ul>

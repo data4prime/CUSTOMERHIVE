@@ -10,11 +10,53 @@ use \App\Role;
 class UserHelper  {
 
   /**
+  * Check if current user has permission over a menù
+  *
+  * @param string 'edit' or 'delete'
+  * @param int menu's id
+  *
+  * @return boolean true if current user has the permission on the menu
+  */
+  public static function can_menu($mode, $menu_id){
+
+    $tenants = \App\Menu::find($menu_id)->tenants();
+    //check role privilege
+    switch ($mode) {
+      case 'edit':
+        $crudbooster_privilege_check = CRUDBooster::isUpdate();
+        break;
+      case 'delete':
+        $crudbooster_privilege_check = CRUDBooster::isDelete();
+        break;
+
+      default:
+        return false;
+        break;
+    }
+
+    return (
+      CRUDBooster::isSuperadmin()
+      OR
+      (
+        $crudbooster_privilege_check
+        AND
+        (
+          in_array(UserHelper::current_user_tenant(), $tenants)
+          AND
+          //tenant admin can only edit menu items that are only available for his own tenant.
+          //this way he cannot edit menus that are published on other tenants
+          count($tenants) == 1
+        )
+      )
+    );
+  }
+
+  /**
   * Get the number of new users added this week
   */
   public static function new_users_count(){
-    //TODO
-    return User::count();
+    $date = date('Y-m-d H:i:s',strtotime("-7 days"));
+    return User::where('created_at','>',$date)->count();
   }
 
   /**
@@ -128,7 +170,12 @@ class UserHelper  {
       //defaults to current user if no id is given
       $user_id = CRUDBooster::myId();
     }
-    return User::find($user_id)->isTenantAdmin();
+    $user = User::find($user_id);
+    if(empty($user)){
+      //defaults to current user if no id is given
+      return false;
+    }
+    return $user->isTenantAdmin();
   }
 
   public static function isSuperAdmin($user_id = null)
@@ -137,7 +184,12 @@ class UserHelper  {
       //defaults to current user if no id is given
       $user_id = CRUDBooster::myId();
     }
-    return User::find($user_id)->isSuperAdmin();
+    $user = User::find($user_id);
+    if(empty($user)){
+      //user not found
+      return false;
+    }
+    return $user->isSuperAdmin();
   }
 
     /**

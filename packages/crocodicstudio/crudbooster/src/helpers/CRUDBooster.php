@@ -457,7 +457,8 @@ class CRUDBooster
           ->where('parent_id', 0)
           ->where('is_active', 1)
           ->where('is_dashboard', 0)
-          ->where('tenant', UserHelper::current_user_tenant());
+          ->join('menu_tenants','menu_tenants.menu_id','cms_menus.id')
+          ->where('menu_tenants.tenant_id', UserHelper::current_user_tenant());
 
         // se l'utente corrente non è superadmin e non è Tenantadmin..
         if(!CRUDBooster::isSuperadmin() AND !UserHelper::isTenantAdmin())
@@ -514,9 +515,10 @@ class CRUDBooster
             $child = DB::table('cms_menus')
               ->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '".self::myPrivilegeId()."')")
               ->where('is_dashboard', 0)
-              ->where('tenant', UserHelper::current_user_tenant())
               ->where('is_active', 1)
-              ->where('parent_id', $menu->id);
+              ->where('parent_id', $menu->id)
+              ->join('menu_tenants','menu_tenants.menu_id','cms_menus.id')
+              ->where('menu_tenants.tenant_id', UserHelper::current_user_tenant());
             // se l'utente corrente non è superadmin e non è Tenantadmin..
             if(!(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin()))
             {
@@ -1118,6 +1120,13 @@ class CRUDBooster
         }
         if($parent_table == 'groups' AND $child_table == 'menu_groups'){
           return 'group_id';
+        }
+        //#RAMA menu n:n tenants
+        if($parent_table == 'cms_menus' AND $child_table == 'menu_tenants'){
+          return 'menu_id';
+        }
+        if($parent_table == 'tenants' AND $child_table == 'menu_tenants'){
+          return 'tenant_id';
         }
         if (Schema::hasColumn($child_table, 'id_'.$parent_table)) {
             return 'id_'.$parent_table;

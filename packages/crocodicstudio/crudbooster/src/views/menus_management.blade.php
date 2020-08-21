@@ -143,30 +143,18 @@
                                 ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
                                 ->where('id_cms_menus',$menu->id)->pluck('cms_privileges.name')->toArray();
 
-                                $tenant = \App\Tenant::find($menu->tenant)->name;
+                                $tenants_name = \App\Menu::find($menu->id)->tenants_name();
                             @endphp
                             <li data-id='{{$menu->id}}' data-name='{{$menu->name}}'>
                                 <div class='{{$menu->is_dashboard?"is-dashboard":""}}' title="{{$menu->is_dashboard?'This is setted as Dashboard':''}}">
                                     <i class='{{($menu->is_dashboard)?"icon-is-dashboard fa fa-dashboard":$menu->icon}}'></i>
                                      {{$menu->name}}
                                      <span class='pull-right'>
-                                      @if(
-                                          CRUDBooster::isSuperadmin() OR
-                                          (
-                                            CRUDBooster::isUpdate() AND
-                                            $menu->tenant == UserHelper::current_user_tenant()
-                                          )
-                                        )
+                                       @if(UserHelper::can_menu('edit', $menu->id))
                                        <a class='fa fa-pencil' title='Edit' href='{{route("MenusControllerGetEdit",["id"=>$menu->id])}}?return_url={{urlencode(Request::fullUrl())}}'></a>
                                        @endif
                                        &nbsp;&nbsp;
-                                      @if(
-                                          CRUDBooster::isSuperadmin() OR
-                                          (
-                                            CRUDBooster::isDelete() AND
-                                            $menu->tenant == UserHelper::current_user_tenant()
-                                          )
-                                        )
+                                       @if(UserHelper::can_menu('delete', $menu->id))
                                       <a title='Delete' class='fa fa-trash' onclick='{{CRUDBooster::deleteConfirm(route("MenusControllerGetDelete",["id"=>$menu->id]))}}' href='javascript:void(0)'></a>
                                       @endif
                                     </span>
@@ -174,9 +162,11 @@
                                     <em class="text-muted">
                                       <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
                                     </em>
+                                    @if(CRUDBooster::isSuperadmin())
                                     <em class="text-muted pull-right">
-                                      <small><i class="fa fa-industry"></i> &nbsp; {{$tenant}}</small>
+                                      <small><i class="fa fa-industry"></i> &nbsp; {{$tenants_name}}</small>
                                     </em>
+                                    @endif
                                 </div>
                                 <ul>
                                     @if($menu->children)

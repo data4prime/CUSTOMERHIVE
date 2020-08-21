@@ -67,7 +67,6 @@ class MenusController extends CBController
   				var current_type = '$row->type';
   				var type_menu = $('input[name=type][checked]').val();
   				type_menu = (current_type)?current_type:type_menu;
-  				console.log(type_menu);
   				if(type_menu == 'Module') {
   					$('#form-group-module_slug').show();
   					$('#qlik_slug').prop('required',false);
@@ -131,7 +130,7 @@ class MenusController extends CBController
   					var default_placeholder_path = 'NameController@methodName';
   					var n = $(this).val();
   					var isCheck = $(this).prop('checked');
-  					console.log('Click the module type '+n);
+  					// console.log('Click the module type '+n);
   					$('#module_slug').prop('required',false);
   					$('input[name=path]').attr('placeholder',default_placeholder_path);
   					if(n == 'Module')
@@ -319,11 +318,13 @@ class MenusController extends CBController
         {
           $this->form[] = [
             'label'=>'Tenant',
-            'name'=>'tenant',
+            'name'=>'menu_tenants',
             "type"=>"select2",
+            "select2_multiple" => true,
             "datatable"=>"tenants,name",
+            "relationship_table" => "menu_tenants",
             'required'=>true,
-            'validation'=>'required|int|min:1',
+            'validation'=>'required',
             'value'=>UserHelper::current_user_tenant()//default value per creazione nuovo record
           ];
           //superadmin vede i gruppi come cascading dropdown in base al tenant
@@ -335,7 +336,8 @@ class MenusController extends CBController
               "datatable" => "groups,name",
               "relationship_table" => "menu_groups",
               "required" => true,
-              'parent_select'=>'tenant'
+              'parent_select'=>'menu_tenants',
+              'fk_name'=>'tenant'
           ];
         }
         elseif(UserHelper::isTenantAdmin())
@@ -350,12 +352,6 @@ class MenusController extends CBController
     				'default'=>UserHelper::current_user_tenant_name(),
     				'value'=>UserHelper::current_user_tenant(),
     				'disabled'=>true
-    			];
-    			//aggiungo un campo tenant hidden perchè con la tenant select disabled viene salvato uno 0
-    			$this->form[] = [
-    				"label"=>"Tenant",
-    				"name"=>"tenant",
-    				'type'=>'hidden'
     			];
           //Tenantadmin vede solo i gruppi del proprio tenant
           $this->form[] = [
@@ -515,13 +511,7 @@ class MenusController extends CBController
         //TODO in altri moduli qui usa isRead anzichè isUpdate
         //forse potrei controllare qui solo isread per vedere i dettagli della voce di menu
         //ma il form è in readonly se non ha isupdate
-        if (
-            !CRUDBooster::isSuperadmin() AND
-            !(
-              CRUDBooster::isUpdate() AND
-              $row->tenant == UserHelper::current_user_tenant()
-            )
-          ) {
+        if (!UserHelper::can_menu('edit', $row->id)) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
                 'name' => $row->{$this->title_field},
                 'module' => CRUDBooster::getCurrentModule()->name,
@@ -576,13 +566,7 @@ class MenusController extends CBController
     {
       //solo superadmin o tenant admin con permesso di update su un menu del proprio tenant
       //possono modificare il menu
-      if(
-          !CRUDBooster::isSuperadmin() AND
-          !(
-            CRUDBooster::isUpdate() AND
-            Menu::find($id)->tenant == UserHelper::current_user_tenant()
-          )
-        ) {
+      if(!UserHelper::can_menu('edit', $id)) {
           CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
               'name' => $id,
               'module' => CRUDBooster::getCurrentModule()->name,
@@ -590,32 +574,36 @@ class MenusController extends CBController
           CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
       }
       //frame width and height data
-        $postdata['frame_width'] .= $postdata['frame_width_unit'];
-        $postdata['frame_height'] .= $postdata['frame_height_unit'];
-        unset($postdata['frame_full_page']);
-        unset($postdata['frame_width_unit']);
-        unset($postdata['frame_height_unit']);
+      $postdata['frame_width'] .= $postdata['frame_width_unit'];
+      $postdata['frame_height'] .= $postdata['frame_height_unit'];
+      unset($postdata['frame_full_page']);
+      unset($postdata['frame_width_unit']);
+      unset($postdata['frame_height_unit']);
 
-        if ($postdata['is_dashboard'] == 1) {
-            //If set dashboard, so unset for first all dashboard
-            //DB::table('cms_menus')->where('id_cms_privileges', $postdata['id_cms_privileges'])->where('is_dashboard', 1)->update(['is_dashboard' => 0]);
-            Cache::forget('sidebarDashboard'.CRUDBooster::myPrivilegeId());
-        }
+      if ($postdata['is_dashboard'] == 1) {
+          //If set dashboard, so unset for first all dashboard
+          //DB::table('cms_menus')->where('id_cms_privileges', $postdata['id_cms_privileges'])->where('is_dashboard', 1)->update(['is_dashboard' => 0]);
+          Cache::forget('sidebarDashboard'.CRUDBooster::myPrivilegeId());
+      }
 
-        if ($postdata['type'] == 'Statistic') {
-            $stat = CRUDBooster::first('cms_statistics', ['id' => $postdata['statistic_slug']]);
-            $postdata['path'] = 'statistic_builder/show/'.$stat->slug;
-        } elseif ($postdata['type'] == 'Module') {
-            $stat = CRUDBooster::first('cms_moduls', ['id' => $postdata['module_slug']]);
-            $postdata['path'] = $stat->path;
-        } elseif ($postdata['type'] == 'Qlik') {
-            $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
-            $postdata['path'] = 'qlik_items/content/'.$postdata['qlik_slug'].'?m='.$id;
-        }
+      if ($postdata['type'] == 'Statistic') {
+          $stat = CRUDBooster::first('cms_statistics', ['id' => $postdata['statistic_slug']]);
+          $postdata['path'] = 'statistic_builder/show/'.$stat->slug;
+      } elseif ($postdata['type'] == 'Module') {
+          $stat = CRUDBooster::first('cms_moduls', ['id' => $postdata['module_slug']]);
+          $postdata['path'] = $stat->path;
+      } elseif ($postdata['type'] == 'Qlik') {
+          $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
+          $postdata['path'] = 'qlik_items/content/'.$postdata['qlik_slug'].'?m='.$id;
+      }
 
-        unset($postdata['module_slug']);
-        unset($postdata['statistic_slug']);
-        unset($postdata['qlik_slug']);
+      unset($postdata['module_slug']);
+      unset($postdata['statistic_slug']);
+      unset($postdata['qlik_slug']);
+      if(!UserHelper::isSuperAdmin()) {
+        //only superadmin can update menu's tenants
+        unset($postdata['tenant']);
+      }
     }
 
 

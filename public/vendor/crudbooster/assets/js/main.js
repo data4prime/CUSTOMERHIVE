@@ -156,8 +156,6 @@
           $(".content-wrapper, .right-side").css('min-height', window_height - neg);
           postSetWidth = window_height - neg;
         } else {
-          console.log('app.js sidebar_height= ');
-          console.log(sidebar_height);
           $(".content-wrapper, .right-side").css('min-height', sidebar_height);
           postSetWidth = sidebar_height;
         }
@@ -172,6 +170,5 @@
       }
     };
 		$( document ).ready(function() {
-	    console.log( "ready!" );
 			rama_fix_sidebar();
 		});

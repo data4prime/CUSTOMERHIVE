@@ -233,17 +233,20 @@
     $parent_select = (count(explode(",", $form['parent_select'])) > 1) ? explode(",", $form['parent_select']) : $form['parent_select'];
     $parent = is_array($parent_select) ? $parent_select[0] : $parent_select;
     $add_field = is_array($parent_select) ? $parent_select[1] : '';
+    //se viene passata una variabile fk_name usala come nome della colonna in cui cercare, altrimenti usa il name della parent select
+    $fk_name = empty($form['fk_name']) ? $parent : $form['fk_name'];
     ?>
     @push('bottom')
         <script type="text/javascript">
             $(function () {
 
                 var default_tenant;
+                console.log('{{$parent}}, input:radio[name={{$parent}}');
 
                 $('#{{$parent}}, input:radio[name={{$parent}}]').change(function () {
                     var $current = $("#{{$form['name']}}");
                     var parent_id = $(this).val();
-                    var fk_name = "{{$parent}}";
+                    var fk_name = "{{$fk_name}}";
                     var fk_value = $(this).val();
                     var datatable = "{{$form['datatable']}}".split(',');
                             @if(!empty($add_field))
@@ -260,7 +263,7 @@
                             datatableWhere = "{{$add_field}} = " + add_field;
                         }
                     }
-                            @endif
+                    @endif
                     var table = datatable[0].trim('');
                     var label = datatable[1].trim('');
                     var value = [{{implode(',',$value)}}];
@@ -277,6 +280,8 @@
                         $current.html("<option value=''>{{trans('crudbooster.text_prefix_option')}} {{$form['label']}}");
                         $.get("{{CRUDBooster::mainpath('data-table')}}?table=" + table + "&label=" + label + "&fk_name=" + fk_name + "&fk_value=" + fk_value + "&datatable_where=" + encodeURI(datatableWhere), function (response) {
                             if (response) {
+                              console.log('query');
+                              console.log("{{CRUDBooster::mainpath('data-table')}}?table=" + table + "&label=" + label + "&fk_name=" + fk_name + "&fk_value=" + fk_value + "&datatable_where=" + encodeURI(datatableWhere));
                                 //check if default is already between the options
                                 $.each(response, function (i, obj) {
                                   if(obj.select_label == '{{$default}}'){
@@ -294,6 +299,7 @@
                                   //..add the default option
                                   $current.html("<option value=''>{{$default}}");
                                 }
+                                console.log(response);
                                 //add the other options
                                 $.each(response, function (i, obj) {
                                   if(value.length==0){
