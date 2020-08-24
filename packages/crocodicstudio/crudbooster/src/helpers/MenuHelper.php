@@ -2,8 +2,23 @@
 namespace crocodicstudio\crudbooster\helpers;
 
 use Illuminate\Support\Facades\DB;
+use App\Menu;
 
 class MenuHelper  {
+
+  /**
+  * When deleting a menu, remove the menu id as parent id from his children
+  * promoting them, no need to check recursively for children's children
+  *
+  * @param int menu's id
+  */
+  public static function promote_orphans($id) {
+    $orphans = Menu::where('parent_id',$id)->get();
+    foreach ($orphans as $orphan) {
+      $orphan->parent_id = 0;
+      $orphan->save();
+    }
+  }
 
   public static function parse_path_for_qlik_item_id($URI) {
      $last_element = end(explode('/',$URI));

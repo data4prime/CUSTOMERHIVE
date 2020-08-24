@@ -636,12 +636,14 @@ class MenusController extends CBController
           ]));
           CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
       }
+
     }
 
     public function hook_after_delete($id)
     {
       DB::table('cms_menus_privileges')->where('id_cms_menus', $id)->delete();
-      DB::table('cms_menus')->where('parent_id', $id)->delete();
+      //promote children removing this menu as their parent
+      MenuHelper::promote_orphans($id);
     }
 
     public function postSaveMenu()
