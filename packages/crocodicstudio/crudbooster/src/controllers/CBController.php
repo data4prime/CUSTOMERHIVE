@@ -1505,7 +1505,15 @@ class CBController extends Controller
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
         //kicks out if user shouldn't view the record $row
-        ModuleHelper::can_delete($this, $row);
+        if(!ModuleHelper::can_delete($this, $row)) {
+          //log denied access
+          CRUDBooster::insertLog(trans("crudbooster.log_try_delete", [
+            'name' => $module->{$this->title_field},
+            'module' => CRUDBooster::getCurrentModule()->name
+          ]));
+          //kick out
+          CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
 
         //insert log
         CRUDBooster::insertLog(

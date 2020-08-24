@@ -11,6 +11,7 @@ use crocodicstudio\crudbooster\fonts\Fontawesome;
 use \crocodicstudio\crudbooster\helpers\UserHelper;
 use \crocodicstudio\crudbooster\helpers\MenuHelper;
 use \App\Menu;
+use \App\MenuTenants;
 
 class MenusController extends CBController
 {
@@ -527,6 +528,7 @@ class MenusController extends CBController
         if (! $postdata['id_cms_privileges']) {
             $postdata['id_cms_privileges'] = CRUDBooster::myPrivilegeId();
         }
+        //new menu non è inizialmente figlio di nessuno
         $postdata['parent_id'] = 0;
 
         if ($postdata['type'] == 'Statistic') {
@@ -560,6 +562,22 @@ class MenusController extends CBController
             //     ->update(['is_dashboard' => 0]);
             Cache::forget('sidebarDashboard'.CRUDBooster::myPrivilegeId());
         }
+
+        if(!UserHelper::isSuperAdmin()) {
+          //only superadmin can update menu's tenants
+          unset($postdata['tenant']);
+        }
+    }
+
+    public function hook_after_add($menu_id)
+    {
+      if(!UserHelper::isSuperAdmin()) {
+        //user didn't set menu's tenants, add user's tenant as menu default tenant
+        $menu_tenant = new MenuTenants();
+        $menu_tenant->menu_id = $menu_id;
+        $menu_tenant->tenant_id = UserHelper::current_user_tenant();
+        $menu_tenant->save();
+      }
     }
 
     public function hook_before_edit(&$postdata, $id)
@@ -611,13 +629,7 @@ class MenusController extends CBController
     {
       //solo superadmin o tenant admin con permesso di delete su un menu del proprio tenant
       //possono eliminare il menu
-      if(
-          !CRUDBooster::isSuperadmin() AND
-          !(
-            CRUDBooster::isDelete() AND
-            Menu::find($id)->tenant == UserHelper::current_user_tenant()
-          )
-        ) {
+      if(!UserHelper::can_menu('delete', $id)) {
           CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
               'name' => $id,
               'module' => CRUDBooster::getCurrentModule()->name,

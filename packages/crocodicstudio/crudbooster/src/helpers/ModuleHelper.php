@@ -115,32 +115,42 @@ class ModuleHelper  {
     // if it's a manually generated module..
     if (
       //admin can always see everything
-      !CRUDBooster::isSuperadmin() AND
+      !CRUDBooster::isSuperadmin()
+      AND
       (
         //check correct privilege role
         (
-          !CRUDBooster::isUpdate() &&
-          $module->global_privilege == false ||
+          !CRUDBooster::isUpdate()
+          AND
+          $module->global_privilege == false
+          OR
           $module->button_edit == false
-        ) OR
+        )
+        OR
         //check group/tenant
         (
           //check this only on manually generated modules
-          ModuleHelper::is_manually_generated($module->table) AND
+          ModuleHelper::is_manually_generated($module->table)
+          AND
           !(
             //..then filter on group and tenant columns
-            in_array($row->group, UserHelper::current_user_groups()) AND
+            in_array($row->group, UserHelper::current_user_groups())
+            AND
             $row->tenant == UserHelper::current_user_tenant()
           )
-        ) OR
+        )
+        OR
         //check tenant
         (
           //check this only on groups and users for Tenantadmin
-          UserHelper::isTenantAdmin() AND
+          UserHelper::isTenantAdmin()
+          AND
           (
-            $module->table == 'groups' OR
+            $module->table == 'groups'
+            OR
             $module->table == 'cms_users'
-          ) AND
+          )
+          AND
           //..then filter by tenant
           $row->tenant !== UserHelper::current_user_tenant()
         )
@@ -148,7 +158,7 @@ class ModuleHelper  {
     ) {
       //log denied access
       CRUDBooster::insertLog(trans("crudbooster.log_try_add", [
-        'name' => $module->{$this->title_field},
+        'name' => $row->{$module->title_field},//TODO not sure this is ok. before helper: $module->{$this->title_field}
         'module' => CRUDBooster::getCurrentModule()->name
       ]));
       //kick out
@@ -163,48 +173,59 @@ class ModuleHelper  {
   * @param object a table row or record
   */
   public static function can_delete($module, $row) {
-    // if it's a manually generated module..
-    if (
-      //admin can always see everything
-      !CRUDBooster::isSuperadmin() AND
-      (
-        //check correct privilege role
-        (
-          !CRUDBooster::isDelete() &&
-          $module->global_privilege == false ||
-          $module->button_delete == false
-        ) OR
-        //check group/tenant
-        (
-          //check this only on manually generated modules
-          ModuleHelper::is_manually_generated($module->table) AND
-          !(
-            //..then filter on group and tenant columns
-            in_array($row->group, UserHelper::current_user_groups()) AND
-            $row->tenant == UserHelper::current_user_tenant()
-          )
-        ) OR
-        //check tenant
-        (
-          //check this only on groups and users for Tenantadmin
-          UserHelper::isTenantAdmin() AND
-          (
-            $module->table == 'groups' OR
-            $module->table == 'cms_users'
-          ) AND
-          //..then filter by tenant
-          $row->tenant !== UserHelper::current_user_tenant()
-        )
-      )
-    ) {
-      //log denied access
-      CRUDBooster::insertLog(trans("crudbooster.log_try_delete", [
-        'name' => $module->{$this->title_field},
-        'module' => CRUDBooster::getCurrentModule()->name
-      ]));
-      //kick out
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+
+    //admin can always do everything
+    if(CRUDBooster::isSuperadmin()) {
+      return true;
     }
+    if($module->table == 'cms_menus') {
+      return UserHelper::can_menu('delete', $row->id);
+    }
+
+    //check correct privilege role
+    if(
+        !CRUDBooster::isDelete()
+        AND
+        $module->global_privilege == false
+    ) {
+      //user doesn't have the correct privilege role for this module
+      return false;
+    }
+
+    if($module->button_delete == false) {
+      //module's rows shouldn't be deleted
+      return false;
+    }
+
+    //check group/tenant
+    if(
+      //check this only on manually generated modules
+      ModuleHelper::is_manually_generated($module->table)
+      AND
+      //..then filter on group and tenant columns
+      //user must be member of the record's group
+      in_array($row->group, UserHelper::current_user_groups())
+      AND
+      //user must be member of the record's tenant
+      $row->tenant == UserHelper::current_user_tenant()
+    ) {
+      return true;
+    }
+
+    if(
+        //this rule is only for Tenantadmin
+        UserHelper::isTenantAdmin()
+        AND
+        //check this only on groups and users
+        in_array($module->table, ['groups','cms_users'])
+        AND
+        //..then filter by tenant
+        $row->tenant !== UserHelper::current_user_tenant()
+      ) {
+        return true;
+      }
+
+      return false;
   }
 
   /**

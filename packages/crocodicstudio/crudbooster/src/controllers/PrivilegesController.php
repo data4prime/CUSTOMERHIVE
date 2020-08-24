@@ -156,6 +156,7 @@ class PrivilegesController extends CBController
                       ->select("cms_moduls.*")
                       ->orderby("name", "asc")
                       ->get();
+
         $page_menu = Route::getCurrentRoute()->getActionName();
 
         return view('crudbooster::privileges', compact('row', 'page_title', 'moduls', 'page_menu'));

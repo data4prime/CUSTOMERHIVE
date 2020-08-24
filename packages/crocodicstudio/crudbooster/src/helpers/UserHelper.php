@@ -19,7 +19,11 @@ class UserHelper  {
   */
   public static function can_menu($mode, $menu_id){
 
-    $tenants = \App\Menu::find($menu_id)->tenants();
+    $menu = \App\Menu::find($menu_id);
+    if(empty($menu_id) OR empty($menu)){
+      return false;
+    }
+    $tenants = $menu->tenants();
     //check role privilege
     switch ($mode) {
       case 'edit':
