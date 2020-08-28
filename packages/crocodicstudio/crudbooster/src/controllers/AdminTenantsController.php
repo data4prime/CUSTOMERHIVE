@@ -54,6 +54,7 @@
 			$this->form[] = ['label'=>'Background Color','name'=>'login_background_color','type'=>'text','width'=>'col-sm-9','help'=>'use hex format i.e.: #4287f5'];
 			$this->form[] = ['label'=>'Background Image','name'=>'login_background_image','type'=>'upload','width'=>'col-sm-9','validation'=>'image|max:10000','help'=>'Supported types: jpg, png, gif. Max 10 MB'];
 			$this->form[] = ['label'=>'Font Color','name'=>'login_font_color','type'=>'text','width'=>'col-sm-9','help'=>'use hex format i.e.: #4287f5'];
+			$this->form[] = ['label'=>'Domain name','name'=>'domain_name','type'=>'text','width'=>'col-sm-9','help'=>'use only letters and numbers','validation'=>'required|min:1|max:20|regex:/^[a-zA-Z0-9]+$/u'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
@@ -293,6 +294,12 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
+					$exists = Tenant::where('domain_name',$postdata['domain_name'])
+														->where('id','!=',$id)
+														->count();
+					if($exists>0) {
+						CRUDBooster::redirect(CRUDBooster::adminPath('tenants'), trans('crudbooster.not_unique_domain'));
+					}
 	    }
 
 	    /*

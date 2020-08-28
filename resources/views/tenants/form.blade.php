@@ -56,7 +56,7 @@
             ?>
             <div class="form-group header-group-0 " id="form-group-domain_name" style="">
               <label class="control-label col-sm-2">
-                  Login Page
+                  Login URI
               </label>
 
               <div class="col-sm-9">

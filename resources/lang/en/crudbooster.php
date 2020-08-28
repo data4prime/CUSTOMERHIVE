@@ -148,6 +148,7 @@ return [
     'delete_not_empty_group' => 'You can only delete groups with no members!',
     'delete_not_empty_tenant' => 'You can only delete tenants with no members!',
     'cant_delete_role' => 'Oops! you can\'t delete this role!',
+    'not_unique_domain' => 'The domain name is already in use!',
 
     'user_image' => 'User Image',
     'online' => 'Online',
