@@ -230,7 +230,7 @@
 @push('bottom')
 @if($form['datatable'] AND $form['relationship_table'] AND $form['parent_select'])
     <?php
-    $parent_select = (count(explode(",", $form['parent_select'])) > 1) ? explode(",", $form['parent_select']) : $form['parent_select'];
+    $parent_select = count(explode(",", $form['parent_select'])) > 1 ? explode(",", $form['parent_select']) : $form['parent_select'];
     $parent = is_array($parent_select) ? $parent_select[0] : $parent_select;
     $add_field = is_array($parent_select) ? $parent_select[1] : '';
     //se viene passata una variabile fk_name usala come nome della colonna in cui cercare, altrimenti usa il name della parent select
@@ -241,17 +241,16 @@
             $(function () {
 
                 var default_tenant;
-                console.log('{{$parent}}, input:radio[name={{$parent}}');
 
                 $('#{{$parent}}, input:radio[name={{$parent}}]').change(function () {
-                    var $current = $("#{{$form['name']}}");
+                    var current = $("#{{$form['name']}}");
                     var parent_id = $(this).val();
                     var fk_name = "{{$fk_name}}";
                     var fk_value = $(this).val();
                     var datatable = "{{$form['datatable']}}".split(',');
-                            @if(!empty($add_field))
+                    @if(!empty($add_field))
                     var add_field = ($("#{{$add_field}}").val()) ? $("#{{$add_field}}").val() : "";
-                            @endif
+                    @endif
                     var datatableWhere = "{{$form['datatable_where']}}";
                     @if(!empty($add_field))
                     if (datatableWhere) {
@@ -270,6 +269,7 @@
                     var default_value = "{{ UserHelper::current_user_primary_group() }}";
                     var is_default_present = false;
                     var belongs_to_tenant = true;
+                    var keep_options = false;
                     //salvo solo all'atterraggio default_tenant e non ogni volta che la tendina tenant cambia
                     if(typeof default_tenant == 'undefined')
                     {
@@ -277,11 +277,25 @@
                     }
 
                     if (fk_value != '') {
-                        $current.html("<option value=''>{{trans('crudbooster.text_prefix_option')}} {{$form['label']}}");
+                      //at parent change,
+                      //if there were options already selected in the child select,
+                      //save child selected options before rewriting the select
+                      //in order to avoid forcing the user to reselect them
+                      var children = current.children();
+                      var li_selected = $('.select2-selection__choice',$(current.parent().children()[1]));
+                      var selected_label = [];
+                      //if there are selected options in the child select..
+                      if(li_selected.html()!=undefined){
+                        //..then keep child selected options rather then setting up the default value
+                        keep_options = true;
+                        $.each(li_selected, function (i, obj) {
+                          var label = $(obj).attr('title');
+                          selected_label.push(label);
+                        })
+                      }
+                        current.html("<option value=''>{{trans('crudbooster.text_prefix_option')}} {{$form['label']}}");
                         $.get("{{CRUDBooster::mainpath('data-table')}}?table=" + table + "&label=" + label + "&fk_name=" + fk_name + "&fk_value=" + fk_value + "&datatable_where=" + encodeURI(datatableWhere), function (response) {
                             if (response) {
-                              console.log('query');
-                              console.log("{{CRUDBooster::mainpath('data-table')}}?table=" + table + "&label=" + label + "&fk_name=" + fk_name + "&fk_value=" + fk_value + "&datatable_where=" + encodeURI(datatableWhere));
                                 //check if default is already between the options
                                 $.each(response, function (i, obj) {
                                   if(obj.select_label == '{{$default}}'){
@@ -293,29 +307,32 @@
                                   belongs_to_tenant = false;
                                 }
                                 //if it's not a duplicate..
-                                //and group's tenant is selected
+                                //and group's tenant is selected..
                                 if(!is_default_present && belongs_to_tenant)
                                 {
                                   //..add the default option
-                                  $current.html("<option value=''>{{$default}}");
+                                  current.html("<option value=''>{{$default}}");
                                 }
-                                console.log(response);
                                 //add the other options
                                 $.each(response, function (i, obj) {
-                                  if(value.length==0){
+                                  if(keep_options){
+                                    var selected = ( $.inArray( obj.select_label, selected_label ) > -1  ) ? "selected" : "";
+                                  }
+                                  else if(value.length==0){
                                     //use default value in create
                                     var selected = (default_value && (obj.select_value == default_value) ) ? "selected" : "";
                                   }
-                                  else{
+                                  else {
                                     var selected = (value && $.inArray( obj.select_value, value ) > -1 ) ? "selected" : "";
                                   }
                                   $("<option " + selected + " value='" + obj.select_value + "'>" + obj.select_label + "</option>").appendTo("#{{$form['name']}}");
                                 });
-                                $current.trigger('change');
+                                current.trigger('change');
                             }
                         });
-                    } else {
-                        $current.html("<option value=''>{{$default}}");
+                    }
+                    else {
+                        current.html("<option value=''>{{$default}}");
                     }
                 })
 
