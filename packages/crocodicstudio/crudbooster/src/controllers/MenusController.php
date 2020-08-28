@@ -573,10 +573,7 @@ class MenusController extends CBController
     {
       if(!UserHelper::isSuperAdmin()) {
         //user didn't set menu's tenants, add user's tenant as menu default tenant
-        $menu_tenant = new MenuTenants();
-        $menu_tenant->menu_id = $menu_id;
-        $menu_tenant->tenant_id = UserHelper::current_user_tenant();
-        $menu_tenant->save();
+        Menu::find($menu_id)->assign_default_tenant();
       }
     }
 

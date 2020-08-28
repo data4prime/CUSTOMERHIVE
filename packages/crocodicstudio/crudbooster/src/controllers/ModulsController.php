@@ -10,6 +10,7 @@ use crocodicstudio\crudbooster\fonts\Fontawesome;
 // #RAMA
 use ModuleHelper;
 use UserHelper;
+use App\Menu;
 use App\Modules;
 use App\Tenant;
 use App\DynamicTable;
@@ -546,10 +547,11 @@ class ModulsController extends CBController
               'is_active' => 1,
               'id_cms_privileges' => CRUDBooster::myPrivilegeId(),
               'sorting' => $parent_menu_sort,
-              'parent_id' => 0,
-              'group' => UserHelper::current_user_primary_group(),
-              'tenant' => UserHelper::current_user_tenant()
+              'parent_id' => 0
             ]);
+            $menu = Menu::find($id_cms_menus);
+            $menu->assign_default_tenant();
+            $menu->assign_default_group();
             DB::table('cms_menus_privileges')->insert(['id_cms_menus' => $id_cms_menus, 'id_cms_privileges' => CRUDBooster::myPrivilegeId()]);
           }
 
@@ -1126,7 +1128,7 @@ class ModulsController extends CBController
         if ($this->arr['controller'] == '') {
             $this->arr['controller'] = CRUDBooster::generateController(Request::get('table_name'), $route_basename);
         }
-        
+
         ModuleHelper::update_enabled_tenants($_POST['module_tenant_enabler']);
 
         DB::table($this->table)->where($this->primary_key, $id)->update($this->arr);
