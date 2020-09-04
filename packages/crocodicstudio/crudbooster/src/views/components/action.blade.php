@@ -157,18 +157,18 @@
 
 @else
 
-    @if(CRUDBooster::isRead() && $button_detail)
+    @if(ModuleHelper::can_view($this_module, $row))
         <a class='btn btn-xs btn-primary btn-detail' title='{{trans("crudbooster.action_detail_data")}}'
            href='{{CRUDBooster::mainpath("detail/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())}}'><i class='fa fa-eye'></i></a>
     @endif
 
-    @if(CRUDBooster::isUpdate() && $button_edit)
+    @if(ModuleHelper::can_edit($this_module, $row))
         <a class='btn btn-xs btn-success btn-edit' title='{{trans("crudbooster.action_edit_data")}}'
            href='{{CRUDBooster::mainpath("edit/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())."&parent_id=".g("parent_id")."&parent_field=".$parent_field}}'><i
                     class='fa fa-pencil'></i></a>
     @endif
 
-    @if(CRUDBooster::isDelete() && $button_delete)
+    @if(ModuleHelper::can_delete($this_module, $row))
         <?php $url = CRUDBooster::mainpath("delete/".$row->$pk);?>
         <a class='btn btn-xs btn-danger btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
            onclick='{{CRUDBooster::deleteConfirm($url)}}'><i class='fa fa-trash'></i></a>

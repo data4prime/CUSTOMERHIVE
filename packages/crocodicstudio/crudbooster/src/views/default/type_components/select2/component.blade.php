@@ -124,8 +124,7 @@
     </label>
 
     <div class="{{$col_width?:'col-sm-10'}}">
-        <select style='width:100%' class='form-control' id="{{$name}}"
-                {{$required}} {{$readonly}} {!!$placeholder!!} {{$disabled}} name="{{$name}}{{($form['relationship_table'])?'[]':''}}" {{ ($form['relationship_table'])?'multiple="multiple"':'' }} >
+        <select style='width:100%' class='form-control' id="{{$name}}" {{$required}} {{$readonly}} {!!$placeholder!!} {{$disabled}} name="{{$name}}{{($form['relationship_table'])?'[]':''}}" {{ ($form['relationship_table'])?'multiple="multiple"':'' }} >
             @if($form['dataenum'])
                 <option value=''>{{trans('crudbooster.text_prefix_option')}} {{$form['label']}}</option>
                 <?php
@@ -147,71 +146,73 @@
                     <option {{$select}} value='{{$val}}'>{{$lab}}</option>
                 @endforeach
             @endif
-
             @if($form['datatable'])
                 @if($form['relationship_table'])
                     <?php
-                    $select_table = explode(',', $form['datatable'])[0];
+                    $table_name = explode(',', $form['datatable'])[0];
                     $select_title = explode(',', $form['datatable'])[1];
                     $select_where = $form['datatable_where'];
-                    $pk = CRUDBooster::findPrimaryKey($select_table);
+                    $table_pk_name = CRUDBooster::findPrimaryKey($table_name);
 
-                    $result = DB::table($select_table)->select($pk, $select_title);
+                    $result = DB::table($table_name)
+                              ->select($table_pk_name, $select_title);
                     if ($select_where) {
-                        $result->whereraw($select_where);
+                      $result->whereraw($select_where);
                     }
                     $result = $result->orderby($select_title, 'asc')->get();
 
                     if($form['datatable_orig'] != ''){
-                        $params = explode("|", $form['datatable_orig']);
-                        if(!isset($params[2])) $params[2] = "id";
-                        $value = DB::table($params[0])->where($params[2], $id)->first()->{$params[1]};
-                        $value = explode(",", $value);
+                      $params = explode("|", $form['datatable_orig']);
+                      if(!isset($params[2])) $params[2] = "id";
+                      $value = DB::table($params[0])->where($params[2], $id)->first()->{$params[1]};
+                      $value = explode(",", $value);
                     } else {
-                        $foreignKey = CRUDBooster::getForeignKey($table, $form['relationship_table']);
-                        $foreignKey2 = CRUDBooster::getForeignKey($select_table, $form['relationship_table']);
-                        $value = DB::table($form['relationship_table'])->where($foreignKey, $id);
-                        $value = $value->pluck($foreignKey2)->toArray();
+                      $foreignKey = CRUDBooster::getForeignKey($table, $form['relationship_table']);
+                      $foreignKey2 = CRUDBooster::getForeignKey($table_name, $form['relationship_table']);
+
+                      $value = DB::table($form['relationship_table'])->where($foreignKey, $id);
+                      $value = $value->pluck($foreignKey2)->toArray();
                     }
 
                     foreach ($result as $r) {
-                        $option_label = $r->{$select_title};
-                        $option_value = $r->id;
-                        $selected = (is_array($value) && in_array($r->$pk, $value)) ? "selected" : "";
-                        echo "<option $selected value='$option_value'>$option_label</option>";
+                      $option_label = $r->{$select_title};
+                      $option_value = $r->id;
+                      $selected = (is_array($value) && in_array($r->$table_pk_name, $value)) ? "selected" : "";
+                      echo "<option $selected value='$option_value'>$option_label</option>";
                     }
                     ?>
                 @else
-                    @if($form['datatable_ajax'] == false)
-                        <option value=''>{{trans('crudbooster.text_prefix_option')}} {{$form['label']}}</option>
-                        <?php
-                        $select_table = explode(',', $form['datatable'])[0];
-                        $select_title = explode(',', $form['datatable'])[1];
-                        $select_where = $form['datatable_where'];
-                        $datatable_format = $form['datatable_format'];
-                        $select_table_pk = CRUDBooster::findPrimaryKey($select_table);
-                        $result = DB::table($select_table)->select($select_table_pk, $select_title);
-                        if ($datatable_format) {
-                            $result->addSelect(DB::raw("CONCAT(".$datatable_format.") as $select_title"));
-                        }
-                        if ($select_where) {
-                            $result->whereraw($select_where);
-                        }
-                        if (CRUDBooster::isColumnExists($select_table, 'deleted_at')) {
-                            $result->whereNull('deleted_at');
-                        }
-                        $result = $result->orderby($select_title, 'asc')->get();
 
-                        foreach ($result as $r) {
+                      @if($form['datatable_ajax'] == false)
+                          <option value=''>{{trans('crudbooster.text_prefix_option')}} {{$form['label']}}</option>
+                          <?php
+                          $table_name = explode(',', $form['datatable'])[0];
+                          $select_title = explode(',', $form['datatable'])[1];
+                          $select_where = $form['datatable_where'];
+                          $datatable_format = $form['datatable_format'];
+                          $table_pk_name = CRUDBooster::findPrimaryKey($table_name);
+                          $result = DB::table($table_name)->select($table_pk_name, $select_title);
+                          if ($datatable_format) {
+                              $result->addSelect(DB::raw("CONCAT(".$datatable_format.") as $select_title"));
+                          }
+                          if ($select_where) {
+                              $result->whereraw($select_where);
+                          }
+                          if (CRUDBooster::isColumnExists($table_name, 'deleted_at')) {
+                              $result->whereNull('deleted_at');
+                          }
+                          $result = $result->orderby($select_title, 'asc')->get();
+
+                          foreach ($result as $r) {
                             $option_label = $r->{$select_title};
-                            $option_value = $r->$select_table_pk;
+                            $option_value = $r->$table_pk_name;
                             //TODO define $value
                             $selected = ($option_value == $value) ? "selected" : "";
                             echo "<option $selected value='$option_value'>$option_label</option>";
-                        }
-                        ?>
-                    <!--end-datatable-ajax-->
-                    @endif
+                          }
+                          ?>
+                      <!--end-datatable-ajax-->
+                      @endif
 
                 <!--end-relationship-table-->
                 @endif
@@ -230,9 +231,15 @@
 @push('bottom')
 @if($form['datatable'] AND $form['relationship_table'] AND $form['parent_select'])
     <?php
-    $parent_select = count(explode(",", $form['parent_select'])) > 1 ? explode(",", $form['parent_select']) : $form['parent_select'];
+    $exploded_parent = explode(",", $form['parent_select']);
+    $parent_select = count($exploded_parent) > 1 ? $exploded_parent : $form['parent_select'];
     $parent = is_array($parent_select) ? $parent_select[0] : $parent_select;
     $add_field = is_array($parent_select) ? $parent_select[1] : '';
+    //se viene passata una variabile parent_crosstable usala come nome della tabella di relazione tra child e parent
+    $parent_crosstable = empty($form['parent_crosstable']) ? '' : $form['parent_crosstable'];
+    //se viene passata una variabile child_crosstable_fk_name usala come nome della colonna chiave verso il child nella tabella di relazione tra child e parent
+    $child_crosstable_fk_name = empty($form['child_crosstable_fk_name']) ? '' : $form['child_crosstable_fk_name'];
+
     //se viene passata una variabile fk_name usala come nome della colonna in cui cercare, altrimenti usa il name della parent select
     $fk_name = empty($form['fk_name']) ? $parent : $form['fk_name'];
     ?>
@@ -245,6 +252,8 @@
                 $('#{{$parent}}, input:radio[name={{$parent}}]').change(function () {
                     var current = $("#{{$form['name']}}");
                     var parent_id = $(this).val();
+                    var parent_crosstable = "{{$parent_crosstable}}";
+                    var child_crosstable_fk_name = "{{$child_crosstable_fk_name}}";
                     var fk_name = "{{$fk_name}}";
                     var fk_value = $(this).val();
                     var datatable = "{{$form['datatable']}}".split(',');
@@ -293,43 +302,185 @@
                           selected_label.push(label);
                         })
                       }
-                        current.html("<option value=''>{{trans('crudbooster.text_prefix_option')}} {{$form['label']}}");
-                        $.get("{{CRUDBooster::mainpath('data-table')}}?table=" + table + "&label=" + label + "&fk_name=" + fk_name + "&fk_value=" + fk_value + "&datatable_where=" + encodeURI(datatableWhere), function (response) {
-                            if (response) {
-                                //check if default is already between the options
-                                $.each(response, function (i, obj) {
-                                  if(obj.select_label == '{{$default}}'){
-                                    is_default_present = true;
-                                  }
-                                })
-                                if(fk_value !== default_tenant)
-                                {
-                                  belongs_to_tenant = false;
+                      current.html("<option value=''>{{trans('crudbooster.text_prefix_option')}} {{$form['label']}}");
+                      var query_data_table = "{{CRUDBooster::mainpath('data-table')}}?";
+                      query_data_table += "table=" + table;
+                      query_data_table += "&label=" + label;
+                      query_data_table += "&fk_name=" + fk_name;
+                      query_data_table += "&fk_value=" + fk_value;
+                      query_data_table += "&parent_crosstable=" + parent_crosstable;
+                      query_data_table += "&child_crosstable_fk_name=" + child_crosstable_fk_name;
+                      query_data_table += "&datatable_where=" + encodeURI(datatableWhere);
+                      // console.log(query_data_table);
+
+                      $.get(query_data_table, function (response) {
+                          if (response) {
+                              //check if default is already between the options
+                              $.each(response, function (i, obj) {
+                                if(obj.select_label == '{{$default}}'){
+                                  is_default_present = true;
                                 }
-                                //if it's not a duplicate..
-                                //and group's tenant is selected..
-                                if(!is_default_present && belongs_to_tenant)
-                                {
-                                  //..add the default option
-                                  current.html("<option value=''>{{$default}}");
+                              })
+                              if(fk_value !== default_tenant)
+                              {
+                                belongs_to_tenant = false;
+                              }
+                              //if it's not a duplicate..
+                              //and group's tenant is selected..
+                              if(!is_default_present && belongs_to_tenant)
+                              {
+                                //..add the default option
+                                current.html("<option value=''>{{$default}}");
+                              }
+                              //add the other options
+                              $.each(response, function (i, obj) {
+                                if(keep_options){
+                                  var selected = ( $.inArray( obj.select_label, selected_label ) > -1  ) ? "selected" : "";
                                 }
-                                //add the other options
-                                $.each(response, function (i, obj) {
-                                  if(keep_options){
-                                    var selected = ( $.inArray( obj.select_label, selected_label ) > -1  ) ? "selected" : "";
-                                  }
-                                  else if(value.length==0){
-                                    //use default value in create
-                                    var selected = (default_value && (obj.select_value == default_value) ) ? "selected" : "";
-                                  }
-                                  else {
-                                    var selected = (value && $.inArray( obj.select_value, value ) > -1 ) ? "selected" : "";
-                                  }
-                                  $("<option " + selected + " value='" + obj.select_value + "'>" + obj.select_label + "</option>").appendTo("#{{$form['name']}}");
-                                });
-                                current.trigger('change');
-                            }
-                        });
+                                else if(value.length==0){
+                                  //use default value in create
+                                  var selected = (default_value && (obj.select_value == default_value) ) ? "selected" : "";
+                                }
+                                else {
+                                  var selected = (value && $.inArray( obj.select_value, value ) > -1 ) ? "selected" : "";
+                                }
+                                $("<option " + selected + " value='" + obj.select_value + "'>" + obj.select_label + "</option>").appendTo("#{{$form['name']}}");
+                              });
+                              current.trigger('change');
+                          }
+                      });
+                    }
+                    else {
+                        current.html("<option value=''>{{$default}}");
+                    }
+                })
+
+                $('#{{$parent}}').trigger('change');
+                $("input[name='{{$parent}}']:checked").trigger("change");
+                $("#{{$form['name']}}").trigger('change');
+            })
+        </script>
+    @endpush
+@elseif($form['datatable'] AND $form['parent_crosstable'] AND $form['parent_select'])
+    <?php
+    $exploded_parent = explode(",", $form['parent_select']);
+    $parent_select = count($exploded_parent) > 1 ? $exploded_parent : $form['parent_select'];
+    $parent = is_array($parent_select) ? $parent_select[0] : $parent_select;
+    $add_field = is_array($parent_select) ? $parent_select[1] : '';
+    //se viene passata una variabile parent_crosstable usala come nome della tabella di relazione tra child e parent
+    $parent_crosstable = empty($form['parent_crosstable']) ? '' : $form['parent_crosstable'];
+    //se viene passata una variabile child_crosstable_fk_name usala come nome della colonna chiave verso il child nella tabella di relazione tra child e parent
+    $child_crosstable_fk_name = empty($form['child_crosstable_fk_name']) ? '' : $form['child_crosstable_fk_name'];
+
+    //se viene passata una variabile fk_name usala come nome della colonna in cui cercare, altrimenti usa il name della parent select
+    $fk_name = empty($form['fk_name']) ? $parent : $form['fk_name'];
+    ?>
+    @push('bottom')
+        <script type="text/javascript">
+            $(function () {
+
+                var default_tenant;
+
+                $('#{{$parent}}, input:radio[name={{$parent}}]').change(function () {
+                    var current = $("#{{$form['name']}}");
+                    var parent_id = $(this).val();
+                    var parent_crosstable = "{{$parent_crosstable}}";
+                    var child_crosstable_fk_name = "{{$child_crosstable_fk_name}}";
+                    var fk_name = "{{$fk_name}}";
+                    var fk_value = $(this).val();
+                    var datatable = "{{$form['datatable']}}".split(',');
+                    @if(!empty($add_field))
+                    var add_field = ($("#{{$add_field}}").val()) ? $("#{{$add_field}}").val() : "";
+                    @endif
+                    var datatableWhere = "{{$form['datatable_where']}}";
+                    @if(!empty($add_field))
+                    if (datatableWhere) {
+                        if (add_field) {
+                            datatableWhere = datatableWhere + " and {{$add_field}} = " + add_field;
+                        }
+                    } else {
+                        if (add_field) {
+                            datatableWhere = "{{$add_field}} = " + add_field;
+                        }
+                    }
+                    @endif
+                    var table = datatable[0].trim('');
+                    var label = datatable[1].trim('');
+                    var value = <?php echo empty($value) ? "0" : $value; ?>;
+                    var default_value = "{{ UserHelper::current_user_primary_group() }}";
+                    var is_default_present = false;
+                    var belongs_to_tenant = true;
+                    var keep_options = false;
+                    //salvo solo all'atterraggio default_tenant e non ogni volta che la tendina tenant cambia
+                    if(typeof default_tenant == 'undefined')
+                    {
+                      default_tenant = fk_value;
+                    }
+
+                    if (fk_value != '') {
+                      //at parent change,
+                      //if there were options already selected in the child select,
+                      //save child selected options before rewriting the select
+                      //in order to avoid forcing the user to reselect them
+                      var children = current.children();
+                      var li_selected = $('.select2-selection__choice',$(current.parent().children()[1]));
+                      var selected_label = [];
+                      //if there are selected options in the child select..
+                      if(li_selected.html()!=undefined){
+                        //..then keep child selected options rather then setting up the default value
+                        keep_options = true;
+                        $.each(li_selected, function (i, obj) {
+                          var label = $(obj).attr('title');
+                          selected_label.push(label);
+                        })
+                      }
+                      current.html("<option value=''>{{trans('crudbooster.text_prefix_option')}} {{$form['label']}}");
+                      var query_data_table = "{{CRUDBooster::mainpath('data-table')}}?";
+                      query_data_table += "table=" + table;
+                      query_data_table += "&label=" + label;
+                      query_data_table += "&fk_name=" + fk_name;
+                      query_data_table += "&fk_value=" + fk_value;
+                      query_data_table += "&parent_crosstable=" + parent_crosstable;
+                      query_data_table += "&child_crosstable_fk_name=" + child_crosstable_fk_name;
+                      query_data_table += "&datatable_where=" + encodeURI(datatableWhere);
+                      console.log(query_data_table);
+
+                      $.get(query_data_table, function (response) {
+                          if (response) {
+                              //check if default is already between the options
+                              $.each(response, function (i, obj) {
+                                if(obj.select_label == '{{$default}}'){
+                                  is_default_present = true;
+                                }
+                              })
+                              if(fk_value !== default_tenant)
+                              {
+                                belongs_to_tenant = false;
+                              }
+                              //if it's not a duplicate..
+                              //and group's tenant is selected..
+                              if(!is_default_present && belongs_to_tenant)
+                              {
+                                //..add the default option
+                                current.html("<option value=''>{{$default}}");
+                              }
+                              //add the other options
+                              $.each(response, function (i, obj) {
+                                if(keep_options){
+                                  var selected = ( $.inArray( obj.select_label, selected_label ) > -1  ) ? "selected" : "";
+                                }
+                                else if(value==0){
+                                  //use default value in create
+                                  var selected = (default_value && (obj.select_value == default_value) ) ? "selected" : "";
+                                }
+                                else {
+                                  var selected = obj.select_value == value ? "selected" : "";
+                                }
+                                $("<option " + selected + " value='" + obj.select_value + "'>" + obj.select_label + "</option>").appendTo("#{{$form['name']}}");
+                              });
+                              current.trigger('change');
+                          }
+                      });
                     }
                     else {
                         current.html("<option value=''>{{$default}}");

@@ -3,6 +3,7 @@ namespace crocodicstudio\crudbooster\helpers;
 
 use App\ModuleTenants;
 use App\Tenant;
+use App\GroupTenants;
 
 class ModuleHelper  {
 
@@ -54,116 +55,166 @@ class ModuleHelper  {
     return false;
   }
 
-  /*
+  /**
   * Check if current user can view the record $row
   *
   * @param object $module a module instance //TODO not really a module...
   * @param object a table row or record
+  *
+  * @return boolean true if user can view module's row, false otherwise
   */
   public static function can_view($module, $row) {
-    // if it's a manually generated module..
-    if (
-      //admin can always see everything
-      !CRUDBooster::isSuperadmin() AND
-      (
-        //check correct privilege role
-        (
-          !CRUDBooster::isRead() &&
-          $module->global_privilege == false ||
-          $module->button_edit == false
-        ) OR
-        //check group/tenant
-        (
-          //check this only on manually generated modules
-          ModuleHelper::is_manually_generated($module->table) AND
-          !(
-            //..then filter on group and tenant columns
-            in_array($row->group, UserHelper::current_user_groups()) AND
-            $row->tenant == UserHelper::current_user_tenant()
-          )
-        ) OR
-        //check tenant
-        (
-          //check this only on groups and users for Tenantadmin
-          UserHelper::isTenantAdmin() AND
-          (
-            $module->table == 'groups' OR
-            $module->table == 'cms_users'
-          ) AND
-          //..then filter by tenant
-          $row->tenant !== UserHelper::current_user_tenant()
-        )
-      )
-    ) {
-      //log denied access
-      CRUDBooster::insertLog(trans("crudbooster.log_try_view", [
-          'name' => $module->table,
-          'module' => CRUDBooster::getCurrentModule()->name,
-      ]));
-      //kick out
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    //admin can always see everything
+    if(CRUDBooster::isSuperadmin()) {
+      return true;
     }
+
+    //check correct privilege role
+    if(
+      !CRUDBooster::isRead() AND //isread o isview? TODO chiarire con view / details
+      $module->global_privilege == false
+    ) {
+      return false;
+    }
+
+    if($module->button_detail == false) {
+      //module's rows details shouldn't be view
+      return false;
+    }
+
+    //check group/tenant
+    if(
+      //check this only on manually generated modules
+      ModuleHelper::is_manually_generated($module->table) AND
+      //..row group is one of user's groups
+      in_array($row->group, UserHelper::current_user_groups()) AND
+      //..row tenant is user's tenant
+      $row->tenant == UserHelper::current_user_tenant()
+    ) {
+      return true;
+    }
+
+    //check tenant
+    if(
+      //check this only on users
+      $module->table == 'cms_users' AND
+      //..then filter by tenant
+      $row->tenant == UserHelper::current_user_tenant()
+    ) {
+      return false;
+    }
+
+    //check tenant
+    if(
+      //check this only on groups
+      $module->table == 'groups' AND
+      //..then filter by tenant
+      GroupTenants::where('group_id',$row->id)->where('tenant_id',UserHelper::current_user_tenant())->count() > 0
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
-  /*
+  /**
   * Check if current user can edit the record $row
   *
-  * @param object $module a module instance //TODO not really a module...
+  * @param object $module a module instance (not a model...)
   * @param object a table row or record
+  *
+  * @return boolean true if user can edit module's row, false otherwise
   */
   public static function can_edit($module, $row) {
-    // if it's a manually generated module..
-    if (
-      //admin can always see everything
-      !CRUDBooster::isSuperadmin()
+    //admin can always see everything
+    if(CRUDBooster::isSuperadmin()){
+      //var_dump('can edit true1'.$row->id);
+      return true;
+    }
+
+    if($module->table == 'cms_menus') {
+      return UserHelper::can_menu('edit', $row->id);
+    }
+
+    //check correct privilege role
+    if(
+        //this should filter basic users
+        !CRUDBooster::isUpdate()
+        AND
+        $module->global_privilege == false
+    ) {
+      //user doesn't have the correct privilege role for this module
+      //var_dump('can edit false1'.$row->id);
+      return false;
+    }
+
+    if($module->button_edit == false) {
+      //module's rows shouldn't be edited
+      //var_dump('can edit false2'.$row->id);
+      return false;
+    }
+
+    //from here checks should be only for tenantadmin
+
+    //get row tenant
+    if(empty($row->tenant) AND \Schema::hasColumn($module->table, 'tenant')) {
+      $row->tenant = \DB::select(\DB::raw("select tenant from ".$module->table." where id='".$row->id."' "))[0]->tenant;
+    }
+    //get row group
+    if(empty($row->group) AND \Schema::hasColumn($module->table, 'group')) {
+      $row->group = \DB::select(\DB::raw("select `group` from ".$module->table." where id='".$row->id."' "))[0]->group;
+    }
+
+    //check group/tenant on manually generated modules
+    if(
+      //check this
+      ModuleHelper::is_manually_generated($module->table)
       AND
       (
-        //check correct privilege role
+        //..then filter on group and tenant columns
+        //TODO tenantadmin deve essere limitato dai gruppi sull'edit degli mg?
+        //user must be member of the record's group or tenantadmin
         (
-          !CRUDBooster::isUpdate()
-          AND
-          $module->global_privilege == false
+          in_array($row->group, UserHelper::current_user_groups())
           OR
-          $module->button_edit == false
-        )
-        OR
-        //check group/tenant
-        (
-          //check this only on manually generated modules
-          ModuleHelper::is_manually_generated($module->table)
-          AND
-          !(
-            //..then filter on group and tenant columns
-            in_array($row->group, UserHelper::current_user_groups())
-            AND
-            $row->tenant == UserHelper::current_user_tenant()
-          )
-        )
-        OR
-        //check tenant
-        (
-          //check this only on groups and users for Tenantadmin
           UserHelper::isTenantAdmin()
-          AND
-          (
-            $module->table == 'groups'
-            OR
-            $module->table == 'cms_users'
-          )
-          AND
-          //..then filter by tenant
-          $row->tenant !== UserHelper::current_user_tenant()
         )
+        AND
+        $row->tenant == UserHelper::current_user_tenant()
       )
-    ) {
-      //log denied access
-      CRUDBooster::insertLog(trans("crudbooster.log_try_add", [
-        'name' => $row->{$module->title_field},//TODO not sure this is ok. before helper: $module->{$this->title_field}
-        'module' => CRUDBooster::getCurrentModule()->name
-      ]));
-      //kick out
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    ){
+      //var_dump('can edit true2'.$row->id);
+      return true;
     }
+
+    //check tenant
+    if(
+      //check this only on users table (for Tenantadmin)
+      $module->table == 'cms_users' AND
+      //..then filter by tenant
+      $row->tenant == UserHelper::current_user_tenant()
+    ) {
+      //var_dump('can edit true3'.$row->id);
+      return true;
+    }
+
+    //check tenant
+    if(
+      //Tenantadmin can edit groups only if group is part of his tenant and no other
+      $module->table == 'groups'
+      AND
+      //..group must be part of his tenant
+      GroupTenants::where('group_id',$row->id)->where('tenant_id',UserHelper::current_user_tenant())->count() > 0
+      AND
+      //..group must not have other tenants
+      GroupTenants::where('group_id',$row->id)->where('tenant_id','!=',UserHelper::current_user_tenant())->count() == 0
+    ){
+      //var_dump('can edit true4'.$row->id);
+      return true;
+    }
+
+    //var_dump('can edit false3'.$row->id);
+    return false;
   }
 
   /**
@@ -171,13 +222,16 @@ class ModuleHelper  {
   *
   * @param object $module a module instance //TODO not really a module...
   * @param object a table row or record
+  *
+  * @return boolean true if user can delete module's row, false otherwise
   */
   public static function can_delete($module, $row) {
-
+    
     //admin can always do everything
     if(CRUDBooster::isSuperadmin()) {
       return true;
     }
+
     if($module->table == 'cms_menus') {
       return UserHelper::can_menu('delete', $row->id);
     }
@@ -189,12 +243,21 @@ class ModuleHelper  {
         $module->global_privilege == false
     ) {
       //user doesn't have the correct privilege role for this module
+      //var_dump('false2');
       return false;
     }
 
     if($module->button_delete == false) {
       //module's rows shouldn't be deleted
+      //var_dump('false3');
       return false;
+    }
+
+    if(empty($row->tenant) AND \Schema::hasColumn($module->table, 'tenant')) {
+      $row->tenant = \DB::select(\DB::raw("select tenant from ".$module->table." where id='".$row->id."' "))[0]->tenant;
+    }
+    if(empty($row->group) AND \Schema::hasColumn($module->table, 'group')) {
+      $row->group = \DB::select(\DB::raw("select group from ".$module->table." where id='".$row->id."' "))[0]->group;
     }
 
     //check group/tenant
@@ -203,8 +266,12 @@ class ModuleHelper  {
       ModuleHelper::is_manually_generated($module->table)
       AND
       //..then filter on group and tenant columns
-      //user must be member of the record's group
-      in_array($row->group, UserHelper::current_user_groups())
+      //user must be member of the record's group or tenantadmin
+      (
+        in_array($row->group, UserHelper::current_user_groups())
+        OR
+        UserHelper::isTenantAdmin()
+      )
       AND
       //user must be member of the record's tenant
       $row->tenant == UserHelper::current_user_tenant()
@@ -212,20 +279,34 @@ class ModuleHelper  {
       return true;
     }
 
+    //check tenant
     if(
-        //this rule is only for Tenantadmin
-        UserHelper::isTenantAdmin()
+        //check this only on users
+        $module->table == 'cms_users'
         AND
-        //check this only on groups and users
-        in_array($module->table, ['groups','cms_users'])
-        AND
-        //..then filter by tenant
-        $row->tenant !== UserHelper::current_user_tenant()
+        //..filter by tenant
+        $row->tenant == UserHelper::current_user_tenant()
       ) {
+        //var_dump('true4');
         return true;
-      }
+    }
 
-      return false;
+    //check tenant
+    if(
+      //check this only on groups
+      $module->table == 'groups'
+      AND
+      //..group must be part of his tenant
+      GroupTenants::where('group_id',$row->id)->where('tenant_id',UserHelper::current_user_tenant())->count() > 0
+      AND
+      //..group must not have other tenants
+      GroupTenants::where('group_id',$row->id)->where('tenant_id','!=',UserHelper::current_user_tenant())->count() == 0
+    ){
+      return true;
+    }
+
+    //var_dump('false6');
+    return false;
   }
 
   /**
@@ -309,35 +390,51 @@ class ModuleHelper  {
         if(CRUDBooster::isSuperadmin())
         {
           //superadmin vede i gruppi come cascading dropdown in base al tenant
-          $field = [
-            'label'=>'Group',
-            'name'=>'group',
-            "type"=>"select",
-            "datatable"=>"groups,name",
-            'required'=>true,
-            'validation'=>'required|int|min:1',
-            'value'=>UserHelper::current_user_primary_group(),//default value per creazione nuovo record
-            'parent_select'=>'tenant'
-          ];
-          // $field = ['label'=>'Group','name'=>'group',"type"=>"select","datatable"=>"groups,name",'required'=>true,'validation'=>'required|int|min:1','default'=>UserHelper::current_user_primary_group_name(),'value'=>UserHelper::current_user_primary_group(),'parent_select'=>'tenant'];
-        }
-        else
-        {
-          //Tenantadmin vede solo i gruppi del proprio tenant
-          $field = [
+          $fields[] = [
             'label'=>'Group',
             'name'=>'group',
             "type"=>"select2",
             "datatable"=>"groups,name",
             'required'=>true,
             'validation'=>'required|int|min:1',
+            'value'=>UserHelper::current_user_primary_group(),//default value per creazione nuovo record
+            'parent_select'=>'tenant',
+    				'parent_crosstable'=>'group_tenants',
+    				'fk_name'=>'tenant_id',
+    				'child_crosstable_fk_name'=>'group_id'
+          ];
+        }
+        else
+        {
+    			//Tenantadmin vede tenant in readonly (disabled) ma può modificare il group
+    			$fields[] = [
+    				"label"=>"Tenant",
+    				"name"=>"tenant",
+    				'required'=>true,
+    				'type'=>'select',
+    				'datatable'=>"tenants,name",
+    				'default'=>UserHelper::current_user_tenant_name(),
+    				'value'=>UserHelper::current_user_tenant(),
+    				'disabled'=>true,
+            'style'=>"display:none;"
+    			];
+          //Tenantadmin vede solo i gruppi del proprio tenant
+          $fields[] = [
+            'label'=>'Group',
+            'name'=>'group',
+            "type"=>"select2",
+            "datatable" => "groups,name",
+            "required" => true,
+            'validation'=>'required|int|min:1',
             'default'=>UserHelper::current_user_primary_group_name(),
             'value'=>UserHelper::current_user_primary_group(),
             //Tenantadmin vede nella dropdown solo i gruppi del proprio tenant
-            'datatable_where'=>'tenant = '.UserHelper::current_user_tenant()
+            'parent_select'=>'tenant',
+            'parent_crosstable'=>'group_tenants',
+            'fk_name'=>'tenant_id',
+            'child_crosstable_fk_name'=>'group_id'
           ];
         }
-  			$fields[] = $field;
       }
     }
     return $fields;

@@ -11,26 +11,17 @@
 @include('crudbooster::admin_template_plugins')
 
 <?php
-//array dei tenant id del gruppo di cui sto modificando i membri
-$group_tenants = \App\GroupTenants::where('group_id',Request::get('select_to'))->pluck('tenant_id')->all();
 
-//bypass CBController getModalData per custom query
-$result = DB::table('cms_users')
-              ->whereNotExists(function ($query) {
+  //bypass CBController getModalData per custom query
+  $result = DB::table('groups')
+                ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
-                ->from('users_groups')
-                ->whereRaw(
-                    'users_groups.group_id = '.Request::get('select_to').'
-                    AND users_groups.user_id = cms_users.id
-                    AND users_groups.deleted_at = null
-                    ');
-              })
-              ->whereIn('cms_users.tenant',$group_tenants);
-
-
-if($q){
-  //filtra la lista in base alla ricerca fatta dall'utente
-  $result = $result->where(function ($query) use ($columns, $q) {
+                      ->from('group_tenants')
+                      ->whereRaw('group_tenants.tenant_id = '.Request::get('select_to').' AND group_tenants.group_id = groups.id');
+            });
+  if($q){
+    //filtra la lista in base alla ricerca fatta dall'utente
+    $result = $result->where(function ($query) use ($columns, $q) {
                             foreach ($columns as $c => $col) {
                               if ($c == 0) {
                                 $query->where($col, 'like', '%'.$q.'%');
@@ -39,10 +30,13 @@ if($q){
                               }
                             }
                           });
-}
-$result = $result->orderby('id', 'asc')
-                  ->get();
+  }
+  $result = $result->orderby('id', 'asc')
+                    ->get();
 
+?>
+
+<?php
 $name = Request::get('name_column');
 $coloms_alias = explode(',', 'ID,'.Request::get('columns_name_alias'));
 if (count($coloms_alias) < 2) {
@@ -52,7 +46,7 @@ if (count($coloms_alias) < 2) {
 <form method='get' action="">
     {!! CRUDBooster::getUrlParameters(['q']) !!}
     <input type="text" placeholder="{{trans('crudbooster.datamodal_search_and_enter')}}" name="q" title="{{trans('crudbooster.datamodal_enter_to_search')}}"
-           value="{{$q}}" class="form-control">
+           value="{{Request::get('q')}}" class="form-control">
 </form>
 
 <table id='table_dashboard' class='table table-striped table-bordered table-condensed' style="margin-bottom: 0px">
@@ -80,7 +74,7 @@ if (count($coloms_alias) < 2) {
             $select_data_result = [];
             $select_data_result['datamodal_id'] = $row->id;
             $select_data_result['datamodal_label'] = $row->{$columns[1]} ?: $row->id;
-            $select_data_result['datamodal_email'] = $row->email;
+            $select_data_result['datamodal_description'] = $row->description;
             $select_data = Request::get('select_to');
             if ($select_data) {
                 $select_data = explode(',', $select_data);
@@ -94,8 +88,11 @@ if (count($coloms_alias) < 2) {
                 }
             }
             ?>
-            <td><a class='btn btn-primary' href='javascript:void(0)' onclick='parent.selectAdditionalData{{$name}}({!! json_encode($select_data_result) !!})'><i
-                            class='fa fa-check-circle'></i> {{trans('crudbooster.datamodal_select')}}</a></td>
+            <td>
+              <a class='btn btn-primary' href='javascript:void(0)' onclick='parent.selectAdditionalData{{$name}}({!! json_encode($select_data_result) !!})'>
+                <i class='fa fa-check-circle'></i> {{trans('crudbooster.datamodal_select')}}
+              </a>
+            </td>
         </tr>
     @endforeach
     </tbody>

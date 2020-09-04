@@ -12,6 +12,10 @@ class MyHelper  {
   */
   public static function version() {
     $verbose_version = GitVersionHelper::getVersion();
+    if(strpos($verbose_version,'-')<0){
+      //no dirty part
+      return $verbose_version;
+    }
     list($version, $garbage) = explode('-',$verbose_version);
     return $version;
   }

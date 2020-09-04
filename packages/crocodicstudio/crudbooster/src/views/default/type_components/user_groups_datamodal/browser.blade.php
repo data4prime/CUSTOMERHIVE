@@ -24,7 +24,9 @@
                           AND users_groups.deleted_at = null'
                         );
             })
-            ->where('groups.tenant',$user_tenant_id);
+            ->join('group_tenants','group_tenants.group_id','groups.id')
+            ->where('group_tenants.tenant_id',$user_tenant_id)
+            ->distinct('groups.id');
   if($q){
     //filtra la lista in base alla ricerca fatta dall'utente
     $result = $result->where(function ($query) use ($columns, $q) {
@@ -37,7 +39,7 @@
                             }
                           });
   }
-  $result = $result->orderby('id', 'asc')
+  $result = $result->orderby('groups.id', 'asc')
                     ->get();
 
 ?>

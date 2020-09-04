@@ -88,15 +88,12 @@ class UserHelper  {
   */
   public static function default_icon($user_id = null) {
     $user = User::find($user_id);
-    if(!empty($user_id) AND !empty($user)) {
-      if($user->isSuperAdmin()){
-        return asset('uploads/1/2020-01/admin.jpeg');
-      }
-      if($user->isTenantAdmin()){
-        return asset('uploads/1/2020-01/manager.jpeg');
-      }
+    if(empty($user_id) OR empty($user)) {
+      return asset('uploads/1/2020-01/user.png');
     }
-    return asset('uploads/1/2020-01/user.png');
+    else{
+      return $user->photo();
+    }
   }
 
   /**

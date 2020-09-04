@@ -5,9 +5,11 @@
 	use DB;
 	use CRUDBooster;
 	use \App\Tenant;
+	use \App\User;
+	use \App\GroupTenants;
 	use Illuminate\Support\Facades\Route;
 	use TenantHelper;
-	use \App\User;
+	use MyHelper;
 
 	class AdminTenantsController extends CBController {
 
@@ -95,7 +97,8 @@
 	        |
 	        */
 	        $this->addaction = array();
-					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('members/[id]'),'icon'=>'fa fa-users','color'=>'info','title'=>'Members'];
+					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('members/[id]'),'icon'=>'fa fa-user','color'=>'info','title'=>'Members'];
+					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('group/[id]'),'icon'=>'fa fa-users','color'=>'warning','title'=>'Groups'];
 
 	        /*
 	        | ----------------------------------------------------------------------
@@ -379,5 +382,87 @@
 			  $this->cbView('tenants.members',$data);
 			}
 
+			public function group($tenant_id, $alert_id = null)
+			{
+				//check auth
+			  if(!CRUDBooster::isSuperadmin())
+				{
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+				$data['tenant_id'] = $tenant_id;
+				$data['tenant'] = Tenant::find($tenant_id);
+				$data['groups'] = GroupTenants::where('tenant_id',$tenant_id)
+																				->join('groups','groups.id','=','group_tenants.group_id')
+																				->get();
+				$data['page_title'] = 'Tenant Groups';
+
+				//prendo $_GET &alert=
+				if(!empty($alert_id)){
+					//se è alert=1
+					if($alert_id=='1'){
+						//mostra messaggio di warning per tasto add premuto senza valori required
+						$data['alerts'][] = ['message'=>'<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...','type'=>'warning'];
+					}
+				}
+
+				//add tenant form
+				$data['forms'] = [];
+				$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'tenant_group_datamodal','width'=>'col-sm-6','datamodal_table'=>'groups','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'Name','datamodal_select_to'=>$tenant_id,'required'=>true];
+				$data['forms'][] = ['label'=>'Description','name'=>'description','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-6','placeholder'=>'Group description','readonly'=>true];
+				$data['action'] = CRUDBooster::mainpath($tenant_id."/add_group");
+				$data['return_url'] = CRUDBooster::mainpath('group/'.$tenant_id);
+
+			  $this->cbView('tenants.group',$data);
+			}
+
+			public function add_group($tenant_id) {
+
+			  if(!CRUDBooster::isSuperadmin()) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+				$group_id = $_POST['name'];
+				$return_url = $_POST['return_url'];
+				$ref_mainpath = $_POST['ref_mainpath'];
+
+			  if(empty($group_id)) {
+					return redirect($return_url.'/alert/1');
+			  }
+				//check if tenant is already allowed
+				$allowed = GroupTenants::where('group_id',$group_id)
+																->where('tenant_id',$tenant_id)
+																->count();
+
+				if($allowed == 0){
+					$add_group = new GroupTenants;
+					$add_group->group_id = $group_id;
+					$add_group->tenant_id = $tenant_id;
+					$add_group->save();
+				}
+
+				//redirect
+				if(empty($return_url)){
+						$return_url = $ref_mainpath;
+				}
+				return redirect($return_url);
+			}
+
+			public function remove_group($tenant_id, $group_id) {
+			  if(!CRUDBooster::isSuperadmin()) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+				//check if tenant_id and user_id are int
+				if(!MyHelper::is_int($group_id) OR !MyHelper::is_int($tenant_id))
+				{
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+			  $data['delete'] = GroupTenants::where('group_id',$group_id)
+														->where('tenant_id',$tenant_id)
+														->delete();
+
+				return redirect('admin/tenants/group/'.$tenant_id);
+			}
 
 	}

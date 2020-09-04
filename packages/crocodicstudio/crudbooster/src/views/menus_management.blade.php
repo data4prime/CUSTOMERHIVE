@@ -173,8 +173,8 @@
                                         @foreach($menu->children as $child)
                                             @php
                                                 $privileges = DB::table('cms_menus_privileges')
-                                                ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
-                                                ->where('id_cms_menus',$child->id)->pluck('cms_privileges.name')->toArray();
+                                                              ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
+                                                              ->where('id_cms_menus',$child->id)->pluck('cms_privileges.name')->toArray();
 
                                                 $tenant = \App\Tenant::find($child->tenant)->name;
                                             @endphp
@@ -360,7 +360,6 @@
 
 
         </div>
-
 
     <?php
 

@@ -39,6 +39,11 @@ Route::get('admin/menu_management/edit/{id}', $controllers_base_path.'MenusContr
 // Route::delete('/admin/menu_management/save-menu')->name('MenusControllerGetDelete');
 //tenant members
 Route::get('admin/tenants/members/{tenant_id}', $controllers_base_path.'AdminTenantsController@members');
+//group tenants
+Route::get('admin/tenants/group/{tenant_id}/alert/{alert_id}', $controllers_base_path.'AdminTenantsController@group');
+Route::get('admin/tenants/group/{tenant_id}', $controllers_base_path.'AdminTenantsController@group');
+Route::post('admin/tenants/{tenant_id}/add_group', $controllers_base_path.'AdminTenantsController@add_group');
+Route::get('admin/tenants/{tenant_id}/remove_group/{group_id}', $controllers_base_path.'AdminTenantsController@remove_group');
 
 //group members
 Route::get('admin/groups/members/{group_id}/alert/{alert_id}', $controllers_base_path.'AdminGroupsController@members');
@@ -52,6 +57,12 @@ Route::get('admin/groups/items/{group_id}/alert/{alert_id}', $controllers_base_p
 Route::get('admin/groups/items/{group_id}', $controllers_base_path.'AdminGroupsController@items');
 Route::post('admin/groups/{group_id}/add_item', $controllers_base_path.'AdminGroupsController@add_item');
 Route::get('admin/groups/{group_id}/remove_item/{item_id}', $controllers_base_path.'AdminGroupsController@remove_item');
+
+//group tenants
+Route::get('admin/groups/tenant/{group_id}/alert/{alert_id}', $controllers_base_path.'AdminGroupsController@tenant');
+Route::get('admin/groups/tenant/{group_id}', $controllers_base_path.'AdminGroupsController@tenant');
+Route::post('admin/groups/{group_id}/add_tenant', $controllers_base_path.'AdminGroupsController@add_tenant');
+Route::get('admin/groups/{group_id}/remove_tenant/{tenant_id}', $controllers_base_path.'AdminGroupsController@remove_tenant');
 
 //user groups
 Route::get('admin/users/groups/{user_id}/alert/{alert_id}', $controllers_base_path.'AdminCmsUsersController@groups');

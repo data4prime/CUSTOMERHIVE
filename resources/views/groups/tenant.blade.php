@@ -1,7 +1,7 @@
 @extends('crudbooster::admin_template')
 
 @section('content')
-<!-- Add member -->
+<!-- Allow tenant to group -->
 <div class="box-body table-responsive">
   <div>
       @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel)
@@ -16,7 +16,7 @@
 
       <div class="panel panel-default">
           <div class="panel-heading">
-            <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Add member</strong>
+            <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! $page_title !!}</strong>
           </div>
 
           <div class="panel-body" style="padding:20px 0px 0px 0px">
@@ -39,7 +39,7 @@
 
                   <div class="box-footer" style="background: #F5F5F5">
 
-                      <div class="form-group">
+                      <div class="form-tenant">
                           <label class="control-label col-sm-2"></label>
                           <div class="col-sm-10">
                               @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
@@ -73,10 +73,10 @@
           </div>
       </div>
   </div><!--END AUTO MARGIN-->
-<!-- List members -->
+<!-- List tenants -->
 <div class="box">
   <div class="box-header">
-    <h4>{{ $group->name }} Members</h4>
+    <h4>Group Tenants</h4>
   </div>
   <div class="box-body table-responsive no-padding">
     <form id='form-table' method='post' action='{{CRUDBooster::mainpath("action-selected")}}'>
@@ -85,29 +85,19 @@
       <table class='table table-striped table-bordered'>
         <thead>
           <tr>
-            <th style="width:25px;"><!-- primary --></th>
             <th>Name</th>
-            <th>Email</th>
-            <th>Photo</th>
-            <th>Privilege</th>
+            <th>Description</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          @foreach($members as $member)
+          @foreach($tenants as $tenant)
           <tr>
-            <td style="text-align:center;">
-              @if($group->id == $member->primary_group)
-              <i class="fa fa-trophy success-icon" title="primary group"></i>
-              @endif
-            </td>
-            <td>{{$member->name}}</td>
-            <td>{{$member->email}}</td>
-            <td><img width="40" src="{{UserHelper::default_icon($member->id)}}" class="user-image" alt="User Image"></td>
-            <td>{{$member->privilege}}</td>
+            <td>{{$tenant->name}}</td>
+            <td>{{$tenant->description}}</td>
             <td>
-              @if(CRUDBooster::isDelete() && $button_edit && $group->id !== $member->primary_group)
-              <a title='Remove' class='btn btn-danger btn-sm' href='{{CRUDBooster::mainpath("$group_id/remove_member/$member->id")}}'><i class="fa fa-trash"></i></a>
+              @if(CRUDBooster::isDelete() && $button_edit)
+              <a title='Remove' class='btn btn-danger btn-sm' href='{{CRUDBooster::mainpath("$group_id/remove_tenant/$tenant->id")}}'><i class="fa fa-trash"></i></a>
               @endif
             </td>
           </tr>

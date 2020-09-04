@@ -50,4 +50,23 @@ class User extends Authenticatable
       $my_role_id = $this->id_cms_privileges;
       return Role::find($my_role_id)->is_superadmin == 1;
     }
+
+    /**
+    * returns user's photo path or a default one based on his privilege
+    */
+    public function photo()
+    {
+      if(!empty($this->photo)){
+        return $this->photo;
+      }
+      elseif($this->isSuperAdmin()){
+        return asset('uploads/1/2020-01/admin.jpeg');
+      }
+      elseif($this->isTenantAdmin()){
+        return asset('uploads/1/2020-01/manager.jpeg');
+      }
+      else{
+        return asset('uploads/1/2020-01/user.png');
+      }
+    }
 }

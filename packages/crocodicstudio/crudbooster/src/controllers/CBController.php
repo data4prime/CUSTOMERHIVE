@@ -261,20 +261,15 @@ class CBController extends Controller
             $result->where($this->table.'.deleted_at', null);
         }
         // if it's a manually generated module..
+        //..no filter needed for superadmin
         if (ModuleHelper::is_manually_generated($this->table) and !CRUDBooster::isSuperadmin() ) {
-          //..no filter for superadmin
-          if(UserHelper::isTenantAdmin())
-          {
-            //.. for Tenantadmin filter on tenant column
-            $result->where($this->table.'.tenant', UserHelper::current_user_tenant());
-          }
-          else
-          {
-            //.. for basic filter on group and tenant columns
-            $result->where($this->table.'.tenant', UserHelper::current_user_tenant());
+          //.. for Tenantadmin and basic add filter by tenant
+          $result->where($this->table.'.tenant', UserHelper::current_user_tenant());
+
+          if(!UserHelper::isTenantAdmin()) {
+            //.. for basic also filter by group
             $result->whereIn($this->table.'.group', UserHelper::current_user_groups());
           }
-
         }
 
         $alias = [];
@@ -630,7 +625,8 @@ class CBController extends Controller
 
             if ($this->button_table_action){
               $button_action_style = $this->button_action_style;
-              $html_content[] = "<div class='button_action' style='text-align:right'>".view('crudbooster::components.action', compact('addaction', 'row', 'button_action_style', 'parent_field'))->render()."</div>";
+              $this_module = $this;
+              $html_content[] = "<div class='button_action' style='text-align:right'>".view('crudbooster::components.action', compact('addaction', 'row', 'button_action_style', 'parent_field', 'this_module'))->render()."</div>";
             }
 
             foreach ($html_content as $i => $v) {
@@ -650,7 +646,6 @@ class CBController extends Controller
 
     public function getExportData()
     {
-
         return redirect(CRUDBooster::mainpath());
     }
 
@@ -716,7 +711,32 @@ class CBController extends Controller
         $datatableWhere = urldecode(Request::get('datatable_where'));
         $foreign_key_name = Request::get('fk_name');
         $foreign_key_value = Request::get('fk_value');
-        if ($table && $label && $foreign_key_name && $foreign_key_value) {
+        $parent_crosstable = Request::get('parent_crosstable');
+        $child_crosstable_fk_name = Request::get('child_crosstable_fk_name');
+        if(!empty($table) AND !empty($label) AND !empty($foreign_key_value) AND $foreign_key_value != 'null') {
+          if(!empty($parent_crosstable)) {
+            $table_pk = CRUDBooster::findPrimaryKey($table);
+            //parent and child are linked with a relationship table
+            $query = DB::table($table)
+                        ->join($parent_crosstable,$parent_crosstable.'.'.$child_crosstable_fk_name,$table.'.'.$table_pk);
+            if ($datatableWhere) {
+                $query->whereRaw($datatableWhere);
+            }
+            $query->distinct($table.'.'.$label);
+            $query->select($table.'.'.$table_pk.' as select_value', $table.'.'.$label.' as select_label');
+            //se $foreign_key_value ha una virgola è un array
+            if(strpos($foreign_key_value,',')>-1) {
+              $query->whereIn($foreign_key_name, explode(',',$foreign_key_value));
+            }
+            else{
+              $query->where($foreign_key_name, $foreign_key_value);
+            }
+            $query->orderby($label, 'asc');
+
+            return response()->json($query->get());
+          }
+          elseif(!empty($foreign_key_name)) {
+            //child table has a parent column
             $query = DB::table($table);
             if ($datatableWhere) {
                 $query->whereRaw($datatableWhere);
@@ -732,9 +752,9 @@ class CBController extends Controller
             $query->orderby($label, 'asc');
 
             return response()->json($query->get());
-        } else {
-            return response()->json([]);
+          }
         }
+        return response()->json([]);
     }
 
     public function getModalData()
@@ -1344,7 +1364,15 @@ class CBController extends Controller
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
         //kicks out if user shouldn't view the record $row
-        ModuleHelper::can_view($this, $row);
+        if(!ModuleHelper::can_edit($this, $row)) {
+          //log denied access
+          CRUDBooster::insertLog(trans("crudbooster.log_try_add", [
+            'name' => $module->{$this->title_field},
+            'module' => CRUDBooster::getCurrentModule()->name
+          ]));
+          //kick out
+          CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
 
         $page_menu = Route::getCurrentRoute()->getActionName();
         $page_title = trans("crudbooster.edit_data_page_title", ['module' => CRUDBooster::getCurrentModule()->name, 'name' => $row->{$this->title_field}]);
@@ -1360,7 +1388,15 @@ class CBController extends Controller
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
         //kicks out if user shouldn't edit the record $row
-        ModuleHelper::can_edit($this, $row);
+        if(!ModuleHelper::can_edit($this, $row)) {
+          //log denied access
+          CRUDBooster::insertLog(trans("crudbooster.log_try_add", [
+            'name' => $module->{$this->title_field},
+            'module' => CRUDBooster::getCurrentModule()->name
+          ]));
+          //kick out
+          CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
 
         $this->validation($id);
         $this->input_assignment($id);
@@ -1548,7 +1584,15 @@ class CBController extends Controller
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
         //kicks out if user shouldn't view the record $row
-        ModuleHelper::can_view($this, $row);
+        if(!ModuleHelper::can_view($this, $row)){
+          //log denied access
+          CRUDBooster::insertLog(trans("crudbooster.log_try_view", [
+              'name' => $this->table,
+              'module' => CRUDBooster::getCurrentModule()->name,
+          ]));
+          //kick out
+          CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
 
         $module = CRUDBooster::getCurrentModule();
 

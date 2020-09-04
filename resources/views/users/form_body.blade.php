@@ -25,8 +25,16 @@ foreach($forms as $index=>$form) {
 
   $name = $form['name'];
   @$join = $form['join'];
-  @$value = (isset($form['value'])) ? $form['value'] : '';
-  @$value = (isset($row->{$name})) ? $row->{$name} : $value;
+
+  if(isset($row->{$name})){
+    @$value = $row->{$name};
+  }
+  elseif(isset($form['value'])){
+    @$value = $form['value'];
+  }
+  else{
+    @$value = '';
+  }
 
   $old = old($name);
   $value = (! empty($old)) ? $old : $value;

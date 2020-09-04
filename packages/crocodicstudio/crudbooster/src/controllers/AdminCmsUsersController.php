@@ -11,9 +11,9 @@ use \App\UsersGroup;
 use \crocodicstudio\crudbooster\helpers\GroupHelper;
 use \crocodicstudio\crudbooster\helpers\UserHelper;
 use \crocodicstudio\crudbooster\helpers\MyHelper;
+use \crocodicstudio\crudbooster\helpers\ModuleHelper;
 
 class AdminCmsUsersController extends CBController {
-
 
 	public function cbInit() {
 		# START CONFIGURATION DO NOT REMOVE THIS LINE
@@ -35,9 +35,6 @@ class AdminCmsUsersController extends CBController {
 		$this->col[] = array("label"=>"Photo","name"=>"photo","image"=>1);
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
-		// $tenants = implode(';',Tenant::all()->pluck('name')->toArray());
-		// $groups = implode(';',Group::all()->pluck('name')->toArray());
-
 		# START FORM DO NOT REMOVE THIS LINE
 		$this->form = array();
 		$this->form[] = array("label"=>"Name","name"=>"name",'required'=>true,'validation'=>'required|alpha_spaces|min:3');
@@ -53,7 +50,7 @@ class AdminCmsUsersController extends CBController {
 				"datatable"=>"tenants,name",
 				'required'=>true,
 				'validation'=>'required|int|min:1',
-				'value'=>UserHelper::current_user_tenant()
+				'value'=>UserHelper::current_user_tenant()//default value if new user
 			];
 			//superadmin vede i gruppi come cascading dropdown in base al tenant
 			$exploded_request_uri = explode('/',parse_url($_SERVER['REQUEST_URI'])['path']);
@@ -69,12 +66,15 @@ class AdminCmsUsersController extends CBController {
 			$this->form[] = [
 				'label'=>'Primary Group',
 				'name'=>'primary_group',
-				"type"=>"select",
+				"type"=>"select2",
 				"datatable"=>"groups,name",
 				'required'=>true,
 				'validation'=>'required|int|min:1',
-				'value'=>$default,
-				'parent_select'=>'tenant'
+				'value'=>$default,//default value if new user
+				'parent_select'=>'tenant',
+				'parent_crosstable'=>'group_tenants',
+				'fk_name'=>'tenant_id',
+				'child_crosstable_fk_name'=>'group_id'
 			];
 		}
 		elseif(UserHelper::isTenantAdmin())
@@ -87,6 +87,7 @@ class AdminCmsUsersController extends CBController {
 				'type'=>'select',
 				'datatable'=>"tenants,name",
 				'default'=>UserHelper::current_user_tenant_name(),
+				'value'=>UserHelper::current_user_tenant(),
 				'disabled'=>true
 			];
 			//aggiungo un campo tenant hidden perchè con la tenant select disabled viene salvato uno 0
@@ -98,19 +99,31 @@ class AdminCmsUsersController extends CBController {
 			$this->form[] = [
 				'label'=>'Primary Group',
 				'name'=>'primary_group',
-				"type"=>"select",
+				"type"=>"select2",
 				"datatable"=>"groups,name",
 				'required'=>true,
 				'validation'=>'required|int|min:1',
 				'default'=>UserHelper::current_user_primary_group_name(),
 				'value'=>UserHelper::current_user_primary_group(),
-				'parent_select'=>'tenant'
+				'parent_select'=>'tenant',
+				'parent_crosstable'=>'group_tenants',
+				'fk_name'=>'tenant_id',
+				'child_crosstable_fk_name'=>'group_id'
 			];
 		}
 		else{
 			//per basic tenant e primary group sono campi readonly (disabled)
 			$this->form[] = array("label"=>"Tenant","name"=>"tenant",'required'=>true,'type'=>'select','datatable'=>"tenants,name",'default'=>'','disabled'=>true);
-			$this->form[] = array("label"=>"Primary group","name"=>"primary_group",'required'=>true,'type'=>'select','datatable'=>"groups,name",'default'=>'','disabled'=>true);
+
+			$this->form[] = [
+				"label"=>"Primary group",
+				"name"=>"primary_group",
+				'required'=>true,
+				'type'=>'select2',
+				'datatable'=>"groups,name",
+				'default'=>'',
+				'disabled'=>true
+			];
 		}
 		$this->form[] = array("label"=>"User directory","name"=>"user_directory",'required'=>false,'validation'=>'min:3');
 		$this->form[] = array("label"=>"Qlik login","name"=>"qlik_login",'required'=>false,'validation'=>'min:3');
@@ -177,6 +190,7 @@ class AdminCmsUsersController extends CBController {
 		//forbid user to delete himself
 		if($id == CRUDBooster::myId()){
 			CRUDBooster::redirect(CRUDBooster::adminPath('users'), trans('crudbooster.delete_self'));
+			exit;
 		}
 		//cascade delete users_groups
 		UsersGroup::where('user_id',$id)->delete();
@@ -196,7 +210,7 @@ class AdminCmsUsersController extends CBController {
     $this->cbLoader();
     $user = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-    if (! CRUDBooster::isSuperadmin()) {
+    if (!ModuleHelper::can_edit($this, $user)) {
         CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
             'name' => $user->{$this->title_field},
             'module' => CRUDBooster::getCurrentModule()->name,
@@ -299,7 +313,7 @@ class AdminCmsUsersController extends CBController {
 		}
 
 		//check if group_id and user_id are int
-		if(MyHelper::is_int($group_id) OR MyHelper::is_int($user_id))
+		if(!MyHelper::is_int($group_id) OR !MyHelper::is_int($user_id))
 		{
 			CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 		}

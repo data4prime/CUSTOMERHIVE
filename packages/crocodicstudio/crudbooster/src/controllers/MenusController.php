@@ -338,7 +338,9 @@ class MenusController extends CBController
               "relationship_table" => "menu_groups",
               "required" => true,
               'parent_select'=>'menu_tenants',
-              'fk_name'=>'tenant'
+      				'parent_crosstable'=>'group_tenants',
+      				'fk_name'=>'tenant_id',
+      				'child_crosstable_fk_name'=>'group_id'
           ];
         }
         elseif(UserHelper::isTenantAdmin())
@@ -363,8 +365,10 @@ class MenusController extends CBController
               "datatable" => "groups,name",
               "relationship_table" => "menu_groups",
               "required" => true,
-              'datatable_where'=>'tenant = '.UserHelper::current_user_tenant(),
-              'parent_select'=>'tenant'
+              'parent_select'=>'tenant',
+      				'parent_crosstable'=>'group_tenants',
+      				'fk_name'=>'tenant_id',
+      				'child_crosstable_fk_name'=>'group_id'
           ];
         }
 
@@ -376,7 +380,7 @@ class MenusController extends CBController
               "name" => "module_slug",
               "type" => "select",
               "datatable" => "cms_moduls,name",
-              "datatable_where" => "is_protected = 0",
+              "datatable_where" => "is_protected = 0 AND table_name LIKE '".config('app.module_generator_prefix')."%' ",
               "value" => $id_module,
           ];
         }

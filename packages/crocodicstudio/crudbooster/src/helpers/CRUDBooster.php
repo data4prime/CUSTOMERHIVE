@@ -694,9 +694,9 @@ class CRUDBooster
 
     public static function getCurrentId()
     {
-        $id = Session::get('current_row_id');
-        $id = intval($id);
-        $id = (! $id) ? Request::segment(4) : $id;
+        // $id = Session::get('current_row_id');
+        // $id = intval($id);
+        $id = !$id ? Request::segment(4) : $id;
         $id = intval($id);
 
         return $id;
@@ -1128,6 +1128,13 @@ class CRUDBooster
           return 'menu_id';
         }
         if($parent_table == 'tenants' AND $child_table == 'menu_tenants'){
+          return 'tenant_id';
+        }
+        //#RAMA group n:n tenants
+        if($parent_table == 'groups' AND $child_table == 'group_tenants'){
+          return 'group_id';
+        }
+        if($parent_table == 'tenants' AND $child_table == 'group_tenants'){
           return 'tenant_id';
         }
         if (Schema::hasColumn($child_table, 'id_'.$parent_table)) {
@@ -2147,7 +2154,6 @@ class CRUDBooster
     */
     public static function routeController($prefix, $controller, $namespace = null)
     {
-
         $prefix = trim($prefix, '/').'/';
 
         $namespace = ($namespace) ?: 'App\Http\Controllers';

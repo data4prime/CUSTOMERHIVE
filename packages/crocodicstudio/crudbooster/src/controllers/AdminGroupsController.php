@@ -5,6 +5,8 @@
 	use DB;
 	use CRUDBooster;
 	use \App\UsersGroup;
+	use \App\Group;
+	use \App\GroupTenants;
 	use \crocodicstudio\crudbooster\helpers\UserHelper;
 	use \crocodicstudio\crudbooster\helpers\MyHelper;
 
@@ -12,217 +14,210 @@
 
 	    public function cbInit() {
 
-			# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->title_field = "name";
-			$this->limit = "20";
-			$this->orderby = "id,desc";
-			$this->global_privilege = false;
-			$this->button_table_action = true;
-			$this->button_bulk_action = true;
-			$this->button_action_style = "button_icon";
-			$this->button_add = true;
-			$this->button_edit = true;
-			$this->button_delete = true;
-			$this->button_detail = true;
-			$this->button_show = true;
-			$this->button_filter = true;
-			$this->button_import = false;
-			$this->button_export = false;
-			$this->table = "groups";
-			# END CONFIGURATION DO NOT REMOVE THIS LINE
+				# START CONFIGURATION DO NOT REMOVE THIS LINE
+				$this->title_field = "name";
+				$this->limit = "20";
+				$this->orderby = "id,desc";
+				$this->global_privilege = false;
+				$this->button_table_action = true;
+				$this->button_bulk_action = true;
+				$this->button_action_style = "button_icon";
+				$this->button_add = true;
+				$this->button_edit = true;
+				$this->button_delete = true;
+				$this->button_detail = true;
+				$this->button_show = true;
+				$this->button_filter = true;
+				$this->button_import = false;
+				$this->button_export = false;
+				$this->table = "groups";
+				# END CONFIGURATION DO NOT REMOVE THIS LINE
 
-			# START COLUMNS DO NOT REMOVE THIS LINE
-			$this->col = [];
-			$this->col[] = ["label"=>"Name","name"=>"name"];
-			$this->col[] = ["label"=>"Help","name"=>"description"];
-			//solo superadmin vede il tenant
-			if(CRUDBooster::isSuperadmin())
-			{
-				$this->col[] = ["label"=>"Tenant","name"=>"tenant","join"=>"tenants,name"];
-			}
-			# END COLUMNS DO NOT REMOVE THIS LINE
+				# START COLUMNS DO NOT REMOVE THIS LINE
+				$this->col = [];
+				$this->col[] = ["label"=>"Name","name"=>"name"];
+				$this->col[] = ["label"=>"Help","name"=>"description"];
+				# END COLUMNS DO NOT REMOVE THIS LINE
 
 
-			# START FORM DO NOT REMOVE THIS LINE
-			$this->form = [];
-			$this->form[] = ['label'=>'Name','name'=>'name','type'=>'text','validation'=>'required|string|min:1|max:70','width'=>'col-sm-10','placeholder'=>'You can only enter the letter only'];
-			$this->form[] = ['label'=>'Help','name'=>'description','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10'];
-			//solo superadmin vede il tenant
-			if(CRUDBooster::isSuperadmin())
-			{
-				$this->form[] = array("label"=>"Tenant","name"=>"tenant",'required'=>true,'type'=>'select','datatable'=>"tenants,name",'validation'=>'required','default'=>'');
-			}
+				# START FORM DO NOT REMOVE THIS LINE
+				$this->form = [];
+				$this->form[] = ['label'=>'Name','name'=>'name','type'=>'text','validation'=>'required|string|min:1|max:70','width'=>'col-sm-10','placeholder'=>'You can only enter the letter only'];
+				$this->form[] = ['label'=>'Help','name'=>'description','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 
-			# Users submodule
-			// #RAMA questo subform riesce ad aggiungere nuovi utenti e a mostrarli ma permette di aggiungere due volte lo stesso utente allo stesso gruppo, non riesco a mostrare un secondo campo nel form e nella tabella, non posso nascondere il tasto edit dalla tabella, fa confusione come interfaccia
-			// $columns[] = ['label'=>'User','name'=>'user_id','type'=>'datamodal','datamodal_table'=>'cms_users','datamodal_columns'=>'name','datamodal_select_to'=>'email:email','datamodal_where'=>'','datamodal_size'=>'large'];
-			// $this->form[] = ['label'=>'Group members','name'=>'users_groups','type'=>'child','columns'=>$columns,'table'=>'users_groups','foreign_key'=>'group_id'];
-			# END FORM DO NOT REMOVE THIS LINE
+				# Users submodule
+				// #RAMA questo subform riesce ad aggiungere nuovi utenti e a mostrarli ma permette di aggiungere due volte lo stesso utente allo stesso gruppo, non riesco a mostrare un secondo campo nel form e nella tabella, non posso nascondere il tasto edit dalla tabella, fa confusione come interfaccia
+				// $columns[] = ['label'=>'User','name'=>'user_id','type'=>'datamodal','datamodal_table'=>'cms_users','datamodal_columns'=>'name','datamodal_select_to'=>'email:email','datamodal_where'=>'','datamodal_size'=>'large'];
+				// $this->form[] = ['label'=>'Group members','name'=>'users_groups','type'=>'child','columns'=>$columns,'table'=>'users_groups','foreign_key'=>'group_id'];
+				# END FORM DO NOT REMOVE THIS LINE
 
-			# OLD START FORM
-			//$this->form = [];
-			//$this->form[] = ['label'=>'Name','name'=>'name','type'=>'text','validation'=>'required|string|min:3|max:70','width'=>'col-sm-10','placeholder'=>'You can only enter the letter only'];
-			//$this->form[] = ['label'=>'Description','name'=>'description','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10'];
-			# OLD END FORM
+				# OLD START FORM
+				//$this->form = [];
+				//$this->form[] = ['label'=>'Name','name'=>'name','type'=>'text','validation'=>'required|string|min:3|max:70','width'=>'col-sm-10','placeholder'=>'You can only enter the letter only'];
+				//$this->form[] = ['label'=>'Description','name'=>'description','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10'];
+				# OLD END FORM
 
-			/*
-	        | ----------------------------------------------------------------------
-	        | Sub Module
-	        | ----------------------------------------------------------------------
-			| @label          = Label of action
-			| @path           = Path of sub module
-			| @foreign_key 	  = foreign key of sub table/module
-			| @button_color   = Bootstrap Class (primary,success,warning,danger)
-			| @button_icon    = Font Awesome Class
-			| @parent_columns = Sparate with comma, e.g : name,created_at
-	        |
-	        */
-	        $this->sub_module = array();
+				/*
+        | ----------------------------------------------------------------------
+        | Sub Module
+        | ----------------------------------------------------------------------
+				| @label          = Label of action
+				| @path           = Path of sub module
+				| @foreign_key 	  = foreign key of sub table/module
+				| @button_color   = Bootstrap Class (primary,success,warning,danger)
+				| @button_icon    = Font Awesome Class
+				| @parent_columns = Sparate with comma, e.g : name,created_at
+        |
+        */
+        $this->sub_module = array();
 
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add More Action Button / Menu
-	        | ----------------------------------------------------------------------
-	        | @label       = Label of action
-	        | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
-	        | @icon        = Font awesome class icon. e.g : fa fa-bars
-	        | @color 	   = Default is primary. (primary, warning, succecss, info)
-	        | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
-	        |
-	        */
-	        $this->addaction = array();
-					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('members/[id]'),'icon'=>'fa fa-users','color'=>'info','title'=>'Members'];
-					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('items/[id]'),'icon'=>'fa fa-shield','color'=>'warning','title'=>'Items'];
+        /*
+        | ----------------------------------------------------------------------
+        | Add More Action Button / Menu
+        | ----------------------------------------------------------------------
+        | @label       = Label of action
+        | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
+        | @icon        = Font awesome class icon. e.g : fa fa-bars
+        | @color 	   = Default is primary. (primary, warning, succecss, info)
+        | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
+        |
+        */
+        $this->addaction = array();
+				$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('members/[id]'),'icon'=>'fa fa-user','color'=>'info','title'=>'Members'];
+				$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('items/[id]'),'icon'=>'fa fa-shield','color'=>'warning','title'=>'Items'];
+				//solo superadmin gestisce i tenant
+				if(CRUDBooster::isSuperadmin())
+				{
+					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('tenant/[id]'),'icon'=>'fa fa-industry','color'=>'primary','title'=>'Tenants'];
+				}
+        /*
+        | ----------------------------------------------------------------------
+        | Add More Button Selected
+        | ----------------------------------------------------------------------
+        | @label       = Label of action
+        | @icon 	   = Icon from fontawesome
+        | @name 	   = Name of button
+        | Then about the action, you should code at actionButtonSelected method
+        |
+        */
+        $this->button_selected = array();
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add More Button Selected
-	        | ----------------------------------------------------------------------
-	        | @label       = Label of action
-	        | @icon 	   = Icon from fontawesome
-	        | @name 	   = Name of button
-	        | Then about the action, you should code at actionButtonSelected method
-	        |
-	        */
-	        $this->button_selected = array();
-
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add alert message to this module at overheader
-	        | ----------------------------------------------------------------------
-	        | @message = Text of message
-	        | @type    = warning,success,danger,info
-	        |
-	        */
-	        $this->alert        = array();
+        /*
+        | ----------------------------------------------------------------------
+        | Add alert message to this module at overheader
+        | ----------------------------------------------------------------------
+        | @message = Text of message
+        | @type    = warning,success,danger,info
+        |
+        */
+        $this->alert        = array();
 
 
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add more button to header button
-	        | ----------------------------------------------------------------------
-	        | @label = Name of button
-	        | @url   = URL Target
-	        | @icon  = Icon from Awesome.
-	        |
-	        */
-	        $this->index_button = array();
+        /*
+        | ----------------------------------------------------------------------
+        | Add more button to header button
+        | ----------------------------------------------------------------------
+        | @label = Name of button
+        | @url   = URL Target
+        | @icon  = Icon from Awesome.
+        |
+        */
+        $this->index_button = array();
 
 
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Customize Table Row Color
-	        | ----------------------------------------------------------------------
-	        | @condition = If condition. You may use field alias. E.g : [id] == 1
-	        | @color = Default is none. You can use bootstrap success,info,warning,danger,primary.
-	        |
-	        */
-	        $this->table_row_color = array();
+        /*
+        | ----------------------------------------------------------------------
+        | Customize Table Row Color
+        | ----------------------------------------------------------------------
+        | @condition = If condition. You may use field alias. E.g : [id] == 1
+        | @color = Default is none. You can use bootstrap success,info,warning,danger,primary.
+        |
+        */
+        $this->table_row_color = array();
 
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | You may use this below array to add statistic at dashboard
-	        | ----------------------------------------------------------------------
-	        | @label, @count, @icon, @color
-	        |
-	        */
-	        $this->index_statistic = array();
-
-
-
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add javascript at body
-	        | ----------------------------------------------------------------------
-	        | javascript code in the variable
-	        | $this->script_js = "function() { ... }";
-	        |
-	        */
-	        $this->script_js = NULL;
-
-
-            /*
-	        | ----------------------------------------------------------------------
-	        | Include HTML Code before index table
-	        | ----------------------------------------------------------------------
-	        | html code to display it before index table
-	        | $this->pre_index_html = "<p>test</p>";
-	        |
-	        */
-	        $this->pre_index_html = null;
+        /*
+        | ----------------------------------------------------------------------
+        | You may use this below array to add statistic at dashboard
+        | ----------------------------------------------------------------------
+        | @label, @count, @icon, @color
+        |
+        */
+        $this->index_statistic = array();
 
 
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Include HTML Code after index table
-	        | ----------------------------------------------------------------------
-	        | html code to display it after index table
-	        | $this->post_index_html = "<p>test</p>";
-	        |
-	        */
-	        $this->post_index_html = null;
+        /*
+        | ----------------------------------------------------------------------
+        | Add javascript at body
+        | ----------------------------------------------------------------------
+        | javascript code in the variable
+        | $this->script_js = "function() { ... }";
+        |
+        */
+        $this->script_js = NULL;
+
+
+          /*
+        | ----------------------------------------------------------------------
+        | Include HTML Code before index table
+        | ----------------------------------------------------------------------
+        | html code to display it before index table
+        | $this->pre_index_html = "<p>test</p>";
+        |
+        */
+        $this->pre_index_html = null;
 
 
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Include Javascript File
-	        | ----------------------------------------------------------------------
-	        | URL of your javascript each array
-	        | $this->load_js[] = asset("myfile.js");
-	        |
-	        */
-	        $this->load_js = array();
+        /*
+        | ----------------------------------------------------------------------
+        | Include HTML Code after index table
+        | ----------------------------------------------------------------------
+        | html code to display it after index table
+        | $this->post_index_html = "<p>test</p>";
+        |
+        */
+        $this->post_index_html = null;
 
 
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add css style at body
-	        | ----------------------------------------------------------------------
-	        | css code in the variable
-	        | $this->style_css = ".style{....}";
-	        |
-	        */
-	        $this->style_css = NULL;
+        /*
+        | ----------------------------------------------------------------------
+        | Include Javascript File
+        | ----------------------------------------------------------------------
+        | URL of your javascript each array
+        | $this->load_js[] = asset("myfile.js");
+        |
+        */
+        $this->load_js = array();
 
 
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Include css File
-	        | ----------------------------------------------------------------------
-	        | URL of your css each array
-	        | $this->load_css[] = asset("myfile.css");
-	        |
-	        */
-	        $this->load_css = array();
+        /*
+        | ----------------------------------------------------------------------
+        | Add css style at body
+        | ----------------------------------------------------------------------
+        | css code in the variable
+        | $this->style_css = ".style{....}";
+        |
+        */
+        $this->style_css = NULL;
 
+
+
+        /*
+        | ----------------------------------------------------------------------
+        | Include css File
+        | ----------------------------------------------------------------------
+        | URL of your css each array
+        | $this->load_css[] = asset("myfile.css");
+        |
+        */
+        $this->load_css = array();
 
 	    }
 
@@ -237,9 +232,7 @@
 	    */
 	    public function actionButtonSelected($id_selected,$button_name) {
 	        //Your code here
-
 	    }
-
 
 	    /*
 	    | ----------------------------------------------------------------------
@@ -252,7 +245,8 @@
 				if(UserHelper::isTenantAdmin())
 				{
 					//Tenantadmin vede nella lista dei gruppi solo quelli del proprio tenant
-					$query->where('tenant',UserHelper::current_user_tenant());
+					$query->join('group_tenants','group_tenants.group_id','groups.id');
+					$query->where('group_tenants.tenant_id',UserHelper::current_user_tenant());
 				}
 			}
 
@@ -275,7 +269,6 @@
 	    */
 	    public function hook_before_add(&$postdata) {
 	        //Your code here
-
 	    }
 
 	    /*
@@ -287,7 +280,7 @@
 	    */
 	    public function hook_after_add($id) {
 	        //Your code here
-
+					Group::find($id)->add_tenant(UserHelper::current_user_tenant());
 	    }
 
 	    /*
@@ -300,7 +293,6 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
-
 	    }
 
 	    /*
@@ -421,7 +413,7 @@
 			  }
 
 				//check if group_id and user_id are int
-				if(MyHelper::is_int($group_id) OR MyHelper::is_int($user_id)) {
+				if(!MyHelper::is_int($group_id) OR !MyHelper::is_int($user_id)) {
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
 
@@ -514,7 +506,7 @@
 			  }
 
 				//check if group_id and user_id are int
-				if(MyHelper::is_int($group_id) OR MyHelper::is_int($item_id))
+				if(!MyHelper::is_int($group_id) OR !MyHelper::is_int($item_id))
 				{
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
 			  }
@@ -525,6 +517,89 @@
 														->delete();
 
 				return redirect('admin/groups/items/'.$group_id);
+			}
+
+			public function tenant($group_id, $alert_id = null)
+			{
+				//check auth
+			  if(!CRUDBooster::isSuperadmin())
+				{
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+				$data['group_id'] = $group_id;
+				$data['group'] = Group::find($group_id);
+				$data['tenants'] = GroupTenants::where('group_id',$group_id)
+																				->join('tenants','tenants.id','=','group_tenants.tenant_id')
+																				->get();
+				$data['page_title'] = 'Group Tenants';
+
+				//prendo $_GET &alert=
+				if(!empty($alert_id)){
+					//se è alert=1
+					if($alert_id=='1'){
+						//mostra messaggio di warning per tasto add premuto senza valori required
+						$data['alerts'][] = ['message'=>'<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...','type'=>'warning'];
+					}
+				}
+
+				//add tenant form
+				$data['forms'] = [];
+				$data['forms'][] = ['label'=>'Name','name'=>'name','type'=>'group_tenant_datamodal','width'=>'col-sm-6','datamodal_table'=>'tenants','datamodal_where'=>'','datamodal_columns'=>'name','datamodal_columns_alias'=>'Name','datamodal_select_to'=>$group_id,'required'=>true];
+				$data['forms'][] = ['label'=>'Description','name'=>'description','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-6','placeholder'=>'Tenant description','readonly'=>true];
+				$data['action'] = CRUDBooster::mainpath($group_id."/add_tenant");
+				$data['return_url'] = CRUDBooster::mainpath('tenant/'.$group_id);
+
+			  $this->cbView('groups.tenant',$data);
+			}
+
+			public function add_tenant($group_id) {
+
+			  if(!CRUDBooster::isSuperadmin()) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+				$tenant_id = $_POST['name'];
+				$return_url = $_POST['return_url'];
+				$ref_mainpath = $_POST['ref_mainpath'];
+
+			  if(empty($tenant_id)) {
+					return redirect($return_url.'/alert/1');
+			  }
+				//check if tenant is already allowed
+				$allowed = GroupTenants::where('group_id',$group_id)
+																->where('tenant_id',$tenant_id)
+																->count();
+
+				if($allowed == 0){
+					$add_tenant = new GroupTenants;
+					$add_tenant->group_id = $group_id;
+					$add_tenant->tenant_id = $tenant_id;
+					$add_tenant->save();
+				}
+
+				//redirect
+				if(empty($return_url)){
+						$return_url = $ref_mainpath;
+				}
+				return redirect($return_url);
+			}
+
+			public function remove_tenant($group_id, $tenant_id) {
+			  if(!CRUDBooster::isSuperadmin()) {
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+				//check if tenant_id and user_id are int
+				if(!MyHelper::is_int($tenant_id) OR !MyHelper::is_int($group_id))
+				{
+			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			  }
+
+			  $data['delete'] = GroupTenants::where('group_id',$group_id)
+														->where('tenant_id',$tenant_id)
+														->delete();
+
+				return redirect('admin/groups/tenant/'.$group_id);
 			}
 
 	}
