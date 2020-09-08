@@ -1,7 +1,7 @@
 @extends('crudbooster::admin_template')
 
 @section('content')
-<!-- Add member -->
+<!-- Add item -->
 <div class="box-body table-responsive">
   <div>
       @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel)

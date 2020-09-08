@@ -27,6 +27,10 @@ $result = DB::table('cms_users')
               })
               ->whereIn('cms_users.tenant',$group_tenants);
 
+if(UserHelper::isTenantAdmin()) {
+	//can only see users of his own tenant
+	$result = $result->where('cms_users.tenant',UserHelper::tenant(CRUDBooster::myId()));
+}
 
 if($q){
   //filtra la lista in base alla ricerca fatta dall'utente

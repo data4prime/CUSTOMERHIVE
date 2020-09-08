@@ -344,8 +344,12 @@
 														->where('users_groups.group_id',$group_id)
 														->where('users_groups.deleted_at',null)
 														->join('cms_users', 'cms_users.id', '=', 'users_groups.user_id')
-														->join('cms_privileges', 'cms_privileges.id', '=', 'cms_users.id_cms_privileges')
-														->select('cms_users.id', 'cms_users.name', 'cms_users.email', 'cms_users.photo', 'cms_privileges.name as privilege', 'cms_users.primary_group')
+														->join('cms_privileges', 'cms_privileges.id', '=', 'cms_users.id_cms_privileges');
+				if(UserHelper::isTenantAdmin()) {
+					//can only see group members of his own tenant
+					$data['members'] = $data['members']->where('cms_users.tenant',UserHelper::tenant(CRUDBooster::myId()));
+				}
+				$data['members'] = $data['members']->select('cms_users.id', 'cms_users.name', 'cms_users.email', 'cms_users.photo', 'cms_privileges.name as privilege', 'cms_users.primary_group')
 														->get();
 
 			  $data['group'] = \App\Group::find($group_id);

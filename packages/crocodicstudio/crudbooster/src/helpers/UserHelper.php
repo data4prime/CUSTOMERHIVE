@@ -10,6 +10,65 @@ use \App\Role;
 class UserHelper  {
 
   /**
+  * Check if current user has permission over a user
+  *
+  * @param string 'edit' or 'delete'
+  * @param int id of the passive user
+  * @param int id of the current user
+  *
+  * @return boolean true if current user has the permission on the user
+  */
+  public static function can_do_on_user($mode, $target_user_id, $current_user_id = null) {
+
+    if(empty($user_id)) {
+      $user_id = CRUDBooster::myId();
+    }
+
+    if(UserHelper::isSuperAdmin($user_id)) {
+      //superadmin can do everything
+      return true;
+    }
+    if(!UserHelper::isTenantAdmin($user_id)) {
+      //basic can't do anything on users
+      return false;
+    }
+    if(UserHelper::tenant($target_user_id) != UserHelper::tenant($user_id)) {
+      return false;
+    }
+
+    switch ($mode) {
+      case 'edit':
+        //tenantadmin can edit self
+        if($target_user_id == $user_id) {
+          return true;
+        }
+        //tenantadmin can't edit superadmins or tenantadmins
+        if(UserHelper::isSuperAdmin($target_user_id) OR UserHelper::isTenantAdmin($target_user_id)) {
+          return false;
+        }
+        else{
+          return true;
+        }
+        break;
+        
+      case 'delete':
+        //tenantadmin can't delete superadmins or tenantadmins
+        if(UserHelper::isSuperAdmin($target_user_id) OR UserHelper::isTenantAdmin($target_user_id)) {
+          return false;
+        }
+        else{
+          return true;
+        }
+        break;
+
+      default:
+        //invalid mode
+        return false;
+        break;
+    }
+  }
+
+  /**
   * Check if current user has permission over a menù
   *
   * @param string 'edit' or 'delete'

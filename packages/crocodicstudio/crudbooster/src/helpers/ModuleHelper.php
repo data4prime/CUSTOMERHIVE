@@ -136,6 +136,10 @@ class ModuleHelper  {
       return UserHelper::can_menu('edit', $row->id);
     }
 
+    if($module->table == 'cms_users') {
+      return UserHelper::can_do_on_user('edit', $row->id);
+    }
+
     //check correct privilege role
     if(
         //this should filter basic users
@@ -226,7 +230,7 @@ class ModuleHelper  {
   * @return boolean true if user can delete module's row, false otherwise
   */
   public static function can_delete($module, $row) {
-    
+
     //admin can always do everything
     if(CRUDBooster::isSuperadmin()) {
       return true;
@@ -234,6 +238,10 @@ class ModuleHelper  {
 
     if($module->table == 'cms_menus') {
       return UserHelper::can_menu('delete', $row->id);
+    }
+
+    if($module->table == 'cms_users') {
+      return UserHelper::can_do_on_user('edit', $row->id);
     }
 
     //check correct privilege role

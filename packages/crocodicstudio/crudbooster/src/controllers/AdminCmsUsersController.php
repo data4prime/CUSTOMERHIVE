@@ -39,7 +39,27 @@ class AdminCmsUsersController extends CBController {
 		$this->form = array();
 		$this->form[] = array("label"=>"Name","name"=>"name",'required'=>true,'validation'=>'required|alpha_spaces|min:3');
 		$this->form[] = array("label"=>"Email","name"=>"email",'required'=>true,'type'=>'email','validation'=>'required|email|unique:cms_users,email,'.CRUDBooster::getCurrentId());
-		$this->form[] = array("label"=>"Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name",'required'=>true,'validation'=>'required|int|min:1');
+		if(UserHelper::isSuperAdmin()){
+			$this->form[] = array("label"=>"Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name",'required'=>true,'validation'=>'required|int|min:1');
+		}
+		if(UserHelper::isTenantAdmin()){
+			//tenantadmin can't edit users privileges (can't upgradte to admins and can't demote admins)
+			$this->form[] = array(
+				"label"=>"Privilege",
+				"name"=>"id_cms_privileges",
+				"type"=>"select",
+				"datatable"=>"cms_privileges,name",
+				'required'=>true,
+				'validation'=>'required|int|min:1',
+				'disabled'=>true
+			);
+			//aggiungo un campo Privilege hidden perchè con la Privilege select disabled viene salvato uno 0
+			$this->form[] = [
+				"label"=>"Privilege",
+				"name"=>"id_cms_privileges",
+				'type'=>'hidden'
+			];
+		}
 
 		if(CRUDBooster::isSuperadmin())
 		{
@@ -135,6 +155,7 @@ class AdminCmsUsersController extends CBController {
 		$this->script_js = "";
 
 		$this->addaction = array();
+		//TODO tenantadmin can't update users with superadmin or tenantadmin privilege
 		$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('groups/[id]'),'icon'=>'fa fa-users','color'=>'info','title'=>'View groups'];
 	}
 

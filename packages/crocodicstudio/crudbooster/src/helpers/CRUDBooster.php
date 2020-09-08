@@ -303,16 +303,16 @@ class CRUDBooster
 
     public static function isUpdate()
     {
-        if (self::isSuperadmin()) {
-            return true;
-        }
+      if (self::isSuperadmin()) {
+        return true;
+      }
 
-        $session = Session::get('admin_privileges_roles');
-        foreach ($session as $v) {
-            if ($v->path == self::getModulePath()) {
-                return (bool) $v->is_edit;
-            }
+      $session = Session::get('admin_privileges_roles');
+      foreach ($session as $v) {
+        if ($v->path == self::getModulePath()) {
+          return (bool) $v->is_edit;
         }
+      }
     }
 
     public static function isCreate()
