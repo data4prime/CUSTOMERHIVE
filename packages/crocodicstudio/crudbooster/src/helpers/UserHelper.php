@@ -50,7 +50,7 @@ class UserHelper  {
           return true;
         }
         break;
-        
+
       case 'delete':
         //tenantadmin can't delete superadmins or tenantadmins
         if(UserHelper::isSuperAdmin($target_user_id) OR UserHelper::isTenantAdmin($target_user_id)) {
@@ -132,7 +132,7 @@ class UserHelper  {
     $users = User::orderby('created_at','desc')->limit($number)->get();
     foreach ($users as $key => $user) {
       if(empty($user->photo)) {
-        $user->photo = UserHelper::default_icon($user->id);
+        $user->photo = UserHelper::icon($user->id);
       }
     }
     return $users;
@@ -145,10 +145,10 @@ class UserHelper  {
   *
   * @return string path to user's default icon
   */
-  public static function default_icon($user_id = null) {
+  public static function icon($user_id = null) {
     $user = User::find($user_id);
     if(empty($user_id) OR empty($user)) {
-      return asset('uploads/1/2020-01/user.png');
+      return asset('/uploads/1/2020-01/user.png');
     }
     else{
       return $user->photo();

@@ -155,7 +155,7 @@ class AdminController extends CBController
                           ->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')
                           ->get();
 
-            $photo = UserHelper::default_icon($users->id);
+            $photo = UserHelper::icon($users->id);
             Session::put('admin_id', $users->id);
             Session::put('admin_is_superadmin', $priv->is_superadmin);
             Session::put('admin_name', $users->name);

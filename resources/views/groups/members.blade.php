@@ -103,7 +103,7 @@
             </td>
             <td>{{$member->name}}</td>
             <td>{{$member->email}}</td>
-            <td><img width="40" src="{{UserHelper::default_icon($member->id)}}" class="user-image" alt="User Image"></td>
+            <td><img width="40" src="{{UserHelper::icon($member->id)}}" class="user-image" alt="User Image"></td>
             <td>{{$member->privilege}}</td>
             <td>
               @if(CRUDBooster::isDelete() && $button_edit && $group->id !== $member->primary_group)

@@ -57,16 +57,16 @@ class User extends Authenticatable
     public function photo()
     {
       if(!empty($this->photo)){
-        return $this->photo;
+        return '/'.$this->photo;
       }
       elseif($this->isSuperAdmin()){
-        return asset('uploads/1/2020-01/admin.jpeg');
+        return asset('/uploads/1/2020-01/admin.jpeg');
       }
       elseif($this->isTenantAdmin()){
-        return asset('uploads/1/2020-01/manager.jpeg');
+        return asset('/uploads/1/2020-01/manager.jpeg');
       }
       else{
-        return asset('uploads/1/2020-01/user.png');
+        return asset('/uploads/1/2020-01/user.png');
       }
     }
 }

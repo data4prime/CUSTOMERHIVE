@@ -91,8 +91,9 @@
 
                   @if(CRUDBooster::isSuperadmin())
                   <li data-collapse="2" class='treeview'>
-                      <a href='#'><i class='fa fa-industry'></i> <span>{{ trans('crudbooster.Tenants') }}</span> <i
-                                  class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
+                      <a href='#'>
+                        <i class='fa fa-industry'></i> <span>{{ trans('crudbooster.Tenants') }}</span> <i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
+                      </a>
                       <ul class='treeview-menu'>
                           <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/tenants/add*')) ? 'active' : '' }}"><a
                                       href='{{Route("AdminTenantsControllerGetAdd")}}'>{{ $current_path }}<i class='fa fa-plus'></i>

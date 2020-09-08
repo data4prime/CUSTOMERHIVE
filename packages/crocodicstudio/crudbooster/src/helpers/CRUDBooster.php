@@ -227,7 +227,7 @@ class CRUDBooster
 
     public static function myPhoto()
     {
-        return Session::get('admin_photo');
+        return UserHelper::icon(self::myId());
     }
 
     public static function myPrivilege()
@@ -573,9 +573,10 @@ class CRUDBooster
                     $grandchild = DB::table('cms_menus')
                       ->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '".self::myPrivilegeId()."')")
                       ->where('is_dashboard', 0)
-                      ->where('tenant', UserHelper::current_user_tenant())
                       ->where('is_active', 1)
-                      ->where('parent_id', $c->id);
+                      ->where('parent_id', $c->id)
+                      ->join('menu_tenants','menu_tenants.menu_id','cms_menus.id')
+                      ->where('menu_tenants.tenant_id', UserHelper::current_user_tenant());
                     // se l'utente corrente non è superadmin e non è Tenantadmin..
                     if(!(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin()))
                     {

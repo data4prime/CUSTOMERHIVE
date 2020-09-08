@@ -191,9 +191,11 @@
                                                 <em class="text-muted">
                                                   <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
                                                 </em>
+                                                @if(CRUDBooster::isSuperadmin())
                                                 <em class="text-muted pull-right">
-                                                  <small><i class="fa fa-industry"></i> &nbsp; {{$tenant}}</small>
+                                                  <small><i class="fa fa-industry"></i> &nbsp; {{$tenants_name}}</small>
                                                 </em>
+                                                @endif
                                               </div>
                                               <ul>
                                                   @if($child->children)
@@ -218,9 +220,11 @@
                                                               <em class="text-muted">
                                                                 <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
                                                               </em>
+                                                              @if(CRUDBooster::isSuperadmin())
                                                               <em class="text-muted pull-right">
-                                                                <small><i class="fa fa-industry"></i> &nbsp; {{$tenant}}</small>
+                                                                <small><i class="fa fa-industry"></i> &nbsp; {{$tenants_name}}</small>
                                                               </em>
+                                                              @endif
                                                             </div>
                                                           </li>
                                                       @endforeach
