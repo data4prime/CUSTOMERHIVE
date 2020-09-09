@@ -85,43 +85,52 @@
                 var sortactive = $(".draggable-menu").sortable({
                     group: '.draggable-menu',
                     delay: 200,
-                    isValidTarget: function ($item, container) {
-                        var depth = 1, // Start with a depth of one (the element itself)
-                            maxDepth = 3,
-                            children = $item.find('ul').first().find('li');
+                    cancel: ".ui-state-disabled",
+                    isValidTarget: function (item, container) {
+                      if($(item).hasClass("ui-state-disabled")) {
+                        return false;
+                      }
+                      var depth = 1, // Start with a depth of one (the element itself)
+                      maxDepth = {{ config('app.menu_max_nesting_levels') }},
+                      children = item.find('ul').first().find('li');
 
-                        // Add the amount of parents to the depth
-                        depth += container.el.parents('ul').length;
+                      // Add the amount of parents to the depth
+                      depth += container.el.parents('ul').length;
 
-                        // Increment the depth for each time a child
-                        while (children.length) {
-                            depth++;
-                            children = children.find('ul').first().find('li');
-                        }
+                      // Increment the depth for each time a child
+                      while (children.length) {
+                          depth++;
+                          children = children.find('ul').first().find('li');
+                      }
 
-                        return depth <= maxDepth;
+                      return depth <= maxDepth;
                     },
-                    onDrop: function ($item, container, _super) {
+                    onDrop: function (item, container, _super) {
 
-                        if ($item.parents('ul').hasClass('draggable-menu-active')) {
-                            var isActive = 1;
-                            var data = $('.draggable-menu-active').sortable("serialize").get();
-                            var jsonString = JSON.stringify(data, null, ' ');
-                        } else {
-                            var isActive = 0;
-                            var data = $('.draggable-menu-inactive').sortable("serialize").get();
-                            var jsonString = JSON.stringify(data, null, ' ');
-                            $('#inactive_text').remove();
+                        var is_active = 1;
+                        if (item.parents('ul').hasClass('draggable-menu-active')) {
+                          is_active = 1;
+                          var data = $('.draggable-menu-active').sortable("serialize").get();
+                          var jsonString = JSON.stringify(data, null, ' ');
                         }
+                        else {
+                          is_active = 0;
+                          var data = $('.draggable-menu-inactive').sortable("serialize").get();
+                          var jsonString = JSON.stringify(data, null, ' ');
+                          $('#inactive_text').remove();
+                        }
+                        console.log(data);
+                        // console.log(jsonString);
+                        console.log(is_active);
 
-                        $.post("{{route('MenusControllerPostSaveMenu')}}", {menus: jsonString, isActive: isActive}, function (resp) {
-                            $('#menu-saved-info').fadeIn('fast').delay(1000).fadeOut('fast');
+                        $.post("{{route('MenusControllerPostSaveMenu')}}", {menus: jsonString, isActive: is_active}, function (resp) {
+                          console.log(resp);
+                          $('#menu-saved-info').fadeIn('fast').delay(1000).fadeOut('fast');
                         });
 
-                        _super($item, container);
+                        _super(item, container);
                     }
                 });
-
 
             });
         </script>
@@ -132,114 +141,18 @@
 
             <div class="panel panel-success">
                 <div class="panel-heading">
-                    <strong>Menu Order (Active)</strong> <span id='menu-saved-info' style="display:none" class='pull-right text-success'>
-                      <i class='fa fa-check'></i> Menu Saved !</span>
+                    <strong>Menu Order (Active)</strong>
+                    <span id='menu-saved-info' style="display:none" class='pull-right text-success'>
+                      <i class='fa fa-check'></i> Menu Saved !
+                    </span>
                 </div>
                 <div class="panel-body clearfix">
-                    <ul class='draggable-menu draggable-menu-active'>
-                        @foreach($menu_active as $menu)
-                            @php
-                                $privileges = DB::table('cms_menus_privileges')
-                                ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
-                                ->where('id_cms_menus',$menu->id)->pluck('cms_privileges.name')->toArray();
-
-                                $tenants_name = \App\Menu::find($menu->id)->tenants_name();
-                            @endphp
-                            <li data-id='{{$menu->id}}' data-name='{{$menu->name}}'>
-                                <div class='{{$menu->is_dashboard?"is-dashboard":""}}' title="{{$menu->is_dashboard?'This is setted as Dashboard':''}}">
-                                    <i class='{{($menu->is_dashboard)?"icon-is-dashboard fa fa-dashboard":$menu->icon}}'></i>
-                                     {{$menu->name}}
-                                     <span class='pull-right'>
-                                       @if(UserHelper::can_menu('edit', $menu->id))
-                                       <a class='fa fa-pencil' title='Edit' href='{{route("MenusControllerGetEdit",["id"=>$menu->id])}}?return_url={{urlencode(Request::fullUrl())}}'></a>
-                                       @endif
-                                       &nbsp;&nbsp;
-                                       @if(UserHelper::can_menu('delete', $menu->id))
-                                      <a title='Delete' class='fa fa-trash' onclick='{{CRUDBooster::deleteConfirm(route("MenusControllerGetDelete",["id"=>$menu->id]))}}' href='javascript:void(0)'></a>
-                                      @endif
-                                    </span>
-                                    <br/>
-                                    <em class="text-muted">
-                                      <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
-                                    </em>
-                                    @if(CRUDBooster::isSuperadmin())
-                                    <em class="text-muted pull-right">
-                                      <small><i class="fa fa-industry"></i> &nbsp; {{$tenants_name}}</small>
-                                    </em>
-                                    @endif
-                                </div>
-                                <ul>
-                                    @if($menu->children)
-                                        @foreach($menu->children as $child)
-                                            @php
-                                                $privileges = DB::table('cms_menus_privileges')
-                                                              ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
-                                                              ->where('id_cms_menus',$child->id)->pluck('cms_privileges.name')->toArray();
-
-                                                $tenant = \App\Tenant::find($child->tenant)->name;
-                                            @endphp
-                                            <li data-id='{{$child->id}}' data-name='{{$child->name}}'>
-                                              <div class='{{$child->is_dashboard?"is-dashboard":""}}' title="{{$child->is_dashboard?'This is setted as Dashboard':''}}">
-                                                <i class='{{($child->is_dashboard)?"icon-is-dashboard fa fa-dashboard":$child->icon}}'></i>
-                                                {{$child->name}}
-                                                <span class='pull-right'>
-                                                  <a class='fa fa-pencil' title='Edit' href='{{route("MenusControllerGetEdit",["id"=>$child->id])}}?return_url={{urlencode(Request::fullUrl())}}'></a>
-                                                  &nbsp;&nbsp;
-                                                  <a title="Delete" class='fa fa-trash' onclick='{{CRUDBooster::deleteConfirm(route("MenusControllerGetDelete",["id"=>$child->id]))}}' href='javascript:void(0)'></a>
-                                                </span>
-                                                <br/>
-                                                <em class="text-muted">
-                                                  <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
-                                                </em>
-                                                @if(CRUDBooster::isSuperadmin())
-                                                <em class="text-muted pull-right">
-                                                  <small><i class="fa fa-industry"></i> &nbsp; {{$tenants_name}}</small>
-                                                </em>
-                                                @endif
-                                              </div>
-                                              <ul>
-                                                  @if($child->children)
-                                                      @foreach($child->children as $grandchild)
-                                                          @php
-                                                              $privileges = DB::table('cms_menus_privileges')
-                                                              ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
-                                                              ->where('id_cms_menus',$grandchild->id)->pluck('cms_privileges.name')->toArray();
-
-                                                              $tenant = \App\Tenant::find($grandchild->tenant)->name;
-                                                          @endphp
-                                                          <li data-id='{{$grandchild->id}}' data-name='{{$grandchild->name}}'>
-                                                            <div class='{{$grandchild->is_dashboard?"is-dashboard":""}}' title="{{$grandchild->is_dashboard?'This is setted as Dashboard':''}}">
-                                                              <i class='{{($grandchild->is_dashboard)?"icon-is-dashboard fa fa-dashboard":$grandchild->icon}}'></i>
-                                                              {{$grandchild->name}}
-                                                              <span class='pull-right'>
-                                                                <a class='fa fa-pencil' title='Edit' href='{{route("MenusControllerGetEdit",["id"=>$grandchild->id])}}?return_url={{urlencode(Request::fullUrl())}}'></a>
-                                                                &nbsp;&nbsp;
-                                                                <a title="Delete" class='fa fa-trash' onclick='{{CRUDBooster::deleteConfirm(route("MenusControllerGetDelete",["id"=>$grandchild->id]))}}' href='javascript:void(0)'></a>
-                                                              </span>
-                                                              <br/>
-                                                              <em class="text-muted">
-                                                                <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
-                                                              </em>
-                                                              @if(CRUDBooster::isSuperadmin())
-                                                              <em class="text-muted pull-right">
-                                                                <small><i class="fa fa-industry"></i> &nbsp; {{$tenants_name}}</small>
-                                                              </em>
-                                                              @endif
-                                                            </div>
-                                                          </li>
-                                                      @endforeach
-                                                  @endif
-                                              </ul>
-                                            </li>
-                                        @endforeach
-                                    @endif
-                                </ul>
-                            </li>
-                        @endforeach
-                    </ul>
-                    @if(count($menu_active)==0)
-                        <div align="center">Active menu is empty, please add new menu</div>
-                    @endif
+                  <ul class='draggable-menu draggable-menu-active'>
+                    <?=$menu_active_html?>
+                  </ul>
+                  @if(count($menu_active)==0)
+                    <div align="center">Active menu is empty, please add new menu</div>
+                  @endif
                 </div>
             </div>
 
@@ -248,114 +161,11 @@
                     <strong>Menu Order (Inactive)</strong>
                 </div>
                 <div class="panel-body clearfix">
+
                     <ul class='draggable-menu draggable-menu-inactive'>
-                        @foreach($menu_inactive as $menu)
-                            @php
-                                $privileges = DB::table('cms_menus_privileges')
-                                ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
-                                ->where('id_cms_menus',$menu->id)->pluck('cms_privileges.name')->toArray();
-
-                                $tenant = \App\Tenant::find($menu->tenant)->name;
-                            @endphp
-                            <li data-id='{{$menu->id}}' data-name='{{$menu->name}}'>
-                                <div class='{{$menu->is_dashboard?"is-dashboard":""}}' title="{{$menu->is_dashboard?'This is setted as Dashboard':''}}">
-                                    <i class='{{($menu->is_dashboard)?"icon-is-dashboard fa fa-dashboard":$menu->icon}}'></i>
-                                     {{$menu->name}}
-                                     <span class='pull-right'>
-                                      @if(
-                                          CRUDBooster::isSuperadmin() OR
-                                          (
-                                            CRUDBooster::isUpdate() AND
-                                            $menu->tenant == UserHelper::current_user_tenant()
-                                          )
-                                        )
-                                       <a class='fa fa-pencil' title='Edit' href='{{route("MenusControllerGetEdit",["id"=>$menu->id])}}?return_url={{urlencode(Request::fullUrl())}}'></a>
-                                       @endif
-                                       &nbsp;&nbsp;
-                                      @if(
-                                          CRUDBooster::isSuperadmin() OR
-                                          (
-                                            CRUDBooster::isDelete() AND
-                                            $menu->tenant == UserHelper::current_user_tenant()
-                                          )
-                                        )
-                                      <a title='Delete' class='fa fa-trash' onclick='{{CRUDBooster::deleteConfirm(route("MenusControllerGetDelete",["id"=>$menu->id]))}}' href='javascript:void(0)'></a>
-                                      @endif
-                                    </span>
-                                    <br/>
-                                    <em class="text-muted">
-                                      <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
-                                    </em>
-                                    <em class="text-muted pull-right">
-                                      <small><i class="fa fa-industry"></i> &nbsp; {{$tenant}}</small>
-                                    </em>
-                                </div>
-                                <ul>
-
-                                      @if($menu->children)
-                                          @foreach($menu->children as $child)
-                                              @php
-                                                  $privileges = DB::table('cms_menus_privileges')
-                                                  ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
-                                                  ->where('id_cms_menus',$child->id)->pluck('cms_privileges.name')->toArray();
-
-                                                  $tenant = \App\Tenant::find($child->tenant)->name;
-                                              @endphp
-                                              <li data-id='{{$child->id}}' data-name='{{$child->name}}'>
-                                                <div class='{{$child->is_dashboard?"is-dashboard":""}}' title="{{$child->is_dashboard?'This is setted as Dashboard':''}}">
-                                                  <i class='{{($child->is_dashboard)?"icon-is-dashboard fa fa-dashboard":$child->icon}}'></i>
-                                                  {{$child->name}}
-                                                  <span class='pull-right'>
-                                                    <a class='fa fa-pencil' title='Edit' href='{{route("MenusControllerGetEdit",["id"=>$child->id])}}?return_url={{urlencode(Request::fullUrl())}}'></a>
-                                                    &nbsp;&nbsp;
-                                                    <a title="Delete" class='fa fa-trash' onclick='{{CRUDBooster::deleteConfirm(route("MenusControllerGetDelete",["id"=>$child->id]))}}' href='javascript:void(0)'></a>
-                                                  </span>
-                                                  <br/>
-                                                  <em class="text-muted">
-                                                    <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
-                                                  </em>
-                                                  <em class="text-muted pull-right">
-                                                    <small><i class="fa fa-industry"></i> &nbsp; {{$tenant}}</small>
-                                                  </em>
-                                                </div>
-                                                <ul>
-                                                    @if($child->children)
-                                                        @foreach($child->children as $grandchild)
-                                                            @php
-                                                                $privileges = DB::table('cms_menus_privileges')
-                                                                ->join('cms_privileges','cms_privileges.id','=','cms_menus_privileges.id_cms_privileges')
-                                                                ->where('id_cms_menus',$grandchild->id)->pluck('cms_privileges.name')->toArray();
-
-                                                                $tenant = \App\Tenant::find($grandchild->tenant)->name;
-                                                            @endphp
-                                                            <li data-id='{{$grandchild->id}}' data-name='{{$grandchild->name}}'>
-                                                              <div class='{{$grandchild->is_dashboard?"is-dashboard":""}}' title="{{$grandchild->is_dashboard?'This is setted as Dashboard':''}}">
-                                                                <i class='{{($grandchild->is_dashboard)?"icon-is-dashboard fa fa-dashboard":$grandchild->icon}}'></i>
-                                                                {{$grandchild->name}}
-                                                                <span class='pull-right'>
-                                                                  <a class='fa fa-pencil' title='Edit' href='{{route("MenusControllerGetEdit",["id"=>$grandchild->id])}}?return_url={{urlencode(Request::fullUrl())}}'></a>
-                                                                  &nbsp;&nbsp;
-                                                                  <a title="Delete" class='fa fa-trash' onclick='{{CRUDBooster::deleteConfirm(route("MenusControllerGetDelete",["id"=>$grandchild->id]))}}' href='javascript:void(0)'></a>
-                                                                </span>
-                                                                <br/>
-                                                                <em class="text-muted">
-                                                                  <small><i class="fa fa-users"></i> &nbsp; {{implode(', ',$privileges)}}</small>
-                                                                </em>
-                                                                <em class="text-muted pull-right">
-                                                                  <small><i class="fa fa-industry"></i> &nbsp; {{$tenant}}</small>
-                                                                </em>
-                                                              </div>
-                                                            </li>
-                                                        @endforeach
-                                                    @endif
-                                                </ul>
-                                              </li>
-                                          @endforeach
-                                      @endif
-                                </ul>
-                            </li>
-                        @endforeach
+                      <?=$menu_inactive_html?>
                     </ul>
+
                     @if(count($menu_inactive)==0)
                         <div align="center" id='inactive_text' class='text-muted'>Inactive menu is empty</div>
                     @endif

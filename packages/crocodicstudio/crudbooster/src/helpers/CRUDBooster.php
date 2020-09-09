@@ -446,7 +446,7 @@ class CRUDBooster
         return $menu;
     }
 
-    public static function sidebarMenu()
+    public static function sidebarMenu($parent_id = 0)
     {
         $menu_active = DB::table('cms_menus')
           ->whereRaw("cms_menus.id IN
@@ -456,7 +456,7 @@ class CRUDBooster
                         where id_cms_privileges = '".self::myPrivilegeId()."'
                       )"
                     )
-          ->where('parent_id', 0)
+          ->where('parent_id', $parent_id)
           ->where('is_active', 1)
           ->where('is_dashboard', 0)
           ->join('menu_tenants','menu_tenants.menu_id','cms_menus.id')
@@ -514,132 +514,14 @@ class CRUDBooster
             $menu->url = $url;
             $menu->url_path = trim(str_replace(url('/'), '', $url), "/");
 
-            $child = DB::table('cms_menus')
-              ->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '".self::myPrivilegeId()."')")
-              ->where('is_dashboard', 0)
-              ->where('is_active', 1)
-              ->where('parent_id', $menu->id)
-              ->join('menu_tenants','menu_tenants.menu_id','cms_menus.id')
-              ->where('menu_tenants.tenant_id', UserHelper::current_user_tenant());
-            // se l'utente corrente non è superadmin e non è Tenantadmin..
-            if(!(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin()))
-            {
-              //..allora filtra i menu visibili in base ai suoi gruppi
-              $child = $child->join('menu_groups', 'cms_menus.id', '=', 'menu_groups.menu_id')
-                                        ->whereIn('menu_groups.group_id',UserHelper::current_user_groups());
-            }
-            $child = $child->orderby('sorting', 'asc')
-              ->select('cms_menus.*')
-              ->orderby('sorting', 'asc')
-              ->get();
-
-            if (count($child)) {
-
-                foreach ($child as $child_key => &$c) {
-
-                    try {
-                        switch ($c->type) {
-                            case 'Route':
-                                $url = route($c->path);
-                                break;
-                            default:
-                            case 'URL':
-                                $url = $c->path;
-                                break;
-                            case 'Controller & Method':
-                                $url = action($c->path);
-                                break;
-                            case 'Module':
-                                break;
-                            case 'Statistic':
-                                $url = self::adminPath($c->path);
-                                break;
-                            case 'Qlik':
-                                //controlla se utente corrente è abilitato a vedere oggetto
-                                $c->item_id = MenuHelper::parse_path_for_qlik_item_id($c->path);
-                                $c->allowed = QlikHelper::can_see_item($c->item_id);
-                                $url = self::adminPath($c->path);
-                                break;
-                        }
-                        $c->is_broken = false;
-                    } catch (\Exception $e) {
-                        $url = "#";
-                        $c->is_broken = true;
-                    }
-
-                    $c->url = $url;
-                    $c->url_path = trim(str_replace(url('/'), '', $url), "/");
-
-                    $grandchild = DB::table('cms_menus')
-                      ->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '".self::myPrivilegeId()."')")
-                      ->where('is_dashboard', 0)
-                      ->where('is_active', 1)
-                      ->where('parent_id', $c->id)
-                      ->join('menu_tenants','menu_tenants.menu_id','cms_menus.id')
-                      ->where('menu_tenants.tenant_id', UserHelper::current_user_tenant());
-                    // se l'utente corrente non è superadmin e non è Tenantadmin..
-                    if(!(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin()))
-                    {
-                      //..allora filtra i menu visibili in base ai suoi gruppi
-                      $grandchild = $grandchild->join('menu_groups', 'cms_menus.id', '=', 'menu_groups.menu_id')
-                                                ->whereIn('menu_groups.group_id',UserHelper::current_user_groups());
-                    }
-                    $grandchild = $grandchild->orderby('sorting', 'asc')
-                      ->select('cms_menus.*')
-                      ->orderby('sorting', 'asc')
-                      ->get();
-
-                    if (count($grandchild)) {
-
-                        foreach ($grandchild as $grandchild_key => &$g) {
-
-                            try {
-                                switch ($g->type) {
-                                    case 'Route':
-                                        $url = route($g->path);
-                                        break;
-                                    default:
-                                    case 'URL':
-                                        $url = $g->path;
-                                        break;
-                                    case 'Controller & Method':
-                                        $url = action($g->path);
-                                        break;
-                                    case 'Module':
-                                        break;
-                                    case 'Statistic':
-                                        $url = self::adminPath($g->path);
-                                        break;
-                                    case 'Qlik':
-                                        //controlla se utente corrente è abilitato a vedere oggetto
-                                        $g->item_id = MenuHelper::parse_path_for_qlik_item_id($g->path);
-                                        $g->allowed = QlikHelper::can_see_item($g->item_id);
-                                        $url = self::adminPath($g->path);
-                                        break;
-                                }
-                                $g->is_broken = false;
-                            } catch (\Exception $e) {
-                                $url = "#";
-                                $g->is_broken = true;
-                            }
-
-                            $g->url = $url;
-                            $g->url_path = trim(str_replace(url('/'), '', $url), "/");
-                        }
-                    }
-
-                    $c->children = $grandchild;
-                }
-
-                $menu->children = $child;
-            }
+            $menu->children = self::sidebarMenu($menu->id);
         }
         return $menu_active;
     }
 
-    public static function deleteConfirm($redirectTo)
+    public static function deleteConfirm($redirectTo, $print = true)
     {
-        echo "swal({
+        $result = "swal({
 				title: \"".trans('crudbooster.delete_title_confirm')."\",
 				text: \"".trans('crudbooster.delete_description_confirm')."\",
 				type: \"warning\",
@@ -649,6 +531,13 @@ class CRUDBooster
 				cancelButtonText: \"".trans('crudbooster.confirmation_no')."\",
 				closeOnConfirm: false },
 				function(){  location.href=\"$redirectTo\" });";
+
+        if($print){
+          echo $result;
+        }
+        else{
+          return $result;
+        }
     }
 
     public static function getModulePath()

@@ -256,11 +256,13 @@ return [
       'deleted_at',
       'deleted_by'
     ),
-
+    'menu_max_nesting_levels' => env('MENU_MAX_NESTING_LEVELS', 5),
     'reserved_tables_prefix' => 'cms_',
+
     //module generator
     'module_generator_prefix' => env('MODULE_GENERATOR_PREFIX', 'mg_'),
     'mg_valid_data_types' => array('text', 'number', 'boolean'),
+
     //qlik settings
     'qlik_sense_app_base_path' => env('QLIK_SENSE_BASE_PATH', 'https://platformq.dasycloud.com'),
     'qlik_sense_main_port' => env('QLIK_SENSE_MAIN_PORT', '443'),

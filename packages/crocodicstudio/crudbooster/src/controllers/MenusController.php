@@ -500,11 +500,14 @@ class MenusController extends CBController
         $menu_active = MenuHelper::get_menu(1);
         $menu_inactive = MenuHelper::get_menu(0);
 
-        $return_url = Request::fullUrl();
+        $return_url = urlencode(Request::fullUrl());
+
+        $menu_active_html = MenuHelper::menu_to_html($menu_active, $return_url);
+        $menu_inactive_html = MenuHelper::menu_to_html($menu_inactive, $return_url);
 
         $page_title = 'Menu Management';
 
-        return view('crudbooster::menus_management', compact('menu_active', 'menu_inactive', 'privileges', 'id_cms_privileges', 'return_url', 'page_title'));
+        return view('crudbooster::menus_management', compact('menu_active_html', 'menu_active','menu_inactive_html',  'menu_inactive', 'privileges', 'id_cms_privileges', 'return_url', 'page_title'));
     }
 
     public function customEdit($id)
@@ -647,42 +650,18 @@ class MenusController extends CBController
       MenuHelper::promote_orphans($id);
     }
 
-    public function postSaveMenu()
-    {
+    public function postSaveMenu() {
         $menu_list = Request::input('menus');
         $isActive = Request::input('isActive');
         $menu_list_decoded = json_decode($menu_list, true);
+        $levels = config('app.menu_max_nesting_levels');
 
-        $parent_counter = 1;
-        foreach ($menu_list_decoded[0] as $parent_menu) {
-            $parent_id = $parent_menu['id'];
-            if ($parent_menu['children'][0]) {
-                $child_counter = 1;
-                foreach ($parent_menu['children'][0] as $child) {
-                    $child_id = $child['id'];
-                    //#RAMA save grandchild
-                    if ($child['children'][0]) {
-                        $grandchild_counter = 1;
-                        foreach ($child['children'][0] as $grandchild) {
-                            $grandchild_id = $grandchild['id'];
-                            DB::table('cms_menus')
-                                ->where('id', $grandchild_id)
-                                ->update(['sorting' => $grandchild_counter, 'parent_id' => $child_id, 'is_active' => $isActive]);
-                            $grandchild_counter++;
-                        }
-                    }
-                    DB::table('cms_menus')
-                        ->where('id', $child_id)
-                        ->update(['sorting' => $child_counter, 'parent_id' => $parent_id, 'is_active' => $isActive]);
-                    $child_counter++;
-                }
-            }
-            DB::table('cms_menus')
-                ->where('id', $parent_id)
-                ->update(['sorting' => $parent_counter, 'parent_id' => 0, 'is_active' => $isActive]);
-            $parent_counter++;
+        $counter = 1;
+        foreach ($menu_list_decoded[0] as $menu) {
+          MenuHelper::save_menu($menu, $counter, $isActive);
+          $counter++;
         }
 
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true, 'active' => $isActive]);
     }
 }

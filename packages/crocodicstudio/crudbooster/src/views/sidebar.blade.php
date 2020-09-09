@@ -34,52 +34,8 @@
                       </a>
                     </li>
                 @endif
-                @foreach(CRUDBooster::sidebarMenu() as $k => $menu)
-                    <?php
-                      if($menu->new_tab){
-                        $target='target="_blank"';
-                      }
-                      else{
-                        $target='';
-                      }
-                    ?>
-                    <li data-id='{{$menu->id}}' data-collapse="1" class='{{(!empty($menu->children))?"treeview":""}} {{ (Request::is($menu->url_path."*"))?"active":""}}'>
-                        <a {{ $target }} href='{{ ($menu->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$menu->url }}' class='{{($menu->color)?"text-".$menu->color:""}}'>
-                            <i class='{{$menu->icon}} {{($menu->color)?"text-".$menu->color:""}}'></i>
-                            <span>{{$menu->name}}</span>
-                            @if(!empty($menu->children))
-                            <i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
-                            @endif
-                        </a>
-                        @if(!empty($menu->children))
-                            <ul class="treeview-menu">
-                                @foreach($menu->children as $child)
-                                    <li data-id='{{$child->id}}' class='{{(Request::is($child->url_path .= !ends_with(Request::decodedPath(), $child->url_path) ? "/*" : ""))?"active":""}}'>
-                                        <a href='{{ ($child->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$child->url}}' class='{{($child->color)?"text-".$child->color:""}}'>
-                                            <i class='{{$child->icon}}'></i>
-                                            <span>{{$child->name}}</span>
-                                            @if(!empty($child->children) AND count($child->children)>0)
-                                            <i class="fa fa-angle-{{ trans("crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
-                                            @endif
-                                            @if(!empty($child->children))
-                                              <ul class="treeview-menu">
-                                                  @foreach($child->children as $grandchild)
-                                                    <li data-id='{{$grandchild->id}}' class='{{(Request::is($child->url_path .= !ends_with(Request::decodedPath(), $grandchild->url_path) ? "/*" : ""))?"active":""}}'>
-                                                      <a href='{{ ($grandchild->is_broken)?"javascript:alert('".trans('crudbooster.controller_route_404')."')":$grandchild->url}}' class='{{($grandchild->color)?"text-".$grandchild->color:""}}'>
-                                                          <i class='{{$grandchild->icon}}'></i>
-                                                          <span>{{$grandchild->name}}</span>
-                                                      </a>
-                                                    </li>
-                                                  @endforeach
-                                              </ul>
-                                            @endif
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
-                    </li>
-                @endforeach
+
+                <?=\crocodicstudio\crudbooster\helpers\MenuHelper::build_main_sidebar()?>
 
                 @if(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin())
 
