@@ -498,6 +498,7 @@ class CRUDBooster
                         //controlla se utente corrente è abilitato a vedere oggetto
                         $menu->item_id = MenuHelper::parse_path_for_qlik_item_id($menu->path);
                         $menu->allowed = QlikHelper::can_see_item($menu->item_id);
+                        // var_dump($menu->allowed);exit;
                         if(!$menu->allowed){
                           unset($menu_active[$key]);
                         }

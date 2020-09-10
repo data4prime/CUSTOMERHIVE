@@ -443,6 +443,10 @@
 					//can't access soft deleted qlik item
 			    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.missing_item"));
 			  }
+				if(empty($qlik_ticket)){
+		      $data['error'] = 'Qlik authentication failed. Ask an admin to fix it';
+		      CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+				}
 
 				//add menu settings
 				$menu = Menu::find($_GET['m']);

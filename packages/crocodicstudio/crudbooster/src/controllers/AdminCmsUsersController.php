@@ -266,11 +266,11 @@ class AdminCmsUsersController extends CBController {
 		$data = [];
 		$data['groups'] = DB::table('users_groups')
 												->where('users_groups.user_id',$user_id)
-												->where('users_groups.deleted_at',null)
+												->whereNull('users_groups.deleted_at')
 												->join('groups', 'groups.id', '=', 'users_groups.group_id')
 												->select('groups.id', 'groups.name', 'groups.description')
 												->get();
-
+												
 		$data['user'] = \App\User::find($user_id);
 		$data['user_id'] = $user_id;
 

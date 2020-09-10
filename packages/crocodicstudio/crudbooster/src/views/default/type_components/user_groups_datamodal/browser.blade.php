@@ -26,7 +26,8 @@
             })
             ->join('group_tenants','group_tenants.group_id','groups.id')
             ->where('group_tenants.tenant_id',$user_tenant_id)
-            ->distinct('groups.id');
+            ->distinct('groups.id')
+            ->select('groups.*');
   if($q){
     //filtra la lista in base alla ricerca fatta dall'utente
     $result = $result->where(function ($query) use ($columns, $q) {
@@ -96,8 +97,11 @@ if (count($coloms_alias) < 2) {
                 }
             }
             ?>
-            <td><a class='btn btn-primary' href='javascript:void(0)' onclick='parent.selectAdditionalData{{$name}}({!! json_encode($select_data_result) !!})'><i
-                            class='fa fa-check-circle'></i> {{trans('crudbooster.datamodal_select')}}</a></td>
+            <td>
+              <a class='btn btn-primary' href='javascript:void(0)' onclick='parent.selectAdditionalData{{$name}}({!! json_encode($select_data_result) !!})'>
+                <i class='fa fa-check-circle'></i> {{trans('crudbooster.datamodal_select')}}
+              </a>
+            </td>
         </tr>
     @endforeach
     </tbody>
