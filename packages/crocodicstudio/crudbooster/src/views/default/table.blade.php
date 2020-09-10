@@ -6,10 +6,10 @@
             function checkWidth() {
                 var windowsize = $window.width();
                 if (windowsize > 500) {
-                    console.log(windowsize);
+                    // console.log(windowsize);
                     $('#box-body-table').removeClass('table-responsive');
                 } else {
-                    console.log(windowsize);
+                    // console.log(windowsize);
                     $('#box-body-table').addClass('table-responsive');
                 }
             }

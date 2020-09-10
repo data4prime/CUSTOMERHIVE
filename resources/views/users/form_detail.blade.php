@@ -65,16 +65,6 @@ $asset_already[] = $type;
             $value = @$join_query_{$join_table}->{$join_title};
         }
 
-        //split width and height into dimension and unit
-        if($name == 'frame_full_page'){
-          if($row->frame_width == '100%' AND $row->frame_height == '100%'){
-            $value = '<i class="fa fa-check"></i>';
-          }
-          else{
-            $value = '<i class="fa fa-close"></i>';
-          }
-        }
-
         $type = @$form['type'] ?: 'text';
         $required = (@$form['required']) ? "required" : "";
         $readonly = (@$form['readonly']) ? "readonly" : "";

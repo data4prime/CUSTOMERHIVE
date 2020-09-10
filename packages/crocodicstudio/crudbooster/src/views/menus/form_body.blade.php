@@ -82,24 +82,6 @@ foreach($forms as $index=>$form) {
     $header_group_class = ($header_group_class) ?: "header-group-$index";
   }
 
-
-    /* Frame size */
-    if($row->frame_width == '100%' AND $row->frame_height == '100%'){
-      $full_page = true;
-    }
-    else{
-      $full_page = false;
-    }
-
-    //full page checked if frame size 100% x 100%
-    if($name == 'frame_full_page'){
-      if($full_page){
-        $checked = "checked";
-      }
-      else{
-        $checked = "";
-      }
-    }
     //split width and height into dimension and unit
     if($name == 'frame_width' OR $name == 'frame_height'){
       @$value = (isset($row->{$name})) ? (int)$row->{$name} : $value;

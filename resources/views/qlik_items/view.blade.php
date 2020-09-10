@@ -1,24 +1,7 @@
-@extends('crudbooster::admin_template')
+@extends('crudbooster::admin_template',['target_layout' => $row->target_layout])
 
-@if($row->full_page)
-  <!-- full page settings -->
-  @push('bottom')
-    <script type="text/javascript">
-      $( document ).ready(function() {
-        //shrink sidebar
-        $('.sidebar-toggle').click();
-        //expand container
-        $('#content_section').css('padding','0px');
-        $('#content_section').css('height','calc(100vh - 42px');
-        $('.qi_iframe_container').css('height','100%');
-        $('.qi_iframe').css('padding-bottom','0px');
-        $('.content-wrapper').css('min-height','0px !important');
-        //hide section header
-        $('.content-header').css('display','none');
-
-      })
-    </script>
-  @endpush
+@if($row->target_layout == 2)
+  <!-- fill content settings -->
   @section('content')
     <div class="qi_iframe_container">
         <iframe class="qi_iframe" src="{{ $item_url }}" style="border:none;"></iframe>

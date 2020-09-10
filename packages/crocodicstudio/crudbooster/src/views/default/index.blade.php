@@ -1,7 +1,6 @@
-@extends('crudbooster::admin_template')
+@extends('crudbooster::admin_template',['target_layout' => $target_layout])
 
 @section('content')
-
     @if($index_statistic)
         <div id='box-statistic' class='row'>
             @foreach($index_statistic as $stat)

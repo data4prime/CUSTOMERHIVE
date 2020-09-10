@@ -449,22 +449,12 @@
 				if(empty($menu)){
 					$data['row']->frame_width = '100%';
 					$data['row']->frame_height = '100%';
-					$data['row']->full_page = false;
-					$data['row']->frame_full_screen = false;
 				}
 				else{
 					$data['row']->frame_width = $menu->frame_width;
 					$data['row']->frame_height = $menu->frame_height;
-					if($menu->frame_width == '100%' AND $menu->frame_height == '100%')
-					{
-						$data['row']->full_page = true;
-					}
-					else
-					{
-						$data['row']->full_page = false;
-					}
-					$data['row']->frame_full_screen = $menu->frame_full_screen;
 				}
+				$data['row']->target_layout = $menu->target_layout;
 
 				$data['page_icon'] = '';
 			  $data['page_title'] = $data['row']->title;
@@ -473,7 +463,7 @@
 
 				$data['item_url'] = $data['row']->url.'&qlikTicket='.$qlik_ticket;
 
-				if($menu->frame_full_screen)
+				if($menu->target_layout == 1)
 				{
 					//iframe only
 			  	$this->cbView('qlik_items.fullscreen_view',$data);

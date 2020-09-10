@@ -1,4 +1,4 @@
-@extends('crudbooster::admin_template')
+@extends('crudbooster::admin_template',['target_layout' => $target_layout])
 @section('content')
   <div>
 

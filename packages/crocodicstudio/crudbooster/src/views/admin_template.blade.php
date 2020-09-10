@@ -82,6 +82,9 @@
 
     @stack('head')
 </head>
+@if($target_layout == 1)
+  @yield('content')
+@else
 <body class="@php echo (Session::get('theme_color'))?:'skin-blue'; echo ' '; echo config('crudbooster.ADMIN_LAYOUT'); @endphp {{($sidebar_mode)?:''}}">
 <div id='app' class="wrapper">
 
@@ -198,7 +201,7 @@
     @include('crudbooster::footer')
 
 </div><!-- ./wrapper -->
-
+@endif
 
 @include('crudbooster::admin_template_plugins')
 
@@ -217,6 +220,22 @@
 
 @stack('bottom')
 
+@if($target_layout == 2)
+  <script type="text/javascript">
+    $( document ).ready(function() {
+      //shrink sidebar
+      $('.sidebar-toggle').click();
+      //expand container
+      $('#content_section').css('padding','0px');
+      $('#content_section').css('height','calc(100vh - 42px');
+      $('.qi_iframe_container').css('height','100%');
+      $('.qi_iframe').css('padding-bottom','0px');
+      $('.content-wrapper').css('min-height','0px !important');
+      //hide section header
+      $('.content-header').css('display','none');
+    })
+  </script>
+@endif
 <script type="text/javascript">
 //sidebar #RAMA
 $( document ).ready(function() {

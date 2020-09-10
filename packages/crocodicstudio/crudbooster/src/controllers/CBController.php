@@ -640,6 +640,8 @@ class CBController extends Controller
 
         $data['html_contents'] = $html_contents;
 
+        $data['target_layout'] = \App\Menu::find(Request::get('m'))->target_layout;
+
         return view("crudbooster::default.index", $data);
     }
 
@@ -1196,7 +1198,9 @@ class CBController extends Controller
         $page_menu = Route::getCurrentRoute()->getActionName();
         $command = 'add';
 
-        return view('crudbooster::default.form', compact('page_title', 'page_menu', 'command'));
+        $target_layout = \App\Menu::find(Request::get('m'))->target_layout;
+
+        return view('crudbooster::default.form', compact('page_title', 'page_menu', 'command', 'target_layout'));
     }
 
     public function postAddSave()
@@ -1378,7 +1382,9 @@ class CBController extends Controller
         $command = 'edit';
         Session::put('current_row_id', $id);
 
-        return view('crudbooster::default.form', compact('id', 'row', 'page_menu', 'page_title', 'command'));
+        $target_layout = \App\Menu::find(Request::get('m'))->target_layout;
+
+        return view('crudbooster::default.form', compact('id', 'row', 'page_menu', 'page_title', 'command', 'target_layout'));
     }
 
     public function postEditSave($id)
@@ -1601,7 +1607,9 @@ class CBController extends Controller
 
         Session::put('current_row_id', $id);
 
-        return view('crudbooster::default.form', compact('row', 'page_menu', 'page_title', 'command', 'id'));
+        $target_layout = \App\Menu::find(Request::get('m'))->target_layout;
+
+        return view('crudbooster::default.form', compact('row', 'page_menu', 'page_title', 'command', 'id', 'target_layout'));
     }
 
     public function getImportData()
