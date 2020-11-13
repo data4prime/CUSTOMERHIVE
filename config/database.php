@@ -62,7 +62,7 @@ return [
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
-            'strict' => true,
+            'strict' => false,//#RAMA 28 ottobre 2020 modificato per upgrade local. mysql <8 era false
             'engine' => null,
         ],
 

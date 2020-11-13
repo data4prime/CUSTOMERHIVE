@@ -97,6 +97,18 @@ class PrivilegesController extends CBController
         $this->validation($request);
         $this->input_assignment($request);
 
+        $this->arr['is_superadmin'] = 0;
+        $this->arr['is_tenantadmin'] = 0;
+        switch ($this->arr['superprivilege']) {
+          case 1:
+            $this->arr['is_superadmin'] = 1;
+            break;
+          case 2:
+            $this->arr['is_tenantadmin'] = 1;
+            break;
+        }
+        unset($this->arr['superprivilege']);
+
         $this->arr[$this->primary_key] = DB::table($this->table)->max($this->primary_key) + 1;
 
         DB::table($this->table)->insert($this->arr);
@@ -129,6 +141,20 @@ class PrivilegesController extends CBController
 
         CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_add_data_success"), 'success');
     }
+
+  	public function hook_before_edit(&$postdata,$user_id) {
+      $postdata['is_superadmin'] = 0;
+      $postdata['is_tenantadmin'] = 0;
+      switch ($postdata['superprivilege']) {
+        case 1:
+          $postdata['is_superadmin'] = 1;
+          break;
+        case 2:
+          $postdata['is_tenantadmin'] = 1;
+          break;
+      }
+      unset($postdata['superprivilege']);
+  	}
 
     public function getEdit($id)
     {
