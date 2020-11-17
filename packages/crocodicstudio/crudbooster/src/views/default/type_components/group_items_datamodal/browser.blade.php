@@ -33,9 +33,9 @@
     $result = $result->where(function ($query) use ($columns, $q) {
                 foreach ($columns as $c => $col) {
                   if ($c == 0) {
-                    $query->where($col, 'like', '%'.$q.'%');
+                    $query->where('qlik_items.'.$col, 'like', '%'.$q.'%');
                   } else {
-                    $query->orWhere($col, 'like', '%'.$q.'%');
+                    $query->orWhere('qlik_items.'.$col, 'like', '%'.$q.'%');
                   }
                 }
               });

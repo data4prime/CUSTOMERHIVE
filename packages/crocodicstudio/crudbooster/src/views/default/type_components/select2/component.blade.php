@@ -169,7 +169,6 @@
                     } else {
                       $foreignKey = CRUDBooster::getForeignKey($table, $form['relationship_table']);
                       $foreignKey2 = CRUDBooster::getForeignKey($table_name, $form['relationship_table']);
-
                       $value = DB::table($form['relationship_table'])->where($foreignKey, $id);
                       $value = $value->pluck($foreignKey2)->toArray();
                     }

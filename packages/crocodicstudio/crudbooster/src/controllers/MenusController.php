@@ -249,7 +249,7 @@ class MenusController extends CBController
             "select2_multiple" => true,
             "datatable" => "cms_privileges,name",
             "relationship_table" => "cms_menus_privileges",
-            "required" => true,
+            "required" => true
         ];
         $this->form[] = [
             "label" => "Name",
@@ -264,7 +264,7 @@ class MenusController extends CBController
             "type" => "radio",
             "required" => true,
             'dataenum' => ['Module', 'Qlik', 'Statistic', 'URL', 'Controller & Method', 'Route'],
-            'value' => 'Module',
+            'value' => 'Module'
         ];
 
         //only superadmin can edit tenant

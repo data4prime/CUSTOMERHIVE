@@ -31,7 +31,7 @@ html{
   width: 100%;
 }
 #table_dashboard a.btn-detail{
-  display:none;
+  /* display:none; */
 }
 #table_dashboard tbody tr td:last-child .button_action{
   text-align:center !important;
