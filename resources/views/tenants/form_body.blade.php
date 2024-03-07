@@ -8,12 +8,12 @@ foreach($forms as $form) {
 
   if (in_array($type, $asset_already)) continue;
   ?>
-  @if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/asset.blade.php')))
-    @include('crudbooster::default.type_components.'.$type.'.asset')
-  @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php')))
-    @include('vendor.crudbooster.type_components.'.$type.'.asset')
-  @endif
-  <?php
+@if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/asset.blade.php')))
+@include('crudbooster::default.type_components.'.$type.'.asset')
+@elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php')))
+@include('vendor.crudbooster.type_components.'.$type.'.asset')
+@endif
+<?php
 
   $asset_already[] = $type;
 }
@@ -36,7 +36,7 @@ foreach($forms as $index=>$form) {
   if ($validation_raw) {
     foreach ($validation_raw as $vr) {
       $vr_a = explode(':', $vr);
-      if ($vr_a[1]) {
+      if (isset($vr_a[1])) {
         $key = $vr_a[0];
         $validation[$key] = $vr_a[1];
       } else {
@@ -59,10 +59,10 @@ foreach($forms as $index=>$form) {
     array_walk($join_arr, 'trim');
     $join_table = $join_arr[0];
     $join_title = $join_arr[1];
-    $join_query_{$join_table} = DB::table($join_table)->select($join_title)->where("id", $row->{'id_'.$join_table})->first();
-    $value = @$join_query_{$join_table}->{$join_title};
+    ${"join_query_".$join_table} = DB::table($join_table)->select($join_title)->where("id", $row->{'id_'.$join_table})->first();
+    $value = @${"join_query_".$join_table}->{$join_title};
   }
-  $form['type'] = ($form['type']) ?: 'text';
+  $form['type'] = isset($form['type']) ? $form['type']: 'text';
   $type = @$form['type'];
   $required = (@$form['required']) ? "required" : "";
   $required = (@strpos($form['validation'], 'required') !== FALSE) ? "required" : $required;
@@ -82,25 +82,25 @@ foreach($forms as $index=>$form) {
     $header_group_class = ($header_group_class) ?: "header-group-$index";
   }
   ?>
-  @if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/component.blade.php')))
-  @include('crudbooster::default.type_components.'.$type.'.component')
-  @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/component.blade.php')))
-  @include('vendor.crudbooster.type_components.'.$type.'.component')
-  @else
-  <p class='text-danger'>{{ $type }} is not found in type component system</p><br/>
-  @endif
-  <?php
+@if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/component.blade.php')))
+@include('crudbooster::default.type_components.'.$type.'.component')
+@elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/component.blade.php')))
+@include('vendor.crudbooster.type_components.'.$type.'.component')
+@else
+<p class='text-danger'>{{ $type }} is not found in type component system</p><br />
+@endif
+<?php
     if($name=='favicon') {
       ?>
-      </div>
-      <div class="box-header with-border">
-        <h3 class="box-title">
-          Login layout settings
-        </h3>
-        <div class="box-tools">
-        </div>
-      </div>
-      <div class="box-body">
-      <?php
+</div>
+<div class="box-header with-border">
+  <h3 class="box-title">
+    Login layout settings
+  </h3>
+  <div class="box-tools">
+  </div>
+</div>
+<div class="box-body">
+  <?php
     }
 }

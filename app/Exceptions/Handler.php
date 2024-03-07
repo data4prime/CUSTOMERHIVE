@@ -2,16 +2,30 @@
 
 namespace App\Exceptions;
 
-use Exception;
+//use Exception;
+use Throwable;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
+
+        /**
+     * A list of exception types with their corresponding custom log levels.
+     *
+     * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
+     */
+    protected $levels = [
+        //
+    ];
+
+
+
     /**
      * A list of the exception types that should not be reported.
      *
      * @var array
+     * @var array<int, class-string<\Throwable>>
      */
     protected $dontReport = [
         \Illuminate\Auth\AuthenticationException::class,
@@ -30,10 +44,22 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return void
      */
+    //ublic function report(Throwable $exception);
+    /*public function report(Exception $exception)
+    {
+        parent::report($exception);
+    }*/
+
+    public function report(Throwable $exception)
+    {
+        parent::report($exception);
+    }
+    /*
     public function report(Exception $exception)
     {
         parent::report($exception);
     }
+    */
 
     /**
      * Render an exception into an HTTP response.
@@ -42,7 +68,13 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
+    /*
     public function render($request, Exception $exception)
+    {
+        return parent::render($request, $exception);
+    }*/
+
+    public function render($request, Throwable $exception)
     {
         return parent::render($request, $exception);
     }

@@ -296,7 +296,7 @@ class ApiCustomController extends CBController
         $json = [];
 
         for ($i = 0; $i <= count($params_name); $i++) {
-            if ($params_name[$i]) {
+            if (isset($params_name[$i])) {
                 $json[] = [
                     'name' => $params_name[$i],
                     'type' => $params_type[$i],
@@ -318,7 +318,7 @@ class ApiCustomController extends CBController
         $responses_used = g('responses_used');
         $json = [];
         for ($i = 0; $i <= count($responses_name); $i++) {
-            if ($responses_name[$i]) {
+            if (isset($responses_name[$i])) {
                 $json[] = [
                     'name' => $responses_name[$i],
                     'type' => $responses_type[$i],

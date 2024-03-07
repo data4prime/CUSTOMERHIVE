@@ -8,9 +8,9 @@ if (in_array($type, $asset_already)) continue;
 
 ?>
 @if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/asset.blade.php')))
-    @include('crudbooster::default.type_components.'.$type.'.asset')
+@include('crudbooster::default.type_components.'.$type.'.asset')
 @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php')))
-    @include('vendor.crudbooster.type_components.'.$type.'.asset')
+@include('vendor.crudbooster.type_components.'.$type.'.asset')
 @endif
 <?php
 $asset_already[] = $type;
@@ -18,12 +18,12 @@ $asset_already[] = $type;
 ?>
 
 @push('head')
-    <style type="text/css">
-        #table-detail tr td:first-child {
-            font-weight: bold;
-            width: 25%;
-        }
-    </style>
+<style type="text/css">
+    #table-detail tr td:first-child {
+        font-weight: bold;
+        width: 25%;
+    }
+</style>
 @endpush
 
 <div class='table-responsive'>
@@ -31,6 +31,8 @@ $asset_already[] = $type;
 
         <?php
         foreach($forms as $index=>$form):
+
+
 
         $name = $form['name'];
         @$join = $form['join'];
@@ -61,8 +63,8 @@ $asset_already[] = $type;
             $join_title = $join_arr[1];
             $join_table_pk = CB::pk($join_table);
             $join_fk = CB::getForeignKey($table, $join_table);
-            $join_query_{$join_table} = DB::table($join_table)->select($join_title)->where($join_table_pk, $row->{$join_fk})->first();
-            $value = @$join_query_{$join_table}->{$join_title};
+            ${"join_query_".$join_table} = DB::table($join_table)->select($join_title)->where($join_table_pk, $row->{$join_fk})->first();
+            $value = @${"join_query_".$join_table}->{$join_title};
         }
 
         $type = @$form['type'] ?: 'text';
@@ -76,25 +78,25 @@ $asset_already[] = $type;
         ?>
 
         @if(file_exists($file_location))
-            <?php $containTR = (substr(trim(file_get_contents($file_location)), 0, 4) == '<tr>') ? TRUE : FALSE;?>
-            @if($containTR)
-                @include('crudbooster::default.type_components.'.$type.'.component_detail')
-            @else
-                <tr>
-                    <td>{{$form['label']}}</td>
-                    <td>@include('crudbooster::default.type_components.'.$type.'.component_detail')</td>
-                </tr>
-            @endif
+        <?php $containTR = (substr(trim(file_get_contents($file_location)), 0, 4) == '<tr>') ? TRUE : FALSE;?>
+        @if($containTR)
+        @include('crudbooster::default.type_components.'.$type.'.component_detail')
+        @else
+        <tr>
+            <td>{{$form['label']}}</td>
+            <td>@include('crudbooster::default.type_components.'.$type.'.component_detail')</td>
+        </tr>
+        @endif
         @elseif(file_exists($user_location))
-            <?php $containTR = (substr(trim(file_get_contents($user_location)), 0, 4) == '<tr>') ? TRUE : FALSE;?>
-            @if($containTR)
-                @include('vendor.crudbooster.type_components.'.$type.'.component_detail')
-            @else
-                <tr>
-                    <td>{{$form['label']}}</td>
-                    <td>@include('vendor.crudbooster.type_components.'.$type.'.component_detail')</td>
-                </tr>
-            @endif
+        <?php $containTR = (substr(trim(file_get_contents($user_location)), 0, 4) == '<tr>') ? TRUE : FALSE;?>
+        @if($containTR)
+        @include('vendor.crudbooster.type_components.'.$type.'.component_detail')
+        @else
+        <tr>
+            <td>{{$form['label']}}</td>
+            <td>@include('vendor.crudbooster.type_components.'.$type.'.component_detail')</td>
+        </tr>
+        @endif
         @else
         <!-- <tr><td colspan='2'>NO COMPONENT {{$type}}</td></tr> -->
         @endif

@@ -12,7 +12,7 @@ return [
 
     // Middlewares which should be applied to all package routes.
     // For laravel 5.1 and before, remove 'web' from the array.
-    'middlewares' => ['web','\crocodicstudio\crudbooster\middlewares\CBBackend'],
+    'middlewares' => ['web', '\crocodicstudio\crudbooster\middlewares\CBBackend'],
 
     // The url to this package. Change it if necessary.
     'prefix' => 'laravel-filemanager',
@@ -35,7 +35,7 @@ return [
     // Flexibla way to customize client folders accessibility
     // Ex: The private folder of user will be named as the user id.
     // You cant use a closure when using the optimized config file (in Laravel 5.2 anyway)
-    'user_field' => function() {
+    'user_field' => function () {
         return Session::get("admin_id");
     },
 
@@ -139,6 +139,7 @@ return [
         'png'  => 'PNG Image',
         'ppt'  => 'Microsoft PowerPoint',
         'pptx' => 'Microsoft PowerPoint',
+        'pem' => 'PEM File'
     ],
 
     'file_icon_array' => [
@@ -154,6 +155,7 @@ return [
         'png'  => 'fa-file-image-o',
         'ppt'  => 'fa-file-powerpoint-o',
         'pptx' => 'fa-file-powerpoint-o',
+        'pem'  => 'fa-file-archive-o',
     ],
 
     /*

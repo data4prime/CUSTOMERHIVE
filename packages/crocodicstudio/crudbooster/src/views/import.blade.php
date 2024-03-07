@@ -2,10 +2,10 @@
 @section('content')
 
 
-    @if($button_show_data || $button_reload_data || $button_new_data || $button_delete_data || $index_button || $columns)
+    @if(isset($button_show_data) || isset($button_reload_data) || isset($button_new_data) || isset($button_delete_data) || isset($index_button) || isset($columns))
         <div id='box-actionmenu' class='box'>
             <div class='box-body'>
-                @include("crudbooster::default.actionmenu")
+                
             </div>
         </div>
     @endif
@@ -108,7 +108,7 @@
             </div>
 
             <?php
-            if ($data_sub_module) {
+            if (isset($data_sub_module)) {
                 $action_path = Route($data_sub_module->controller."GetIndex");
             } else {
                 $action_path = CRUDBooster::mainpath();
@@ -229,7 +229,7 @@
             </div>
 
             <?php
-            if ($data_sub_module) {
+            if (isset($data_sub_module)) {
                 $action_path = Route($data_sub_module->controller."GetIndex");
             } else {
                 $action_path = CRUDBooster::mainpath();

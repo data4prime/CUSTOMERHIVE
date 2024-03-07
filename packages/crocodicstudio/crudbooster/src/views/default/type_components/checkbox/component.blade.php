@@ -1,25 +1,26 @@
-<div class='form-group {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='form-group-{{$name}}' style="{{@$form['style']}}">
-    <label class='control-label col-sm-2'>{{$form['label']}}
-        @if($required)
-            <span class='text-danger' title='{!! trans('crudbooster.this_field_is_required') !!}'>*</span>
-        @endif
-    </label>
-    <div class="{{$col_width?:'col-sm-10'}}">
+<div class='form-group {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='form-group-{{$name}}'
+  style="{{@$form['style']}}">
+  <label class='control-label col-sm-2'>{{$form['label']}}
+    @if($required)
+    <span class='text-danger' title='{!! trans(' crudbooster.this_field_is_required') !!}'>*</span>
+    @endif
+  </label>
+  <div class="{{$col_width?:'col-sm-10'}}">
 
-      <?php
-        if($form['dataenum']=='' AND !@$form['datatable'] AND !$form['dataquery']) {
+    <?php
+        if(isset($form['dataenum']) && $form['dataenum']=='' AND !@$form['datatable'] AND !$form['dataquery']) {
           //se non ci sono altre etichette possibili attiva una versione semplice di checkbox
           $checked = (!empty($checked) OR !empty($value)) ? "checked" : "";
           ?>
-          <div class="checkbox {{$disabled}}">
-            <label>
-              <input type="checkbox" {{$disabled}} {{$checked}} name="{{$name}}[]" value="{{$name}}">
-            </label>
-          </div>
-          <?php
+    <div class="checkbox {{$disabled}}">
+      <label>
+        <input type="checkbox" {{$disabled}} {{$checked}} name="{{$name}}[]" value="{{$name}}">
+      </label>
+    </div>
+    <?php
         }
 
-        if($form['dataenum']!='') {
+        if(isset($form['dataenum']) && $form['dataenum']!='') {
             @$value = explode(";", $value);
             @array_walk($value, 'trim');
             $dataenum = $form['dataenum'];
@@ -33,12 +34,12 @@
               }
               $checked = ($checked OR ($value && in_array($val, $value))) ? "checked" : "";
             ?>
-            <div class="checkbox {{$disabled}}">
-                <label>
-                    <input type="checkbox" {{$disabled}} {{$checked}} name="{{$name}}[]" value="{{$val}}"> {{$label}}
-                </label>
-            </div>
-      <?php
+    <div class="checkbox {{$disabled}}">
+      <label>
+        <input type="checkbox" {{$disabled}} {{$checked}} name="{{$name}}[]" value="{{$val}}"> {{$label}}
+      </label>
+    </div>
+    <?php
           }
         }
 
@@ -104,7 +105,7 @@
             }
         }
 
-        if ($form['dataquery']) {
+        if (isset($form['dataquery'])) {
 
             $query = DB::select(DB::raw($form['dataquery']));
             @$value = explode(';', $value);
@@ -124,17 +125,18 @@
         }
 
         ?>
-        <div class="text-danger">{!! $errors->first($name)?"<i class='fa fa-info-circle'></i> ".$errors->first($name):"" !!}</div>
-        <p class='help-block'>{{ @$form['help'] }}</p>
+    <div class="text-danger">{!! $errors->first($name)?"<i class='fa fa-info-circle'></i> ".$errors->first($name):"" !!}
     </div>
+    <p class='help-block'>{{ @$form['help'] }}</p>
+  </div>
 </div>
-@if($is_public && $name == 'public_access')
-<div class="form-group {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}">
+@if(isset($is_public) && $name == 'public_access')
+<div class="form-group {{$header_group_class}} {{ ($errors->first($name))?" has-error":"" }}">
   <div class="col-sm-2 control-label" style="padding-top: 7px">
     <label class="">Public URL</label>
   </div>
   <div class="col-sm-10">
-    <a id="copyLink" href="{{ $link }}" target="_blank">{{ $link }}</a>
+    <a id="copyLink" href="{{ isset($link) ? $link : '' }}" target="_blank">{{ isset($link) ? $link : '' }}</a>
     &nbsp<button id="copyButton" class="btn btn-info">Copy</button>
   </div>
 </div>

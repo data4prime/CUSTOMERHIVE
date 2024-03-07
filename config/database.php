@@ -64,6 +64,14 @@ return [
             'prefix' => '',
             'strict' => true,//#RAMA 28 ottobre 2020 modificato a false per upgrade local a mysql8. mysql < 8 era true
             'engine' => null,
+            'modes'  => [
+                'ONLY_FULL_GROUP_BY',
+                'STRICT_TRANS_TABLES',
+                'NO_ZERO_IN_DATE',
+                'NO_ZERO_DATE',
+                'ERROR_FOR_DIVISION_BY_ZERO',
+                'NO_ENGINE_SUBSTITUTION',
+                ],
         ],
 
         'pgsql' => [

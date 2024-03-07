@@ -29,15 +29,15 @@ class CmsEmailTemplates extends Seeder
     public function run()
     {
         DB::table('cms_email_templates')->insert([
-                'created_at' => date('Y-m-d H:i:s'),
-                'name' => 'Email Template Forgot Password Backend',
-                'slug' => 'forgot_password_backend',
-                'content' => '<p>Hi,</p><p>Someone requested forgot password, here is your new password : </p><p>[password]</p><p><br></p><p>--</p><p>Regards,</p><p>Admin</p>',
-                'description' => '[password]',
-                'from_name' => 'System',
-                'from_email' => 'system@crudbooster.com',
-                'cc_email' => null,
-            ]);
+            'created_at' => date('Y-m-d H:i:s'),
+            'name' => 'Email Template Forgot Password Backend',
+            'slug' => 'forgot_password_backend',
+            'content' => '<p>Hi,</p><p>Someone requested forgot password, here is your new password : </p><p>[password]</p><p><br></p><p>--</p><p>Regards,</p><p>Admin</p>',
+            'description' => '[password]',
+            'from_name' => 'System',
+            'from_email' => 'system@crudbooster.com',
+            'cc_email' => null,
+        ]);
     }
 }
 
@@ -213,6 +213,174 @@ class Cms_settingsSeeder extends Seeder
                 'dataenum' => null,
                 'helper' => null,
             ],
+
+            //QLIK CONF
+
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'confname',
+                'label' => 'Configuration Name',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'content' => '',
+                'content_input_type' => 'text',
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'qrsurl',
+                'label' => 'QRS Url',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'content' => '',
+                'content_input_type' => 'text',
+                'dataenum' => null,
+                'helper' => '',
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'active',
+                'label' => 'Active',
+                'content' => '',
+                'content_input_type' => 'checkbox',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'endpoint',
+                'label' => 'Endpoint',
+                'content' => '',
+                'content_input_type' => 'text',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'QRSCertfile',
+                'label' => 'QRSCertfile',
+                'content' => '',
+                'content_input_type' => 'upload',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'QRSCertkeyfile',
+                'label' => 'QRSCertkeyfile',
+                'content' => '',
+                'content_input_type' => 'upload',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'QRSCertkeyfilePassword',
+                'label' => 'QRSCertkeyfilePassword',
+                'content' => '',
+                'content_input_type' => 'password',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+
+
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'url',
+                'label' => 'url',
+                'content' => '',
+                'content_input_type' => 'text',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'type',
+                'label' => 'type',
+                'content' => '',
+                'content_input_type' => 'text',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'url',
+                'label' => 'url',
+                'content' => '',
+                'content_input_type' => 'text',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'type',
+                'label' => 'type',
+                'content' => '',
+                'content_input_type' => 'select',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => 'On-Premise,SAAS',
+                'helper' => null,
+            ],
+
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'keyid',
+                'label' => 'keyid',
+                'content' => '',
+                'content_input_type' => 'text',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'issuer',
+                'label' => 'issuer',
+                'content' => '',
+                'content_input_type' => 'text',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'web_int_id',
+                'label' => 'web_int_id',
+                'content' => '',
+                'content_input_type' => 'text',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'private_key',
+                'label' => 'private_key',
+                'content' => '',
+                'content_input_type' => 'upload',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'debug',
+                'label' => 'Debug',
+                'content' => '',
+                'content_input_type' => 'checkbox',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ]
         ];
 
         foreach ($data as $row) {
@@ -455,4 +623,3 @@ class Cms_usersSeeder extends Seeder
         }
     }
 }
-

@@ -11,13 +11,15 @@ class MyHelper  {
   * here i strip that from the end of the version number
   */
   public static function version() {
-    $verbose_version = GitVersionHelper::getVersion();
+    //$verbose_version = GitVersionHelper::getVersion();
+    $verbose_version = "";
     if(strpos($verbose_version,'-')<0){
       //no dirty part
       return $verbose_version;
     }
-    list($version, $garbage) = explode('-',$verbose_version);
-    return $version;
+    //list($version, $garbage) = explode('-',$verbose_version);
+    
+    return "";
   }
 
   public static function is_int($var)

@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+
+
 class CBSeeder extends Seeder
 {
     /**
@@ -12,13 +14,29 @@ class CBSeeder extends Seeder
     public function run()
     {
         $this->command->info('Please wait updating the data...');
-
+                
+$this->call('GroupSeeder');
+        $this->call('TenantSeeder');
+        $this->call('Cms_statistics');
+        $this->call('Cms_menus');
         $this->call('Cms_usersSeeder');
+
+
+        $this->call('Cms_menusGroups');
+        $this->call('Cms_menusTenants');
+        $this->call('Cms_groupTenants');
+
+        $this->call('Cms_usersGroups');
+
         $this->call('Cms_modulsSeeder');
         $this->call('Cms_privilegesSeeder');
         $this->call('Cms_privileges_rolesSeeder');
+
         $this->call('Cms_settingsSeeder');
         $this->call('CmsEmailTemplates');
+        $this->call('Cms_menusPrivileges');
+
+
 
         $this->command->info('Updating the data completed !');
     }
@@ -29,15 +47,15 @@ class CmsEmailTemplates extends Seeder
     public function run()
     {
         DB::table('cms_email_templates')->insert([
-                'created_at' => date('Y-m-d H:i:s'),
-                'name' => 'Email Template Forgot Password Backend',
-                'slug' => 'forgot_password_backend',
-                'content' => '<p>Hi,</p><p>Someone requested forgot password, here is your new password : </p><p>[password]</p><p><br></p><p>--</p><p>Regards,</p><p>Admin</p>',
-                'description' => '[password]',
-                'from_name' => 'System',
-                'from_email' => 'system@crudbooster.com',
-                'cc_email' => null,
-            ]);
+            'created_at' => date('Y-m-d H:i:s'),
+            'name' => 'Email Template Forgot Password Backend',
+            'slug' => 'forgot_password_backend',
+            'content' => '<p>Hi,</p><p>Someone requested forgot password, here is your new password : </p><p>[password]</p><p><br></p><p>--</p><p>Regards,</p><p>Admin</p>',
+            'description' => '[password]',
+            'from_name' => 'System',
+            'from_email' => 'system@crudbooster.com',
+            'cc_email' => null,
+        ]);
     }
 }
 
@@ -213,6 +231,145 @@ class Cms_settingsSeeder extends Seeder
                 'dataenum' => null,
                 'helper' => null,
             ],
+
+            //QLIK CONFIGURATION
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'confname',
+                'label' => 'Configuration Name',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'content' => '',
+                'content_input_type' => 'text',
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'type',
+                'label' => 'Type',
+                'content' => '',
+                'content_input_type' => 'select',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => 'On-Premise,SAAS',
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'qrsurl',
+                'label' => 'QRS Url',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'content' => '',
+                'content_input_type' => 'text',
+                'dataenum' => null,
+                'helper' => '',
+            ],
+
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'endpoint',
+                'label' => 'Endpoint',
+                'content' => '',
+                'content_input_type' => 'text',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'QRSCertfile',
+                'label' => 'QRSCertfile',
+                'content' => '',
+                'content_input_type' => 'upload_file',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'QRSCertkeyfile',
+                'label' => 'QRSCertkeyfile',
+                'content' => '',
+                'content_input_type' => 'upload_file',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'QRSCertkeyfilePassword',
+                'label' => 'QRSCertkeyfilePassword',
+                'content' => '',
+                'content_input_type' => 'text',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+
+
+
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'url',
+                'label' => 'Url',
+                'content' => '',
+                'content_input_type' => 'text',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+
+
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'keyid',
+                'label' => 'Key ID',
+                'content' => '',
+                'content_input_type' => 'text',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'issuer',
+                'label' => 'Issuer',
+                'content' => '',
+                'content_input_type' => 'text',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'web_int_id',
+                'label' => 'Web integration ID',
+                'content' => '',
+                'content_input_type' => 'text',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'private_key',
+                'label' => 'Private Key',
+                'content' => '',
+                'content_input_type' => 'upload_file',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => null,
+                'helper' => null,
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'debug',
+                'label' => 'Debug',
+                'content' => '',
+                'content_input_type' => 'select',
+                'group_setting' => trans('crudbooster.qlik_conf'),
+                'dataenum' => 'Active, Inactive',
+                'helper' => null,
+            ]
         ];
 
         foreach ($data as $row) {
@@ -425,6 +582,40 @@ class Cms_modulsSeeder extends Seeder
                 'is_protected' => 1,
                 'is_active' => 1,
             ],
+
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'Qlik Items',
+                'icon' => 'fa fa-cog',
+                'path' => 'qlik_items',
+                'table_name' => 'qlik_items',
+                'controller' => 'AdminQlikItemsController',
+                'is_protected' => 0,
+                'is_active' => 1,
+            ],
+
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'Groups',
+                'icon' => 'fa fa-users',
+                'path' => 'groups',
+                'table_name' => 'groups',
+                'controller' => 'AdminGroupsController',
+                'is_protected' => 0,
+                'is_active' => 1,
+            ],
+
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'Tenants',
+                'icon' => 'fa fa-industry',
+                'path' => 'tenants',
+                'table_name' => 'tenants',
+                'controller' => 'AdminTenantsController',
+                'is_protected' => 0,
+                'is_active' => 1,
+            ],
+
         ];
 
         foreach ($data as $k => $d) {
@@ -443,16 +634,204 @@ class Cms_usersSeeder extends Seeder
     {
 
         if (DB::table('cms_users')->count() == 0) {
+            $tenant = DB::table('tenants')->first();
+            $group = DB::table('groups')->first();
             $password = \Hash::make('123456');
             $cms_users = DB::table('cms_users')->insert([
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'Super Admin',
-                'email' => 'admin@crudbooster.com',
+                'email' => 'admin@chive.com',
                 'password' => $password,
                 'id_cms_privileges' => 1,
                 'status' => 'Active',
+                'primary_group' => $group->id,
+                'tenant' => $tenant->id,
             ]);
         }
     }
 }
 
+class TenantSeeder extends Seeder
+{
+    public function run()
+    {
+
+        if (DB::table('tenants')->count() == 0) {
+            DB::table('tenants')->insert([
+                'name' => 'Tenant 1',
+                'description' => 'Descrizione tenant 1',
+                'logo' => '',
+                'favicon' => '',
+                'domain_name' => '',
+                'login_background_color' => '#ffffff',
+                'login_background_image' => 'background.jpg',
+                'login_font_color' => '#000000',
+                'created_by' => 1,
+                'created_at' => now(),
+                'modified_by' => 1,
+                'modified_at' => now(),
+                'deleted_by' => null,
+                'deleted_at' => null,
+            ]);
+        }
+    }
+}
+
+class GroupSeeder extends Seeder
+{
+    public function run()
+    {
+
+        if (DB::table('groups')->count() == 0) {
+            DB::table('groups')->insert([
+                'name' => 'IT',
+                'description' => 'Information Technology',
+                'created_by' => 1,
+                'created_at' => now(),
+                'modified_by' => 1,
+                'modified_at' => now(),
+                'deleted_by' => null,
+                'deleted_at' => null,
+            ]);
+        }
+    }
+}
+
+class Cms_menus extends Seeder
+{
+    public function run()
+    {
+
+        if (DB::table('cms_menus')->count() == 0) {
+
+            $stat = DB::table('cms_statistics')->where('slug', 'dashboard')->first();
+
+            DB::table('cms_menus')->insert([
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'Dashboard',
+                'type' => 'Statistic',
+                'path' => 'dashboard',
+                'color' => 'normal',
+                'icon' => 'fa fa-dashboard',
+                'parent_id' => 0,
+                'is_active' => 1,
+                'is_dashboard' => 1,
+                'id_cms_privileges' => 1,
+                'sorting' => 0,
+            ]);
+        }
+    }
+}
+
+class Cms_menusPrivileges extends Seeder
+{
+    public function run()
+    {
+
+        $menus = DB::table('cms_menus')->get();
+        $privileges = DB::table('cms_privileges')->get();
+
+        foreach ($menus as $menu) {
+            foreach ($privileges as $privilege) {
+                DB::table('cms_menus_privileges')->insert([
+
+                    'id_cms_menus' => $menu->id,
+                    'id_cms_privileges' => $privilege->id
+
+                ]);
+            }
+        }
+    }
+}
+
+class Cms_statistics extends Seeder
+{
+    public function run()
+    {
+
+        DB::table('cms_statistics')->insert([
+            /*
+(1,'Dashboard','dashboard','2023-10-25 17:26:33',NULL);
+*/
+            'created_at' => date('Y-m-d H:i:s'),
+            'name' => 'Dashboard',
+            'slug' => 'dashboard',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => null,
+        ]);
+    }
+}
+
+
+class Cms_menusGroups extends Seeder
+{
+    public function run()
+    {
+
+        $menus = DB::table('cms_menus')->get();
+        $groups = DB::table('groups')->get();
+        foreach ($menus as $menu) {
+            foreach ($groups as $group) {
+                DB::table('menu_groups')->insert([
+                    'menu_id' => $menu->id,
+                    'group_id' => $group->id,
+                ]);
+            }
+        }
+    }
+}
+
+class Cms_menusTenants extends Seeder
+{
+    public function run()
+    {
+
+        $menus = DB::table('cms_menus')->get();
+        $groups = DB::table('groups')->get();
+        foreach ($menus as $menu) {
+            foreach ($groups as $group) {
+                DB::table('menu_tenants')->insert([
+                    'menu_id' => $menu->id,
+                    'tenant_id' => $group->id,
+                ]);
+            }
+        }
+    }
+}
+
+class Cms_groupTenants extends Seeder
+{
+    public function run()
+    {
+
+        $menus = DB::table('cms_menus')->get();
+        $tenants = DB::table('tenants')->get();
+        foreach ($menus as $menu) {
+            foreach ($tenants as $tenant) {
+                DB::table('group_tenants')->insert([
+                    'group_id' => $menu->id,
+                    'tenant_id' => $tenant->id,
+                ]);
+            }
+        }
+    }
+}
+
+
+class Cms_usersGroups extends Seeder
+{
+    public function run()
+    {
+
+        $users = DB::table('cms_users')->get();
+        $groups = DB::table('groups')->get();
+        foreach ($users as $user) {
+            foreach ($groups as $group) {
+                DB::table('users_groups')->insert([
+                    'user_id' => $user->id,
+                    'group_id' => $group->id,
+                ]);
+            }
+        }
+    }
+}

@@ -25,7 +25,21 @@ $name = str_slug($form['label'], '');
                                 <div class="panel-heading"><i class="fa fa-pencil-square-o"></i> {{trans("crudbooster.text_form")}}</div>
                                 <div class="panel-body child-form-area">
                                     @foreach($form['columns'] as $col)
-                                        <?php $name_column = $name.$col['name'];?>
+                                        <?php 
+$name_column = $name.$col['name'];
+$col['required'] = isset($col['required']) ? $col['required'] : '';
+$col['datamodal_columns_alias'] = isset($col['datamodal_columns_alias']) ? $col['datamodal_columns_alias'] : '';
+$col['datamodal_paginate'] = isset($col['datamodal_paginate']) ? $col['datamodal_paginate'] : '';
+$col['datamodal_height'] = isset($col['datamodal_height']) ? $col['datamodal_height'] : '';
+$col['help'] = isset($col['help']) ? $col['help'] : '';
+$col['formula'] = isset($col['formula']) ? $col['formula'] : '';
+$col['max'] = isset($col['max']) ? $col['max'] : '';
+$col['min'] = isset($col['min']) ? $col['min'] : '';
+$col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
+
+
+
+?>
                                         <div class='form-group'>
                                             @if($col['type']!='hidden')
                                                 <label class="control-label col-sm-2">{{$col['label']}}
@@ -79,7 +93,7 @@ $name = str_slug($form['label'], '');
 
                                                     @push('bottom')
                                                         <script type="text/javascript">
-                                                            var url_{{$name_column}} = "{{CRUDBooster::mainpath('modal-data')}}?table={{$col['datamodal_table']}}&columns=id,{{$col['datamodal_columns']}}&name_column={{$name_column}}&where={{urlencode($col['datamodal_where'])}}&select_to={{ urlencode($col['datamodal_select_to']) }}&columns_name_alias={{urlencode($col['datamodal_columns_alias'])}}";
+                                                            var url_{{$name_column}} = "{{CRUDBooster::mainpath('modal-data')}}?table={{$col['datamodal_table']}}&columns=id,{{$col['datamodal_columns']}}&name_column={{$name_column}}&where={{urlencode($col['datamodal_where'])}}&select_to={{ urlencode($col['datamodal_select_to']) }}&columns_name_alias={{urlencode($col['datamodal_columns_alias'])}}&paginate={{urlencode($col['datamodal_paginate'])}}";
                                                             var url_is_setted_{{$name_column}} = false;
 
                                                             function showModal{{$name_column}}() {
@@ -121,7 +135,7 @@ $name = str_slug($form['label'], '');
                                                                     </h4>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <iframe id='iframe-modal-{{$name_column}}' style="border:0;height: 430px;width: 100%"
+                                                                    <iframe id='iframe-modal-{{$name_column}}' style="border:0;height:{{$col['datamodal_height']?: "430px"}};width: 100%"
                                                                             src=""></iframe>
                                                                 </div>
 
@@ -526,7 +540,7 @@ $name = str_slug($form['label'], '');
 
                                 <?php
                                 $columns_tbody = [];
-                                $data_child = DB::table($form['table'])->where($form['foreign_key'], $id);
+                                $data_child = DB::table($form['table'])->where($form['foreign_key'], isset($id) ? $id : 0);
                                 foreach ($form['columns'] as $i => $c) {
                                     $data_child->addselect($form['table'].'.'.$c['name']);
 

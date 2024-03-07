@@ -62,6 +62,9 @@ return [
     'alert_add_data_success' => 'The data has been added !',
     'alert_add_data_failed' => 'Failed to save the data !',
     'alert_update_data_success' => 'The data has been updated !',
+    'alert_userqlik_exists' => 'Qlik user already exists. To generate new user, empty Qlik Cloud IDP Subject first!',
+    'alert_userqlik_created' => 'Created new Qlik user!',
+    'alert_userqlik_error' => 'There was an error!',
     'alert_update_data_failed' => 'Failed to update the data',
     'alert_delete_data_success' => 'Delete the data success !',
     'alert_want_to_logout' => 'Do you want to logout ?',
@@ -192,6 +195,7 @@ return [
     'login_register_style' => 'Login Register Style',
     'email_setting' => 'Email Setting',
     'application_setting' => 'Application Setting',
+    'qlik_conf' => 'Qlik Configuration',
 
     // table filter & sort
     'filter_select_operator_type' => 'Select Operator Type',

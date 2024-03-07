@@ -1,38 +1,39 @@
-<div class='form-group {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='form-group-{{$name}}' style="{{@$form['style']}}">
+<div class='form-group {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='form-group-{{$name}}'
+    style="{{ isset($form['style']) ? $form['style'] : '' }}">
     <label class='control-label col-sm-2'>{{$form['label']}}
         @if($required)
-            <span class='text-danger' title='{!! trans('crudbooster.this_field_is_required') !!}'>*</span>
+        <span class='text-danger' title='{!! trans("crudbooster.this_field_is_required") !!}'>*</span>
         @endif
     </label>
     <div class="{{$col_width?:'col-sm-10'}}">
 
         @if(!$form['dataenum'] && !$form['datatable'] && !$form['dataquery'])
-            <em>{{trans('crudbooster.there_is_no_option')}}</em>
+        <em>{{trans('crudbooster.there_is_no_option')}}</em>
         @endif
 
-        @if($form['dataenum']!='')
-            <?php
+        @if(isset($form['dataenum']) && $form['dataenum']!='')
+        <?php
             @$value = explode(";", $value);
             @array_walk($value, 'trim');
             $dataenum = $form['dataenum'];
             $dataenum = (is_array($dataenum)) ? $dataenum : explode(";", $dataenum);
             ?>
-            @foreach($dataenum as $k=>$d)
-                <?php
+        @foreach($dataenum as $k=>$d)
+        <?php
                 if (strpos($d, '|')) {
                     $val = substr($d, 0, strpos($d, '|'));
                     $label = substr($d, strpos($d, '|') + 1);
                 } else {
                     $val = $label = $d;
                 }
-				$checked = ( ($value && in_array($val, $value)) || (CRUDBooster::isCreate() && ($k==0 && $form['validation'])) ) ? "checked" : "";
+				$checked = ( ($value && in_array($val, $value)) || (CRUDBooster::isCreate() && ($k==0 && isset($form['validation']))) ) ? "checked" : "";
                 ?>
-                <div class=" {{$disabled}}">
-                    <label class='radio-inline'>
-                        <input type="radio" {{$disabled}} {{$checked}} name="{{$name}}" value="{{$val}}"> {{$label}}
-                    </label>
-                </div>
-            @endforeach
+        <div class=" {{$disabled}}">
+            <label class='radio-inline'>
+                <input type="radio" {{$disabled}} {{$checked}} name="{{$name}}" value="{{$val}}"> {{$label}}
+            </label>
+        </div>
+        @endforeach
         @endif
 
         <?php
@@ -75,30 +76,37 @@
 
                 $checked = ($value == $d->id) ? "checked" : "";
 
-                echo "
-											<div data-val='$val' class='input-radio-wrapper $disabled'>
-											  <label class='radio-inline'>
-											    <input type='radio' $disabled $checked name='".$name."' value='".$d->id."'> ".$val." 								    
-											  </label>
-											</div>";
+               echo "
+<div data-val='".$val."' class='input-radio-wrapper " . $disabled . "'>
+  <label class='radio-inline'>
+    <input type='radio' " . $disabled . " " . $checked . " name='" . $name . "' value='" . $d->id . "'> " . $val . "
+  </label>
+</div>";
+
+				
+				
+				
+				
+				
             }
 
         endif;
-        if ($form['dataquery']) {
+        if (isset($form['dataquery'])) {
             $query = DB::select(DB::raw($form['dataquery']));
             if ($query) {
                 foreach ($query as $q) {
                     $checked = ($value == $q->value) ? "checked" : "";
-                    echo "<div data-val='$val' class=' $disabled'>
-																<label class='radio-inline'>
-																	<input type='radio' $disabled $checked name='".$name."' value='$q->value'> ".$q->label."								    
-																</label>
-																</div>";
+                    echo "<div data-val='" . htmlspecialchars($val) . "' class='" . htmlspecialchars($disabled) . "'></div>
+					    <label class='radio-inline'></div>
+					        <input type='radio' " . htmlspecialchars($disabled) . " " . htmlspecialchars($checked) . " name='" . htmlspecialchars($name) . "' value='" . htmlspecialchars($q->value) . "'> " . htmlspecialchars($q->label) . "</div>
+					    </label></div>
+					</div>";
                 }
             }
         }
         ?>
-        <div class="text-danger">{!! $errors->first($name)?"<i class='fa fa-info-circle'></i> ".$errors->first($name):"" !!}</div>
+        <div class="text-danger">{!! $errors->first($name)?"<i class='fa fa-info-circle'></i> ".$errors->first($name):""
+            !!}</div>
         <p class='help-block'>{{ @$form['help'] }}</p>
     </div>
 </div>

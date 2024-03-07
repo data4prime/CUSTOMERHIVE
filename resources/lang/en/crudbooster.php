@@ -218,6 +218,7 @@ return [
     'login_register_style' => 'Login Register Style',
     'email_setting' => 'Email Setting',
     'application_setting' => 'Application Setting',
+    'qlik_conf' => 'Qlik Configuration',
 
     // table filter & sort
     'filter_select_operator_type' => 'Select Operator Type',

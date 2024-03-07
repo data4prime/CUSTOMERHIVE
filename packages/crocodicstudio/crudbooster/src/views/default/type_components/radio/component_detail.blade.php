@@ -1,6 +1,6 @@
 <?php
 
-if ($form['datatable'] && $form['relationship_table']) {
+if ((isset($form['datatable']) && isset($form['relationship_table'])) && $form['datatable'] && $form['relationship_table']) {
     $datatable_array = explode(",", $form['datatable']);
     $datatable_tab = $datatable_array[0];
     $datatable_field = $datatable_array[1];
@@ -20,7 +20,7 @@ if ($form['datatable'] && $form['relationship_table']) {
     } else {
         $value = [];
     }
-} elseif ($form['dataquery']) {
+} elseif (isset($form['dataquery']) && $form['dataquery']) {
     $dataquery = $form['dataquery'];
     $query = DB::select(DB::raw($dataquery));
     if ($query) {

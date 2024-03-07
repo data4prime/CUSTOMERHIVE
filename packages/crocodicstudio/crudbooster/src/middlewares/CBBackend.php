@@ -50,6 +50,7 @@ class CBBackend
                 }
             }
         }
+        //dd($request);
         return $next($request);
     }
 }

@@ -1,9 +1,11 @@
-@extends('crudbooster::admin_template',['target_layout' => $row->target_layout])
 
-@if($row->target_layout == 2)
+@extends('crudbooster::admin_template',['target_layout' => isset($row->target_layout) ? $row->target_layout : null ])
+
+@if(isset($row->target_layout) && $row->target_layout == 2)
   <!-- fill content settings -->
   @section('content')
     <div class="qi_iframe_container">
+	{{ $item_url }}
         <iframe class="qi_iframe" src="{{ $item_url }}" style="border:none;"></iframe>
     </div>
   @endsection
@@ -12,6 +14,7 @@
   @section('content')
   <div class="box qi_box">
     <h4 class="qi_subtitle">{{ $subtitle }}</h4>
+	{{ $item_url }}
     <div class="qi_iframe_container">
         <iframe class="qi_iframe" src="{{ $item_url }}" style="border:none;"></iframe>
     </div>

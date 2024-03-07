@@ -75,7 +75,7 @@ class CRUDBoosterServiceProvider extends ServiceProvider
         $this->app->register('Intervention\Image\ImageServiceProvider');
 
         $loader = AliasLoader::getInstance();
-        $loader->alias('PDF', 'Barryvdh\DomPDF\Facade');
+        $loader->alias('PDF', 'Barryvdh\DomPDF\Facade\Pdf');
         $loader->alias('Excel', 'Maatwebsite\Excel\Facades\Excel');
         $loader->alias('Image', 'Intervention\Image\Facades\Image');
         $loader->alias('CRUDBooster', 'crocodicstudio\crudbooster\helpers\CRUDBooster');

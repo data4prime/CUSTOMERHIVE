@@ -92,8 +92,9 @@ if (count($coloms_alias) < 2) {
                     foreach ($select_data as $s) {
                         $s_exp = explode(':', $s);
                         $field_name = $s_exp[0];
-                        $target_field_name = $s_exp[1];
-                        $select_data_result[$target_field_name] = $row->$field_name;
+                        
+                        $target_field_name = isset($s_exp[1]) ? $s_exp[1] : $field_name;
+                        $select_data_result[$target_field_name] = isset($row->$field_name) ? $row->$field_name : '';
                     }
                 }
             }

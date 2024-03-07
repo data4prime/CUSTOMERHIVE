@@ -1,29 +1,30 @@
 @extends('crudbooster::admin_template')
 @section('content')
-    @push('bottom')
-        <script src="{{asset('vendor/laravel-filemanager/js/lfm.js')}}"></script>
-        <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-        <script>
-            $(function () {
-                $('.label-setting').hover(function () {
-                    $(this).find('a').css("visibility", "visible");
-                }, function () {
-                    $(this).find('a').css("visibility", "hidden");
-                })
-            })
-            var editor_config = {
-                path_absolute: "{{asset('/')}}",
-                selector: ".wysiwyg",
-                height: 250,
-                {{ ($disabled)?"readonly:1,":"" }}
-                plugins: [
-                    "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-                    "searchreplace wordcount visualblocks visualchars code fullscreen",
-                    "insertdatetime media nonbreaking save table contextmenu directionality",
-                    "emoticons template paste textcolor colorpicker textpattern"
-                ],
-                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media",
-                relative_urls: false,
+@push('bottom')
+<script src="{{asset('vendor/laravel-filemanager/js/lfm.js')}}"></script>
+<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+<script defer src="{{asset('js/qlik_conf.js')}}"></script>
+<script>
+    $(function () {
+        $('.label-setting').hover(function () {
+            $(this).find('a').css("visibility", "visible");
+        }, function () {
+            $(this).find('a').css("visibility", "hidden");
+        })
+    })
+    var editor_config = {
+        path_absolute: "{{asset('/')}}",
+        selector: ".wysiwyg",
+        height: 250,
+                { { isset($disabled) ? "readonly:1," : "" } }
+    plugins: [
+        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+        "searchreplace wordcount visualblocks visualchars code fullscreen",
+        "insertdatetime media nonbreaking save table contextmenu directionality",
+        "emoticons template paste textcolor colorpicker textpattern"
+    ],
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media",
+            relative_urls: false,
                 file_browser_callback: function (field_name, url, type, win) {
                     var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
                     var y = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
@@ -46,25 +47,27 @@
                 }
             };
 
-            tinymce.init(editor_config);
+    tinymce.init(editor_config);
 
-        </script>
-    @endpush
+</script>
+@endpush
 
-    <div style="width:750px;margin:0 auto ">
+<div style="width:750px;margin:0 auto ">
 
-        <p align="right"><a title='Add Field Setting' class='btn btn-sm btn-primary' href='{{route("SettingsControllerGetAdd")."?group_setting=".$page_title}}'><i
-                        class='fa fa-plus'></i> Add Field Setting</a></p>
+    <p align="right"><a title='Add Field Setting' class='btn btn-sm btn-primary'
+            href='{{route("SettingsControllerGetAdd")."?group_setting=".$page_title}}'><i class='fa fa-plus'></i> Add
+            Field Setting</a></p>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class='fa fa-cog'></i> {{$page_title}}
-            </div>
-            <div class="panel-body">
-                <form method='post' id="form" enctype="multipart/form-data" action='{{CRUDBooster::mainpath("save-setting?group_setting=$page_title")}}'>
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <div class="box-body">
-                        <?php
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class='fa fa-cog'></i> {{$page_title}}
+        </div>
+        <div class="panel-body">
+            <form method='post' id="form" enctype="multipart/form-data"
+                action='{{CRUDBooster::mainpath("save-setting?group_setting=$page_title")}}'>
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class="box-body">
+                    <?php
                         $set = DB::table('cms_settings')->where('group_setting', $page_title)->get();
                         foreach($set as $s):
 
@@ -82,15 +85,16 @@
                         }
 
                         ?>
-                        <div class='form-group'>
-                            <label class='label-setting' title="{{$s->name}}">{{$s->label}}
-                                <a style="visibility:hidden" href='{{CRUDBooster::mainpath("edit/$s->id")}}' title='Edit This Meta Setting'
-                                   class='btn btn-box-tool'><i class='fa fa-pencil'></i></a>
-                                <a style="visibility:hidden" href='javascript:;' title='Delete this Setting' class='btn btn-box-tool'
-                                   onClick='swal({   title: "Are you sure?",   text: "You will not be able to recover {{$s->label}} and may be can cause some errors on your system !",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "Yes, delete it!",   closeOnConfirm: false }, function(){  location.href="{{CRUDBooster::mainpath("delete/$s->id")}}" });'
-                                ><i class='fa fa-trash'></i></a>
-                            </label>
-                            <?php
+                    <div class='form-group'>
+                        <label class='label-setting' title="{{$s->name}}">{{$s->label}}
+                            <a style="visibility:hidden" href='{{CRUDBooster::mainpath("edit/$s->id")}}'
+                                title='Edit This Meta Setting' class='btn btn-box-tool'><i class='fa fa-pencil'></i></a>
+                            <a style="visibility:hidden" href='javascript:;' title='Delete this Setting'
+                                class='btn btn-box-tool'
+                                onClick='swal({   title: "Are you sure?",   text: "You will not be able to recover {{$s->label}} and may be can cause some errors on your system !",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "Yes, delete it!",   closeOnConfirm: false }, function(){  location.href="{{CRUDBooster::mainpath("delete/$s->id")}}" });'><i
+                                    class='fa fa-trash'></i></a>
+                        </label>
+                        <?php
                             switch ($s->content_input_type) {
                                 case 'text':
                                     echo "<input type='text' class='form-control' name='$s->name' value='$value'/>";
@@ -126,7 +130,7 @@
                                     } else {
                                         echo "<input type='file' name='$s->name' class='form-control'/>";
                                     }
-                                    echo "<div class='help-block'>File support only doc,docx,xls,xlsx,ppt,pptx,pdf,zip,rar, Max 20 MB</div>";
+                                    echo "<div class='help-block'>File support only pem,doc,docx,xls,xlsx,ppt,pptx,pdf,zip,rar, Max 20 MB</div>";
                                     break;
                                 case 'datepicker':
                                     echo "<input type='text' class='datepicker form-control' name='$s->name' value='$value'/>";
@@ -155,19 +159,19 @@
                             }
                             ?>
 
-                            <div class='help-block'>{{$s->helper}}</div>
-                        </div>
-                        <?php endforeach;?>
-                    </div><!-- /.box-body -->
-                    <div class="box-footer">
-                        <div class='pull-right'>
-                            <input type='submit' name='submit' value='Save' class='btn btn-success'/>
-                        </div>
-                    </div><!-- /.box-footer-->
-                </form>
-            </div>
+                        <div class='help-block'>{{$s->helper}}</div>
+                    </div>
+                    <?php endforeach;?>
+                </div><!-- /.box-body -->
+                <div class="box-footer">
+                    <div class='pull-right'>
+                        <input type='submit' name='submit' value='Save' class='btn btn-success' />
+                    </div>
+                </div><!-- /.box-footer-->
+            </form>
         </div>
-
     </div>
+
+</div>
 
 @endsection

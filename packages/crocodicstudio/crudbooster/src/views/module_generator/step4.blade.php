@@ -378,14 +378,14 @@ $(function () {
                 if($types):
                   ?>
 
-                  @if($types->alert)
+                  @if(isset($types->alert))
                   <div class="alert alert-warning">
                     {!! $types->alert !!}
                   </div>
                   @endif
 
                   <?php
-                  if($types->attribute->required):
+                  if(isset($types->attribute->required)):
                     foreach($types->attribute->required as $key=>$val):
                       @$value = $form[$key];
                       if(is_object($val)):
@@ -421,7 +421,7 @@ $(function () {
 
 
                     <?php
-                    if($types->attribute->requiredOne):
+                    if(isset($types->attribute->requiredOne)):
                       foreach($types->attribute->requiredOne as $key=>$val):
                         @$value = $form[$key];
                         ?>

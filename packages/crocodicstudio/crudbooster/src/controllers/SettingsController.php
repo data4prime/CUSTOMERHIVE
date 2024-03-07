@@ -1,4 +1,6 @@
-<?php namespace crocodicstudio\crudbooster\controllers;
+<?php
+
+namespace crocodicstudio\crudbooster\controllers;
 
 use CRUDBooster;
 use Illuminate\Support\Facades\Cache;
@@ -68,7 +70,7 @@ class SettingsController extends CBController
     {
         $this->cbLoader();
 
-        if (! CRUDBooster::isSuperadmin()) {
+        if (!CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'Setting', 'module' => 'Setting']));
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
@@ -80,14 +82,14 @@ class SettingsController extends CBController
 
     function hook_before_edit(&$posdata, $id)
     {
-        $this->return_url = CRUDBooster::mainpath("show")."?group=".$posdata['group_setting'];
+        $this->return_url = CRUDBooster::mainpath("show") . "?group=" . $posdata['group_setting'];
     }
 
     function getDeleteFileSetting()
     {
         $id = g('id');
         $row = CRUDBooster::first('cms_settings', $id);
-        Cache::forget('setting_'.$row->name);
+        Cache::forget('setting_' . $row->name);
         if (Storage::exists($row->content)) {
             Storage::delete($row->content);
         }
@@ -98,7 +100,7 @@ class SettingsController extends CBController
     function postSaveSetting()
     {
 
-        if (! CRUDBooster::isSuperadmin()) {
+        if (!CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'Setting', 'module' => 'Setting']));
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
@@ -113,30 +115,31 @@ class SettingsController extends CBController
 
             if (Request::hasFile($name)) {
 
+
                 if ($set->content_input_type == 'upload_image') {
                     CRUDBooster::valid([$name => 'image|max:10000'], 'view');
                 } else {
-                    CRUDBooster::valid([$name => 'mimes:doc,docx,xls,xlsx,ppt,pptx,pdf,zip,rar|max:20000'], 'view');
+                    CRUDBooster::valid([$name => 'mimes:pem,doc,docx,xls,xlsx,ppt,pptx,pdf,zip,rar|max:20000'], 'view');
                 }
 
                 $file = Request::file($name);
                 $ext = $file->getClientOriginalExtension();
 
                 //Create Directory Monthly
-                $directory = 'uploads/'.date('Y-m');
+                $directory = 'uploads/' . date('Y-m');
                 Storage::makeDirectory($directory);
 
                 //Move file to storage
-                $filename = md5(str_random(5)).'.'.$ext;
+                $filename = md5(str_random(5)) . '.' . $ext;
                 $storeFile = Storage::putFileAs($directory, $file, $filename);
                 if ($storeFile) {
-                    $content = $directory.'/'.$filename;
+                    $content = $directory . '/' . $filename;
                 }
             }
 
             DB::table('cms_settings')->where('name', $set->name)->update(['content' => $content]);
 
-            Cache::forget('setting_'.$set->name);
+            Cache::forget('setting_' . $set->name);
         }
 
         return redirect()->back()->with(['message' => 'Your setting has been saved !', 'message_type' => 'success']);
@@ -145,7 +148,7 @@ class SettingsController extends CBController
     function hook_before_add(&$arr)
     {
         $arr['name'] = str_slug($arr['label'], '_');
-        $this->return_url = CRUDBooster::mainpath("show")."?group=".$arr['group_setting'];
+        $this->return_url = CRUDBooster::mainpath("show") . "?group=" . $arr['group_setting'];
     }
 
     function hook_after_edit($id)
@@ -153,6 +156,6 @@ class SettingsController extends CBController
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
         /* REMOVE CACHE */
-        Cache::forget('setting_'.$row->name);
+        Cache::forget('setting_' . $row->name);
     }
 }

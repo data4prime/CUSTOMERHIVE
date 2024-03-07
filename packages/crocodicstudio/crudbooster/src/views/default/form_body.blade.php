@@ -4,22 +4,28 @@
 //add group and tenant columns for admins
 $forms = ModuleHelper::add_default_form_fields($table, $forms);
 
+//dd($forms);
+
 $asset_already = [];
+
 foreach($forms as $key => $form) {
-  $type = @$form['type'] ?: 'text';
-  $name = $form['name'];
+  
+  $type = isset($form['type']) ? $form['type'] : 'text';
+  $name = isset($form['name']) ? $form['name'] : '';
 
   if (in_array($type, $asset_already)) continue;
+
   ?>
-  @if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/asset.blade.php')))
-    @include('crudbooster::default.type_components.'.$type.'.asset')
-  @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php')))
-    @include('vendor.crudbooster.type_components.'.$type.'.asset')
-  @endif
-  <?php
+@if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/asset.blade.php')))
+@include('crudbooster::default.type_components.'.$type.'.asset')
+@elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php')))
+@include('vendor.crudbooster.type_components.'.$type.'.asset')
+@endif
+<?php
 
   $asset_already[] = $type;
 }
+
 
 //Loading input components
 $header_group_class = "";
@@ -34,6 +40,8 @@ foreach($forms as $index => $form) {
 
   $name = $form['name'];
   @$join = $form['join'];
+
+
 
   if(isset($row->{$name})){
     @$value = $row->{$name};
@@ -53,7 +61,7 @@ foreach($forms as $index => $form) {
   if ($validation_raw) {
     foreach ($validation_raw as $vr) {
       $vr_a = explode(':', $vr);
-      if ($vr_a[1]) {
+      if (isset($vr_a[1]) && $vr_a[1]) {
         $key = $vr_a[0];
         $validation[$key] = $vr_a[1];
       } else {
@@ -76,12 +84,13 @@ foreach($forms as $index => $form) {
     array_walk($join_arr, 'trim');
     $join_table = $join_arr[0];
     $join_title = $join_arr[1];
-    $join_query_{$join_table} = DB::table($join_table)->select($join_title)->where("id", $row->{'id_'.$join_table})->first();
-    $value = @$join_query_{$join_table}->{$join_title};
+    ${"join_query_".$join_table} = DB::table($join_table)->select($join_title)->where("id", $row->{'id_'.$join_table})->first();
+    //${"join_query_".$join_table} = DB::table($join_table)->select($join_title)->where("id", $row->{'id_'.$join_table})->first();
+    $value = @${"join_query_".$join_table}->{$join_title};
   }
-  $form['type'] = ($form['type']) ?: 'text';
-  $type = @$form['type'];
-  $required = (@$form['required']) ? "required" : "";
+  $form['type'] = (isset($form['type'])) ? $form['type']: 'text';
+  $type = isset($form['type']) ? $form['type'] : 'text';
+  $required = (isset($form['required']) && $form['required'] == true ) ? "required" : "";
   $required = (@strpos($form['validation'], 'required') !== FALSE) ? "required" : $required;
   $readonly = (@$form['readonly']) ? "readonly" : "";
   $disabled = (@$form['disabled']) ? "disabled" : "";
@@ -99,13 +108,40 @@ foreach($forms as $index => $form) {
     $header_group_class = ($header_group_class) ?: "header-group-$index";
   }
   ?>
+@if($name == 'tenant')
+<div class="row">
+  <div class="col-sm-12 col-md-12">
+    <div class="box box-info collapsed-box">
+      <div class="box-header with-border">
+        <h3 class="box-title">
+          <strong>
+            <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Informazioni di sistema
+          </strong>
+        </h3>
+        <div class="box-tools pull-right">
+          <!-- <span class="label label-info">0 righe</span> -->
+          <button type="button" class="btn btn-box-tool" data-widget="collapse">
+            <i class="fa fa-plus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="box-body no-padding">
+        @endif
 
-  @if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/component.blade.php')))
-  @include('crudbooster::default.type_components.'.$type.'.component')
-  @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/component.blade.php')))
-  @include('vendor.crudbooster.type_components.'.$type.'.component')
-  @else
-  <p class='text-danger'>{{$type}} is not found in type component system</p><br/>
-  @endif
-  <?php
+        @if(file_exists(base_path('packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/component.blade.php')))
+
+        @include('crudbooster::default.type_components.'.$type.'.component')
+        @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/component.blade.php')))
+        @include('vendor.crudbooster.type_components.'.$type.'.component')
+        @else
+        <p class='text-danger'>{{$type}} is not found in type component system</p><br />
+        @endif
+        @if($name == 'group')
+      </div>
+    </div>
+  </div>
+</div>
+@endif
+<?php
 }
+?>

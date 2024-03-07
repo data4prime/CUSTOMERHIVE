@@ -1,12 +1,15 @@
-<?php namespace crocodicstudio\crudbooster\controllers;
+<?php
 
-use CRUDBooster;
+namespace crocodicstudio\crudbooster\controllers;
+
+//use CRUDBooster;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Excel;
 use Illuminate\Support\Facades\PDF;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use \crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 class PrivilegesController extends CBController
 {
@@ -52,7 +55,7 @@ class PrivilegesController extends CBController
     {
         $this->cbLoader();
 
-        if (! CRUDBooster::isCreate() && $this->global_privilege == false) {
+        if (!CRUDBooster::isCreate() && $this->global_privilege == false) {
             CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module' => CRUDBooster::getCurrentModule()->name]));
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
         }
@@ -60,22 +63,22 @@ class PrivilegesController extends CBController
         $id = 0;
         $data['page_title'] = "Add Data";
         $data['moduls'] = DB::table("cms_moduls")
-          ->where('is_protected', 0)
-          ->where('table_name','like',config('app.module_generator_prefix').'%')
-          ->orWhere('table_name','groups')
-          ->orWhere('table_name','cms_users')
-          ->orWhere('table_name','cms_menus')
-          ->whereNull('deleted_at')
-          ->select(
+            ->where('is_protected', 0)
+            ->where('table_name', 'like', config('app.module_generator_prefix') . '%')
+            ->orWhere('table_name', 'groups')
+            ->orWhere('table_name', 'cms_users')
+            ->orWhere('table_name', 'cms_menus')
+            ->whereNull('deleted_at')
+            ->select(
                 "cms_moduls.*",
                 DB::raw("(select is_visible from cms_privileges_roles where id_cms_moduls = cms_moduls.id and id_cms_privileges = '$id') as is_visible"),
                 DB::raw("(select is_create from cms_privileges_roles where id_cms_moduls  = cms_moduls.id and id_cms_privileges = '$id') as is_create"),
                 DB::raw("(select is_read from cms_privileges_roles where id_cms_moduls    = cms_moduls.id and id_cms_privileges = '$id') as is_read"),
                 DB::raw("(select is_edit from cms_privileges_roles where id_cms_moduls    = cms_moduls.id and id_cms_privileges = '$id') as is_edit"),
                 DB::raw("(select is_delete from cms_privileges_roles where id_cms_moduls  = cms_moduls.id and id_cms_privileges = '$id') as is_delete")
-              )
-          ->orderby("name", "asc")
-          ->get();
+            )
+            ->orderby("name", "asc")
+            ->get();
 
         $data['page_menu'] = Route::getCurrentRoute()->getActionName();
 
@@ -86,7 +89,7 @@ class PrivilegesController extends CBController
     {
         $this->cbLoader();
 
-        if (! CRUDBooster::isCreate() && $this->global_privilege == false) {
+        if (!CRUDBooster::isCreate() && $this->global_privilege == false) {
             CRUDBooster::insertLog(trans('crudbooster.log_try_add_save', [
                 'name' => Request::input($this->title_field),
                 'module' => CRUDBooster::getCurrentModule()->name,
@@ -94,18 +97,18 @@ class PrivilegesController extends CBController
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
         }
 
-        $this->validation($request);
-        $this->input_assignment($request);
+        $this->validation(Request::all());
+        $this->input_assignment(Request::all());
 
         $this->arr['is_superadmin'] = 0;
         $this->arr['is_tenantadmin'] = 0;
         switch ($this->arr['superprivilege']) {
-          case 1:
-            $this->arr['is_superadmin'] = 1;
-            break;
-          case 2:
-            $this->arr['is_tenantadmin'] = 1;
-            break;
+            case 1:
+                $this->arr['is_superadmin'] = 1;
+                break;
+            case 2:
+                $this->arr['is_tenantadmin'] = 1;
+                break;
         }
         unset($this->arr['superprivilege']);
 
@@ -113,6 +116,9 @@ class PrivilegesController extends CBController
 
         DB::table($this->table)->insert($this->arr);
         $id = $this->arr[$this->primary_key];
+
+        //default dashboard for this role inserted
+        DB::table('cms_menus_privileges')->insert(['id_cms_menus' => 1, 'id_cms_privileges' => $id]);
 
         //set theme
         Session::put('theme_color', $this->arr['theme_color']);
@@ -139,22 +145,25 @@ class PrivilegesController extends CBController
         $roles = DB::table('cms_privileges_roles')->where('id_cms_privileges', CRUDBooster::myPrivilegeId())->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')->get();
         Session::put('admin_privileges_roles', $roles);
 
+
+
         CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_add_data_success"), 'success');
     }
 
-  	public function hook_before_edit(&$postdata,$user_id) {
-      $postdata['is_superadmin'] = 0;
-      $postdata['is_tenantadmin'] = 0;
-      switch ($postdata['superprivilege']) {
-        case 1:
-          $postdata['is_superadmin'] = 1;
-          break;
-        case 2:
-          $postdata['is_tenantadmin'] = 1;
-          break;
-      }
-      unset($postdata['superprivilege']);
-  	}
+    public function hook_before_edit(&$postdata, $user_id)
+    {
+        $postdata['is_superadmin'] = 0;
+        $postdata['is_tenantadmin'] = 0;
+        switch ($postdata['superprivilege']) {
+            case 1:
+                $postdata['is_superadmin'] = 1;
+                break;
+            case 2:
+                $postdata['is_tenantadmin'] = 1;
+                break;
+        }
+        unset($postdata['superprivilege']);
+    }
 
     public function getEdit($id)
     {
@@ -173,15 +182,15 @@ class PrivilegesController extends CBController
         $page_title = trans('crudbooster.edit_data_page_title', ['module' => 'Privilege', 'name' => $row->name]);
 
         $moduls = DB::table("cms_moduls")
-                      ->where('is_protected', 0)
-                      ->where('deleted_at', null)
-                      ->where('table_name','like',config('app.module_generator_prefix').'%')
-                      ->orWhere('table_name','groups')
-                      ->orWhere('table_name','cms_users')
-                      ->orWhere('table_name','cms_menus')
-                      ->select("cms_moduls.*")
-                      ->orderby("name", "asc")
-                      ->get();
+            ->where('is_protected', 0)
+            ->where('deleted_at', null)
+            ->where('table_name', 'like', config('app.module_generator_prefix') . '%')
+            ->orWhere('table_name', 'groups')
+            ->orWhere('table_name', 'cms_users')
+            ->orWhere('table_name', 'cms_menus')
+            ->select("cms_moduls.*")
+            ->orderby("name", "asc")
+            ->get();
 
         $page_menu = Route::getCurrentRoute()->getActionName();
 
@@ -194,7 +203,7 @@ class PrivilegesController extends CBController
 
         $row = CRUDBooster::first($this->table, $id);
 
-        if (! CRUDBooster::isUpdate() && $this->global_privilege == false) {
+        if (!CRUDBooster::isUpdate() && $this->global_privilege == false) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_add", ['name' => $row->{$this->title_field}, 'module' => CRUDBooster::getCurrentModule()->name]));
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
@@ -206,12 +215,12 @@ class PrivilegesController extends CBController
         $this->arr['is_superadmin'] = 0;
         $this->arr['is_tenantadmin'] = 0;
         switch ($this->arr['superprivilege']) {
-          case 1:
-            $this->arr['is_superadmin'] = 1;
-            break;
-          case 2:
-            $this->arr['is_tenantadmin'] = 1;
-            break;
+            case 1:
+                $this->arr['is_superadmin'] = 1;
+                break;
+            case 2:
+                $this->arr['is_tenantadmin'] = 1;
+                break;
         }
         unset($this->arr['superprivilege']);
 
@@ -236,6 +245,7 @@ class PrivilegesController extends CBController
                     $arrs['is_read'] = @$data['is_read'] ?: 0;
                     $arrs['is_edit'] = @$data['is_edit'] ?: 0;
                     $arrs['is_delete'] = @$data['is_delete'] ?: 0;
+
                     DB::table('cms_privileges_roles')->where('id', $currentPermission->id)->update($arrs);
                 } else {
                     $arrs = [];
@@ -247,6 +257,7 @@ class PrivilegesController extends CBController
                     $arrs['is_delete'] = @$data['is_delete'] ?: 0;
                     $arrs['id_cms_privileges'] = $id;
                     $arrs['id_cms_moduls'] = $id_modul;
+
                     DB::table("cms_privileges_roles")->insert($arrs);
                 }
             }
@@ -272,21 +283,20 @@ class PrivilegesController extends CBController
 
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-        if (! CRUDBooster::isDelete() && $this->global_privilege == false) {
+        if (!CRUDBooster::isDelete() && $this->global_privilege == false) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_delete", [
                 'name' => $row->{$this->title_field},
                 'module' => CRUDBooster::getCurrentModule()->name,
             ]));
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
-        if ( $id < 4 )
-        {
-          //can't delete default roles
-          CRUDBooster::insertLog(trans("crudbooster.log_try_delete", [
-              'name' => $row->{$this->title_field},
-              'module' => CRUDBooster::getCurrentModule()->name,
-          ]));
-          CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.cant_delete_role'));
+        if ($id < 4) {
+            //can't delete default roles
+            CRUDBooster::insertLog(trans("crudbooster.log_try_delete", [
+                'name' => $row->{$this->title_field},
+                'module' => CRUDBooster::getCurrentModule()->name,
+            ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.cant_delete_role'));
         }
 
 

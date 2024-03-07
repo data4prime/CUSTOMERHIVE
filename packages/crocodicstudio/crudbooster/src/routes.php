@@ -60,6 +60,8 @@ Route::group([
     }
 });
 
+// Route::get('/admin/mg_ordini/{ordine}/righe/add', [AdminRigheController::class, 'show']);
+
 /* ROUTER FOR BACKEND CRUDBOOSTER */
 Route::group([
     'middleware' => ['web', '\crocodicstudio\crudbooster\middlewares\CBBackend'],
