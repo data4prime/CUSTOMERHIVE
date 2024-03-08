@@ -1,4 +1,5 @@
-{{ $item_url }}<iframe id="qlik_frame" class="qi_iframe" src="{{ $item_url }}"  style="border:none;"></iframe>
+{{ $debug == 'Active' ? $item_url : '' }}<iframe id="qlik_frame" class="qi_iframe" src="{{ $item_url }}"
+   style="border:none;"></iframe>
 
 <style>
   /*set iframe size*/

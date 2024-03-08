@@ -462,6 +462,9 @@ class AdminQlikItemsController extends CBController
 		$data['page_title'] = $data['row']->title;
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
+		$data['debug'] = CRUDBooster::getSetting('debug');
+
+
 		if ($type == 'On-Premise') {
 
 			//get qlik ticket
@@ -501,7 +504,6 @@ class AdminQlikItemsController extends CBController
   const APPID = '##APP##';
   const JWTTOKEN = "##JWTTOKEN##";
 */
-
 			if ($menu->target_layout == 1) {
 				//iframe only
 				$this->cbView('qlik_items.fullscreen_view_saas', $data);
