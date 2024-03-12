@@ -822,9 +822,9 @@ class CRUDBooster
             $template->subject = str_replace('[' . $key . ']', $val, $template->subject);
         }
         $subject = $template->subject;
-        $attachments = ($config['attachments']) ?: [];
+        $attachments = isset($config['attachments']) ? $config['attachments'] : [];
 
-        if ($config['send_at'] != null) {
+        if (isset($config['send_at']) && $config['send_at'] != null) {
             $a = [];
             $a['send_at'] = $config['send_at'];
             $a['email_recipient'] = $to;
