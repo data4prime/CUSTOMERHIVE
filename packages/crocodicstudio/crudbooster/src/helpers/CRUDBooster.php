@@ -1094,6 +1094,8 @@ class CRUDBooster
             $table = substr($fieldName, 3);
         } elseif (substr($fieldName, -3) == '_id') {
             $table = substr($fieldName, 0, (strlen($fieldName) - 3));
+        } else {
+            return false;
         }
 
         if (Cache::has('isForeignKey_' . $fieldName)) {
