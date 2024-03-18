@@ -580,9 +580,12 @@ class CRUDBooster
         // Check to position of admin_path
         if (config("crudbooster.ADMIN_PATH")) {
             $adminPathSegments = explode('/', Request::path());
+            
             $no = 1;
+
             foreach ($adminPathSegments as $path) {
-                if ($path == config("crudbooster.ADMIN_PATH")) {
+                if ($path == config("crudbooster.ADMIN_PATH") ) {
+                    //dd($path);
                     $segment = $no + 1;
                     break;
                 }
@@ -592,7 +595,16 @@ class CRUDBooster
             $segment = 1;
         }
 
-        return Request::segment($segment);
+        if (!isset($segment)) {
+            $segment = DB::table('cms_apicustom')->where('permalink', explode('/', Request::path())[1])->first()->tabel;
+            return $segment;
+
+        } else {
+return Request::segment($segment);
+        }
+
+
+        
     }
 
     public static function mainpath($path = null)
@@ -1478,6 +1490,13 @@ class CRUDBooster
 
     public static function generateAPI($controller_name, $table_name, $permalink, $method_type = 'post')
     {
+/*
+crocodicstudio\crudbooster\controllers\
+*/
+
+        $manually_generated = ModuleHelper::is_manually_generated($table_name);
+        $path = $manually_generated == true ? "App\Http\Controllers\\" : "crocodicstudio\crudbooster\controllers\\";
+        $controller = DB::table('cms_moduls')->where('table_name', $table_name)->first()->controller;
         $php = '
 		<?php namespace App\Http\Controllers;
 
@@ -1485,13 +1504,15 @@ class CRUDBooster
 		use Request;
 		use DB;
 		use CRUDBooster;
+        use '.$path.''.$controller.';
 
 		class Api' . $controller_name . 'Controller extends \crocodicstudio\crudbooster\controllers\ApiController {
-
+            public $controller = null;
 		    function __construct() {
 				$this->table       = "' . $table_name . '";
 				$this->permalink   = "' . $permalink . '";
 				$this->method_type = "' . $method_type . '";
+                $this->controller = new '."{$controller}".'();
 		    }
 		';
 

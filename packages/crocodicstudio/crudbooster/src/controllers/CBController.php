@@ -137,7 +137,9 @@ class CBController extends Controller
 
     public function cbLoader()
     {
+
         $this->cbInit();
+
 
         $this->checkHideForm();
 
@@ -219,9 +221,11 @@ class CBController extends Controller
 
     public function getIndex()
     {
+
         $this->cbLoader();
 
         $module = CRUDBooster::getCurrentModule();
+       
 
         if (!CRUDBooster::isView() && !$this->global_privilege) {
             CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
@@ -287,10 +291,10 @@ class CBController extends Controller
         $join_table_temp = [];
         $table = $this->table;
         $columns_table = $this->columns_table;
+        
 
         //add group and tenant columns for admins
         $columns_table = ModuleHelper::add_default_column_headers($table, $columns_table);
-
 
         foreach ($columns_table as $index => $coltab) {
 

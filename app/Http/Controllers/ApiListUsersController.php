@@ -4,13 +4,15 @@
 		use Request;
 		use DB;
 		use CRUDBooster;
+        use crocodicstudio\crudbooster\controllers\AdminCmsUsersController;
 
-		class ApiTestApiController extends \crocodicstudio\crudbooster\controllers\ApiController {
-
+		class ApiListUsersController extends \crocodicstudio\crudbooster\controllers\ApiController {
+            public $controller = null;
 		    function __construct() {
 				$this->table       = "cms_users";
-				$this->permalink   = "test_api";
+				$this->permalink   = "list_users";
 				$this->method_type = "get";
+                $this->controller = new AdminCmsUsersController();
 		    }
 		
 

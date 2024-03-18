@@ -7,6 +7,7 @@ use \App\Group;
 use \App\Tenant;
 use \App\UsersGroup;
 use \App\Role;
+use Illuminate\Support\Facades\DB;
 
 class UserHelper
 {

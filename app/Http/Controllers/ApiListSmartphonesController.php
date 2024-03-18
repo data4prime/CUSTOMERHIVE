@@ -4,13 +4,15 @@
 		use Request;
 		use DB;
 		use CRUDBooster;
+        use App\Http\Controllers\AdminSmartphonesController;
 
-		class ApiTestApiDetailController extends \crocodicstudio\crudbooster\controllers\ApiController {
-
+		class ApiListSmartphonesController extends \crocodicstudio\crudbooster\controllers\ApiController {
+            public $controller = null;
 		    function __construct() {
-				$this->table       = "cms_users";
-				$this->permalink   = "test_api_detail";
+				$this->table       = "mg_smartphones";
+				$this->permalink   = "list_smartphones";
 				$this->method_type = "get";
+                $this->controller = new AdminSmartphonesController();
 		    }
 		
 

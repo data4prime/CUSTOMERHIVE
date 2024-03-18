@@ -3,10 +3,18 @@
 namespace crocodicstudio\crudbooster\controllers;
 
 use CRUDBooster;
+use ModuleHelper;
+use UserHelper;
+use Session;
+use \crocodicstudio\crudbooster\controllers\AdminCmsUsersController;
+use App\Http\Controllers\AdminSmartphonesController;
+
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Schema;
 
 class ApiController extends Controller
 {
@@ -56,6 +64,9 @@ class ApiController extends Controller
     public function execute_api($output = 'JSON')
     {
 
+
+
+
         // DB::enableQueryLog();
 
         $posts = Request::all();
@@ -90,6 +101,23 @@ class ApiController extends Controller
 
         /*
         | ----------------------------------------------
+        | User validation
+        | ----------------------------------------------
+        |
+        */
+
+
+        $login = $this->login();
+
+        if ($login != "OK") {
+            $result['api_status'] = 0;
+            $result['api_message'] = $login;
+            goto show;
+        }
+
+
+        /*
+        | ----------------------------------------------
         | Check the row is exists or not
         | ----------------------------------------------
         |
@@ -111,7 +139,6 @@ class ApiController extends Controller
             }
         }
         foreach ($parameters as $k => $v) {
-            //dd($v);
             if (empty($v['name']) || $v['used'] != 1) {
                 unset($parameters[$k]);
             }
@@ -238,6 +265,7 @@ class ApiController extends Controller
         $password_candidate = explode(',', config('crudbooster.PASSWORD_FIELDS_CANDIDATE'));
         $asset = asset('/');
 
+
         unset($posts['limit']);
         unset($posts['offset']);
         unset($posts['orderby']);
@@ -304,7 +332,6 @@ class ApiController extends Controller
                     }
                 }
             } //End Responses
-            //dd($parameters);
             foreach ($parameters as $param) {
                 $name = $param['name'];
                 $type = $param['type'];
@@ -430,10 +457,16 @@ class ApiController extends Controller
                 }
 
                 $rows = $data->orderby($orderby_col, $orderby_val)->get();
+                
 
                 if ($rows) {
 
-                    foreach ($rows as &$row) {
+                    foreach ($rows as $index => &$row) { 
+                        $this->controller->cbInit();
+                        if (!ModuleHelper::can_list($this->controller, $row)) {
+                            unset($rows[$index]);
+                            continue;
+                        }
                         foreach ($row as $k => $v) {
                             $ext = \File::extension($v);
                             if (in_array($ext, $uploads_format_candidate)) {
@@ -501,8 +534,14 @@ class ApiController extends Controller
                             }
                         }
                     }
+                        $this->controller->cbInit();
+                        if (!ModuleHelper::can_view($this->controller, $rows)) {
+                            //unset($rows[$k]);
+                            $rows = [];
+                        }
 
                     foreach ($rows as $k => $v) {
+
                         $ext = \File::extension($v);
                         if (in_array($ext, $uploads_format_candidate)) {
                             $rows->$k = asset($v);
@@ -529,18 +568,29 @@ class ApiController extends Controller
                     }
                 }
             } elseif ($action_type == 'delete') {
+                $data2 = $data->first();
+                $this->controller->cbInit();
+                if (ModuleHelper::can_delete($this->controller, $data2)) {
 
                 if (CRUDBooster::isColumnExists($table, 'deleted_at')) {
                     $delete = $data->update(['deleted_at' => date('Y-m-d H:i:s')]);
                 } else {
                     $delete = $data->delete();
                 }
-
                 $result['api_status'] = ($delete) ? 1 : 0;
                 $result['api_message'] = ($delete) ? "success" : "failed";
                 if (CRUDBooster::getSetting('api_debug_mode') == 'true') {
                     $result['api_authorization'] = $debug_mode_message;
                 }
+                } else {
+                $result['api_status'] = 0;
+                $result['api_message'] = "failed";
+                if (CRUDBooster::getSetting('api_debug_mode') == 'true') {
+                    $result['api_authorization'] = $debug_mode_message;
+                }
+                }
+
+                
             }
         } elseif ($action_type == 'save_add' || $action_type == 'save_edit') {
 
@@ -603,11 +653,20 @@ class ApiController extends Controller
                 }
             }
 
-            if ($action_type == 'save_add') {
 
+            if ($action_type == 'save_add') {
+                $this->controller->cbInit();
+                if (ModuleHelper::can_add($this->controller, $row_assign)) {
+                    if (empty($row->tenant) && Schema::hasColumn($this->controller->table, 'tenant')) {
+                        $row_assign['tenant'] = UserHelper::tenant(Session::get('admin_id'));
+                    }
+                    if (empty($row->group) && Schema::hasColumn($this->controller->table, 'group')) {
+                        $row_assign['group'] = UserHelper::primary_group(Session::get('admin_id'));
+                    }
                 DB::beginTransaction();
                 try {
                     $id = DB::table($table)->insertGetId($row_assign);
+                    
                     DB::commit();
                 } catch (\Exception $e) {
                     DB::rollBack();
@@ -621,9 +680,25 @@ class ApiController extends Controller
                     $result['api_authorization'] = $debug_mode_message;
                 }
                 $result['id'] = $id;
+                } else {
+                    $result['api_status'] =0;
+                    $result['api_message'] =  'failed';
+                    if (CRUDBooster::getSetting('api_debug_mode') == 'true') {
+
+                        $result['api_authorization'] = $debug_mode_message;
+                    }
+
+                }
             } else {
 
                 try {
+                    $row = DB::table($table)->where('id', $row_assign['id'])->first();
+                    $this->controller->cbInit();
+                    if (!ModuleHelper::can_edit($this->controller, $row)) {
+                        $result['api_status'] = 0;
+                        $result['api_message'] = 'Cannot edit this entity!';
+                        goto show;
+                    }
                     $pk = CRUDBooster::pk($table);
                     $update = DB::table($table);
                     $update->where($table . '.' . $pk, $row_assign['id']);
@@ -731,5 +806,47 @@ class ApiController extends Controller
         }
 
         return $result;
+    }
+
+    public function login()
+    {
+        $x_user = Request::header('X-user');
+        $x_user = 'mariusssss@gmail.com';
+        //$x_user = 'admin@chive.com';
+        $user = DB::table('cms_users')
+            ->where('status', '=', 'Active')
+            ->where('email', $x_user)
+
+            ->first();
+        if (!$user) {
+            return "User not found!";
+        }
+
+        $priv = DB::table("cms_privileges")
+            ->where("id", $user->id_cms_privileges)
+            ->first();
+
+        $roles = DB::table('cms_privileges_roles')
+            ->where('id_cms_privileges', $user->id_cms_privileges)
+            ->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')
+            ->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')
+            ->get();
+
+
+
+        Session::put('admin_id', $user->id);
+        Session::put('admin_is_superadmin', $priv->is_superadmin);
+        Session::put('admin_name', $user->name);
+        Session::put('admin_privileges_roles', $roles);
+        Session::put("admin_privileges", $user->id_cms_privileges);
+        Session::put('admin_privileges_name', $priv->name);
+        Session::put('admin_lock', 0);
+        Session::put('theme_color', $priv->theme_color);
+        Session::put("appname", CRUDBooster::getSetting('appname'));
+
+
+
+
+        return "OK";
     }
 }

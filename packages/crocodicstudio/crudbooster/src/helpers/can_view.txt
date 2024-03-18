@@ -1,0 +1,28 @@
+{"smartphone":"Samsung","id":1,"group":1,"tenant":1,"created_by":1,"updated_by":1,"deleted_by":null}
+
+isSuperadmin 0
+
+isRead 
+
+isRead 
+
+{"smartphone":"Samsung","id":1,"group":1,"tenant":1,"created_by":1,"updated_by":1,"deleted_by":null}
+
+isSuperadmin 0
+
+isRead 
+
+isRead 
+
+{"smartphone":"Samsung","id":1,"group":1,"tenant":1,"created_by":1,"updated_by":1,"deleted_by":null}
+
+isSuperadmin 0
+
+isRead 
+
+{"smartphone":"Samsung","id":1,"group":1,"tenant":1,"created_by":1,"updated_by":1,"deleted_by":null}
+
+isSuperadmin 0
+
+isRead 
+

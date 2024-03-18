@@ -4,13 +4,15 @@
 		use Request;
 		use DB;
 		use CRUDBooster;
+        use App\Http\Controllers\AdminSmartphonesController;
 
-		class ApiDeleteQlikitemController extends \crocodicstudio\crudbooster\controllers\ApiController {
-
+		class ApiDeleteSmartphoneController extends \crocodicstudio\crudbooster\controllers\ApiController {
+            public $controller = null;
 		    function __construct() {
-				$this->table       = "qlik_items";
-				$this->permalink   = "delete_qlikitem";
+				$this->table       = "mg_smartphones";
+				$this->permalink   = "delete_smartphone";
 				$this->method_type = "get";
+                $this->controller = new AdminSmartphonesController();
 		    }
 		
 

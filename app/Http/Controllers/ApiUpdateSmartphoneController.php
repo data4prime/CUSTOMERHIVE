@@ -4,13 +4,15 @@
 		use Request;
 		use DB;
 		use CRUDBooster;
+        use App\Http\Controllers\AdminSmartphonesController;
 
-		class ApiUpdateUserController extends \crocodicstudio\crudbooster\controllers\ApiController {
-
+		class ApiUpdateSmartphoneController extends \crocodicstudio\crudbooster\controllers\ApiController {
+            public $controller = null;
 		    function __construct() {
-				$this->table       = "cms_users";
-				$this->permalink   = "update_user";
+				$this->table       = "mg_smartphones";
+				$this->permalink   = "update_smartphone";
 				$this->method_type = "post";
+                $this->controller = new AdminSmartphonesController();
 		    }
 		
 

@@ -3,6 +3,7 @@
 return [
 
     'ADMIN_PATH' => 'admin',
+    'API_PATH' => 'api',
 
     /*
         To Allowed Specific User Agent Only

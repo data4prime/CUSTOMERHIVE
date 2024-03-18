@@ -7,6 +7,7 @@ use App\Tenant;
 use App\GroupTenants;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Session;
 
 class ModuleHelper
 {
@@ -70,8 +71,70 @@ class ModuleHelper
    *
    * @return boolean true if user can view module's row, false otherwise
    */
+  public static function can_list($module, $row)
+  {
+
+
+
+
+    //admin can always see everything
+    if (CRUDBooster::isSuperadmin()) {
+      return true;
+    }
+
+    //check correct privilege role
+    if (
+      !CRUDBooster::isView() && //isread o isview? TODO chiarire con view / details
+      $module->global_privilege == false
+    ) {
+      return false;
+    }
+
+    if ($module->button_detail == false) {
+      //module's rows details shouldn't be view
+      return false;
+    }
+    $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
+    $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
+
+    //check group/tenant
+    if (
+      //check this only on manually generated modules
+      ModuleHelper::is_manually_generated($module->table) &&
+      //..row group is one of user's groups
+      in_array($entity_group, UserHelper::current_user_groups()) &&
+      //..row tenant is user's tenant
+      $entity_tenant == UserHelper::current_user_tenant()
+    ) {
+      return true;
+    }
+
+    //check tenant
+    if (
+      //check this only on users
+      $module->table == 'cms_users' &&
+      //..then filter by tenant
+      $row->tenant == UserHelper::current_user_tenant()
+    ) {
+      return false;
+    }
+
+    //check tenant
+    if (
+      //check this only on groups
+      $module->table == 'groups' &&
+      //..then filter by tenant
+      GroupTenants::where('group_id', $row->id)->where('tenant_id', UserHelper::current_user_tenant())->count() > 0
+    ) {
+      return true;
+    }
+
+    return false;
+  }
   public static function can_view($module, $row)
   {
+
+
     //admin can always see everything
     if (CRUDBooster::isSuperadmin()) {
       return true;
@@ -89,15 +152,17 @@ class ModuleHelper
       //module's rows details shouldn't be view
       return false;
     }
+    $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
+    $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
 
     //check group/tenant
     if (
       //check this only on manually generated modules
       ModuleHelper::is_manually_generated($module->table) &&
       //..row group is one of user's groups
-      in_array($row->group, UserHelper::current_user_groups()) &&
+      in_array($entity_group, UserHelper::current_user_groups()) &&
       //..row tenant is user's tenant
-      $row->tenant == UserHelper::current_user_tenant()
+      $entity_tenant == UserHelper::current_user_tenant()
     ) {
       return true;
     }
@@ -176,6 +241,111 @@ class ModuleHelper
     //get row group
     if (empty($row->group) && Schema::hasColumn($module->table, 'group')) {
       $row->group = DB::select(DB::raw("select `group` from " . $module->table . " where id='" . $row->id . "' "))[0]->group;
+    }
+
+    //check group/tenant on manually generated modules
+    if (
+      //check this
+      ModuleHelper::is_manually_generated($module->table)
+      &&
+      (
+        //..then filter on group && tenant columns
+        //TODO tenantadmin deve essere limitato dai gruppi sull'edit degli mg?
+        //user must be member of the record's group or tenantadmin
+        (in_array($row->group, UserHelper::current_user_groups())
+          or
+          UserHelper::isTenantAdmin()
+        )
+        &&
+        $row->tenant == UserHelper::current_user_tenant()
+      )
+    ) {
+      //var_dump('can edit true2'.$row->id);
+      return true;
+    }
+
+    //check tenant
+    if (
+      //check this only on users table (for Tenantadmin)
+      $module->table == 'cms_users' &&
+      //..then filter by tenant
+      $row->tenant == UserHelper::current_user_tenant()
+    ) {
+      //var_dump('can edit true3'.$row->id);
+      return true;
+    }
+
+    //check tenant
+    if (
+      //Tenantadmin can edit groups only if group is part of his tenant && no other
+      $module->table == 'groups'
+      &&
+      //..group must be part of his tenant
+      GroupTenants::where('group_id', $row->id)->where('tenant_id', UserHelper::current_user_tenant())->count() > 0
+      &&
+      //..group must not have other tenants
+      GroupTenants::where('group_id', $row->id)->where('tenant_id', '!=', UserHelper::current_user_tenant())->count() == 0
+    ) {
+      //var_dump('can edit true4'.$row->id);
+      return true;
+    }
+
+    //var_dump('can edit false3'.$row->id);
+    return false;
+  }
+
+  /**
+   * Check if current user can edit the record $row
+   *
+   * @param object $module a module instance (not a model...)
+   * @param object a table row or record
+   *
+   * @return boolean true if user can edit module's row, false otherwise
+   */
+  public static function can_add($module, $row)
+  {
+    $row = (object) $row;
+    //admin can always see everything
+    if (CRUDBooster::isSuperadmin()) {
+      //var_dump('can edit true1'.$row->id);
+      return true;
+    }
+
+    if ($module->table == 'cms_menus') {
+      return UserHelper::can_menu('edit', $row->id);
+    }
+
+    if ($module->table == 'cms_users') {
+      return UserHelper::can_do_on_user('edit', $row->id);
+    }
+
+    //check correct privilege role
+    if (
+      //this should filter basic users
+      !CRUDBooster::isCreate()
+      &&
+      $module->global_privilege == false
+    ) {
+      //user doesn't have the correct privilege role for this module
+      //var_dump('can edit false1'.$row->id);
+      return false;
+    }
+
+    if ($module->button_add == false) {
+      //module's rows shouldn't be edited
+      //var_dump('can edit false2'.$row->id);
+      return false;
+    }
+
+    //from here checks should be only for tenantadmin
+
+    //get row tenant
+    if (empty($row->tenant) && Schema::hasColumn($module->table, 'tenant')) {
+      $row->tenant = UserHelper::tenant(Session::get('admin_id'));
+    }
+    //get row group
+    if (empty($row->group) && Schema::hasColumn($module->table, 'group')) {
+      $row->group = UserHelper::primary_group(Session::get('admin_id'));
     }
 
     //check group/tenant on manually generated modules
