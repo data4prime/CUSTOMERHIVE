@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{{trans("crudbooster.page_title_forgot")}} : {{ isset($appname) ? $appname : ''}}</title>
-    <meta name='generator' content='CRUDBooster.com' />
+    <meta name='generator' content='CustomerHive' />
     <meta name='robots' content='noindex,nofollow' />
     <link rel="shortcut icon"
         href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">

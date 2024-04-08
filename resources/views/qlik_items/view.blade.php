@@ -4,7 +4,7 @@
 <!-- fill content settings -->
 @section('content')
 <div class="qi_iframe_container">
-  {{ $debug == 'Active' ? $item_url : '' }}
+  {{ isset($debug) && $debug == 'Active' ? $item_url : '' }}
   <iframe class="qi_iframe" src="{{ $item_url }}"  style="border:none;"></iframe>
 </div>
 @endsection
@@ -13,7 +13,7 @@
 @section('content')
 <div class="box qi_box">
   <h4 class="qi_subtitle">{{ $subtitle }}</h4>
-  {{ $debug == 'Active' ? $item_url : '' }}
+  {{ isset($debug) && $debug == 'Active' ? $item_url : '' }}
   <div class="qi_iframe_container">
     <iframe class="qi_iframe" src="{{ $item_url }}"  style="border:none;"></iframe>
   </div>

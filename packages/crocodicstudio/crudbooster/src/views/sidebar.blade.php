@@ -39,7 +39,7 @@
         <?=\crocodicstudio\crudbooster\helpers\MenuHelper::build_main_sidebar()?>
 
         @if(CRUDBooster::isSuperadmin() OR UserHelper::isTenantAdmin())
-
+        <?php $current_path = "" ?>
         <li class="header">{{ trans('crudbooster.UserPermissions') }}
           <div class="my-collapse-sidebar pull-right" data-collapse-btn="2">
             <i class="fa fa-minus"></i>
@@ -47,7 +47,7 @@
         </li>
 
         @if(CRUDBooster::isSuperadmin())
-        <?php $current_path = "" ?>
+
         <li data-collapse="2" class='treeview'>
           <a href='#'>
             <i class='fa fa-industry'></i> <span>{{ trans('crudbooster.Tenants') }}</span> <i

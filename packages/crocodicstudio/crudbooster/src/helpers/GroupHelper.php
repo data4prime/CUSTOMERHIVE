@@ -40,7 +40,7 @@ class GroupHelper  {
     public static function add($group_id, $user_id)
     {
       if(!MyHelper::is_int($group_id) OR !MyHelper::is_int($user_id)){
-        add_log('add membership', 'group '.$group_id.' or user '.$user_id.' not found','error');
+        add_log_ch('add membership', 'group '.$group_id.' or user '.$user_id.' not found','error');
         return false;
       }
       $exists = UsersGroup::where('user_id',$user_id)
@@ -59,7 +59,7 @@ class GroupHelper  {
       $membership->created_at = date('Y-m-d H:i:s');
       $membership->save();
 
-      add_log('add membership', 'group '.$group_id.' has a new member user '.$user_id);
+      add_log_ch('add membership', 'group '.$group_id.' has a new member user '.$user_id);
 
       return $membership->id;
     }
@@ -77,7 +77,7 @@ class GroupHelper  {
     public static function remove($group_id, $user_id)
     {
       if(!MyHelper::is_int($group_id) OR !MyHelper::is_int($user_id)){
-        add_log('remove membership', 'group '.$group_id.' or user '.$user_id.' not found','error');
+        add_log_ch('remove membership', 'group '.$group_id.' or user '.$user_id.' not found','error');
         return false;
       }
       $exists = UsersGroup::where('user_id',$user_id)
@@ -94,7 +94,7 @@ class GroupHelper  {
       ->where('group_id',$group_id)
       ->delete();
 
-      add_log('remove membership', 'group '.$group_id.' has lost user '.$user_id);
+      add_log_ch('remove membership', 'group '.$group_id.' has lost user '.$user_id);
 
       return $result;
     }

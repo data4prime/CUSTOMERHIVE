@@ -67,10 +67,11 @@ class AdminController extends CBController
       return redirect(CRUDBooster::adminPath());
     }
 
-    $array = explode('.', $_SERVER['HTTP_HOST']);
+
+    $array = isset($_SERVER) && isset($_SERVER['HTTP_HOST']) ? explode('.', $_SERVER['HTTP_HOST']) : [];
 
     //tenant specific login page
-    $tenant_domain_name = $array[0];
+    $tenant_domain_name = isset($array[0]) ? $array[0] : '';
     $tenant = Tenant::where('domain_name', $tenant_domain_name)->first();
     if (isset($tenant->favicon)) {
       //tenant favicon

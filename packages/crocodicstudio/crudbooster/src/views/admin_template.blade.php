@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -6,7 +5,7 @@
     <meta charset="UTF-8">
     <title>{{ isset($page_title)?Session::get('appname').': '.strip_tags($page_title):"Admin Area" }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <meta name='generator' content='CRUDBooster 5.4.6' />
+    <meta name='generator' content='CustomerHive' />
     <meta name='robots' content='noindex,nofollow' />
     <link rel="shortcut icon"
         href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
@@ -95,6 +94,7 @@
 @if(isset($target_layout) && $target_layout == 1)
 @yield('content')
 @else
+
 <body
     class="@php echo (Session::get('theme_color'))?:'skin-blue'; echo ' '; echo config('crudbooster.ADMIN_LAYOUT'); @endphp {{isset($sidebar_mode) ?: ''}}">
     <div id='app' class="wrapper">
@@ -236,7 +236,7 @@
 
 
 
-    <script type="text/javascript"><?php echo isset($script_js) ? $script_js : '' ?></script>
+    <script type="text/javascript"><? php echo isset($script_js) ? $script_js : '' ?></script>
 
 
     @stack('bottom')

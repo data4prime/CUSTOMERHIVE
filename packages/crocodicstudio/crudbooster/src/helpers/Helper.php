@@ -110,7 +110,8 @@ if(!function_exists('rrmdir')) {
  *
  * @return $id_log integer id del nuovo log
  */
-function add_log($category, $description, $type='log')
+if (!function_exists('add_log_ch')) {
+function add_log_ch($category, $description, $type='log')
 {
   //evito errore di scrittura in DB se la descrizione supera i limiti di SQL TEXT
   $description = substr(trim(addslashes($description)), 0, 65000);
@@ -126,4 +127,6 @@ function add_log($category, $description, $type='log')
 	$log->save();
 
 	return $log->id;
+}
+
 }

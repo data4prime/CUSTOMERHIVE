@@ -811,8 +811,7 @@ class ApiController extends Controller
     public function login()
     {
         $x_user = Request::header('X-user');
-        $x_user = 'mariusssss@gmail.com';
-        //$x_user = 'admin@chive.com';
+
         $user = DB::table('cms_users')
             ->where('status', '=', 'Active')
             ->where('email', $x_user)

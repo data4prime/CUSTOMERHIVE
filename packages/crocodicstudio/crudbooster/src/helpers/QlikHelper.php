@@ -39,11 +39,11 @@ class QlikHelper
     $qlik_item = \App\QlikItem::find($qlik_item_id);
 
     if (empty($qlik_item)) {
-      add_log('can see item', 'qlik item not found id: ' . $qlik_item_id);
+      add_log_ch('can see item', 'qlik item not found id: ' . $qlik_item_id);
       return false;
     }
     if (!MyHelper::is_int($qlik_item)) {
-      add_log('can see item', 'qlik item id is not int: ' . $qlik_item_id);
+      add_log_ch('can see item', 'qlik item id is not int: ' . $qlik_item_id);
       return false;
     }
 
@@ -73,7 +73,7 @@ class QlikHelper
       }
     } else {
       //tenant non abilitato
-      add_log('can see item', 'tenant non abilitato qlik item id: ' . $qlik_item_id);
+      add_log_ch('can see item', 'tenant non abilitato qlik item id: ' . $qlik_item_id);
       return false;
     }
 
@@ -89,7 +89,7 @@ class QlikHelper
         return true;
       }
     }
-    add_log('can see item', 'nessun gruppo dell\'utente abilitato, qlik item id: ' . $qlik_item_id);
+    add_log_ch('can see item', 'nessun gruppo dell\'utente abilitato, qlik item id: ' . $qlik_item_id);
     return false;
   }
 

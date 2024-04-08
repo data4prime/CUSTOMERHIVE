@@ -82,6 +82,15 @@ class ModuleHelper
       return true;
     }
 
+    $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
+    $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
+
+    //check tenant admin
+    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+      return true;
+    }
+
+
     //check correct privilege role
     if (
       !CRUDBooster::isView() && //isread o isview? TODO chiarire con view / details
@@ -94,8 +103,6 @@ class ModuleHelper
       //module's rows details shouldn't be view
       return false;
     }
-    $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
-    $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
 
     //check group/tenant
     if (
@@ -140,6 +147,16 @@ class ModuleHelper
       return true;
     }
 
+    $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
+    $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
+
+
+    //check tenant admin
+    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+      return true;
+    }
+
+
     //check correct privilege role
     if (
       !CRUDBooster::isRead() && //isread o isview? TODO chiarire con view / details
@@ -152,9 +169,7 @@ class ModuleHelper
       //module's rows details shouldn't be view
       return false;
     }
-    $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
-    $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
-
+ 
     //check group/tenant
     if (
       //check this only on manually generated modules
@@ -205,6 +220,15 @@ class ModuleHelper
       //var_dump('can edit true1'.$row->id);
       return true;
     }
+
+    $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
+    $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
+
+    //check tenant admin
+    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+      return true;
+    }
+
 
     if ($module->table == 'cms_menus') {
       return UserHelper::can_menu('edit', $row->id);
@@ -311,6 +335,15 @@ class ModuleHelper
       return true;
     }
 
+    $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
+    $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
+
+    //check tenant admin
+    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+      return true;
+    }
+
+
     if ($module->table == 'cms_menus') {
       return UserHelper::can_menu('edit', $row->id);
     }
@@ -414,6 +447,15 @@ class ModuleHelper
     if (CRUDBooster::isSuperadmin()) {
       return true;
     }
+
+    $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
+    $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
+
+    //check tenant admin
+    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+      return true;
+    }
+
 
     if ($module->table == 'cms_menus') {
       return UserHelper::can_menu('delete', $row->id);

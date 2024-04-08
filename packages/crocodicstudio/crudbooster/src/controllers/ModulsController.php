@@ -358,12 +358,12 @@ class ModulsController extends CBController
       $message = "Didn't delete module " . $module->name;
       $message .= '<br><br>' . $alert;
       $message_type = 'warning';
-      add_log('delete module', $alert, 'log');
+      add_log_ch('delete module', $alert, 'log');
       //stop module delete
       CRUDBooster::redirect($url, $message, $message_type);
       exit;
     } else {
-      add_log('delete module', 'Delete module ' . $module->name, 'log');
+      add_log_ch('delete module', 'Delete module ' . $module->name, 'log');
     }
 
     if (isset($drop_table) && !empty($drop_table)) {
@@ -371,14 +371,14 @@ class ModulsController extends CBController
       if (isset($module->table_name)  && !empty($module->table_name)) {
         if (Schema::hasTable($module->table_name)) {
           Schema::dropIfExists($module->table_name);
-          add_log('delete module', 'Drop table ' . $module->table_name, 'log');
+          add_log_ch('delete module', 'Drop table ' . $module->table_name, 'log');
         }
       }
     } else {
       $message = "Didn't delete table " . $module->table_name;
       $message .= '<br><br>' . $alert;
       $message_type = 'info';
-      add_log('delete module', 'Didn\'t drop table ' . $module->table_name, 'log');
+      add_log_ch('delete module', 'Didn\'t drop table ' . $module->table_name, 'log');
     }
 
     $this->hook_before_delete($id);
@@ -1172,7 +1172,7 @@ class ModulsController extends CBController
 
     if (substr($module->table_name, 0, strlen(config('app.reserved_tables_prefix'))) === config('app.reserved_tables_prefix')) {
       // editing reserved tables is forbidden
-      add_log('mg save table', 'editing reserved tables is forbidden ' . $table_name . ' starts with ' . config('app.reserved_tables_prefix'), 'error');
+      add_log_ch('mg save table', 'editing reserved tables is forbidden ' . $table_name . ' starts with ' . config('app.reserved_tables_prefix'), 'error');
       $message['type'] = 'danger';
       $message['content'] = 'editing reserved tables is forbidden';
       $messages = $message['type'] . ',' . $message['content'] . ',';
@@ -1207,7 +1207,7 @@ class ModulsController extends CBController
         $column = new DynamicColumn;
         if (ctype_digit($dynamic_column_name)) {
           // error digit only column name is invalid
-          add_log('mg create table add column', 'digit only column name is invalid creating table ' . $table_name . ' column ' . $dynamic_column_name, 'error');
+          add_log_ch('mg create table add column', 'digit only column name is invalid creating table ' . $table_name . ' column ' . $dynamic_column_name, 'error');
           $message['type'] = 'danger';
           $message['content'] = 'Digit only column name is not accepted';
           $messages = $message['type'] . ',' . $message['content'] . ',';
@@ -1219,7 +1219,7 @@ class ModulsController extends CBController
         $column->name = $dynamic_column_name;
         if (Schema::hasColumn($table_name, $column->name)) {
           // error Duplicate column name
-          add_log('mg create table add column', 'Duplicate column name ' . $column->name, 'error');
+          add_log_ch('mg create table add column', 'Duplicate column name ' . $column->name, 'error');
           $message['type'] = 'danger';
           $message['content'] = 'Duplicate column name';
           $messages = $message['type'] . ',' . $message['content'] . ',';
@@ -1374,7 +1374,7 @@ class ModulsController extends CBController
 
           if (ctype_digit($column->name)) {
             // error digit only column name is invalid
-            add_log('mg edit table add column', 'digit only column name is invalid creating table ' . $table_name . ' column ' . $dynamic_column->name, 'error');
+            add_log_ch('mg edit table add column', 'digit only column name is invalid creating table ' . $table_name . ' column ' . $dynamic_column->name, 'error');
             $message['type'] = 'danger';
             $message['content'] = 'Digit only column name is not accepted';
             $messages = $message['type'] . ',' . $message['content'] . ',';
@@ -1382,7 +1382,7 @@ class ModulsController extends CBController
           }
           if (Schema::hasColumn($table_name, $column->name)) {
             // error Duplicate column name
-            add_log('mg edit table add column', 'Duplicate column name ' . $column->name, 'error');
+            add_log_ch('mg edit table add column', 'Duplicate column name ' . $column->name, 'error');
             $message['type'] = 'danger';
             $message['content'] = 'Duplicate column name';
             $messages = $message['type'] . ',' . $message['content'] . ',';
@@ -1400,7 +1400,7 @@ class ModulsController extends CBController
             }
           });
           $description = 'add column ' . $column->name . ' after ' . $existing_table[$index - 1]['name'];
-          add_log('mg edit table add column', $description);
+          add_log_ch('mg edit table add column', $description);
 
           // reload table to detect multiple new columns and insert them in proper order
           $existing_table = CRUDBooster::getTableStructure($table_name);
@@ -1414,7 +1414,7 @@ class ModulsController extends CBController
           $target = $request['name'][$loop_index];
           if (in_array($target, config('app.reserved_column_names')) or Schema::hasColumn($table_name, $target)) {
             // invalid column name
-            add_log('mg edit table rename column', 'invalid target column name. Renaming ' . $source . ' into ' . $target, 'error');
+            add_log_ch('mg edit table rename column', 'invalid target column name. Renaming ' . $source . ' into ' . $target, 'error');
             $message['type'] = 'danger';
             $message['content'] = 'Invalid target column name. Renaming ' . $source . ' into ' . $target;
             $messages = $message['type'] . ',' . $message['content'] . ',';
@@ -1422,7 +1422,7 @@ class ModulsController extends CBController
           }
           if (!Schema::hasColumn($table_name, $source)) {
             // error source column not found
-            add_log('mg edit table rename column', 'source column not found. Renaming ' . $source . ' into ' . $target, 'error');
+            add_log_ch('mg edit table rename column', 'source column not found. Renaming ' . $source . ' into ' . $target, 'error');
             $message['type'] = 'danger';
             $message['content'] = 'Column not found renaming ' . $source . ' into ' . $target;
             $messages = $message['type'] . ',' . $message['content'] . ',';
@@ -1430,7 +1430,7 @@ class ModulsController extends CBController
           }
           if (ctype_digit($target)) {
             // error digit only column name is invalid
-            add_log('mg edit table rename column', 'digit only column name is invalid. Renaming ' . $source . ' into ' . $target, 'error');
+            add_log_ch('mg edit table rename column', 'digit only column name is invalid. Renaming ' . $source . ' into ' . $target, 'error');
             $message['type'] = 'danger';
             $message['content'] = 'Digit only column name is not accepted';
             $messages = $message['type'] . ',' . $message['content'] . ',';
@@ -1439,7 +1439,7 @@ class ModulsController extends CBController
           $result = Schema::table($table_name, function (Blueprint $table) use ($source, $target) {
             $table->renameColumn($source, $target);
           });
-          add_log('mg edit table rename column', 'Rename ' . $source . ' into ' . $target);
+          add_log_ch('mg edit table rename column', 'Rename ' . $source . ' into ' . $target);
           //TODO reload table?
           $existing_table = CRUDBooster::getTableStructure($table_name);
         }
@@ -1449,7 +1449,7 @@ class ModulsController extends CBController
             $type = $column->type;
             $table->$type("{$column->name}")->change();
           });
-          add_log('mg edit table change column data type', 'Column ' . $column->name . ' from ' . $existing_table[$index]['type'] . ' to ' . $column->type);
+          add_log_ch('mg edit table change column data type', 'Column ' . $column->name . ' from ' . $existing_table[$index]['type'] . ' to ' . $column->type);
         }
 
         if ($request['size'][$loop_index] != $existing_table[$index]['size']) {
@@ -1462,7 +1462,7 @@ class ModulsController extends CBController
               $table->$type("{$column->name}", $column->size)->change();
             }
           });
-          add_log('mg edit table change column data size', 'Column ' . $column->name . ' from ' . $existing_table[$index]['type'] . ' to ' . $column->type);
+          add_log_ch('mg edit table change column data size', 'Column ' . $column->name . ' from ' . $existing_table[$index]['type'] . ' to ' . $column->type);
         }
       } //end loop through request columns
 
@@ -1475,7 +1475,7 @@ class ModulsController extends CBController
           // ..delete column
           if (!Schema::hasColumn($table_name, $value['name'])) {
             // error column not found
-            add_log('mg edit table drop column', 'error column ' . $value['name'] . ' not found', 'error');
+            add_log_ch('mg edit table drop column', 'error column ' . $value['name'] . ' not found', 'error');
             $message['type'] = 'danger';
             $message['content'] = 'column ' . $value['name'] . ' not found';
             $messages = $message['type'] . ',' . $message['content'] . ',';
@@ -1484,7 +1484,7 @@ class ModulsController extends CBController
             $result = Schema::table($table_name, function (Blueprint $table) use ($value) {
               $table->dropColumn("{$value['name']}");
             });
-            add_log('mg edit table drop column', 'delete column ' . $value['name']);
+            add_log_ch('mg edit table drop column', 'delete column ' . $value['name']);
           }
         }
       }

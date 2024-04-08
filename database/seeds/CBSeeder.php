@@ -166,7 +166,7 @@ class Cms_settingsSeeder extends Seeder
                 'name' => 'appname',
                 'label' => 'Application Name',
                 'group_setting' => trans('crudbooster.application_setting'),
-                'content' => 'CRUDBooster',
+                'content' => 'CustomerHive',
                 'content_input_type' => 'text',
                 'dataenum' => null,
                 'helper' => null,

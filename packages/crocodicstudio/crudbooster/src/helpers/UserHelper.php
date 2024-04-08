@@ -335,7 +335,7 @@ class UserHelper
   public static function remove_all_groups($user_id)
   {
     if (!MyHelper::is_int($user_id)) {
-      add_log('remove all groups', 'user ' . $user_id . ' not found', 'error');
+      add_log_ch('remove all groups', 'user ' . $user_id . ' not found', 'error');
       return false;
     }
 
@@ -343,7 +343,7 @@ class UserHelper
       ->where('deleted_at', null)
       ->delete();
 
-    add_log('remove all groups', 'user ' . $user_id);
+    add_log_ch('remove all groups', 'user ' . $user_id);
 
     return $result;
   }

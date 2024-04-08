@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>::LOCKSCREEN::</title>
-    <meta name='generator' content='CRUDBooster' />
+    <meta name='generator' content='CustomerHive' />
     <meta name='robots' content='noindex,nofollow' />
     <link rel="shortcut icon"
         href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
@@ -57,7 +57,7 @@
     <div class="lockscreen-wrapper">
         <div class="lockscreen-logo">
             <a href="{{url('/')}}">
-                <img title=" {!! isset($appname) ? ($appname == 'CRUDBooster' ? '<b>CRUD</b>Booster':$appname) : ''  !!}  "
+                <img title=" {!! isset($appname) ? ($appname == 'CustomerHive' ? 'CustomerHive':$appname) : ''  !!}  "
                     src='{{ CRUDBooster::getSetting("logo")?asset(CRUDBooster::getSetting('
                     logo')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}'
                     style='max-width: 100%;max-height:170px' />
