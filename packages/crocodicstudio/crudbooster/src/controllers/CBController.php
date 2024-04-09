@@ -278,7 +278,7 @@ class CBController extends Controller
         //..no filter needed for superadmin
         if (ModuleHelper::is_manually_generated($this->table) and !CRUDBooster::isSuperadmin()) {
             //.. for Tenantadmin and basic add filter by tenant
-            $result->where($this->table . '.tenant', UserHelper::current_user_tenant());
+            //$result->where($this->table . '.tenant', UserHelper::current_user_tenant());
 
             if (!UserHelper::isTenantAdmin()) {
                 //.. for basic also filter by group
@@ -498,6 +498,7 @@ class CBController extends Controller
             }
         }
 
+
         if ($filter_is_orderby == true) {
             $data['result'] = $result->paginate($limit);
         } else {
@@ -562,7 +563,11 @@ class CBController extends Controller
         $html_contents = [];
         $page = (Request::get('page')) ? Request::get('page') : 1;
         $number = ($page - 1) * $limit + 1;
-        foreach ($data['result'] as $row) {
+        foreach ($data['result'] as $ind => $row) {
+            if (!ModuleHelper::can_view($this, $row)) {
+                unset($data['result'][$ind]);
+                continue;
+            }
             $html_content = [];
 
             if ($this->button_bulk_action) {

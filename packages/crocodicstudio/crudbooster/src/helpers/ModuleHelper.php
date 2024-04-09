@@ -82,6 +82,9 @@ class ModuleHelper
       return true;
     }
 
+    
+
+if(ModuleHelper::is_manually_generated($module->table)) {
     $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
     $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
 
@@ -89,7 +92,9 @@ class ModuleHelper
     if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
       return true;
     }
+} else {
 
+}
 
     //check correct privilege role
     if (
@@ -138,22 +143,70 @@ class ModuleHelper
 
     return false;
   }
+
+  public static function can_tenant_admin_view($module, $row, $entity_group, $entity_tenant) {
+
+
+
+if(ModuleHelper::is_manually_generated($module->table)) {
+
+
+    //check tenant admin
+    return ($entity_tenant == UserHelper::current_user_tenant());
+
+
+} else {
+
+
+  if ($module->table == "groups") {
+      $tenant_groups = DB::table("group_tenants")->where('tenant_id', UserHelper::current_user_tenant())->select("group_id")->get();
+      $t_g = [];
+
+      foreach($tenant_groups as $g) {
+        $t_g[] = $g->group_id;
+
+      }
+
+
+      if (in_array($row->id, $t_g) && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+        return true;
+      }
+
+  }
+if ($module->table == "cms_users") {
+  if (UserHelper::current_user_tenant() == $entity_tenant && UserHelper::isTenantAdmin(CRUDBooster::myId()) ) {
+    return true;
+  }
+}
+
+
+}
+
+  }
+
   public static function can_view($module, $row)
   {
-
-
     //admin can always see everything
     if (CRUDBooster::isSuperadmin()) {
       return true;
     }
 
-    $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
-    $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
+    if(ModuleHelper::is_manually_generated($module->table)) {
+      $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
+      $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
+      $created_by = DB::table($module->table)->where('id', $row->id)->first()->created_by;
+    } else {
+
+      if ($module->table == "groups") {
+        $entity_group = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->group_id;
+        $entity_tenant = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->tenant_id;
+      }
+if ($module->table == "cms_users") {
+        $entity_group = DB::table($module->table)->where('id', $row->id)->first()->primary_group;
+        $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
+      }
 
 
-    //check tenant admin
-    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
-      return true;
     }
 
 
@@ -169,15 +222,28 @@ class ModuleHelper
       //module's rows details shouldn't be view
       return false;
     }
- 
+
+if (UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+    if(!ModuleHelper::can_tenant_admin_view($module, $row, $entity_group, $entity_tenant)) {
+      return false;
+    } 
+}
+
+//se row è di tenant admin e current user non è tenant admin, return false
+if(ModuleHelper::is_manually_generated($module->table)) {
+ if (!UserHelper::isTenantAdmin(CRUDBooster::myId()) && $created_by != CRUDBooster::myId() &&  UserHelper::isTenantAdmin($created_by) ) {
+    return false;
+
+  }
+}
+
+
     //check group/tenant
     if (
-      //check this only on manually generated modules
       ModuleHelper::is_manually_generated($module->table) &&
-      //..row group is one of user's groups
       in_array($entity_group, UserHelper::current_user_groups()) &&
-      //..row tenant is user's tenant
       $entity_tenant == UserHelper::current_user_tenant()
+
     ) {
       return true;
     }
@@ -187,9 +253,9 @@ class ModuleHelper
       //check this only on users
       $module->table == 'cms_users' &&
       //..then filter by tenant
-      $row->tenant == UserHelper::current_user_tenant()
+      $entity_tenant == UserHelper::current_user_tenant()
     ) {
-      return false;
+      return true;
     }
 
     //check tenant
@@ -221,6 +287,7 @@ class ModuleHelper
       return true;
     }
 
+if(ModuleHelper::is_manually_generated($module->table)) {
     $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
     $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
 
@@ -228,6 +295,9 @@ class ModuleHelper
     if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
       return true;
     }
+} else {
+
+}
 
 
     if ($module->table == 'cms_menus') {
@@ -335,6 +405,7 @@ class ModuleHelper
       return true;
     }
 
+if(ModuleHelper::is_manually_generated($module->table)) {
     $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
     $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
 
@@ -342,6 +413,9 @@ class ModuleHelper
     if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
       return true;
     }
+} else {
+
+}
 
 
     if ($module->table == 'cms_menus') {
@@ -448,6 +522,7 @@ class ModuleHelper
       return true;
     }
 
+if(ModuleHelper::is_manually_generated($module->table)) {
     $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
     $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
 
@@ -455,6 +530,9 @@ class ModuleHelper
     if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
       return true;
     }
+} else {
+
+}
 
 
     if ($module->table == 'cms_menus') {
@@ -650,7 +728,29 @@ class ModuleHelper
             'child_crosstable_fk_name' => 'group_id'
           ];
         }
+
       }
+        if (!UserHelper::isTenantAdmin() && !CRUDBooster::isSuperadmin()) {
+            $user_groups = UserHelper::current_user_groups();
+            $gs = DB::table('groups')->whereIn('id', $user_groups)->pluck('id')->toArray();
+            $gs = implode(",", $gs);
+          $fields[] = [
+            'label' => 'Group',
+            'name' => 'group',
+            "type" => "select2",
+            "datatable" => "groups,name",
+            "datatable_where" => "id IN ({$gs})",
+            "required" => true,
+            'validation' => 'required|int|min:1',
+            'default' => UserHelper::current_user_primary_group_name(),
+            'value' => UserHelper::current_user_primary_group(),
+            //Tenantadmin vede nella dropdown solo i gruppi del proprio tenant
+            'parent_select' => 'tenant',
+            'parent_crosstable' => 'group_tenants',
+            'fk_name' => 'tenant_id',
+            'child_crosstable_fk_name' => 'group_id'
+          ];
+        }
     }
     return $fields;
   }

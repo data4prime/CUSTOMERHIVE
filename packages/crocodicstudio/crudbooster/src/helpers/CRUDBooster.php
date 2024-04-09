@@ -483,6 +483,7 @@ class CRUDBooster
 
     public static function sidebarMenu($parent_id = 0)
     {
+
         $menu_active = DB::table('cms_menus')
             ->whereRaw(
                 "cms_menus.id IN
@@ -508,6 +509,8 @@ class CRUDBooster
             ->select('cms_menus.*')
             ->distinct() // moltiplica le righe senza duplicate se item ha molti gruppi
             ->get();
+
+
 
         foreach ($menu_active as $key => &$menu) {
 

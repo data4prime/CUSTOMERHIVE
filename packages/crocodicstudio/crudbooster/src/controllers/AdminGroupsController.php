@@ -382,6 +382,9 @@ class AdminGroupsController extends CBController
 		$data['forms'][] = ['label' => 'Email', 'name' => 'email', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-6', 'placeholder' => 'User email', 'readonly' => true, 'required' => true];
 		$data['action'] = CRUDBooster::mainpath($group_id . "/add_member");
 		$data['return_url'] = CRUDBooster::mainpath('members/' . $group_id);
+		$data['command'] ='create';
+
+		//dd($data);
 
 		$this->cbView('groups.members', $data);
 	}
