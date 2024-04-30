@@ -92,7 +92,8 @@ class AdminController extends CBController
       $logo = asset(CRUDBooster::getSetting('logo'));
     } else {
       //default crudbooster logo
-      $logo = asset('vendor/crudbooster/assets/logo_crudbooster.png');
+      //$logo = asset('vendor/crudbooster/assets/logo_crudbooster.png');
+$logo = "";
     }
 
     if (isset($tenant->login_background_color)) {

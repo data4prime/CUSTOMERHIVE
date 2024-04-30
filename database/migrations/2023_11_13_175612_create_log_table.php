@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('ip')->nullable()->collation('utf8mb3_unicode_ci');
             $table->string('url')->nullable()->collation('utf8mb3_unicode_ci');
             $table->string('useragent')->nullable()->collation('utf8mb3_unicode_ci');
-            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedInteger('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('cms_users'); // Assuming a users table exists
             $table->timestamps();
         });

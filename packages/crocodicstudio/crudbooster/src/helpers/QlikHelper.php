@@ -209,7 +209,7 @@ class QlikHelper
     $check_idp = $current_user->idp_qlik;
 
     $privateKey = CRUDBooster::getSetting('private_key');
-    $privateKey = "http://192.168.15.50/" . $privateKey;
+    $privateKey = env('APP_URL')."/" . $privateKey;
     $privateKey = file_get_contents($privateKey);
 
     if (empty($check_idp)) {

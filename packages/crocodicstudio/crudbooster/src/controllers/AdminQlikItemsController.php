@@ -498,12 +498,6 @@ class AdminQlikItemsController extends CBController
 			$data['tenant'] = CRUDBooster::getSetting('url');;
 			$data['web_int_id'] = CRUDBooster::getSetting('web_int_id');
 
-			/*
-  const TENANT = '##TENANT##';
-  const WEBINTEGRATIONID = '##WEBID##';
-  const APPID = '##APP##';
-  const JWTTOKEN = "##JWTTOKEN##";
-*/
 			if ($menu->target_layout == 1) {
 				//iframe only
 				$this->cbView('qlik_items.fullscreen_view_saas', $data);

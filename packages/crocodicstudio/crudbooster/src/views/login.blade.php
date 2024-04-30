@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{{trans("crudbooster.page_title_login")}} : {{ isset($tenant->name) ? $tenant->name : '' }}</title>
-    <meta name='generator' content='CustomerHive' />
+    <meta name='generator' content='CRUDBooster' />
     <meta name='robots' content='noindex,nofollow' />
     <link rel="shortcut icon" href="{{ $favicon }}">
 
@@ -86,7 +86,7 @@
     <div class="login-box">
         <div class="login-logo">
             <a href="{{url('/')}}">
-                <img title="{!!(Session::get('appname') == 'CustomerHive')?'CustomerHive':CRUDBooster::getSetting('appname')!!}"
+                <img title="{!! !empty(Session::get('appname')) ? CRUDBooster::getSetting('appname') : '' !!}"
                     src="{{ $logo }}" style='max-width: 100%;max-height:170px' />
             </a>
         </div><!-- /.login-logo -->

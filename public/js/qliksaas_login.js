@@ -11,14 +11,15 @@ const JWTTOKEN = "{{ $token}}";*/
 //    MAIN
 
 (async function main() {
-    console.log("isLoggedIn");
+
     const isLoggedIn = await qlikLogin();
-    console.log(isLoggedIn);
-    console.log("CHECK");
+    //console.log("print isLoggedIn");
+    //console.log(isLoggedIn);
+    //console.log("CHECK");
     const check = await checkLoggedIn();
 
 
-    console.log(check);
+    //console.log(check);
 
     //const qcsHeaders = await getQCSHeaders();
 
@@ -29,18 +30,16 @@ const JWTTOKEN = "{{ $token}}";*/
 
 async function qlikLogin() {
     const tokenRes = await (await getJWTToken());
+    //console.log("Login Res");
     const loginRes = await jwtLogin(tokenRes);
-    console.log("Login Res");
-    console.log(loginRes.json());
-
-    //'Access-Control-Allow-Origin
+    //console.log(loginRes);
 
     return true;
 }
 
 async function checkLoggedIn() {
-    console.log("JWTTOKEN");
-    console.log(JWTTOKEN);
+    //console.log("JWTTOKEN");
+    //console.log(JWTTOKEN);
     return await fetch(`${TENANT}/api/v1/users/me`, {
         //redirect: 'follow'
         mode: 'cors',
@@ -61,6 +60,7 @@ async function getJWTToken() {
 
 async function jwtLogin(token) {
     const authHeader = `Bearer ${JWTTOKEN}`;
+    console.log(authHeader);
     return await fetch(`${TENANT}/login/jwt-session`, {
         credentials: 'include',
         mode: 'cors',
@@ -95,8 +95,10 @@ async function getQCSHeaders() {
 //    HELPER FUNCTION TO GENERATE IFRAME
 
 function renderSingleIframe() {
-    var url = "{{ $item_url }}";
-    document.getElementById('qlik_frame').src = url;
+    //var url = "{{ $item_url }}";
+    console.log(url);
+    document.querySelector('.qi_iframe').src = url;
+    //document.getElementById('qlik_frame').src = url;
 
     //window.location.href = url;
 }
