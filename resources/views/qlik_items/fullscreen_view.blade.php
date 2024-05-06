@@ -1,23 +1,21 @@
-{{ $debug == 'Active' ? $item_url : '' }}<iframe class="qi_iframe" src="{{ $item_url }}"  style="border:none;"></iframe>
+@php
+$debug_url = '';
+if ($debug == 'Active') {
+$debug_url = $item_url;
+}
+
+
+@endphp
+
+<a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a>
+<iframe class="qi_iframe" src="{{ $item_url }}"  style="border:none;"></iframe>
 
 <style>
   /*set iframe size*/
   .qi_iframe {
-    width: {
-        {
-        $row->frame_width
-      }
-    }
+    width: @php echo $row->frame_width @endphp !important;
 
-    !important;
-
-    height: {
-        {
-        $row->frame_height
-      }
-    }
-
-    !important;
+    height: @php echo $row->frame_height @endphp !important;
     border: none;
     @if($row->target_layout ==1) margin-left: auto;
     margin-right: auto;
