@@ -155,9 +155,9 @@ class QlikHelper
     //$QRSCertfile = asset(CRUDBooster::getSetting('QRSCertfile'));
     //$QRSCertkeyfile = asset(CRUDBooster::getSetting('QRSCertkeyfile'));
 
-    $QRSCertfile = env('APP_PATH').'/storage/app/'. asset(CRUDBooster::getSetting('QRSCertfile'));
-
-    $QRSCertkeyfilePassword = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertkeyfilePassword');
+    $QRSCertfile = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertfile');
+    $QRSCertkeyfile = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertkeyfile');
+    $QRSCertkeyfilePassword = CRUDBooster::getSetting('QRSCertkeyfilePassword');
 
     $headers = array(
       'Accept: application/json',
