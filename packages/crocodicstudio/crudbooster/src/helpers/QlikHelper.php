@@ -152,10 +152,12 @@ class QlikHelper
 
     $endpoint = CRUDBooster::getSetting('endpoint') . "/ticket?xrfkey=" . $xrfkey;
 
-    $QRSCertfile = asset(CRUDBooster::getSetting('QRSCertfile'));
-    $QRSCertkeyfile = asset(CRUDBooster::getSetting('QRSCertkeyfile'));
+    //$QRSCertfile = asset(CRUDBooster::getSetting('QRSCertfile'));
+    //$QRSCertkeyfile = asset(CRUDBooster::getSetting('QRSCertkeyfile'));
 
-    $QRSCertkeyfilePassword = CRUDBooster::getSetting('QRSCertkeyfilePassword');
+    $QRSCertfile = env('APP_PATH').'/storage/app/'. asset(CRUDBooster::getSetting('QRSCertfile'));
+
+    $QRSCertkeyfilePassword = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertkeyfilePassword');
 
     $headers = array(
       'Accept: application/json',
@@ -178,7 +180,10 @@ class QlikHelper
     curl_setopt($ch, CURLOPT_SSLCERT, $QRSCertfile);
     curl_setopt($ch, CURLOPT_SSLKEY, $QRSCertkeyfile);
     // #RAMA no password
-    curl_setopt($ch, CURLOPT_KEYPASSWD, $QRSCertkeyfilePassword);
+    if (!empty($QRSCertkeyfilePassword)) {
+      curl_setopt($ch, CURLOPT_KEYPASSWD, $QRSCertkeyfilePassword);
+    }
+    
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
@@ -188,9 +193,11 @@ class QlikHelper
     if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
     }
+    //dd($error_msg);
 
 
     $response = json_decode($raw_response);
+    //dd($response);
 
     return isset($response->Ticket) ? $response->Ticket : '';
     //return isset($response['Ticket']) ? $response['Ticket'] : '';
@@ -209,7 +216,7 @@ class QlikHelper
     $check_idp = $current_user->idp_qlik;
 
     $privateKey = CRUDBooster::getSetting('private_key');
-    $privateKey = env('APP_URL')."/" . $privateKey;
+    $privateKey = env() . $privateKey;
     $privateKey = file_get_contents($privateKey);
 
     if (empty($check_idp)) {
