@@ -184,8 +184,7 @@ class MenusController extends CBController
   					}
             else if (n == 'URL')
             {
-
-  						$('input[name=\"path\"]').attr('placeholder','Please enter your URL');
+  						$('input[name=path]').attr('placeholder','Please enter your URL');
 
   						$('#path').prop('required',true);
   						$('#form-group-path label .text-danger').remove();
@@ -391,13 +390,13 @@ class MenusController extends CBController
     $fontawesome = Fontawesome::getIcons();
 
     $custom = view('crudbooster::components.list_icon', compact('fontawesome', 'row'))->render();
-    $this->form[] = ['label' => 'Icon', 'name' => 'icon', 'type' => 'custom', 'html' => $custom, 'required' => false];
+    $this->form[] = ['label' => 'Icon', 'name' => 'icon', 'type' => 'custom', 'html' => $custom, 'required' => true];
     $this->form[] = [
       'label' => 'Color',
       'name' => 'color',
       'type' => 'select2',
       'dataenum' => ['normal', 'red', 'green', 'aqua', 'light-blue', 'red', 'yellow', 'muted'],
-      'required' => false,
+      'required' => true,
       'value' => 'normal',
     ];
     $this->form[] = [

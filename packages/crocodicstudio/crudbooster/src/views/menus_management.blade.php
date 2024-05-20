@@ -83,7 +83,7 @@
 <script type="text/javascript">
     
 $(function () {
-    var id_cms_privileges = '{{$id_cms_privileges}}';
+    var id_cms_privileges = '{!! $id_cms_privileges !!}';
     var sortactive = $(".draggable-menu").sortable({
         group: '.draggable-menu',
         delay: 200,
@@ -93,7 +93,7 @@ $(function () {
                 return false;
             }
             var depth = 1; // Start with a depth of one (the element itself)
-            var maxDepth = config('app.menu_max_nesting_levels'); // Assumendo che config() sia definita altrove nel tuo codice.
+            var maxDepth = '{!! config("app.menu_max_nesting_levels") !!}'; // Assumendo che config() sia definita altrove nel tuo codice.
             
             var children = item.find('ul').first().find('li');
             // Add the amount of parents to the depth
@@ -196,7 +196,7 @@ $(function () {
             </div>
             <div class="panel-body clearfix">
                 <ul class='draggable-menu draggable-menu-active'>
-                    <?=$menu_active_html?>
+                    @php echo $menu_active_html @endphp
                 </ul>
                 @if(count($menu_active)==0)
                 <div align="center">Active menu is empty, please add new menu</div>
@@ -211,7 +211,7 @@ $(function () {
             <div class="panel-body clearfix">
 
                 <ul class='draggable-menu draggable-menu-inactive'>
-                    <?=$menu_inactive_html?>
+                    @php echo $menu_inactive_html @endphp
                 </ul>
 
                 @if(count($menu_inactive)==0)

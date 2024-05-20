@@ -110,8 +110,8 @@
 
             <section class="content-header">
                 @php
-                $module = CRUDBooster::getCurrentModule();
-                @endphp
+            $module = CRUDBooster::getCurrentModule();
+            @endphp
                 @if(isset($module))
 
                 <h1>
@@ -177,19 +177,14 @@
 @if(isset($ib['onLoad'])) onLoad='return {{$ib["onLoad"]}}' @endif
 >
 -->
-                    @php
-
-                    $onclik = isset($ib['onClick']) ? $ib['onClick'] : '';
-                    $onmouseover = isset($ib['onMouseOver']) ? $ib['onMouseOver'] : '';
-                    $onmouseout = isset($ib['onMouseOut']) ? $ib['onMouseOut'] : '';
-                    $onkeydown = isset($ib['onKeyDown']) ? $ib['onKeyDown'] : '';
-                    $onload = isset($ib['onLoad']) ? $ib['onLoad'] : '';
-
-                    @endphp
-                    <a href='{{$ib["url"]}}' id='{{str_slug($ib["label"])}}' class="btn 
-                    {{isset($ib['color'])?'btn-'.$ib['color']:'btn-primary'}} btn-sm" onClick="{{$onclick}}"
-                        onMouseOver="{{$onmouseover}}" onMouseOut="{{$onmouseout}}" onKeyDown="{{$onkeydown}}"
-                        onLoad="{{$onload}}">
+<a href='{{$ib["url"]}}' id='{{str_slug($ib["label"])}}' class="btn 
+                    {{isset($ib['color'])?'btn-'.$ib['color']:'btn-primary'}} btn-sm" 
+onClick="{{return isset($ib['onClick']) ? $ib['onClick'] : ''}}"
+onMouseOver="{{return isset($ib['onMouseOver']) ? $ib['onMouseOver'] : ''}}"
+onMouseOut="{{return isset($ib['onMouseOut']) ? $ib['onMouseOut'] : ''}}" 
+onKeyDown="{{return isset($ib['onKeyDown']) ? $ib['onKeyDown'] : ''}}"
+onLoad='return isset($ib['onLoad']) ? $ib["onLoad"] : ''}}' @endif
+>
 
 
 
@@ -263,25 +258,25 @@
 
 
 
-    <script type="text/javascript">@php echo  $script_js @endphp</script>
+    <script type="text/javascript">{{ $script_js }}</script>
 
 
     @stack('bottom')
 
     @if(isset($target_layout) && $target_layout == 2)
     <script type="text/javascript">
-        $(document).ready(function () {
-            //shrink sidebar
-            $('.sidebar-toggle').click();
-            //expand container
-            $('#content_section').css('padding', '0px');
-            $('#content_section').css('height', 'calc(100vh - 42px');
-            $('.qi_iframe_container').css('height', '100%');
-            $('.qi_iframe').css('padding-bottom', '0px');
-            $('.content-wrapper').css('min-height', '0px !important');
-            //hide section header
-            $('.content-header').css('display', 'none');
-        })
+            $(document).ready(function () {
+                //shrink sidebar
+                $('.sidebar-toggle').click();
+                //expand container
+                $('#content_section').css('padding', '0px');
+                $('#content_section').css('height', 'calc(100vh - 42px');
+                $('.qi_iframe_container').css('height', '100%');
+                $('.qi_iframe').css('padding-bottom', '0px');
+                $('.content-wrapper').css('min-height', '0px !important');
+                //hide section header
+                $('.content-header').css('display', 'none');
+            })
     </script>
     @endif
     <script type="text/javascript">

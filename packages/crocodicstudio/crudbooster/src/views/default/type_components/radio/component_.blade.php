@@ -76,12 +76,10 @@
 
                 $checked = ($value == $d->id) ? "checked" : "";
 
-                echo "$name";
-
                echo "
 <div data-val='".$val."' class='input-radio-wrapper " . $disabled . "'>
   <label class='radio-inline'>
-    <input type='radio' " . $disabled . " " . $checked . " name='".$name."' value='" . $d->id . "'> " . $val . "
+    <input type='radio' " . $disabled . " " . $checked . " name='" . $name . "' value='" . $d->id . "'> " . $val . "
   </label>
 </div>";
 
