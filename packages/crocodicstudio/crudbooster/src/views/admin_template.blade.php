@@ -179,7 +179,7 @@
 -->
                     @php
 
-                    $onclik = isset($ib['onClick']) ? $ib['onClick'] : '';
+                    $onclick = isset($ib['onClick']) ? $ib['onClick'] : '';
                     $onmouseover = isset($ib['onMouseOver']) ? $ib['onMouseOver'] : '';
                     $onmouseout = isset($ib['onMouseOut']) ? $ib['onMouseOut'] : '';
                     $onkeydown = isset($ib['onKeyDown']) ? $ib['onKeyDown'] : '';
