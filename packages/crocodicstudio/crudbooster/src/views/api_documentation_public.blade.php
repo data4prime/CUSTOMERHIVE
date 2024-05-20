@@ -58,7 +58,8 @@
                 TIME : UNIX CURRENT TIME <br/>
                 <label>Header :</label><br/>
                 X-Authorization-Token : md5( SCREETKEY + TIME + USER_AGENT )<br/>
-                X-Authorization-Time : TIME
+                X-Authorization-Time : TIME<br>
+                X-user : User Email
             </div>
             <table class='table table-striped table-api table-bordered'>
                 <thead>
