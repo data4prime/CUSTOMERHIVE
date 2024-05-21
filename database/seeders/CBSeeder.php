@@ -37,8 +37,13 @@ $this->call('GroupSeeder');
         $this->call('CmsEmailTemplates');
         $this->call('Cms_menusPrivileges');
 
+
+
         //QlikSett
 $this->call('QlikSett');
+
+//Qlink Confs
+$this->call('QlikConf');
 
         $this->command->info('Updating the data completed !');
     }
