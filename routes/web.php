@@ -85,3 +85,6 @@ Route::get('admin/QlikServerSenseQMC', $controllers_base_path . 'AdminQlikItemsC
 //modules
 Route::get('admin/module_generator/enable', $controllers_base_path . 'ModulsController@enable');
 Route::post('admin/module_generator/save_enable', $controllers_base_path . 'ModulsController@saveEnable');
+
+
+//Qlik Configurations
