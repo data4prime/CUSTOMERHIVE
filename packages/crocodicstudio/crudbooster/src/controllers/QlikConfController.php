@@ -55,17 +55,17 @@ class QlikConfController extends CBController
 		# START FORM DO NOT REMOVE THIS LINE
 		$this->form = [];
 		$this->form[] = ['label' => 'Configuration Name', 'name' => 'confname', 'type' => 'text', 'validation' => 'required|string|min:1|max:70', 'width' => 'col-sm-10', 'placeholder' => 'Enter Configuration Name'];
-        $this->form[] = ['label' => 'Type', 'name' => 'type', 'type' => 'text', 'validation' => 'required|string|min:1|max:50', 'width' => 'col-sm-10', 'placeholder' => 'Enter Type'];
+        $this->form[] = ['label' => 'Type', 'name' => 'type', 'type' => 'select', 'validation' => 'required|string|min:1|max:50', 'width' => 'col-sm-10', 'dataenum' => 'On-Premise;SAAS'];
         $this->form[] = ['label' => 'QRS Url', 'name' => 'qrsurl', 'type' => 'text', 'validation' => 'required|url', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRS Url'];
         $this->form[] = ['label' => 'Endpoint', 'name' => 'endpoint', 'type' => 'text', 'validation' => 'required|url', 'width' => 'col-sm-10', 'placeholder' => 'Enter Endpoint'];
-        $this->form[] = ['label' => 'QRSCertfile', 'name' => 'QRSCertfile', 'type' => 'text', 'validation' => 'required|string|min:1|max:255', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertfile'];
-        $this->form[] = ['label' => 'QRSCertkeyfile', 'name' => 'QRSCertkeyfile', 'type' => 'text', 'validation' => 'required|string|min:1|max:255', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertkeyfile'];
+        $this->form[] = ['label' => 'QRSCertfile', 'name' => 'QRSCertfile', 'type' => 'file_upload', 'validation' => 'required|string|min:1|max:255', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertfile'];
+        $this->form[] = ['label' => 'QRSCertkeyfile', 'name' => 'QRSCertkeyfile', 'type' => 'file_upload', 'validation' => 'required|string|min:1|max:255', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertkeyfile'];
         $this->form[] = ['label' => 'QRSCertkeyfilePassword', 'name' => 'QRSCertkeyfilePassword', 'type' => 'password', 'validation' => 'required|string|min:1|max:255', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertkeyfilePassword'];
         $this->form[] = ['label' => 'URL', 'name' => 'url', 'type' => 'text', 'validation' => 'required|url', 'width' => 'col-sm-10', 'placeholder' => 'Enter URL'];
         $this->form[] = ['label' => 'Key ID', 'name' => 'keyid', 'type' => 'text', 'validation' => 'required|string|min:1|max:255', 'width' => 'col-sm-10', 'placeholder' => 'Enter Key ID'];
         $this->form[] = ['label' => 'Issuer', 'name' => 'issuer', 'type' => 'text', 'validation' => 'required|string|min:1|max:255', 'width' => 'col-sm-10', 'placeholder' => 'Enter Issuer'];
         $this->form[] = ['label' => 'Web Int ID', 'name' => 'web_int_id', 'type' => 'text', 'validation' => 'required|string|min:1', 'width' => 'col-sm-10', 'placeholder' => 'Enter Web Int ID'];
-        $this->form[] = ['label' => 'Private Key', 'name' => 'private_key', 'type' => 'textarea', 'validation' => 'required|string|min:1', 'width' => 'col-sm-10', 'placeholder' => 'Enter Private Key'];
+        $this->form[] = ['label' => 'Private Key', 'name' => 'private_key', 'type' => 'file_upload', 'validation' => 'required|string|min:1', 'width' => 'col-sm-10', 'placeholder' => 'Enter Private Key'];
         $this->form[] = ['label' => 'Debug', 'name' => 'debug', 'type' => 'select', 'validation' => 'required|boolean', 'width' => 'col-sm-10', 'dataenum' => 'Inactive;Active'];
 
 
@@ -180,7 +180,141 @@ class QlikConfController extends CBController
         | $this->script_js = "function() { ... }";
         |
         */
-		$this->script_js = NULL;
+		$this->script_js = "
+
+$(document).ready(function () {
+
+    var type = $('[name=\"type\"]').first();
+    var type_val = type.val();
+    var on_premise = ['qrsurl', 'endpoint', 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
+
+    var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
+    if (type_val == 'On-Premise') {
+
+        saas.forEach(element => {
+
+            to_hide = document.getElementsByName(element);
+
+            to_hide.forEach(hide => {
+                hide.parentNode.style.display = 'none';
+
+            });
+
+
+        });
+
+        on_premise.forEach(element => {
+
+            to_show = document.getElementsByName(element);
+
+            to_show.forEach(show => {
+                show.parentNode.style.display = '';
+
+            });
+
+
+        });
+
+
+    } else if (type_val == 'SAAS') {
+        on_premise.forEach(element => {
+
+            to_hide = document.getElementsByName(element);
+
+            to_hide.forEach(hide => {
+                hide.parentNode.style.display = 'none';
+
+            });
+
+
+        });
+
+        saas.forEach(element => {
+
+            to_show = document.getElementsByName(element);
+
+            to_show.forEach(show => {
+                show.parentNode.style.display = '';
+
+            });
+
+
+        });
+
+    }
+
+    type.change(function () {
+        // Code to be executed when the value of the select changes
+        var selectedValue = $(this).val();
+        var on_premise = ['qrsurl', 'endpoint', 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
+
+        var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
+
+        //console.log(document.getElementsByName('type')[0]);
+
+        //var type = document.getElementsByName('type')[0].value;
+
+        var type = $('[name=\"type\"]').first().val();
+
+        if (type == 'On-Premise') {
+
+            saas.forEach(element => {
+
+                to_hide = document.getElementsByName(element);
+
+                to_hide.forEach(hide => {
+                    hide.parentNode.style.display = 'none';
+
+                });
+
+
+            });
+
+            on_premise.forEach(element => {
+
+                to_show = document.getElementsByName(element);
+
+                to_show.forEach(show => {
+                    show.parentNode.style.display = '';
+
+                });
+
+
+            });
+
+
+        } else if (type == 'SAAS') {
+            on_premise.forEach(element => {
+
+                to_hide = document.getElementsByName(element);
+
+                to_hide.forEach(hide => {
+                    hide.parentNode.style.display = 'none';
+
+                });
+
+
+            });
+
+            saas.forEach(element => {
+
+                to_show = document.getElementsByName(element);
+
+                to_show.forEach(show => {
+                    show.parentNode.style.display = '';
+
+                });
+
+
+            });
+
+        }
+
+    });
+});
+
+
+";
 
 
 		/*
