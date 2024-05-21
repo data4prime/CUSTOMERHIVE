@@ -15,8 +15,20 @@ class Qlik_Conf extends Seeder
     {
         $this->command->info('Please wait updating the data...');
                 
-$this->call('QlikConf');
+//$this->call('QlikConf');
 
+
+ $mod = [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'Qlik Configuration',
+                'icon' => 'fa fa-cog',
+                'path' => 'qlik_confs',
+                'table_name' => 'qlik_confs',
+                'controller' => 'QlikConfController',
+                'is_protected' => 1,
+                'is_active' => 1,
+            ];
+        DB::table('cms_moduls')->insert($mod);  
 
 
         $this->command->info('Updating the data completed !');
