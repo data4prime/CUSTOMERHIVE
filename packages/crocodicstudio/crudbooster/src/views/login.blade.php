@@ -22,7 +22,7 @@
     <!-- support rtl-->
     @if (in_array(App::getLocale(), ['ar', 'fa']))
     <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
-    <link href="{{ asset(" vendor/crudbooster/assets/rtl.css")}}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('vendor/crudbooster/assets/rtl.css')}}" rel="stylesheet" type="text/css" />
     @endif
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
