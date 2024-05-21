@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(UsersTableSeeder::class);
         //$this->call(CBSeeder::class);
         $this->command->info('Qlik settings...');
-        $this->call(Qlik_Sett::class);
+        //$this->call(Qlik_Sett::class);
+        $this->call(QlikConf::class);
     }
 }

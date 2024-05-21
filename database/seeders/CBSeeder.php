@@ -15,7 +15,7 @@ class CBSeeder extends Seeder
     {
         $this->command->info('Please wait updating the data...');
 
-                /*
+                
 $this->call('GroupSeeder');
         $this->call('TenantSeeder');
         $this->call('Cms_statistics');
@@ -40,7 +40,7 @@ $this->call('GroupSeeder');
 
 
 $this->call('QlikSett');
-*/
+
 
 
 $this->call('QlikConf');
