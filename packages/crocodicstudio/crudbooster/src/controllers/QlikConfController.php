@@ -196,7 +196,7 @@ $(document).ready(function () {
             to_hide = document.getElementsByName(element);
 
             to_hide.forEach(hide => {
-                hide.parentNode.style.display = 'none';
+                hide.parentNode.parentNode.style.display = 'none';
 
             });
 
@@ -208,7 +208,7 @@ $(document).ready(function () {
             to_show = document.getElementsByName(element);
 
             to_show.forEach(show => {
-                show.parentNode.style.display = '';
+                show.parentNode.parentNode.style.display = '';
 
             });
 
@@ -222,7 +222,7 @@ $(document).ready(function () {
             to_hide = document.getElementsByName(element);
 
             to_hide.forEach(hide => {
-                hide.parentNode.style.display = 'none';
+                hide.parentNode.parentNode.style.display = 'none';
 
             });
 
@@ -234,7 +234,7 @@ $(document).ready(function () {
             to_show = document.getElementsByName(element);
 
             to_show.forEach(show => {
-                show.parentNode.style.display = '';
+                show.parentNode.parentNode.style.display = '';
 
             });
 
@@ -263,7 +263,7 @@ $(document).ready(function () {
                 to_hide = document.getElementsByName(element);
 
                 to_hide.forEach(hide => {
-                    hide.parentNode.style.display = 'none';
+                    hide.parentNode.parentNode.style.display = 'none';
 
                 });
 
@@ -275,7 +275,7 @@ $(document).ready(function () {
                 to_show = document.getElementsByName(element);
 
                 to_show.forEach(show => {
-                    show.parentNode.style.display = '';
+                    show.parentNode.parentNode.style.display = '';
 
                 });
 
@@ -289,7 +289,7 @@ $(document).ready(function () {
                 to_hide = document.getElementsByName(element);
 
                 to_hide.forEach(hide => {
-                    hide.parentNode.style.display = 'none';
+                    hide.parentNode.parentNode.style.display = 'none';
 
                 });
 
@@ -301,7 +301,7 @@ $(document).ready(function () {
                 to_show = document.getElementsByName(element);
 
                 to_show.forEach(show => {
-                    show.parentNode.style.display = '';
+                    show.parentNode.parentNode.style.display = '';
 
                 });
 
