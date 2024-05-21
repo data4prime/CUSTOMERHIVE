@@ -186,6 +186,7 @@ return [
     'tenantadmin' => 'Tenant Admin',
     'UserPermissions' => 'User Permissions',
     'Qlik_Development_Tools' => 'Qlik Platform',
+    'Qlik_Configuration' => 'Qlik Configuration',
     'Qlik_Sense_Hub' => 'Qlik Sense HUB',
     'Qlik_Sense_QMC' => 'Qlik Sense QMC',
     'click_here' => 'Click here',
