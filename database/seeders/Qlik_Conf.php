@@ -15,6 +15,18 @@ class QlikConf extends Seeder
     public function run()
     {
         //
+$this->call('Qlik_Conf');
+   
+    }
+}
+//php artisan db:seed -–class=QlikConf
+
+
+
+class Qlik_Conf extends Seeder
+{
+    public function run()
+    {
         $mod = [
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'Qlik Configuration',
@@ -25,7 +37,7 @@ class QlikConf extends Seeder
                 'is_protected' => 1,
                 'is_active' => 1,
             ];
-        DB::table('cms_moduls')->insert($mod);     
+        DB::table('cms_moduls')->insert($mod);  
+        
     }
 }
-//php artisan db:seed -–class=QlikConf
