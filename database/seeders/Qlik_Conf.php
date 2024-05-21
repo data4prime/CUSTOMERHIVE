@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class QlikConf extends Seeder
+class Qlik_Conf extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,7 +15,7 @@ class QlikConf extends Seeder
     public function run()
     {
         //
-$this->call('Qlik_Conf');
+$this->call('QlikConf');
    
     }
 }
@@ -23,7 +23,7 @@ $this->call('Qlik_Conf');
 
 
 
-class Qlik_Conf extends Seeder
+class QlikConf extends Seeder
 {
     public function run()
     {
