@@ -11,23 +11,23 @@
     href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
   <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
   <!-- Bootstrap 3.4.1 -->
-  <link href="{{ asset(" vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css") }}" rel="stylesheet"
+  <link href="{{ asset('vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"
     type="text/css" />
   <!-- Font Awesome Icons -->
-  <link href="{{asset(" vendor/crudbooster/assets/adminlte/font-awesome/css")}}/font-awesome.min.css" rel="stylesheet"
+  <link href="{{asset('vendor/crudbooster/assets/adminlte/font-awesome/css')}}/font-awesome.min.css" rel="stylesheet"
     type="text/css" />
   <!-- Ionicons -->
-  <link href="{{asset(" vendor/crudbooster/ionic/css/ionicons.min.css")}}" rel="stylesheet" type="text/css" />
+  <link href="{{asset('vendor/crudbooster/ionic/css/ionicons.min.css')}}" rel="stylesheet" type="text/css" />
   <!-- Theme style -->
-  <link href="{{ asset(" vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css")}}" rel="stylesheet"
+  <link href="{{ asset('vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css')}}" rel="stylesheet"
     type="text/css" />
-  <link href="{{ asset(" vendor/crudbooster/assets/adminlte/dist/css/skins/_all-skins.min.css")}}" rel="stylesheet"
+  <link href="{{ asset('vendor/crudbooster/assets/adminlte/dist/css/skins/_all-skins.min.css')}}" rel="stylesheet"
     type="text/css" />
 
   <!-- support rtl-->
   @if (in_array(App::getLocale(), ['ar', 'fa']))
   <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
-  <link href="{{ asset(" vendor/crudbooster/assets/rtl.css")}}" rel="stylesheet" type="text/css" />
+  <link href="{{ asset('vendor/crudbooster/assets/rtl.css')}}" rel="stylesheet" type="text/css" />
   @endif
 
   <link rel='stylesheet' href='{{asset("vendor/crudbooster/assets/css/main.css").' ?r='.time()}}' />
