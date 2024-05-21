@@ -29,21 +29,12 @@
     <style type="text/css">
         .login-page,
         .register-page {
-            background: {
-                    {
-                    CRUDBooster: :getSetting("login_background_color")?:'#dddddd'
-                }
-            }
+            background: @php echo CRUDBooster::getSetting("login_background_color")?:'#dddddd'@endphp ;
 
-            url('{{ CRUDBooster::getSetting("login_background_image")?asset(CRUDBooster::getSetting("login_background_image")):asset(' vendor/crudbooster/assets/bg_blur3.jpg') }}');
 
-            color: {
-                    {
-                    CRUDBooster: :getSetting("login_font_color")?:'#ffffff'
-                }
-            }
+            url('{{ CRUDBooster::getSetting("login_background_image")?asset(CRUDBooster::getSetting("login_background_image")):asset("vendor/crudbooster/assets/bg_blur3.jpg") }}');
 
-            !important;
+            color: @php echo CRUDBooster::getSetting("login_font_color")?:'#ffffff'@endphp !important;
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
@@ -53,13 +44,7 @@
             box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.8);
             background: rgba(255, 255, 255, 0.9);
 
-            color: {
-                    {
-                    CRUDBooster: :getSetting("login_font_color")?:'#666666'
-                }
-            }
-
-            !important;
+            color: @php echo CRUDBooster::getSetting("login_font_color")?:'#666666'@endphp !important;
         }
     </style>
 </head>
@@ -69,8 +54,7 @@
         <div class="login-logo">
             <a href="{{url('/')}}">
                 <img title='{!!(isset($appname))? $appname : "<b>CRUD</b>Booster"!!}' src='{{
-                CRUDBooster::getSetting("logo")?asset(CRUDBooster::getSetting('
-                    logo')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}'
+                CRUDBooster::getSetting("logo")?asset(CRUDBooster::getSetting("logo")):asset("vendor/crudbooster/assets/logo_crudbooster.png") }}'
                     style='max-width: 100%;max-height:170px' />
             </a>
         </div><!-- /.login-logo -->

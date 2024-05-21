@@ -29,21 +29,10 @@
     <link rel='stylesheet' href='{{asset("vendor/crudbooster/assets/css/main.css")}}' />
     <style type="text/css">
         .lockscreen {
-            background: {
-                    {
-                    CRUDBooster: :getSetting("login_background_color")?:'#dddddd'
-                }
-            }
+            background: @php echo CRUDBooster::getSetting("login_background_color")?:'#dddddd'@endphp ;
+            url('{{ CRUDBooster::getSetting("login_background_image")?asset(CRUDBooster::getSetting("login_background_image")):asset("vendor/crudbooster/assets/bg_blur3.jpg") }}');
 
-            url('{{ CRUDBooster::getSetting("login_background_image")?asset(CRUDBooster::getSetting("login_background_image")):asset(' vendor/crudbooster/assets/bg_blur3.jpg') }}');
-
-            color: {
-                    {
-                    CRUDBooster: :getSetting("login_font_color")?:'#ffffff'
-                }
-            }
-
-            !important;
+            color: @php CRUDBooster::getSetting("login_font_color")?:'#ffffff'@endphp !important;
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
@@ -58,8 +47,7 @@
         <div class="lockscreen-logo">
             <a href="{{url('/')}}">
                 <img title=" {!! isset($appname) ? ($appname == 'CustomerHive' ? 'CustomerHive':$appname) : ''  !!}  "
-                    src='{{ CRUDBooster::getSetting("logo")?asset(CRUDBooster::getSetting('
-                    logo')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}'
+                    src='{{ CRUDBooster::getSetting("logo")?asset(CRUDBooster::getSetting("logo")):asset("vendor/crudbooster/assets/logo_crudbooster.png") }}'
                     style='max-width: 100%;max-height:170px' />
             </a>
         </div>
@@ -70,7 +58,7 @@
         <div class="lockscreen-item">
             <!-- lockscreen image -->
             <div class="lockscreen-image">
-                <img src="{{ (Session::get('admin_photo'))?:asset(" assets/adminlte/dist/img/user2-160x160.jpg") }}"
+                <img src="{{ (Session::get('admin_photo'))?:asset('assets/adminlte/dist/img/user2-160x160.jpg') }}"
                     alt="user image" />
             </div>
             <!-- /.lockscreen-image -->
