@@ -227,12 +227,11 @@ class QlikHelper
     //return isset($response['Ticket']) ? $response['Ticket'] : '';
   }
 
-  public static function getJWTToken($id, $qlik_item_id)
+  public static function getJWTToken($id, $conf_id)
   {
 
     $current_user = \App\User::find($id);
 
-    $conf_id = DB::table('qlik_items')->where('id',$qlik_item_id )->get()->qlik_conf;
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->get();
 
     $issuedAt = Carbon::now();
@@ -305,7 +304,7 @@ class QlikHelper
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
-    $token = QlikHelper::getJWTToken($id);
+    $token = QlikHelper::getJWTToken($id, $conf_id);
 
     $curl = curl_init();
 
