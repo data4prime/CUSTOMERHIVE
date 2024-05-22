@@ -39,10 +39,20 @@ class AdminCmsUsersController extends CBController
 		$this->col[] = array("label" => "Email", "name" => "email");
 		$this->col[] = array("label" => "Privilege", "name" => "id_cms_privileges", "join" => "cms_privileges,name");
 		$this->col[] = array("label" => "User directory", "name" => "user_directory");
-		$this->col[] = array("label" => "Qlik login", "name" => "qlik_login");
-		$this->col[] = array("label" => "User directory", "name" => "user_directory");
-
+		//$this->col[] = array("label" => "Qlik login", "name" => "qlik_login");
+		//$this->col[] = array("label" => "User directory", "name" => "user_directory");
 		//$this->col[] = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik");
+//QLIK USERS START
+		$columns[] = ['label'=>'Qlik Conf','name'=>'qlik_conf_id','type'=>'datamodal','datamodal_table'=>'qlik_confs','datamodal_columns'=>'confname,type','datamodal_select_to'=>'confname:confname,type:type','datamodal_where'=>'','datamodal_size'=>'large'];
+		$columns = array("label" => "Qlik login", "name" => "qlik_login");
+		$columns = array("label" => "User directory", "name" => "user_directory");
+		$columns = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik");
+		$columns = array("label" => "");
+		$this->form[] = ['label'=>'Utenze Qlik','name'=>'qlik_users','type'=>'child','columns'=>$columns,'table'=>'qlik_users','foreign_key'=>'ordine_id'];
+//QLIK USERS END
+
+
+
 		$this->col[] = array("label" => "Data scadenza", "name" => "data_scadenza");
 		$this->col[] = array("label" => "Status", "name" => "status");
 		$this->col[] = array("label" => "Photo", "name" => "photo", "image" => 1);
