@@ -162,8 +162,7 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                                     </div>
                                                     <div class="modal-body">
                                                         <iframe id='iframe-modal-{{$name_column}}'
-                                                            style="border:0;height:{{$col['datamodal_height']?: "
-                                                            430px"}};width: 100%" src=""></iframe>
+                                                            style="border:0;height:{{$col['datamodal_height']?: '430px'}};width: 100%" src=""></iframe>
                                                     </div>
 
                                                 </div><!-- /.modal-content -->
@@ -171,10 +170,8 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                         </div><!-- /.modal -->
 
                                         @elseif($col['type']=='number')
-                                        <input id='{{$name_column}}' type='number' {{ ($col['min'])?"min='".$col['
-                                            min']."'":"" }} {{
-                                            ($col['max'])?"max='$col[max]'":"" }} name='child-{{$col[" name"]}}'
-                                            class='form-control {{$col[' required']?"required":""}}'
+                                        <input id='{{$name_column}}' type='number' {{ isset($col['min'])?"min='".$col['min']."'":"" }} 
+{{($col['max'])?"max='$col[max]'":"" }} name='child-{{$col[" name"]}}' class='form-control {{$col['required']?"required":""}}'
                                             {{($col['readonly']===true)?"readonly":""}} />
                                         @elseif($col['type']=='textarea')
                                         <textarea id='{{$name_column}}' name='child-{{$col["name"]}}'
@@ -187,8 +184,8 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                                 required":""}}" readonly>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-primary" id="btn-upload-{{$name_column}}"
-                                                    onclick="showFakeUpload{{$name_column}}()" type="button"><i
-                                                        class='fa fa-search'></i>
+                                                    onclick="showFakeUpload{{$name_column}}()" type="button">
+<i class='fa fa-search'></i>
                                                     {{trans('crudbooster.datamodal_browse_file')}}</button>
                                             </span>
                                         </div><!-- /input-group -->
@@ -204,7 +201,7 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                             var filename;
                                             var is_uploading = false;
 
-                                            function showFakeUpload{ { $name_column } } () {
+                                            function showFakeUpload{{ $name_column }} () {
                                                 if (is_uploading) {
                                                     return false;
                                                 }
@@ -216,7 +213,7 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                             $('#fake-upload-{{$name_column}}').on('change', prepareUpload{{ $name_column }});
 
                                             // Grab the files and set them to our variable
-                                            function prepareUpload{ { $name_column } } (event) {
+                                            function prepareUpload{{ $name_column }} (event) {
                                                 var max_size = {{ ($col['max']) ?: 2000
                                             }};
                                             file = event.target.files[0];
@@ -255,10 +252,10 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                             is_uploading = true;
 
                                                                 //Upload File To Server
-                                                                uploadFiles{ { $name_column } } (event);
+                                                                uploadFiles{{ $name_column }} (event);
                                                             }
 
-                                            function uploadFiles{ { $name_column } } (event) {
+                                            function uploadFiles{{ $name_column }} (event) {
                                                 event.stopPropagation(); // Stop stuff happening
                                                 event.preventDefault(); // Totally stop stuff happening
 
@@ -381,8 +378,8 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                                         ?>
                                         </select>
                                         @elseif($col['type']=='hidden')
-                                        <input type="{{$col['type']}}" id="{{$name.$col[" name"]}}"
-                                            name="child-{{$name.$col[" name"]}}" value="{{$col[" value"]}}">
+                                        <input type="{{$col['type']}}" id="{{$name.$col["name"]}}"
+                                            name="child-{{$name.$col["name"]}}" value="{{$col["value"]}}">
                                         @endif
 
                                         @if($col['help'])
@@ -429,12 +426,12 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                 <script type="text/javascript">
                                     var currentRow = null;
 
-                                    function resetForm{ { $name } } () {
+                                    function resetForm{{ $name }} () {
                                         $('#panel-form-{{$name}}').find("input[type=text],input[type=number],select,textarea").val('');
                                         $('#panel-form-{{$name}}').find(".select2").val('').trigger('change');
                                     }
 
-                                    function deleteRow{ { $name } } (t) {
+                                    function deleteRow{{ $name }} (t) {
 
                                         if (confirm("{{trans('crudbooster.delete_title_confirm')}}")) {
                                             $(t).parent().parent().remove();
@@ -445,7 +442,7 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                         }
                                     }
 
-                                    function editRow{ { $name } } (t) {
+                                    function editRow{{ $name }} (t) {
                                         var p = $(t).parent().parent(); //parentTR
                                         currentRow = p;
                                         p.addClass('warning');
@@ -472,7 +469,7 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                         @endforeach
                                     }
 
-                                    function validateForm{ { $name } } () {
+                                    function validateForm{{ $name }} () {
                                         var is_false = 0;
                                         $('#panel-form-{{$name}} .required').each(function () {
                                             var v = $(this).val();
@@ -489,9 +486,9 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                         }
                                     }
 
-                                    function addToTable{ { $name } } () {
+                                    function addToTable{{ $name }} () {
 
-                                        if (validateForm{ { $name } } () == false) {
+                                        if (validateForm{{ $name }} () == false) {
                                             return false;
                                         }
 
