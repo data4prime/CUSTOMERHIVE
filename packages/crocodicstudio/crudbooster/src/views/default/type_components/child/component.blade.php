@@ -83,7 +83,7 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
 
                                         $required = $e===0 && isset ($col['required']) && $col['required'] ? "required"
                                         : "";
-                                        $checked = $e===0 && isset ($col['required']) && $col['required'] ? "checked :
+                                        $checked = $e===0 && isset ($col['required']) && $col['required'] ? "checked" :
                                         "";
 
 
@@ -104,7 +104,8 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                         @endphp
                                         <div id='{{$name_column}}' class="input-group">
                                             <input type="hidden" class="input-id">
-                                            <input type="text" class="form-control input-label {{ $required }}" readonly>
+                                            <input type="text" class="form-control input-label {{ $required }}"
+                                                readonly>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-primary" onclick="showModal{{$name_column}}()"
                                                     type="button"><i class='fa fa-search'></i>
