@@ -184,7 +184,7 @@ class AdminCmsUsersController extends CBController
 		$columns = array("label" => "User directory", "name" => "user_directory");
 		$columns = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik");
 		//$columns = array("label" => "");
-		$this->form[] = ['label'=>'Utenze Qlik','name'=>'qlik_users','type'=>'child','columns'=>$columns,'table'=>'qlik_users','foreign_key'=>'ordine_id'];
+		$this->form[] = ['label'=>'Utenze Qlik','name'=>'qlik_users','type'=>'child','columns'=>$columns,'table'=>'qlik_users','foreign_key'=>'user_id'];
 //QLIK USERS END
 		
 
