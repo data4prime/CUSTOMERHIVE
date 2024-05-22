@@ -51,9 +51,15 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                     @endif
                                     <div class="col-sm-10">
                                         @if($col['type']=='text')
-                                        <input id='{{$name_column}}' type='text' {{ ($col['max'])?"maxlength='".$col['
-                                            max']."'":"" }} name='child-{{$col["name"]}}' class='form-control {{$col['
-                                            required']?"required":""}}' {{($col['readonly']===true)?"readonly":""}} />
+                                        @php
+                                        $maxlength = isset ($col['max']) ? "maxlength='".$col['max']."'" : "";
+                                        $required = isset ($col['required']) && $col['required'] ? "required" : "";
+                                        $readonly = isset ($col['readonly']) && $col['readonly'] ? "readonly" : "";
+
+                                        @endphp
+                                        <input id='{{$name_column}}' type='text' {{ $maxlength }}
+                                            name='child-{{$col["name"]}}' class='form-control {{$required}}'
+                                            {{$readonly}} />
                                         @elseif($col['type']=='radio')
                                         <?php
                                                     if($col['dataenum']):
@@ -73,19 +79,32 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                                         $radio_value = $radio_label = $enum[0];
                                                     }
                                                     ?>
+                                        @php
+
+                                        $required = $e===0 && isset ($col['required']) && $col['required'] ? "required"
+                                        : "";
+                                        $checked = $e===0 && isset ($col['required']) && $col['required'] ? "checked :
+                                        "";
+
+
+                                        @endphp
                                         <label class="radio-inline">
-                                            <input type="radio" name="child-{{$col['name']}}" class='{{ ($e==0 && $col['
-                                                required'])?"required":""}} {{$name_column}}' value="{{$radio_value}}"
-                                                {{ ($e==0 && $col['required'])?" checked":""}}> {{$radio_label}}
+                                            <input type="radio" name="child-{{$col['name']}}"
+                                                class='{{$required} {{$name_column}}' value="{{$radio_value}}" {{
+                                                $checked }}> {{$radio_label}}
                                         </label>
                                         <?php endforeach;?>
                                         <?php endif;?>
                                         @elseif($col['type']=='datamodal')
+                                        @php
 
+                                        $required = isset ($col['required']) && $col['required'] ? "required" : "";
+
+
+                                        @endphp
                                         <div id='{{$name_column}}' class="input-group">
                                             <input type="hidden" class="input-id">
-                                            <input type="text" class="form-control input-label {{$col['required']?"
-                                                required":""}}" readonly>
+                                            <input type="text" class="form-control input-label {{ $required }}" readonly>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-primary" onclick="showModal{{$name_column}}()"
                                                     type="button"><i class='fa fa-search'></i>
