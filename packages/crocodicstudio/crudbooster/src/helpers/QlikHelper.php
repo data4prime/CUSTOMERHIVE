@@ -19,13 +19,13 @@ class QlikHelper
 
   public static function getTypeConf($id) {
 
-    return DB::table('qlik_confs')->where('id', $id)->get()->type;
+    return DB::table('qlik_confs')->where('id', $id)->first()->type;
 
   }
 
   public static function confIsSAAS($id) {
 
-    return DB::table('qlik_confs')->where('id', $id)->get()->type == 'SAAS';
+    return DB::table('qlik_confs')->where('id', $id)->first()->type == 'SAAS';
 
   }
 
