@@ -42,14 +42,6 @@ class AdminCmsUsersController extends CBController
 		//$this->col[] = array("label" => "Qlik login", "name" => "qlik_login");
 		//$this->col[] = array("label" => "User directory", "name" => "user_directory");
 		//$this->col[] = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik");
-//QLIK USERS START
-		$columns[] = ['label'=>'Qlik Conf','name'=>'qlik_conf_id','type'=>'datamodal','datamodal_table'=>'qlik_confs','datamodal_columns'=>'confname,type','datamodal_select_to'=>'confname:confname,type:type','datamodal_where'=>'','datamodal_size'=>'large'];
-		$columns = array("label" => "Qlik login", "name" => "qlik_login");
-		$columns = array("label" => "User directory", "name" => "user_directory");
-		$columns = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik");
-		$columns = array("label" => "");
-		$this->form[] = ['label'=>'Utenze Qlik','name'=>'qlik_users','type'=>'child','columns'=>$columns,'table'=>'qlik_users','foreign_key'=>'ordine_id'];
-//QLIK USERS END
 
 
 
@@ -186,7 +178,17 @@ class AdminCmsUsersController extends CBController
 		$this->form[] = array("label" => "Photo", "name" => "photo", "type" => "upload", "help" => "Recommended resolution is 200x200px", 'required' => false, 'validation' => 'image|max:1000', 'resize_width' => 90, 'resize_height' => 90);
 		$this->form[] = array("label" => "Password", "name" => "password", "type" => "password", "help" => "Leave empty if no change is needed");
 		$this->form[] = array("label" => "Password Confirmation", "name" => "password_confirmation", "type" => "password", "help" => "Leave empty if no change is needed");
-		# END FORM DO NOT REMOVE THIS LINE
+//QLIK USERS START
+		$columns[] = ['label'=>'Qlik Conf','name'=>'qlik_conf_id','type'=>'datamodal','datamodal_table'=>'qlik_confs','datamodal_columns'=>'confname,type','datamodal_select_to'=>'confname:confname,type:type','datamodal_where'=>'','datamodal_size'=>'large'];
+		$columns = array("label" => "Qlik login", "name" => "qlik_login");
+		$columns = array("label" => "User directory", "name" => "user_directory");
+		$columns = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik");
+		$columns = array("label" => "");
+		$this->form[] = ['label'=>'Utenze Qlik','name'=>'qlik_users','type'=>'child','columns'=>$columns,'table'=>'qlik_users','foreign_key'=>'ordine_id'];
+//QLIK USERS END
+		
+
+# END FORM DO NOT REMOVE THIS LINE
 		$user_id = CRUDBooster::myId();
 		$this->script_js = "
 var row = document.getElementById('idp_qlik').parentNode;
