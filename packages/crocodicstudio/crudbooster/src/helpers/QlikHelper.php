@@ -244,7 +244,7 @@ class QlikHelper
     //$privateKey = CRUDBooster::getSetting('private_key');
     $privateKey = $qlik_conf->private_key;
 
-    $privateKey = env('APP_PATH') . '/' .$privateKey;
+    $privateKey = env('APP_PATH') . '/storage/app/' .$privateKey;
     $privateKey = file_get_contents($privateKey);
 
     if (empty($check_idp)) {
