@@ -273,7 +273,26 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 
 	public function hook_after_edit($id)
 	{
-	dd(Request::all());
+	//dd(Request::all());
+		$qlik_conf_ids = Request::all()['utenzeqlik-qlik_conf_id'];
+		$qlik_logins = Request::all()['utenzeqlik-qlik_login'];
+		$qlik_user_directory = Request::all()['utenzeqlik-user_directory'];
+		$qlik_idp_qlik = Request::all()['utenzeqlik-idp_qlik'];
+
+		$id_user = DB::table('cms_users')->select('id')->where('email',Request::all()['email'] )->first()->id;
+
+
+		foreach($qlik_conf_ids as $k => $v) {
+
+			if (QlikHelper::confIsSAAS($v)) {
+				
+				$idp = QlikHelper::createUser($id_user, $v);
+				Request::all()['utenzeqlik-idp_qlik'][$k] = $idp;
+			}
+		}
+
+		dd(Request::all());
+		
 	}
 
 	public function hook_before_add(&$postdata)

@@ -17,6 +17,20 @@ use Firebase\JWT\JWT;
 class QlikHelper
 {
 
+  public static function getTypeConf($id) {
+
+    return DB::table('qlik_confs')->where('id', $id)->get()->type;
+
+  }
+
+  public static function confIsSAAS($id) {
+
+    return DB::table('qlik_confs')->where('id', $id)->get()->type == 'SAAS';
+
+  }
+
+
+
   /**
    *	Verifica se l'utente corrente è abilitato a vedere un oggetto qlik
    * superadmin può sempre
@@ -278,21 +292,25 @@ class QlikHelper
     return $myToken;
   }
 
-  public static function createUser($id)
+  public static function createUser($id, $conf_id)
   {
 
     $current_user = \App\User::find($id);
 
+/*
     if (!empty($current_user->idp_qlik)) {
       return ['mex' => 'crudbooster.alert_userqlik_exists', 'style' => 'danger'];
     }
+*/
+
+    $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
     $token = QlikHelper::getJWTToken($id);
 
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-      CURLOPT_URL => CRUDBooster::getSetting('url') . '/login/jwt-session',
+      CURLOPT_URL => $qlik_conf->url . '/login/jwt-session',
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
       CURLOPT_MAXREDIRS => 10,
@@ -305,7 +323,7 @@ class QlikHelper
       CURLOPT_COOKIEFILE => __DIR__ . "/cookie.txt",
 
       CURLOPT_HTTPHEADER => array(
-        "qlik-web-integration-id: " . CRUDBooster::getSetting('web_int_id'),
+        "qlik-web-integration-id: " . $qlik_conf->web_int_id,
         "Authorization: Bearer {$token}"
       ),
     ));
@@ -315,7 +333,7 @@ class QlikHelper
     if ($response == "OK") {
 
       curl_setopt_array($curl, array(
-        CURLOPT_URL => CRUDBooster::getSetting('url') . "/api/v1/users/me",
+        CURLOPT_URL => $qlik_conf->url . "/api/v1/users/me",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -324,7 +342,7 @@ class QlikHelper
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'GET',
         CURLOPT_HTTPHEADER => array(
-          "qlik-web-integration-id: " . CRUDBooster::getSetting('web_int_id'),
+          "qlik-web-integration-id: " . $qlik_conf->web_int_id,
           "Authorization: Bearer {$token}"
         ),
       ));
@@ -335,17 +353,19 @@ class QlikHelper
       $response = json_decode($response);
 
       $sub = $response->subject;
-      $current_user = \App\User::find($id);
-
-      $current_user->idp_qlik = $sub;
-
-      $current_user->save();
-      return ['mex' => 'crudbooster.alert_userqlik_created', 'style' => 'success'];
-
-
       curl_close($curl);
+      return $sub;
+      //$current_user = \App\User::find($id);
+
+      //$current_user->idp_qlik = $sub;
+
+      //$current_user->save();
+      //return ['mex' => 'crudbooster.alert_userqlik_created', 'style' => 'success'];
+
+
+      
     }
-    return ['mex' => 'crudbooster.alert_userqlik_error', 'style' => 'danger'];
+    //return ['mex' => 'crudbooster.alert_userqlik_error', 'style' => 'danger'];
   }
 
   public static function randString($length, $charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')
