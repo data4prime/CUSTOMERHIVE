@@ -27,7 +27,7 @@ $name = str_slug($form['label'], '');
                             <div class="panel-body child-form-area">
                                 @foreach($form['columns'] as $col)
                                 <?php 
-dd($form['columns']);
+
 $name_column = $name.$col['name'];
 $col['required'] = isset($col['required']) ? $col['required'] : '';
 $col['datamodal_columns_alias'] = isset($col['datamodal_columns_alias']) ? $col['datamodal_columns_alias'] : '';
