@@ -195,6 +195,7 @@ $this->form[] = ['label'=>'Group members','name'=>'users_groups','type'=>'child'
 # END FORM DO NOT REMOVE THIS LINE
 		$user_id = CRUDBooster::myId();
 		$this->script_js = "
+/*
 var row = document.getElementById('idp_qlik').parentNode;
 row.className = ' col-sm-5';
 
@@ -214,7 +215,7 @@ newColumn.appendChild(newButton);
 
 row.parentNode.insertBefore(newColumn, row.nextSibling);
 
-
+*/
 ";
 
 		$this->addaction = array();
