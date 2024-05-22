@@ -90,7 +90,7 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                         @endphp
                                         <label class="radio-inline">
                                             <input type="radio" name="child-{{$col['name']}}"
-                                                class='{{$required} {{$name_column}}' value="{{$radio_value}}" {{
+                                                class='{{$required}} {{$name_column}}' value="{{$radio_value}}" {{
                                                 $checked }}> {{$radio_label}}
                                         </label>
                                         <?php endforeach;?>
