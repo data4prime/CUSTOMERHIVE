@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::table('qlik_users', function (Blueprint $table) {
             //
-            $table->unsignedBigInteger('qlik_conf_id');
-            $table->foreign('qlik_conf_id')->references('id')->on('qlik_confs');
+            //$table->unsignedBigInteger('qlik_conf_id');
+            //$table->foreign('qlik_conf_id')->references('id')->on('qlik_confs');
         });
     }
 
