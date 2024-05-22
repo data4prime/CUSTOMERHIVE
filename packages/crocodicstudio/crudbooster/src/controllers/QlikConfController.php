@@ -37,16 +37,16 @@ class QlikConfController extends CBController
 		$this->col = [];
 		$this->col[] = ["label" => "Configuration Name", "name" => "confname"];
 		$this->col[] = ["label" => "Type", "name" => "type"];
-        $this->col[] = ["label" => "qrsurl", "name" => "QRS Url"];
-        $this->col[] = ["label" => "Endpoint", "name" => "endpoint"];
-        $this->col[] = ["label" => "QRSCertfile", "name" => "QRSCertfile"];
-        $this->col[] = ["label" => "QRSCertkeyfile", "name" => "QRSCertkeyfile"];
-        $this->col[] = ["label" => "QRSCertkeyfilePassword", "name" => "QRSCertkeyfilePassword"];
-        $this->col[] = ["label" => "url", "name" => "url"];
-        $this->col[] = ["label" => "keyid", "name" => "keyid"];
-        $this->col[] = ["label" => "issuer", "name" => "issuer"];
-        $this->col[] = ["label" => "web_int_id", "name" => "web_int_id"];
-        $this->col[] = ["label" => "private_key", "name" => "private_key"];
+        //$this->col[] = ["label" => "qrsurl", "name" => "QRS Url"];
+        //$this->col[] = ["label" => "Endpoint", "name" => "endpoint"];
+        //$this->col[] = ["label" => "QRSCertfile", "name" => "QRSCertfile"];
+        //$this->col[] = ["label" => "QRSCertkeyfile", "name" => "QRSCertkeyfile"];
+        //$this->col[] = ["label" => "QRSCertkeyfilePassword", "name" => "QRSCertkeyfilePassword"];
+        //$this->col[] = ["label" => "url", "name" => "url"];
+        //$this->col[] = ["label" => "keyid", "name" => "keyid"];
+        //$this->col[] = ["label" => "issuer", "name" => "issuer"];
+        //$this->col[] = ["label" => "web_int_id", "name" => "web_int_id"];
+        //$this->col[] = ["label" => "private_key", "name" => "private_key"];
         $this->col[] = ["label" => "debug", "name" => "debug"];
 
 		# END COLUMNS DO NOT REMOVE THIS LINE
@@ -287,6 +287,7 @@ $(document).ready(function () {
             on_premise.forEach(element => {
 
                 to_hide = document.getElementsByName(element);
+				console.log(to_hide);
 
                 to_hide.forEach(hide => {
                     hide.parentNode.parentNode.style.display = 'none';
