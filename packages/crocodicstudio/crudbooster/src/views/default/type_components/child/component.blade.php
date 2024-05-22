@@ -118,19 +118,19 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                             var url_{{ $name_column }} = "{{CRUDBooster::mainpath('modal-data')}}?table={{$col['datamodal_table']}}&columns=id,{{$col['datamodal_columns']}}&name_column={{$name_column}}&where={{urlencode($col['datamodal_where'])}}&select_to={{ urlencode($col['datamodal_select_to']) }}&columns_name_alias={{urlencode($col['datamodal_columns_alias'])}}&paginate={{urlencode($col['datamodal_paginate'])}}";
                                             var url_is_setted_{{ $name_column }} = false;
 
-                                            function showModal{ { $name_column } } () {
-                                                if (url_is_setted_{ { $name_column } } == false) {
-                                                                    url_is_setted_{ { $name_column } } = true;
+                                            function showModal{{ $name_column }} () {
+                                                if (url_is_setted_{{ $name_column }} == false) {
+                                                                    url_is_setted_{{ $name_column }} = true;
                                                     $('#iframe-modal-{{$name_column}}').attr('src', url_{{ $name_column }});
                                             }
                                             $('#modal-datamodal-{{$name_column}}').modal('show');
                                                             }
 
-                                            function hideModal{ { $name_column } } () {
+                                            function hideModal{{ $name_column }} () {
                                                 $('#modal-datamodal-{{$name_column}}').modal('hide');
                                             }
 
-                                            function selectAdditionalData{ { $name_column } } (select_to_json) {
+                                            function selectAdditionalData{{ $name_column }} (select_to_json) {
                                                 $.each(select_to_json, function (key, val) {
                                                     console.log('#' + key + ' = ' + val);
                                                     if (key == 'datamodal_id') {
@@ -141,7 +141,7 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                                     }
                                                     $('#{{$name}}' + key).val(val).trigger('change');
                                                 })
-                                                                hideModal{ { $name_column } } ();
+                                                                hideModal{{ $name_column }} ();
                                             }
                                         </script>
                                         @endpush
