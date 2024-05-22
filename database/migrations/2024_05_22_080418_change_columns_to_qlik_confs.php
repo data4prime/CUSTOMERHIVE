@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('qlik_confs', function (Blueprint $table) {
+        Schema::create('qlik_confs', function (Blueprint $table) {
             //
 $table->string('confname')->nullable()->change();
         $table->string('type')->nullable()->change();
