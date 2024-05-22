@@ -273,6 +273,7 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 
 	public function hook_after_edit($id)
 	{
+	dd(Request::all());
 	}
 
 	public function hook_before_add(&$postdata)
