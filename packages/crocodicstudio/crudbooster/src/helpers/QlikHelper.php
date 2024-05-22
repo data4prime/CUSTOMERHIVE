@@ -232,7 +232,7 @@ class QlikHelper
 
     $current_user = \App\User::find($id);
 
-    $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->get();
+    $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
     $issuedAt = Carbon::now();
     $issuedA2 = Carbon::now();
