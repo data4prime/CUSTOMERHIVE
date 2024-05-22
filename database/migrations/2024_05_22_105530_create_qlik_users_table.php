@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('qlik_users', function (Blueprint $table) {
+        Schema::create('qlik_users', function (Blueprint $table) {
             //
             $table->string('qlik_login')->nullable();
             $table->string('user_directory')->nullable();
