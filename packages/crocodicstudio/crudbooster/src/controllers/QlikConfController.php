@@ -111,7 +111,9 @@ class QlikConfController extends CBController
 		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'fa fa-user', 'color' => 'info', 'title' => 'Members'];
 		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'fa fa-shield', 'color' => 'warning', 'title' => 'Items'];
 		if (CRUDBooster::isSuperadmin()) {
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Tenants'];
+            $this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseHub'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Qlik Sense Hub'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseQMC'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Qlik Sense QMC'];
+            //$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Tenants'];
 		}
 		/*
         | ----------------------------------------------------------------------

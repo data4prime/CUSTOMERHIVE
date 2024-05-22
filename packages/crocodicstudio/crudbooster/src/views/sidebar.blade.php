@@ -210,7 +210,7 @@
           </ul>-->
         </li>
 
-        <li data-collapse="3" class='treeview'>
+        <!--<li data-collapse="3" class='treeview'>
           <a href='#'>
             <img class="menu qlik_logo" src=/images/qlik_logo.png />
             <span>{{ trans('crudbooster.Qlik_Development_Tools') }}</span> <i class="fa fa-angle-{{ trans("
@@ -230,7 +230,7 @@
               </a>
             </li>
           </ul>
-        </li>
+        </li>-->
 
         <li data-collapse="3" class='treeview'>
           <a href='#'><i class='fa fa-dashboard'></i> <span>{{ trans('crudbooster.Statistic_Builder') }}</span> <i
