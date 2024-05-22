@@ -129,7 +129,7 @@ class QlikHelper
    *
    * @return string qlik ticket
    */
-  public static function getTicket()
+  public static function getTicket($qlik_item_id)
   {
     //get user data
     $current_user_id = CRUDBooster::myId();
@@ -146,18 +146,28 @@ class QlikHelper
       exit;
     }
 
-    $QRSurl = CRUDBooster::getSetting('qrsurl');
+    $conf_id = DB::table('qlik_items')->where('id',$qlik_item_id )->get()->qlik_conf;
+    $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->get();
+
+    $QRSurl = $qlik_conf->qrsurl;
+
+    //$QRSurl = CRUDBooster::getSetting('qrsurl');
 
     $xrfkey = '0123456789abcdef';
-
-    $endpoint = CRUDBooster::getSetting('endpoint') . "/ticket?xrfkey=" . $xrfkey;
+    $endpoint = $qlik_conf->endpoint . "/ticket?xrfkey=" . $xrfkey;
+    //$endpoint = CRUDBooster::getSetting('endpoint') . "/ticket?xrfkey=" . $xrfkey;
 
     //$QRSCertfile = asset(CRUDBooster::getSetting('QRSCertfile'));
     //$QRSCertkeyfile = asset(CRUDBooster::getSetting('QRSCertkeyfile'));
 
-    $QRSCertfile = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertfile');
-    $QRSCertkeyfile = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertkeyfile');
-    $QRSCertkeyfilePassword = CRUDBooster::getSetting('QRSCertkeyfilePassword');
+    //$QRSCertfile = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertfile');
+    $QRSCertfile = env('APP_PATH').'/storage/app/'.$qlik_conf->QRSCertfile;
+
+    $QRSCertkeyfile = env('APP_PATH').'/storage/app/'.$qlik_conf->QRSCertkeyfile;
+
+    //$QRSCertkeyfile = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertkeyfile');
+    $QRSCertkeyfilePassword =$qlik_conf->QRSCertkeyfilePassword;
+    //$QRSCertkeyfilePassword = CRUDBooster::getSetting('QRSCertkeyfilePassword');
 
     $headers = array(
       'Accept: application/json',
@@ -203,10 +213,13 @@ class QlikHelper
     //return isset($response['Ticket']) ? $response['Ticket'] : '';
   }
 
-  public static function getJWTToken($id)
+  public static function getJWTToken($id, $qlik_item_id)
   {
 
     $current_user = \App\User::find($id);
+
+    $conf_id = DB::table('qlik_items')->where('id',$qlik_item_id )->get()->qlik_conf;
+    $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->get();
 
     $issuedAt = Carbon::now();
     $issuedA2 = Carbon::now();
@@ -215,15 +228,17 @@ class QlikHelper
 
     $check_idp = $current_user->idp_qlik;
 
-    $privateKey = CRUDBooster::getSetting('private_key');
-    $privateKey = env() . $privateKey;
+    //$privateKey = CRUDBooster::getSetting('private_key');
+    $privateKey = $qlik_conf->private_key;
+
+    $privateKey = env('APP_PATH') . $privateKey;
     $privateKey = file_get_contents($privateKey);
 
     if (empty($check_idp)) {
       $check_idp = QlikHelper::randString(64);
     }
 
-    $keyid = CRUDBooster::getSetting('keyid');
+    $keyid = $qlik_conf->keyid;
 
 
 
@@ -232,7 +247,7 @@ class QlikHelper
       'alg' => 'RS256',
       'algorithm' => 'RS256',
       'aud' => 'qlik.api/login/jwt-session',
-      'iss' => CRUDBooster::getSetting('issuer'),
+      'iss' => $qlik_conf->issuer,
       'kid' => $keyid,
       'typ' => 'JWT',
       'exp' => '1h'
@@ -248,7 +263,7 @@ class QlikHelper
       'subType' => 'user',
       'jti' => Uuid::uuid4()->toString(),
       'iat'  => $issuedAt->getTimestamp(),
-      'iss' => CRUDBooster::getSetting('issuer'),
+      'iss' => $qlik_conf->issuer,
       'nbf'  => $issuedAt->getTimestamp(),
       'exp'  => $expire,
       'aud' => 'qlik.api/login/jwt-session',
@@ -258,6 +273,7 @@ class QlikHelper
     ];
 
     $myToken = JWT::encode($payload, $privateKey, 'RS256', $keyid, $header);
+    file_put_contents(__DIR__."/log.txt", $myToken."\n", FILE_APPEND);
 
     return $myToken;
   }

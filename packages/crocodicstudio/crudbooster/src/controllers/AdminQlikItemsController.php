@@ -57,7 +57,7 @@ class AdminQlikItemsController extends CBController
 		$this->form[] = ['label' => 'Subtitle', 'name' => 'subtitle', 'type' => 'text', 'validation' => 'string|min:1|max:70', 'width' => 'col-sm-10', 'placeholder' => 'Item subtitle'];
 		$this->form[] = ['label' => 'Help', 'name' => 'description', 'type' => 'textarea', 'validation' => 'string|min:1|max:200', 'width' => 'col-sm-10', 'placeholder' => 'Item description'];
 		$this->form[] = ['label' => 'Enable public access', 'name' => 'public_access', 'type' => 'checkbox', 'width' => 'col-sm-1'];
-		$this->form[] = ['label' => 'Qlik Configuration', 'name' => 'qlik_conf', "type" => "select", "datatable" => "qlik_confs,confname", 'width' => 'col-sm-1'];
+		$this->form[] = ['label' => 'Qlik Configuration', 'name' => 'qlik_conf', "type" => "select", "datatable" => "qlik_confs,confname", 'width' => 'col-sm-10'];
 		# END FORM DO NOT REMOVE THIS LINE
 
 		# OLD START FORM
@@ -470,7 +470,7 @@ class AdminQlikItemsController extends CBController
 		if ($type == 'On-Premise') {
 
 			//get qlik ticket
-			$qlik_ticket = QlikHelper::getTicket();
+			$qlik_ticket = QlikHelper::getTicket($qlik_item_id);
 
 
 			if (empty($qlik_ticket)) {
@@ -489,7 +489,7 @@ class AdminQlikItemsController extends CBController
 				$this->cbView('qlik_items.view', $data);
 			}
 		} else if ($type == 'SAAS') {
-			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId());
+			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $qlik_item_id);
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
 				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
