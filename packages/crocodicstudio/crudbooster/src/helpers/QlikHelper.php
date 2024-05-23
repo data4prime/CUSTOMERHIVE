@@ -286,7 +286,7 @@ class QlikHelper
     ];
 
     $myToken = JWT::encode($payload, $privateKey, 'RS256', $keyid, $header);
-    file_put_contents(__DIR__."/log.txt", $myToken."\n", FILE_APPEND);
+    //file_put_contents(__DIR__."/log.txt", $myToken."\n", FILE_APPEND);
 
     return $myToken;
   }
@@ -306,7 +306,7 @@ class QlikHelper
 
     $token = QlikHelper::getJWTToken($id, $conf_id);
 
-    file_put_contents(__DIR__."/log.txt", $token."\n\n", FILE_APPEND);
+    //file_put_contents(__DIR__."/log.txt", $token."\n\n", FILE_APPEND);
 
     $curl = curl_init();
 
@@ -353,11 +353,11 @@ class QlikHelper
 
       $response = json_decode($response);
 
-      file_put_contents(__DIR__."/log.txt", json_encode($response)."\n\n", FILE_APPEND);
+      //file_put_contents(__DIR__."/log.txt", json_encode($response)."\n\n", FILE_APPEND);
 
       $sub = $response->subject;
 
-      file_put_contents(__DIR__."/log.txt", $sub."\n\n", FILE_APPEND);
+      //file_put_contents(__DIR__."/log.txt", $sub."\n\n", FILE_APPEND);
       curl_close($curl);
       return $sub;
       //$current_user = \App\User::find($id);
