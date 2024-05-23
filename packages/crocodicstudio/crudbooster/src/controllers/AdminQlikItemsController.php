@@ -748,11 +748,10 @@ class AdminQlikItemsController extends CBController
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
-		//get qlik ticket
-		$qlik_ticket = QlikHelper::getTicket($qlik_item);
+
 
 		$data = [];
-
+$conf = QlikHelper::getConfFromItem($qlik_item);
 
 	$view = 'qlik_items.view';
 $data = [];
