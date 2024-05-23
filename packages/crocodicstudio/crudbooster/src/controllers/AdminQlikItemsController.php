@@ -465,7 +465,7 @@ class AdminQlikItemsController extends CBController
 		$data['page_title'] = $data['row']->title;
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
-		$data['debug'] = CRUDBooster::getSetting('debug');
+		$data['debug'] = $conf->debug;
 
 
 		if ($type == 'On-Premise') {
@@ -796,6 +796,18 @@ class AdminQlikItemsController extends CBController
 		$view = 'qlik_items.view';
 
 		if (QlikHelper::confIsSAAS($conf->id)) {
+
+			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+			if (empty($token)) {
+				$data['error'] = 'JWT Token generation failed!';
+				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+			}
+			$data['token'] = $token;
+			$data['item_url'] = $data['row']->url;
+
+			$data['tenant'] = $conf->url;
+			$data['web_int_id'] = $conf->web_int_id;
+
 			$view = 'qlik_items.view_saas';
 
 		} else {
@@ -809,9 +821,6 @@ class AdminQlikItemsController extends CBController
 		//dd($qlik_ticket);
 
 		$data = [];
-
-		
-		
 
 		$row = new \stdClass;
 		$row->frame_width = '100%';
