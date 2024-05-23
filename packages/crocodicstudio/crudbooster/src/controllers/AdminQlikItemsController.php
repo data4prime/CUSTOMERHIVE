@@ -740,7 +740,7 @@ class AdminQlikItemsController extends CBController
 		return view('qlik_items.form', compact('row', 'page_menu', 'page_title', 'command', 'id'));
 	}
 
-	public function GetRouteSenseHub()
+	public function GetRouteSenseHub($qlik_item)
 	{
 		$this->cbLoader();
 		if (!CRUDBooster::isSuperadmin()) {
@@ -749,7 +749,7 @@ class AdminQlikItemsController extends CBController
 		}
 
 		//get qlik ticket
-		$qlik_ticket = QlikHelper::getTicket();
+		$qlik_ticket = QlikHelper::getTicket($qlik_item);
 
 		$data = [];
 
@@ -778,7 +778,7 @@ class AdminQlikItemsController extends CBController
 		$this->cbView('qlik_items.view', $data);
 	}
 
-	public function GetRouteSenseQMC()
+	public function GetRouteSenseQMC($qlik_item)
 	{
 		$this->cbLoader();
 		if (!CRUDBooster::isSuperadmin()) {
@@ -787,7 +787,7 @@ class AdminQlikItemsController extends CBController
 		}
 
 		//get qlik ticket
-		$qlik_ticket = QlikHelper::getTicket();
+		$qlik_ticket = QlikHelper::getTicket($qlik_item);
 		//dd($qlik_ticket);
 
 		$data = [];
