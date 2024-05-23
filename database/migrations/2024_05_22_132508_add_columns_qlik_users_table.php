@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::table('qlik_users', function (Blueprint $table) {
             //
             $table->id();
-            $table->unsignedBigInteger('qlik_conf_id')->change();
+            $table->unsignedBigInteger('qlik_conf_id')->nullable();
             $table->timestamps();
         });
     }
