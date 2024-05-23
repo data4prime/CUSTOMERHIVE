@@ -836,6 +836,7 @@ class AdminQlikItemsController extends CBController
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] = $data['row']->url;
+		$data['debug'] = $conf->debug;
 
 		$this->cbView($view, $data);
 	}
