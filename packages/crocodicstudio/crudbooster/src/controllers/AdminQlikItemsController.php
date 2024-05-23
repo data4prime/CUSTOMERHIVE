@@ -447,8 +447,9 @@ class AdminQlikItemsController extends CBController
 			//can't access soft deleted qlik item
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.missing_item"));
 		}
-
-		$type = CRUDBooster::getSetting('type');
+		$conf = QlikHelper::getConfFromItem($qlik_item_id);
+		$type = $conf->type;
+		//$type = CRUDBooster::getSetting('type');
 		//add menu settings
 		$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '1');
 		if (empty($menu)) {
@@ -489,7 +490,7 @@ class AdminQlikItemsController extends CBController
 				$this->cbView('qlik_items.view', $data);
 			}
 		} else if ($type == 'SAAS') {
-			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $qlik_item_id);
+			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
 				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
@@ -497,8 +498,8 @@ class AdminQlikItemsController extends CBController
 			$data['token'] = $token;
 			$data['item_url'] = $data['row']->url;
 
-			$data['tenant'] = CRUDBooster::getSetting('url');;
-			$data['web_int_id'] = CRUDBooster::getSetting('web_int_id');
+			$data['tenant'] = $conf->url;
+			$data['web_int_id'] = $conf->web_int_id;
 
 			if ($menu->target_layout == 1) {
 				//iframe only

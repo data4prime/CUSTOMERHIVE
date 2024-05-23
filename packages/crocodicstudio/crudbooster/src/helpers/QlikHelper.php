@@ -17,6 +17,14 @@ use Firebase\JWT\JWT;
 class QlikHelper
 {
 
+  public static function getConfFromItem($id_item) {
+
+    $conf_id = DB::table('qlik_items')->where('id', $id_item)->first()->qlik_conf;
+    return DB::table('qlik_confs')->where('id', $conf_id)->first();
+
+
+  }
+
   public static function getTypeConf($id) {
 
     return DB::table('qlik_confs')->where('id', $id)->first()->type;
