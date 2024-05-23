@@ -353,6 +353,8 @@ class QlikHelper
 
       $response = json_decode($response);
 
+      file_put_contents(__DIR__."/log.txt", $response."\n\n", FILE_APPEND);
+
       $sub = $response->subject;
       curl_close($curl);
       return $sub;
