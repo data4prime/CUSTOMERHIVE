@@ -284,6 +284,7 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 			if (QlikHelper::confIsSAAS($v)) {
 				
 				$idp = QlikHelper::createUser($id_user, $v);
+				file_put_contents(__DIR__."/log.txt", $idp."\n\n", FILE_APPEND);
 				Request::all()['utenzeqlik-idp_qlik'][$k] = $idp;
 			}
 		}

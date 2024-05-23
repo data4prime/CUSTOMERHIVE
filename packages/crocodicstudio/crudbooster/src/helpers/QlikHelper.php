@@ -356,6 +356,8 @@ class QlikHelper
       file_put_contents(__DIR__."/log.txt", json_encode($response)."\n\n", FILE_APPEND);
 
       $sub = $response->subject;
+
+      file_put_contents(__DIR__."/log.txt", $sub."\n\n", FILE_APPEND);
       curl_close($curl);
       return $sub;
       //$current_user = \App\User::find($id);
