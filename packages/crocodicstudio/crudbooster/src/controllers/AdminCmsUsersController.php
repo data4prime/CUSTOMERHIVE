@@ -269,10 +269,7 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 			//rimuovi vecchio primary group dai gruppi di appartenenza
 			GroupHelper::remove($old_primary_group_id, $user_id);
 		}
-	}
 
-	public function hook_after_edit($id)
-	{
 	//dd(Request::all());
 		$qlik_conf_ids = Request::all()['utenzeqlik-qlik_conf_id'];
 		$qlik_logins = Request::all()['utenzeqlik-qlik_login'];
@@ -292,6 +289,11 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 		}
 
 		dd(Request::all());
+	}
+
+	public function hook_after_edit($id)
+	{
+
 		
 	}
 

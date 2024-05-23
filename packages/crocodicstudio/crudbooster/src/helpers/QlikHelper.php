@@ -306,6 +306,8 @@ class QlikHelper
 
     $token = QlikHelper::getJWTToken($id, $conf_id);
 
+    file_put_contents(__DIR__."/log.txt", $token."\n\n", FILE_APPEND);
+
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
