@@ -47,7 +47,7 @@
     <div class="public-wrapper">
       <section class="content-header">
         <div class="qi_iframe_container">
-          <!--<iframe class="qi_iframe" src="{{ $url }}"  ></iframe>-->
+          <iframe class="qi_iframe" src="{{ $url }}"  ></iframe>
         </div>
       </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
