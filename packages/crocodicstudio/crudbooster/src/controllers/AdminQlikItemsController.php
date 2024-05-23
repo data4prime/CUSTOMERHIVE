@@ -803,7 +803,7 @@ class AdminQlikItemsController extends CBController
 				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
 			}
 			$data['token'] = $token;
-			$data['item_url'] = $data['row']->url;
+			$data['item_url'] = $conf->url;
 
 			$data['tenant'] = $conf->url;
 			$data['web_int_id'] = $conf->web_int_id;
