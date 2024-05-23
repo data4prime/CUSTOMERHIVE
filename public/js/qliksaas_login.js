@@ -95,7 +95,7 @@ async function getQCSHeaders() {
 //    HELPER FUNCTION TO GENERATE IFRAME
 
 function renderSingleIframe() {
-    var url = "{{ $item_url }}";
+    //var url = "{{ $item_url }}";
     console.log(url);
     document.querySelector('.qi_iframe').src = url;
     //document.getElementById('qlik_frame').src = url;

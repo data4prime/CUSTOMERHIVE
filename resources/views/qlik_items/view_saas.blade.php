@@ -23,7 +23,7 @@ $debug_url = $item_url;
 
   <div class="qi_iframe_container">
     <a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a>
-    <iframe class="qi_iframe" src=""  style="border:none;"></iframe>
+    <iframe class="qi_iframe" src="{{$item_url}}"  style="border:none;"></iframe>
   </div>
 </div>
 @endsection
