@@ -786,18 +786,32 @@ class AdminQlikItemsController extends CBController
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
-		//get qlik ticket
-		$qlik_ticket = QlikHelper::getTicket($qlik_item);
-		//dd($qlik_ticket);
-
-		$data = [];
+		$conf = QlikHelper::getConfFromItem($qlik_item);
 
 		$url = config('app.qlik_sense_app_base_path');
 		$url .= ':' . config('app.qlik_sense_main_port');
 		$url .= config('app.qlik_sense_virtual_proxy');
 		$url .= '/qmc';
-		$url .= '?';
-		$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
+		
+		$view = 'qlik_items.view';
+
+		if (QlikHelper::confIsSAAS($conf->id)) {
+			$view = 'qlik_items.view_saas';
+
+		} else {
+			//get qlik ticket
+			$qlik_ticket = QlikHelper::getTicket($qlik_item);
+			$url .= '?';
+			$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
+		}
+
+		
+		//dd($qlik_ticket);
+
+		$data = [];
+
+		
+		
 
 		$row = new \stdClass;
 		$row->frame_width = '100%';
@@ -814,6 +828,6 @@ class AdminQlikItemsController extends CBController
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] = $data['row']->url;
 
-		$this->cbView('qlik_items.view', $data);
+		$this->cbView($view, $data);
 	}
 }
