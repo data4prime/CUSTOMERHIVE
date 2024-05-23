@@ -165,7 +165,7 @@ class QlikHelper
     //dd(DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->toSql());
 
 
-    $qlik_user = DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->first();
+    $qlik_user = DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->get();
     dd($qlik_user);
 
     //UserId
