@@ -753,12 +753,40 @@ class AdminQlikItemsController extends CBController
 
 		$data = [];
 
-		$url = config('app.qlik_sense_app_base_path');
+
+	$view = 'qlik_items.view';
+$data = [];
+		if (QlikHelper::confIsSAAS($conf->id)) {
+			
+		$url = $conf->url;
 		$url .= ':' . config('app.qlik_sense_main_port');
 		$url .= config('app.qlik_sense_virtual_proxy');
-		$url .= '/hub';
-		$url .= '/?';
-		$url .= 'qlikTicket=' . $qlik_ticket;
+		$url .= '/qmc';
+		
+
+			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+			if (empty($token)) {
+				$data['error'] = 'JWT Token generation failed!';
+				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+			}
+			$data['token'] = $token;
+			$data['item_url'] = $conf->url;
+
+			$data['tenant'] = $conf->url;
+			$data['web_int_id'] = $conf->web_int_id;
+
+			$view = 'qlik_items.view_saas';
+
+		} else {
+		$url = $conf->qrsurl;
+		$url .= ':' . config('app.qlik_sense_main_port');
+		$url .= config('app.qlik_sense_virtual_proxy');
+		$url .= '/qmc';
+			//get qlik ticket
+			$qlik_ticket = QlikHelper::getTicket($qlik_item);
+			$url .= '?';
+			$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
+		}
 
 		$row = new \stdClass;
 		$row->frame_width = '100%';
@@ -774,6 +802,7 @@ class AdminQlikItemsController extends CBController
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] = $data['row']->url;
+$data['debug'] = $conf->debug;
 
 		$this->cbView('qlik_items.view', $data);
 	}
