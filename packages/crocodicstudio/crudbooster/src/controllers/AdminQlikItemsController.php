@@ -801,7 +801,7 @@ $data = [];
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] = $data['row']->url;
-$data['debug'] = $data['item_url'];
+$data['debug'] = $conf->debug;
 
 		$this->cbView('qlik_items.view', $data);
 	}
@@ -871,7 +871,7 @@ $data = [];
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] = $data['row']->url;
-		$data['debug'] = $data['item_url'];
+		$data['debug'] = $conf->debug;
 
 		$this->cbView($view, $data);
 	}
