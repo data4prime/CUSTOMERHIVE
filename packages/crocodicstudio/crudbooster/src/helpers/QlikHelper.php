@@ -157,10 +157,15 @@ class QlikHelper
     $current_user_id = CRUDBooster::myId();
     $current_user = \App\User::find($current_user_id);
 
+    $conf_id = DB::table('qlik_items')->where('id',$qlik_item_id )->first()->qlik_conf;
+    $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
+
+    $qlik_user = DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->first();
+
     //UserId
-    $qlik_login = $current_user->qlik_login;
+    $qlik_login = $qlik_user->qlik_login;
     //User Directory
-    $user_directory = $current_user->user_directory;
+    $user_directory = $qlik_user->user_directory;
 
     if (empty($qlik_login) or empty($user_directory)) {
       $data['error'] = 'User credentials missing. Ask an admin to set your qlik id and user directory';
@@ -168,8 +173,6 @@ class QlikHelper
       exit;
     }
 
-    $conf_id = DB::table('qlik_items')->where('id',$qlik_item_id )->get()->qlik_conf;
-    $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->get();
 
     $QRSurl = $qlik_conf->qrsurl;
 
