@@ -758,7 +758,7 @@ $data = [];
 		if (QlikHelper::confIsSAAS($conf->id)) {
 			
 		$url = $conf->url;
-		$url .= ':' . config('app.qlik_sense_main_port');
+		$url .= ':' . !empty($conf->port) ? $conf->port : '443';
 		$url .= $conf->endpoint;
 		$url .= '/qmc';
 		
@@ -778,7 +778,7 @@ $data = [];
 
 		} else {
 		$url = $conf->qrsurl;
-		$url .= ':' . config('app.qlik_sense_main_port');
+		$url .= ':' . !empty($conf->port) ? $conf->port : '443';
 		$url .= $conf->endpoint;
 		$url .= '/qmc';
 			//get qlik ticket
@@ -823,8 +823,8 @@ $data = [];
 		if (QlikHelper::confIsSAAS($conf->id)) {
 			
 		$url = $conf->url;
-		$url .= ':' . config('app.qlik_sense_main_port');
-		$url .= config('app.qlik_sense_virtual_proxy');
+		$url .= ':' . !empty($conf->port) ? $conf->port : '443';
+		$url .= $conf->endpoint;
 		$url .= '/qmc';
 		
 
@@ -843,8 +843,8 @@ $data = [];
 
 		} else {
 		$url = $conf->qrsurl;
-		$url .= ':' . config('app.qlik_sense_main_port');
-		$url .= config('app.qlik_sense_virtual_proxy');
+		$url .= ':' . !empty($conf->port) ? $conf->port : '443';
+		$url .= $conf->endpoint;
 		$url .= '/qmc';
 			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);

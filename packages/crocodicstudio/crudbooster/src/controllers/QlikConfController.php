@@ -59,6 +59,8 @@ class QlikConfController extends CBController
         $this->form[] = ['label' => 'QRS Url', 'name' => 'qrsurl', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRS Url'];
         $this->form[] = ['label' => 'URL', 'name' => 'url', 'type' => 'text', 'validation' => 'required|url', 'width' => 'col-sm-10', 'placeholder' => 'Enter URL'];
 
+        $this->form[] = ['label' => 'Port', 'name' => 'port', 'type' => 'text',  'width' => 'col-sm-10', 'placeholder' => 'Port'];
+
         $this->form[] = ['label' => 'Endpoint', 'name' => 'endpoint', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Endpoint'];
         $this->form[] = ['label' => 'QRSCertfile', 'name' => 'QRSCertfile', 'type' => 'upload', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertfile'];
         $this->form[] = ['label' => 'QRSCertkeyfile', 'name' => 'QRSCertkeyfile', 'type' => 'upload', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertkeyfile'];
