@@ -285,7 +285,8 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 				
 				$idp = QlikHelper::createUser($id_user, $v);
 				file_put_contents(__DIR__."/log.txt", $idp."\n\n", FILE_APPEND);
-				Request::all()['utenzeqlik-idp_qlik'][$k] = $idp;
+				Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
+				//Request::all()['utenzeqlik-idp_qlik'][$k] = $idp;
 			}
 		}
 
