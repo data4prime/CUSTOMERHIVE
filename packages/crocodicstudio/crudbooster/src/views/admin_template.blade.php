@@ -103,7 +103,7 @@
         @include('crudbooster::header')
 
         <!-- Sidebar -->
-        <!-- @include('crudbooster::sidebar')-->
+        @include('crudbooster::sidebar')
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
