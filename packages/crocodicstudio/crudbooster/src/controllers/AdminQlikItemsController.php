@@ -788,14 +788,17 @@ class AdminQlikItemsController extends CBController
 
 		$conf = QlikHelper::getConfFromItem($qlik_item);
 
-		$url = config('app.qlik_sense_app_base_path');
-		$url .= ':' . config('app.qlik_sense_main_port');
-		$url .= config('app.qlik_sense_virtual_proxy');
-		$url .= '/qmc';
+
 		
 		$view = 'qlik_items.view';
 $data = [];
 		if (QlikHelper::confIsSAAS($conf->id)) {
+			
+		$url = $conf->url;
+		$url .= ':' . config('app.qlik_sense_main_port');
+		$url .= config('app.qlik_sense_virtual_proxy');
+		$url .= '/qmc';
+		
 
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 			if (empty($token)) {
@@ -811,6 +814,10 @@ $data = [];
 			$view = 'qlik_items.view_saas';
 
 		} else {
+		$url = $conf->qrsurl;
+		$url .= ':' . config('app.qlik_sense_main_port');
+		$url .= config('app.qlik_sense_virtual_proxy');
+		$url .= '/qmc';
 			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
