@@ -794,7 +794,7 @@ class AdminQlikItemsController extends CBController
 		$url .= '/qmc';
 		
 		$view = 'qlik_items.view';
-
+$data = [];
 		if (QlikHelper::confIsSAAS($conf->id)) {
 
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
@@ -820,7 +820,7 @@ class AdminQlikItemsController extends CBController
 		
 		//dd($qlik_ticket);
 
-		$data = [];
+		
 
 		$row = new \stdClass;
 		$row->frame_width = '100%';
