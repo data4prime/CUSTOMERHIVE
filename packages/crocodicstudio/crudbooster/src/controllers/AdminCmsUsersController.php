@@ -277,7 +277,7 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 		$qlik_idp_qlik = Request::all()['utenzeqlik-idp_qlik'];
 
 		$id_user = DB::table('cms_users')->select('id')->where('email',Request::all()['email'] )->first()->id;
-
+		$updated_idp_qlik = $qlik_idp_qlik;
 
 		foreach($qlik_conf_ids as $k => $v) {
 
@@ -285,10 +285,12 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 				
 				$idp = QlikHelper::createUser($id_user, $v);
 				file_put_contents(__DIR__."/log.txt", $idp."\n\n", FILE_APPEND);
-				Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
+ 				$updated_idp_qlik[$k] = $idp;
+				//Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
 				//Request::all()['utenzeqlik-idp_qlik'][$k] = $idp;
 			}
 		}
+		Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
 
 		dd(Request::all());
 	}
