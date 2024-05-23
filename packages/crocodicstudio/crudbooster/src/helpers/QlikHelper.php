@@ -160,7 +160,10 @@ class QlikHelper
     $conf_id = DB::table('qlik_items')->where('id',$qlik_item_id )->first()->qlik_conf;
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
-    dd($current_user_id);
+    //dd($current_user_id);
+
+    dd(DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->toSql());
+
 
     $qlik_user = DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->first();
     dd($qlik_user);
