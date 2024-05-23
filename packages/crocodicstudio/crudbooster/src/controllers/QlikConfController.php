@@ -57,15 +57,18 @@ class QlikConfController extends CBController
 		$this->form[] = ['label' => 'Configuration Name', 'name' => 'confname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Configuration Name'];
         $this->form[] = ['label' => 'Type', 'name' => 'type', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'On-Premise;SAAS'];
         $this->form[] = ['label' => 'QRS Url', 'name' => 'qrsurl', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRS Url'];
+        $this->form[] = ['label' => 'URL', 'name' => 'url', 'type' => 'text', 'validation' => 'required|url', 'width' => 'col-sm-10', 'placeholder' => 'Enter URL'];
+
         $this->form[] = ['label' => 'Endpoint', 'name' => 'endpoint', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Endpoint'];
         $this->form[] = ['label' => 'QRSCertfile', 'name' => 'QRSCertfile', 'type' => 'upload', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertfile'];
         $this->form[] = ['label' => 'QRSCertkeyfile', 'name' => 'QRSCertkeyfile', 'type' => 'upload', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertkeyfile'];
         $this->form[] = ['label' => 'QRSCertkeyfilePassword', 'name' => 'QRSCertkeyfilePassword', 'type' => 'password', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertkeyfilePassword'];
-        $this->form[] = ['label' => 'URL', 'name' => 'url', 'type' => 'text', 'validation' => 'required|url', 'width' => 'col-sm-10', 'placeholder' => 'Enter URL'];
+
         $this->form[] = ['label' => 'Key ID', 'name' => 'keyid', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Key ID'];
         $this->form[] = ['label' => 'Issuer', 'name' => 'issuer', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Issuer'];
         $this->form[] = ['label' => 'Web Int ID', 'name' => 'web_int_id', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Web Int ID'];
         $this->form[] = ['label' => 'Private Key', 'name' => 'private_key', 'type' => 'upload', 'width' => 'col-sm-10', 'placeholder' => 'Enter Private Key'];
+
         $this->form[] = ['label' => 'Debug', 'name' => 'debug', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'Inactive;Active'];
 
 
