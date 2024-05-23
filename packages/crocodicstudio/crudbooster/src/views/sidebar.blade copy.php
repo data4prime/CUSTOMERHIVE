@@ -194,7 +194,20 @@
             <span>{{ trans('crudbooster.Qlik_Configuration') }}</span> <i class="fa fa-angle-{{ trans("
               crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
           </a>
-
+          <!--<ul class='treeview-menu'>
+            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items/add')) ? 'active' : '' }}">
+              <a href='{{Route("QlikServerSenseHub")}}'>
+                <i class='fa fa-dashboard'></i>
+                <span>{{ trans('crudbooster.Qlik_Sense_Hub') }}</span>
+              </a>
+            </li>
+            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items')) ? 'active' : '' }}">
+              <a href='{{Route("QlikServerSenseQMC")}}'>
+                <i class='fa fa-cog'></i>
+                <span>{{ trans('crudbooster.Qlik_Sense_QMC') }}</span>
+              </a>
+            </li>
+          </ul>-->
         </li>
 
         <!--<li data-collapse="3" class='treeview'>
