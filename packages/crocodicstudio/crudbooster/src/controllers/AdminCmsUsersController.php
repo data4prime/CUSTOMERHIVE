@@ -288,9 +288,10 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
  				$updated_idp_qlik[$k] = $idp;
 				//Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
 				//Request::all()['utenzeqlik-idp_qlik'][$k] = $idp;
+				Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
 			}
 		}
-		Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
+		
 
 		//dd(Request::all());
 	}
