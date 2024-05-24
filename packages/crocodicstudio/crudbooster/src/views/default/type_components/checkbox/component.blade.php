@@ -1,3 +1,6 @@
+@php 
+dd($form);
+@endphp 
 <div class='form-group {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' 
 id='form-group-{{$name}}' style="{!! @$form['style'] !!}">
   <label class='control-label col-sm-2'>{{$form['label']}}
