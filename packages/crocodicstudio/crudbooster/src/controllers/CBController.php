@@ -1374,9 +1374,9 @@ class CBController extends Controller
                         if (!empty($colvalue)) 
                         { 
                             $column_data[$colname] = $colvalue; 
-                        } else { 
+                        } /*else { 
                             $column_data[$colname] = null; 
-                        }
+                        }*/
                     }
                     if (!empty($column_data)) {
                         $column_data[$fk] = $id;
@@ -1561,7 +1561,11 @@ class CBController extends Controller
                     foreach ($columns as $col) {
                         $colname = $col['name'];
                         $colvalue = Request::get($name . '-' . $colname)[$i];
-                        if (!empty($colvalue)) $column_data[$colname] = $colvalue;
+                        if (!empty($colvalue)) { 
+                            $column_data[$colname] = $colvalue;
+                        } else {
+                            $column_data[$colname] = null;
+                        }
                     }
                     if (!empty($column_data)) {
                         $column_data[$childtablePK] = $lastId;
