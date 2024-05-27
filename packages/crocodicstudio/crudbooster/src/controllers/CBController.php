@@ -1560,7 +1560,7 @@ class CBController extends Controller
                     $column_data = [];
                     foreach ($columns as $col) {
                         $colname = $col['name'];
-                        $colvalue = Request::get($name . '-' . $colname)[$i];
+                        $colvalue = isset(Request::get($name . '-' . $colname)[$i]) ? Request::get($name . '-' . $colname)[$i] : null;
                         if (!empty($colvalue)) { 
                             $column_data[$colname] = $colvalue;
                         } else {
