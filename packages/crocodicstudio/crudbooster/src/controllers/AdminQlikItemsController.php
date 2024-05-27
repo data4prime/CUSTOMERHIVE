@@ -451,7 +451,7 @@ class AdminQlikItemsController extends CBController
 		$type = $conf->type;
 		//$type = CRUDBooster::getSetting('type');
 		//add menu settings
-		$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '1');
+		$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '89');
 		if (empty($menu)) {
 			$data['row']->frame_width = '100%';
 			$data['row']->frame_height = '100%';
@@ -751,16 +751,19 @@ class AdminQlikItemsController extends CBController
 
 
 		$data = [];
-$conf = QlikHelper::getConfFromItem($qlik_item);
+		//dd($qlik_item);
+$conf = DB::table('qlik_confs')->where('id', $qlik_item)->first();
 
 	$view = 'qlik_items.view';
 $data = [];
 		if (QlikHelper::confIsSAAS($conf->id)) {
 			
 		$url = $conf->url;
-		$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-		$url .= $conf->endpoint;
-		$url .= '/qmc';
+		//$url .= ':443'
+		//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+		//$url .= $conf->endpoint;
+		$url .= '/chive';
+		$url .= '/hub/';
 		
 
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
@@ -778,9 +781,11 @@ $data = [];
 
 		} else {
 		$url = $conf->qrsurl;
-		$url .=  !empty($conf->port) ? ':' .$conf->port :':' . '443';
-		$url .= $conf->endpoint;
-		$url .= '/qmc';
+		//$url .= ':443'
+		//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+		//$url .= $conf->endpoint;
+		$url .= '/chive';
+		$url .= '/hub/';
 			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
@@ -814,7 +819,7 @@ $data['debug'] = $conf->debug;
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
-		$conf = QlikHelper::getConfFromItem($qlik_item);
+		$conf = DB::table('qlik_confs')->where('id', $qlik_item)->first();
 
 
 		
@@ -823,9 +828,11 @@ $data = [];
 		if (QlikHelper::confIsSAAS($conf->id)) {
 			
 		$url = $conf->url;
-		$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-		$url .= $conf->endpoint;
-		$url .= '/qmc';
+		//$url .= ':443'
+		//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+		//$url .= $conf->endpoint;
+		$url .= '/chive';
+		$url .= '/qmc/';
 		
 
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
@@ -843,9 +850,11 @@ $data = [];
 
 		} else {
 		$url = $conf->qrsurl;
-		$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-		$url .= $conf->endpoint;
-		$url .= '/qmc';
+		//$url .= ':443'
+		//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+		//$url .= $conf->endpoint;
+		$url .= '/chive';
+		$url .= '/qmc/';
 			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
