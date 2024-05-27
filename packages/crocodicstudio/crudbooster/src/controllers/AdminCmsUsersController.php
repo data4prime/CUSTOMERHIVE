@@ -270,7 +270,7 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 			GroupHelper::remove($old_primary_group_id, $user_id);
 		}
 
-		
+		if (isset(Request::all()['utenzeqlik-qlik_conf_id'])) {
 		$qlik_conf_ids = Request::all()['utenzeqlik-qlik_conf_id'];
 		$qlik_logins = Request::all()['utenzeqlik-qlik_login'];
 		$qlik_user_directory = Request::all()['utenzeqlik-user_directory'];
@@ -291,6 +291,10 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 				Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
 			}
 		}
+		}
+
+		
+
 
 		//dd(Request::all());
 		
