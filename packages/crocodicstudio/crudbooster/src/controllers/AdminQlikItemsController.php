@@ -46,6 +46,7 @@ class AdminQlikItemsController extends CBController
 		$this->col[] = ["label" => "Subtitle", "name" => "subtitle"];
 		$this->col[] = ["label" => "Help", "name" => "description"];
 		$this->col[] = ["label" => "Public", "name" => "proxy_token"];
+		$this->col[] = ["label" => "Qlik Conf", "name" => "qlik_conf"];
 		// $this->col[] = ["label"=>"Url","name"=>"url"];
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
@@ -56,6 +57,7 @@ class AdminQlikItemsController extends CBController
 		$this->form[] = ['label' => 'Subtitle', 'name' => 'subtitle', 'type' => 'text', 'validation' => 'string|min:1|max:70', 'width' => 'col-sm-10', 'placeholder' => 'Item subtitle'];
 		$this->form[] = ['label' => 'Help', 'name' => 'description', 'type' => 'textarea', 'validation' => 'string|min:1|max:200', 'width' => 'col-sm-10', 'placeholder' => 'Item description'];
 		$this->form[] = ['label' => 'Enable public access', 'name' => 'public_access', 'type' => 'checkbox', 'width' => 'col-sm-1'];
+		$this->form[] = ['label' => 'Qlik Configuration', 'name' => 'qlik_conf', "type" => "select", "datatable" => "qlik_confs,confname", 'width' => 'col-sm-10'];
 		# END FORM DO NOT REMOVE THIS LINE
 
 		# OLD START FORM
@@ -445,8 +447,9 @@ class AdminQlikItemsController extends CBController
 			//can't access soft deleted qlik item
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.missing_item"));
 		}
-
-		$type = CRUDBooster::getSetting('type');
+		$conf = QlikHelper::getConfFromItem($qlik_item_id);
+		$type = $conf->type;
+		//$type = CRUDBooster::getSetting('type');
 		//add menu settings
 		$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '1');
 		if (empty($menu)) {
@@ -462,13 +465,13 @@ class AdminQlikItemsController extends CBController
 		$data['page_title'] = $data['row']->title;
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
-		$data['debug'] = CRUDBooster::getSetting('debug');
+		$data['debug'] = $conf->debug;
 
 
 		if ($type == 'On-Premise') {
 
 			//get qlik ticket
-			$qlik_ticket = QlikHelper::getTicket();
+			$qlik_ticket = QlikHelper::getTicket($qlik_item_id);
 
 
 			if (empty($qlik_ticket)) {
@@ -487,7 +490,7 @@ class AdminQlikItemsController extends CBController
 				$this->cbView('qlik_items.view', $data);
 			}
 		} else if ($type == 'SAAS') {
-			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId());
+			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
 				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
@@ -495,8 +498,8 @@ class AdminQlikItemsController extends CBController
 			$data['token'] = $token;
 			$data['item_url'] = $data['row']->url;
 
-			$data['tenant'] = CRUDBooster::getSetting('url');;
-			$data['web_int_id'] = CRUDBooster::getSetting('web_int_id');
+			$data['tenant'] = $conf->url;
+			$data['web_int_id'] = $conf->web_int_id;
 
 			if ($menu->target_layout == 1) {
 				//iframe only
@@ -737,7 +740,7 @@ class AdminQlikItemsController extends CBController
 		return view('qlik_items.form', compact('row', 'page_menu', 'page_title', 'command', 'id'));
 	}
 
-	public function GetRouteSenseHub()
+	public function GetRouteSenseHub($qlik_item)
 	{
 		$this->cbLoader();
 		if (!CRUDBooster::isSuperadmin()) {
@@ -745,17 +748,44 @@ class AdminQlikItemsController extends CBController
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
-		//get qlik ticket
-		$qlik_ticket = QlikHelper::getTicket();
+
 
 		$data = [];
+$conf = QlikHelper::getConfFromItem($qlik_item);
 
-		$url = config('app.qlik_sense_app_base_path');
-		$url .= ':' . config('app.qlik_sense_main_port');
-		$url .= config('app.qlik_sense_virtual_proxy');
-		$url .= '/hub';
-		$url .= '/?';
-		$url .= 'qlikTicket=' . $qlik_ticket;
+	$view = 'qlik_items.view';
+$data = [];
+		if (QlikHelper::confIsSAAS($conf->id)) {
+			
+		$url = $conf->url;
+		$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+		$url .= $conf->endpoint;
+		$url .= '/qmc';
+		
+
+			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+			if (empty($token)) {
+				$data['error'] = 'JWT Token generation failed!';
+				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+			}
+			$data['token'] = $token;
+			$data['item_url'] = $conf->url;
+
+			$data['tenant'] = $conf->url;
+			$data['web_int_id'] = $conf->web_int_id;
+
+			$view = 'qlik_items.view_saas';
+
+		} else {
+		$url = $conf->qrsurl;
+		$url .=  !empty($conf->port) ? ':' .$conf->port :':' . '443';
+		$url .= $conf->endpoint;
+		$url .= '/qmc';
+			//get qlik ticket
+			$qlik_ticket = QlikHelper::getTicket($qlik_item);
+			$url .= '?';
+			$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
+		}
 
 		$row = new \stdClass;
 		$row->frame_width = '100%';
@@ -771,11 +801,12 @@ class AdminQlikItemsController extends CBController
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] = $data['row']->url;
+$data['debug'] = $conf->debug;
 
 		$this->cbView('qlik_items.view', $data);
 	}
 
-	public function GetRouteSenseQMC()
+	public function GetRouteSenseQMC($qlik_item)
 	{
 		$this->cbLoader();
 		if (!CRUDBooster::isSuperadmin()) {
@@ -783,18 +814,48 @@ class AdminQlikItemsController extends CBController
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
-		//get qlik ticket
-		$qlik_ticket = QlikHelper::getTicket();
+		$conf = QlikHelper::getConfFromItem($qlik_item);
+
+
+		
+		$view = 'qlik_items.view';
+$data = [];
+		if (QlikHelper::confIsSAAS($conf->id)) {
+			
+		$url = $conf->url;
+		$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+		$url .= $conf->endpoint;
+		$url .= '/qmc';
+		
+
+			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+			if (empty($token)) {
+				$data['error'] = 'JWT Token generation failed!';
+				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+			}
+			$data['token'] = $token;
+			$data['item_url'] = $conf->url;
+
+			$data['tenant'] = $conf->url;
+			$data['web_int_id'] = $conf->web_int_id;
+
+			$view = 'qlik_items.view_saas';
+
+		} else {
+		$url = $conf->qrsurl;
+		$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+		$url .= $conf->endpoint;
+		$url .= '/qmc';
+			//get qlik ticket
+			$qlik_ticket = QlikHelper::getTicket($qlik_item);
+			$url .= '?';
+			$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
+		}
+
+		
 		//dd($qlik_ticket);
 
-		$data = [];
-
-		$url = config('app.qlik_sense_app_base_path');
-		$url .= ':' . config('app.qlik_sense_main_port');
-		$url .= config('app.qlik_sense_virtual_proxy');
-		$url .= '/qmc';
-		$url .= '?';
-		$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
+		
 
 		$row = new \stdClass;
 		$row->frame_width = '100%';
@@ -810,7 +871,8 @@ class AdminQlikItemsController extends CBController
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] = $data['row']->url;
+		$data['debug'] = $conf->debug;
 
-		$this->cbView('qlik_items.view', $data);
+		$this->cbView($view, $data);
 	}
 }

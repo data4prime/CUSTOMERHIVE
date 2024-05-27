@@ -1,8 +1,9 @@
-<div class='form-group {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='form-group-{{$name}}'
-  style="{{@$form['style']}}">
+
+<div class='form-group {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' 
+id='form-group-{{$name}}' style="{!! @$form['style'] !!}">
   <label class='control-label col-sm-2'>{{$form['label']}}
     @if($required)
-    <span class='text-danger' title='{!! trans(' crudbooster.this_field_is_required') !!}'>*</span>
+    <span class='text-danger' title="{!! trans('crudbooster.this_field_is_required') !!}" >*</span>
     @endif
   </label>
   <div class="{{$col_width?:'col-sm-10'}}">
@@ -115,9 +116,9 @@
                     $checked = (is_array($value) && in_array($val, $value)) ? "checked" : "";
                     //if($val == '' || !$d->id) continue;
                     echo "
-												<div data-val='$val' class='checkbox $disabled'>
+												<div data-val='{$val}' class='checkbox {$disabled}'>
 												  <label>
-												    <input type='checkbox' $disabled $checked name='".$name."[]' value='$q->value'> ".$q->label."
+												    <input type='checkbox' {$disabled} {$checked} name='".$name."[]' value='{$q->value}'> ".$q->label."
 												  </label>
 												</div>";
                 }
@@ -131,7 +132,7 @@
   </div>
 </div>
 @if(isset($is_public) && $name == 'public_access')
-<div class="form-group {{$header_group_class}} {{ ($errors->first($name))?" has-error":"" }}">
+<div class="form-group {{$header_group_class}} {{ ($errors->first($name))?'has-error':'' }}">
   <div class="col-sm-2 control-label" style="padding-top: 7px">
     <label class="">Public URL</label>
   </div>

@@ -79,9 +79,12 @@ Route::post('admin/users/{user_id}/add_group', $controllers_base_path . 'AdminCm
 Route::get('admin/users/{user_id}/remove_group/{group_id}', $controllers_base_path . 'AdminCmsUsersController@remove_group');
 
 //Qlik Server Routes
-Route::get('admin/QlikServerSenseHub', $controllers_base_path . 'AdminQlikItemsController@GetRouteSenseHub')->name('QlikServerSenseHub');
-Route::get('admin/QlikServerSenseQMC', $controllers_base_path . 'AdminQlikItemsController@GetRouteSenseQMC')->name('QlikServerSenseQMC');
+Route::get('admin/qlik_confs/QlikServerSenseHub/{id}', $controllers_base_path . 'AdminQlikItemsController@GetRouteSenseHub')->name('QlikServerSenseHub');
+Route::get('admin/qlik_confs/QlikServerSenseQMC/{id}', $controllers_base_path . 'AdminQlikItemsController@GetRouteSenseQMC')->name('QlikServerSenseQMC');
 
 //modules
 Route::get('admin/module_generator/enable', $controllers_base_path . 'ModulsController@enable');
 Route::post('admin/module_generator/save_enable', $controllers_base_path . 'ModulsController@saveEnable');
+
+
+//Qlik Configurations
