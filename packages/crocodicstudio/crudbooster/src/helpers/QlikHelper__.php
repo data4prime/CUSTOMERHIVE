@@ -20,14 +20,13 @@ class QlikHelper
   public static function getConfFromItem($id_item) {
 
     $conf_id = DB::table('qlik_items')->where('id', $id_item)->first()->qlik_conf;
-
     return DB::table('qlik_confs')->where('id', $conf_id)->first();
 
 
   }
 
   public static function getTypeConf($id) {
-	
+
     return DB::table('qlik_confs')->where('id', $id)->first()->type;
 
   }
@@ -158,13 +157,8 @@ class QlikHelper
     $current_user_id = CRUDBooster::myId();
     $current_user = \App\User::find($current_user_id);
 
-    $conf_id = DB::table('qlik_items')->where('id',$qlik_item_id )->first();//->qlik_conf;
-	if (!$conf_id) {
-		$qlik_conf = DB::table('qlik_confs')->where('id', $qlik_item_id)->first();
-	} else {
-		$qlik_conf = DB::table('qlik_confs')->where('id', $conf_id->qlik_conf)->first();
-	}
-    
+    $conf_id = DB::table('qlik_items')->where('id',$qlik_item_id )->first()->qlik_conf;
+    $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
     //dd($qlik_conf->id);
 
@@ -190,7 +184,7 @@ class QlikHelper
     }
 
 
-    $QRSurl = $qlik_conf->qrsurl .':'.$qlik_conf->port;
+    $QRSurl = $qlik_conf->qrsurl;
 
     //$QRSurl = CRUDBooster::getSetting('qrsurl');
 
@@ -216,8 +210,6 @@ class QlikHelper
       'x-qlik-xrfkey: ' . $xrfkey,
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
-	
-	//dd($QRSurl . $endpoint);
 
     $ch = curl_init($QRSurl . $endpoint);
 
@@ -242,7 +234,6 @@ class QlikHelper
 
     //Execute and get response
     $raw_response = curl_exec($ch);
-	//dd($raw_response);
 
     if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
