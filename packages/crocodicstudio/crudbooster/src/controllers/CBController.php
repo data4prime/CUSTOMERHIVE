@@ -1555,7 +1555,7 @@ class CBController extends Controller
                 DB::table($childtable)->where($fk, $id)->delete();
                 $lastId = CRUDBooster::newId($childtable);
                 $childtablePK = CB::pk($childtable);
-                dd($count_input_data);
+                dd($columns);
                 for ($i = 0; $i <= $count_input_data; $i++) {
                     $column_data = [];
                     foreach ($columns as $col) {
