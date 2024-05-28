@@ -85,7 +85,7 @@ class CRUDBooster
             }
 
             $file = Request::file($name);
-		dd($file);
+		//dd($file);
             $ext = $file->getClientOriginalExtension();
             $filename = str_slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
             //$filesize = $file->getClientSize() / 1024;
@@ -100,7 +100,7 @@ class CRUDBooster
             } else {
                 $filename = str_slug($filename, '_') . '.' . $ext;
             }
-
+	dd(Storage::putFileAs($file_path, $file, $filename));
             if (Storage::putFileAs($file_path, $file, $filename)) {
                 self::resizeImage($file_path . '/' . $filename, $resize_width, $resize_height, $ext);
 
