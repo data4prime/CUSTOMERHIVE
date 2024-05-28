@@ -1061,7 +1061,7 @@ return Request::segment($segment);
 
     public static function getForeignKey($parent_table, $child_table)
     {
-	    dd($parent_table);
+	    dd($child_table);
         $parent_table = CRUDBooster::parseSqlTable($parent_table)['table'];
         $child_table = CRUDBooster::parseSqlTable($child_table)['table'];
         //#RAMA menu n:n groups
@@ -1075,7 +1075,7 @@ return Request::segment($segment);
         if ($parent_table == 'cms_menus' and $child_table == 'menu_tenants') {
             return 'menu_id';
         }
-	if ($parent_table == 'qlik_confs' and $child_table == 'qlikconfs_tenants') {
+	if ($parent_table == 'tenants' and $child_table == 'qlikconfs_tenants') {
             return 'tenant_id';
         }
         if ($parent_table == 'tenants' and $child_table == 'menu_tenants') {
