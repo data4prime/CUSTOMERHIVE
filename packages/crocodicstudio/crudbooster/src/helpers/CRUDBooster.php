@@ -1085,6 +1085,9 @@ return Request::segment($segment);
         if ($parent_table == 'groups' and $child_table == 'group_tenants') {
             return 'group_id';
         }
+	if ($parent_table == 'groups' and $child_table == 'qlikconfs_groups') {
+            return 'group_id';
+        }
         if ($parent_table == 'tenants' and $child_table == 'group_tenants') {
             return 'tenant_id';
         }
