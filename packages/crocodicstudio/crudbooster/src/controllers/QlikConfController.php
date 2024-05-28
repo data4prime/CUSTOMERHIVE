@@ -273,7 +273,7 @@ $(document).ready(function () {
 
             to_show.forEach(show => {
                 //show.parentNode.parentNode.style.display = '';
-		show.setAttribute('disabled', false);
+		show.removeAttribute('disabled');
 
             });
 
@@ -301,7 +301,7 @@ $(document).ready(function () {
 
             to_show.forEach(show => {
                 //show.parentNode.parentNode.style.display = '';
-		show.setAttribute('disabled', false);
+		show.removeAttribute('disabled');
 
             });
 
@@ -344,7 +344,7 @@ $(document).ready(function () {
 
                 to_show.forEach(show => {
                     //show.parentNode.parentNode.style.display = '';
-		    show.setAttribute('disabled', false);
+		    show.removeAttribute('disabled');
 
                 });
 
