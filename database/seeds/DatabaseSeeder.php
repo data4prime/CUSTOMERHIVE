@@ -12,10 +12,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
-        //$this->call(CBSeeder::class);
-        //$this->command->info('Qlik settings...');
-        //$this->call(Qlik_Sett::class);
-        //$this->call(Qlik_Conf::class);
+        $this->call(CBSeeder::class);
+        $this->command->info('Qlik settings...');
+        $this->call(Qlik_Sett::class);
+
 
  $mod = [
                 'created_at' => date('Y-m-d H:i:s'),
