@@ -100,8 +100,8 @@ class CRUDBooster
             } else {
                 $filename = str_slug($filename, '_') . '.' . $ext;
             }
-	dd($file_path);
-	dd(Storage::putFileAs($file_path, $file, $filename));
+	//dd($file_path);
+	//dd(Storage::putFileAs($file_path, $file, $filename));
             if (Storage::putFileAs($file_path, $file, $filename)) {
                 self::resizeImage($file_path . '/' . $filename, $resize_width, $resize_height, $ext);
 
