@@ -259,7 +259,8 @@ $(document).ready(function () {
             to_hide = document.getElementsByName(element);
 
             to_hide.forEach(hide => {
-                hide.parentNode.parentNode.style.display = 'none';
+                //hide.parentNode.parentNode.style.display = 'none';
+		hide.setAttribute('disabled', true);
 
             });
 
@@ -271,7 +272,8 @@ $(document).ready(function () {
             to_show = document.getElementsByName(element);
 
             to_show.forEach(show => {
-                show.parentNode.parentNode.style.display = '';
+                //show.parentNode.parentNode.style.display = '';
+		show.setAttribute('disabled', false);
 
             });
 
@@ -285,7 +287,8 @@ $(document).ready(function () {
             to_hide = document.getElementsByName(element);
 
             to_hide.forEach(hide => {
-                hide.parentNode.parentNode.style.display = 'none';
+                //hide.parentNode.parentNode.style.display = 'none';
+		hide.setAttribute('disabled', true);
 
             });
 
@@ -297,7 +300,8 @@ $(document).ready(function () {
             to_show = document.getElementsByName(element);
 
             to_show.forEach(show => {
-                show.parentNode.parentNode.style.display = '';
+                //show.parentNode.parentNode.style.display = '';
+		show.setAttribute('disabled', false);
 
             });
 
@@ -326,7 +330,8 @@ $(document).ready(function () {
                 to_hide = document.getElementsByName(element);
 
                 to_hide.forEach(hide => {
-                    hide.parentNode.parentNode.style.display = 'none';
+                    //hide.parentNode.parentNode.style.display = 'none';
+		    hide.setAttribute('disabled', true);
 
                 });
 
@@ -338,7 +343,8 @@ $(document).ready(function () {
                 to_show = document.getElementsByName(element);
 
                 to_show.forEach(show => {
-                    show.parentNode.parentNode.style.display = '';
+                    //show.parentNode.parentNode.style.display = '';
+		    show.setAttribute('disabled', false);
 
                 });
 
@@ -353,7 +359,8 @@ $(document).ready(function () {
 				console.log(to_hide);
 
                 to_hide.forEach(hide => {
-                    hide.parentNode.parentNode.style.display = 'none';
+                    //hide.parentNode.parentNode.style.display = 'none';
+		    hide.setAttribute('disabled', true);
 
                 });
 
@@ -365,7 +372,8 @@ $(document).ready(function () {
                 to_show = document.getElementsByName(element);
 
                 to_show.forEach(show => {
-                    show.parentNode.parentNode.style.display = '';
+                    //show.parentNode.parentNode.style.display = '';
+		    show.setAttribute('disabled', false);
 
                 });
 
