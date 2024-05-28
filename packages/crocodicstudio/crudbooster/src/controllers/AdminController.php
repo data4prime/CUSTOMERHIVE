@@ -150,7 +150,11 @@ $logo = "";
     $tenant_domain_name = isset($array[0]) ? $array[0] : '';
     $tenant_domain_name = Tenant::where('domain_name', $tenant_domain_name)->first()->domain_name;
 
-    if (\Hash::check($password, $users->password) && $users->status == "Active" && $tenant_domain_name == $tenant) {
+    $priv = DB::table("cms_privileges")
+        ->where("id", $users->id_cms_privileges)
+        ->first();
+
+    if (\Hash::check($password, $users->password) && $users->status == "Active" && ($tenant_domain_name == $tenant || $priv->is_superadmin == 1)) {
       $priv = DB::table("cms_privileges")
         ->where("id", $users->id_cms_privileges)
         ->first();
