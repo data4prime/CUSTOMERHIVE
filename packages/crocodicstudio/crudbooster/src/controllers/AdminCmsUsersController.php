@@ -184,7 +184,7 @@ class AdminCmsUsersController extends CBController
 		$columns[] = ['label'=>'Qlik Conf','name'=>'qlik_conf_id','type'=>'datamodal','datamodal_table'=>'qlik_confs','datamodal_columns'=>'confname,type','datamodal_select_to'=>'confname:confname,type:type','datamodal_where'=>'','datamodal_size'=>'large'];
 		$columns[] = array("label" => "Qlik login", "name" => "qlik_login", 'type'=>'text', 'help' => 'Compilare a mano se la configurazione scelta è di tipo On-Premise');
 		$columns[] = array("label" => "User directory", "name" => "user_directory", 'type'=>'text', 'help' => 'Compilare a mano se la configurazione scelta è di tipo On-Premise');
-		$columns[] = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik", 'type'=>'text', 'help' => 'Lasciare vuoto, in tutti i casi. Se la configurazione scelta è di tipo SAAS, il campo verrà valorizzaro dopo aver salvato l\'utenza. Se si vuole ottenere un IDP diverso, cancellare il valore attuale e salvare l\'utenza, il sistema creerà un nuovo IDP in automatico.');
+		$columns[] = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik", 'type'=>'text', 'help' => 'Se la configurazione scelta è di tipo SAAS, il campo verrà valorizzato dopo aver salvato l\'utenza se lasciato vuoto. Se si vuole ottenere un IDP diverso, cancellare il valore attuale e salvare l\'utenza, il sistema creerà un nuovo IDP in automatico.');
 		//$columns = array("label" => "");
 /*
 $columns[] = ['label'=>'User','name'=>'user_id','type'=>'datamodal','datamodal_table'=>'cms_users','datamodal_columns'=>'name','datamodal_select_to'=>'email:email','datamodal_where'=>'','datamodal_size'=>'large'];
