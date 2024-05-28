@@ -202,9 +202,10 @@ class QlikHelper
     //$QRSCertkeyfile = asset(CRUDBooster::getSetting('QRSCertkeyfile'));
 
     //$QRSCertfile = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertfile');
-    $QRSCertfile = env('APP_PATH').'/storage/app/public'.$qlik_conf->QRSCertfile;
+    //$QRSCertfile = env('APP_PATH').'/storage/app/public'.$qlik_conf->QRSCertfile;
+	$QRSCertfile =$qlik_conf->tenant_path.$qlik_conf->QRSCertfile;
 
-    $QRSCertkeyfile = env('APP_PATH').'/storage/app/public'.$qlik_conf->QRSCertkeyfile;
+    $QRSCertkeyfile = $qlik_conf->tenant_path.$qlik_conf->QRSCertkeyfile;
 
     //$QRSCertkeyfile = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertkeyfile');
     $QRSCertkeyfilePassword =$qlik_conf->QRSCertkeyfilePassword;
@@ -274,7 +275,7 @@ class QlikHelper
     //$privateKey = CRUDBooster::getSetting('private_key');
     $privateKey = $qlik_conf->private_key;
 
-    $privateKey = env('APP_PATH') . '/storage/app/public/' .$privateKey;
+    $privateKey =$qlik_conf->tenant_path .$privateKey;
     $privateKey = file_get_contents($privateKey);
 
     if (empty($check_idp)) {
