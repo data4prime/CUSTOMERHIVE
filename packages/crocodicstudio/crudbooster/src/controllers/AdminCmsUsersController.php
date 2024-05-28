@@ -282,8 +282,12 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 		foreach($qlik_conf_ids as $k => $v) {
 
 			if (QlikHelper::confIsSAAS($v)) {
+				if (!empty($qlik_idp_qlik[$k])) {
+					$idp = $qlik_idp_qlik[$k];
+				} else {
+					$idp = QlikHelper::createUser($id_user, $v);
+				}
 				
-				$idp = QlikHelper::createUser($id_user, $v);
 				//file_put_contents(__DIR__."/log.txt", $idp."\n\n", FILE_APPEND);
  				$updated_idp_qlik[$k] = $idp;
 				//Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
