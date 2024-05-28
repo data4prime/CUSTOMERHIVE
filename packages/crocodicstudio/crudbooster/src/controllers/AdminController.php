@@ -148,7 +148,7 @@ $logo = "";
 
     //tenant specific login page
     $tenant_domain_name = isset($array[0]) ? $array[0] : '';
-    $tenant_domain_name = isset(Tenant::where('domain_name', $tenant_domain_name)->first()) ? Tenant::where('domain_name', $tenant_domain_name)->first()->domain_name : '';
+    $tenant_domain_name = Tenant::where('domain_name', $tenant_domain_name)->first() !== null ? Tenant::where('domain_name', $tenant_domain_name)->first()->domain_name : '';
 
     $priv = DB::table("cms_privileges")
         ->where("id", $users->id_cms_privileges)
