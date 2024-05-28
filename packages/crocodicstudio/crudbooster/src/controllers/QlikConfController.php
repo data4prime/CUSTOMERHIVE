@@ -90,13 +90,13 @@ class QlikConfController extends CBController
       //superadmin vede i gruppi come cascading dropdown in base al tenant
       $this->form[] = [
         "label" => "Group",
-        "name" => "menu_groups",
+        "name" => "qlikconfs_groups",
         "type" => "select2",
         "select2_multiple" => true,
         "datatable" => "groups,name",
-        "relationship_table" => "menu_groups",
+        "relationship_table" => "qlikconfs_groups",
         "required" => true,
-        'parent_select' => 'menu_tenants',
+        'parent_select' => 'qlikconfs_groups',
         'parent_crosstable' => 'group_tenants',
         'fk_name' => 'tenant_id',
         'child_crosstable_fk_name' => 'group_id'
