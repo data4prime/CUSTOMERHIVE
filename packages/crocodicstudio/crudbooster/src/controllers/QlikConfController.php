@@ -82,7 +82,7 @@ class QlikConfController extends CBController
         "type" => "select2",
         "select2_multiple" => true,
         "datatable" => "tenants,name",
-        "relationship_table" => "menu_tenants",
+        "relationship_table" => "qlikconfs_tenants",
         'required' => true,
         'validation' => 'required',
         'value' => UserHelper::current_user_tenant() //default value per creazione nuovo record
