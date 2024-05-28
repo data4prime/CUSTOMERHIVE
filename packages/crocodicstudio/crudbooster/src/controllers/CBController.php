@@ -1524,7 +1524,7 @@ class CBController extends Controller
                     $foreignKey2 = CRUDBooster::getForeignKey($datatable, $ro['relationship_table']);
                     $foreignKey = CRUDBooster::getForeignKey($this->table, $ro['relationship_table']);
                     DB::table($ro['relationship_table'])->where($foreignKey, $id)->delete();
-                    dd($inputdata);
+                    //dd($inputdata);
 
                     if ($inputdata) {
                         foreach ($inputdata as $input_id) {
