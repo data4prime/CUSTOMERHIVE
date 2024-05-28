@@ -1074,6 +1074,9 @@ return Request::segment($segment);
         if ($parent_table == 'cms_menus' and $child_table == 'menu_tenants') {
             return 'menu_id';
         }
+	if ($parent_table == 'qlik_confs' and $child_table == 'qlikconfs_tenants') {
+            return 'tenant_id';
+        }
         if ($parent_table == 'tenants' and $child_table == 'menu_tenants') {
             return 'tenant_id';
         }
