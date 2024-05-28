@@ -61,6 +61,7 @@ async function getJWTToken() {
 async function jwtLogin(token) {
     const authHeader = `Bearer ${JWTTOKEN}`;
     console.log(authHeader);
+    console.log(WEBINTEGRATIONID);
     return await fetch(`${TENANT}/login/jwt-session`, {
         credentials: 'include',
         mode: 'cors',
