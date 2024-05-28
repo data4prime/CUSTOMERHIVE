@@ -203,7 +203,7 @@ if ($module->table == "cms_users") {
       }
 
       if ($module->table == "groups") {
-        $entity_group = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->group_id;
+        $entity_group = DB::table("group_tenants")->where('group_id', $row->id)->where('group_id',UserHelper::current_user_tenant() )->first()->group_id;
         $entity_tenant = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->tenant_id;
       }
 if ($module->table == "cms_users") {
