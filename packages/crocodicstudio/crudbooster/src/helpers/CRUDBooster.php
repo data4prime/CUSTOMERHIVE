@@ -1061,7 +1061,7 @@ return Request::segment($segment);
 
     public static function getForeignKey($parent_table, $child_table)
     {
-	    dd($child_table);
+	    
         $parent_table = CRUDBooster::parseSqlTable($parent_table)['table'];
         $child_table = CRUDBooster::parseSqlTable($child_table)['table'];
         //#RAMA menu n:n groups
