@@ -25,7 +25,7 @@ class AdminQlikItemsController extends CBController
 		$this->title_field = "title";
 		$this->limit = "20";
 		$this->orderby = "id,desc";
-		$this->global_privilege = false;
+		$this->global_privilege = true;
 		$this->button_table_action = true;
 		$this->button_bulk_action = true;
 		$this->button_action_style = "button_icon";
