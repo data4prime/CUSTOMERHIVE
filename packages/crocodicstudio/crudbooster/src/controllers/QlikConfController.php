@@ -96,7 +96,7 @@ class QlikConfController extends CBController
         "datatable" => "groups,name",
         "relationship_table" => "qlikconfs_groups",
         "required" => true,
-        'parent_select' => 'qlikconfs_groups',
+        'parent_select' => 'qlikconfs_tenants',
         'parent_crosstable' => 'group_tenants',
         'fk_name' => 'tenant_id',
         'child_crosstable_fk_name' => 'group_id'
