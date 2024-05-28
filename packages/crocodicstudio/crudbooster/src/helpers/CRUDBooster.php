@@ -85,6 +85,7 @@ class CRUDBooster
             }
 
             $file = Request::file($name);
+		dd($file);
             $ext = $file->getClientOriginalExtension();
             $filename = str_slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
             //$filesize = $file->getClientSize() / 1024;
