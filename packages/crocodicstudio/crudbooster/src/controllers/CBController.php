@@ -1219,7 +1219,7 @@ class CBController extends Controller
             if (@$ro['type'] == 'upload') {
 
                 $this->arr[$name] = CRUDBooster::uploadFile($name, (isset($ro['encrypt']) ? $ro['encrypt'] : '')  || (isset($ro['upload_encrypt']) ? $ro['upload_encrypt'] : ''), (isset($ro['resize_width']) ? $ro['resize_width'] : ''), (isset($ro['resize_height']) ? $ro['resize_height'] : ''), CB::myId());
-
+                dd($this->arr);
                 if (!$this->arr[$name]) {
                     $this->arr[$name] = Request::get('_' . $name);
                 }
