@@ -73,6 +73,61 @@ class QlikConfController extends CBController
 
         $this->form[] = ['label' => 'Debug', 'name' => 'debug', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'Inactive;Active'];
 
+		//only superadmin can edit tenant
+    if (CRUDBooster::isSuperadmin()) {
+      $this->form[] = [
+        'label' => 'Tenant',
+        'name' => 'menu_tenants',
+        "type" => "select2",
+        "select2_multiple" => true,
+        "datatable" => "tenants,name",
+        "relationship_table" => "menu_tenants",
+        'required' => true,
+        'validation' => 'required',
+        'value' => UserHelper::current_user_tenant() //default value per creazione nuovo record
+      ];
+      //superadmin vede i gruppi come cascading dropdown in base al tenant
+      $this->form[] = [
+        "label" => "Group",
+        "name" => "menu_groups",
+        "type" => "select2",
+        "select2_multiple" => true,
+        "datatable" => "groups,name",
+        "relationship_table" => "menu_groups",
+        "required" => true,
+        'parent_select' => 'menu_tenants',
+        'parent_crosstable' => 'group_tenants',
+        'fk_name' => 'tenant_id',
+        'child_crosstable_fk_name' => 'group_id'
+      ];
+    } elseif (UserHelper::isTenantAdmin()) {
+      //Tenantadmin vede tenant in readonly (disabled) ma può modificare il group
+      $this->form[] = [
+        "label" => "Tenant",
+        "name" => "tenant",
+        'required' => true,
+        'type' => 'select',
+        'datatable' => "tenants,name",
+        'default' => UserHelper::current_user_tenant_name(),
+        'value' => UserHelper::current_user_tenant(),
+        'disabled' => true
+      ];
+      //Tenantadmin vede solo i gruppi del proprio tenant
+      $this->form[] = [
+        "label" => "Group",
+        "name" => "menu_groups",
+        "type" => "select2",
+        "select2_multiple" => true,
+        "datatable" => "groups,name",
+        "relationship_table" => "menu_groups",
+        "required" => true,
+        'parent_select' => 'tenant',
+        'parent_crosstable' => 'group_tenants',
+        'fk_name' => 'tenant_id',
+        'child_crosstable_fk_name' => 'group_id'
+      ];
+    }
+
 
 		# Users submodule
 		// #RAMA questo subform riesce ad aggiungere nuovi utenti e a mostrarli ma permette di aggiungere due volte lo stesso utente allo stesso gruppo, non riesco a mostrare un secondo campo nel form e nella tabella, non posso nascondere il tasto edit dalla tabella, fa confusione come interfaccia
