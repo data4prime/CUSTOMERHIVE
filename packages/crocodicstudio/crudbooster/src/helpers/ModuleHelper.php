@@ -197,6 +197,11 @@ if ($module->table == "cms_users") {
       $created_by = DB::table($module->table)->where('id', $row->id)->first()->created_by;
     } else {
 
+            if ($module->table == "qlik_confs") {
+        $entity_group = DB::table("qlikconfs_groups")->where('group_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->group_id;
+        $entity_tenant = DB::table("qlikconfs_tenants")->where('tenant_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->tenant_id;
+      }
+
       if ($module->table == "groups") {
         $entity_group = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->group_id;
         $entity_tenant = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->tenant_id;
