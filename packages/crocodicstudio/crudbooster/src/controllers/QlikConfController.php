@@ -78,7 +78,7 @@ class QlikConfController extends CBController
     if (CRUDBooster::isSuperadmin()) {
       $this->form[] = [
         'label' => 'Tenant',
-        'name' => 'menu_tenants',
+        'name' => 'qlikconfs_tenants',
         "type" => "select2",
         "select2_multiple" => true,
         "datatable" => "tenants,name",
