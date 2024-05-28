@@ -198,8 +198,14 @@ if ($module->table == "cms_users") {
     } else {
 
             if ($module->table == "qlik_confs") {
-        $entity_group = DB::table("qlikconfs_groups")->where('group_id', $row->id)->where('group_id',UserHelper::current_user_tenant() )->first()->group_id;
-        $entity_tenant = DB::table("qlikconfs_tenants")->where('tenant_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->tenant_id;
+        $entity_group = DB::table("qlikconfs_groups")->where('group_id', $row->id)->where('group_id',UserHelper::current_user_tenant())->first();//->group_id;
+        $entity_tenant = DB::table("qlikconfs_tenants")->where('tenant_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first();//->tenant_id;
+              if ($entity_group) {
+                $entity_group = $entity_group->group_id;
+              }
+              if ($entity_tenant) {
+                $entity_tenant = $entity_tenant->tenant_id;
+              }
       }
 
       if ($module->table == "groups") {
