@@ -130,6 +130,27 @@
           class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/menu_management*')) ? 'active' : '' }}"><a
             href='{{Route("MenusControllerGetIndex")}}'><i class='fa fa-bars'></i>
             <span>{{ trans('crudbooster.Menu_Management') }}</span></a></li>
+                <li data-collapse="3" class='treeview'>
+          <a href='#'><i class='fa fa-signal'></i> <span>{{ trans('crudbooster.Qlik_Items') }}</span> <i
+              class="fa fa-angle-{{ trans(" crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
+          <ul class='treeview-menu'>
+            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items/add')) ? 'active' : '' }}"><a
+                href='{{Route("AdminQlikItemsControllerGetAdd")}}'><i class='fa fa-plus'></i>
+                <span>{{ trans('crudbooster.Add_New_Qlikitem') }}</span></a></li>
+            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items')) ? 'active' : '' }}"><a
+                href='{{Route("AdminQlikItemsControllerGetIndex")}}'><i class='fa fa-bars'></i>
+                <span>{{ trans('crudbooster.List_Qlikitem') }}</span></a></li>
+          </ul>
+        </li>
+
+        <li data-collapse="3" class='treeview'>
+          <a href='{{url("admin/qlik_confs")}}'>
+            <img class="menu qlik_logo" src=/images/qlik_logo.png />
+            <span>{{ trans('crudbooster.Qlik_Configuration') }}</span> <i class="fa fa-angle-{{ trans("
+              crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
+          </a>
+
+        </li>
 
         @if(CRUDBooster::isSuperadmin())
         <li data-collapse="3" class="treeview">
@@ -175,27 +196,7 @@
           </ul>
         </li>
 
-        <li data-collapse="3" class='treeview'>
-          <a href='#'><i class='fa fa-signal'></i> <span>{{ trans('crudbooster.Qlik_Items') }}</span> <i
-              class="fa fa-angle-{{ trans(" crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
-          <ul class='treeview-menu'>
-            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items/add')) ? 'active' : '' }}"><a
-                href='{{Route("AdminQlikItemsControllerGetAdd")}}'><i class='fa fa-plus'></i>
-                <span>{{ trans('crudbooster.Add_New_Qlikitem') }}</span></a></li>
-            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items')) ? 'active' : '' }}"><a
-                href='{{Route("AdminQlikItemsControllerGetIndex")}}'><i class='fa fa-bars'></i>
-                <span>{{ trans('crudbooster.List_Qlikitem') }}</span></a></li>
-          </ul>
-        </li>
 
-        <li data-collapse="3" class='treeview'>
-          <a href='{{url("admin/qlik_confs")}}'>
-            <img class="menu qlik_logo" src=/images/qlik_logo.png />
-            <span>{{ trans('crudbooster.Qlik_Configuration') }}</span> <i class="fa fa-angle-{{ trans("
-              crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
-          </a>
-
-        </li>
 
 
         <li data-collapse="3" class='treeview'>
