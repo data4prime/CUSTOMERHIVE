@@ -347,7 +347,7 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 	public function hook_before_add(&$postdata)
 	{
 		unset($postdata['password_confirmation']);
-		dd(Request::all());
+		//dd(Request::all());
 		AdminCmsUsersController::prepare_qlik_users();
 	}
 
