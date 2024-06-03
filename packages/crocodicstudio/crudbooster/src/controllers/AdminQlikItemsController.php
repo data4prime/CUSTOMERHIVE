@@ -451,7 +451,12 @@ class AdminQlikItemsController extends CBController
 		$type = $conf->type;
 		//$type = CRUDBooster::getSetting('type');
 		//add menu settings
-		$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '89');
+		if (isset($_GET['m'])) {
+			$menu = Menu::find($_GET['m']);
+		} else {
+			$menu = Menu::where('name', 'Dashboard')->where('is_active', 1)->where('is_dashboard', 1)->first();
+		}
+		//$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '89');
 		if (empty($menu)) {
 			$data['row']->frame_width = '100%';
 			$data['row']->frame_height = '100%';
