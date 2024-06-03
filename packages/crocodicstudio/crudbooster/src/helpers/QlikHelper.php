@@ -270,7 +270,7 @@ class QlikHelper
 
     $expire = $issuedA2->addMinutes(60)->timestamp;
 
-    $check_idp = $current_user->idp_qlik;
+    //$check_idp = $current_user->idp_qlik;
 
     //$privateKey = CRUDBooster::getSetting('private_key');
     $privateKey = $qlik_conf->private_key;
@@ -278,11 +278,13 @@ class QlikHelper
     $privateKey =$qlik_conf->tenant_path .$privateKey;
     $privateKey = file_get_contents($privateKey);
 
-    if (empty($check_idp)) {
+    /*if (empty($check_idp)) {
       $check_idp = QlikHelper::randString(64);
-    }
+    }*/
 
     $keyid = $qlik_conf->keyid;
+
+    $check_idp = DB::table('qlik_users')->where('user_id', $id)->where('qlik_conf_id', $conf_id)->first()->idp_qlik;
 
 
 
