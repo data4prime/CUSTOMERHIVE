@@ -811,7 +811,7 @@ class AdminQlikItemsController extends CBController
 		$data['page_title'] = $data['row']->title;
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
-		$data['item_url'] = $data['row']->url;
+		$data['item_url'] =  htmlspecialchars_decode($data['row']->url);
 		$data['debug'] = $conf->debug;
 		file_put_contents(__DIR__."/hub.txt", "DATA \n".json_encode($data)."\n\n", FILE_APPEND);
 
@@ -886,7 +886,7 @@ if (QlikHelper::confIsSAAS($conf->id)) {
 		$data['page_title'] = $data['row']->title;
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
-		$data['item_url'] = $data['row']->url;
+		$data['item_url'] =  htmlspecialchars_decode($data['row']->url);
 		$data['debug'] = $conf->debug;
 
 		$this->cbView($view, $data);
