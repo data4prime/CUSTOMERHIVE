@@ -748,25 +748,24 @@ class AdminQlikItemsController extends CBController
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
-
-
 		$data = [];
-		//dd($qlik_item);
-$conf = DB::table('qlik_confs')->where('id', $qlik_item)->first();
+		$conf = DB::table('qlik_confs')->where('id', $qlik_item)->first();
+		file_put_contents(__DIR__."/hub.txt", "CONF \n".json_encode($conf)."\n\n", FILE_APPEND);
 
-	$view = 'qlik_items.view';
-$data = [];
+		$view = 'qlik_items.view';
+		$data = [];
 		if (QlikHelper::confIsSAAS($conf->id)) {
 			
-		$url = $conf->url;
-		//$url .= ':443'
-		//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-		//$url .= $conf->endpoint;
-		$url .= '/chive';
-		$url .= '/hub/';
-		
+			$url = $conf->url;
+			//$url .= ':443'
+			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+			//$url .= $conf->endpoint;
+			$url .= '/chive';
+			$url .= '/hub/';
+			
 
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+			file_put_contents(__DIR__."/hub.txt", "TOKEN \n".json_encode($token)."\n\n", FILE_APPEND);
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
 				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
@@ -780,12 +779,12 @@ $data = [];
 			$view = 'qlik_items.view_saas';
 
 		} else {
-		$url = $conf->qrsurl;
-		//$url .= ':443'
-		//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-		//$url .= $conf->endpoint;
-		$url .= '/chive';
-		$url .= '/hub/';
+			$url = $conf->qrsurl;
+			//$url .= ':443'
+			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+			//$url .= $conf->endpoint;
+			$url .= '/chive';
+			$url .= '/hub/';
 			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
@@ -806,7 +805,8 @@ $data = [];
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] = $data['row']->url;
-$data['debug'] = $conf->debug;
+		$data['debug'] = $conf->debug;
+		file_put_contents(__DIR__."/hub.txt", "DATA \n".json_encode($data)."\n\n", FILE_APPEND);
 
 		$this->cbView('qlik_items.view', $data);
 	}
