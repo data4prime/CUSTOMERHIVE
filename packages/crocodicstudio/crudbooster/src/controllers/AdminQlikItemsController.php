@@ -808,7 +808,7 @@ class AdminQlikItemsController extends CBController
 		$data['debug'] = $conf->debug;
 		file_put_contents(__DIR__."/hub.txt", "DATA \n".json_encode($data)."\n\n", FILE_APPEND);
 
-		$this->cbView('qlik_items.view', $data);
+		$this->cbView($view, $data);
 	}
 
 	public function GetRouteSenseQMC($qlik_item)
