@@ -757,7 +757,7 @@ class AdminQlikItemsController extends CBController
 
 		$data = [];
 		$conf = DB::table('qlik_confs')->where('id', $qlik_item)->first();
-		file_put_contents(__DIR__."/hub.txt", "CONF \n".json_encode($conf)."\n\n", FILE_APPEND);
+		//file_put_contents(__DIR__."/hub.txt", "CONF \n".json_encode($conf)."\n\n", FILE_APPEND);
 
 		$view = 'qlik_items.view';
 		$data = [];
@@ -772,7 +772,7 @@ class AdminQlikItemsController extends CBController
 			
 
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
-			file_put_contents(__DIR__."/hub.txt", "TOKEN \n".json_encode($token)."\n\n", FILE_APPEND);
+			//file_put_contents(__DIR__."/hub.txt", "TOKEN \n".json_encode($token)."\n\n", FILE_APPEND);
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
 				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
@@ -813,7 +813,7 @@ class AdminQlikItemsController extends CBController
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] =  htmlspecialchars_decode($data['row']->url);
 		$data['debug'] = $conf->debug;
-		file_put_contents(__DIR__."/hub.txt", "DATA \n".json_encode($data)."\n\n", FILE_APPEND);
+		//file_put_contents(__DIR__."/hub.txt", "DATA \n".json_encode($data)."\n\n", FILE_APPEND);
 
 		$this->cbView($view, $data);
 	}
@@ -845,7 +845,7 @@ if (QlikHelper::confIsSAAS($conf->id)) {
 			
 
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
-			file_put_contents(__DIR__."/hub.txt", "TOKEN \n".json_encode($token)."\n\n", FILE_APPEND);
+			//file_put_contents(__DIR__."/hub.txt", "TOKEN \n".json_encode($token)."\n\n", FILE_APPEND);
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
 				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
