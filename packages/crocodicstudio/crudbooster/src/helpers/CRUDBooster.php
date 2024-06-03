@@ -39,7 +39,7 @@ class CRUDBooster
 
         dd($currentUrl);
 
-        $pattern = '/edit\/\d+\//';
+        $pattern = '/edit\/\d+.*/';
 
         if (preg_match($pattern, $currentUrl)) {
 
