@@ -326,23 +326,15 @@ class QlikHelper
   {
 
     $current_user = \App\User::find($id);
-    file_put_contents(__DIR__."/create_user.txt", "CURRENT USER \n".json_encode($current_user)."\n\n", FILE_APPEND);
-
-/*
-    if (!empty($current_user->idp_qlik)) {
-      return ['mex' => 'crudbooster.alert_userqlik_exists', 'style' => 'danger'];
-    }
-*/
+    //file_put_contents(__DIR__."/create_user.txt", "CURRENT USER \n".json_encode($current_user)."\n\n", FILE_APPEND);
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
-    file_put_contents(__DIR__."/create_user.txt", "QLIK CONF \n".json_encode($qlik_conf)."\n\n", FILE_APPEND);
+    //file_put_contents(__DIR__."/create_user.txt", "QLIK CONF \n".json_encode($qlik_conf)."\n\n", FILE_APPEND);
 
     $token = QlikHelper::getJWTToken($id, $conf_id);
 
-    file_put_contents(__DIR__."/create_user.txt", "TOKEN \n".json_encode($token)."\n\n", FILE_APPEND);
-
-    //file_put_contents(__DIR__."/log.txt", $token."\n\n", FILE_APPEND);
+    //file_put_contents(__DIR__."/create_user.txt", "TOKEN \n".json_encode($token)."\n\n", FILE_APPEND);
 
     $curl = curl_init();
 
@@ -367,7 +359,7 @@ class QlikHelper
 
     $response = curl_exec($curl);
 
-    file_put_contents(__DIR__."/create_user.txt", "RESPONSE /login/jwt-session  \n".json_encode($response)."\n\n", FILE_APPEND);
+    //file_put_contents(__DIR__."/create_user.txt", "RESPONSE /login/jwt-session  \n".json_encode($response)."\n\n", FILE_APPEND);
 
     if ($response == "OK") {
 
@@ -391,26 +383,16 @@ class QlikHelper
 
       $response = json_decode($response);
 
-      file_put_contents(__DIR__."/create_user.txt", "RESPONSE /api/v1/users/me  \n".json_encode($response)."\n\n", FILE_APPEND);
-
-      //file_put_contents(__DIR__."/log.txt", json_encode($response)."\n\n", FILE_APPEND);
+      //file_put_contents(__DIR__."/create_user.txt", "RESPONSE /api/v1/users/me  \n".json_encode($response)."\n\n", FILE_APPEND);
 
       $sub = $response->subject;
 
-      //file_put_contents(__DIR__."/log.txt", $sub."\n\n", FILE_APPEND);
       curl_close($curl);
       return $sub;
-      //$current_user = \App\User::find($id);
-
-      //$current_user->idp_qlik = $sub;
-
-      //$current_user->save();
-      //return ['mex' => 'crudbooster.alert_userqlik_created', 'style' => 'success'];
-
 
       
     }
-    //return ['mex' => 'crudbooster.alert_userqlik_error', 'style' => 'danger'];
+
   }
 
   public static function randString($length, $charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')
