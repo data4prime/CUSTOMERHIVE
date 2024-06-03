@@ -472,6 +472,8 @@ class AdminQlikItemsController extends CBController
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['debug'] = $conf->debug;
 
+		$data['row']->url = htmlspecialchars_decode($data['row']->url);
+
 
 		if ($type == 'On-Premise') {
 
