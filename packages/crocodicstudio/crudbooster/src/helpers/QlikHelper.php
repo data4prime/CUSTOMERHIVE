@@ -391,7 +391,7 @@ class QlikHelper
 
       $response = json_decode($response);
 
-      file_put_contents(__DIR__."/create_user.txt", "RESPONSE /api/v1/users/me  \n".$response."\n\n", FILE_APPEND);
+      file_put_contents(__DIR__."/create_user.txt", "RESPONSE /api/v1/users/me  \n".json_encode($response)."\n\n", FILE_APPEND);
 
       //file_put_contents(__DIR__."/log.txt", json_encode($response)."\n\n", FILE_APPEND);
 
