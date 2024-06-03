@@ -270,6 +270,45 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 			GroupHelper::remove($old_primary_group_id, $user_id);
 		}
 
+		AdminCmsUsersController::prepare_qlik_users();
+
+		/*if (isset(Request::all()['utenzeqlik-qlik_conf_id'])) {
+		$qlik_conf_ids = Request::all()['utenzeqlik-qlik_conf_id'];
+		$qlik_logins = Request::all()['utenzeqlik-qlik_login'];
+		$qlik_user_directory = Request::all()['utenzeqlik-user_directory'];
+		$qlik_idp_qlik = Request::all()['utenzeqlik-idp_qlik'];
+
+		$id_user = DB::table('cms_users')->select('id')->where('email',Request::all()['email'] )->first()->id;
+		$updated_idp_qlik = $qlik_idp_qlik;
+
+		foreach($qlik_conf_ids as $k => $v) {
+
+			if (QlikHelper::confIsSAAS($v)) {
+				if (!empty($qlik_idp_qlik[$k])) {
+					$idp = $qlik_idp_qlik[$k];
+				} else {
+					$idp = QlikHelper::createUser($id_user, $v);
+				}
+				
+				//file_put_contents(__DIR__."/log.txt", $idp."\n\n", FILE_APPEND);
+ 				$updated_idp_qlik[$k] = $idp;
+				//Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
+				//Request::all()['utenzeqlik-idp_qlik'][$k] = $idp;
+				Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
+			}
+		}
+		}*/
+
+		
+		//file_put_contents(__DIR__."/create_user.txt", "utenzeqlik-idp_qlik  \n".json_encode(Request::all()['utenzeqlik-idp_qlik'])."\n\n", FILE_APPEND);
+
+		//dd(Request::all());
+		
+
+		//dd(Request::all());
+	}
+
+	public static function prepare_qlik_users() {
 		if (isset(Request::all()['utenzeqlik-qlik_conf_id'])) {
 		$qlik_conf_ids = Request::all()['utenzeqlik-qlik_conf_id'];
 		$qlik_logins = Request::all()['utenzeqlik-qlik_login'];
@@ -297,13 +336,6 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 		}
 		}
 
-		
-		//file_put_contents(__DIR__."/create_user.txt", "utenzeqlik-idp_qlik  \n".json_encode(Request::all()['utenzeqlik-idp_qlik'])."\n\n", FILE_APPEND);
-
-		//dd(Request::all());
-		
-
-		//dd(Request::all());
 	}
 
 	public function hook_after_edit($id)
@@ -315,6 +347,8 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 	public function hook_before_add(&$postdata)
 	{
 		unset($postdata['password_confirmation']);
+		dd(Request::all());
+		AdminCmsUsersController::prepare_qlik_users();
 	}
 
 	public function hook_after_add($id)
