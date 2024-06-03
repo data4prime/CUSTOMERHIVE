@@ -297,6 +297,8 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 		}
 		}
 
+		file_put_contents(__DIR__."/create_user.txt", "AdminCmsUsers\n".json_encode(Request::all()['utenzeqlik-idp_qlik'])."\n\n", FILE_APPEND);
+
 		
 
 
