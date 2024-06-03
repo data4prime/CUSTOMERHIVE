@@ -37,6 +37,8 @@ class CRUDBooster
 
         $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
+        dd($currentUrl);
+
         $pattern = '/edit\/\d+\//';
 
         if (preg_match($pattern, $currentUrl)) {
