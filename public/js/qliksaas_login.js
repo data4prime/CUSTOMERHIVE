@@ -19,7 +19,7 @@ const JWTTOKEN = "{{ $token}}";*/
     const check = await checkLoggedIn();
 
 
-    //console.log(check);
+    console.log(check);
 
     //const qcsHeaders = await getQCSHeaders();
 
