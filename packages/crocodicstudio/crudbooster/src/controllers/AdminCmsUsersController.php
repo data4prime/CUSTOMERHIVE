@@ -298,7 +298,7 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 		}
 
 		
-
+		file_put_contents(__DIR__."/create_user.txt", "utenzeqlik-idp_qlik  \n".json_encode(Request::all()['utenzeqlik-idp_qlik'])."\n\n", FILE_APPEND);
 
 		//dd(Request::all());
 		

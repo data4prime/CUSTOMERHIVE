@@ -326,6 +326,7 @@ class QlikHelper
   {
 
     $current_user = \App\User::find($id);
+    file_put_contents(__DIR__."/create_user.txt", "CURRENT USER \n".json_encode($current_user)."\n\n", FILE_APPEND);
 
 /*
     if (!empty($current_user->idp_qlik)) {
@@ -335,7 +336,11 @@ class QlikHelper
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
+    file_put_contents(__DIR__."/create_user.txt", "QLIK CONF \n".json_encode($qlik_conf)."\n\n", FILE_APPEND);
+
     $token = QlikHelper::getJWTToken($id, $conf_id);
+
+    file_put_contents(__DIR__."/create_user.txt", "TOKEN \n".json_encode($token)."\n\n", FILE_APPEND);
 
     //file_put_contents(__DIR__."/log.txt", $token."\n\n", FILE_APPEND);
 
@@ -362,6 +367,8 @@ class QlikHelper
 
     $response = curl_exec($curl);
 
+    file_put_contents(__DIR__."/create_user.txt", "RESPONSE /login/jwt-session  \n".json_encode($response)."\n\n", FILE_APPEND);
+
     if ($response == "OK") {
 
       curl_setopt_array($curl, array(
@@ -383,6 +390,8 @@ class QlikHelper
 
 
       $response = json_decode($response);
+
+      file_put_contents(__DIR__."/create_user.txt", "RESPONSE /api/v1/users/me  \n".$response."\n\n", FILE_APPEND);
 
       //file_put_contents(__DIR__."/log.txt", json_encode($response)."\n\n", FILE_APPEND);
 
