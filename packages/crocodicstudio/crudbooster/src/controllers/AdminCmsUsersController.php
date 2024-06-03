@@ -180,7 +180,8 @@ class AdminCmsUsersController extends CBController
 		$this->form[] = array("label" => "Photo", "name" => "photo", "type" => "upload", "help" => "Recommended resolution is 200x200px", 'required' => false, 'validation' => 'image|max:1000', 'resize_width' => 90, 'resize_height' => 90);
 		$this->form[] = array("label" => "Password", "name" => "password", "type" => "password", "help" => "Leave empty if no change is needed");
 		$this->form[] = array("label" => "Password Confirmation", "name" => "password_confirmation", "type" => "password", "help" => "Leave empty if no change is needed");
-if (CRUDBooster::isUpdate()) {
+
+if (CRUDBooster::isEditPage()) {
 //QLIK USERS START
 		$columns[] = ['label'=>'Qlik Conf','name'=>'qlik_conf_id','type'=>'datamodal','datamodal_table'=>'qlik_confs','datamodal_columns'=>'confname,type','datamodal_select_to'=>'confname:confname,type:type','datamodal_where'=>'','datamodal_size'=>'large'];
 		$columns[] = array("label" => "Qlik login", "name" => "qlik_login", 'type'=>'text', 'help' => 'Compilare a mano se la configurazione scelta è di tipo On-Premise');
@@ -189,8 +190,9 @@ if (CRUDBooster::isUpdate()) {
 
 		
 			$this->form[] = ['label'=>'Utenze Qlik','name'=>'qlik_users','type'=>'child','columns'=>$columns,'table'=>'qlik_users','foreign_key'=>'user_id'];
-		}
+
 //QLIK USERS END
+}
 		
 
 # END FORM DO NOT REMOVE THIS LINE

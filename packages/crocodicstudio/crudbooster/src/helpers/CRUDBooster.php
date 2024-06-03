@@ -31,6 +31,22 @@ use crocodicstudio\crudbooster\helpers\UserHelper;
 
 class CRUDBooster
 {
+
+
+    public static function isEditPage() {
+
+        $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+        $pattern = '/edit\/\d+\//';
+
+        if (preg_match($pattern, $currentUrl)) {
+
+            return true;
+
+        }
+        return false;
+    }
+
     /**
      *	Comma-delimited data output from the child table
      */
