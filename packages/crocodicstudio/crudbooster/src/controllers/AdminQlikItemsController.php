@@ -825,17 +825,20 @@ class AdminQlikItemsController extends CBController
 		
 		$view = 'qlik_items.view';
 $data = [];
-		if (QlikHelper::confIsSAAS($conf->id)) {
+
+
+if (QlikHelper::confIsSAAS($conf->id)) {
 			
-		$url = $conf->url;
-		//$url .= ':443'
-		//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-		//$url .= $conf->endpoint;
-		$url .= '/chive';
-		$url .= '/qmc/';
-		
+			$url = $conf->url;
+			//$url .= ':443'
+			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+			//$url .= $conf->endpoint;
+			$url .= '/chive';
+			$url .= '/qmc/';
+			
 
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+			file_put_contents(__DIR__."/hub.txt", "TOKEN \n".json_encode($token)."\n\n", FILE_APPEND);
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
 				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
@@ -849,20 +852,17 @@ $data = [];
 			$view = 'qlik_items.view_saas';
 
 		} else {
-		$url = $conf->qrsurl;
-		//$url .= ':443'
-		//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-		//$url .= $conf->endpoint;
-		$url .= '/chive';
-		$url .= '/qmc/';
+			$url = $conf->qrsurl;
+			//$url .= ':443'
+			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+			//$url .= $conf->endpoint;
+			$url .= '/chive';
+			$url .= '/hub/';
 			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
 			$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
 		}
-
-		
-		//dd($qlik_ticket);
 
 		
 
