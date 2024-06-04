@@ -1468,6 +1468,87 @@ a:focus {
   background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
 }
 /*
+*
+* Componente: Qlik Widget
+*
+*/
+
+.qlikwidget {
+  border-radius: 2px;
+  position: relative;
+  display: block;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.qlikwidget > .inner {
+  padding: 10px;
+}
+.qlikwidget > .qlikwidget-footer {
+  position: relative;
+  text-align: center;
+  padding: 3px 0;
+  color: #fff;
+  color: rgba(255, 255, 255, 0.8);
+  display: block;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+}
+.qlikwidget > .qlikwidget-footer:hover {
+  color: #fff;
+  background: rgba(0, 0, 0, 0.15);
+}
+.qlikwidget h3 {
+  font-size: 38px;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  white-space: nowrap;
+  padding: 0;
+}
+.qlikwidget p {
+  font-size: 15px;
+}
+.qlikwidget p > small {
+  display: block;
+  color: #f9f9f9;
+  font-size: 13px;
+  margin-top: 5px;
+}
+.qlikwidget h3,
+.qlikwidget p {
+  z-index: 5;
+}
+.qlikwidget .icon {
+  -webkit-transition: all 0.3s linear;
+  -o-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  z-index: 0;
+  font-size: 90px;
+  color: rgba(0, 0, 0, 0.15);
+}
+.qlikwidget:hover {
+  text-decoration: none;
+  color: #f9f9f9;
+}
+.qlikwidget:hover .icon {
+  font-size: 95px;
+}
+@media (max-width: 767px) {
+  .qlikwidget {
+    text-align: center;
+  }
+  .qlikwidget .icon {
+    display: none;
+  }
+  .qlikwidget p {
+    font-size: 12px;
+  }
+}
+
+/*
  * Component: Small Box
  * --------------------
  */
