@@ -284,9 +284,13 @@ class QlikHelper
 
     $keyid = $qlik_conf->keyid;
 
-    $check_idp = DB::table('qlik_users')->where('user_id', $id)->where('qlik_conf_id', $conf_id)->first()->idp_qlik;
+    $check_idp = DB::table('qlik_users')->where('user_id', $id)->where('qlik_conf_id', $conf_id)->first();//->idp_qlik;
 
-
+    if (!$check_idp) {
+      $check_idp = QlikHelper::randString(64);
+    } else {
+      $check_idp = $check_idp->idp_qlik;
+    }
 
     $header = [
 
