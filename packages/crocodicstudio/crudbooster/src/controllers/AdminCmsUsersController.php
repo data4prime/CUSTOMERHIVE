@@ -341,7 +341,7 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 			}
 		}
 
-		//dd(Request::all());
+		dd(Request::all());
 
 	}
 
