@@ -1018,6 +1018,7 @@ class CBController extends Controller
             }
 
             if (isset($di['type']) && $di['type'] == 'child') {
+                file_put_contents(__CLASS__."/child_log.txt","RO1021\n" .json_encode($ro)."\n\n", FILE_APPEND);
                 $slug_name = str_slug($di['label'], '');
                 foreach ($di['columns'] as $child_col) {
                     if (isset($child_col['validation'])) {
