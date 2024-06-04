@@ -162,6 +162,14 @@
                         </a>
                     </div>
                 </li>
+                <li class='connectedSortable' title='Drag To Main Area'>
+                    <div id='btn-qlikwidget' class='button-widget-area'>
+                        <a href="#" data-component='qlikwidget' class='btn-add-widget add-qlikwidget'>
+                            <img src='{{asset("vendor/crudbooster/assets/statistic_builder/smallbox.png")}}' />
+                            <div class='title'>Qlik Widget</div>
+                        </a>
+                    </div>
+                </li>
             </ul>
         </aside>
         <!-- The sidebar's background -->
