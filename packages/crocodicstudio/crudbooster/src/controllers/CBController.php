@@ -1982,6 +1982,8 @@ class CBController extends Controller
 
         DB::table($this->table)->where($this->primary_key, $id)->update([$column => null]);
 
+        dd($row);
+
         CRUDBooster::insertLog(trans("crudbooster.log_delete_image", [
             'name' => $row->{$this->title_field},
             'module' => CRUDBooster::getCurrentModule()->name,
