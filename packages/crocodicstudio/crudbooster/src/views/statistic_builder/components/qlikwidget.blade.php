@@ -3,6 +3,28 @@
 <div id='{{$componentID}}' class='border-box'>
 
     <div class="small-box [color]">
+  <div id="chart1"></div>
+  <div id="chart2"></div>
+  
+  <script>
+    require.config({
+      baseUrl: "https://data4primesaas.eu.qlikcloud.com/resources"
+    });
+
+    require(["js/qlik"], function(qlik) {
+      var config = {
+        host: "https://data4primesaas.eu.qlikcloud.com",
+        prefix: "/",
+        port: 443,
+        isSecure: false
+      };
+      
+      var app = qlik.openApp('Course.qvf', config);
+      
+      app.getObject('chart1', 'ID_Oggetto1');
+      app.getObject('chart2', 'ID_Oggetto2');
+    });
+  </script>
         <div class='inner inner-box'>
             <h3>[sql]</h3>
             <p>[name]</p>
