@@ -1,12 +1,12 @@
 @if($command=='layout')
-<script src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
+<script  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
 <div id='{{$componentID}}' class='border-box'>
 
     <div class="small-box [color]">
   <div id="chart1"></div>
   <div id="chart2"></div>
   
-  <script>
+  <script defer>
     require.config({
       baseUrl: "https://data4primesaas.eu.qlikcloud.com/resources"
     });
