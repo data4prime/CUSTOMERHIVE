@@ -1,5 +1,5 @@
 @if($command=='layout')
-<script  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
+
 <div id='{{$componentID}}' class='border-box'>
 
     <div class="small-box [color]">
