@@ -49,6 +49,22 @@ class CRUDBooster
         return false;
     }
 
+    public static function isAddPage() {
+
+        $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+        //dd($currentUrl);
+
+        $pattern = "/users/add";
+
+        if (str_contains($currentUrl, $pattern)) {
+
+            return true;
+
+        }
+        return false;
+    }
+
     /**
      *	Comma-delimited data output from the child table
      */
