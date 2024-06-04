@@ -1229,7 +1229,7 @@ class CBController extends Controller
 
             if (@$ro['type'] == 'filemanager') {
                 $filename = str_replace('/' . config('lfm.prefix') . '/' . config('lfm.files_folder_name') . '/', '', $this->arr[$name]);
-                $url = '/storage/uploads/' . $filename;
+                $url = 'uploads/' . $filename;
                 $this->arr[$name] = $url;
             }
         }

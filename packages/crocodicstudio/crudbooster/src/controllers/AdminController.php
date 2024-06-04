@@ -86,7 +86,7 @@ class AdminController extends CBController
 
     if (isset($tenant->logo)) {
       //tenant logo
-      $logo = '/storage/' . $tenant->logo;
+      $logo = $tenant->logo;
     } elseif (CRUDBooster::getSetting('logo')) {
       //default site logo
       $logo = asset(CRUDBooster::getSetting('logo'));
