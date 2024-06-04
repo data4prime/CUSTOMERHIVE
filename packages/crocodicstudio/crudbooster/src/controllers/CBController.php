@@ -1018,7 +1018,7 @@ class CBController extends Controller
             }
 
             if (isset($di['type']) && $di['type'] == 'child') {
-                file_put_contents(__CLASS__."/child_log.txt","RO1021\n" .json_encode($ro)."\n\n", FILE_APPEND);
+                //file_put_contents(__CLASS__."/child_log.txt","RO1021\n" .json_encode($ro)."\n\n", FILE_APPEND);
                 $slug_name = str_slug($di['label'], '');
                 foreach ($di['columns'] as $child_col) {
                     if (isset($child_col['validation'])) {
@@ -1361,7 +1361,7 @@ class CBController extends Controller
             }
 
             if (isset($ro['type']) && $ro['type']  == 'child') {
-                file_put_contents(__CLASS__."/child_log.txt","RO\n" .json_encode($ro)."\n\n", FILE_APPEND);
+                //file_put_contents(__CLASS__."/child_log.txt","RO\n" .json_encode($ro)."\n\n", FILE_APPEND);
                 $name = str_slug($ro['label'], '');
                 $columns = $ro['columns'];
                 $getColName = Request::get($name . '-' . $columns[0]['name']);
@@ -1549,7 +1549,7 @@ class CBController extends Controller
             }
 
             if (isset($ro['type']) && $ro['type']  == 'child') {
-                file_put_contents(__DIR__."/child_log.txt","RO1550\n" .json_encode($ro)."\n\n", FILE_APPEND);
+                //file_put_contents(__DIR__."/child_log.txt","RO1550\n" .json_encode($ro)."\n\n", FILE_APPEND);
                 $name = str_slug($ro['label'], '');
                 $columns = $ro['columns'];
                 $getColName = Request::get($name . '-' . $columns[0]['name']);

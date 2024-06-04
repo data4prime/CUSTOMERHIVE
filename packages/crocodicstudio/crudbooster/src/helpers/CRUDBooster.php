@@ -1100,7 +1100,7 @@ return Request::segment($segment);
 	    
         $parent_table = CRUDBooster::parseSqlTable($parent_table)['table'];
         $child_table = CRUDBooster::parseSqlTable($child_table)['table'];
-        file_put_contents(__CLASS__."/getForeignKey.txt","RO1021\n" .json_encode($parent_table)."\n\n", FILE_APPEND);
+        //file_put_contents(__CLASS__."/getForeignKey.txt","RO1021\n" .json_encode($parent_table)."\n\n", FILE_APPEND);
         //#RAMA menu n:n groups
         if ($parent_table == 'cms_menus' and $child_table == 'menu_groups') {
             return 'menu_id';
@@ -1587,7 +1587,7 @@ crocodicstudio\crudbooster\controllers\
 
         $php = trim($php);
         $path = base_path("app/Http/Controllers/");
-        file_put_contents($path . 'Api' . $controller_name . 'Controller.php', $php);
+        //file_put_contents($path . 'Api' . $controller_name . 'Controller.php', $php);
     }
 
     public static function makeControllerName($name)
@@ -2142,7 +2142,7 @@ crocodicstudio\crudbooster\controllers\
         $php = trim($php);
 
         //create file controller
-        file_put_contents($path . 'Admin' . $controllername . '.php', $php);
+        //file_put_contents($path . 'Admin' . $controllername . '.php', $php);
 
         return 'Admin' . $controllername;
     }
