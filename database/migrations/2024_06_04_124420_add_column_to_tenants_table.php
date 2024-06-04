@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('tenants', function (Blueprint $table) {
             //
+$table->string('tenant_path')->nullable();
         });
     }
 
