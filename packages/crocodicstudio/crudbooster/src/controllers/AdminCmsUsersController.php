@@ -311,7 +311,7 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 	}
 
 	public static function prepare_qlik_users() {
-		dd(Request::all());
+		//dd(Request::all());
 		if (isset(Request::all()['utenzeqlik-qlik_conf_id']) && !empty(Request::all()['utenzeqlik-qlik_conf_id'])) {
 		$qlik_conf_ids = Request::all()['utenzeqlik-qlik_conf_id'];
 		$qlik_logins = Request::all()['utenzeqlik-qlik_login'];
@@ -322,19 +322,20 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 		$updated_idp_qlik = $qlik_idp_qlik;
 
 		foreach($qlik_conf_ids as $k => $v) {
-
-			if (QlikHelper::confIsSAAS($v)) {
-				if (!empty($qlik_idp_qlik[$k])) {
-					$idp = $qlik_idp_qlik[$k];
-				} else {
-					$idp = QlikHelper::createUser($id_user, $v);
+			if (!empty($v)) {
+				if (QlikHelper::confIsSAAS($v)) {
+					if (!empty($qlik_idp_qlik[$k])) {
+						$idp = $qlik_idp_qlik[$k];
+					} else {
+						$idp = QlikHelper::createUser($id_user, $v);
+					}
+					
+					//file_put_contents(__DIR__."/log.txt", $idp."\n\n", FILE_APPEND);
+					$updated_idp_qlik[$k] = $idp;
+					//Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
+					//Request::all()['utenzeqlik-idp_qlik'][$k] = $idp;
+					Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
 				}
-				
-				//file_put_contents(__DIR__."/log.txt", $idp."\n\n", FILE_APPEND);
- 				$updated_idp_qlik[$k] = $idp;
-				//Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
-				//Request::all()['utenzeqlik-idp_qlik'][$k] = $idp;
-				Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
 			}
 		}
 		}
