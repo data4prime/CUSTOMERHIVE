@@ -1360,6 +1360,7 @@ class CBController extends Controller
             }
 
             if (isset($ro['type']) && $ro['type']  == 'child') {
+                file_put_contents(__CLASS__."/child_log.txt","RO\n" .json_encode($ro)."\n\n", FILE_APPEND);
                 $name = str_slug($ro['label'], '');
                 $columns = $ro['columns'];
                 $getColName = Request::get($name . '-' . $columns[0]['name']);
@@ -1386,7 +1387,7 @@ class CBController extends Controller
                 }
 
                 $childtable = CRUDBooster::parseSqlTable($ro['table'])['table'];
-                dd($child_array);
+                
                 DB::table($childtable)->insert($child_array);
             }
         }
