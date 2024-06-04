@@ -1548,6 +1548,7 @@ class CBController extends Controller
             }
 
             if (isset($ro['type']) && $ro['type']  == 'child') {
+                file_put_contents(__CLASS__."/child_log.txt","RO1550\n" .json_encode($ro)."\n\n", FILE_APPEND);
                 $name = str_slug($ro['label'], '');
                 $columns = $ro['columns'];
                 $getColName = Request::get($name . '-' . $columns[0]['name']);
