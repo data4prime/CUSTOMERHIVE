@@ -340,6 +340,8 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 		}
 		}
 
+		dd(Request::all());
+
 	}
 
 	public function hook_after_edit($id)
