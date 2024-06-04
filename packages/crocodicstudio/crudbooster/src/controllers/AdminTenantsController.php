@@ -61,7 +61,7 @@ class AdminTenantsController extends CBController
 		$this->form[] = ['label' => 'Background Image', 'name' => 'login_background_image', 'type' => 'upload', 'width' => 'col-sm-9', 'validation' => 'image|max:10000', 'help' => 'Supported types: jpg, png, gif. Max 10 MB'];
 		$this->form[] = ['label' => 'Font Color', 'name' => 'login_font_color', 'type' => 'text', 'width' => 'col-sm-9', 'help' => 'use hex format i.e.: #4287f5'];
 		$this->form[] = ['label' => 'Domain name', 'name' => 'domain_name', 'type' => 'text', 'width' => 'col-sm-9', 'help' => 'use only letters and numbers', 'validation' => 'required|min:1|max:20|regex:/^[a-zA-Z0-9]+$/u'];
-	$this->form[] = ['label' => 'Tenant Path', 'name' => 'tenant_path', 'type' => 'hidden', 'width' => 'col-sm-10', 'value' => env('APP_PATH').'/storage/app/public'];
+	$this->form[] = ['label' => 'Tenant Path', 'name' => 'tenant_path', 'type' => 'hidden', 'width' => 'col-sm-10', 'value' => env('APP_URL')];
 		
 # END FORM DO NOT REMOVE THIS LINE
 
