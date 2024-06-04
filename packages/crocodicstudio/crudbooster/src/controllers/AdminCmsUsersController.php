@@ -255,6 +255,7 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 
 	public function hook_before_edit(&$postdata, $user_id)
 	{
+		
 		unset($postdata['password_confirmation']);
 		//se il tenant è cambiato
 		$old_tenant_id = UserHelper::tenant($user_id);
@@ -310,7 +311,8 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 	}
 
 	public static function prepare_qlik_users() {
-		if (isset(Request::all()['utenzeqlik-qlik_conf_id'])) {
+		dd(Request::all());
+		if (isset(Request::all()['utenzeqlik-qlik_conf_id']) && !empty(Request::all()['utenzeqlik-qlik_conf_id'])) {
 		$qlik_conf_ids = Request::all()['utenzeqlik-qlik_conf_id'];
 		$qlik_logins = Request::all()['utenzeqlik-qlik_login'];
 		$qlik_user_directory = Request::all()['utenzeqlik-user_directory'];
