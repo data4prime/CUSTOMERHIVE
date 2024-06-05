@@ -14,13 +14,13 @@
 				host: "data4primesaas.eu.qlikcloud.com", //the address of your Qlik Engine Instance
 				prefix: "/chive/", //or the virtual proxy to be used. for example "/anonymous/"
 				port: 443, //or the port to be used if different from the default port  
-				isSecure: true //should be true if connecting over HTTPS
-				//webIntegrationId: 'web-integration-id-here' //only needed in SaaS editions
+				isSecure: true, //should be true if connecting over HTTPS
+				webIntegrationId: '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj' //only needed in SaaS editions
 			};
 						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 				require.config({
-						baseUrl: baseUrl + 'resources'
-						// webIntegrationId: config.webIntegrationId// only needed in SaaS editions				
+						baseUrl: baseUrl + 'resources',
+						webIntegrationId: config.webIntegrationId// only needed in SaaS editions				
 			});
 			
 
