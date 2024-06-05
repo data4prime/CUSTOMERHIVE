@@ -15,7 +15,10 @@
 				prefix: "/chive/", //or the virtual proxy to be used. for example "/anonymous/"
 				port: 443, //or the port to be used if different from the default port  
 				isSecure: true, //should be true if connecting over HTTPS
-				webIntegrationId: '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj' //only needed in SaaS editions
+				webIntegrationId: '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj', //only needed in SaaS editions
+                paths: {
+                    "js/qlik": "js/qlik"
+                    }
 			};
 						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 				require.config({
@@ -25,7 +28,7 @@
 			
 
 			/* Require */
-			define( ["js/qlik"], function ( qlik ) {
+			require( ["js/qlik"], function ( qlik ) {
 
 			
 				/* language setup */
