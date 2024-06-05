@@ -7,23 +7,39 @@
   <div id="chart2"></div>
   
   <script type="text/javascript">
-    require.config({
-      baseUrl: "https://data4primesaas.eu.qlikcloud.com/resources"
-    });
+			var selState;
+			var query;
+			var filters;
+			var config = {
+				host: "data4primesaas.eu.qlikcloud.com", //the address of your Qlik Engine Instance
+				prefix: "/chive/", //or the virtual proxy to be used. for example "/anonymous/"
+				port: 443, //or the port to be used if different from the default port  
+				isSecure: true //should be true if connecting over HTTPS
+				//webIntegrationId: 'web-integration-id-here' //only needed in SaaS editions
+			};
+						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
+				require.config({
+						baseUrl: baseUrl + 'resources'
+						// webIntegrationId: config.webIntegrationId// only needed in SaaS editions				
+			});
+			
 
-    require(["js/qlik"], function(qlik) {
-      var config = {
-        host: "https://data4primesaas.eu.qlikcloud.com",
-        prefix: "/",
-        port: 443,
-        isSecure: true
-      };
-      
-      var app = qlik.openApp('Course.qvf', config);
-      
-      app.getObject('chart1', 'ID_Oggetto1');
-      app.getObject('chart2', 'ID_Oggetto2');
-    });
+			/* Require */
+			require( ["js/qlik"], function ( qlik ) {
+
+			
+				/* language setup */
+				qlik.setLanguage("en");
+				
+
+				// app production = EURL_new
+				var app = qlik.openApp('5a174d39-0d26-4871-bbe9-583252deaeb2', config);
+				
+
+
+				
+			});
+			
   </script>
         <div class='inner inner-box'>
             <h3>[sql]</h3>
