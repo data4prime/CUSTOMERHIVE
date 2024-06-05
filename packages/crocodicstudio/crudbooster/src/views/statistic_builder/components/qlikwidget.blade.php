@@ -25,7 +25,7 @@
 			
 
 			/* Require */
-			require( ["js/qlik"], function ( qlik ) {
+			define( ["js/qlik"], function ( qlik ) {
 
 			
 				/* language setup */
