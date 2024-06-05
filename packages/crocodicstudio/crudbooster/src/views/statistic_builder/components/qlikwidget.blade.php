@@ -6,7 +6,7 @@
   <div id="chart1"></div>
   <div id="chart2"></div>
   
-  <script defer>
+  <script type="text/javascript">
     require.config({
       baseUrl: "https://data4primesaas.eu.qlikcloud.com/resources"
     });
@@ -16,7 +16,7 @@
         host: "https://data4primesaas.eu.qlikcloud.com",
         prefix: "/",
         port: 443,
-        isSecure: false
+        isSecure: true
       };
       
       var app = qlik.openApp('Course.qvf', config);
