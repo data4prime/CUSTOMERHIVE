@@ -1,44 +1,5 @@
 @if($command=='layout')
-<script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
-  <script type="text/javascript" >
-			var selState;
-			var query;
-			var filters;
-			var config = {
-				host: "data4primesaas.eu.qlikcloud.com", 
-				prefix: "/", 
-				port: 443, 
-				isSecure: true,
-				webIntegrationId: '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj',
-                paths: {
-                    "qlik": "js/qlik"
-                    }
-			};
-						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
-                console.log(baseUrl);
 
-				require.config({
-						baseUrl: baseUrl + 'resources',
-						webIntegrationId: config.webIntegrationId			
-			});
-
-
-			require( ["js/qlik"], function ( qlik ) {
-                qlik.setOnError( function (error){
-                        alert(error.message);
-                    });
-
-				qlik.setLanguage("en");
-
-				var app = qlik.openApp('5a174d39-0d26-4871-bbe9-583252deaeb2', config);
-                console.log("DOPOO OPEN APP");
-				
-
-
-				
-			});
-
-  </script>
 <div id='{{$componentID}}' class='border-box'>
 
     <div class="small-box [color]">
