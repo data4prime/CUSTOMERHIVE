@@ -55,9 +55,9 @@
     var NOTIFICATION_NOTIFICATIONS = "{{trans('crudbooster.notification_notification')}}";
     var NOTIFICATION_NEW = "{{trans('crudbooster.notification_new')}}";
 
-    $(function () {
+   /* $(function () {
         $('.datatables-simple').DataTable();
-    })
+    })*/
 </script>
 <script src="{{asset('vendor/crudbooster/assets/js/main.js').'?r='.time()}}"></script>
 
