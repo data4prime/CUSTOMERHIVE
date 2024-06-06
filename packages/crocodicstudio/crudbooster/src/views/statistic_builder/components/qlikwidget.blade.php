@@ -22,7 +22,7 @@
 			};
 						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
                 console.log(baseUrl);
-/*
+
 				require.config({
 						baseUrl: baseUrl + 'resources',
 						webIntegrationId: config.webIntegrationId			
@@ -41,7 +41,7 @@
 
 				
 			});
-*/	
+
   </script>
 
         <!--<div class='inner inner-box'>
