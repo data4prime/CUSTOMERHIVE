@@ -92,7 +92,7 @@
 			});
 
 
-			require( ["js/qlik",
+			require( ["js/qlik"
 
 ], function ( qlik ) {
                 qlik.setOnError( function (error){
