@@ -1,10 +1,4 @@
 @if($command=='layout')
-
-<div id='{{$componentID}}' class='border-box'>
-
-    <div class="small-box [color]">
-  <div id="chart1"></div>
-  <div id="chart2"></div>
 <script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
   <script type="text/javascript" >
 			var selState;
@@ -45,6 +39,12 @@
 			});
 
   </script>
+<div id='{{$componentID}}' class='border-box'>
+
+    <div class="small-box [color]">
+  <div id="chart1"></div>
+  <div id="chart2"></div>
+
 
         <!--<div class='inner inner-box'>
             <h3>[sql]</h3>
