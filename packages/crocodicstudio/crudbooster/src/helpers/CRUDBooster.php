@@ -140,7 +140,7 @@ public static function isProfilePage() {
             $filename = str_slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
             //$filesize = $file->getClientSize() / 1024;
             $filesize = $file->getSize() / 1024;
-            $file_path = '/storage/uploads/' . $userID . '/' . date('Y-m');
+            $file_path = '/uploads/' . $userID . '/' . date('Y-m');
 
             //Create Directory Monthly
             Storage::makeDirectory($file_path);
