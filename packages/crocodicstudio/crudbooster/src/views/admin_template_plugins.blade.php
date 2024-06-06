@@ -79,7 +79,8 @@
 				isSecure: true,
 				webIntegrationId: '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj',
                 paths: {
-                    "qlik": "js/qlik"
+                    "qlik": "js/qlik",
+
                     }
 			};
 						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
@@ -91,7 +92,10 @@
 			});
 
 
-			require( ["js/qlik"], function ( qlik ) {
+			require( ["js/qlik",
+
+"vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min"
+], function ( qlik, jQuery ) {
                 qlik.setOnError( function (error){
                         alert(error.message);
                     });
