@@ -5,7 +5,7 @@
     <div class="small-box [color]">
   <div id="chart1"></div>
   <div id="chart2"></div>
-  
+  <script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
   <script type="text/javascript">
 			var selState;
 			var query;
@@ -17,7 +17,7 @@
 				isSecure: true, //should be true if connecting over HTTPS
 				webIntegrationId: '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj', //only needed in SaaS editions
                 paths: {
-                    "js/qlik": "js/qlik"
+                    "qlik": "js/qlik"
                     }
 			};
 						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
