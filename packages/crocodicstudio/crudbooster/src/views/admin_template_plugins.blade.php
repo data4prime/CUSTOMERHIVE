@@ -11,10 +11,10 @@
 
 <script>
 define([
-'vendor/crudbooster/assets/adminlte/plugins/daterangepicker/moment.min.js',
-'vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min.js'
+'vendor/crudbooster/assets/adminlte/plugins/daterangepicker/moment.min',
+'vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min'
 
-], function(moment, jquery) {
+], function(moment, jQuery) {
 
 
 
