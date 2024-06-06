@@ -30,7 +30,9 @@
 
 
 			require( ["js/qlik"], function ( qlik ) {
-
+                qlik.setOnError( function (error){
+                        alert(error.message);
+                    });
 
 				qlik.setLanguage("en");
 
