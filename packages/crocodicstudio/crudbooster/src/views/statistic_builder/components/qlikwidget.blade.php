@@ -5,17 +5,17 @@
     <div class="small-box [color]">
   <div id="chart1"></div>
   <div id="chart2"></div>
-  <!--<script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>-->
+<!--
   <script type="text/javascript" >
 			var selState;
 			var query;
 			var filters;
 			var config = {
-				host: "data4primesaas.eu.qlikcloud.com", //the address of your Qlik Engine Instance
-				prefix: "/", //or the virtual proxy to be used. for example "/anonymous/"
-				port: 443, //or the port to be used if different from the default port  
-				isSecure: true, //should be true if connecting over HTTPS
-				webIntegrationId: '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj', //only needed in SaaS editions
+				host: "data4primesaas.eu.qlikcloud.com", 
+				prefix: "/", 
+				port: 443, 
+				isSecure: true,
+				webIntegrationId: '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj',
                 paths: {
                     "qlik": "js/qlik"
                     }
@@ -24,19 +24,16 @@
                 console.log(baseUrl);
 				require.config({
 						baseUrl: baseUrl + 'resources',
-						webIntegrationId: config.webIntegrationId// only needed in SaaS editions				
+						webIntegrationId: config.webIntegrationId			
 			});
 			
 
-			/* Require */
+
 			require( ["js/qlik"], function ( qlik ) {
 
-			
-				/* language setup */
-				qlik.setLanguage("en");
-				
 
-				// app production = EURL_new
+				qlik.setLanguage("en");
+
 				var app = qlik.openApp('5a174d39-0d26-4871-bbe9-583252deaeb2', config);
                 console.log("DOPOO OPEN APP");
 				
@@ -46,6 +43,7 @@
 			});
 			
   </script>
+-->
         <!--<div class='inner inner-box'>
             <h3>[sql]</h3>
             <p>[name]</p>
