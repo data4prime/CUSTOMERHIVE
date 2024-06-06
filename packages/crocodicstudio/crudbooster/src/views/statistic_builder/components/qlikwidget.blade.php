@@ -5,7 +5,7 @@
     <div class="small-box [color]">
   <div id="chart1"></div>
   <div id="chart2"></div>
-<!--
+
   <script type="text/javascript" >
 			var selState;
 			var query;
@@ -26,8 +26,7 @@
 						baseUrl: baseUrl + 'resources',
 						webIntegrationId: config.webIntegrationId			
 			});
-			
-
+/*
 
 			require( ["js/qlik"], function ( qlik ) {
 
@@ -41,9 +40,9 @@
 
 				
 			});
-			
+*/	
   </script>
--->
+
         <!--<div class='inner inner-box'>
             <h3>[sql]</h3>
             <p>[name]</p>
