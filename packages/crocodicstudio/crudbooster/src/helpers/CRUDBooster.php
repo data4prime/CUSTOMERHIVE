@@ -155,7 +155,7 @@ public static function isProfilePage() {
             if (Storage::putFileAs($file_path, $file, $filename)) {
                 self::resizeImage($file_path . '/' . $filename, $resize_width, $resize_height, $ext);
 
-                return $file_path . '/' . $filename;
+                return '/storage'.$file_path . '/' . $filename;
             } else {
                 return null;
             }
