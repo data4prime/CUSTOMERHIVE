@@ -10,7 +10,7 @@
 
 
 
-<!--
+
 <script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
 
 
@@ -94,8 +94,7 @@
 
 			require( ["js/qlik",
 
-"vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min"
-], function ( qlik, jQuery ) {
+], function ( qlik ) {
                 qlik.setOnError( function (error){
                         alert(error.message);
                     });
