@@ -10,7 +10,7 @@
 <script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
 
 <script>
-define([
+require([
 'vendor/crudbooster/assets/adminlte/plugins/daterangepicker/moment.min',
 'vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min'
 
