@@ -7,39 +7,6 @@
 
 <!-- jQuery 2.2.3 -->
 
-<script type="text/javascript" src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
-<script>
-    require.config({
-        baseUrl: '{{ asset("vendor/crudbooster/assets") }}',
-        paths: {
-            'jquery': 'adminlte/plugins/jQuery/jquery-2.2.3.min',
-            'bootstrap': 'adminlte/bootstrap/js/bootstrap.min',
-            'adminlte': 'adminlte/dist/js/app',
-            'datepicker': 'adminlte/plugins/datepicker/bootstrap-datepicker',
-            'moment': 'adminlte/plugins/daterangepicker/moment.min',
-            'daterangepicker': 'adminlte/plugins/daterangepicker/daterangepicker',
-            'timepicker': 'adminlte/plugins/timepicker/bootstrap-timepicker.min',
-            'lightbox': 'lightbox/dist/js/lightbox.min',
-            'sweetalert': 'sweetalert/dist/sweetalert.min',
-            'priceFormat': 'jquery.price_format.2.0.min',
-            'datatables': 'adminlte/plugins/datatables/jquery.dataTables.min',
-            'dataTablesBootstrap': 'adminlte/plugins/datatables/dataTables.bootstrap.min'
-        },
-        shim: {
-            'bootstrap': ['jquery'],
-            'adminlte': ['bootstrap'],
-            'daterangepicker': ['moment'],
-            'dataTablesBootstrap': ['datatables']
-        }
-    });
-
-    require(['jquery', 'bootstrap', 'adminlte', 'datepicker', 'daterangepicker', 'timepicker', 'lightbox', 'sweetalert', 'priceFormat', 'datatables', 'dataTablesBootstrap'], function($) {
-        $(document).ready(function() {
-
-        });
-    });
-</script>
-
 <script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
 
 
