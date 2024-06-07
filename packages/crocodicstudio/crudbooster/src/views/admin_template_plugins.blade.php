@@ -64,11 +64,33 @@
 </script>
 <script src="{{asset('vendor/crudbooster/assets/js/main.js').'?r='.time()}}"></script>
 
+@php 
+
+
+use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
+
+
+$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+
+
+@endphp 
 
 
 
 <script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
  <script type="text/javascript" >
+const authHeader = "{{$token}}";
+    console.log(authHeader);
+    console.log(WEBINTEGRATIONID);
+    return await fetch(`${TENANT}/login/jwt-session`, {
+        credentials: 'include',
+        mode: 'cors',
+        method: 'POST',
+        headers: {
+            'Authorization': authHeader,
+            'qlik-web-integration-id': '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj'
+        },
+    })
 			var selState;
 			var query;
 			var filters;
