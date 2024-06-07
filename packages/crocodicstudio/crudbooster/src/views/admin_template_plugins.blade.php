@@ -79,7 +79,7 @@
 				isSecure: true,
 				webIntegrationId: '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj',
                 paths: {
-                    "qlik": "js/qlik",
+                    "qlik": "js/qlik"
 
                     }
 			};
@@ -92,9 +92,7 @@
 			});
 
 
-			require( ["js/qlik"
-
-], function ( qlik ) {
+			require( ["js/qlik"], function ( qlik ) {
                 qlik.setOnError( function (error){
                         alert(error.message);
                     });
