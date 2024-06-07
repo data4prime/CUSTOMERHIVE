@@ -4,7 +4,7 @@
 })();
 
 async function jwtLogin(token) {
-    const authHeader = `Bearer ${token}`;
+    const authHeader = 'Bearer '+qlik_token ;
     console.log(authHeader);
 
     return await fetch(`https://data4primesaas.eu.qlikcloud.com/login/jwt-session`, {

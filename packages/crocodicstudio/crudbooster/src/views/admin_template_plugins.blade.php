@@ -76,6 +76,12 @@ $token = HelpersQlikHelper::getJWTToken(1, 3);
 
 @endphp 
 
+<script  type="text/javascript" >
+
+var qlik_token = '{{$token}}';
+
+</script>
+
 
 
 <script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
