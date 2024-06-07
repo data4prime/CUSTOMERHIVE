@@ -79,7 +79,7 @@ $token = HelpersQlikHelper::getJWTToken(1, 3);
 
 
 <script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
-<script  src="{{asset('js/qliksaas_login_widget.js')}}"></script> 
+<script  src="{{asset('js/qlik_login_widget.js')}}"></script> 
 <script defer type="text/javascript" >
 
 var selState;
