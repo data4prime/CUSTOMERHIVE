@@ -25,7 +25,6 @@
                 class='fa fa-trash'></i></a>
     </div>-->
 </div>
-<script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
   <script type="text/javascript" >
 			var selState;
 			var query;
