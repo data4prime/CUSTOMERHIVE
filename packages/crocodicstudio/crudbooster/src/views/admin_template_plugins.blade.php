@@ -82,7 +82,7 @@ $token = HelpersQlikHelper::getJWTToken(1, 3);
 const authHeader = "{{$token}}";
     console.log(authHeader);
     console.log(WEBINTEGRATIONID);
-    var login =  await fetch(`${TENANT}/login/jwt-session`, {
+    var login =  fetch(`${TENANT}/login/jwt-session`, {
         credentials: 'include',
         mode: 'cors',
         method: 'POST',
@@ -90,7 +90,18 @@ const authHeader = "{{$token}}";
             'Authorization': authHeader,
             'qlik-web-integration-id': '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj'
         },
-    })
+    }).then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+    }
+    return response.text(); // o .text() o .blob() a seconda del tipo di risposta
+})
+.then(data => {
+    console.log('Success:', data);
+})
+.catch(error => {
+    console.error('There has been a problem with your fetch operation:', error);
+});
 			var selState;
 			var query;
 			var filters;
