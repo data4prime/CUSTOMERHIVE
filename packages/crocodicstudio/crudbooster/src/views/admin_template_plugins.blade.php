@@ -7,7 +7,7 @@
 
 <!-- jQuery 2.2.3 -->
 
-<script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
+<!--<script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>-->
 
 
  <!--Bootstrap 3.4.1 JS -->
