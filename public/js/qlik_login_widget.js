@@ -1,6 +1,7 @@
 (async function main() {
 
     const isLoggedIn = await jwtLogin();
+    console.log(isLoggedIn);
 })();
 
 async function jwtLogin(token) {
