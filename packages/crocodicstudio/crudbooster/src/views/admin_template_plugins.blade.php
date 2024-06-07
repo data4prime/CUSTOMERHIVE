@@ -141,9 +141,6 @@ var selState;
 } catch (e) {
         console.error("Errore durante l'apertura dell'app:", e);
     }
-})
-.catch(error => {
-    console.error('There has been a problem with your fetch operation:', error);
 });
 			
 
