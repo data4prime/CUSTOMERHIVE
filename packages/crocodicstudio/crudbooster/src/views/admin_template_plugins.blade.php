@@ -78,10 +78,10 @@
 				port: 443, 
 				isSecure: true,
 				webIntegrationId: '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj',
-                paths: {
+                /*paths: {
                     "qlik": "js/qlik"
 
-                    }
+                    }*/
 			};
 						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
                 console.log(baseUrl);
@@ -92,7 +92,7 @@
 			});
 
 
-			require( ["qlik"], function ( qlik ) {
+			require( ["js/qlik"], function ( qlik ) {
                 qlik.setOnError( function (error){
                         alert(error.message);
                     });
