@@ -80,7 +80,7 @@ $token = HelpersQlikHelper::getJWTToken(1, 3);
 <script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
  <script type="text/javascript" >
 const authHeader = "{{$token}}";
-
+    console.log(authHeader);
     var login =  fetch(`https://data4primesaas.eu.qlikcloud.com/login/jwt-session`, {
         credentials: 'include',
         mode: 'cors',
@@ -90,6 +90,7 @@ const authHeader = "{{$token}}";
             'qlik-web-integration-id': '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj'
         },
     }).then(response => {
+    console.log(response);
     if (!response.ok) {
         throw new Error('Network response was not ok ' + response.statusText);
     }
