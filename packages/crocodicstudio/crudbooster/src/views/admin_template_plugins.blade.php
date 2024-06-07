@@ -70,7 +70,7 @@
 use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 
 
-$token = HelpersQlikHelper::getJWTToken(1, 1);
+$token = HelpersQlikHelper::getJWTToken(1, 3);
 
 
 @endphp 
