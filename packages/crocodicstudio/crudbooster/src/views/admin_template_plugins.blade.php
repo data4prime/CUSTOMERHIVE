@@ -79,27 +79,9 @@ $token = HelpersQlikHelper::getJWTToken(1, 3);
 
 
 <script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
-<script  src="{{asset('js/qliksaas_login.js')}}"></script> 
+<script  src="{{asset('js/qliksaas_login_widget.js')}}"></script> 
 <script defer type="text/javascript" >
-const authHeader = "{{$token}}";
-    console.log(authHeader);
-    var login =  fetch(`https://data4primesaas.eu.qlikcloud.com/login/jwt-session`, {
-        credentials: 'include',
-        mode: 'cors',
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${authHeader}`,
-            'qlik-web-integration-id': '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj'
-        },
-    }).then(response => {
-    console.log(response);
-    if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
-    }
-    return response.text(); // o .text() o .blob() a seconda del tipo di risposta
-})
-.then(data => {
-    console.log('Success:', data);
+
 var selState;
 			var query;
 			var filters;
@@ -119,7 +101,6 @@ var selState;
 						webIntegrationId: config.webIntegrationId			
 			});
 
-            try {
 
 			require( ["js/qlik"], function ( qlik ) {
                 if (!qlik) {
@@ -139,10 +120,7 @@ var selState;
 
 				
 			});
-} catch (e) {
-        console.error("Errore durante l'apertura dell'app:", e);
-    }
-});
+
 			
 
   </script>
