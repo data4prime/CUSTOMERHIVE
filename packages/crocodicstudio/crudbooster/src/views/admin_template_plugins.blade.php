@@ -68,7 +68,7 @@
 
 
 <script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
-  <script type="text/javascript" >
+  <script defer type="text/javascript" >
 			var selState;
 			var query;
 			var filters;
@@ -90,7 +90,7 @@
 						baseUrl: baseUrl + 'resources',
 						webIntegrationId: config.webIntegrationId			
 			});
-/*
+
             try {
 
 			require( ["js/qlik"], function ( qlik ) {
@@ -113,7 +113,7 @@
 			});
 } catch (e) {
         console.error("Errore durante l'apertura dell'app:", e);
-    }*/
+    }
 
   </script>
 
