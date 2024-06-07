@@ -7,24 +7,7 @@
   <div id="chart2"></div>
 
 
-        <!--<div class='inner inner-box'>
-            <h3>[sql]</h3>
-            <p>[name]</p>
-        </div>
-        <div class="icon">
-            <i class="ion [icon]"></i>
-        </div>
-        <a href="[link]" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>-->
-    </div>
-
-    <!--<div class='action pull-right'>
-        <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Qlik Widget'
-            class='btn-edit-component'><i class='fa fa-pencil'></i></a>
-        &nbsp;
-        <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i
-                class='fa fa-trash'></i></a>
-    </div>-->
-</div>
+<iframe src="/mashup" frameborder="0"></iframe>
  @elseif($command=='configuration')
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
