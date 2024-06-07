@@ -68,7 +68,7 @@
 
 
 <script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
-  <script defer type="text/javascript" >
+  <script type="text/javascript" >
 			var selState;
 			var query;
 			var filters;
@@ -78,10 +78,7 @@
 				port: 443, 
 				isSecure: true,
 				webIntegrationId: '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj',
-                /*paths: {
-                    "qlik": "js/qlik"
 
-                    }*/
 			};
 						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
                 console.log(baseUrl);
