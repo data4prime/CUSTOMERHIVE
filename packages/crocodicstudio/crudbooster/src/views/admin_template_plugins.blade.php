@@ -86,7 +86,7 @@ const authHeader = "{{$token}}";
         mode: 'cors',
         method: 'POST',
         headers: {
-            'Authorization': authHeader,
+            'Authorization': `${authHeader}`,
             'qlik-web-integration-id': '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj'
         },
     }).then(response => {
