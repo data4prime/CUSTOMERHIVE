@@ -1,6 +1,7 @@
 (async function main() {
 
     const isLoggedIn = await jwtLogin();
+    const check = await checkLoggedIn();
     console.log(isLoggedIn);
 var selState;
 			var query;
@@ -53,6 +54,20 @@ async function jwtLogin(token) {
         headers: {
             'Authorization': authHeader,
             'qlik-web-integration-id': '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj'
+        },
+    })
+}
+
+async function checkLoggedIn(token) {
+    //console.log("JWTTOKEN");
+    //console.log(JWTTOKEN);
+    return await fetch(`https://data4primesaas.eu.qlikcloud.com/api/v1/users/me`, {
+        //redirect: 'follow'
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+            'qlik-web-integration-id': '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj',
+            'Authorization': 'Bearer ' + qlik_token
         },
     })
 }
