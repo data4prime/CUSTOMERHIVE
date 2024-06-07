@@ -93,11 +93,15 @@
 
 
 			require( ["js/qlik"], function ( qlik ) {
+                if (!qlik) {
+                        console.error("Il modulo qlik non è stato caricato correttamente.");
+                        return;
+                    }
                 qlik.setOnError( function (error){
                         alert(error.message);
                     });
 
-				qlik.setLanguage("en");
+				//qlik.setLanguage("en");
 
 				var app = qlik.openApp('5a174d39-0d26-4871-bbe9-583252deaeb2', config);
                 console.log("DOPOO OPEN APP");
