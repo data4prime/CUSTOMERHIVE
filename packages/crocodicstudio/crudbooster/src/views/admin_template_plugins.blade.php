@@ -90,7 +90,7 @@
 						baseUrl: baseUrl + 'resources',
 						webIntegrationId: config.webIntegrationId			
 			});
-
+/*
             try {
 
 			require( ["js/qlik"], function ( qlik ) {
@@ -102,7 +102,7 @@
                         alert(error.message);
                     });
 
-				//qlik.setLanguage("en");
+
 
 				var app = qlik.openApp('5a174d39-0d26-4871-bbe9-583252deaeb2', config);
                 console.log("DOPOO OPEN APP");
@@ -113,7 +113,7 @@
 			});
 } catch (e) {
         console.error("Errore durante l'apertura dell'app:", e);
-    }
+    }*/
 
   </script>
 
