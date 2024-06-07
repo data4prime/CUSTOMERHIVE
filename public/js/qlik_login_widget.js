@@ -1,7 +1,7 @@
 (async function main() {
 
-    /*const isLoggedIn = await jwtLogin();
-    console.log(isLoggedIn);*/
+    const isLoggedIn = await jwtLogin();
+    console.log(isLoggedIn);
 var selState;
 			var query;
 			var filters;
