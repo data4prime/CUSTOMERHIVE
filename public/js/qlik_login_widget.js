@@ -7,7 +7,7 @@ async function jwtLogin(token) {
     const authHeader = `Bearer ${token}`;
     console.log(authHeader);
 
-    return await fetch(`${TENANT}/login/jwt-session`, {
+    return await fetch(`https://data4primesaas.eu.qlikcloud.com/login/jwt-session`, {
         credentials: 'include',
         mode: 'cors',
         method: 'POST',
