@@ -99,11 +99,7 @@ const authHeader = "{{$token}}";
 })
 .then(data => {
     console.log('Success:', data);
-})
-.catch(error => {
-    console.error('There has been a problem with your fetch operation:', error);
-});
-			var selState;
+var selState;
 			var query;
 			var filters;
 			var config = {
@@ -145,6 +141,11 @@ const authHeader = "{{$token}}";
 } catch (e) {
         console.error("Errore durante l'apertura dell'app:", e);
     }
+})
+.catch(error => {
+    console.error('There has been a problem with your fetch operation:', error);
+});
+			
 
   </script>
 
