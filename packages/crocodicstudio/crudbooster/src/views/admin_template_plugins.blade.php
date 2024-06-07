@@ -66,7 +66,7 @@
 </script>
 <script src="{{asset('vendor/crudbooster/assets/js/main.js').'?r='.time()}}"></script>
 
-<!--
+
 <script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
   <script type="text/javascript" >
 			var selState;
@@ -116,5 +116,5 @@
     }
 
   </script>
--->
+
 
