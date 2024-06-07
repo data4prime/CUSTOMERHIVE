@@ -600,7 +600,8 @@ class CBController extends Controller
                 }
 
                 if (@$col['download']) {
-                    $url = (strpos($value, 'http://') !== false) ? $value : asset($value) . '?download=1';
+
+                    $url = (strpos($value, 'http://') !== false) ? $value : asset('/storage'.$value) . '?download=1';
                     if ($value) {
                         $value = "<a class='btn btn-xs btn-primary' href='$url' target='_blank' title='Download File'><i class='fa fa-download'></i> Download</a>";
                     } else {
