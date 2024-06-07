@@ -22,10 +22,7 @@ var selState;
 			});
 
 
-			require( [
-"js/qlik",
-"vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min"
-], function ( qlik, jQuery ) {
+			require( ["js/qlik"], function ( qlik, jQuery ) {
                 if (!qlik) {
                         console.error("Il modulo qlik non è stato caricato correttamente.");
                         return;
