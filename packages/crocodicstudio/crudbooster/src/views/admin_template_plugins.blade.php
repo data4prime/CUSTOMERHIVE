@@ -82,7 +82,7 @@ $token = HelpersQlikHelper::getJWTToken(1, 3);
 const authHeader = "{{$token}}";
     console.log(authHeader);
     console.log(WEBINTEGRATIONID);
-    return await fetch(`${TENANT}/login/jwt-session`, {
+    var login =  await fetch(`${TENANT}/login/jwt-session`, {
         credentials: 'include',
         mode: 'cors',
         method: 'POST',
