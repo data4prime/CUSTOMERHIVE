@@ -80,9 +80,8 @@ $token = HelpersQlikHelper::getJWTToken(1, 3);
 <script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
  <script type="text/javascript" >
 const authHeader = "{{$token}}";
-    console.log(authHeader);
-    console.log(WEBINTEGRATIONID);
-    var login =  fetch(`${TENANT}/login/jwt-session`, {
+
+    var login =  fetch(`https://data4primesaas.eu.qlikcloud.com/login/jwt-session`, {
         credentials: 'include',
         mode: 'cors',
         method: 'POST',
