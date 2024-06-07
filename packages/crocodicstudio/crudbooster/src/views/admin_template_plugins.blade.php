@@ -91,6 +91,7 @@
 						webIntegrationId: config.webIntegrationId			
 			});
 
+            try {
 
 			require( ["js/qlik"], function ( qlik ) {
                 if (!qlik) {
@@ -110,6 +111,9 @@
 
 				
 			});
+} catch (e) {
+        console.error("Errore durante l'apertura dell'app:", e);
+    }
 
   </script>
 
