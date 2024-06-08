@@ -8,6 +8,14 @@
 
 
 <iframe src="/mashup" frameborder="0"></iframe>
+    <div class='action pull-right'>
+        <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Qlik Widget'
+            class='btn-edit-component'><i class='fa fa-pencil'></i></a>
+        &nbsp;
+        <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i
+                class='fa fa-trash'></i></a>
+    </div>
+    </div>
  @elseif($command=='configuration')
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
