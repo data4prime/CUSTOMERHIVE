@@ -16,6 +16,7 @@
                 class='fa fa-trash'></i></a>
     </div>
     </div>
+</div>
  @elseif($command=='configuration')
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
