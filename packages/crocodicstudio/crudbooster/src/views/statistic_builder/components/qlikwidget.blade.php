@@ -2,7 +2,7 @@
 
 <div id='{{$componentID}}' class='border-box'>
 
-    <div class="small-box [color]">
+    <div class="qlikwidget [color]">
   <div id="chart1"></div>
   <div id="chart2"></div>
 <a href="[link]" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
