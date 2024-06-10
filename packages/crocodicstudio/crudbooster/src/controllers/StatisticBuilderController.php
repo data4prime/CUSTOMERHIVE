@@ -115,8 +115,13 @@ class StatisticBuilderController extends CBController
     {
 
         $component = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
+
+        if ($component->component_name = 'qlikwidget') {
+            $mashups = QlikMashupController::getMashups();
+        }
+
         $command = 'layout';
-        $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID'))->render();
+        $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID', 'mashups'))->render();
 
         $component_name = $component->component_name;
         $area_name = $component->area_name;
@@ -125,13 +130,13 @@ class StatisticBuilderController extends CBController
             foreach ($config as $key => $value) {
                 if ($value) {
                     $command = 'showFunction';
-                    $value = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'value', 'key', 'config', 'componentID'))->render();
+                    $value = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'value', 'key', 'config', 'componentID', 'mashups'))->render();
                     $layout = str_replace('[' . $key . ']', $value, $layout);
                 }
             }
         }
 
-        return response()->json(compact('componentID', 'layout'));
+        return response()->json(compact('componentID', 'layout', 'mashups'));
     }
 
     public function postAddComponent()
@@ -147,7 +152,7 @@ class StatisticBuilderController extends CBController
         $command = 'layout';
         $layout = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'componentID'))->render();
 
-        $mashups = QlikMashupController::getMashups();
+        //$mashups = QlikMashupController::getMashups();
 
         $data = [
             'id_cms_statistics' => $id_cms_statistics,
@@ -156,7 +161,7 @@ class StatisticBuilderController extends CBController
             'area_name' => $area,
             'sorting' => $sorting,
             'name' => 'Untitled',
-            'mashups' => $mashups,
+            //'mashups' => $mashups,
         ];
         CRUDBooster::insert('cms_statistic_components', $data);
 
