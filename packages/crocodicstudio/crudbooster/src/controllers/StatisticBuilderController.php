@@ -195,7 +195,7 @@ class StatisticBuilderController extends CBController
         $command = 'configuration';
 
          $mashups = [];
-        if ($component->component_name = 'qlikwidget') {
+        if ($component_row->component_name = 'qlikwidget') {
             $mashups = QlikMashupController::getMashups();
         }
 
