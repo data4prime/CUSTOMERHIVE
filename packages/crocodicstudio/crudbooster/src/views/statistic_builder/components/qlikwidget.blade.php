@@ -5,6 +5,7 @@
     <div class="small-box [color]">
   <div id="chart1"></div>
   <div id="chart2"></div>
+</div>
 
 
 <!--<iframe src="/mashup" frameborder="0"></iframe>-->
@@ -16,7 +17,6 @@
                 class='fa fa-trash'></i></a>
     </div>
     </div>
-</div>
  @elseif($command=='configuration')
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
