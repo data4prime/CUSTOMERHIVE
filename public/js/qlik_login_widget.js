@@ -54,7 +54,7 @@ async function jwtLogin(token) {
         method: 'POST',
         headers: {
             'Authorization': authHeader,
-            'qlik-web-integration-id': '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj'
+            'qlik-web-integration-id': webIntegrationId
         },
     })
 }
@@ -67,7 +67,7 @@ async function checkLoggedIn(token) {
         mode: 'cors',
         credentials: 'include',
         headers: {
-            'qlik-web-integration-id': '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj',
+            'qlik-web-integration-id': webIntegrationId,
             'Authorization': 'Bearer ' + qlik_token
         },
     })
