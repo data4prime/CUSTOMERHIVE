@@ -30,7 +30,7 @@ var selState;
                     }
                 qlik.setOnError( function (error){
                         //alert(error.message);
-                        document.getElementById(componentID).getElementsByClassName('text-danger').append(error.message);
+                        //document.getElementById(componentID).getElementsByClassName('text-danger').append(error.message);
                     });
 
 
