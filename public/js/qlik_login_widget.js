@@ -8,7 +8,7 @@ var selState;
 			var filters;
 			var config = {
 				host: host, 
-				prefix: prefix, 
+				prefix: '', 
 				port: port == null ? '' : port, 
 				isSecure: true,
 				webIntegrationId: webIntegrationId,
