@@ -7,11 +7,11 @@ var selState;
 			var query;
 			var filters;
 			var config = {
-				host: "data4primesaas.eu.qlikcloud.com", 
-				prefix: "/", 
-				port: 443, 
+				host: host, 
+				prefix: prefix, 
+				port: port, 
 				isSecure: true,
-				webIntegrationId: '9G9Lt4S--4o5Vj5BLq4HGEqVRpvP_Djj',
+				webIntegrationId: webIntegrationId,
 
 			};
 						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
@@ -34,7 +34,7 @@ var selState;
 
 
 
-				var app = qlik.openApp('5a174d39-0d26-4871-bbe9-583252deaeb2', config);
+				var app = qlik.openApp(appId, config);
                 console.log("DOPOO OPEN APP");
 				
 

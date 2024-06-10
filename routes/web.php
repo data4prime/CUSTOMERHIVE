@@ -89,5 +89,20 @@ Route::post('admin/module_generator/save_enable', $controllers_base_path . 'Modu
 Route::get('/mashup/{componentID}', function ($componentID) {
     //$componentID = Request::get('componentID');
     //dd($componentID);
-    return view('mashup', compact('componentID'));
+
+    //prendi il valore di mashups dalla tabella cms_statistic_components colonna config
+    $mashups = DB::table('cms_statistic_components')->where('id', $componentID)->first();
+    $mashups = json_decode($mashups->config);
+
+    //prendi dalla tabella qlik_mashups
+    $mashup = DB::table('qlik_mashups')->where('id', $mashups->mashup_id)->first();
+
+    //prendi conf
+    $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first();
+
+
+
+
+
+    return view('mashup', compact('componentID', 'mashup', 'qlik_conf'));
 });

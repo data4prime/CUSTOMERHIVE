@@ -7,6 +7,7 @@ use Request;
 use DB;
 use CRUDBooster;
 use \crocodicstudio\crudbooster\helpers\UserHelper;
+use \crocodicstudio\crudbooster\helpers\QlikHelper;
 
 
 class QlikMashupController extends CBController
@@ -280,6 +281,35 @@ class QlikMashupController extends CBController
         |
         */
 		$this->load_css = array();
+	}
+
+	public static function getConf($id) {
+		$mashup = DB::table('qlik_mashups')->where('id', $id)->first();
+		$qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first();
+
+		$return = [];
+/*
+var on_premise = ['qrsurl', 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
+
+        var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
+*/
+		$return['host'] = $qlik_conf->url;
+			$return['webIntegrationId'] = $qlik_conf->web_int_id;
+			$return['port'] = $qlik_conf->port;
+			$return['prefix'] = $qlik_conf->endpoint;
+		if (QlikHelper::isSAAS()) {
+			$return['host'] = $qlik_conf->url;
+			$return['webIntegrationId'] = $qlik_conf->web_int_id;
+			$return['port'] = $qlik_conf->port;
+			$return['prefix'] = $qlik_conf->endpoint;
+		} 
+
+//cast to object
+		$return = (object) $return;
+
+
+
+
 	}
 
 	public static function getMashups() {
