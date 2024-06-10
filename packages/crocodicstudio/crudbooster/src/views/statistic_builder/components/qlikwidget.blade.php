@@ -30,7 +30,7 @@
     <div class="form-group">
         <label>Mashup</label>
         <select class='form-control' required name='config[mashups]'>
-            <option value=''>Choose Mashup</option>
+            <option value='0'>Choose Mashup</option>
             @foreach($mashups as $mashup)
             <!-- option with selected  -->
             @if($mashup->id == $config->mashups)
