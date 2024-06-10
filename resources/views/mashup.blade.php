@@ -20,7 +20,19 @@ var qlik_token = '{{$token}}';
 <script type="text/javascript"  src="https://data4primesaas.eu.qlikcloud.com/resources/assets/external/requirejs/require.js"></script>
 <!--<script  src="{{asset('js/qlik_login_widget.js')}}"></script> -->
 
-<h1>{{$componentID}}</h1>
-<h2>{{$token}}</h2>
+<!-- se componentID esiste -->
+@if(isset($componentID))
+	<h1>{{$componentID}}</h1>
+@else 
+	<h1>Component ID not found</h1>
+@endif
+
+<!-- se token esiste -->
+@if(isset($token))
+	<h1>{{$token}}</h1>
+@else
+	<h1>Token not found</h1>
+@endif
+
 
 
