@@ -1128,19 +1128,23 @@ return Request::segment($segment);
         if ($parent_table == 'cms_menus' and $child_table == 'menu_tenants') {
             return 'menu_id';
         }
-	if ($parent_table == 'tenants' and $child_table == 'qlikconfs_tenants') {
+	if ($parent_table == 'tenants' and $child_table == 'qlikmashups_tenants') {
             return 'tenant_id';
         }
         if ($parent_table == 'tenants' and $child_table == 'menu_tenants') {
             return 'tenant_id';
         }
-        //#RAMA group n:n tenants
+        //#
         if ($parent_table == 'groups' and $child_table == 'group_tenants') {
+            return 'group_id';
+        }
+	if ($parent_table == 'groups' and $child_table == 'qlikmashups_groups') {
             return 'group_id';
         }
 	if ($parent_table == 'groups' and $child_table == 'qlikconfs_groups') {
             return 'group_id';
         }
+
         if ($parent_table == 'tenants' and $child_table == 'group_tenants') {
             return 'tenant_id';
         }
