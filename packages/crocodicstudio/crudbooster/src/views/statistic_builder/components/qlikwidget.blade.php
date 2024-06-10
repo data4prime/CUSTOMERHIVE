@@ -31,7 +31,12 @@
         <select class='form-control' required name='config[mashups]'>
             <option value=''>Choose Mashup</option>
             @foreach($mashups as $mashup)
-            <option @php echo  $mashup->id == $config['mashups'] ? 'selected' : ''  @endphp value='{{$mashup->id}}'>{{$mashup->mashupname}}</option>
+            <!-- option with selected  -->
+            @if($mashup->id == $config['mashups'])
+            <option selected value='{{$mashup->id}}'>{{$mashup->mashupname}}</option>
+            @else
+            <option  value='{{$mashup->id}}'>{{$mashup->mashupname}}</option>
+            @endif
             @endforeach
         </select>
     </div>
