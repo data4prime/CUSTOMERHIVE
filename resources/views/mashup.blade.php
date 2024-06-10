@@ -18,7 +18,7 @@ var host = '{{$conf->host}}';
 var prefix = '{{$conf->prefix}}';
 var port = '{{$conf->port}}';
 var webIntegrationId = '{{$conf->webIntegrationId}}';
-var appId = '{{$conf->appId}}';
+var appId = '{{$mashup->appid}}';
 
 
 </script>
