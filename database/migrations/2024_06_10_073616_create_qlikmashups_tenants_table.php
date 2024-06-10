@@ -13,8 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('qlikmashups_tenants', function (Blueprint $table) {
+        Schema::create('qlikmashups_tenants', function (Blueprint $table) {
             //
+            $table->increments('id');
+            $table->unsignedBigInteger('qlikmashups_id');
+            $table->unsignedInteger('tenant_id');
+            $table->unique(['qlikmashups_id', 'tenant_id'], 'unique');
+            $table->foreign('qlikmashups_id')->references('id')->on('qlik_mashupss')->onDelete('cascade');
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
         });
     }
 
