@@ -55,7 +55,7 @@ class QlikMashupController extends CBController
                         ];
 
 
-		//only superadmin can edit tenant
+
     if (CRUDBooster::isSuperadmin()) {
       $this->form[] = [
         'label' => 'Tenant',
@@ -66,9 +66,9 @@ class QlikMashupController extends CBController
         "relationship_table" => "qlikconfs_tenants",
         'required' => true,
         'validation' => 'required',
-        'value' => UserHelper::current_user_tenant() //default value per creazione nuovo record
+        'value' => UserHelper::current_user_tenant()
       ];
-      //superadmin vede i gruppi come cascading dropdown in base al tenant
+
       $this->form[] = [
         "label" => "Group",
         "name" => "qlikconfs_groups",
@@ -83,7 +83,7 @@ class QlikMashupController extends CBController
         'child_crosstable_fk_name' => 'group_id'
       ];
     } elseif (UserHelper::isTenantAdmin()) {
-      //Tenantadmin vede tenant in readonly (disabled) ma può modificare il group
+
       $this->form[] = [
         "label" => "Tenant",
         "name" => "tenant",
@@ -94,7 +94,7 @@ class QlikMashupController extends CBController
         'value' => UserHelper::current_user_tenant(),
         'disabled' => true
       ];
-      //Tenantadmin vede solo i gruppi del proprio tenant
+
       $this->form[] = [
         "label" => "Group",
         "name" => "menu_groups",
