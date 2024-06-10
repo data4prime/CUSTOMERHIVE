@@ -19,10 +19,7 @@
     </div>
     </div>
  @elseif($command=='configuration')
-@php 
 
-dd($config);
-@endphp
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
     <input type='hidden' name='componentid' value='{{$componentID}}' />
