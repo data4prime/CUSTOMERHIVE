@@ -88,5 +88,6 @@ Route::post('admin/module_generator/save_enable', $controllers_base_path . 'Modu
 
 Route::get('/mashup/{componentID}', function () {
     $componentID = Request::get('componentID');
+    dd($componentID);
     return view('mashup', compact('componentID'));
 });
