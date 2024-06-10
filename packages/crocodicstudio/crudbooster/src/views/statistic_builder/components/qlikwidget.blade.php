@@ -29,7 +29,7 @@
         <select class='form-control' required name='config[color]'>
             <option value=''>Choose Mashup</option>
             @foreach($mashups as $mashup)
-            <option value='{{$mashup->id}}'>{{$mashup->name}}</option>
+            <option value='{{$mashup->id}}'>{{$mashup->mashupname}}</option>
             @endforeach
         </select>
     </div>
