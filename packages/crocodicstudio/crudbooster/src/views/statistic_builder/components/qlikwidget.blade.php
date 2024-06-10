@@ -21,40 +21,26 @@
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
     <input type='hidden' name='componentid' value='{{$componentID}}' />
     <div class="form-group">
-        <label>Name</label>
-        <input class="form-control" required name='config[name]' type='text' value='{{@$config->name}}' />
-    </div>
+     
+@php 
+
+use crocodicstudio\crudbooster\controllers\QlikMashupController;
+
+$mashups = QlikMashupController::getMashups();
+
+@endphp
 
     <div class="form-group">
-        <label>Icon By Ionicons</label>
-        <input class="form-control" required name='config[icon]' type='text' value='{{@$config->icon}}' />
-        E.g : ion-bag . You can find more icon, checkout at <a target='_blank'
-            href='http://ionicons.com/'>ionicons.com</a>
-    </div>
-
-    <div class="form-group">
-        <label>Color</label>
+        <label>Mashup</label>
         <select class='form-control' required name='config[color]'>
-            <option {{(@$config->color == 'bg-green')?"selected":""}} value='bg-green'>Green</option>
-            <option {{(@$config->color == 'bg-red')?"selected":""}} value='bg-red'>Red</option>
-            <option {{(@$config->color == 'bg-aqua')?"selected":""}} value='bg-aqua'>Aqua</option>
-            <option {{(@$config->color == 'bg-yellow')?"selected":""}} value='bg-yellow'>Yellow</option>
+            <option value=''>Choose Mashup</option>
+            @foreach($mashups as $mashup)
+            <option value='{{$mashup->id}}'>{{$mashup->name}}</option>
+            @endforeach
         </select>
     </div>
 
-    <div class="form-group">
-        <label>Link</label>
-        <input class="form-control" required name='config[link]' type='text' value='{{@$config->link}}' />
-    </div>
 
-    <div class="form-group">
-        <label>Count (SQL QUERY)</label>
-        <textarea name='config[sql]' rows="5" class='form-control'>{{@$config->sql}}</textarea>
-        <div class="help-block">Make sure the sql query are correct unless the widget will be broken. Mak sure give the
-            alias name each column. You may use
-            alias [SESSION_NAME] to get the session
-        </div>
-    </div>
 
 </form>
 @elseif($command=='showFunction')

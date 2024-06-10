@@ -282,6 +282,27 @@ class QlikMashupController extends CBController
 		$this->load_css = array();
 	}
 
+	public static function getMashups() {
+		//se super admin prendo tutti i mashups
+		if (CRUDBooster::isSuperadmin()) {
+			$mashups = DB::table('qlik_mashups')->get();
+		} elseif (UserHelper::isTenantAdmin()) {
+			$mashups = DB::table('qlik_mashups')
+				->join('qlikmashups_tenants', 'qlik_mashups.id', '=', 'qlikmashups_tenants.qlikmashup_id')
+				->where('tenant_id', UserHelper::current_user_tenant())
+				->get();
+		} else {
+			$mashups = DB::table('qlik_mashups')
+				->join('qlikmashups_groups', 'qlik_mashups.id', '=', 'qlikmashups_groups.qlikmashup_id')
+				->join('group_users', 'group_users.group_id', '=', 'qlikmashups_groups.group_id')
+				->where('group_users.user_id', CRUDBooster::myId())
+				->get();
+		}
+
+		return $mashups;
+
+	}
+
 
 	/*
 	    | ----------------------------------------------------------------------
