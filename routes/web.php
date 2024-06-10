@@ -91,7 +91,7 @@ Route::get('/mashup/{componentID}', function ($componentID) {
     //dd($componentID);
 
     //prendi il valore di mashups dalla tabella cms_statistic_components colonna config
-    $mashups = DB::table('cms_statistic_components')->where('id', $componentID)->first();
+    $mashups = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
     $mashups = json_decode($mashups->config);
 
     //prendi dalla tabella qlik_mashups
