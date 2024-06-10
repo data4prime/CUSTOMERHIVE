@@ -300,7 +300,7 @@ var on_premise = ['qrsurl', 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePass
 			$return['webIntegrationId'] = $qlik_conf->web_int_id;
 			$return['port'] = $qlik_conf->port;
 			$return['prefix'] = $qlik_conf->endpoint;
-		if (QlikHelper::isSAAS()) {
+		if (QlikHelper::isSAAS($id)) {
 			$return['host'] = $qlik_conf->url;
 			$return['webIntegrationId'] = $qlik_conf->web_int_id;
 			$return['port'] = $qlik_conf->port;
