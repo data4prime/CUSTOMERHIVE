@@ -56,7 +56,7 @@ class QlikMashupController extends CBController
 
 
 
-    if (CRUDBooster::isSuperadmin()) {
+   /* if (CRUDBooster::isSuperadmin()) {
       $this->form[] = [
         'label' => 'Tenant',
         'name' => 'qlikconfs_tenants',
@@ -110,7 +110,7 @@ class QlikMashupController extends CBController
       ];
     }
 
-
+*/
 		# Users submodule
 		// #RAMA questo subform riesce ad aggiungere nuovi utenti e a mostrarli ma permette di aggiungere due volte lo stesso utente allo stesso gruppo, non riesco a mostrare un secondo campo nel form e nella tabella, non posso nascondere il tasto edit dalla tabella, fa confusione come interfaccia
 		// $columns[] = ['label'=>'User','name'=>'user_id','type'=>'datamodal','datamodal_table'=>'cms_users','datamodal_columns'=>'name','datamodal_select_to'=>'email:email','datamodal_where'=>'','datamodal_size'=>'large'];
