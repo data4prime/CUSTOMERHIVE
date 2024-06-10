@@ -19,18 +19,7 @@
     </div>
     </div>
  @elseif($command=='configuration')
-<!-- se $config->mashups non esiste, crealo con valore a 0 -->
-@if(!isset($config)  || $config == null)
 
-$config->mashups = 0;
-@endif
-
-
-@php 
-
-dd($config);
-
-@endphp
 
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
@@ -45,7 +34,7 @@ dd($config);
             <option value='0'>Choose Mashup</option>
             @foreach($mashups as $mashup)
             <!-- option with selected  -->
-            @if($mashup->id == $config->mashups)
+            @if(isset($config) && $mashup->id == $config->mashups)
             <option selected value='{{$mashup->id}}'>{{$mashup->mashupname}}</option>
             @else
             <option  value='{{$mashup->id}}'>{{$mashup->mashupname}}</option>
