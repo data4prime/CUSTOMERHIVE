@@ -19,6 +19,11 @@
     </div>
     </div>
  @elseif($command=='configuration')
+<!-- se $config->mashups non esiste, crealo con valore a 0 -->
+@if(!isset($config->mashups))
+@php
+$config->mashups = 0;
+@endphp
 
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
