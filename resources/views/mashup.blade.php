@@ -21,6 +21,7 @@ var prefix = '{{$conf->prefix}}';
 var port = '{{$conf->port}}';
 var webIntegrationId = '{{$conf->webIntegrationId}}';
 var appId = '{{$mashup->appid}}';
+var componentID = '{{$componentID}}';
 
 
 </script>
