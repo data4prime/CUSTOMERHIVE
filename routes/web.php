@@ -86,8 +86,8 @@ Route::get('admin/qlik_confs/QlikServerSenseQMC/{id}', $controllers_base_path . 
 Route::get('admin/module_generator/enable', $controllers_base_path . 'ModulsController@enable');
 Route::post('admin/module_generator/save_enable', $controllers_base_path . 'ModulsController@saveEnable');
 
-Route::get('/mashup', function () {
+Route::get('/mashup/{componentID}', function () {
     //esiste ancora la view('welcome')
     //TODO spostare tutto /admin in / per migliorare url se stiamo usando solo /admin e non c'è nessuna pagina pubblicata in /
-    return view('mashup');
+    return view('mashup', compact('componentID'));
 });

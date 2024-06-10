@@ -9,7 +9,7 @@
 </div>
 
 
-<!--<iframe src="/mashup" frameborder="0"></iframe>-->
+<iframe src="/mashup/{{$componentID}}" frameborder="0"></iframe>
     <div class='action pull-right'>
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Qlik Widget'
             class='btn-edit-component'><i class='fa fa-pencil'></i></a>
