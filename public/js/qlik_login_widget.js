@@ -9,7 +9,7 @@ var selState;
 			var config = {
 				host: host, 
 				prefix: prefix, 
-				port: port, 
+				port: port == null ? '' : port, 
 				isSecure: true,
 				webIntegrationId: webIntegrationId,
 
