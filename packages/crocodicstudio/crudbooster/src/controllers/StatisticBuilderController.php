@@ -107,7 +107,6 @@ class StatisticBuilderController extends CBController
     public function getListComponent($id_cms_statistics, $area_name)
     {
         $rows = DB::table('cms_statistic_components')->where('id_cms_statistics', $id_cms_statistics)->where('area_name', $area_name)->orderby('sorting', 'asc')->get();
-        file_put_contents(__DIR__ . '/getListComponent.txt', json_encode($rows)."\n\n", FILE_APPEND);
         return response()->json(['components' => $rows]);
     }
 
