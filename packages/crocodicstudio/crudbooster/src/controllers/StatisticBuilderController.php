@@ -150,7 +150,6 @@ class StatisticBuilderController extends CBController
         $command = 'layout';
         $layout = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'componentID'))->render();
 
-        //$mashups = QlikMashupController::getMashups();
 
         $data = [
             'id_cms_statistics' => $id_cms_statistics,
@@ -159,7 +158,6 @@ class StatisticBuilderController extends CBController
             'area_name' => $area,
             'sorting' => $sorting,
             'name' => 'Untitled',
-            //'mashups' => $mashups,
         ];
         CRUDBooster::insert('cms_statistic_components', $data);
 
@@ -191,10 +189,8 @@ class StatisticBuilderController extends CBController
 
         $command = 'configuration';
 
-         $mashups = [];
-        if ($component_row->component_name = 'qlikwidget') {
-            $mashups = QlikMashupController::getMashups();
-        }
+        $mashups = QlikMashupController::getMashups();
+
 
         return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups'));
     }
