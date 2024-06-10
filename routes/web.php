@@ -86,8 +86,8 @@ Route::get('admin/qlik_confs/QlikServerSenseQMC/{id}', $controllers_base_path . 
 Route::get('admin/module_generator/enable', $controllers_base_path . 'ModulsController@enable');
 Route::post('admin/module_generator/save_enable', $controllers_base_path . 'ModulsController@saveEnable');
 
-Route::get('/mashup/{componentID}', function () {
-    $componentID = Request::get('componentID');
+Route::get('/mashup/{componentID}', function ($componentID) {
+    //$componentID = Request::get('componentID');
     dd($componentID);
     return view('mashup', compact('componentID'));
 });
