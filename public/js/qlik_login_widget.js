@@ -47,7 +47,7 @@ async function jwtLogin(token) {
     const authHeader = 'Bearer '+qlik_token ;
     console.log(authHeader);
 
-    return await fetch(`https://data4primesaas.eu.qlikcloud.com/login/jwt-session`, {
+    return await fetch(`${appId}/login/jwt-session`, {
         credentials: 'include',
         mode: 'cors',
         method: 'POST',
@@ -61,7 +61,7 @@ async function jwtLogin(token) {
 async function checkLoggedIn(token) {
     //console.log("JWTTOKEN");
     //console.log(JWTTOKEN);
-    return await fetch(`https://data4primesaas.eu.qlikcloud.com/api/v1/users/me`, {
+    return await fetch(`${appId}/api/v1/users/me`, {
         //redirect: 'follow'
         mode: 'cors',
         credentials: 'include',

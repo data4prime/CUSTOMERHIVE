@@ -28,7 +28,7 @@ var appId = '{{$mashup->appid}}';
 
 
 <script type="text/javascript"  src="{{$conf->host}}/resources/assets/external/requirejs/require.js"></script>
-<!--<script  src="{{asset('js/qlik_login_widget.js')}}"></script> -->
+<script  src="{{asset('js/qlik_login_widget.js')}}"></script>
 
 <!-- se componentID esiste -->
 @if(isset($componentID))
