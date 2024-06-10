@@ -8,6 +8,8 @@ $token = HelpersQlikHelper::getJWTToken(1, 3);
 
 $conf = QlikMashupController::getConf($qlik_conf);
 
+dd($conf);
+
 
 @endphp 
 
