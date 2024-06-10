@@ -46,7 +46,7 @@ class QlikMashupController extends CBController
 
 		# START FORM DO NOT REMOVE THIS LINE
 		$this->form = [];
-		$this->form[] = ['label' => 'Configuration Name', 'name' => 'confname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Configuration Name'];
+		$this->form[] = ['label' => 'Mashup Name', 'name' => 'mashupname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Mashup Name'];
         $this->form[] = ['label' => 'App ID', 'name' => 'appid', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter App ID'];
         $this->form[] = ['label' => 'Conf', 'name' => 'conf', 'type' => 'select', 'width' => 'col-sm-10',
                             "datatable" => "qlik_confs,confname",
