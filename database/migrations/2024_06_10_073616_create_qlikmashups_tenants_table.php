@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('qlikmashups_id');
             $table->unsignedInteger('tenant_id');
             $table->unique(['qlikmashups_id', 'tenant_id'], 'unique');
-            $table->foreign('qlikmashups_id')->references('id')->on('qlik_mashupss')->onDelete('cascade');
+            $table->foreign('qlikmashups_id')->references('id')->on('qlik_mashups')->onDelete('cascade');
             $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
         });
     }
