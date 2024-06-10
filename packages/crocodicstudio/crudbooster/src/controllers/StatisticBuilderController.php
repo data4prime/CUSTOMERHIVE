@@ -194,7 +194,12 @@ class StatisticBuilderController extends CBController
 
         $command = 'configuration';
 
-        return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config'));
+         $mashups = [];
+        if ($component->component_name = 'qlikwidget') {
+            $mashups = QlikMashupController::getMashups();
+        }
+
+        return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups'));
     }
 
     public function postSaveComponent()
