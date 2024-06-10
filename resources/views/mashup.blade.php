@@ -1,3 +1,10 @@
+
+
+    <div class="small-box [color]">
+  <div id="chart1"></div>
+  <div id="chart2"></div>
+<div class="text-danger" ></div>
+</div>
 @php 
 
 
