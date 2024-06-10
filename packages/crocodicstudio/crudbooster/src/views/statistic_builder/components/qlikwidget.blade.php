@@ -20,7 +20,7 @@
     </div>
  @elseif($command=='configuration')
 <!-- se $config->mashups non esiste, crealo con valore a 0 -->
-@if(!isset($config))
+@if(!isset($config)  || $config == null)
 
 $config->mashups = 0;
 @endif
