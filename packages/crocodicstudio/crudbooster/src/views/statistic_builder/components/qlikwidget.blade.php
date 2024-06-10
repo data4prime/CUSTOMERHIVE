@@ -26,7 +26,7 @@
 
     <div class="form-group">
         <label>Mashup</label>
-        <select class='form-control' required name='config[color]'>
+        <select class='form-control' required name='config[mashups]'>
             <option value=''>Choose Mashup</option>
             @foreach($mashups as $mashup)
             <option value='{{$mashup->id}}'>{{$mashup->mashupname}}</option>
