@@ -87,7 +87,6 @@ Route::get('admin/module_generator/enable', $controllers_base_path . 'ModulsCont
 Route::post('admin/module_generator/save_enable', $controllers_base_path . 'ModulsController@saveEnable');
 
 Route::get('/mashup/{componentID}', function () {
-    //esiste ancora la view('welcome')
-    //TODO spostare tutto /admin in / per migliorare url se stiamo usando solo /admin e non c'è nessuna pagina pubblicata in /
+    $componentID = Request::get('componentID');
     return view('mashup', compact('componentID'));
 });
