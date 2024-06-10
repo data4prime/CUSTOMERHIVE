@@ -22,13 +22,7 @@
     <input type='hidden' name='componentid' value='{{$componentID}}' />
     <div class="form-group">
      
-@php 
 
-use crocodicstudio\crudbooster\controllers\QlikMashupController;
-
-$mashups = QlikMashupController::getMashups();
-
-@endphp
 
     <div class="form-group">
         <label>Mashup</label>

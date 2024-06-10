@@ -3,6 +3,7 @@
 namespace crocodicstudio\crudbooster\controllers;
 
 use CRUDBooster;
+use QlikMashupController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Excel;
 use Illuminate\Support\Facades\PDF;
@@ -146,6 +147,8 @@ class StatisticBuilderController extends CBController
         $command = 'layout';
         $layout = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'componentID'))->render();
 
+        $mashups = QlikMashupController::getMashups();
+
         $data = [
             'id_cms_statistics' => $id_cms_statistics,
             'componentID' => $componentID,
@@ -153,6 +156,7 @@ class StatisticBuilderController extends CBController
             'area_name' => $area,
             'sorting' => $sorting,
             'name' => 'Untitled',
+            'mashups' => $mashups,
         ];
         CRUDBooster::insert('cms_statistic_components', $data);
 
