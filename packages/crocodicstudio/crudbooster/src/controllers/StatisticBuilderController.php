@@ -116,13 +116,10 @@ class StatisticBuilderController extends CBController
 
         $component = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
 
-        $mashups = [];
-        if ($component->component_name = 'qlikwidget') {
-            $mashups = QlikMashupController::getMashups();
-        }
+
 
         $command = 'layout';
-        $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID', 'mashups'))->render();
+        $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID'))->render();
 
         $component_name = $component->component_name;
         $area_name = $component->area_name;
@@ -131,13 +128,13 @@ class StatisticBuilderController extends CBController
             foreach ($config as $key => $value) {
                 if ($value) {
                     $command = 'showFunction';
-                    $value = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'value', 'key', 'config', 'componentID', 'mashups'))->render();
+                    $value = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'value', 'key', 'config', 'componentID'))->render();
                     $layout = str_replace('[' . $key . ']', $value, $layout);
                 }
             }
         }
 
-        return response()->json(compact('componentID', 'layout', 'mashups'));
+        return response()->json(compact('componentID', 'layout'));
     }
 
     public function postAddComponent()
