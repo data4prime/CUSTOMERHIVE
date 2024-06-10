@@ -23,13 +23,13 @@ var selState;
 			});
 
 
-			require( ["js/qlik"], function ( qlik, jQuery ) {
+			require( ["js/qlik"], function ( qlik ) {
                 if (!qlik) {
                         console.error("Il modulo qlik non è stato caricato correttamente.");
                         return;
                     }
                 qlik.setOnError( function (error){
-                        alert(error.message);
+                        //alert(error.message);
                         document.getElementById(componentID).getElementsByClassName('text-danger').append(error.message);
                     });
 
