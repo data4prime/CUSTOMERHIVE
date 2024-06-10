@@ -309,6 +309,7 @@ var on_premise = ['qrsurl', 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePass
 
 //cast to object
 		$return = (object) $return;
+		return $return;
 
 
 
