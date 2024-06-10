@@ -33,7 +33,7 @@
             <option value=''>Choose Mashup</option>
             @foreach($mashups as $mashup)
             <!-- option with selected  -->
-            @if($mashup->id == $config['mashups'])
+            @if($mashup->id == $config->mashups)
             <option selected value='{{$mashup->id}}'>{{$mashup->mashupname}}</option>
             @else
             <option  value='{{$mashup->id}}'>{{$mashup->mashupname}}</option>
