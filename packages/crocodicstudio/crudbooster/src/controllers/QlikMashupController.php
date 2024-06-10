@@ -284,10 +284,11 @@ class QlikMashupController extends CBController
 	}
 
 	public static function getConf($id) {
-		dd($id);
+		$qlik_conf = DB::table('qlik_confs')->where('id', $id)->first();
+		/*dd($id);
 		$mashup = DB::table('qlik_mashups')->where('id', $id)->first();
-		dd($mashup);
-		$qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first();
+		dd($mashup);*/
+		//$qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first();
 
 		$return = [];
 /*
