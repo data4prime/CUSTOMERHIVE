@@ -84,10 +84,7 @@ function getSheets(){
 		str=str+ "<br>" + value.qData.title + "    -    " + value.qInfo.qId;
 		app.getFullPropertyTree(value.qInfo.qId).then(function(reply){
 		});	
-	});
-	//$('#QV01').html(str)
-
-        var sheetId = value.qInfo.qId;
+var sheetId = value.qInfo.qId;
         var sheetTitle = value.qData.title;
         console.log(sheetId);
         console.log(sheetTitle);
@@ -97,6 +94,10 @@ function getSheets(){
         sheetDiv.id = sheetId;
         $('#QV01').html(str)
         document.getElementById(appId).appendChild(sheetDiv);
+	});
+	//$('#QV01').html(str)
+
+        
 
 	});
 	}
