@@ -13,6 +13,7 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         //
-        '/admin/statistic_builder/*'
+        '/admin/statistic_builder/*',
+        '/mashup/*',
     ];
 }
