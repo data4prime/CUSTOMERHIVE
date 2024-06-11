@@ -117,9 +117,13 @@ app.visualization.get(sheetId).then(function(vis){
 	app.getAppLayout(function(layout){
 	console.log("Layout")
 	console.log(layout);
+    $( "#title" ).html( layout.qTitle );
+
+    $( "#title" ).attr( "title", "Last reload:" + layout.qLastReloadTime.replace( /T/, ' ' ).replace( /Z/, ' ' ) );
+    //
 	//
 
-$('#QV01').html(JSON.stringify(layout))
+//$('#QV01').html(JSON.stringify(layout))
 	});
 	}
 	function getList(listType){
