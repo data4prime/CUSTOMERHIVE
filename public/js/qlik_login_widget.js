@@ -88,12 +88,21 @@ var sheetId = value.qInfo.qId;
         var sheetTitle = value.qData.title;
         console.log(sheetId);
         console.log(sheetTitle);
+var sheetDiv = document.createElement('div');
+        sheetDiv.id = sheetId;
+document.getElementById(appId).appendChild(sheetDiv);
+
+
+app.visualization.get(sheetId).then(function(vis){
+					vis.show(sheetId);
+					qlik.resize();
+			});
+
 
         //create a div element with the sheetId as id
-        var sheetDiv = document.createElement('div');
-        sheetDiv.id = sheetId;
-        $('#QV01').html(str)
-        document.getElementById(appId).appendChild(sheetDiv);
+        
+        //$('#QV01').html(str)
+        //document.getElementById(appId).appendChild(sheetDiv);
 	});
 	//$('#QV01').html(str)
 
