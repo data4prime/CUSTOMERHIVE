@@ -21,7 +21,7 @@ if (host.includes("https://") || host.includes("http://")) {
 }
 
 var config = {
-				host: host, 
+				//host: host, 
 				prefix: '', 
 				port: port == null ? '443' : port, 
 				isSecure: true,
@@ -33,7 +33,7 @@ var config = {
                 //console.log(config);
 
 				require.config({
-						baseUrl: baseUrl, //+ '/resources',
+						baseUrl: baseUrl + '/resources',
 						webIntegrationId: config.webIntegrationId			
 			});
 
@@ -57,7 +57,6 @@ var config = {
                 var x = document.cookie;
                 //console.log(x);
 
-                console.log(config);
 				var app = qlik.openApp(appId, config);
 
 
