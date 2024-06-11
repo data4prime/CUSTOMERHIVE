@@ -16,12 +16,13 @@ var selState;
 			};*/
 
 //se host contiene il protocollo, elimina tutto tranne l'host
+var host_q = '';
 if (host.includes("https://") || host.includes("http://")) {
-    host = host.split("//")[1];
+    host_q = host.split("//")[1];
 }
 
 var config = {
-				host: host, 
+				host: host_q, 
 				prefix: '', 
 				port: port == null ? '443' : port, 
 				isSecure: true,
