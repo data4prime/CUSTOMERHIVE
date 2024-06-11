@@ -33,8 +33,8 @@ if (host.includes("https://") || host.includes("http://")) {
 				host: "sense.izsvenezie.it", //the address of your Qlik Engine Instance
 				prefix: "/pub", //or the virtual proxy to be used. for example "/anonymous/"
 				port: 443, //or the port to be used if different from the default port  
-				isSecure: true //should be true if connecting over HTTPS
-				//webIntegrationId: 'web-integration-id-here' //only needed in SaaS editions
+				isSecure: true, //should be true if connecting over HTTPS
+				webIntegrationId: webIntegrationId //only needed in SaaS editions
 			};
 						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
                 //console.log(baseUrl);
