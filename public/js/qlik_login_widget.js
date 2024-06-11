@@ -86,6 +86,18 @@ function getSheets(){
 		});	
 	});
 	//$('#QV01').html(str)
+
+        var sheetId = value.qInfo.qId;
+        var sheetTitle = value.qData.title;
+        console.log(sheetId);
+        console.log(sheetTitle);
+
+        //create a div element with the sheetId as id
+        var sheetDiv = document.createElement('div');
+        sheetDiv.id = sheetId;
+        $('#QV01').html(str)
+        document.getElementById(appId).appendChild(sheetDiv);
+
 	});
 	}
 	
