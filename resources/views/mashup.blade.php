@@ -41,19 +41,19 @@ console.log(appId);
 <div class="text-danger" ></div>
 </div>
 
-<!-- se componentID esiste -->
+<!-- 
 @if(isset($componentID))
 	<h1>{{$componentID}}</h1>
 @else 
 	<h1>Component ID not found</h1>
 @endif
 
-<!-- se token esiste -->
+
 @if(isset($token))
 	<h1>{{$token}}</h1>
 @else
 	<h1>Token not found</h1>
 @endif
-
+-->
 
 
