@@ -127,6 +127,7 @@ app.visualization.get(sheetId).then(function(vis){
 			
 			str=str+ "<br>" + value.qData.title + "    -    " + value.qInfo.qId;
 			});
+            console.log(str);
 		//$('#QV01').html(str);
 		});
 	}
