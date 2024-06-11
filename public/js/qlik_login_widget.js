@@ -44,8 +44,8 @@ var config = {
                         return;
                     }
                 qlik.setOnError( function (error){
-                        alert(error.message);
-                        //document.getElementById(componentID).getElementsByClassName('text-danger').append(error.message);
+                        //alert(error.message);
+                        document.getElementById(componentID).getElementsByClassName('text-danger').append(error.message);
                     });
 
 
