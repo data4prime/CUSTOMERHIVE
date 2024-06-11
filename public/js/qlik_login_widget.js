@@ -33,7 +33,7 @@ var config = {
                 //console.log(config);
 
 				require.config({
-						baseUrl: baseUrl + '/resources',
+						baseUrl: baseUrl, //+ '/resources',
 						webIntegrationId: config.webIntegrationId			
 			});
 
