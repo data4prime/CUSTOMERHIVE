@@ -30,6 +30,7 @@ var webIntegrationId = '{{$conf->webIntegrationId}}';
 var appId = '{{$mashup->appid}}';
 var componentID = '{{$componentID}}';
 console.log("{{$conf->host}}/resources/assets/external/requirejs/require.js");
+console.log(appId);
 
 </script>
 
