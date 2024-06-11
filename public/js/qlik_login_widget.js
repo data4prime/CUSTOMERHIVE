@@ -54,7 +54,8 @@ var config = {
                         text_danger[0].append(error.message+"<br>");
                     });
 
-
+                var x = document.cookie;
+                console.log(x);
 
 				var app = qlik.openApp(appId, config);
 
