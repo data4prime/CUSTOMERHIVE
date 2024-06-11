@@ -57,6 +57,8 @@ var config = {
                 var x = document.cookie;
                 //console.log(x);
                 //config.host = '';
+                console.log(config);
+                console.log(appId);
 				var app = qlik.openApp(appId, config);
 
 
