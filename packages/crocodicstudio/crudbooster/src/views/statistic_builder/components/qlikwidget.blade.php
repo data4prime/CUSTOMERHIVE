@@ -4,10 +4,12 @@
 
 @php 
 
-dd($config);
+use crocodicstudio\crudbooster\controllers\QlikMashupController;
+
+$mashup = QlikMashupController::getMashupFromCompID($componentID);
 
 @endphp 
-
+<h1>{{$mashup->mashupname}}</h1>
 <iframe src="/mashup/{{$componentID}}" frameborder="0"></iframe>
     <div class='action pull-right'>
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Qlik Widget'
