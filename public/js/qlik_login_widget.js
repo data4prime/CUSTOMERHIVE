@@ -69,7 +69,13 @@ if (host.includes("https://") || host.includes("http://")) {
                 console.log(appId);
 				var app = qlik.openApp(appId, config);
                 console.log(app);
-
+            function loadObject(app, id, containerId) {
+                app.getObject(containerId, id).then(function() {
+                    console.log("Oggetto caricato:", id);
+                }).catch(function(error) {
+                    console.error("Errore nel caricamento dell'oggetto:", id, error);
+                });
+            }
                 app.getAppObjectList('sheet', function(reply) {
                 var container = document.getElementById(appId);
                 reply.qAppObjectList.qItems.forEach(function(sheet) {
