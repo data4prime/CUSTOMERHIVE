@@ -2,7 +2,7 @@
 
     const isLoggedIn = await jwtLogin();
     const check = await checkLoggedIn();
-    console.log(isLoggedIn);
+    //console.log(isLoggedIn);
 var selState;
 			var query;
 			var filters;
@@ -29,8 +29,8 @@ var config = {
 
 			};
 						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
-                console.log(baseUrl);
-                console.log(config);
+                //console.log(baseUrl);
+                //console.log(config);
 
 				require.config({
 						baseUrl: baseUrl + '/resources',
@@ -47,16 +47,17 @@ var config = {
                         //alert(error.message);
                         //document.getElementById(appId).getElementsByClassName('text-danger').append(error.message);
                         var appdoc = document.getElementById(appId);//.getElementsByClassName('text-danger')[0].append(error.message);
-                        console.log(appdoc);
+                        //console.log(appdoc);
                         var text_danger =  appdoc.getElementsByClassName('text-danger');    
-                        console.log(text_danger);
+                        //console.log(text_danger);
 
-                        text_danger[0].append(error.message+"<br>");
+                        text_danger[0].append(error.message);
                     });
 
                 var x = document.cookie;
-                console.log(x);
+                //console.log(x);
 
+                console.log(config);
 				var app = qlik.openApp(appId, config);
 
 
