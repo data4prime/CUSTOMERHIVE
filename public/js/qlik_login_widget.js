@@ -84,6 +84,8 @@ function getSheets(){
 		str=str+ "<br>" + value.qData.title + "    -    " + value.qInfo.qId;
 		app.getFullPropertyTree(value.qInfo.qId).then(function(reply){
 		});	
+
+/*
 var sheetId = value.qInfo.qId;
         var sheetTitle = value.qData.title;
         console.log(sheetId);
@@ -96,7 +98,7 @@ document.getElementById(appId).appendChild(sheetDiv);
 app.visualization.get(sheetId).then(function(vis){
 					vis.show(sheetId);
 					qlik.resize();
-			});
+			});*/
 
 
         //create a div element with the sheetId as id
