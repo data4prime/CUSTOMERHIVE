@@ -33,7 +33,7 @@ var config = {
                 //console.log(config);
 
 				require.config({
-						baseUrl: baseUrl + '/resources',
+						baseUrl: baseUrl + '/resources/',
 						webIntegrationId: config.webIntegrationId			
 			});
 
@@ -56,7 +56,7 @@ var config = {
 
                 var x = document.cookie;
                 //console.log(x);
-                config.host = '';
+                //config.host = '';
 				var app = qlik.openApp(appId, config);
 
 
