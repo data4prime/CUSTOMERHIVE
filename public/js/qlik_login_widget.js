@@ -16,6 +16,7 @@ var selState;
 			};
 						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
                 console.log(baseUrl);
+                console.log(config);
 
 				require.config({
 						baseUrl: baseUrl + 'resources',
