@@ -37,8 +37,8 @@ var componentID = '{{$componentID}}';
 
 
     
-  <div id="chart1"></div>
-  <div id="chart2"></div>
+  <div id="QV01"></div>
+
 <div class="text-danger" ></div>
 </div>
 <script defer  src="{{asset('js/qlik_login_widget.js')}}"></script>

@@ -117,7 +117,9 @@ app.visualization.get(sheetId).then(function(vis){
 	app.getAppLayout(function(layout){
 	console.log("Layout")
 	console.log(layout);
-	//$('#QV01').html(JSON.stringify(layout))
+	//
+
+$('#QV01').html(JSON.stringify(layout))
 	});
 	}
 	function getList(listType){
