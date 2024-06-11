@@ -73,6 +73,7 @@ if (host.includes("https://") || host.includes("http://")) {
                 app.getAppObjectList(function(reply) {
                     var container = document.getElementById(appId);
                     reply.qAppObjectList.qItems.forEach(function(item) {
+                            console.log(item.qInfo.qId);
                         // Crea un nuovo div per ogni oggetto
                         var div = document.createElement('div');
                         div.setAttribute('id', item.qInfo.qId);
