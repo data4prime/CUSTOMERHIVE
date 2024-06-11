@@ -17,7 +17,7 @@ $conf = QlikMashupController::getConf($qlik_conf);
 @endphp 
 <script type="text/javascript"  src="{{$conf->host}}/resources/assets/external/requirejs/require.js"></script>
 <script defer  src="{{asset('js/qlik_login_widget.js')}}"></script>
-<div id="{{$mashup->appid}}" class="small-box [color]"></div>
+<div id="{{$mashup->appid}}" class="small-box [color]">
 <script  type="text/javascript" >
 
 var qlik_token = '{{$token}}';
