@@ -23,7 +23,7 @@ if (host.includes("https://") || host.includes("http://")) {
 
 var config = {
 				host: host_q, 
-				prefix: '', 
+				prefix: '/single', 
 				port: port == null ? '443' : port, 
 				isSecure: true,
 				webIntegrationId: webIntegrationId,
