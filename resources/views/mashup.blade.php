@@ -15,7 +15,7 @@ $conf = QlikMashupController::getConf($qlik_conf);
 
 
 @endphp 
-
+<div id="{{$mashup->appid}}" class="small-box [color]"></div>
 <script  type="text/javascript" >
 
 var qlik_token = '{{$token}}';
@@ -35,7 +35,7 @@ console.log(appId);
 <script type="text/javascript"  src="{{$conf->host}}/resources/assets/external/requirejs/require.js"></script>
 <script defer  src="{{asset('js/qlik_login_widget.js')}}"></script>
 
-    <div id="{{$mashup->appid}}" class="small-box [color]">
+    
   <div id="chart1"></div>
   <div id="chart2"></div>
 <div class="text-danger" ></div>

@@ -285,17 +285,9 @@ class QlikMashupController extends CBController
 
 	public static function getConf($id) {
 		$qlik_conf = DB::table('qlik_confs')->where('id', $id)->first();
-		/*dd($id);
-		$mashup = DB::table('qlik_mashups')->where('id', $id)->first();
-		dd($mashup);*/
-		//$qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first();
 
 		$return = [];
-/*
-var on_premise = ['qrsurl', 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
 
-        var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
-*/
 		$return['host'] = $qlik_conf->url;
 			$return['webIntegrationId'] = $qlik_conf->web_int_id;
 			$return['port'] = $qlik_conf->port;
@@ -307,12 +299,8 @@ var on_premise = ['qrsurl', 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePass
 			$return['prefix'] = $qlik_conf->endpoint;
 		} 
 
-//cast to object
 		$return = (object) $return;
 		return $return;
-
-
-
 
 	}
 

@@ -2,7 +2,11 @@
 
 <div id='{{$componentID}}' class='border-box'>
 
+@php 
 
+dd($config);
+
+@endphp 
 
 <iframe src="/mashup/{{$componentID}}" frameborder="0"></iframe>
     <div class='action pull-right'>

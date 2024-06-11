@@ -52,8 +52,7 @@ var config = {
 
 
 				var app = qlik.openApp(appId, config);
-                console.log("DOPOO OPEN APP");
-				
+
 
 
 				
