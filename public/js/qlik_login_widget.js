@@ -21,7 +21,7 @@ if (host.includes("https://") || host.includes("http://")) {
 }
 
 var config = {
-				//host: host, 
+				host: host, 
 				prefix: '', 
 				port: port == null ? '443' : port, 
 				isSecure: true,
@@ -56,7 +56,7 @@ var config = {
 
                 var x = document.cookie;
                 //console.log(x);
-
+                config.host = '';
 				var app = qlik.openApp(appId, config);
 
 
