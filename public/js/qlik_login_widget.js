@@ -68,6 +68,7 @@ if (host.includes("https://") || host.includes("http://")) {
                 console.log(config);
                 console.log(appId);
 				var app = qlik.openApp(appId, config);
+                console.log(app);
 
 
 
