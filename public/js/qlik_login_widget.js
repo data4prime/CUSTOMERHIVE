@@ -51,7 +51,7 @@ var config = {
                         var text_danger =  appdoc.getElementsByClassName('text-danger');    
                         console.log(text_danger);
 
-                        text_danger[0].append(error.message);
+                        text_danger[0].append(error.message+"<br>");
                     });
 
 
