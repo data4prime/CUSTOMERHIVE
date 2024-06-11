@@ -47,7 +47,10 @@ var config = {
                         //alert(error.message);
                         //document.getElementById(appId).getElementsByClassName('text-danger').append(error.message);
                         var appdoc = document.getElementById(appId);//.getElementsByClassName('text-danger')[0].append(error.message);
-                        var text_danger =  appdoc.getElementsByClassName('text-danger');
+                        console.log(appdoc);
+                        var text_danger =  appdoc.getElementsByClassName('text-danger');    
+                        console.log(text_danger);
+
                         text_danger[0].append(error.message);
                     });
 
