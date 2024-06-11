@@ -1,7 +1,3 @@
-@if($command=='layout')
-
-<div id='{{$componentID}}' class='border-box'>
-
 @php 
 
 use crocodicstudio\crudbooster\controllers\QlikMashupController;
@@ -9,6 +5,11 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 $mashup = QlikMashupController::getMashupFromCompID($componentID);
 
 @endphp 
+@if($command=='layout')
+
+<div id='{{$componentID}}' class='border-box'>
+
+
 <h1>{{$mashup->mashupname}}</h1>
 <iframe src="/mashup/{{$componentID}}" frameborder="0"></iframe>
     <div class='action pull-right'>
