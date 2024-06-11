@@ -6,7 +6,21 @@
 var selState;
 			var query;
 			var filters;
-			var config = {
+			/*var config = {
+				host: host, 
+				prefix: '', 
+				port: port == null ? '443' : port, 
+				isSecure: true,
+				webIntegrationId: webIntegrationId,
+
+			};*/
+
+//se host contiene il protocollo, elimina tutto tranne l'host
+if (host.includes("https://") || host.includes("http://")) {
+    host = host.split("//")[1];
+}
+
+var config = {
 				host: host, 
 				prefix: '', 
 				port: port == null ? '443' : port, 
