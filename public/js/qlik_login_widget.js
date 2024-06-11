@@ -70,8 +70,22 @@ if (host.includes("https://") || host.includes("http://")) {
 				var app = qlik.openApp(appId, config);
                 console.log(app);
 
+                app.getAppObjectList(function(reply) {
+                    var container = document.getElementById(appId);
+                    reply.qAppObjectList.qItems.forEach(function(item) {
+                        // Crea un nuovo div per ogni oggetto
+                        var div = document.createElement('div');
+                        div.setAttribute('id', item.qInfo.qId);
+                        div.setAttribute('style', 'width: 100%; height: 400px; margin-bottom: 20px; border: 1px solid #ccc;');
+                        container.appendChild(div);
+
+                        // Carica l'oggetto nel div creato
+                        app.getObject(div.id, item.qInfo.qId);
+                    });
+                });
+
             //getSheets();
-            getAppDetails();
+           // getAppDetails();
 
 
 
