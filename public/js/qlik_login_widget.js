@@ -70,7 +70,7 @@ if (host.includes("https://") || host.includes("http://")) {
 				var app = qlik.openApp(appId, config);
                 console.log(app);
 
-            getSheets();
+            //getSheets();
             getAppDetails();
 
 
