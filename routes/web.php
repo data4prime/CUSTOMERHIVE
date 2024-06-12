@@ -93,10 +93,15 @@ Route::get('/mashup/{componentID}', function ($componentID) {
     if ($mashups) {
         $mashups = json_decode($mashups->config);
 
+        if (isset($mashups->mashups)){
+             $mashup = DB::table('qlik_mashups')->where('id', $mashups->mashups)->first();
+$qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
+        }
 
-    $mashup = DB::table('qlik_mashups')->where('id', $mashups->mashups)->first();
 
-    $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
+   
+
+    
     }  else {
         $mashup = null;
         $qlik_conf = null;
