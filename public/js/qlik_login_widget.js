@@ -71,8 +71,8 @@ app.getAppObjectList( 'sheet', function(reply){
 
 	$.each(reply.qAppObjectList.qItems, function(key, value) {
         console.log(value);
-        app.visualization.get(value.qData.qId).then(function(vis){
-		    vis.show(value.qData.qId);
+        app.visualization.get(value.qInfo.qId).then(function(vis){
+		    vis.show(value.qInfo.qId);
 	    });
 		str +=  value.qData.title + ' ';
 		$.each(value.qData.cells, function(k,v){
@@ -80,7 +80,7 @@ app.getAppObjectList( 'sheet', function(reply){
  
 		});
 	});
-	alert(str);
+	//alert(str);
 });
 
 
