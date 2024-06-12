@@ -11,7 +11,6 @@ $token = HelpersQlikHelper::getJWTToken(1, 3);
 
 $conf = QlikMashupController::getConf($qlik_conf);
 
-dd(gettype($conf));
 
 @endphp 
 @if (isset($conf) && $conf) 
