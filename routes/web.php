@@ -87,21 +87,21 @@ Route::get('admin/module_generator/enable', $controllers_base_path . 'ModulsCont
 Route::post('admin/module_generator/save_enable', $controllers_base_path . 'ModulsController@saveEnable');
 
 Route::get('/mashup/{componentID}', function ($componentID) {
-    //$componentID = Request::get('componentID');
-    //dd($componentID);
 
-    //prendi il valore di mashups dalla tabella cms_statistic_components colonna config
     $mashups = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
-    $mashups = json_decode($mashups->config);
 
-    //prendi dalla tabella qlik_mashups
+    if ($mashups) {
+        $mashups = json_decode($mashups->config);
+
+
     $mashup = DB::table('qlik_mashups')->where('id', $mashups->mashups)->first();
 
-    //prendi conf
     $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
-
-
-
+    }  else {
+        $mashup = null;
+        $qlik_conf = null;
+    }
+    
 
 
     return view('mashup', compact('componentID', 'mashup', 'qlik_conf'));
