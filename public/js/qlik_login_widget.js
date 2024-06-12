@@ -71,9 +71,13 @@ app.getAppObjectList( 'sheet', function(reply){
 
 	$.each(reply.qAppObjectList.qItems, function(key, value) {
         console.log(value);
+        app.visualization.get(value.qData.qId).then(function(vis){
+		    vis.show(value.qData.qId);
+	    });
 		str +=  value.qData.title + ' ';
 		$.each(value.qData.cells, function(k,v){
 			str +=  v.name + ' ';
+ 
 		});
 	});
 	alert(str);
