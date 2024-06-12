@@ -12,7 +12,7 @@ $token = HelpersQlikHelper::getJWTToken(1, 3);
 $conf = QlikMashupController::getConf($qlik_conf);
 
 
-
+dd($conf)
 
 @endphp 
 <script type="text/javascript"  src="{{$conf->host}}/resources/assets/external/requirejs/require.js"></script>
