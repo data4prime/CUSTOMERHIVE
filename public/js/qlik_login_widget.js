@@ -63,20 +63,10 @@ if (host.includes("https://") || host.includes("http://")) {
                     });
 
                 var x = document.cookie;
-                //console.log(x);
-                //config.host = '';
-                console.log(config);
-                console.log(appId);
+
 				var app = qlik.openApp(appId, config);
-                console.log(app);
-            function loadObject(app, id, containerId) {
-                app.getObject(containerId, id).then(function() {
-                    console.log("Oggetto caricato:", id);
-                }).catch(function(error) {
-                    console.error("Errore nel caricamento dell'oggetto:", id, error);
-                });
-            }
-                app.getAppObjectList( 'sheet', function(reply){
+
+app.getAppObjectList( 'sheet', function(reply){
 	var str = "";
 	$.each(reply.qAppObjectList.qItems, function(key, value) {
 		str +=  value.qData.title + ' ';
@@ -86,26 +76,6 @@ if (host.includes("https://") || host.includes("http://")) {
 	});
 	alert(str);
 });
-
-                    /*app.getObjectProperties(sheet.qInfo.qId).then(function(properties) {
-                        var objects = properties.qChildren;
-                        objects.forEach(function(object) {
-                            var objDiv = document.createElement('div');
-                            objDiv.setAttribute('id', object.qInfo.qId);
-                            objDiv.setAttribute('style', 'width: 100%; height: 400px; margin-bottom: 20px; border: 1px solid #ccc;');
-                            sheetDiv.appendChild(objDiv);
-
-                            loadObject(app, object.qInfo.qId, object.qInfo.qId);
-                        });
-                    }).catch(function(error) {
-                        console.error("Errore nel recupero delle proprietà della sheet:", sheet.qInfo.qId, error);
-                    });*/
-                });
-            });
-
-            //getSheets();
-           // getAppDetails();
-
 
 
 function getSheets(){
