@@ -71,6 +71,15 @@ app.getAppObjectList( 'sheet', function(reply){
 
 	$.each(reply.qAppObjectList.qItems, function(key, value) {
         console.log(value);
+        //create a div
+        var sheetId = value.qInfo.qId;
+        var sheetTitle = value.qData.title;
+        console.log(sheetId);
+        console.log(sheetTitle);
+        var sheetDiv = document.createElement('div');
+        sheetDiv.id = sheetId;
+        document.getElementById(appId).appendChild(sheetDiv);
+
         app.visualization.get(value.qInfo.qId).then(function(vis){
 		    vis.show(value.qInfo.qId);
 	    });
