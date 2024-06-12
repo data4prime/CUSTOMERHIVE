@@ -284,7 +284,7 @@ class QlikMashupController extends CBController
 	}
 
 	public static function getMashupFromCompID($compID) {
-
+		file_put_contents(__DIR__ . '/log.txt', $compID);
 		$mashup = DB::table('cms_statistic_components')->where('componentID', $compID)->first();
 		$mashup = json_decode($mashup->config)->mashups;
 		$mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
