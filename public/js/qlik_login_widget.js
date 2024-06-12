@@ -76,19 +76,16 @@ if (host.includes("https://") || host.includes("http://")) {
                     console.error("Errore nel caricamento dell'oggetto:", id, error);
                 });
             }
-                app.getAppObjectList('sheet', function(reply) {
-                var container = document.getElementById(appId);
-                reply.qAppObjectList.qItems.forEach(function(sheet) {
-                    // Creare un contenitore per ogni sheet
-                    var sheetDiv = document.createElement('div');
-                    sheetDiv.setAttribute('id', 'sheet-' + sheet.qInfo.qId);
-                    sheetDiv.setAttribute('style', 'margin-bottom: 40px;');
-                    container.appendChild(sheetDiv);
-
-                    app.visualization.get(sheet.qInfo.qId).then(function(vis){
-					vis.show('sheet-' + sheet.qInfo.qId);
-					qlik.resize();
-				});
+                app.getAppObjectList( 'sheet', function(reply){
+	var str = "";
+	$.each(reply.qAppObjectList.qItems, function(key, value) {
+		str +=  value.qData.title + ' ';
+		$.each(value.qData.cells, function(k,v){
+			str +=  v.name + ' ';
+		});
+	});
+	alert(str);
+});
 
                     /*app.getObjectProperties(sheet.qInfo.qId).then(function(properties) {
                         var objects = properties.qChildren;
