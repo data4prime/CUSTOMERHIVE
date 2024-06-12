@@ -34,12 +34,12 @@ $mashup = QlikMashupController::getMashupFromCompID($componentID);
         <label>Mashup</label>
         <select class='form-control' required name='config[mashups]'>
             <option value='0'>Choose Mashup</option>
-            @foreach($mashups as $mashup)
+            @foreach($mashups as $m)
             <!-- option with selected  -->
-            @if(isset($config) && $mashup->id == $config->mashups)
-            <option selected value='{{$mashup->id}}'>{{$mashup->mashupname}}</option>
+            @if(isset($config) && $m->id == $config->mashups)
+            <option selected value='{{$m->id}}'>{{$m->mashupname}}</option>
             @else
-            <option  value='{{$mashup->id}}'>{{$mashup->mashupname}}</option>
+            <option  value='{{$m->id}}'>{{$m->mashupname}}</option>
             @endif
             @endforeach
         </select>
