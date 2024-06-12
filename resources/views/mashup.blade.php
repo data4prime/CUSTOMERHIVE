@@ -13,7 +13,7 @@ $conf = QlikMashupController::getConf($qlik_conf);
 
 
 @endphp 
-@if (isset($conf)) 
+@if (isset($conf) || !empty($conf)) 
 <script type="text/javascript"  src="{{$conf->host}}/resources/assets/external/requirejs/require.js"></script>
 
 <div id="{{$mashup->appid}}" class="small-box [color]">
