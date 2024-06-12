@@ -10,7 +10,7 @@ $mashup = QlikMashupController::getMashupFromCompID($componentID);
 <div id='{{$componentID}}' class='border-box'>
 
 
-<h1>{{$mashup->mashupname}}</h1>
+<h1>{{isset($mashup) ? $mashup->mashupname : 'Choose Conf'}}</h1>
 <iframe src="/mashup/{{$componentID}}" frameborder="0"></iframe>
     <div class='action pull-right'>
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Qlik Widget'
