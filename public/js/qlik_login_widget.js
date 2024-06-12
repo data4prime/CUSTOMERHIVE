@@ -85,22 +85,24 @@ if (host.includes("https://") || host.includes("http://")) {
                     sheetDiv.setAttribute('style', 'margin-bottom: 40px;');
                     container.appendChild(sheetDiv);
 
-                    // Ottenere tutti gli oggetti della sheet
-                    app.getObjectProperties(sheet.qInfo.qId).then(function(properties) {
+                    app.visualization.get(sheet.qInfo.qId).then(function(vis){
+					vis.show('sheet-' + sheet.qInfo.qId);
+					qlik.resize();
+				});
+
+                    /*app.getObjectProperties(sheet.qInfo.qId).then(function(properties) {
                         var objects = properties.qChildren;
                         objects.forEach(function(object) {
-                            // Creare un contenitore per ogni oggetto
                             var objDiv = document.createElement('div');
                             objDiv.setAttribute('id', object.qInfo.qId);
                             objDiv.setAttribute('style', 'width: 100%; height: 400px; margin-bottom: 20px; border: 1px solid #ccc;');
                             sheetDiv.appendChild(objDiv);
 
-                            // Caricare l'oggetto nel contenitore
                             loadObject(app, object.qInfo.qId, object.qInfo.qId);
                         });
                     }).catch(function(error) {
                         console.error("Errore nel recupero delle proprietà della sheet:", sheet.qInfo.qId, error);
-                    });
+                    });*/
                 });
             });
 
