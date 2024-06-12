@@ -13,6 +13,7 @@ $conf = QlikMashupController::getConf($qlik_conf);
 
 
 @endphp 
+@if (isset($conf)) 
 <script type="text/javascript"  src="{{$conf->host}}/resources/assets/external/requirejs/require.js"></script>
 
 <div id="{{$mashup->appid}}" class="small-box [color]">
@@ -25,8 +26,6 @@ var port = '{{$conf->port}}';
 var webIntegrationId = '{{$conf->webIntegrationId}}';
 var appId = '{{$mashup->appid}}';
 var componentID = '{{$componentID}}';
-//console.log("{{$conf->host}}/resources/assets/external/requirejs/require.js");
-//console.log(appId);
 
 </script>
 
@@ -42,6 +41,7 @@ var componentID = '{{$componentID}}';
 <div class="text-danger" ></div>
 </div>
 <script defer  src="{{asset('js/qlik_login_widget.js')}}"></script>
+@endif
 <!-- 
 @if(isset($componentID))
 	<h1>{{$componentID}}</h1>
