@@ -65,13 +65,13 @@ if (host.includes("https://") || host.includes("http://")) {
                 var x = document.cookie;
 
 				var app = qlik.openApp(appId, config);
+app.getObject($('#currentselection'), 'CurrentSelections');
 
-app.getAppObjectList( 'sheet', function(reply){
+/*app.getAppObjectList( 'sheet', function(reply){
 	var str = "";
 
 	$.each(reply.qAppObjectList.qItems, function(key, value) {
         console.log(value);
-        //create a div
         var sheetId = value.qInfo.qId;
         var sheetTitle = value.qData.title;
         console.log(sheetId);
@@ -89,8 +89,7 @@ app.getAppObjectList( 'sheet', function(reply){
  
 		});
 	});
-	//alert(str);
-});
+});*/
 
 
 function getSheets(){
