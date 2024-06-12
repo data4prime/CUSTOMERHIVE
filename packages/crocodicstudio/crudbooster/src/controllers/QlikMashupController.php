@@ -308,6 +308,8 @@ class QlikMashupController extends CBController
 
 		$return = [];
 
+		if (isset($id)) {
+
 		$return['host'] = $qlik_conf->url;
 			$return['webIntegrationId'] = $qlik_conf->web_int_id;
 			$return['port'] = $qlik_conf->port;
@@ -318,6 +320,7 @@ class QlikMashupController extends CBController
 			$return['port'] = $qlik_conf->port;
 			$return['prefix'] = $qlik_conf->endpoint;
 		} 
+		}
 
 		$return = (object) $return;
 		return $return;
