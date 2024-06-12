@@ -68,7 +68,9 @@ if (host.includes("https://") || host.includes("http://")) {
 
 app.getAppObjectList( 'sheet', function(reply){
 	var str = "";
+
 	$.each(reply.qAppObjectList.qItems, function(key, value) {
+        console.log(value);
 		str +=  value.qData.title + ' ';
 		$.each(value.qData.cells, function(k,v){
 			str +=  v.name + ' ';
