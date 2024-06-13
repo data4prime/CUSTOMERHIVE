@@ -156,12 +156,12 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
     // Aggiungi il bordo agli elementi selezionati e ai loro nodi interni
     statisticRows.forEach(row => {
         // Aggiungi il bordo all'elemento stesso
-        row.style.border = '2px solid red';
+        row.style.border = '1px solid black';
         
         // Aggiungi il bordo a tutti i nodi interni
         const childNodes = row.querySelectorAll('*');
         childNodes.forEach(child => {
-            child.style.border = '1px solid blue';
+            child.style.border = '1px solid black';
         });
     });
 }
