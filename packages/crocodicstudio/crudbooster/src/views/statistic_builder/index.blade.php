@@ -341,6 +341,11 @@
 </script>
 @endpush
 
+@php 
+
+dd($id_cms_statistics);
+
+@endphp 
 <div id='modal-statistic' class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

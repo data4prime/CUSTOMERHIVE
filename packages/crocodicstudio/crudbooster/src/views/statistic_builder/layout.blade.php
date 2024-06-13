@@ -57,7 +57,7 @@
             <nav class="navbar navbar-static-top">
                 <div class="container">
                     <div class="navbar-header">
-                        <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get(' appname')}}'
+                        <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}'
                             class="navbar-brand">{{CRUDBooster::getSetting('appname')}}</a>
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                             data-target="#navbar-collapse">
