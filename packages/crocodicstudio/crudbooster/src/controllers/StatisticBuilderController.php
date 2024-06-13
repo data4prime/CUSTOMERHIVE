@@ -118,9 +118,8 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         
         $layout = CRUDBooster::first($this->table, ['id' => $id_cms_statistics])->layout;
         $layout = DB::table('dashboard_layouts')->where('id', $layout)->first()->code_layout;
-        dd($layout);
 
-        return view('crudbooster::statistic_builder.builder', compact('page_title', 'id_cms_statistics'));
+        return view('crudbooster::statistic_builder.builder', compact('page_title', 'id_cms_statistics', 'layout'));
     }
 
     public function getListComponent($id_cms_statistics, $area_name)
