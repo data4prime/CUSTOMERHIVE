@@ -20,8 +20,7 @@ $conf = QlikMashupController::getConf($qlik_conf);
 <style>
 .mashup-container{
   display: flex;
-  flex-wrap: wrap;
-}
+  flex-direction: column;}
 .masterobject {
   width: 50%;
 }
