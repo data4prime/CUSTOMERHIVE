@@ -188,6 +188,7 @@ return [
     'Qlik_Development_Tools' => 'Qlik Platform',
     'Qlik_Configuration' => 'Qlik Configuration',
     'Qlik_Mashups' => 'Qlik Mashups',
+    'Dashboard_Layouts' => 'Dashboard Layouts',
     'Qlik_Sense_Hub' => 'Qlik Sense HUB',
     'Qlik_Sense_QMC' => 'Qlik Sense QMC',
     'click_here' => 'Click here',

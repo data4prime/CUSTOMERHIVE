@@ -29,7 +29,8 @@ class DatabaseSeeder extends Seeder
             ];
         DB::table('cms_moduls')->insert($mod);  */
 
- $mod = [
+ /*
+$mod = [
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'Qlik Mashups',
                 'icon' => 'fa fa-cog',
@@ -39,7 +40,18 @@ class DatabaseSeeder extends Seeder
                 'is_protected' => 1,
                 'is_active' => 1,
             ];
-        DB::table('cms_moduls')->insert($mod);  
-
+        DB::table('cms_moduls')->insert($mod); 
+*/ 
+$mod = [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'Dashboard Layouts',
+                'icon' => 'fa fa-cog',
+                'path' => 'dashboard_layouts',
+                'table_name' => 'dashboard_layouts',
+                'controller' => 'DashboardLayoutController',
+                'is_protected' => 1,
+                'is_active' => 1,
+            ];
+        DB::table('cms_moduls')->insert($mod); 
     }
 }
