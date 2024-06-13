@@ -78,6 +78,7 @@ app.getAppObjectList( 'masterobject', function(reply){
         console.log(sheetTitle);
         var sheetDiv = document.createElement('div');
         sheetDiv.id = sheetId;
+		sheetDiv.className = 'masterobject';
         document.getElementById(appId).appendChild(sheetDiv);
 
         app.visualization.get(value.qInfo.qId).then(function(vis){
