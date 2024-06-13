@@ -165,7 +165,7 @@
                 <li class='connectedSortable' title='Drag To Main Area'>
                     <div id='btn-qlikwidget' class='button-widget-area'>
                         <a href="#" data-component='qlikwidget' class='btn-add-widget add-qlikwidget'>
-                            <img src='/images/qlik_logo.png' />
+                            <img style="width: 50%;" src='/images/qlik_logo.png' />
                             <div class='title'>Qlik Widget</div>
                         </a>
                     </div>
