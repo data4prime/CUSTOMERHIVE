@@ -88,11 +88,13 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         $id_cms_statistics = isset($row->id) ? $row->id : 0;
         $page_title = isset($row->name) ? $row->name : 'Dashboard';
 
-        dd($row);
+        $layout = $row->layout;
+
+        $layout = DB::table('dashboard_layouts')->where('id', $layout)->first()->code_layout;
 
 
 
-        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics'));
+        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout'));
     }
 
     public function getShow($slug)
