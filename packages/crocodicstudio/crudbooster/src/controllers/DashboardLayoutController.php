@@ -280,6 +280,7 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
 	public function hook_before_add(&$postdata)
 	{
 		//Your code here
+		dd($postdata);
 	}
 
 	/*
@@ -291,6 +292,8 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
 	    */
 	public function hook_after_add($id)
 	{
+
+
 
 	}
 
@@ -304,7 +307,6 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
 	    */
 	public function hook_before_edit(&$postdata, $id)
 	{
-		//Your code here
 		
 	}
 
