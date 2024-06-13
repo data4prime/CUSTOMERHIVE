@@ -37,13 +37,11 @@ $conf = QlikMashupController::getConf($qlik_conf);
     text-overflow: ellipsis;
 }
 
-.qlikwidget {
-	height: 50vh;
-}
+
 </style>
 
 
-<div id="{{$mashup->appid}}" class="qlikwidget small-box [color]">
+<div id="{{$mashup->appid}}" class="small-box [color]">
 <script  type="text/javascript" >
 
 var qlik_token = '{{$token}}';

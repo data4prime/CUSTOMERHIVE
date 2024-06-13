@@ -7,7 +7,13 @@ $mashup = QlikMashupController::getMashupFromCompID($componentID);
 @endphp 
 @if($command=='layout')
 
-<div id='{{$componentID}}' class='border-box'>
+<style>
+.qlikwidget {
+	height: 50vh;
+}
+</style>
+
+<div id='{{$componentID}}' class='qlikwidget border-box'>
 
 
 <h1>{{isset($mashup) ? $mashup->mashupname : 'Choose Conf'}}</h1>
