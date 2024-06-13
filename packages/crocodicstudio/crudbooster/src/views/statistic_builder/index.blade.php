@@ -379,8 +379,23 @@
         </div>
     </div>
 
+<div class="statistic-row row">
+        <div id='area5' class="col-sm-3 connectedSortable">
+
+        </div>
+        <div id='area6' class="col-sm-3 connectedSortable">
+
+        </div>
+        <div id='area7' class="col-sm-3 connectedSortable">
+
+        </div>
+        <div id='area8' class="col-sm-3 connectedSortable">
+
+        </div>
+    </div>
+
     <div class='statistic-row row'>
-        <div id='area5' class="col-sm-12 connectedSortable">
+        <div id='area9' class="col-sm-12 connectedSortable">
 
         </div>
     </div>
