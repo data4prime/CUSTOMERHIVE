@@ -146,6 +146,10 @@
         display: block;
     }
 
+    .panel {
+        margin-bottom: 0px;
+    }
+
     .panel-heading,
     .inner-box,
     .box-header,
