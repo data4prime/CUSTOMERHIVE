@@ -33,6 +33,7 @@ class StatisticBuilderController extends CBController
 
         $this->col = [];
         $this->col[] = ["label" => "Name", "name" => "name"];
+        $this->col[] = ["label" => "Layout", "name" => "layout"];
 
         $this->form = [];
         $this->form[] = [
@@ -41,11 +42,20 @@ class StatisticBuilderController extends CBController
             "type" => "text",
             "required" => true,
             "validation" => "required|min:3|max:255",
-            "placeholder" => "You can only enter the letter only",
+            "placeholder" => "",
+        ];
+
+        $this->form[] = [
+            "label" => "Layout",
+            "name" => "layout",
+            "type" => "select",
+            "required" => true,
+            "datatable" => "dashboard_layouts,layoutname",
+            "validation" => "required",
+            "placeholder" => "",
         ];
 
         $this->addaction = [];
-        $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('builder') . '/[id]', 'icon' => 'fa fa-wrench'];
     }
 
     public function getShowDashboard()

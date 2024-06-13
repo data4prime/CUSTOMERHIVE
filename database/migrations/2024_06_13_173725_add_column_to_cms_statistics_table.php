@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('cms_statistics', function (Blueprint $table) {
             //
+            $table->string('layout')->nullable();
         });
     }
 
