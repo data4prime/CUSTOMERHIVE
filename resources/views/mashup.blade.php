@@ -23,7 +23,7 @@ $conf = QlikMashupController::getConf($qlik_conf);
   flex-wrap: wrap;
 }
 .masterobject {
-  flex: 1;
+  width: 50%;
 }
 </style>
 
