@@ -1128,9 +1128,7 @@ return Request::segment($segment);
         if ($parent_table == 'cms_menus' and $child_table == 'menu_tenants') {
             return 'menu_id';
         }
-	if ($parent_table == 'tenants' and $child_table == 'qlikmashups_tenants') {
-            return 'tenant_id';
-        }
+
         if ($parent_table == 'tenants' and $child_table == 'menu_tenants') {
             return 'tenant_id';
         }
@@ -1138,18 +1136,25 @@ return Request::segment($segment);
         if ($parent_table == 'groups' and $child_table == 'group_tenants') {
             return 'group_id';
         }
-	if ($parent_table == 'groups' and $child_table == 'qlikmashups_groups') {
-            return 'group_id';
-        }
-	if ($parent_table == 'groups' and $child_table == 'qlikconfs_groups') {
-            return 'group_id';
-        }
+
+
 
         if ($parent_table == 'tenants' and $child_table == 'group_tenants') {
             return 'tenant_id';
         }
-if ($parent_table == 'groups' and $child_table == 'qlikmashups_tenants') {
+//qlik mashups 
+        if ($parent_table == 'groups' and $child_table == 'qlikmashups_groups') {
             return 'group_id';
+        }
+	    if ($parent_table == 'tenants' and $child_table == 'qlikmashups_tenants') {
+            return 'tenant_id';
+        }
+//qlik confs
+        if ($parent_table == 'groups' and $child_table == 'qlikconfs_groups') {
+            return 'group_id';
+        }
+        if ($parent_table == 'tenants' and $child_table == 'qlikconfs_tenants') {
+            return 'tenant_id';
         }
         if (Schema::hasColumn($child_table, 'id_' . $parent_table)) {
             return 'id_' . $parent_table;
