@@ -72,7 +72,10 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         $id_cms_statistics = $row->id;
         $page_title = $row->name;
 
-        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics'));
+        $layout = $row->layout;
+        $layout = DB::table('dashboard_layouts')->where('id', $layout)->first();
+
+        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout'));
     }
 
     public function getDashboard()

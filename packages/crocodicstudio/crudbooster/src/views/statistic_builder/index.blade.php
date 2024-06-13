@@ -185,7 +185,7 @@
 
         var cloneSidebar = $('.control-sidebar').clone();
 
-        @if (CRUDBooster:: getCurrentMethod() == 'getBuilder')
+        @if (CRUDBooster::getCurrentMethod() == 'getBuilder')
     createSortable();
 
     @endif
@@ -341,11 +341,7 @@
 </script>
 @endpush
 
-@php 
 
-dd($id_cms_statistics);
-
-@endphp 
 <div id='modal-statistic' class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -368,8 +364,9 @@ dd($id_cms_statistics);
 
 <div id='statistic-area'>
 
+{{$layout}}
 
-    <div class="statistic-row row">
+    <!--<div class="statistic-row row">
         <div id='area1' class="col-sm-3 connectedSortable">
 
         </div>
@@ -402,7 +399,7 @@ dd($id_cms_statistics);
     <div class='statistic-row row'>
         <div id='area9' class="col-sm-12 connectedSortable">
 
-        </div>
+        </div>-->
     </div>
 
 </div><!--END STATISTIC AREA-->
