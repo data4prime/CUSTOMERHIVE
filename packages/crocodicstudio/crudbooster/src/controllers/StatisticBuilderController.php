@@ -61,7 +61,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 		$this->script_js = "
 
 			// Verifica se l'URL contiene 'dashboard_layouts/detail/'
-if (window.location.href.includes('dashboard_layouts/detail/')) {
+if (window.location.href.includes('statistic_builder/builder')) {
     // Seleziona tutti gli elementi con la classe 'statistic-row'
     const statisticRows = document.querySelectorAll('.statistic-row');
     
