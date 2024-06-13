@@ -74,7 +74,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         
 
-        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout'));
+        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics'));
     }
 
     public function getDashboard()
@@ -93,7 +93,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         dd($layout);
 
 
-        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics'));
+        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout'));
     }
 
     public function getShow($slug)
