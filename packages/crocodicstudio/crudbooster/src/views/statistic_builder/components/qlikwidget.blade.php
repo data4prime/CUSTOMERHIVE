@@ -13,11 +13,12 @@ $mashup = QlikMashupController::getMashupFromCompID($componentID);
 }
 </style>
 
-<div id='{{$componentID}}' class='qlikwidget border-box'>
 
-
+<div id='{{$componentID}}' class='qlikwidget border-box'></div>
+<div class="small-box [color]">
 <h1>{{isset($mashup) ? $mashup->mashupname : 'Choose Conf'}}</h1>
-<iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 100%;;"></iframe>
+<iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 100%;"></iframe>
+</div>
     <div class='action pull-right'>
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Qlik Widget'
             class='btn-edit-component'><i class='fa fa-pencil'></i></a>
