@@ -1148,6 +1148,9 @@ return Request::segment($segment);
         if ($parent_table == 'tenants' and $child_table == 'group_tenants') {
             return 'tenant_id';
         }
+if ($parent_table == 'groups' and $child_table == 'qlikmashups_tenants') {
+            return 'group_id';
+        }
         if (Schema::hasColumn($child_table, 'id_' . $parent_table)) {
             return 'id_' . $parent_table;
         } else {
