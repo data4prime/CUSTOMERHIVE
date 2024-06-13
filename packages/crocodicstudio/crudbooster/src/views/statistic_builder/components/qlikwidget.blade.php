@@ -9,12 +9,12 @@ $mashup = QlikMashupController::getMashupFromCompID($componentID);
 
 <style>
 .qlikwidget {
-	/*height: 50vh;*/
+	height: 50vh;
 }
 </style>
 
 
-<div id='{{$componentID}}' class='qlikwidget border-box'></div>
+<div id='{{$componentID}}' class='qlikwidget border-box'>
 
 <h1>{{isset($mashup) ? $mashup->mashupname : 'Choose Conf'}}</h1>
 <iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 100%;"></iframe>
