@@ -88,12 +88,9 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         $id_cms_statistics = isset($row->id) ? $row->id : 0;
         $page_title = isset($row->name) ? $row->name : 'Dashboard';
 
-        $layout = $row->layout;
-        $layout = DB::table('dashboard_layouts')->where('id', $layout)->first()->code_layout;
-        dd($layout);
 
 
-        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout'));
+        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics'));
     }
 
     public function getShow($slug)
@@ -117,6 +114,11 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         }
 
         $page_title = 'Statistic Builder';
+
+        
+        $layout = CRUDBooster::first($this->table, ['id' => $id_cms_statistics])->layout;
+        $layout = DB::table('dashboard_layouts')->where('id', $layout)->first()->code_layout;
+        dd($layout);
 
         return view('crudbooster::statistic_builder.builder', compact('page_title', 'id_cms_statistics'));
     }
