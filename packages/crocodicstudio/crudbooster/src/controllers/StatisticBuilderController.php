@@ -56,6 +56,7 @@ class StatisticBuilderController extends CBController
         ];
 
         $this->addaction = [];
+$this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('builder') . '/[id]', 'icon' => 'fa fa-wrench'];
     }
 
     public function getShowDashboard()
