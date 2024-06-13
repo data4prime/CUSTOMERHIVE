@@ -13,7 +13,7 @@ if (isset($datatable) && ! isset($form['relationship_table'])) {
 if (isset($datatable) && isset($form['relationship_table'])) {
     $datatable_table = explode(',', $datatable)[0];
     $datatable_field = explode(',', $datatable)[1];
-    if($form['datatable_orig'] != ''){
+    if(isset($form['datatable_orig']) && $form['datatable_orig'] != ''){
         $params = explode("|", $form['datatable_orig']);
         if(!isset($params[2])) $params[2] = "id";
         $values = explode(",", DB::table($params[0])->where($params[2], $id)->first()->{$params[1]});
