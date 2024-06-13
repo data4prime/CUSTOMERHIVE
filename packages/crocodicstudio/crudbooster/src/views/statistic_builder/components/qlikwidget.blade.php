@@ -9,7 +9,7 @@ $mashup = QlikMashupController::getMashupFromCompID($componentID);
 
 <style>
 .qlikwidget {
-	height: 50vh;
+	/*height: 50vh;*/
 }
 </style>
 
