@@ -280,8 +280,7 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
 	public function hook_before_add(&$postdata)
 	{
 		//Your code here
-		//dd($postdata);
-		//from 'code_layout' eliminate all \r\n
+
 		$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
 	}
 
@@ -309,6 +308,8 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
 	    */
 	public function hook_before_edit(&$postdata, $id)
 	{
+
+		$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
 		
 	}
 
