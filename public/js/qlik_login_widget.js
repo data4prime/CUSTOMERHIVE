@@ -34,8 +34,12 @@ if (host.includes("https://") || host.includes("http://")) {
 				prefix: "/", //or the virtual proxy to be used. for example "/anonymous/"
 				port: 443, //or the port to be used if different from the default port  
 				isSecure: true, //should be true if connecting over HTTPS
-				webIntegrationId: webIntegrationId //only needed in SaaS editions
+				//webIntegrationId: webIntegrationId
 			};
+			//if webIntegrationId is not empty, add it to the config object
+			if (webIntegrationId != '') {
+				config.webIntegrationId = webIntegrationId;
+			}
 						const baseUrl = ( config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
                 //console.log(baseUrl);
                 //console.log(config);
