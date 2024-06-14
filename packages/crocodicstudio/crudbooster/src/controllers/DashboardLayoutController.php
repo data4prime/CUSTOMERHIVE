@@ -161,7 +161,7 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
         // Aggiungi il bordo a tutti i nodi interni
         const childNodes = row.querySelectorAll('*');
         childNodes.forEach(child => {
-			console.log(child);
+			//console.log(child);
 			
             child.style.border = '1px solid black';
 			//if child is a br element, delete it
