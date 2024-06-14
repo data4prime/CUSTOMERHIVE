@@ -49,6 +49,9 @@ var webIntegrationId = '{{$conf->webIntegrationId}}';
 var appId = '';
 var componentID = '{{$componentID}}';
 
+console.log(qlik_token);
+console.log(host);
+
 
 
 </script>
