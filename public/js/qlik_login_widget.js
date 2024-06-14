@@ -2,7 +2,6 @@
 
     const isLoggedIn = await jwtLogin();
     const check = await checkLoggedIn();
-    //console.log(isLoggedIn);
 var selState;
 			var query;
 			var filters;
@@ -14,13 +13,11 @@ if (host.includes("https://") || host.includes("http://")) {
 
 
 			var config = {
-				host: host_q, //the address of your Qlik Engine Instance
-				prefix: "/", //or the virtual proxy to be used. for example "/anonymous/"
-				port: 443, //or the port to be used if different from the default port  
-				isSecure: true, //should be true if connecting over HTTPS
-				//webIntegrationId: webIntegrationId
+				host: host_q, 
+				prefix: "/", 
+				port: 443, 
+				isSecure: true, 
 			};
-			//if webIntegrationId is not empty, add it to the config object
 			if (webIntegrationId != '') {
 				config.webIntegrationId = webIntegrationId;
 			}
@@ -39,10 +36,8 @@ if (host.includes("https://") || host.includes("http://")) {
                     }
                 qlik.setOnError( function (error){
 
-                        var appdoc = document.getElementById(appId);//.getElementsByClassName('text-danger')[0].append(error.message);
-                        //console.log(appdoc);
+                        var appdoc = document.getElementById(appId);
                         var text_danger =  appdoc.getElementsByClassName('text-danger');    
-                        //console.log(text_danger);
 
                         text_danger[0].append(error.message);
                     });
@@ -100,10 +95,9 @@ async function jwtLogin(token) {
 }
 
 async function checkLoggedIn(token) {
-    //console.log("JWTTOKEN");
-    //console.log(JWTTOKEN);
+
     return await fetch(`${host}/api/v1/users/me`, {
-        //redirect: 'follow'
+
         mode: 'cors',
         credentials: 'include',
         headers: {
