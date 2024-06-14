@@ -172,6 +172,7 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
     });
 
 	statisticRows.forEach(row => {
+console.log(row.nextSibling);
 			//if next sibling is a br element, delete it
 			if (row.nextSibling.tagName == 'BR') {
 				//row.nextSibling.remove();
