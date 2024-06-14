@@ -1,8 +1,19 @@
 @php 
+use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 
 use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
 $mashup = QlikMashupController::getMashupFromCompID($componentID);
+
+
+
+
+$token = HelpersQlikHelper::getJWTToken(1, 3);
+
+$conf = QlikMashupController::getConf($qlik_conf);
+
+
+@endphp 
 
 @endphp 
 @if($command=='layout')
@@ -28,18 +39,7 @@ $mashup = QlikMashupController::getMashupFromCompID($componentID);
     </div>
     </div>
  @elseif($command=='configuration')
-@php 
 
-
-use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
-use crocodicstudio\crudbooster\controllers\QlikMashupController;
-
-$token = HelpersQlikHelper::getJWTToken(1, 3);
-
-$conf = QlikMashupController::getConf($qlik_conf);
-
-
-@endphp 
 <script>
 
 var qlik_token = '{{$token}}';
