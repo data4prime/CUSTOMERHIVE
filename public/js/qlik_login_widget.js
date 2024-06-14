@@ -45,6 +45,7 @@ if (host.includes("https://") || host.includes("http://")) {
                 var x = document.cookie;
 
 				var app = qlik.openApp(appId, config);
+
 app.getObject($('#currentselection'), 'CurrentSelections');
 
 

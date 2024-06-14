@@ -13,7 +13,6 @@ $token = HelpersQlikHelper::getJWTToken(1, 3);
 $conf = QlikMashupController::getConf(3);
 
 
-@endphp 
 
 @endphp 
 @if($command=='layout')
@@ -47,12 +46,24 @@ var host = '{{$conf->host}}';
 var prefix = '{{$conf->prefix}}';
 var port = '{{$conf->port}}';
 var webIntegrationId = '{{$conf->webIntegrationId}}';
-var appId = '{{$mashup->appid}}';
+var appId = '';
 var componentID = '{{$componentID}}';
+
 
 
 </script>
 <script defer  src="{{asset('js/qlik_login_widget.js')}}"></script>
+
+<script defer >
+
+function create_object_select(select){
+    var mashup_id = $(select).val();
+
+    console.log(mashup_id);
+    
+}
+
+</script>
 
 
 
@@ -65,7 +76,7 @@ var componentID = '{{$componentID}}';
 
     <div class="form-group">
         <label>Mashup</label>
-        <select class='form-control' required name='config[mashups]'>
+        <select onchange="create_object_select(this)" class='form-control' required name='config[mashups]'>
             <option value='0'>Choose Mashup</option>
             @foreach($mashups as $m)
             <!-- option with selected  -->
@@ -80,7 +91,7 @@ var componentID = '{{$componentID}}';
 
 <div class="form-group">
         <label>Mashup</label>
-        <select class='form-control' required name='config[object]'>
+        <select  class='form-control' required name='config[object]'>
             <option value='0'>Choose Object</option>
 
         </select>
