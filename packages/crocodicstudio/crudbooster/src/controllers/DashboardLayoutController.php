@@ -175,7 +175,7 @@ if (window.location.href.includes('dashboard_layouts/edit/')) {
     function formatHTML(html) {
         let formatted = '';
         const tab = '\t';
-        let indentLevel = 0;
+        let indentLevel = 1;
 
         html.split(/>\s*</).forEach(function(element) {
             if (element.match(/^\/\w/)) {
