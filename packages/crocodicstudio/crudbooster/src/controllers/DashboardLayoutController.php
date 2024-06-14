@@ -172,11 +172,11 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
     });
 var statisticRows = document.querySelectorAll('.statistic-row');
 	statisticRows.forEach(row => {
-console.log(row.nextSibling);
+console.log(row.nextElementSibling);
 			//if next sibling is a br element, delete it
-			if (row.nextSibling.tagName == 'BR') {
-				//row.nextSibling.remove();
-				console.log(row.nextSibling);
+			if (row.nextElementSibling.tagName == 'BR') {
+				row.nextElementSibling.remove();
+				console.log(row.nextElementSibling);
 			}
 	});
 }
