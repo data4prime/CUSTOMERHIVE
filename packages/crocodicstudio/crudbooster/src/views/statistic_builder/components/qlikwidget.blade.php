@@ -72,7 +72,7 @@ function create_object_select(select){
 console.log(document.getElementById('configuration').getElementById(jMWFZ));
 
 //find the select element in the iframe
-var select = document.getElementById('configuration').contentWindow.document.getElementById('jMWFZ');
+var select = document.getElementById('configuration').contentWindow.document.getElementById('currentselection');
 console.log(select);
 
     
