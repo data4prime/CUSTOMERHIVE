@@ -71,6 +71,10 @@ function create_object_select(select){
 //get html element with id jMWFZ
 console.log(document.getElementById('configuration').getElementById(jMWFZ));
 
+//find the select element in the iframe
+var select = document.getElementById('configuration').contentWindow.document.getElementById('jMWFZ');
+console.log(select);
+
     
 }
 
