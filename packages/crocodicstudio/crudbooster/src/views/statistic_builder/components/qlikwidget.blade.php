@@ -38,8 +38,9 @@ $conf = QlikMashupController::getConf(3);
     </div>
     </div>
  @elseif($command=='configuration')
-
+<!--
 <script>
+
 
 var qlik_token = '{{$token}}';
 var host = '{{$conf->host}}';
@@ -54,7 +55,7 @@ console.log(host);
 
 
 
-</script>
+</script>-->
 <iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 80%;"></iframe>
 
 <script defer >
