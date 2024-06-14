@@ -60,7 +60,7 @@ console.log(host);
 <iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 80%;"></iframe>
 </div>
 
-
+<!--
 <script defer >
 
 function create_object_select(select){
@@ -70,7 +70,7 @@ function create_object_select(select){
     
 }
 
-</script>
+</script>-->
 
 
 
