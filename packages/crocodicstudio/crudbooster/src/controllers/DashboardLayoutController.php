@@ -151,7 +151,7 @@ class DashboardLayoutController extends CBController
 			// Verifica se l'URL contiene 'dashboard_layouts/detail/'
 if (window.location.href.includes('dashboard_layouts/detail/')) {
     // Seleziona tutti gli elementi con la classe 'statistic-row'
-    const statisticRows = document.querySelectorAll('.statistic-row');
+    var statisticRows = document.querySelectorAll('.statistic-row');
     
     // Aggiungi il bordo agli elementi selezionati e ai loro nodi interni
     statisticRows.forEach(row => {
@@ -170,7 +170,7 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
 			}
         });
     });
-
+var statisticRows = document.querySelectorAll('.statistic-row');
 	statisticRows.forEach(row => {
 console.log(row.nextSibling);
 			//if next sibling is a br element, delete it
