@@ -11,7 +11,7 @@ if (host.includes("https://") || host.includes("http://")) {
     host_q = host.split("//")[1];
 }
 
-
+console.log(host_q);
 			var config = {
 				host: host_q, 
 				prefix: "/", 
