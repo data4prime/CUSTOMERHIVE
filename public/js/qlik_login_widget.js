@@ -78,6 +78,7 @@ app.getAppObjectList( 'masterobject', function(reply){
 });
 */
 function navbar() {
+console.log(document.getElementById('configuration'));
 app.getObject($('#currentselection'), 'CurrentSelections');
 }
 
