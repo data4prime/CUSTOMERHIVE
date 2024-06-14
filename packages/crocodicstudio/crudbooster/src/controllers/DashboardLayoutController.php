@@ -155,11 +155,7 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
     
     // Aggiungi il bordo agli elementi selezionati e ai loro nodi interni
     statisticRows.forEach(row => {
-		//if next sibling is a br element, delete it
-		if (row.nextSibling.tagName == 'BR') {
-			row.nextSibling.remove();
-		}
-        // Aggiungi il bordo all'elemento stesso
+		/ Aggiungi il bordo all'elemento stesso
         row.style.border = '1px solid black';
         
         // Aggiungi il bordo a tutti i nodi interni
@@ -174,6 +170,13 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
 			}
         });
     });
+
+statisticRows.forEach(row => {
+		//if next sibling is a br element, delete it
+		if (row.nextSibling.tagName == 'BR') {
+			row.nextSibling.remove();
+		}
+});
 }
 
 /*if (window.location.href.includes('dashboard_layouts/edit/')) {
