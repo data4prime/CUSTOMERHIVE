@@ -178,6 +178,7 @@ if (window.location.href.includes('dashboard_layouts/edit/')) {
         let indentLevel = 1;
 
         html.split(/>\s*</).forEach(function(element) {
+			console.log(indentLevel);
             if (element.match(/^\/\w/)) {
                 // Closing tag
                 indentLevel--;
