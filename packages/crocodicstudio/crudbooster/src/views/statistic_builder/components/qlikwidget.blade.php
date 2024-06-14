@@ -52,7 +52,7 @@ var componentID = '{{$componentID}}';
 
 
 </script>
-<script defer  src="{{asset('js/qlik_login_widget.js')}}"></script>
+<iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 80%;"></iframe>
 
 <script defer >
 
