@@ -28,7 +28,7 @@ $mashup = QlikMashupController::getMashupFromCompID($componentID);
     </div>
     </div>
  @elseif($command=='configuration')
-
+<script defer  src="{{asset('js/qlik_login_widget.js')}}"></script>
 
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
@@ -49,6 +49,14 @@ $mashup = QlikMashupController::getMashupFromCompID($componentID);
             <option  value='{{$m->id}}'>{{$m->mashupname}}</option>
             @endif
             @endforeach
+        </select>
+    </div>
+
+<div class="form-group">
+        <label>Mashup</label>
+        <select class='form-control' required name='config[object]'>
+            <option value='0'>Choose Object</option>
+
         </select>
     </div>
 
