@@ -162,7 +162,12 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
         const childNodes = row.querySelectorAll('*');
         childNodes.forEach(child => {
 			console.log(child);
+			
             child.style.border = '1px solid black';
+			//if child is a br element, delete it
+			if (child.tagName == 'BR') {
+				child.remove();
+			}
         });
     });
 }
