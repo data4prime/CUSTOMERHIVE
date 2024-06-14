@@ -174,7 +174,10 @@ var statisticRows = document.querySelectorAll('.statistic-row');
 	statisticRows.forEach(row => {
 console.log(row.nextElementSibling);
 			//if next sibling is a br element, delete it
-			if (row.nextElementSibling.tagName == 'BR') {
+			//check if exists
+
+
+			if (row.nextElementSibling != null && row.nextElementSibling.tagName == 'BR') {
 				row.nextElementSibling.remove();
 				console.log(row.nextElementSibling);
 			}
