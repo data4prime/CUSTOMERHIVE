@@ -56,7 +56,10 @@ console.log(host);
 
 
 </script>-->
+<div id='{{$componentID}}'>
 <iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 80%;"></iframe>
+</div>
+
 
 <script defer >
 
