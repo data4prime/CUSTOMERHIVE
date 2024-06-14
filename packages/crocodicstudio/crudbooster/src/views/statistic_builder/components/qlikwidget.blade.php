@@ -57,7 +57,7 @@ console.log(host);
 
 </script>-->
 <div id='{{$componentID}}'>
-<iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 80%;"></iframe>
+<iframe src="/mashup/{{$componentID}}" id="configuration" frameborder="0" style="width: 100%;height: 80%;"></iframe>
 </div>
 
 
@@ -69,7 +69,7 @@ function create_object_select(select){
     console.log(mashup_id);
 
 //get html element with id jMWFZ
-console.log(document.getElementById('jMWFZ'));
+console.log(document.getElementById('configuration').getElementById(jMWFZ));
 
     
 }
