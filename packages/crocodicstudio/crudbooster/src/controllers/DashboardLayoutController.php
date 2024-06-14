@@ -185,14 +185,14 @@ if (window.location.href.includes('dashboard_layouts/edit/')) {
             if (element.match(/^\/\w/)) {
                 // Closing tag
                 indentLevel--;
-                formatted += '\\n' + tab.repeat(indentLevel) + '<' + element + '>';
+                formatted += '\\n' + tab.repeat(indentLevel);// + '<' + element + '>';
             } else if (element.match(/^</) && !element.match(/\/$/)) {
                 // Opening tag
-                formatted += '\\n' + tab.repeat(indentLevel) + '<' + element + '>';
+                formatted += '\\n' + tab.repeat(indentLevel) ;//+ '<' + element + '>';
                 indentLevel++;
             } else {
                 // Self-closing tag or text node
-                formatted += '\\n' + tab.repeat(indentLevel) + '<' + element + '>';
+                formatted += '\\n' + tab.repeat(indentLevel);// + '<' + element + '>';
             }
         });
 
