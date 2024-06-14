@@ -368,7 +368,7 @@
 
 <div id='statistic-area'>
 
-@php echo $layout @endphp
+@php echo str_replace("\r\n", "", $layout) @endphp
 
     <!--<div class="statistic-row row">
         <div id='area1' class="col-sm-3 connectedSortable">

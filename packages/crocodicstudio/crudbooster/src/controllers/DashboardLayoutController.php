@@ -166,7 +166,7 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
     });
 }
 
-if (window.location.href.includes('dashboard_layouts/edit/')) {
+/*if (window.location.href.includes('dashboard_layouts/edit/')) {
 	//code_layout
 
 	var textarea = document.querySelector('textarea[name=\"code_layout\"]');
@@ -203,7 +203,7 @@ if (window.location.href.includes('dashboard_layouts/edit/')) {
     textarea.value = formattedHTML;
 
 }
-
+*/
 		";
 
 
@@ -346,7 +346,7 @@ if (window.location.href.includes('dashboard_layouts/edit/')) {
 	public function hook_before_edit(&$postdata, $id)
 	{
 
-		$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
+		//$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
 		
 	}
 
