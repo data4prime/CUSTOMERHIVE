@@ -67,6 +67,10 @@ function create_object_select(select){
     var mashup_id = $(select).val();
 
     console.log(mashup_id);
+
+//get html element with id jMWFZ
+console.log(document.getElementById('jMWFZ'));
+
     
 }
 
