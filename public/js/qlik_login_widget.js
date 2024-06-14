@@ -46,11 +46,12 @@ console.log(host_q);
 
 				var app = qlik.openApp(appId, config);
 
-console.log(app);
-
-app.getObject($('#currentselection'), 'CurrentSelections');
 
 
+
+navbar();
+
+/*
 app.getAppObjectList( 'masterobject', function(reply){
 	var str = "";
 
@@ -75,12 +76,18 @@ app.getAppObjectList( 'masterobject', function(reply){
 		});
 	});
 });
+*/
+function navbar() {
+app.getObject($('#currentselection'), 'CurrentSelections');
+}
 
 
 
 				
 			});
 })();
+
+
 
 async function jwtLogin(token) {
     const authHeader = 'Bearer '+qlik_token ;
