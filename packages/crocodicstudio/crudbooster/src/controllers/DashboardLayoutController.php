@@ -166,6 +166,39 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
     });
 }
 
+if (window.location.href.includes('dashboard_layouts/edit/')) {
+	//code_layout
+
+	var textarea = document.querySelector('textarea[name=\"code_layout\"]');
+    var code = textarea.value;
+
+    function formatHTML(html) {
+        let formatted = '';
+        const tab = '\t';
+        let indentLevel = 0;
+
+        html.split(/>\s*</).forEach(function(element) {
+            if (element.match(/^\/\w/)) {
+                // Closing tag
+                indentLevel--;
+                formatted += '\n' + tab.repeat(indentLevel) + '<' + element + '>';
+            } else if (element.match(/^</) && !element.match(/\/$/)) {
+                // Opening tag
+                formatted += '\n' + tab.repeat(indentLevel) + '<' + element + '>';
+                indentLevel++;
+            } else {
+                // Self-closing tag or text node
+                formatted += '\n' + tab.repeat(indentLevel) + '<' + element + '>';
+            }
+        });
+
+        return formatted.trim();
+    }
+
+    var formattedHTML = formatHTML(code);
+    textarea.value = formattedHTML;
+
+}
 
 		";
 
