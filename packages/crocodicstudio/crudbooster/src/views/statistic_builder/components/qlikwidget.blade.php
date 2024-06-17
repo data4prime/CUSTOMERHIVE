@@ -37,7 +37,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
  @elseif($command=='configuration')
 
 <div id='{{$componentID}}'>
-
+<iframe src="/mashup-objects/{{$mashup}}/{{$componentID}}" id="configuration" frameborder="0" style="width: 100%;height: 80%;"></iframe>
 
 
 
@@ -53,7 +53,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
     <div class="form-group">
         <label>Mashup</label>
 <select class='form-control' required name='config[mashups]'>
-            <option value='0'>Choose Mashup</option>
+            <option value='0'>Choose App</option>
             @foreach($mashups as $m)
             @if(isset($config) && $m->id == $config->mashups)
             <option selected value='{{$m->id}}'>{{$m->mashupname}}</option>
@@ -65,7 +65,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
     </div>
 
 <div class="form-group">
-        <label>Mashup</label>
+        <label>Mashup Object</label>
         <select  class='form-control' required name='config[object]'>
             <option value='0'>Choose Object</option>
 
