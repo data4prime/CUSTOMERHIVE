@@ -35,6 +35,6 @@ console.log(appId);
 
 <div class="text-danger" ></div>
 </div>
-<script defer  src="{{asset('js/qlik_login_widget.js')}}"></script>
+<script  src="{{asset('js/qlik_login_widget.js')}}"></script>
 @endif
 
