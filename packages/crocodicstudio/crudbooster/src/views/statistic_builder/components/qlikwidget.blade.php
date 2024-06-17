@@ -7,12 +7,9 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
     $mashup = QlikMashupController::getMashupFromCompID($componentID);
     $token = HelpersQlikHelper::getJWTToken(1, 3);
     $conf = QlikMashupController::getConf(3);
-if ($command == 'configuration') {
 
-    dd($mashups);
 
-} 
-
+dd($config);
 
 
 @endphp 
