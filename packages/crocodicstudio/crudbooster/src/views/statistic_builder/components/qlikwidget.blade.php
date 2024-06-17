@@ -3,16 +3,21 @@ use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 
 use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
+if ($coomand == 'layout') {
 
+    $mashup = QlikMashupController::getMashupFromCompID($componentID);
+    $token = HelpersQlikHelper::getJWTToken(1, 3);
+    $conf = QlikMashupController::getConf(3);
 
-$mashup = QlikMashupController::getMashupFromCompID($componentID);
+} else {
 
+    $mashup = QlikMashupController::getMashupFromCompID($componentID);
+    dd($mashup);
+    $token = HelpersQlikHelper::getJWTToken(1, 3);
+    $conf = QlikMashupController::getConf(3);
 
+}
 
-
-$token = HelpersQlikHelper::getJWTToken(1, 3);
-
-$conf = QlikMashupController::getConf(3);
 
 
 
