@@ -47,6 +47,8 @@ $conf = QlikMashupController::getConf(3);
 
 <script defer >
 
+
+
 function create_object_select(select){
     var mashup_id = $(select).val();
 
@@ -60,7 +62,23 @@ function create_object_select(select){
 }
 
 </script>
+<script>
 
+
+var qlik_token = '{{$token}}';
+var host = '{{$conf->host}}';
+var prefix = '{{$conf->prefix}}';
+var port = '{{$conf->port}}';
+var webIntegrationId = '{{$conf->webIntegrationId}}';
+var appId = '';
+var componentID = '{{$componentID}}';
+
+console.log(qlik_token);
+console.log(host);
+
+
+
+</script>
 
 
 <form method='post'>
