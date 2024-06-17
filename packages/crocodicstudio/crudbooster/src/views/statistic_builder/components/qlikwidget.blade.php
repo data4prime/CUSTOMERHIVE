@@ -53,7 +53,7 @@ function create_object_select(select){
 
     console.log(mashup_id);
 
-    document.getElementById('configuration').src = '/mashup-objects/'+mashup_id;
+    document.getElementById('configuration').src = '/mashup-objects/'+mashup_id+'/'+$componentID;
 
 
 
