@@ -36,7 +36,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
     </div>
  @elseif($command=='configuration')
 
-<div id='{{$componentID}}'>
+<!--<div id='{{$componentID}}'>-->
 <iframe src="/mashup-objects/{{$mashup}}/{{$componentID}}" id="configuration" frameborder="0" style="width: 100%;height: 80%;"></iframe>
 <!--
 
