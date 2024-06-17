@@ -9,7 +9,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
     $conf = QlikMashupController::getConf(3);
 if ($command == 'configuration') {
 
-    dd($mashup);
+    dd($token);
 
 } 
 
