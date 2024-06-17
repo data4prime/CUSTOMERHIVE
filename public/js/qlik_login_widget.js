@@ -75,7 +75,7 @@ function objectsOptions(app) {
             sheetDiv.className = 'masterobject-option';
             sheetDiv.value = sheetId;
             sheetDiv.innerHTML = name + ' (' + sheetId + ')';
-            document.getElementById(appId).appendChild(sheetDiv);
+            document.getElementById('mashup_object').appendChild(sheetDiv);
 
             app.visualization.get(value.qInfo.qId).then(function (vis) {
                 vis.show(value.qInfo.qId);
