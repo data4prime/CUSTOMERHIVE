@@ -45,10 +45,12 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
             var options = innerDoc.getElementsByClassName('masterobject-option');
             console.log(options);
             var select = document.getElementById('mashup_object');
+            console.log(select);
             for (var i = 0; i < options.length; i++) {
                 var opt = document.createElement('option');
                 opt.value = options[i].value;
                 opt.innerHTML = options[i].innerHTML;
+                console.log(opt);
                 select.appendChild(opt);
             }
         });
