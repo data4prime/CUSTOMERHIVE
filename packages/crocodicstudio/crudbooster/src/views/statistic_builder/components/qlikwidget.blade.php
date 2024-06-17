@@ -37,7 +37,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
  @elseif($command=='configuration')
 
 <!--javascript code che dal ifame con id configuration, prende tutti gli option con classe masterobject-option, e li inserisce nel select con id mashup_object -->
-<script>
+<script defer>
     $(document).ready(function () {
         $('#configuration').on('load', function () {
             var iframe = document.getElementById('configuration');
@@ -56,6 +56,20 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
         });
 
     });
+
+function update_objects(select){
+    var iframe = document.getElementById('configuration');
+    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    var options = innerDoc.getElementsByClassName('masterobject-option');
+    var select = document.getElementById('mashup_object');
+    select.innerHTML = '';
+    for (var i = 0; i < options.length; i++) {
+        var opt = document.createElement('option');
+        opt.value = options[i].value;
+        opt.innerHTML = options[i].innerHTML;
+        select.appendChild(opt);
+    }
+}
 </script>
 
 
@@ -73,7 +87,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
     <div class="form-group">
         <label>Mashup</label>
-<select class='form-control' required name='config[mashups]'>
+<select onchange="update_objects(this)" class='form-control' required name='config[mashups]'>
             <option value='0'>Choose App</option>
             @foreach($mashups as $m)
             @if(isset($config) && $m->id == $config->mashups)
