@@ -211,7 +211,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         $component_row = CRUDBooster::first('cms_statistic_components', ['componentID' => $componentID]);
 
         $config = json_decode($component_row->config);
-        dd($config);
+        //dd($config);
 
         $command = 'configuration';
 
