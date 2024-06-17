@@ -70,6 +70,7 @@ function update_objects(select){
 
     //when iframe is loaded, update the select
     iframe.onload = function () {
+        console.log(loaded);
         var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
         var options = innerDoc.getElementsByClassName('masterobject-option');
         console.log(options);
