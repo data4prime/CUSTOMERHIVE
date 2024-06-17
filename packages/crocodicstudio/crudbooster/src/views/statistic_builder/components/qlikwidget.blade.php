@@ -9,7 +9,9 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
     $conf = QlikMashupController::getConf(3);
 
 
-dd($config);
+if ($command == 'configuration') {
+   dd($config);
+}
 
 
 @endphp 
