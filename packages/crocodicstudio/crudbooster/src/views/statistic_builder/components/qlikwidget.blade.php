@@ -43,6 +43,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
             var iframe = document.getElementById('configuration');
             var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
             var options = innerDoc.getElementsByClassName('masterobject-option');
+            console.log(options);
             var select = document.getElementById('mashup_object');
             for (var i = 0; i < options.length; i++) {
                 var opt = document.createElement('option');

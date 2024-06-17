@@ -87,12 +87,12 @@ app.getAppObjectList( 'masterobject', function(reply){
 	var str = "";
 
 	$.each(reply.qAppObjectList.qItems, function(key, value) {
-        console.log(value);
+        //console.log(value);
         var sheetId = value.qInfo.qId;
         var sheetTitle = value.qData.title;
 		var name = value.qData.name;
-        console.log(sheetId);
-        console.log(sheetTitle);
+        //console.log(sheetId);
+        //console.log(sheetTitle);
         var sheetDiv = document.createElement('option');
         //sheetDiv.id = sheetId;
 		sheetDiv.className = 'masterobject-option';
