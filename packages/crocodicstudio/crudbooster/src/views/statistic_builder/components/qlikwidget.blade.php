@@ -8,7 +8,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
     $token = HelpersQlikHelper::getJWTToken(1, 3);
     $conf = QlikMashupController::getConf(3);
 
-if ($layout == 'configuration') {
+if ($command == 'configuration') {
     
 dd($config);
 } 
