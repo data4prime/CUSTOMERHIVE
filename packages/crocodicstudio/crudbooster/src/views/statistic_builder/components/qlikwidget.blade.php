@@ -14,7 +14,6 @@ $token = HelpersQlikHelper::getJWTToken(1, 3);
 
 $conf = QlikMashupController::getConf(3);
 
-dd($conf);
 
 
 @endphp 
