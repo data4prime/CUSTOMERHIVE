@@ -53,6 +53,7 @@ var port = '{{$conf->port}}';
 var webIntegrationId = '{{$conf->webIntegrationId}}';
 var appId = '{{$mashup->appid}}';
 var componentID = '{{$componentID}}';
+var objectid = '{{$mashup->objectid}}';
 
 </script>
 
@@ -67,7 +68,7 @@ var componentID = '{{$componentID}}';
 
 <div class="text-danger" ></div>
 </div>
-<script defer  src="{{asset('js/qlik_login_widget.js')}}"></script>
+<script defer  src="{{asset('js/qlik_login_widget_obj.js')}}"></script>
 @endif
 <!-- 
 @if(isset($componentID))
