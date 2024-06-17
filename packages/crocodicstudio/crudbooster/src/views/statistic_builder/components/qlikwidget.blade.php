@@ -40,24 +40,7 @@ $conf = QlikMashupController::getConf(3);
     </div>
     </div>
  @elseif($command=='configuration')
-<!--
-<script>
 
-
-var qlik_token = '{{$token}}';
-var host = '{{$conf->host}}';
-var prefix = '{{$conf->prefix}}';
-var port = '{{$conf->port}}';
-var webIntegrationId = '{{$conf->webIntegrationId}}';
-var appId = '';
-var componentID = '{{$componentID}}';
-
-console.log(qlik_token);
-console.log(host);
-
-
-
-</script>-->
 <div id='{{$componentID}}'>
 <iframe src="/mashup-objects/{{$mashup}}" id="configuration" frameborder="0" style="width: 100%;height: 80%;"></iframe>
 </div>
