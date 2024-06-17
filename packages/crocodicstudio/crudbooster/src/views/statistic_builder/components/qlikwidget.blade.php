@@ -44,17 +44,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
 
 
-function create_object_select(select){
-    var mashup_id = $(select).val();
 
-    console.log(mashup_id);
-
-    document.getElementById('configuration').src = '/mashup-objects/'+mashup_id+'/'+$componentID;
-
-
-
-    
-}
 
 </script>
 
@@ -69,7 +59,7 @@ function create_object_select(select){
 
     <div class="form-group">
         <label>Mashup</label>
-        <select onchange="create_object_select(this)" class='form-control' required name='config[mashups]'>
+        <select  class='form-control' required name='config[mashups]'>
             <option value='0'>Choose Mashup</option>
             @foreach($mashups as $m)
             @if(isset($config) && $m->id == $config->mashups)
