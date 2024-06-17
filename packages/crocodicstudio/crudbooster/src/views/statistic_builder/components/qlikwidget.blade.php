@@ -38,7 +38,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
 <div id='{{$componentID}}'>
 <iframe src="/mashup-objects/{{$mashup}}/{{$componentID}}" id="configuration" frameborder="0" style="width: 100%;height: 80%;"></iframe>
-
+<!--
 
 
 <script defer >
@@ -93,6 +93,7 @@ function create_object_select(select){
 
 
 </form>
+-->
 @elseif($command=='showFunction')
 <?php
     if ($key == 'sql') {
