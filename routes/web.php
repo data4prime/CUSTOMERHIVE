@@ -121,7 +121,6 @@ $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
 
 Route::get('/mashup-objects/{mashup}', function ($mashup) {
 
-   dd($mashup);
              $mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
 $qlik_conf = DB::table('qlik_confs')->where('id', $mashup)->first()->id;
 
