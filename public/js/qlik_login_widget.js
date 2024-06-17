@@ -48,8 +48,8 @@ console.log(host_q);
 
 
 
-
-navbar();
+objectsOptions();
+//navbar();
 
 /*
 app.getAppObjectList( 'masterobject', function(reply){
@@ -80,6 +80,33 @@ app.getAppObjectList( 'masterobject', function(reply){
 function navbar() {
 console.log(document.getElementById('configuration'));
 app.getObject($('#currentselection'), 'CurrentSelections');
+}
+
+function objectsOptions() {
+app.getAppObjectList( 'masterobject', function(reply){
+	var str = "";
+
+	$.each(reply.qAppObjectList.qItems, function(key, value) {
+        console.log(value);
+        var sheetId = value.qInfo.qId;
+        var sheetTitle = value.qData.title;
+        console.log(sheetId);
+        console.log(sheetTitle);
+        var sheetDiv = document.createElement('option');
+        sheetDiv.id = sheetId;
+		sheetDiv.className = 'masterobject';
+        document.getElementById(appId).appendChild(sheetDiv);
+
+        app.visualization.get(value.qInfo.qId).then(function(vis){
+		    vis.show(value.qInfo.qId);
+	    });
+		str +=  value.qData.title + ' ';
+		$.each(value.qData.cells, function(k,v){
+			str +=  v.name + ' ';
+ 
+		});
+	});
+});
 }
 
 
