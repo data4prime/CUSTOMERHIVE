@@ -2,7 +2,7 @@
 use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 
 use crocodicstudio\crudbooster\controllers\QlikMashupController;
-dd($command);
+
 
 if ($command == 'layout') {
 
