@@ -58,7 +58,17 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
     });
 
 function update_objects(select){
+
+
+
+
     var iframe = document.getElementById('configuration');
+
+    iframe.src = '/mashup-objects/' + select.value + '/{{$componentID}}';
+
+    
+
+
     var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
     var options = innerDoc.getElementsByClassName('masterobject-option');
     var select = document.getElementById('mashup_object');
