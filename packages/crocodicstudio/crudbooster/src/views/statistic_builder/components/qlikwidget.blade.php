@@ -52,7 +52,16 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
     <div class="form-group">
         <label>Mashup</label>
-
+<select class='form-control' required name='config[mashups]'>
+            <option value='0'>Choose Mashup</option>
+            @foreach($mashups as $m)
+            @if(isset($config) && $m->id == $config->mashups)
+            <option selected value='{{$m->id}}'>{{$m->mashupname}}</option>
+            @else
+            <option  value='{{$m->id}}'>{{$m->mashupname}}</option>
+            @endif
+            @endforeach
+        </select>
     </div>
 
 <div class="form-group">
