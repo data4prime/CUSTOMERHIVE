@@ -125,7 +125,7 @@ Route::get('/mashup-objects/{mashup}/{componentID}', function ($mashup, $compone
     $qlik_conf = DB::table('qlik_confs')->where('id', $mashup)->first()->id;
 
 
-
+    dd($mashup);
 
     if ($mashup && $qlik_conf) {
         return view('mashup_objects', compact('componentID', 'mashup', 'qlik_conf'));
