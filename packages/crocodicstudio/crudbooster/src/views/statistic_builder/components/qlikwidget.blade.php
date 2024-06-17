@@ -3,7 +3,7 @@ use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 
 use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
-if ($coomand == 'layout') {
+if ($command == 'layout') {
 
     $mashup = QlikMashupController::getMashupFromCompID($componentID);
     $token = HelpersQlikHelper::getJWTToken(1, 3);
