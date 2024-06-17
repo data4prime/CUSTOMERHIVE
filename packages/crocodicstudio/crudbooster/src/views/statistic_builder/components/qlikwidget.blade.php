@@ -8,10 +8,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
     $token = HelpersQlikHelper::getJWTToken(1, 3);
     $conf = QlikMashupController::getConf(3);
 
-if ($command == 'configuration') {
-    
-dd($config);
-} 
+
 
 
 @endphp 
@@ -73,17 +70,7 @@ function create_object_select(select){
 
     <div class="form-group">
         <label>Mashup</label>
-        <select onchange="create_object_select(this)" class='form-control' required name='config[mashups]'>
-            <option value='0'>Choose Mashup</option>
-            @foreach($mashups as $m)
-            <!-- option with selected  -->
-            @if(isset($config) && $m->id == $config->mashups)
-            <option selected value='{{$m->id}}'>{{$m->mashupname}}</option>
-            @else
-            <option  value='{{$m->id}}'>{{$m->mashupname}}</option>
-            @endif
-            @endforeach
-        </select>
+
     </div>
 
 <div class="form-group">
