@@ -53,6 +53,7 @@ async function main() {
         var app = qlik.openApp(appId, config);
 
         objectsOptions(app);
+document.getElementById('state_page').value = 'main';
     });
 }
 
@@ -119,7 +120,9 @@ async function checkLoggedIn() {
 }
 
 // Avvia la funzione principale
-var loaded= "NO";
+
+var state = document.getElementById('state_page');
+console.log(state.value);
 main();
-loaded = "YES";
-console.log(loaded);
+console.log('main()');
+console.log('state: ' + state.value);

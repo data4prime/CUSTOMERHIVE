@@ -35,6 +35,7 @@ console.log(appId);
 
 <div class="text-danger" ></div>
 </div>
+<input type="hidden" name="state_page">
 <script  src="{{asset('js/qlik_login_widget.js')}}"></script>
 @endif
 
