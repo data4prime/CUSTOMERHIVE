@@ -9,9 +9,6 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
     $conf = QlikMashupController::getConf(3);
 
 
-if ($command == 'configuration') {
-   dd($config);
-}
 
 
 @endphp 
@@ -69,7 +66,7 @@ function update_objects(select){
 
     var iframe = document.getElementById('configuration');
 
-    iframe.src = '/mashup-objects/' + select.value + '/{{$componentID}}';
+    iframe.src = '/mashup-objects/' + select.value + '/{{$componentID}}'+'/{{$config->object}}';
 
     console.log(iframe.src);
 
