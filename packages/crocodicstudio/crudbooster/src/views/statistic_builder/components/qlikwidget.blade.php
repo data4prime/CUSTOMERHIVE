@@ -51,7 +51,9 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
                 select.appendChild(opt);
             }
         });
+
     });
+</script>
 
 
 <div id='{{$componentID}}'>
