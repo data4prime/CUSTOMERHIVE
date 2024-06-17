@@ -80,7 +80,7 @@ function objectsOptions(app) {
 
 
 
-            document.getElementById('mashup_object').appendChild(sheetDiv);
+            parent.document.getElementById('mashup_object').appendChild(sheetDiv);
 
             app.visualization.get(value.qInfo.qId).then(function (vis) {
                 vis.show(value.qInfo.qId);
