@@ -40,7 +40,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 <iframe src="/mashup-objects/{{$mashup}}/{{$componentID}}" id="configuration" frameborder="0" style="width: 100%;height: 80%;"></iframe>
 
 
-<script defer >
+<script  >
 
 
 
@@ -95,7 +95,7 @@ function create_object_select(select){
 
 @elseif($command=='showFunction')
 <?php
-    echo "showFunction";
+
     if ($key == 'sql') {
         try {
             $sessions = Session::all();
