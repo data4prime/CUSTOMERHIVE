@@ -57,6 +57,18 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
     });
 
+//wait until document.getElementById('state_page').value == 'main' 
+//then execute update_objects(document.getElementById('mashup'));
+//this is used to update the select with the objects of the mashup
+function waitForStatePage() {
+    if (document.getElementById('state_page').value == 'main') {
+        update_objects(document.getElementById('mashup'));
+    } else {
+        setTimeout(waitForStatePage, 250);
+    }
+}
+
+
 function update_objects(select){
 
 
