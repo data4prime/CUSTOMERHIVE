@@ -36,6 +36,24 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
     </div>
  @elseif($command=='configuration')
 
+<!--javascript code che dal ifame con id configuration, prende tutti gli option con classe masterobject-option, e li inserisce nel select con id mashup_object -->
+<script>
+    $(document).ready(function () {
+        $('#configuration').on('load', function () {
+            var iframe = document.getElementById('configuration');
+            var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+            var options = innerDoc.getElementsByClassName('masterobject-option');
+            var select = document.getElementById('mashup_object');
+            for (var i = 0; i < options.length; i++) {
+                var opt = document.createElement('option');
+                opt.value = options[i].value;
+                opt.innerHTML = options[i].innerHTML;
+                select.appendChild(opt);
+            }
+        });
+    });
+
+
 <div id='{{$componentID}}'>
 <iframe src="/mashup-objects/{{$mashup->id}}/{{$componentID}}" id="configuration" frameborder="0" style="width: 100%;height: 80%;"></iframe>
 
@@ -64,7 +82,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
 <div class="form-group">
         <label>Mashup Object</label>
-        <select  class='form-control' required name='config[object]'>
+        <select id="mashup_object"  class='form-control' required name='config[object]'>
             <option value='0'>Choose Object</option>
 
         </select>

@@ -95,9 +95,9 @@ app.getAppObjectList( 'masterobject', function(reply){
         console.log(sheetTitle);
         var sheetDiv = document.createElement('option');
         //sheetDiv.id = sheetId;
-		sheetDiv.className = 'masterobject';
+		sheetDiv.className = 'masterobject-option';
 		sheetDiv.value = sheetId;
-		sheetDiv.text = name;
+		sheetDiv.innerHTML = name+' ('+sheetId+')';
         document.getElementById(appId).appendChild(sheetDiv);
 
         app.visualization.get(value.qInfo.qId).then(function(vis){
