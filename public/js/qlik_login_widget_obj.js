@@ -84,6 +84,7 @@ function objectsOptions(app) {
             sheetDiv.className = 'masterobject-option';
             sheetDiv.value = sheetId;
             sheetDiv.innerHTML = name + ' (' + sheetId + ')';
+            console.log(sheetDiv);
 			console.log("mashup_object");
 			console.log(parent.document.getElementById('mashup_object'));
 
@@ -91,10 +92,10 @@ function objectsOptions(app) {
 
             parent.document.getElementById('mashup_object').appendChild(sheetDiv);
 
-            app.visualization.get(value.qInfo.qId).then(function (vis) {
+            /*app.visualization.get(value.qInfo.qId).then(function (vis) {
                 vis.show(value.qInfo.qId);
             });
-
+*/
             str += value.qData.title + ' ';
             $.each(value.qData.cells, function (k, v) {
                 str += v.name + ' ';
