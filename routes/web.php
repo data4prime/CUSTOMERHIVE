@@ -123,6 +123,14 @@ $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
 
 Route::get('/mashup-objects/{mashup}/{componentID}/{objectid}', function ($mashup, $componentID, $objectid) {
 
+$comp = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
+
+
+
+    if ($comp) {
+        $config = json_decode($mashups->config);
+    }
+
     $mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
     $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
 
