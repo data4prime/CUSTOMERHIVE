@@ -128,7 +128,7 @@ $comp = DB::table('cms_statistic_components')->where('componentID', $componentID
 
 
     if ($comp) {
-        $config = json_decode($mashups->config);
+        $config = json_decode($comp->config);
     }
 
     $mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
@@ -137,7 +137,7 @@ $comp = DB::table('cms_statistic_components')->where('componentID', $componentID
 
 
     if ($mashup && $qlik_conf) {
-        return view('mashup_objects', compact('componentID', 'mashup', 'qlik_conf', 'objectid'));
+        return view('mashup_objects', compact('componentID', 'mashup', 'qlik_conf', 'config'));
     }
 
 
