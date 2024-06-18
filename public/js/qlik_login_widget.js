@@ -51,16 +51,21 @@ async function main() {
         var x = document.cookie;
 
         var app = qlik.openApp(appId, config);
+        objectDisplay(app);
 
-        objectsOptions(app);
+        //objectsOptions(app);
 
         //find the div with title 'title' and change innerhtml to "Qlik App Loaded."
         var title = document.getElementById('title');
-        title.innerHTML = "Qlik App Loaded.";
+        title.innerHTML = "";
 
     });
 }
-
+function objectDisplay(app) {
+    app.visualization.get(objectid).then(function (vis) {
+                    vis.show(objectid);
+                });
+}
 function navbar(app) {
     console.log(document.getElementById('configuration'));
     app.getObject($('#currentselection'), 'CurrentSelections');

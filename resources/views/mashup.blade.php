@@ -64,7 +64,7 @@ var objectid = '{{$mashups->object}}';
     
   <div id="title"></div>
 
-<div id="currentselection"></div>
+<div id="{{$mashups->object}}"></div>
 
 <div class="text-danger" ></div>
 </div>
