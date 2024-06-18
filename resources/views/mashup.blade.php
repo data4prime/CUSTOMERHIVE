@@ -68,7 +68,7 @@ var objectid = '{{$mashups->object}}';
 
 <div class="text-danger" ></div>
 </div>
-<script defer  src="{{asset('js/qlik_login_widget_obj.js')}}"></script>
+<script defer  src="{{asset('js/qlik_login_widget.js')}}"></script>
 @endif
 <!-- 
 @if(isset($componentID))
