@@ -54,6 +54,10 @@ async function main() {
 
         objectsOptions(app);
 
+        //find the div with title 'title' and change innerhtml to "Qlik App Loaded."
+        var title = document.getElementById('title');
+        title.innerHTML = "Qlik App Loaded.";
+
     });
 }
 

@@ -26,15 +26,12 @@ var prefix = '{{$conf->prefix}}';
 var port = '{{$conf->port}}';
 var webIntegrationId = '{{$conf->webIntegrationId}}';
 var appId = '{{$mashup->appid}}';
+var objectId = '{{$config->object}}';
 console.log(appId);
 </script>
 
-  <div id="title"></div>
+  <div id="title">Loading Qlik App. Please wait.</div>
 
-<div id="currentselection"></div>
-
-<div class="text-danger" ></div>
-</div>
 <input type="hidden" id="state_page" name="state_page">
 <script defer  src="{{asset('js/qlik_login_widget.js')}}"></script>
 @endif
