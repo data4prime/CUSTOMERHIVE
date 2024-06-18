@@ -114,7 +114,7 @@ $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
     
 
     if ($mashup && $qlik_conf) {
-        return view('mashup', compact('componentID', 'mashup', 'qlik_conf'));
+        return view('mashup', compact('componentID', 'mashup', 'qlik_conf', 'mashups'));
     }
 
 
