@@ -62,6 +62,8 @@ async function main() {
     });
 }
 function objectDisplay(app) {
+    var title = document.getElementById('title');
+        title.innerHTML = "Loading Object. Please wait...";
     app.visualization.get(objectid).then(function (vis) {
                     vis.show(objectid);
                 });

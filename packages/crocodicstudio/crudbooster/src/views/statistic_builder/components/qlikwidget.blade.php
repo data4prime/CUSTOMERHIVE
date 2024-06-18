@@ -23,7 +23,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
 <div id='{{$componentID}}' class='border-box'>
 
-<h1>{{isset($mashup) ? $mashup->mashupname : 'Choose Conf'}}</h1>
+<!--<h1>{{isset($mashup) ? $mashup->mashupname : 'Choose Conf'}}</h1>-->
 <iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 80%;"></iframe>
 
     <div class='action pull-right'>
