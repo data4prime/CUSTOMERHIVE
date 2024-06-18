@@ -53,7 +53,7 @@ var port = '{{$conf->port}}';
 var webIntegrationId = '{{$conf->webIntegrationId}}';
 var appId = '{{$mashup->appid}}';
 var componentID = '{{$componentID}}';
-var objectid = '{{$config->objectid}}';
+var objectid = '{{$mashups->objectid}}';
 
 </script>
 

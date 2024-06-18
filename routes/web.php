@@ -90,6 +90,8 @@ Route::get('/mashup/{componentID}', function ($componentID) {
 
     $mashups = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
 
+
+
     if ($mashups) {
         $mashups = json_decode($mashups->config);
 
