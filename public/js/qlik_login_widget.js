@@ -53,6 +53,8 @@ async function main() {
         var app = qlik.openApp(appId, config);
         objectDisplay(app);
 
+        console.log("objectDisplay(app)");
+
         //objectsOptions(app);
 
         //find the div with title 'title' and change innerhtml to "Qlik App Loaded."
