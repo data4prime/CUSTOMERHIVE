@@ -38,9 +38,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
 <!--javascript code che dal ifame con id configuration, prende tutti gli option con classe masterobject-option, e li inserisce nel select con id mashup_object -->
 <script defer>
-    var iframe = document.getElementById('configuration');
 
-    iframe.src = '/mashup-objects/' + select.value + '/{{$componentID}}'+'/{{$config->object}}';
 
 
 function update_objects(select){
@@ -76,7 +74,7 @@ function update_objects(select){
 
 
 <div id='{{$componentID}}'>
-<iframe  id="configuration" frameborder="0" style="width: 100%;height: 80%;"></iframe>
+<iframe src='/mashup-objects/{{$mashup->id}}/{{$componentID}}/{{$config->object}}'  id="configuration" frameborder="0" style="width: 100%;height: 80%;"></iframe>
 
 
 
