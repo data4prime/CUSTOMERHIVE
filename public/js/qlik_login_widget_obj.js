@@ -52,6 +52,8 @@ async function main() {
 
         var app = qlik.openApp(appId, config);
 
+objectsOptions(app)
+
 
 
     });
