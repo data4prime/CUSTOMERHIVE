@@ -26,7 +26,7 @@ var prefix = '{{$conf->prefix}}';
 var port = '{{$conf->port}}';
 var webIntegrationId = '{{$conf->webIntegrationId}}';
 var appId = '{{$mashup->appid}}';
-var objectId = '{{$config->object}}';
+var objectid = '{{$config->object}}';
 console.log(appId);
 </script>
 
