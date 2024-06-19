@@ -105,6 +105,7 @@ function update_objects(select){
             <option value='0'>Choose Object</option>
 
         </select>
+        <input type="hidden" id="mashup_object_hidden" value="{{$config->object}}">
     </div>
 
 

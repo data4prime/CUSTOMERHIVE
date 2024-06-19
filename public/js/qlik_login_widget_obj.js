@@ -79,11 +79,20 @@ function objectsOptions(app) {
             var sheetId = value.qInfo.qId;
             var sheetTitle = value.qData.title;
             var name = value.qData.name;
+
+            var hidden_object = parent.document.getElementById('mashup_object_hidden');
             
+
             var sheetDiv = document.createElement('option');
             sheetDiv.className = 'masterobject-option';
             sheetDiv.value = sheetId;
             sheetDiv.innerHTML = name + ' (' + sheetId + ')';
+
+            if (hidden_object.value == sheetId) {
+                sheetDiv.selected = true;
+            }
+
+
             console.log(sheetDiv);
 			console.log("mashup_object");
 			console.log(parent.document.getElementById('mashup_object'));
