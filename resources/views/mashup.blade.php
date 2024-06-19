@@ -62,7 +62,7 @@ var objectid = '{{$mashups->object}}';
 
 
     
-  <div id="title"></div>
+  <div id="title">Loading Qlik App. Please wait.</div>
 
 <div id="{{$mashups->object}}"></div>
 
