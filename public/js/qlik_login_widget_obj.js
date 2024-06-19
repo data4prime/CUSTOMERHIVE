@@ -53,12 +53,6 @@ async function main() {
         var app = qlik.openApp(appId, config);
 
 objectsOptions(app)
-var title = document.getElementById('title');
-        title.innerHTML = "";
-
-//id mashup_object
-var mashup_object = parent.document.getElementById('mashup_object');
-mashup_object.removeAttribute('disabled');
 
 
 //console.log("objectsOptions(app)");
@@ -122,6 +116,13 @@ function objectsOptions(app) {
             });
         });
     });
+var title = document.getElementById('title');
+        title.innerHTML = "";
+
+//id mashup_object
+var mashup_object = parent.document.getElementById('mashup_object');
+mashup_object.removeAttribute('disabled');
+
 }
 
 async function jwtLogin() {
