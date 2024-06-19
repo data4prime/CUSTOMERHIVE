@@ -53,6 +53,8 @@ async function main() {
         var app = qlik.openApp(appId, config);
 
 objectsOptions(app)
+var title = document.getElementById('title');
+        title.innerHTML = "";
 //console.log("objectsOptions(app)");
 
 
