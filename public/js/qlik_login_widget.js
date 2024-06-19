@@ -88,8 +88,8 @@ function objectsOptions(app) {
             sheetDiv.className = 'masterobject-option';
             sheetDiv.value = sheetId;
             sheetDiv.innerHTML = name + ' (' + sheetId + ')';
-			console.log("mashup_object");
-			console.log(parent.document.getElementById('mashup_object'));
+			//console.log("mashup_object");
+			//console.log(parent.document.getElementById('mashup_object'));
 
 
 
