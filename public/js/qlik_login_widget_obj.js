@@ -11,7 +11,7 @@ async function main() {
         host_q = host.split("//")[1];
     }
 
-    console.log(host_q);
+
     
     var config = {
         host: host_q, 
@@ -52,7 +52,7 @@ async function main() {
 
         var app = qlik.openApp(appId, config);
 
-        objectsOptions(app)
+        objectsOptions(app);
 
         var title = document.getElementById('title');
         title.innerHTML = "";
@@ -66,16 +66,7 @@ async function main() {
     });
 }
 
-function navbar(app) {
-    //console.log(document.getElementById('configuration'));
-    app.getObject($('#currentselection'), 'CurrentSelections');
-}
 
-function objectDisplay(app) {
-    app.visualization.get(objectid).then(function (vis) {
-                    vis.show(objectid);
-                });
-}
 
 function objectsOptions(app) {
     app.getAppObjectList('masterobject', function (reply) {
@@ -94,30 +85,12 @@ function objectsOptions(app) {
             sheetDiv.value = sheetId;
             sheetDiv.innerHTML = name + ' (' + sheetId + ')';
 
-            //console.log(hidden_object.value);
-            //console.log(sheetId);
 
             if (hidden_object.value == sheetId) {
                 sheetDiv.selected = true;
             }
 
-
-            //console.log(sheetDiv);
-			//console.log("mashup_object");
-			//console.log(parent.document.getElementById('mashup_object'));
-
-
-
             parent.document.getElementById('mashup_object').appendChild(sheetDiv);
-
-            /*app.visualization.get(value.qInfo.qId).then(function (vis) {
-                vis.show(value.qInfo.qId);
-            });
-*/
-            str += value.qData.title + ' ';
-            $.each(value.qData.cells, function (k, v) {
-                str += v.name + ' ';
-            });
         });
     });
 
