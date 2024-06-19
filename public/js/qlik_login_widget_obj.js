@@ -53,7 +53,7 @@ async function main() {
         var app = qlik.openApp(appId, config);
 
 objectsOptions(app)
-console.log("objectsOptions(app)");
+//console.log("objectsOptions(app)");
 
 
 
@@ -88,14 +88,17 @@ function objectsOptions(app) {
             sheetDiv.value = sheetId;
             sheetDiv.innerHTML = name + ' (' + sheetId + ')';
 
+            console.log(hidden_object.value);
+            console.log(sheetId);
+
             if (hidden_object.value == sheetId) {
                 sheetDiv.selected = true;
             }
 
 
-            console.log(sheetDiv);
-			console.log("mashup_object");
-			console.log(parent.document.getElementById('mashup_object'));
+            //console.log(sheetDiv);
+			//console.log("mashup_object");
+			//console.log(parent.document.getElementById('mashup_object'));
 
 
 
@@ -115,7 +118,7 @@ function objectsOptions(app) {
 
 async function jwtLogin() {
     const authHeader = 'Bearer ' + qlik_token;
-    console.log(authHeader);
+    //console.log(authHeader);
 
     const response = await fetch(`${host}/login/jwt-session`, {
         credentials: 'include',
