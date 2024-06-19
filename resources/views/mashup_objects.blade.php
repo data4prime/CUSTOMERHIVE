@@ -33,6 +33,6 @@ var objectid = '{{$config->object}}';
   <div id="title">Loading Qlik App. Please wait.</div>
 
 <input type="hidden" id="state_page" name="state_page">
-<script defer  src="{{asset('js/qlik_login_widget_obj.js')}}"></script>
+<script   src="{{asset('js/qlik_login_widget_obj.js')}}"></script>
 @endif
 
