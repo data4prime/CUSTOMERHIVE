@@ -53,7 +53,7 @@ function update_objects(select){
    // console.log(iframe.src);
 
     //when iframe is loaded, update the select
-    iframe.onload = function () {
+   /* iframe.onload = function () {
         var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
         var options = innerDoc.getElementsByClassName('masterobject-option');
         //console.log(options);
@@ -65,7 +65,7 @@ function update_objects(select){
             opt.innerHTML = options[i].innerHTML;
             select.appendChild(opt);
         }
-    }
+    }*/
 
 
 
@@ -74,7 +74,7 @@ function update_objects(select){
 
 
 <div id='{{$componentID}}'>
-<iframe src='/mashup-objects/{{$mashup->id}}/{{$componentID}}/{{$config->object}}'  id="configuration" frameborder="0" style="width: 100%;height: 80%;"></iframe>
+<iframe src='/mashup-objects/{{$mashup->id}}/{{$componentID}}/{{$config->object}}'  id="configuration" frameborder="0" style="width: 100%;"></iframe>
 
 
 

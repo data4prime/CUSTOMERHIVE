@@ -17,7 +17,7 @@ $conf = QlikMashupController::getConf($qlik_conf);
 
 
 
-<div id="{{$mashup->appid}}" class="small-box [color]">
+<div id="{{$mashup->appid}}" >
 <script  type="text/javascript" >
 
 var qlik_token = '{{$token}}';
