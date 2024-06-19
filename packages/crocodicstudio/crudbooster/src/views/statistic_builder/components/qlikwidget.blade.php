@@ -43,6 +43,12 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
 function update_objects(select){
 
+    //id mashup_object
+    var select = document.getElementById('mashup_object');
+    //delete all options except the first one
+    while (select.options.length > 1) {
+        select.remove(1);
+    }
 
 
 
@@ -50,22 +56,6 @@ function update_objects(select){
 
     iframe.src = '/mashup-objects/' + select.value + '/{{$componentID}}'+'/{{$config->object}}';
 
-   // console.log(iframe.src);
-
-    //when iframe is loaded, update the select
-   /* iframe.onload = function () {
-        var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-        var options = innerDoc.getElementsByClassName('masterobject-option');
-        //console.log(options);
-        var select = document.getElementById('mashup_object');
-        select.innerHTML = '';
-        for (var i = 0; i < options.length; i++) {
-            var opt = document.createElement('option');
-            opt.value = options[i].value;
-            opt.innerHTML = options[i].innerHTML;
-            select.appendChild(opt);
-        }
-    }*/
 
 
 
