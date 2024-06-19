@@ -61,7 +61,7 @@ objectsOptions(app)
 }
 
 function navbar(app) {
-    console.log(document.getElementById('configuration'));
+    //console.log(document.getElementById('configuration'));
     app.getObject($('#currentselection'), 'CurrentSelections');
 }
 
