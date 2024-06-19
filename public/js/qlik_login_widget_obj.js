@@ -88,8 +88,8 @@ function objectsOptions(app) {
             sheetDiv.value = sheetId;
             sheetDiv.innerHTML = name + ' (' + sheetId + ')';
 
-            console.log(hidden_object.value);
-            console.log(sheetId);
+            //console.log(hidden_object.value);
+            //console.log(sheetId);
 
             if (hidden_object.value == sheetId) {
                 sheetDiv.selected = true;

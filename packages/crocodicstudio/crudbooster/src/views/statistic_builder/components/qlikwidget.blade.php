@@ -50,13 +50,13 @@ function update_objects(select){
 
     iframe.src = '/mashup-objects/' + select.value + '/{{$componentID}}'+'/{{$config->object}}';
 
-    console.log(iframe.src);
+   // console.log(iframe.src);
 
     //when iframe is loaded, update the select
     iframe.onload = function () {
         var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
         var options = innerDoc.getElementsByClassName('masterobject-option');
-        console.log(options);
+        //console.log(options);
         var select = document.getElementById('mashup_object');
         select.innerHTML = '';
         for (var i = 0; i < options.length; i++) {

@@ -27,7 +27,7 @@ var port = '{{$conf->port}}';
 var webIntegrationId = '{{$conf->webIntegrationId}}';
 var appId = '{{$mashup->appid}}';
 var objectid = '{{$config->object}}';
-console.log(appId);
+//console.log(appId);
 </script>
 
   <div id="title">Loading Qlik App. Please wait.</div>
