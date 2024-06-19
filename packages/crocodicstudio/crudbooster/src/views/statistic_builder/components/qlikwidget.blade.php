@@ -101,7 +101,7 @@ function update_objects(select){
 
 <div class="form-group">
         <label>Mashup Object</label>
-        <select id="mashup_object"  class='form-control' required name='config[object]'>
+        <select id="mashup_object" disabled  class='form-control' required name='config[object]'>
             <option value='0'>Choose Object</option>
 
         </select>
