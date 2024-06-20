@@ -8,6 +8,15 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
     $token = HelpersQlikHelper::getJWTToken(1, 3);
     $conf = QlikMashupController::getConf(3);
 
+    if (!$mashup) {
+
+        $mashup = new \stdClass();
+        $mashup->id = 0;
+        $mashup->mashupname = 'Choose Conf';
+    
+
+    }
+
 
 
 
