@@ -91,6 +91,7 @@ function update_objects(select){
             @endif
             @endforeach
         </select>
+<input type="hidden" id="mashup_app_hidden" value="{{$m->id}}">
     </div>
 
 <div class="form-group">

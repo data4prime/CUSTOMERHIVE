@@ -78,6 +78,7 @@ function objectsOptions(app) {
             var name = value.qData.name;
 
             var hidden_object = parent.document.getElementById('mashup_object_hidden');
+            var hidden_app = parent.document.getElementById('mashup_app_hidden');
             
 
             var sheetDiv = document.createElement('option');
@@ -86,7 +87,7 @@ function objectsOptions(app) {
             sheetDiv.innerHTML = name + ' (' + sheetId + ')';
 
 
-            if (hidden_object.value == sheetId) {
+            if (hidden_object.value == sheetId && hidden_app.value == appId) {
                 sheetDiv.selected = true;
             }
 
