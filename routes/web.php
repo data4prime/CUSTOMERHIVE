@@ -138,6 +138,7 @@ $comp = DB::table('cms_statistic_components')->where('componentID', $componentID
     }
 
     $mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
+    dd($mashup);
     $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
 
 
