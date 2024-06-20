@@ -43,6 +43,10 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
 function update_objects(select){
 
+    
+    var select = document.getElementById('mashup_app');
+    var mashup_id = select.value;
+
     //id mashup_object
     var select = document.getElementById('mashup_object');
     //delete all options except the first one
@@ -54,7 +58,7 @@ function update_objects(select){
 
     var iframe = document.getElementById('configuration');
 
-    iframe.src = '/mashup-objects/' + select.value + '/{{$componentID}}'+'/{{$config->object}}';
+    iframe.src = '/mashup-objects/' + mashup_id + '/{{$componentID}}'+'/{{$config->object}}';
 
 
 
@@ -77,7 +81,7 @@ function update_objects(select){
 
     <div class="form-group">
         <label>Mashup</label>
-<select onchange="update_objects(this)" class='form-control' required name='config[mashups]'>
+<select id="mashup_app" onchange="update_objects(this)" class='form-control' required name='config[mashups]'>
             <option value='0'>Choose App</option>
             @foreach($mashups as $m)
             @if(isset($config) && $m->id == $config->mashups)
