@@ -131,6 +131,12 @@ $comp = DB::table('cms_statistic_components')->where('componentID', $componentID
         $config = json_decode($comp->config);
     }
 
+    if (!$config) {
+        $config = new \stdClass();
+        $config->mashups = 0;
+        $config->object = 0;
+    }
+
     $mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
     $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
 
