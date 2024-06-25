@@ -158,10 +158,11 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         $config = json_decode($component->config);
         if ($config) {
             $conf = QlikMashupController::getConf($config->mashups);
+dd($config);
         } else {
             $conf = null;
         }
-dd($conf);
+        dd($conf);
         $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID', 'conf'))->render();
 
         $component_name = $component->component_name;
