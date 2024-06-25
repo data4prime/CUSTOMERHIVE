@@ -85,7 +85,8 @@ function objectsOptions(app) {
             sheetDiv.className = 'masterobject-option';
             sheetDiv.value = sheetId;
             sheetDiv.innerHTML = name + ' (' + sheetId + ')';
-
+            console.log("hidden_object: " + hidden_object.value);
+            console.log("hidden_app: " + hidden_app.value);
 
             if (hidden_object.value == sheetId && hidden_app.value == appId) {
                 sheetDiv.selected = true;
