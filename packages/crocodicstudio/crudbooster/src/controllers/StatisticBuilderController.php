@@ -170,7 +170,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             }
         }
 
-        return response()->json(compact('componentID', 'layout'));
+        return response()->json(compact('componentID', 'layout', 'config'));
     }
 
     public function postAddComponent()
