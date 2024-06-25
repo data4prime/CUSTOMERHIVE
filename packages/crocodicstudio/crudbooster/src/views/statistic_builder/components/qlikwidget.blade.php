@@ -77,7 +77,7 @@ function update_objects(select){
 
 
 <div id='{{$componentID}}'>
-<iframe src='/mashup-objects/{{$mashup->id}}/{{$componentID}}/{{$config->object}}'  id="configuration" frameborder="0" style="width: 100%;"></iframe>
+<iframe src='/mashup-objects/{{$mashup->id}}/{{$componentID}}/{{$config->object}}'  id="configuration" frameborder="0" style="width: 100%;height:30px;"></iframe>
 
 
 
@@ -89,7 +89,7 @@ function update_objects(select){
 
 
     <div class="form-group">
-        <label>Mashup</label>
+        <label>Mashup App</label>
 <select id="mashup_app" onchange="update_objects(this)" class='form-control' required name='config[mashups]'>
             <option value='0'>Choose App</option>
             @foreach($mashups as $m)
