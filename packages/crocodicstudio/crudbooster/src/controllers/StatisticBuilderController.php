@@ -160,7 +160,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $mashup = DB::table('qlik_mashups')->where('id', $config->mashups)->first();
             if ($mashup) {
                 $conf = QlikMashupController::getConf($mashup->conf);
-                dd($conf);
+                //dd($conf);
             } else {
                 $conf = null;
             }
