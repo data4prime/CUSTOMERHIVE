@@ -136,14 +136,14 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
     {
         $rows = DB::table('cms_statistic_components')->where('id_cms_statistics', $id_cms_statistics)->where('area_name', $area_name)
                 ->orderby('sorting', 'asc')->get();
-        foreach ($rows as $k => $row) {
+        /*foreach ($rows as $k => $row) {
             $config = json_decode($row->config);
             if ($config) {
                 $conf = QlikMashupController::getConf($config->mashups);
                 $rows[$k]->conf = $conf;
             }
         }
-        dd($rows);
+        dd($rows);*/
         return response()->json(['components' => $rows]);
     }
 
