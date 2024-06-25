@@ -88,7 +88,7 @@ function objectsOptions(app) {
             console.log("hidden_object: " + hidden_object.value);
             console.log("hidden_app: " + hidden_app.value);
 
-            if (hidden_object.value == sheetId && hidden_app.value == appId) {
+            if (hidden_object.value == sheetId && hidden_app.value == mashupId) {
                 sheetDiv.selected = true;
             }
 
