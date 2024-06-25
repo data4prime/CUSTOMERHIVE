@@ -3,10 +3,12 @@ use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 
 use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
+use crocodicstudio\crudbooster\controllers\CRUDBooster;
+
 
     $mashup = QlikMashupController::getMashupFromCompID($componentID);
-    $token = HelpersQlikHelper::getJWTToken(1, 3);
-    $conf = QlikMashupController::getConf(3);
+    $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+    //$conf = QlikMashupController::getConf(3);
 
     if (!$mashup) {
 
@@ -89,7 +91,7 @@ function update_objects(select){
 
 
     <div class="form-group">
-        <label>Mashup App</label>
+        <label>Qlik App</label>
 <select id="mashup_app" onchange="update_objects(this)" class='form-control' required name='config[mashups]'>
             <option value='0'>Choose App</option>
             @foreach($mashups as $m)
@@ -104,7 +106,7 @@ function update_objects(select){
     </div>
 
 <div class="form-group">
-        <label>Mashup Object</label>
+        <label>App Object</label>
         <select id="mashup_object" disabled  class='form-control' required name='config[object]'>
             <option value='0'>Choose Object</option>
 

@@ -221,12 +221,14 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         }
 
+        $conf = QlikMashupController::geConf($config->mashups);
+
         $command = 'configuration';
 
         $mashups = QlikMashupController::getMashups();
 
 
-        return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups'));
+        return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf'));
     }
 
     public function postSaveComponent()
