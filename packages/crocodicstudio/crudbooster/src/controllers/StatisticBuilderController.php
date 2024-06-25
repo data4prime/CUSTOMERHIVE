@@ -98,6 +98,8 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
 
 
+
+
         return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout'));
     }
 
@@ -132,7 +134,15 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
     public function getListComponent($id_cms_statistics, $area_name)
     {
-        $rows = DB::table('cms_statistic_components')->where('id_cms_statistics', $id_cms_statistics)->where('area_name', $area_name)->orderby('sorting', 'asc')->get();
+        $rows = DB::table('cms_statistic_components')->where('id_cms_statistics', $id_cms_statistics)->where('area_name', $area_name)
+                ->orderby('sorting', 'asc')->get();
+        foreach ($rows as $k => $row) {
+            $config = json_decode($row->config);
+            if ($config) {
+                $conf = QlikMashupController::geConf($config->mashups);
+                $rows[$k]->config = $conf;
+            }
+        }
         return response()->json(['components' => $rows]);
     }
 
