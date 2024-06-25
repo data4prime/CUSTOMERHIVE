@@ -308,18 +308,18 @@ class QlikMashupController extends CBController
 
 		$return = [];
 
-		if (isset($id)) {
+		if (isset($id) && $qlik_conf) {
 
-		$return['host'] = $qlik_conf->url;
-			$return['webIntegrationId'] = '';
-			$return['port'] = $qlik_conf->port;
-			$return['prefix'] = $qlik_conf->endpoint;
-		if (QlikHelper::confIsSAAS($id)) {
 			$return['host'] = $qlik_conf->url;
-			$return['webIntegrationId'] = $qlik_conf->web_int_id;
-			$return['port'] = $qlik_conf->port;
-			$return['prefix'] = $qlik_conf->endpoint;
-		} 
+				$return['webIntegrationId'] = '';
+				$return['port'] = $qlik_conf->port;
+				$return['prefix'] = $qlik_conf->endpoint;
+			if (QlikHelper::confIsSAAS($id)) {
+				$return['host'] = $qlik_conf->url;
+				$return['webIntegrationId'] = $qlik_conf->web_int_id;
+				$return['port'] = $qlik_conf->port;
+				$return['prefix'] = $qlik_conf->endpoint;
+			} 
 		}
 
 		$return = (object) $return;
