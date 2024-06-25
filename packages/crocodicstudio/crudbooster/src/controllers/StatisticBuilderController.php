@@ -155,11 +155,12 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
 
         $command = 'layout';
-        $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID'))->render();
+        $config = json_decode($component->config);
+        $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID', 'config'))->render();
 
         $component_name = $component->component_name;
         $area_name = $component->area_name;
-        $config = json_decode($component->config);
+        //$config = json_decode($component->config);
         if ($config) {
             foreach ($config as $key => $value) {
                 if ($value) {
