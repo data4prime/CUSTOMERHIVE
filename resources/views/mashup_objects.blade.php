@@ -28,7 +28,9 @@ var webIntegrationId = '{{$conf->webIntegrationId}}';
 var appId = '{{$mashup->appid}}';
 var mashupId = '{{$mashup->id}}';
 var objectid = '{{$config->object}}';
+
 console.log("mashupId: "+mashupId);
+
 </script>
 
   <div id="title">Loading Qlik App. Please wait.</div>
