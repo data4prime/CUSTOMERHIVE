@@ -139,7 +139,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         foreach ($rows as $k => $row) {
             $config = json_decode($row->config);
             if ($config) {
-                $conf = QlikMashupController::geConf($config->mashups);
+                $conf = QlikMashupController::getConf($config->mashups);
                 $rows[$k]->config = $conf;
             }
         }
