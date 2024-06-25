@@ -177,13 +177,13 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             foreach ($config as $key => $value) {
                 if ($value) {
                     $command = 'showFunction';
-                    $value = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'value', 'key', 'config', 'componentID'))->render();
+                    $value = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'value', 'key', 'config', 'conf', 'componentID'))->render();
                     $layout = str_replace('[' . $key . ']', $value, $layout);
                 }
             }
         }
 
-        return response()->json(compact('componentID', 'layout', 'config'));
+        return response()->json(compact('componentID', 'layout', 'config', 'conf'));
     }
 
     public function postAddComponent()
