@@ -29,6 +29,7 @@ var appId = '{{$mashup->appid}}';
 var mashupId = '{{$mashup->id}}';
 var objectid = '{{$config->object}}';
 
+console.log("objectid: "+objectid);
 console.log("mashupId: "+mashupId);
 
 </script>
