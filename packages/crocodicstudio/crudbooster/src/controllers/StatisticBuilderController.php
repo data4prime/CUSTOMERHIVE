@@ -143,6 +143,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
                 $rows[$k]->config = $conf;
             }
         }
+        dd($rows);
         return response()->json(['components' => $rows]);
     }
 
