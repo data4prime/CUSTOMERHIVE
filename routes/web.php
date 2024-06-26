@@ -100,6 +100,7 @@ Route::get('/mashup/{componentID}', function ($componentID) {
             if ($mashup) {
              $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
             } else {
+                $qlik_conf = null;
                 /*$qlik_conf = new \stdClass();
                 $qlik_conf->id = 0;
                 $qlik_conf->mashupname = 'Choose Conf';
