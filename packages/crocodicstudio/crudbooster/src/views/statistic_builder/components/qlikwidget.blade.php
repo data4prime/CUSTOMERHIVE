@@ -18,17 +18,19 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
         $mashup = new \stdClass();
         $mashup->id = 0;
         $mashup->mashupname = 'Choose Conf';
+        $mashup->object = '';
     
 
     }
 
-    if (!isset($config)) {
+    /*if (!isset($config)) {
         $config = new \stdClass();
         $config->mashups = 0;
         $config->object = 0;
     }
 
 dd($config);
+*/
 
 
 @endphp 
@@ -91,7 +93,7 @@ function update_objects(select){
 
     var iframe = document.getElementById('configuration');
 
-    iframe.src = '/mashup-objects/' + mashup_id + '/{{$componentID}}'+'/{{$config->object}}';
+    iframe.src = '/mashup-objects/' + mashup_id + '/{{$componentID}}'+'/{{$mashup->object}}';
 
 
 
