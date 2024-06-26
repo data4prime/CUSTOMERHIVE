@@ -79,7 +79,7 @@ function objectDisplay(app) {
 }
 function navbar(app) {
     console.log(document.getElementById('configuration'));
-    app.getObject($('#CurrentSelections'), 'CurrentSelections');
+    app.getObject(parent.document.getElementById('#CurrentSelections'), 'CurrentSelections');
 }
 
 function objectsOptions(app) {
