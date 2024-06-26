@@ -101,8 +101,8 @@ parent.document.getElementById('mashup_object').appendChild(option);
             var sheetTitle = value.qData.title;
             var name = value.qData.name;
 
-            var hidden_object = parent.document.getElementById('mashup_object_hidden');
-var hidden_app = parent.document.getElementById('mashup_app_hidden');
+            /*var hidden_object = parent.document.getElementById('mashup_object_hidden');
+var hidden_app = parent.document.getElementById('mashup_app_hidden');*/
             
 
             var option = document.createElement('option');
