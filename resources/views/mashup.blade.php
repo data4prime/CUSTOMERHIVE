@@ -6,10 +6,12 @@
 
 use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 use crocodicstudio\crudbooster\controllers\QlikMashupController;
-
-$token = HelpersQlikHelper::getJWTToken(1, 3);
+use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 $conf = QlikMashupController::getConf($qlik_conf);
+$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+
+
 
 
 @endphp 
@@ -47,8 +49,10 @@ $conf = QlikMashupController::getConf($qlik_conf);
 <script  type="text/javascript" >
 
 var qlik_token = '{{$token}}';
+/*
 console.log("qlik_token");
 console.log(qlik_token);
+*/
 var host = '{{$conf->host}}';
 var prefix = '{{$conf->prefix}}';
 var port = '{{$conf->port}}';

@@ -3,11 +3,10 @@
 
 use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 use crocodicstudio\crudbooster\controllers\QlikMashupController;
-
-$token = HelpersQlikHelper::getJWTToken(1, 3);
-
+use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 $conf = QlikMashupController::getConf($qlik_conf);
+$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 
 
 @endphp 
