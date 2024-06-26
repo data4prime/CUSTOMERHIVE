@@ -37,6 +37,8 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 <div id='{{$componentID}}' class='border-box'>
 
+{{ $mashup->id }}
+
 <iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 80%;"></iframe>
 
     <div class='action pull-right'>
