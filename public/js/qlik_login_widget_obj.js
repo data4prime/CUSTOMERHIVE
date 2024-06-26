@@ -85,11 +85,11 @@ option_cs.innerHTML = "Current Selections";
 if (hidden_object.value == "CurrentSelections"  && hidden_app.value == mashupId) {
 //console.log("CurrentSelections");
 //console.log("TRUE");
- option.selected = true;
+ option_cs.selected = true;
 }
 
 
-parent.document.getElementById('mashup_object').appendChild(option);
+parent.document.getElementById('mashup_object').appendChild(option_cs);
 
     app.getAppObjectList('masterobject', function (reply) {
         var str = "";
