@@ -70,9 +70,10 @@ async function main() {
 
 function objectsOptions(app) {
 
-console.log(parent.document.querySelectorAll('mashup_object_hidden'));
+console.log(parent.document.querySelectorAll('#mashup_object_hidden'));
 
 var hidden_object = parent.document.getElementById('mashup_object_hidden');
+console.log(hidden_object.value);
 var hidden_app = parent.document.getElementById('mashup_app_hidden');
 
 var option = document.createElement('option');
@@ -81,8 +82,8 @@ option.value =  "CurrentSelections";
 option.innerHTML = "Current Selections";
 
 if (hidden_object.value == "CurrentSelections"  && hidden_app.value == mashupId) {
-console.log("CurrentSelections");
-console.log("TRUE");
+//console.log("CurrentSelections");
+//console.log("TRUE");
  option.selected = true;
 }
 
@@ -109,8 +110,8 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');
             if ( hidden_object.value == objectid && hidden_app.value == mashupId
 
                  ) {
-console.log(name + ' (' + sheetId + ')');
-console.log("TRUE");
+//console.log(name + ' (' + sheetId + ')');
+//console.log("TRUE");
                 option.selected = true;
             }
 
