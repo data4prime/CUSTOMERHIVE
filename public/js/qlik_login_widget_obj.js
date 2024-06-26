@@ -59,7 +59,7 @@ async function main() {
 
         var mashup_object = parent.document.getElementById('mashup_object');
         mashup_object.removeAttribute('disabled');
-        console.log("objectsOptions(app)");
+        //console.log("objectsOptions(app)");
 
 
 
@@ -110,12 +110,14 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');*/
 
             if ( hidden_object.value == sheetId && hidden_app.value == mashupId) {
 
+                /*
                 console.log("--------------------");
                 console.log("hidden_object.value " + hidden_object.value + " == " + objectid);
                 console.log("objectid " + objectid);
                 console.log("hidden_app.value " + hidden_app.value + " == " + mashupId);
                 console.log("mashupId " + mashupId);
                 console.log("--------------------");
+                */
 
                 option.selected = true;
             }

@@ -1,10 +1,12 @@
 async function main() {
     const isLoggedIn = await jwtLogin();
     const check = await checkLoggedIn();
+/*
     console.log("isLoggedIn");
     console.log(isLoggedIn);
     console.log("check");
     console.log(check);
+*/
     var selState;
     var query;
     var filters;
@@ -78,8 +80,8 @@ function objectDisplay(app) {
     }
 }
 function navbar(app) {
-    console.log("navbar");
-    console.log($(parent.document).find('#CurrentSelections'));
+    //console.log("navbar");
+    //console.log($(parent.document).find('#CurrentSelections'));
     app.getObject($('#CurrentSelections'), 'CurrentSelections');
     app.getObject($(parent.document).find('#CurrentSelections'), 'CurrentSelections');
 }
@@ -118,7 +120,7 @@ function objectsOptions(app) {
 
 async function jwtLogin() {
     const authHeader = 'Bearer ' + qlik_token;
-    console.log(authHeader);
+    //console.log(authHeader);
 
     const response = await fetch(`${host}/login/jwt-session`, {
         credentials: 'include',
