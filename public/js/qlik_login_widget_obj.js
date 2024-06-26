@@ -79,6 +79,8 @@ option.innerHTML = "Current Selections";
 
 if (hidden_object.value == "CurrentSelections"  && hidden_app.value == mashupId
 ) {
+console.log("CurrentSelections");
+console.log("TRUE");
  option.selected = true;
 }
 
@@ -104,6 +106,8 @@ parent.document.getElementById('mashup_object').appendChild(option);
             if ( hidden_object.value == objectid && hidden_app.value == mashupId
 
                  ) {
+console.log(name + ' (' + sheetId + ')');
+console.log("TRUE");
                 option.selected = true;
             }
 
