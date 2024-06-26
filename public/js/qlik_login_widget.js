@@ -69,7 +69,7 @@ async function main() {
 function objectDisplay(app) {
     var title = document.getElementById('title');
         title.innerHTML = "Loading Object. Please wait...";
-    if (objectid = 'CurrentSelections') {
+    if (objectid == 'CurrentSelections') {
         navbar(app);
     } else {
     app.visualization.get(objectid).then(function (vis) {
