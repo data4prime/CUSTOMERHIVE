@@ -97,7 +97,11 @@ Route::get('/mashup/{componentID}', function ($componentID) {
 
         if (isset($mashups->mashups)){
              $mashup = DB::table('qlik_mashups')->where('id', $mashups->mashups)->first();
-$qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
+            if ($mashup) {
+             $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
+            } else {
+                $qlik_conf = null;
+            }
         } else {
             $mashup = null;
             $qlik_conf = null;
