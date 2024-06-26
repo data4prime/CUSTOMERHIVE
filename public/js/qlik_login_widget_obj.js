@@ -70,10 +70,10 @@ async function main() {
 
 function objectsOptions(app) {
 
-console.log(parent.document.querySelectorAll('#mashup_object_hidden'));
+//console.log(parent.document.querySelectorAll('#mashup_object_hidden'));
 
 var hidden_object = parent.document.getElementById('mashup_object_hidden');
-console.log(hidden_object.value);
+
 var hidden_app = parent.document.getElementById('mashup_app_hidden');
 
 var option = document.createElement('option');
@@ -81,6 +81,9 @@ option.className = 'masterobject-option';
 option.value =  "CurrentSelections";
 option.innerHTML = "Current Selections";
 
+console.log("hidden_object.value " + hidden_object.value);
+console.log("hidden_app.value " + hidden_app.value);
+console.log("mashupId " + mashupId);
 if (hidden_object.value == "CurrentSelections"  && hidden_app.value == mashupId) {
 //console.log("CurrentSelections");
 //console.log("TRUE");
