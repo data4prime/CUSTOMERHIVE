@@ -157,6 +157,7 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
     statisticRows.forEach(row => {
 		// Aggiungi il bordo all'elemento stesso
         row.style.border = '1px solid black';
+		row.style.borderCollapse = 'collapse';
         
         // Aggiungi il bordo a tutti i nodi interni
         const childNodes = row.querySelectorAll('*');
@@ -164,6 +165,7 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
 			//console.log(child);
 			
             child.style.borderRight = '1px solid black';
+			child.style.borderCollapse = 'collapse';
 			//if child is a br element, delete it
 			if (child.tagName == 'BR') {
 				child.remove();
