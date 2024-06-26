@@ -76,10 +76,10 @@ var hidden_object = parent.document.getElementById('mashup_object_hidden');
 
 var hidden_app = parent.document.getElementById('mashup_app_hidden');
 
-var option = document.createElement('option');
-option.className = 'masterobject-option';
-option.value =  "CurrentSelections";
-option.innerHTML = "Current Selections";
+var option_cs = document.createElement('option');
+option_cs.className = 'masterobject-option';
+option_cs.value =  "CurrentSelections";
+option_cs.innerHTML = "Current Selections";
 
 
 if (hidden_object.value == "CurrentSelections"  && hidden_app.value == mashupId) {
