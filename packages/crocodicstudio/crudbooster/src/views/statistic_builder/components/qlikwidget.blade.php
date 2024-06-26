@@ -39,7 +39,13 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 {{ $mashup->id }}
 
+@if ($mashup->id != 0)
 <iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 80%;"></iframe>
+@else 
+<img style="width: 50%;" src='/images/qlik_logo.png' />
+@endif 
+
+
 
     <div class='action pull-right'>
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Qlik Widget'
