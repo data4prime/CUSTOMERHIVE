@@ -164,7 +164,7 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
         childNodes.forEach(child => {
 			//console.log(child);
 			
-            child.style.borderRight = '1px solid black';
+            child.style.border = '1px solid black';
 			child.style.borderCollapse = 'collapse';
 			//if child is a br element, delete it
 			if (child.tagName == 'BR') {
