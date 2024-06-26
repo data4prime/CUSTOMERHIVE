@@ -414,20 +414,18 @@
 </div><!--END STATISTIC AREA-->
 
 <script defer>
-			// Verifica se l'URL contiene 'dashboard_layouts/detail/'
+
 if (window.location.href.includes('statistic_builder/builder')) {
-    // Seleziona tutti gli elementi con la classe 'statistic-row'
+
     const statisticRows = document.querySelectorAll('.statistic-row');
-    
-    // Aggiungi il bordo agli elementi selezionati e ai loro nodi interni
+
     statisticRows.forEach(row => {
-        // Aggiungi il bordo all'elemento stesso
-        row.style.border = '1px solid black';
-        
-        // Aggiungi il bordo a tutti i nodi interni
+
+        //row.style.border = '1px solid black';
+
         const childNodes = row.querySelectorAll('*');
         childNodes.forEach(child => {
-            child.style.border = '1px solid black';
+            child.style.border = '1px dotted black';
         });
     });
 }
