@@ -47,6 +47,8 @@ $conf = QlikMashupController::getConf($qlik_conf);
 <script  type="text/javascript" >
 
 var qlik_token = '{{$token}}';
+console.log("qlik_token");
+console.log(qlik_token);
 var host = '{{$conf->host}}';
 var prefix = '{{$conf->prefix}}';
 var port = '{{$conf->port}}';
