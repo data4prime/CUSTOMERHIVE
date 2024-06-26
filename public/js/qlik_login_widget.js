@@ -56,7 +56,7 @@ async function main() {
         var app = qlik.openApp(appId, config);
         objectDisplay(app);
 
-        console.log("objectDisplay(app)");
+        //console.log("objectDisplay(app)");
 
         //objectsOptions(app);
 
@@ -69,9 +69,13 @@ async function main() {
 function objectDisplay(app) {
     var title = document.getElementById('title');
         title.innerHTML = "Loading Object. Please wait...";
+    if (objectid = 'CurrentSelections') {
+        navbar(app);
+    } else {
     app.visualization.get(objectid).then(function (vis) {
                     vis.show(objectid);
                 });
+    }
 }
 function navbar(app) {
     console.log(document.getElementById('configuration'));

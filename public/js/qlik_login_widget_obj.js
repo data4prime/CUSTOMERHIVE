@@ -69,6 +69,11 @@ async function main() {
 
 
 function objectsOptions(app) {
+var option = document.createElement('option');
+            option.className = 'masterobject-option';
+            option.value =  "CurrentSelections";
+            option.innerHTML = "Current Selections";
+parent.document.getElementById('mashup_object').appendChild(option);
     app.getAppObjectList('masterobject', function (reply) {
         var str = "";
 
@@ -81,18 +86,18 @@ function objectsOptions(app) {
             var hidden_app = parent.document.getElementById('mashup_app_hidden');
             
 
-            var sheetDiv = document.createElement('option');
-            sheetDiv.className = 'masterobject-option';
-            sheetDiv.value = sheetId;
-            sheetDiv.innerHTML = name + ' (' + sheetId + ')';
+            var option = document.createElement('option');
+            option.className = 'masterobject-option';
+            option.value = sheetId;
+            option.innerHTML = name + ' (' + sheetId + ')';
             console.log("hidden_object: " + hidden_object.value);
             console.log("hidden_app: " + hidden_app.value);
 
             if (hidden_object.value == objectid && hidden_app.value == mashupId) {
-                sheetDiv.selected = true;
+                option.selected = true;
             }
 
-            parent.document.getElementById('mashup_object').appendChild(sheetDiv);
+            parent.document.getElementById('mashup_object').appendChild(option);
         });
     });
 
