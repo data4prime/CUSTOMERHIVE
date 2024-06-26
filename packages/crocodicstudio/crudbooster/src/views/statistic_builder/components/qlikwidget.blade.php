@@ -113,6 +113,7 @@ function update_objects(select){
         <label>App Object</label>
         <select id="mashup_object" disabled  class='form-control' required name='config[object]'>
             <option value='0'>Choose Object</option>
+            <option value='CurrentSelections'>Current Selections</option>
 
         </select>
         <input type="hidden" id="mashup_object_hidden" value="{{$config->object}}">
