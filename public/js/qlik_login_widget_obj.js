@@ -81,9 +81,7 @@ option.className = 'masterobject-option';
 option.value =  "CurrentSelections";
 option.innerHTML = "Current Selections";
 
-console.log("hidden_object.value " + hidden_object.value);
-console.log("hidden_app.value " + hidden_app.value);
-console.log("mashupId " + mashupId);
+
 if (hidden_object.value == "CurrentSelections"  && hidden_app.value == mashupId) {
 //console.log("CurrentSelections");
 //console.log("TRUE");
@@ -113,8 +111,11 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');*/
             if ( hidden_object.value == objectid && hidden_app.value == mashupId
 
                  ) {
-//console.log(name + ' (' + sheetId + ')');
-//console.log("TRUE");
+console.log("hidden_object.value " + hidden_object.value);
+console.log("objectid " + objectid);
+console.log("hidden_app.value " + hidden_app.value);
+console.log("mashupId " + mashupId);
+
                 option.selected = true;
             }
 
