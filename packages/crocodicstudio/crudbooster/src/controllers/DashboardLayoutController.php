@@ -156,8 +156,8 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
     // Aggiungi il bordo agli elementi selezionati e ai loro nodi interni
     statisticRows.forEach(row => {
 		// Aggiungi il bordo all'elemento stesso
-        row.style.border = '1px solid black';
-		row.style.borderCollapse = 'collapse';
+        //row.style.border = '1px solid black';
+		//row.style.borderCollapse = 'collapse';
         
         // Aggiungi il bordo a tutti i nodi interni
         const childNodes = row.querySelectorAll('*');
