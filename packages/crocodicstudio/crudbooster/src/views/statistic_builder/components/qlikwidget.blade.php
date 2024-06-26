@@ -40,9 +40,10 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 
 @if ($mashup->id != 0)
-@php $h = 'width: 100%;height:30px;'; @endphp
-@else 
+
 @php $h = 'width: 100%;height:80%;'; @endphp
+@else 
+@php $h = 'width: 100%;height:30px;'; @endphp
 <p>Configurate the widget<br>from Statistic Builder</p>
 
 <img style="width: 20%;" src='/images/qlik_logo.png' />
