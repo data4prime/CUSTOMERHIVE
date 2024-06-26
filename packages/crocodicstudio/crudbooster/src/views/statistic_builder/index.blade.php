@@ -31,7 +31,7 @@
 <style type="text/css">
 .statistic-row>div {
 
-overflow: hidden;
+overflow: auto;
 
 }
     .control-sidebar ul {
