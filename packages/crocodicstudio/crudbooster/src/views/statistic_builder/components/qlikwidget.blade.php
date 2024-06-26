@@ -12,7 +12,6 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
     } else {
         $token = '';
     }
-    //$conf = QlikMashupController::getConf(3);
 
     if (!$mashup) {
 
@@ -38,7 +37,6 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 <div id='{{$componentID}}' class='border-box'>
 
-<!--<h1>{{isset($mashup) ? $mashup->mashupname : 'Choose Conf'}}</h1>-->
 <iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 80%;"></iframe>
 
     <div class='action pull-right'>
@@ -51,7 +49,7 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
     </div>
  @elseif($command=='configuration')
 
-<!--javascript code che dal ifame con id configuration, prende tutti gli option con classe masterobject-option, e li inserisce nel select con id mashup_object -->
+
 <script defer>
 
 
@@ -62,9 +60,9 @@ function update_objects(select){
     var select = document.getElementById('mashup_app');
     var mashup_id = select.value;
 
-    //id mashup_object
+
     var select = document.getElementById('mashup_object');
-    //delete all options except the first one
+    //delete all options except the first two
     while (select.options.length > 2) {
         select.remove(2);
     }
