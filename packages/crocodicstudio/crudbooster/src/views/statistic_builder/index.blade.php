@@ -29,6 +29,11 @@
 @endpush
 @push('head')
 <style type="text/css">
+.statistic-row>div {
+
+overflow: hidden;
+
+}
     .control-sidebar ul {
         padding: 0 0 0 0;
         margin: 0 0 0 0;
