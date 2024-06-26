@@ -37,7 +37,7 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 <div id='{{$componentID}}' class='border-box'>
 
-{{ $mashup->id }}
+
 
 @if ($mashup->id != 0)
 <iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 80%;"></iframe>
