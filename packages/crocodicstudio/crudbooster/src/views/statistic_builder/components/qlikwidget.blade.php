@@ -40,12 +40,14 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 
 @if ($mashup->id != 0)
+@php $h = 'width: 100%;height:0px;'; @endphp
 @else 
+@php $h = 'width: 100%;height:80%;'; @endphp
 <p>Configurate the widget<br>from Statistic Builder</p>
 
 <img style="width: 20%;" src='/images/qlik_logo.png' />
 @endif 
-<iframe src="/mashup/{{$componentID}}" frameborder="0" style="width: 100%;height: 80%;"></iframe>
+<iframe src="/mashup/{{$componentID}}" frameborder="0" style="{{ $h }}"></iframe>
 
 
 
