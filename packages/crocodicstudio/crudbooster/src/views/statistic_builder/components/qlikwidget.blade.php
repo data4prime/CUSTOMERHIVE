@@ -22,7 +22,7 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
     }
 
-    if (!isset($config)) {
+    if ($config) {
         $config = new \stdClass();
         $config->mashups = 0;
         $config->object = 0;
