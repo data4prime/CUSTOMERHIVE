@@ -69,11 +69,22 @@ async function main() {
 
 
 function objectsOptions(app) {
+var hidden_object = parent.document.getElementById('mashup_object_hidden');
+var hidden_app = parent.document.getElementById('mashup_app_hidden');
+
 var option = document.createElement('option');
-            option.className = 'masterobject-option';
-            option.value =  "CurrentSelections";
-            option.innerHTML = "Current Selections";
+option.className = 'masterobject-option';
+option.value =  "CurrentSelections";
+option.innerHTML = "Current Selections";
+
+if (hidden_object.value == "CurrentSelections"  && hidden_app.value == mashupId
+) {
+ option.selected = true;
+}
+
+
 parent.document.getElementById('mashup_object').appendChild(option);
+
     app.getAppObjectList('masterobject', function (reply) {
         var str = "";
 
@@ -82,18 +93,17 @@ parent.document.getElementById('mashup_object').appendChild(option);
             var sheetTitle = value.qData.title;
             var name = value.qData.name;
 
-            var hidden_object = parent.document.getElementById('mashup_object_hidden');
-            var hidden_app = parent.document.getElementById('mashup_app_hidden');
+            
             
 
             var option = document.createElement('option');
             option.className = 'masterobject-option';
             option.value = sheetId;
             option.innerHTML = name + ' (' + sheetId + ')';
-            console.log("hidden_object: " + hidden_object.value);
-            console.log("hidden_app: " + hidden_app.value);
 
-            if (hidden_object.value == objectid && hidden_app.value == mashupId) {
+            if ( hidden_object.value == objectid && hidden_app.value == mashupId
+
+                 ) {
                 option.selected = true;
             }
 
