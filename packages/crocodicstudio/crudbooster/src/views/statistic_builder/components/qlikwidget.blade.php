@@ -7,7 +7,11 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 
     $mashup = QlikMashupController::getMashupFromCompID($componentID);
-    $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+    if (isset($conf->id)) {
+        $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+    } else {
+        $token = '';
+    }
     //$conf = QlikMashupController::getConf(3);
 
     if (!$mashup) {
