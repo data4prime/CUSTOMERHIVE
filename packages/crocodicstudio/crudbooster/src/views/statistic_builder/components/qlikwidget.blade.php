@@ -65,9 +65,9 @@ function update_objects(select){
     //id mashup_object
     var select = document.getElementById('mashup_object');
     //delete all options except the first one
-    while (select.options.length > 1) {
+    /*while (select.options.length > 1) {
         select.remove(1);
-    }
+    }*/
 
 
 
