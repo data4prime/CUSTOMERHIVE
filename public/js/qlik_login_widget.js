@@ -16,7 +16,7 @@ async function main() {
         host_q = host.split("//")[1];
     }
 
-    console.log(host_q);
+    //console.log(host_q);
     
     var config = {
         host: host_q, 
