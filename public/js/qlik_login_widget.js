@@ -78,7 +78,7 @@ function objectDisplay(app) {
     }
 }
 function navbar(app) {
-    console.log(document.getElementById('configuration'));
+    console.log("navbar");
     app.getObject(parent.document.getElementById('#CurrentSelections'), 'CurrentSelections');
 }
 
