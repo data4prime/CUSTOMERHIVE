@@ -40,7 +40,7 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 
 @if ($mashup->id != 0)
-@php $h = 'width: 100%;height:0px;'; @endphp
+@php $h = 'width: 100%;height:30px;'; @endphp
 @else 
 @php $h = 'width: 100%;height:80%;'; @endphp
 <p>Configurate the widget<br>from Statistic Builder</p>
