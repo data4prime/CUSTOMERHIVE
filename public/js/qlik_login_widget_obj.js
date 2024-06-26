@@ -111,10 +111,12 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');*/
             if ( hidden_object.value == objectid && hidden_app.value == mashupId
 
                  ) {
+console.log("--------------------");
 console.log("hidden_object.value " + hidden_object.value);
 console.log("objectid " + objectid);
 console.log("hidden_app.value " + hidden_app.value);
 console.log("mashupId " + mashupId);
+console.log("--------------------");
 
                 option.selected = true;
             }
