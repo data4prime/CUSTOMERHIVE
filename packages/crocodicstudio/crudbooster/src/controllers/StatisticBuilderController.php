@@ -410,6 +410,9 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             }
         }
 
+        file_put_contents(__DIR__ . '/mashup_objects.txt', json_encode($mashup)."\n\n", FILE_APPEND);
+        file_put_contents(__DIR__ . '/mashup_objects.txt', json_encode($qlik_conf)."\n\n", FILE_APPEND);
+
         if ($mashup && $qlik_conf) {
             return view('mashup_objects', compact('componentID', 'mashup', 'qlik_conf', 'config'));
         }
