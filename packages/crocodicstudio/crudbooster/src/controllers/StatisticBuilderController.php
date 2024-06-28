@@ -166,6 +166,9 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             }
         } else {
             $conf = null;
+            $config = new \stdClass();
+            $config->mashups = 0;
+            $config->object = 0;
         }
         //dd($conf);
         $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID', 'conf', 'config'))->render();
@@ -250,9 +253,15 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         $command = 'configuration';
 
         $mashups = QlikMashupController::getMashups();
+        $mashup = QlikMashupController::getMashupFromCompID($componentID);
+if (isset($conf->id)) {
+        $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+    } else {
+        $token = '';
+    }
 
 
-        return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf'));
+        return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf', 'mashup', 'token'));
     }
 
     public function postSaveComponent()

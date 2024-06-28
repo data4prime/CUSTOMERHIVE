@@ -6,12 +6,12 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 
-    $mashup = QlikMashupController::getMashupFromCompID($componentID);
-    if (isset($conf->id)) {
+   /* $mashup = QlikMashupController::getMashupFromCompID($componentID);*/
+    /*if (isset($conf->id)) {
         $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
     } else {
         $token = '';
-    }
+    }*/
 
     if (!$mashup) {
 
