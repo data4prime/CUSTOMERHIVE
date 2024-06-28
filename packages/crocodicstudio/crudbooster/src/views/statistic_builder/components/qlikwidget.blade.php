@@ -25,7 +25,7 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 
 
-    if (isset($config->object)) {
+    if (!isset($config->object)) {
     
             $config->object = '';
 
