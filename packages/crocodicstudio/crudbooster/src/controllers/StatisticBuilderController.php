@@ -3,6 +3,9 @@
 namespace crocodicstudio\crudbooster\controllers;
 
 use CRUDBooster;
+use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
+
+
 use \crocodicstudio\crudbooster\controllers\QlikMashupController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Excel;

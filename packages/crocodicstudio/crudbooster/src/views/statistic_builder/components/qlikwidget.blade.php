@@ -1,10 +1,11 @@
 @php 
+/*
 use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 
 use crocodicstudio\crudbooster\controllers\QlikMashupController;
 
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
-
+*/
 
    /* $mashup = QlikMashupController::getMashupFromCompID($componentID);*/
     /*if (isset($conf->id)) {
