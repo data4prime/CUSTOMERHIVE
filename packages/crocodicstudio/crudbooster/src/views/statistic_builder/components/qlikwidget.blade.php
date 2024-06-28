@@ -79,8 +79,8 @@ function update_objects(select){
 
     var select = document.getElementById('mashup_object');
     //delete all options except the first two
-    while (select.options.length > 2) {
-        select.remove(2);
+    while (select.options.length > 1) {
+        select.remove(1);
     }
 
 
