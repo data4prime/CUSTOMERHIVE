@@ -41,7 +41,7 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 
 
-@if ($mashup->id != 0)
+@if (isset($mashup->id) || $mashup->id != 0)
 
 @php $h = 'width: 100%;height:80%;'; @endphp
 @else 
