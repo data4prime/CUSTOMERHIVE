@@ -168,7 +168,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $conf = null;
         }
         //dd($conf);
-        $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID', 'conf'))->render();
+        $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID', 'conf', 'config'))->render();
 
         $component_name = $component->component_name;
         $area_name = $component->area_name;

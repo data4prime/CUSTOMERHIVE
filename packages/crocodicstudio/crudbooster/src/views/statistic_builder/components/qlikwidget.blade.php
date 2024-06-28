@@ -25,8 +25,6 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 
 
-    $config = json_decode($mashup->config);
-
 
 
 @endphp 
