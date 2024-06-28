@@ -171,22 +171,23 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $config->object = 0;
         }
         //dd($conf);
-        $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID', 'conf', 'config'))->render();
-
-        $component_name = $component->component_name;
-        $area_name = $component->area_name;
         $mashup = QlikMashupController::getMashupFromCompID($componentID);
         if (isset($conf->id)) {
         $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
             } else {
                 $token = '';
             }
+        $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID', 'conf', 'config','mashup', 'token'))->render();
+
+        $component_name = $component->component_name;
+        $area_name = $component->area_name;
+
         //$config = json_decode($component->config);
         if ($config) {
             foreach ($config as $key => $value) {
                 if ($value) {
                     $command = 'showFunction';
-                    $value = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'value', 'key', 'config', 'conf', 'componentID', 'mashup'))->render();
+                    $value = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'value', 'key', 'config', 'conf', 'componentID', 'mashup', 'token'))->render();
                     $layout = str_replace('[' . $key . ']', $value, $layout);
                 }
             }
