@@ -400,6 +400,13 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             }
         }
 
+        if (!isset($config->mashups)) {
+            $config->mashups = 0;
+        }
+        if (!isset($config->object)) {
+            $config->object = 0;
+        }
+
         //$mashup = DB::table('qlik_mashups')->where('id', $config->mashups)->first();
         $mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
         $qlik_conf = null;
