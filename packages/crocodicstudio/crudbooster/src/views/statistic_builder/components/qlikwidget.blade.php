@@ -31,7 +31,7 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
     }*/
 
-dd($mashup);
+
 
     /*if (!isset($config)) {
         $config = new \stdClass();
@@ -81,7 +81,7 @@ dd($config);
     </div>
  @elseif($command=='configuration')
 
-
+@php dd($mashup) @endphp
 <script defer>
 
 
