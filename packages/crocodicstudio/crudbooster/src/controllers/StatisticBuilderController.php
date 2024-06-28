@@ -175,12 +175,18 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         $component_name = $component->component_name;
         $area_name = $component->area_name;
+        $mashup = QlikMashupController::getMashupFromCompID($componentID);
+        if (isset($conf->id)) {
+        $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+            } else {
+                $token = '';
+            }
         //$config = json_decode($component->config);
         if ($config) {
             foreach ($config as $key => $value) {
                 if ($value) {
                     $command = 'showFunction';
-                    $value = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'value', 'key', 'config', 'conf', 'componentID'))->render();
+                    $value = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'value', 'key', 'config', 'conf', 'componentID', 'mashup'))->render();
                     $layout = str_replace('[' . $key . ']', $value, $layout);
                 }
             }
@@ -254,11 +260,11 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         $mashups = QlikMashupController::getMashups();
         $mashup = QlikMashupController::getMashupFromCompID($componentID);
-if (isset($conf->id)) {
+        if (isset($conf->id)) {
         $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
-    } else {
-        $token = '';
-    }
+            } else {
+                $token = '';
+            }
 
 
         return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf', 'mashup', 'token'));
