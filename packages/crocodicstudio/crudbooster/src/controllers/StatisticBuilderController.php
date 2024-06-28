@@ -246,8 +246,10 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         }
 
         $component_row = CRUDBooster::first('cms_statistic_components', ['componentID' => $componentID]);
+        file_put_contents(__DIR__ . '/getEditComponent.txt', "component_row\n".json_encode($component_row )."\n\n", FILE_APPEND);
 
         $config = json_decode($component_row->config);
+        file_put_contents(__DIR__ . '/getEditComponent.txt', "config\n".json_encode($config)."\n\n", FILE_APPEND);
         //dd($config);
 
         //if $config is null, create mashups and object proprieties and assign 0 value
@@ -258,17 +260,20 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         }
 
+        //qlik_confs row
         $conf = QlikMashupController::getConf($config->mashups);
+        file_put_contents(__DIR__ . '/conf.txt', json_encode($conf)."\n\n", FILE_APPEND);
 
         $command = 'configuration';
 
         $mashups = QlikMashupController::getMashups();
         $mashup = QlikMashupController::getMashupFromCompID($componentID);
+
         if (isset($conf->id)) {
-        $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
-            } else {
-                $token = '';
-            }
+            $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+        } else {
+            $token = '';
+        }
 
         file_put_contents(__DIR__ . '/mashup.txt', json_encode($mashup)."\n\n", FILE_APPEND);
 
