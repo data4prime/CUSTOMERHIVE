@@ -25,11 +25,7 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 
 
-    if (!isset($config->object)) {
-    
-            $config->object = '';
-
-    }
+    $config = json_decode($mashup->config);
 
 
 
