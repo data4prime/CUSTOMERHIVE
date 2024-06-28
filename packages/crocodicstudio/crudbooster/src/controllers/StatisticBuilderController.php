@@ -252,6 +252,14 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         file_put_contents(__DIR__ . '/getEditComponent.txt', "config\n".json_encode($config)."\n\n", FILE_APPEND);
         //dd($config);
 
+        if (!isset($config->mashups)) {
+            $config->mashups = 0;
+        }
+
+        if (!isset($config->object)) {
+            $config->object = 0;
+        }   
+
         //if $config is null, create mashups and object proprieties and assign 0 value
         if ($config == null) {
             $config = new \stdClass();
