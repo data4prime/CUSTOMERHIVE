@@ -277,6 +277,11 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         $mashups = QlikMashupController::getMashups();
         $mashup = QlikMashupController::getMashupFromCompID($componentID);
 
+        if (!$mashup) {
+            $mashup = new \stdClass();
+            $mashup->id = 0;
+        }
+
         if (isset($conf->id)) {
             $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
         } else {
