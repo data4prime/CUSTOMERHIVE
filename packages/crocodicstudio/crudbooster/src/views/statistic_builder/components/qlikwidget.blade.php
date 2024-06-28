@@ -14,7 +14,7 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
         $token = '';
     }*/
 
-    if (!$mashup) {
+    /*if (!$mashup) {
 
         $mashup = new \stdClass();
         $mashup->id = 0;
@@ -23,8 +23,7 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
     
 
     }
-
-
+*/
 
 
 
