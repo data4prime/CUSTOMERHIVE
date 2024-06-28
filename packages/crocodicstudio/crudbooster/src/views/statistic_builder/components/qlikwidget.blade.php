@@ -23,7 +23,7 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
     }
 
-dd($mashup);
+/*dd($mashup);*/
 
     /*if (!isset($config)) {
         $config = new \stdClass();
