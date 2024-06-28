@@ -270,7 +270,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
                 $token = '';
             }
 
-        file_put_contents(__DIR__ . '/mashup.txt', print_r($mashup, true));
+        file_put_contents(__DIR__ . '/mashup.txt', json_encode($mashup)."\n\n", FILE_APPEND);
 
 
         return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf', 'mashup', 'token'));
