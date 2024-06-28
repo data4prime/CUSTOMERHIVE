@@ -250,7 +250,13 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         $config = json_decode($component_row->config);
         file_put_contents(__DIR__ . '/getEditComponent.txt', "config\n".json_encode($config)."\n\n", FILE_APPEND);
-        //dd($config);
+        //dd($c//if $config is null, create mashups and object proprieties and assign 0 value
+        if (!$config) {
+            $config = new \stdClass();
+            $config->mashups = 0;
+            $config->object = 0;
+
+        }
 
         if (!isset($config->mashups)) {
             $config->mashups = 0;
@@ -260,13 +266,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $config->object = 0;
         }   
 
-        //if $config is null, create mashups and object proprieties and assign 0 value
-        if ($config == null) {
-            $config = new \stdClass();
-            $config->mashups = 0;
-            $config->object = 0;
-
-        }
+        
 
         //qlik_confs row
         $conf = QlikMashupController::getConf($config->mashups);
