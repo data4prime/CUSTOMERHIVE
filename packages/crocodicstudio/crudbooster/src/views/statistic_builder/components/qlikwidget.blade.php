@@ -31,6 +31,11 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
     }*/
 
+    if (isser($config->object)) {
+    
+            $config->object = '';
+
+    }
 
 
     /*if (!isset($config)) {
@@ -113,7 +118,7 @@ function update_objects(select){
 
 
 <div id='{{$componentID}}' style="width: 100%;height: 100%;">
-{!! dd($config) !!}
+
 <iframe src='/mashup-objects/{{$mashup->id}}/{{$componentID}}/{{$config->object}}'  id="configuration" frameborder="0" style="width: 100%;height:30px;"></iframe>
 
 
