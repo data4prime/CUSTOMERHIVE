@@ -18,10 +18,18 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
         $mashup = new \stdClass();
         $mashup->id = 0;
         $mashup->mashupname = 'Choose Conf';
-        $mashup->object = '';
+        $mashup->object = 'null';
     
 
     }
+
+/*
+    if (!isset($mashup->object)) {
+
+        $mashup->object = 'null';
+    
+
+    }*/
 
 /*dd($mashup);*/
 
