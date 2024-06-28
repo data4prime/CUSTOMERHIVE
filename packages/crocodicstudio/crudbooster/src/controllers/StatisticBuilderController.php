@@ -282,4 +282,132 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         //Your code here
         $arr['slug'] = str_slug($arr['name']);
     }
+
+    public function mashup($componentID) {
+
+       /* $mashups = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
+
+
+
+        if ($mashups) {
+            $mashups = json_decode($mashups->config);
+
+            if (isset($mashups->mashups)){
+                $mashup = DB::table('qlik_mashups')->where('id', $mashups->mashups)->first();
+                if ($mashup) {
+                $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
+                } else {
+                    $qlik_conf = null;
+
+                }
+            } else {
+                $mashup = null;
+                $qlik_conf = null;
+            }
+
+
+    
+
+        
+        }  else {
+            $mashup = null;
+            $qlik_conf = null;
+        }
+        
+
+        if ($mashup && $qlik_conf) {
+            return view('mashup', compact('componentID', 'mashup', 'qlik_conf', 'mashups'));
+        }
+*/
+
+            $mashups = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
+
+            $qlik_conf = null;
+            $mashup = null;
+
+            if ($mashups) {
+                $mashups = json_decode($mashups->config);
+
+                if (isset($mashups->mashups)) {
+                    $mashup = DB::table('qlik_mashups')->where('id', $mashups->mashups)->first();
+                    if ($mashup) {
+                        $qlik_conf_record = DB::table('qlik_confs')->where('id', $mashup->conf)->first();
+                        if ($qlik_conf_record) {
+                            $qlik_conf = $qlik_conf_record->id;
+                        }
+                    }
+                }
+            }
+
+            if ($mashup && $qlik_conf) {
+                return view('mashup', compact('componentID', 'mashup', 'qlik_conf', 'mashups'));
+            }
+
+
+
+    }
+
+    public function mashup_objects($mashup, $componentID, $objectid) {
+        $comp = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
+
+        $config = new \stdClass();
+        $config->mashups = 0;
+        $config->object = 0;
+
+        if ($comp) {
+            $decodedConfig = json_decode($comp->config);
+            if ($decodedConfig) {
+                $config = $decodedConfig;
+            }
+        }
+
+        $mashup = DB::table('qlik_mashups')->where('id', $config->mashups)->first();
+        $qlik_conf = null;
+
+        if ($mashup) {
+            $qlik_conf_record = DB::table('qlik_confs')->where('id', $mashup->conf)->first();
+            if ($qlik_conf_record) {
+                $qlik_conf = $qlik_conf_record->id;
+            }
+        }
+
+        if ($mashup && $qlik_conf) {
+            return view('mashup_objects', compact('componentID', 'mashup', 'qlik_conf', 'config'));
+        }
+
+/*        $comp = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
+
+
+
+    if ($comp) {
+        $config = json_decode($comp->config);
+    }
+
+    if (!$config) {
+        $config = new \stdClass();
+        $config->mashups = 0;
+        $config->object = 0;
+    }
+
+    $mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
+    if ($mashup) {
+        $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
+    } else {
+        $qlik_conf = null;
+    }
+    
+
+
+
+    if ($mashup && $qlik_conf) {
+        return view('mashup_objects', compact('componentID', 'mashup', 'qlik_conf', 'config'));
+    }
+*/
+
+
+    }
+
+
+
+
 }
