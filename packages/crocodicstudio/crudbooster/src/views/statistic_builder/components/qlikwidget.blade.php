@@ -23,29 +23,14 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
     }
 
-/*
-    if (!isset($mashup->object)) {
 
-        $mashup->object = 'null';
-    
 
-    }*/
-
-    if (isser($config->object)) {
+    if (isset($config->object)) {
     
             $config->object = '';
 
     }
 
-
-    /*if (!isset($config)) {
-        $config = new \stdClass();
-        $config->mashups = 0;
-        $config->object = 0;
-    }
-
-dd($config);
-*/
 
 
 @endphp 
