@@ -86,6 +86,6 @@ Route::get('admin/qlik_confs/QlikServerSenseQMC/{id}', $controllers_base_path . 
 Route::get('admin/module_generator/enable', $controllers_base_path . 'ModulsController@enable');
 Route::post('admin/module_generator/save_enable', $controllers_base_path . 'ModulsController@saveEnable');
 
-Route::get('/mashup/{componentID}', 'StatisticBuilderController@mashup');
+Route::get('/mashup/{componentID}',$controllers_base_path . 'StatisticBuilderController@mashup');
 
-Route::get('/mashup-objects/{mashup}/{componentID}/{objectid}','StatisticBuilderController@mashup_objects' );
+Route::get('/mashup-objects/{mashup}/{componentID}/{objectid}',$controllers_base_path .'StatisticBuilderController@mashup_objects' );
