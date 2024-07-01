@@ -277,6 +277,7 @@ class QlikHelper
     $privateKey = $qlik_conf->private_key;
 
     $privateKey =$qlik_conf->tenant_path .$privateKey;
+    dd($privateKey);
     $privateKey = file_get_contents($privateKey);
     dd($privateKey);
 
