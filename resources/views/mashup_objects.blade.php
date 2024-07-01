@@ -6,7 +6,9 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 $conf = QlikMashupController::getConf($qlik_conf);
+
 $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+
 
 
 @endphp 

@@ -331,7 +331,11 @@ class QlikMashupController extends CBController
 	public static function getMashups() {
 		//se super admin prendo tutti i mashups
 		if (CRUDBooster::isSuperadmin()) {
-			$mashups = DB::table('qlik_mashups')->get();
+			$mashups = DB::table('qlik_mashups')
+			//join qlink_conf per avere il nome della conf
+			->join('qlik_confs', 'qlik_mashups.conf', '=', 'qlik_confs.id')
+			->where('qlik_confs.type', 'SAAS')
+			->get();
 		} elseif (UserHelper::isTenantAdmin()) {
 			$mashups = DB::table('qlik_mashups')
 				->join('qlikmashups_tenants', 'qlik_mashups.id', '=', 'qlikmashups_tenants.qlikmashup_id')
