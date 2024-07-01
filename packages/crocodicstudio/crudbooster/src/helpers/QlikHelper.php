@@ -262,7 +262,7 @@ class QlikHelper
   public static function getJWTToken($id, $conf_id)
   {
 
-    dd($conf_id);
+    //dd($conf_id);
     $current_user = \App\User::find($id);
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
@@ -278,9 +278,9 @@ class QlikHelper
     $privateKey = $qlik_conf->private_key;
 
     $privateKey =$qlik_conf->tenant_path .$privateKey;
-    dd($privateKey);
+    //dd($privateKey);
     $privateKey = file_get_contents($privateKey);
-    dd($privateKey);
+    //dd($privateKey);
 
     /*if (empty($check_idp)) {
       $check_idp = QlikHelper::randString(64);
