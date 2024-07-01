@@ -9,11 +9,7 @@ console.log("isLoggedIn");
     }
     
 
-    console.log("isLoggedIn");
-    console.log(isLoggedIn);
-    console.log("check");
-    console.log(check);
-    
+
     var selState;
     var query;
     var filters;
