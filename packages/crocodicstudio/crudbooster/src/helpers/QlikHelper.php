@@ -245,7 +245,6 @@ class QlikHelper
 
     //Execute and get response
     $raw_response = curl_exec($ch);
-	dd($raw_response);
 
     if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
