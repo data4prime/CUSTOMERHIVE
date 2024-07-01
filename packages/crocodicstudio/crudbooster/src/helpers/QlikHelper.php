@@ -174,7 +174,7 @@ class QlikHelper
     $qlik_user = DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->first();
     if (!$qlik_user) {
       $data['error'] = 'User not found!';
-      dd($data);
+      //dd($data);
       CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
       exit;
     }
@@ -186,7 +186,7 @@ class QlikHelper
 
     if (empty($qlik_login) or empty($user_directory)) {
       $data['error'] = 'User credentials missing. Ask an admin to set your qlik id and user directory';
-      dd($data);
+      //dd($data);
       CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
       exit;
     }
