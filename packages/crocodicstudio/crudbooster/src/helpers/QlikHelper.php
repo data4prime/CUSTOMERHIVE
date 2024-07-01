@@ -262,6 +262,7 @@ class QlikHelper
   public static function getJWTToken($id, $conf_id)
   {
 
+    dd($conf_id);
     $current_user = \App\User::find($id);
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
