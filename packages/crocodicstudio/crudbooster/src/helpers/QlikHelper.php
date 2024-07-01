@@ -278,6 +278,7 @@ class QlikHelper
 
     $privateKey =$qlik_conf->tenant_path .$privateKey;
     $privateKey = file_get_contents($privateKey);
+    dd($privateKey);
 
     /*if (empty($check_idp)) {
       $check_idp = QlikHelper::randString(64);
