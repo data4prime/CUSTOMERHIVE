@@ -1,6 +1,10 @@
 async function main() {
-    const isLoggedIn = await jwtLogin();
     const check = await checkLoggedIn();
+    if (check.status === 401) {
+        const isLoggedIn = await jwtLogin();
+    }
+    
+    
 
     console.log("isLoggedIn");
     console.log(isLoggedIn);
