@@ -220,7 +220,7 @@ class QlikHelper
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
 	
-	//dd($QRSurl . $endpoint);
+	dd($QRSurl . $endpoint);
 
     $ch = curl_init($QRSurl . $endpoint);
 
