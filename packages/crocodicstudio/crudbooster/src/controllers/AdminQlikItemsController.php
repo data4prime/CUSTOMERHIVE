@@ -448,6 +448,7 @@ class AdminQlikItemsController extends CBController
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.missing_item"));
 		}
 		$conf = QlikHelper::getConfFromItem($qlik_item_id);
+		dd($conf);
 		$type = $conf->type;
 		//$type = CRUDBooster::getSetting('type');
 		//add menu settings
