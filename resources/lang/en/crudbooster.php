@@ -187,7 +187,7 @@ return [
     'UserPermissions' => 'User Permissions',
     'Qlik_Development_Tools' => 'Qlik Platform',
     'Qlik_Configuration' => 'Qlik Configuration',
-    'Qlik_Mashups' => 'Qlik Mashups',
+    'Qlik_Mashups' => 'Qlik Apps',
     'Dashboard_Layouts' => 'Dashboard Layouts',
     'Qlik_Sense_Hub' => 'Qlik Sense HUB',
     'Qlik_Sense_QMC' => 'Qlik Sense QMC',

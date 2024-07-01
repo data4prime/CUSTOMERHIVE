@@ -30,7 +30,7 @@ var appId = '{{$mashup->appid}}';
 var componentID = '{{$componentID}}';
 var objectid = '{{$mashups->object}}';
 
-console.log("EMPTY objectid: " + objectid);
+
 
 </script>
 

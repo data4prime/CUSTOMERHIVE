@@ -1,12 +1,12 @@
 async function main() {
     const isLoggedIn = await jwtLogin();
     const check = await checkLoggedIn();
-/*
+
     console.log("isLoggedIn");
     console.log(isLoggedIn);
     console.log("check");
     console.log(check);
-*/
+
     var selState;
     var query;
     var filters;
@@ -145,7 +145,7 @@ async function checkLoggedIn() {
         }
     });
 
-    return response.ok;
+    return response;
 }
 
 // Avvia la funzione principale
