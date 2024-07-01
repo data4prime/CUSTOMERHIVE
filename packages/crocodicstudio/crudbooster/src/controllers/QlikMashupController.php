@@ -339,14 +339,21 @@ class QlikMashupController extends CBController
 			->get();
 		} elseif (UserHelper::isTenantAdmin()) {
 			$mashups = DB::table('qlik_mashups')
+				->select('qlik_mashups.*')
 				->join('qlikmashups_tenants', 'qlik_mashups.id', '=', 'qlikmashups_tenants.qlikmashup_id')
+->join('qlik_confs', 'qlik_mashups.conf', '=', 'qlik_confs.id')
+					->where('qlik_confs.type', 'SAAS')
 				->where('tenant_id', UserHelper::current_user_tenant())
+
 				->get();
 		} else {
 			$mashups = DB::table('qlik_mashups')
+->select('qlik_mashups.*')
 				->join('qlikmashups_groups', 'qlik_mashups.id', '=', 'qlikmashups_groups.qlikmashup_id')
 				->join('group_users', 'group_users.group_id', '=', 'qlikmashups_groups.group_id')
+->join('qlik_confs', 'qlik_mashups.conf', '=', 'qlik_confs.id')
 				->where('group_users.user_id', CRUDBooster::myId())
+->where('qlik_confs.type', 'SAAS')
 				->get();
 		}
 

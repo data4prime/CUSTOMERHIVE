@@ -164,29 +164,19 @@ class QlikHelper
 	} else {
 		$qlik_conf = DB::table('qlik_confs')->where('id', $conf_id->qlik_conf)->first();
 	}
-    
-
-    //dd($qlik_conf->id);
-
-    //dd(DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->toSql());
-
 
     $qlik_user = DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->first();
     if (!$qlik_user) {
       $data['error'] = 'User not found!';
-      //dd($data);
       CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
       exit;
     }
 
-    //UserId
     $qlik_login = $qlik_user->qlik_login;
-    //User Directory
     $user_directory = $qlik_user->user_directory;
 
     if (empty($qlik_login) or empty($user_directory)) {
       $data['error'] = 'User credentials missing. Ask an admin to set your qlik id and user directory';
-      //dd($data);
       CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
       exit;
     }
@@ -194,24 +184,14 @@ class QlikHelper
 
     $QRSurl = $qlik_conf->qrsurl .':'.$qlik_conf->port;
 
-    //$QRSurl = CRUDBooster::getSetting('qrsurl');
-
     $xrfkey = '0123456789abcdef';
     $endpoint = $qlik_conf->endpoint . "/ticket?xrfkey=" . $xrfkey;
-    //$endpoint = CRUDBooster::getSetting('endpoint') . "/ticket?xrfkey=" . $xrfkey;
 
-    //$QRSCertfile = asset(CRUDBooster::getSetting('QRSCertfile'));
-    //$QRSCertkeyfile = asset(CRUDBooster::getSetting('QRSCertkeyfile'));
-
-    //$QRSCertfile = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertfile');
-    //$QRSCertfile = env('APP_PATH').'/storage/app/public'.$qlik_conf->QRSCertfile;
-	$QRSCertfile =$qlik_conf->tenant_path.$qlik_conf->QRSCertfile;
+	  $QRSCertfile =$qlik_conf->tenant_path.$qlik_conf->QRSCertfile;
 
     $QRSCertkeyfile = $qlik_conf->tenant_path.$qlik_conf->QRSCertkeyfile;
 
-    //$QRSCertkeyfile = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertkeyfile');
     $QRSCertkeyfilePassword =$qlik_conf->QRSCertkeyfilePassword;
-    //$QRSCertkeyfilePassword = CRUDBooster::getSetting('QRSCertkeyfilePassword');
 
     $headers = array(
       'Accept: application/json',
@@ -219,13 +199,10 @@ class QlikHelper
       'x-qlik-xrfkey: ' . $xrfkey,
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
-	
-	//dd($QRSurl . $endpoint);
 
     $ch = curl_init($QRSurl . $endpoint);
 
     curl_setopt($ch, CURLOPT_VERBOSE, true);
-    // curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_POSTFIELDS, '{
       "UserId":"' . $qlik_login . '",
@@ -235,7 +212,6 @@ class QlikHelper
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSLCERT, $QRSCertfile);
     curl_setopt($ch, CURLOPT_SSLKEY, $QRSCertkeyfile);
-    // #RAMA no password
     if (!empty($QRSCertkeyfilePassword)) {
       curl_setopt($ch, CURLOPT_KEYPASSWD, $QRSCertkeyfilePassword);
     }
@@ -249,20 +225,13 @@ class QlikHelper
     if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
     }
-    //dd($error_msg);
-
-
     $response = json_decode($raw_response);
-    //dd($response);
-
     return isset($response->Ticket) ? $response->Ticket : '';
-    //return isset($response['Ticket']) ? $response['Ticket'] : '';
   }
 
   public static function getJWTToken($id, $conf_id)
   {
 
-    //dd($conf_id);
     $current_user = \App\User::find($id);
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
@@ -272,19 +241,10 @@ class QlikHelper
 
     $expire = $issuedA2->addMinutes(60)->timestamp;
 
-    //$check_idp = $current_user->idp_qlik;
-
-    //$privateKey = CRUDBooster::getSetting('private_key');
     $privateKey = $qlik_conf->private_key;
 
     $privateKey =$qlik_conf->tenant_path .$privateKey;
-    //dd($privateKey);
     $privateKey = file_get_contents($privateKey);
-    //dd($privateKey);
-
-    /*if (empty($check_idp)) {
-      $check_idp = QlikHelper::randString(64);
-    }*/
 
     $keyid = $qlik_conf->keyid;
 
@@ -327,7 +287,6 @@ class QlikHelper
     ];
 
     $myToken = JWT::encode($payload, $privateKey, 'RS256', $keyid, $header);
-    //file_put_contents(__DIR__."/log.txt", $myToken."\n", FILE_APPEND);
 
     return $myToken;
   }
@@ -336,15 +295,9 @@ class QlikHelper
   {
 
     $current_user = \App\User::find($id);
-    //file_put_contents(__DIR__."/create_user.txt", "CURRENT USER \n".json_encode($current_user)."\n\n", FILE_APPEND);
-
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
-    //file_put_contents(__DIR__."/create_user.txt", "QLIK CONF \n".json_encode($qlik_conf)."\n\n", FILE_APPEND);
-
     $token = QlikHelper::getJWTToken($id, $conf_id);
-
-    //file_put_contents(__DIR__."/create_user.txt", "TOKEN \n".json_encode($token)."\n\n", FILE_APPEND);
 
     $curl = curl_init();
 
@@ -369,8 +322,6 @@ class QlikHelper
 
     $response = curl_exec($curl);
 
-    //file_put_contents(__DIR__."/create_user.txt", "RESPONSE /login/jwt-session  \n".json_encode($response)."\n\n", FILE_APPEND);
-
     if ($response == "OK") {
 
       curl_setopt_array($curl, array(
@@ -392,8 +343,6 @@ class QlikHelper
 
 
       $response = json_decode($response);
-
-      //file_put_contents(__DIR__."/create_user.txt", "RESPONSE /api/v1/users/me  \n".json_encode($response)."\n\n", FILE_APPEND);
 
       $sub = $response->subject;
 

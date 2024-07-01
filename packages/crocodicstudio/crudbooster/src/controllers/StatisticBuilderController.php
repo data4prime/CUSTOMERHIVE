@@ -108,7 +108,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
     public function getShow($slug)
     {
-        //dd("AAA");
+
         $this->cbLoader();
         $row = CRUDBooster::first($this->table, ['slug' => $slug]);
         $id_cms_statistics = $row->id;
@@ -139,14 +139,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
     {
         $rows = DB::table('cms_statistic_components')->where('id_cms_statistics', $id_cms_statistics)->where('area_name', $area_name)
                 ->orderby('sorting', 'asc')->get();
-        /*foreach ($rows as $k => $row) {
-            $config = json_decode($row->config);
-            if ($config) {
-                $conf = QlikMashupController::getConf($config->mashups);
-                $rows[$k]->conf = $conf;
-            }
-        }
-        dd($rows);*/
+
         return response()->json(['components' => $rows]);
     }
 
@@ -163,7 +156,6 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $mashup = DB::table('qlik_mashups')->where('id', $config->mashups)->first();
             if ($mashup) {
                 $conf = QlikMashupController::getConf($mashup->conf);
-                //dd($conf);
             } else {
                 $conf = null;
             }
@@ -173,7 +165,6 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $config->mashups = 0;
             $config->object = 0;
         }
-        //dd($conf);
         $mashup = QlikMashupController::getMashupFromCompID($componentID);
         if (isset($conf->id)) {
         $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
@@ -185,7 +176,6 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         $component_name = $component->component_name;
         $area_name = $component->area_name;
 
-        //$config = json_decode($component->config);
         if ($config) {
             foreach ($config as $key => $value) {
                 if ($value) {
@@ -246,11 +236,9 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         }
 
         $component_row = CRUDBooster::first('cms_statistic_components', ['componentID' => $componentID]);
-        file_put_contents(__DIR__ . '/getEditComponent.txt', "component_row\n".json_encode($component_row )."\n\n", FILE_APPEND);
 
         $config = json_decode($component_row->config);
-        file_put_contents(__DIR__ . '/getEditComponent.txt', "config\n".json_encode($config)."\n\n", FILE_APPEND);
-        //dd($c//if $config is null, create mashups and object proprieties and assign 0 value
+
         if (!$config) {
             $config = new \stdClass();
             $config->mashups = 0;
@@ -266,11 +254,8 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $config->object = 0;
         }   
 
-        
 
-        //qlik_confs row
         $conf = QlikMashupController::getConf($config->mashups);
-        file_put_contents(__DIR__ . '/conf.txt', json_encode($conf)."\n\n", FILE_APPEND);
 
         $command = 'configuration';
 
@@ -287,9 +272,6 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         } else {
             $token = '';
         }
-
-        file_put_contents(__DIR__ . '/mashup.txt', json_encode($mashup)."\n\n", FILE_APPEND);
-
 
         return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf', 'mashup', 'token'));
     }
@@ -318,46 +300,10 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
     public function hook_before_add(&$arr)
     {
-        //Your code here
         $arr['slug'] = str_slug($arr['name']);
     }
 
     public function mashup($componentID) {
-
-       /* $mashups = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
-
-
-
-        if ($mashups) {
-            $mashups = json_decode($mashups->config);
-
-            if (isset($mashups->mashups)){
-                $mashup = DB::table('qlik_mashups')->where('id', $mashups->mashups)->first();
-                if ($mashup) {
-                $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
-                } else {
-                    $qlik_conf = null;
-
-                }
-            } else {
-                $mashup = null;
-                $qlik_conf = null;
-            }
-
-
-    
-
-        
-        }  else {
-            $mashup = null;
-            $qlik_conf = null;
-        }
-        
-
-        if ($mashup && $qlik_conf) {
-            return view('mashup', compact('componentID', 'mashup', 'qlik_conf', 'mashups'));
-        }
-*/
 
             $mashups = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
 
@@ -407,7 +353,6 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $config->object = 0;
         }
 
-        //$mashup = DB::table('qlik_mashups')->where('id', $config->mashups)->first();
         $mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
         $qlik_conf = null;
 
@@ -418,42 +363,9 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             }
         }
 
-       // file_put_contents(__DIR__ . '/mashup_objects.txt', json_encode($mashup)."\n\n", FILE_APPEND);
-       // file_put_contents(__DIR__ . '/mashup_objects.txt', json_encode($qlik_conf)."\n\n", FILE_APPEND);
-
         if ($mashup && $qlik_conf) {
             return view('mashup_objects', compact('componentID', 'mashup', 'qlik_conf', 'config'));
         }
-
-/*        $comp = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
-
-
-
-    if ($comp) {
-        $config = json_decode($comp->config);
-    }
-
-    if (!$config) {
-        $config = new \stdClass();
-        $config->mashups = 0;
-        $config->object = 0;
-    }
-
-    $mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
-    if ($mashup) {
-        $qlik_conf = DB::table('qlik_confs')->where('id', $mashup->conf)->first()->id;
-    } else {
-        $qlik_conf = null;
-    }
-    
-
-
-
-    if ($mashup && $qlik_conf) {
-        return view('mashup_objects', compact('componentID', 'mashup', 'qlik_conf', 'config'));
-    }
-*/
-
 
     }
 

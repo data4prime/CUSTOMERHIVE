@@ -1,33 +1,4 @@
-@php 
-/*
-use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 
-use crocodicstudio\crudbooster\controllers\QlikMashupController;
-
-use crocodicstudio\crudbooster\helpers\CRUDBooster;
-*/
-
-   /* $mashup = QlikMashupController::getMashupFromCompID($componentID);*/
-    /*if (isset($conf->id)) {
-        $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
-    } else {
-        $token = '';
-    }*/
-
-    /*if (!$mashup) {
-
-        $mashup = new \stdClass();
-        $mashup->id = 0;
-        $mashup->mashupname = 'Choose Conf';
-        $mashup->object = 'null';
-    
-
-    }
-*/
-
-
-
-@endphp 
 @if($command=='layout')
 
 <style>

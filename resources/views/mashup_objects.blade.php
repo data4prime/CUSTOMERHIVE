@@ -33,13 +33,6 @@ var objectid = '{{$config->object}}';
 var hidden_object = parent.document.getElementById('mashup_object_hidden');
 var hidden_app = parent.document.getElementById('mashup_app_hidden');
 
-/*
-console.log("hidden_object: " + hidden_object.value);
-console.log("hidden_app: " + hidden_app.value);
-console.log("objectid: "+objectid);
-console.log("mashupId: "+mashupId);
-*/
-
 </script>
 
   <div id="title">Loading Qlik App. Please wait.</div>

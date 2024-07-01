@@ -5,8 +5,6 @@ async function main() {
         const isLoggedIn = await jwtLogin();
 
     }
-    
-
 
     var selState;
     var query;
@@ -17,8 +15,6 @@ async function main() {
         host_q = host.split("//")[1];
     }
 
-
-    
     var config = {
         host: host_q, 
         prefix: "/", 
@@ -65,9 +61,6 @@ async function main() {
 
         var mashup_object = parent.document.getElementById('mashup_object');
         mashup_object.removeAttribute('disabled');
-        //console.log("objectsOptions(app)");
-
-
 
     });
 }
@@ -75,8 +68,6 @@ async function main() {
 
 
 function objectsOptions(app) {
-
-//console.log(parent.document.querySelectorAll('#mashup_object_hidden'));
 
 var hidden_object = parent.document.getElementById('mashup_object_hidden');
 
@@ -89,8 +80,7 @@ option_cs.innerHTML = "Current Selections";
 
 
 if (hidden_object.value == "CurrentSelections"  && hidden_app.value == mashupId) {
-//console.log("CurrentSelections");
-//console.log("TRUE");
+
  option_cs.selected = true;
 }
 
@@ -105,25 +95,12 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
             var sheetTitle = value.qData.title;
             var name = value.qData.name;
 
-            /*var hidden_object = parent.document.getElementById('mashup_object_hidden');
-var hidden_app = parent.document.getElementById('mashup_app_hidden');*/
-            
-
             var option = document.createElement('option');
             option.className = 'masterobject-option';
             option.value = sheetId;
             option.innerHTML = name + ' (' + sheetId + ')';
 
             if ( hidden_object.value == sheetId && hidden_app.value == mashupId) {
-
-                /*
-                console.log("--------------------");
-                console.log("hidden_object.value " + hidden_object.value + " == " + objectid);
-                console.log("objectid " + objectid);
-                console.log("hidden_app.value " + hidden_app.value + " == " + mashupId);
-                console.log("mashupId " + mashupId);
-                console.log("--------------------");
-                */
 
                 option.selected = true;
             }
@@ -137,7 +114,6 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');*/
 
 async function jwtLogin() {
     const authHeader = 'Bearer ' + qlik_token;
-    //console.log(authHeader);
 
     const response = await fetch(`${host}/login/jwt-session`, {
         credentials: 'include',
