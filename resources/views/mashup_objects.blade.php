@@ -7,7 +7,10 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 $conf = QlikMashupController::getConf($qlik_conf);
 
-$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+if ($conf->type == 'SAAS') {
+  $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+}
+
 
 
 
