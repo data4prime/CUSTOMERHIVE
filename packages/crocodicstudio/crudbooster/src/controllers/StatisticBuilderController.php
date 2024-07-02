@@ -246,6 +246,9 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         }
 
+        if ($errors) {
+            return view('crudbooster::statistic_builder.components.error', compact('errors'));
+        }
 
         $conf = QlikMashupController::getConf($config->mashups);
 
