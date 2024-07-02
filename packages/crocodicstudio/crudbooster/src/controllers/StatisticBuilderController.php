@@ -246,9 +246,9 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         }
 
-        if ($errors) {
+        /*if ($errors) {
             return view('crudbooster::statistic_builder.components.error', compact('errors'));
-        }
+        }*/
 
         $conf = QlikMashupController::getConf($config->mashups);
 
@@ -267,11 +267,11 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $errors[] = 'Qlik configuration is empty or not selected.';
         }
 
-        if ($errors) {
+        /*if ($errors) {
             return view('crudbooster::statistic_builder.components.error', compact('errors'));
-        }
+        }*/
 
-        return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf', 'mashup', 'token'));
+        return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf', 'mashup', 'token', 'errors'));
     }
 
     public function postSaveComponent()
