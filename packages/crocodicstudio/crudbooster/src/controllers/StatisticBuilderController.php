@@ -228,6 +228,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
     public function getEditComponent($componentID)
     {
+        $errors = [];
         $this->cbLoader();
 
         if (!CRUDBooster::isSuperadmin()) {
@@ -241,22 +242,12 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
 
         if (!$config) {
-            $config = new \stdClass();
-            $config->mashups = 0;
-            $config->object = 0;
+            $errors[] = 'Widget configuration is empty. Please, add configuration for this widget.';
 
         }
 
-        if (!isset($config->mashups)) {
-            $config->mashups = 0;
-        }
-
-        if (!isset($config->object)) {
-            $config->object = 0;
-        }   
 
         $conf = QlikMashupController::getConf($config->mashups);
-        dd($conf);
 
         $command = 'configuration';
 
@@ -264,14 +255,17 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         $mashup = QlikMashupController::getMashupFromCompID($componentID);
 
         if (!$mashup) {
-            $mashup = new \stdClass();
-            $mashup->id = 0;
+            $errors[] = 'Mashup is not selected. Please, select mashup for this widget.';
         }
 
-        if (isset($conf->id)) {
+        if ($conf ) {
             $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
         } else {
-            $token = '';
+            $errors[] = 'Qlik configuration is empty or not selected.';
+        }
+
+        if ($errors) {
+            return view('crudbooster::statistic_builder.components.error', compact('errors'));
         }
 
         return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf', 'mashup', 'token'));
