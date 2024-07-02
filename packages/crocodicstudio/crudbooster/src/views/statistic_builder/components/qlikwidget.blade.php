@@ -102,7 +102,7 @@ function update_objects(select){
             <!--<option value='CurrentSelections'>Current Selections</option>-->
 
         </select>
-        <input type="hidden" id="mashup_object_hidden" value="{{$config->object}}">
+        <input type="hidden" id="mashup_object_hidden" value="{{ isset($config->object) ? $config->object : ''}}">
     </div>
 
 
