@@ -585,7 +585,6 @@ class CBController extends Controller
                 if (isset($col['visible']) && $col['visible'] === false) {
                     continue;
                 }
-                file_put_contents(__DIR__."/log.txt", json_encode($col)."\n\n", FILE_APPEND);
                 $value = @$row->{$col['field']};
                 $title = @$row->{$this->title_field};
                 $label = $col['label'];
@@ -595,6 +594,7 @@ class CBController extends Controller
                         $value = "<a  data-lightbox='roadtrip' rel='group_{{$table}}' title='$label: $title' href='" . UserHelper::icon(@$row->id) . "'><img width='40px' height='40px' src='" . UserHelper::icon(@$row->id) . "'/></a>";
                     } else {
                         $pic = (strpos($value, 'http://') !== false) ? $value : asset($value);
+                        $pic = '/storage' . $value;
                         $value = "<a data-lightbox='roadtrip'  rel='group_{{$table}}' title='$label: $title' href='" . $pic . "'><img width='40px' height='40px' src='" . $pic . "'/></a>";
                     }
                 }
