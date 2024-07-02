@@ -305,7 +305,7 @@ class QlikMashupController extends CBController
 
 	public static function getConf($id) {
 		$qlik_conf = DB::table('qlik_confs')->where('id', $id)->first();
-
+		dd($qlik_conf);
 		$return = [];
 
 		$return['type'] = $qlik_conf->type;
