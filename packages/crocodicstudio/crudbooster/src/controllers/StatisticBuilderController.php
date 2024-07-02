@@ -270,6 +270,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         } else {
             //$errors[] = 'Qlik configuration is empty or not selected.';
             $conf = null;
+            $token = null;
         }
 
         /*if ($errors) {
