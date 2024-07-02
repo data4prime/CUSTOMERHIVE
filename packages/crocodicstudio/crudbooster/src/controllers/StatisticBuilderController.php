@@ -239,7 +239,6 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         $config = json_decode($component_row->config);
 
-        dd($config);
 
         if (!$config) {
             $config = new \stdClass();
@@ -257,7 +256,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         }   
 
         $conf = QlikMashupController::getConf($config->mashups);
-        //dd($conf);
+        dd($conf);
 
         $command = 'configuration';
 
