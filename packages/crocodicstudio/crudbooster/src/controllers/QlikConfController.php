@@ -73,7 +73,7 @@ class QlikConfController extends CBController
         $this->form[] = ['label' => 'Private Key', 'name' => 'private_key', 'type' => 'upload', 'width' => 'col-sm-10', 'placeholder' => 'Enter Private Key'];
 
         $this->form[] = ['label' => 'Debug', 'name' => 'debug', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'Inactive;Active'];
-	$this->form[] = ['label' => 'Tenant Path', 'name' => 'tenant_path', 'type' => 'hidden', 'width' => 'col-sm-10', 'value' => env('APP_PATH').'/storage/app/public/'];
+	$this->form[] = ['label' => 'Tenant Path', 'name' => 'tenant_path', 'type' => 'hidden', 'width' => 'col-sm-10', 'value' => env('APP_URL')];
 
 		//only superadmin can edit tenant
     if (CRUDBooster::isSuperadmin()) {
