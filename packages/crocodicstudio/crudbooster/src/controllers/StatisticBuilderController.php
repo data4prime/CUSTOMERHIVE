@@ -239,6 +239,8 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         $config = json_decode($component_row->config);
 
+        dd($config);
+
         if (!$config) {
             $config = new \stdClass();
             $config->mashups = 0;
