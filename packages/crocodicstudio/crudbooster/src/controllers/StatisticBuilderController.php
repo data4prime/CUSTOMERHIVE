@@ -250,7 +250,11 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             return view('crudbooster::statistic_builder.components.error', compact('errors'));
         }*/
 
-        $conf = QlikMashupController::getConf($config->mashups);
+        if (isset($config->mashups)) {
+            $conf = QlikMashupController::getConf($config->mashups);
+        } else {
+            $errors[] = 'Mashup is not selected. Please, select mashup for this widget.';
+        }
 
         $command = 'configuration';
 
