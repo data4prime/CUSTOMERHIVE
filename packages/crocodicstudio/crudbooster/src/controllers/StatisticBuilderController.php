@@ -256,6 +256,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
 
         $conf = QlikMashupController::getConf($config->mashups);
+        dd($conf);
 
         $command = 'configuration';
 
