@@ -92,7 +92,7 @@ function update_objects(select){
             @endif
             @endforeach
         </select>
-<input type="hidden" id="mashup_app_hidden" value="{{$config->mashups}}">
+<input type="hidden" id="mashup_app_hidden" value="{{ isset($config->mashups) ?  $config->mashups : '' }}">
     </div>
 
 <div class="form-group">
