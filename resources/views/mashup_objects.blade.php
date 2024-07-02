@@ -9,6 +9,8 @@ $conf = QlikMashupController::getConf($qlik_conf);
 //dd($conf);
 if ($conf->type == 'SAAS') {
   $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+} else {
+  $token = '';
 }
 
 
