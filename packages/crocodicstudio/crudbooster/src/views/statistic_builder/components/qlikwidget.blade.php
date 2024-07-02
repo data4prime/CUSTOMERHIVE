@@ -58,7 +58,7 @@ function update_objects(select){
 
     var iframe = document.getElementById('configuration');
 
-    iframe.src = '/mashup-objects/' + mashup_id + '/{{$componentID}}'+'/{{$config->object}}';
+    iframe.src = '/mashup-objects/' + mashup_id + '/{{$componentID}}'+'/{{isset($config->object) ? $config->object : ""}}';
 
 
 
