@@ -69,7 +69,7 @@ function update_objects(select){
 
 <div id='{{$componentID}}' style="width: 100%;height: 100%;">
 
-<iframe src='/mashup-objects/{{ isset($mashup->id) ? $mashup->id : ""}}/{{$componentID}}/{{isset($config->object) ? $config->object : "empty"}}'  id="configuration" frameborder="0" style="width: 100%;height:30px;"></iframe>
+<iframe src='/mashup-objects/{{ isset($mashup->id) ? $mashup->id : 0}}/{{$componentID}}/{{isset($config->object) ? $config->object : "empty"}}'  id="configuration" frameborder="0" style="width: 100%;height:30px;"></iframe>
 
 
 
