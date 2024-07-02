@@ -269,6 +269,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
         } else {
             //$errors[] = 'Qlik configuration is empty or not selected.';
+            $conf = null;
         }
 
         /*if ($errors) {
