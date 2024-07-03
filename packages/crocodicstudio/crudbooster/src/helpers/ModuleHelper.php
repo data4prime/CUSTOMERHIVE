@@ -182,6 +182,7 @@ if(ModuleHelper::is_manually_generated($module->table)) {
   if ($module->table == "qlik_confs") {
       //dd(UserHelper::current_user_tenant()." ".$entity_tenant);
       if (UserHelper::current_user_tenant() == $entity_tenant && UserHelper::isTenantAdmin(CRUDBooster::myId()) ) {
+        dd("YES");
         return true;
       }
   }
