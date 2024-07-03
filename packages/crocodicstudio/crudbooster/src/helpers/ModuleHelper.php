@@ -11,6 +11,66 @@ use Session;
 
 class ModuleHelper
 {
+  public static function get_created_by_id($module, $row)
+  {
+    if(ModuleHelper::is_manually_generated($module->table)) {
+
+      $created_by = DB::table($module->table)->where('id', $row->id)->first()->created_by;
+    } else {
+
+      $created_by = null;
+    }
+
+    return $created_by;
+  }
+
+  public static function get_group_id($module, $row)
+  {
+    if(ModuleHelper::is_manually_generated($module->table)) {
+      $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
+    } else {
+
+      if ($module->table == "qlik_confs") {
+        $entity_group = DB::table("qlikconfs_groups")->where('qlik_confs_id', $row->id)->where('group_id',UserHelper::current_user_tenant())->first();//->group_id;
+        if ($entity_group) {
+          $entity_group = $entity_group->group_id;
+        }
+
+      } 
+      if ($module->table == "groups") {
+        $entity_group = DB::table("group_tenants")->where('group_id', $row->id)->where('group_id',UserHelper::current_user_tenant() )->first()->group_id;
+      }
+      if ($module->table == "cms_users") {
+        $entity_group = DB::table($module->table)->where('id', $row->id)->first()->primary_group;
+      }
+    }
+
+    return $entity_group;
+  }
+
+  public static function get_tenant_id($module, $row)
+  {
+    if(ModuleHelper::is_manually_generated($module->table)) {
+      $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
+    } else {
+
+      if ($module->table == "qlik_confs") {
+        $entity_tenant = DB::table("qlikconfs_tenants")->where('qlik_confs_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first();//->tenant_id;
+
+        if ($entity_tenant) {
+          $entity_tenant = $entity_tenant->tenant_id;
+        }
+      } 
+      if ($module->table == "groups") {
+        $entity_tenant = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->tenant_id;
+      }
+      if ($module->table == "cms_users") {
+        $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
+      }
+    }
+
+    return $entity_tenant;
+  }
 
   /**
    *	Encode a column or table name
@@ -198,41 +258,10 @@ if(ModuleHelper::is_manually_generated($module->table)) {
       return true;
     }
 
-    if(ModuleHelper::is_manually_generated($module->table)) {
-      $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
-      $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
-      $created_by = DB::table($module->table)->where('id', $row->id)->first()->created_by;
-    } else {
+    $created_by = ModuleHelper::get_created_by_id($module, $row);
 
-      if ($module->table == "qlik_confs") {
-        $entity_group = DB::table("qlikconfs_groups")->where('qlik_confs_id', $row->id)->where('group_id',UserHelper::current_user_tenant())->first();//->group_id;
-        $entity_tenant = DB::table("qlikconfs_tenants")->where('qlik_confs_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first();//->tenant_id;
-        if ($entity_group) {
-          $entity_group = $entity_group->group_id;
-        }
-        if ($entity_tenant) {
-          $entity_tenant = $entity_tenant->tenant_id;
-        }
-      } /*else if () {
-        $entity_group = DB::table("qlikconfs_groups")->where('group_id', $row->id)->where('group_id',UserHelper::current_user_tenant())->first();//->group_id;
-        $entity_tenant = DB::table("qlikconfs_tenants")->where('tenant_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first();//->tenant_id;
-        if ($entity_group) {
-          $entity_group = $entity_group->group_id;
-        }
-        if ($entity_tenant) {
-          $entity_tenant = $entity_tenant->tenant_id;
-        }
-      }*/
-
-      if ($module->table == "groups") {
-        $entity_group = DB::table("group_tenants")->where('group_id', $row->id)->where('group_id',UserHelper::current_user_tenant() )->first()->group_id;
-        $entity_tenant = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->tenant_id;
-      }
-      if ($module->table == "cms_users") {
-        $entity_group = DB::table($module->table)->where('id', $row->id)->first()->primary_group;
-        $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
-      }
-    }
+    $entity_group = ModuleHelper::get_group_id($module, $row);
+    $entity_tenant = ModuleHelper::get_tenant_id($module, $row);
 
 
     //check correct privilege role
@@ -248,19 +277,19 @@ if(ModuleHelper::is_manually_generated($module->table)) {
       return false;
     }
 
-if (UserHelper::isTenantAdmin(CRUDBooster::myId())) {
-    if(ModuleHelper::can_tenant_admin_view($module, $row, $entity_group, $entity_tenant)) {
-      return true;
-    } 
-}
+    if (UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+        if(ModuleHelper::can_tenant_admin_view($module, $row, $entity_group, $entity_tenant)) {
+          return true;
+        } 
+    }
 
-//se row è di tenant admin e current user non è tenant admin, return false
-if(ModuleHelper::is_manually_generated($module->table)) {
- if (!UserHelper::isTenantAdmin(CRUDBooster::myId()) && $created_by != CRUDBooster::myId() &&  UserHelper::isTenantAdmin($created_by) ) {
-    return false;
+    //se row è di tenant admin e current user non è tenant admin, return false
+    if(ModuleHelper::is_manually_generated($module->table)) {
+      if (!UserHelper::isTenantAdmin(CRUDBooster::myId()) && $created_by != CRUDBooster::myId() &&  UserHelper::isTenantAdmin($created_by) ) {
+          return false;
 
-  }
-}
+      }
+    }
 
 
     //check group/tenant
@@ -312,17 +341,17 @@ if(ModuleHelper::is_manually_generated($module->table)) {
       return true;
     }
 
-if(ModuleHelper::is_manually_generated($module->table)) {
-    $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
-    $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
+    if(ModuleHelper::is_manually_generated($module->table)) {
+      $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
+      $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
 
-    //check tenant admin
-    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
-      return true;
+      //check tenant admin
+      if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+        return true;
+      }
+    } else {
+
     }
-} else {
-
-}
 
 
     if ($module->table == 'cms_menus') {
