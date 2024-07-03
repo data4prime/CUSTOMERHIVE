@@ -173,11 +173,17 @@ if(ModuleHelper::is_manually_generated($module->table)) {
       }
 
   }
-if ($module->table == "cms_users") {
-  if (UserHelper::current_user_tenant() == $entity_tenant && UserHelper::isTenantAdmin(CRUDBooster::myId()) ) {
-    return true;
+  if ($module->table == "cms_users") {
+    if (UserHelper::current_user_tenant() == $entity_tenant && UserHelper::isTenantAdmin(CRUDBooster::myId()) ) {
+      return true;
+    }
   }
-}
+
+  if ($module->table == "qlik_confs") {
+      if (UserHelper::current_user_tenant() == $entity_tenant && UserHelper::isTenantAdmin(CRUDBooster::myId()) ) {
+        return true;
+      }
+  }
 
 
 }
@@ -197,27 +203,34 @@ if ($module->table == "cms_users") {
       $created_by = DB::table($module->table)->where('id', $row->id)->first()->created_by;
     } else {
 
-            if ($module->table == "qlik_confs" || $module->table == "qlik_items") {
+      if ($module->table == "qlik_confs") {
         $entity_group = DB::table("qlikconfs_groups")->where('group_id', $row->id)->where('group_id',UserHelper::current_user_tenant())->first();//->group_id;
         $entity_tenant = DB::table("qlikconfs_tenants")->where('tenant_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first();//->tenant_id;
-              if ($entity_group) {
-                $entity_group = $entity_group->group_id;
-              }
-              if ($entity_tenant) {
-                $entity_tenant = $entity_tenant->tenant_id;
-              }
-      }
+        if ($entity_group) {
+          $entity_group = $entity_group->group_id;
+        }
+        if ($entity_tenant) {
+          $entity_tenant = $entity_tenant->tenant_id;
+        }
+      } /*else if () {
+        $entity_group = DB::table("qlikconfs_groups")->where('group_id', $row->id)->where('group_id',UserHelper::current_user_tenant())->first();//->group_id;
+        $entity_tenant = DB::table("qlikconfs_tenants")->where('tenant_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first();//->tenant_id;
+        if ($entity_group) {
+          $entity_group = $entity_group->group_id;
+        }
+        if ($entity_tenant) {
+          $entity_tenant = $entity_tenant->tenant_id;
+        }
+      }*/
 
       if ($module->table == "groups") {
         $entity_group = DB::table("group_tenants")->where('group_id', $row->id)->where('group_id',UserHelper::current_user_tenant() )->first()->group_id;
         $entity_tenant = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->tenant_id;
       }
-if ($module->table == "cms_users") {
+      if ($module->table == "cms_users") {
         $entity_group = DB::table($module->table)->where('id', $row->id)->first()->primary_group;
         $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
       }
-
-
     }
 
 
