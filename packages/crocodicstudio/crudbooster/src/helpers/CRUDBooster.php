@@ -156,7 +156,11 @@ public static function isProfilePage() {
                 self::resizeImage($file_path . '/' . $filename, $resize_width, $resize_height, $ext);
 
                 //return '/storage'.$file_path . '/' . $filename;
-                return $file_path . '/' . $filename;
+                //return $file_path . '/' . $filename;
+                //get host
+                $host = $_SERVER['HTTP_HOST'];
+                return 'http://' . $host . '/storage' . $file_path . '/' . $filename;
+
             } else {
                 return null;
             }
