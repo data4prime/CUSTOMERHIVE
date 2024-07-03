@@ -267,9 +267,9 @@ class QlikHelper
     //$check_idp = $current_user->idp_qlik;
 
     //$privateKey = CRUDBooster::getSetting('private_key');
-    //$privateKey = $qlik_conf->private_key;
+    $privateKey = $qlik_conf->private_key;
 
-    $privateKey =$qlik_conf->privateKey;
+    //$privateKey =$qlik_conf->privateKey;
     $privateKey = file_get_contents($privateKey);
 
     /*if (empty($check_idp)) {
