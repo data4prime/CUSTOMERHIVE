@@ -313,7 +313,7 @@ class QlikMashupController extends CBController
 
 		if (isset($id) && $qlik_conf) {
 				$return['id'] = $qlik_conf->id;
-				$return['host'] = $qlik_conf->url;
+				$return['host'] = $qlik_conf->qrsurl;
 				$return['webIntegrationId'] = '';
 				$return['port'] = $qlik_conf->port;
 				$return['prefix'] = $qlik_conf->endpoint;

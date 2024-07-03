@@ -27,7 +27,9 @@ if ($conf->type == 'SAAS') {
 <div id="{{$mashup->appid}}" >
 <script  type="text/javascript" >
 
-var qlik_token = '{{$token}}';
+var type = '{{$conf->type}}';
+
+var qlik_token = '{{$conf->type == "SAAS" ? $token : ""}}';
 var host = '{{$conf->host}}';
 var prefix = '{{$conf->prefix}}';
 var port = '{{$conf->port}}';
