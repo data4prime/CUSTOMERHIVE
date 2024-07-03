@@ -13,7 +13,7 @@ if ($conf->type == 'SAAS') {
 } else {
 
   //in realta sarebbe il ticket
-  $token = HelpersQlikHelper::::getTickeFromConf($conf->id) ;
+  $token = HelpersQlikHelper::getTickeFromConf($conf->id) ;
 }
 
 
