@@ -144,6 +144,78 @@ class QlikHelper
       $qlik_item->disablePublicAccess();
     }
   }
+  public static function getTicketFromConf($conf_id)
+  {
+    //get user data
+    $current_user_id = CRUDBooster::myId();
+    $current_user = \App\User::find($current_user_id);
+
+    $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
+
+
+    $qlik_user = DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->first();
+    if (!$qlik_user) {
+      $data['error'] = 'User not found!';
+      CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+      exit;
+    }
+
+    $qlik_login = $qlik_user->qlik_login;
+    $user_directory = $qlik_user->user_directory;
+
+    if (empty($qlik_login) or empty($user_directory)) {
+      $data['error'] = 'User credentials missing. Ask an admin to set your qlik id and user directory';
+      CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+      exit;
+    }
+
+
+    $QRSurl = $qlik_conf->qrsurl .':'.$qlik_conf->port;
+
+    $xrfkey = '0123456789abcdef';
+    $endpoint = $qlik_conf->endpoint . "/ticket?xrfkey=" . $xrfkey;
+
+	  $QRSCertfile =$qlik_conf->tenant_path.$qlik_conf->QRSCertfile;
+
+    $QRSCertkeyfile = $qlik_conf->tenant_path.$qlik_conf->QRSCertkeyfile;
+
+    $QRSCertkeyfilePassword =$qlik_conf->QRSCertkeyfilePassword;
+
+    $headers = array(
+      'Accept: application/json',
+      'Content-Type: application/json',
+      'x-qlik-xrfkey: ' . $xrfkey,
+      'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
+    );
+
+    $ch = curl_init($QRSurl . $endpoint);
+
+    curl_setopt($ch, CURLOPT_VERBOSE, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, '{
+      "UserId":"' . $qlik_login . '",
+      "UserDirectory":"' . $user_directory . '"
+    }');
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSLCERT, $QRSCertfile);
+    curl_setopt($ch, CURLOPT_SSLKEY, $QRSCertkeyfile);
+    if (!empty($QRSCertkeyfilePassword)) {
+      curl_setopt($ch, CURLOPT_KEYPASSWD, $QRSCertkeyfilePassword);
+    }
+    
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+    //Execute and get response
+    $raw_response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+      $error_msg = curl_error($ch);
+    }
+    $response = json_decode($raw_response);
+    return isset($response->Ticket) ? $response->Ticket : '';
+  }
 
   /**
    *	Ottiene il qlik ticket per la connessione
