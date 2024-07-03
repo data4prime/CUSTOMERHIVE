@@ -159,18 +159,12 @@ class QlikHelper
     $current_user = \App\User::find($current_user_id);
 
     $conf_id = DB::table('qlik_items')->where('id',$qlik_item_id )->first();//->qlik_conf;
-	if (!$conf_id) {
-		$qlik_conf = DB::table('qlik_confs')->where('id', $qlik_item_id)->first();
-	} else {
-		$qlik_conf = DB::table('qlik_confs')->where('id', $conf_id->qlik_conf)->first();
-	}
+    if (!$conf_id) {
+      $qlik_conf = DB::table('qlik_confs')->where('id', $qlik_item_id)->first();
+    } else {
+      $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id->qlik_conf)->first();
+    }
     
-
-    //dd($qlik_conf->id);
-
-    //dd(DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->toSql());
-
-
     $qlik_user = DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->first();
     if (!$qlik_user) {
       $data['error'] = 'User credentials missing. Ask an admin to set your qlik id and user directory';
@@ -203,9 +197,9 @@ class QlikHelper
 
     //$QRSCertfile = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertfile');
     //$QRSCertfile = env('APP_PATH').'/storage/app/public'.$qlik_conf->QRSCertfile;
-	$QRSCertfile =$qlik_conf->tenant_path.$qlik_conf->QRSCertfile;
+    $QRSCertfile =$qlik_conf->QRSCertfile;
 
-    $QRSCertkeyfile = $qlik_conf->tenant_path.$qlik_conf->QRSCertkeyfile;
+    $QRSCertkeyfile = $qlik_conf->QRSCertkeyfile;
 
     //$QRSCertkeyfile = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertkeyfile');
     $QRSCertkeyfilePassword =$qlik_conf->QRSCertkeyfilePassword;
@@ -275,7 +269,7 @@ class QlikHelper
     //$privateKey = CRUDBooster::getSetting('private_key');
     $privateKey = $qlik_conf->private_key;
 
-    $privateKey =$qlik_conf->tenant_path .$privateKey;
+    $privateKey =$qlik_conf->$privateKey;
     $privateKey = file_get_contents($privateKey);
 
     /*if (empty($check_idp)) {
