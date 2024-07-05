@@ -99,11 +99,17 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         $layout = DB::table('dashboard_layouts')->where('id', $layout)->first()->code_layout;
 
+        if ($layout) {
+            $code_layout = $layout->code_layout;
+        } else {
+            $code_layout = '';
+        }
 
 
 
 
-        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout'));
+
+        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout', 'code_layout'));
     }
 
     public function getShow($slug)

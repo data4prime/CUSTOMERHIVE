@@ -373,9 +373,11 @@
 
 <div id='statistic-area'>
 
-@php echo str_replace("\r\n", "", $layout) @endphp
+@if (!empty($code_layout)) 
+    {{ str_replace("\r\n", "", $code_layout)}} 
+@else 
 
-    <!--<div class="statistic-row row">
+<div class="statistic-row row">
         <div id='area1' class="col-sm-3 connectedSortable">
 
         </div>
@@ -408,7 +410,8 @@
     <div class='statistic-row row'>
         <div id='area9' class="col-sm-12 connectedSortable">
 
-        </div>-->
+        </div>
+@endif
     </div>
 
 </div><!--END STATISTIC AREA-->
