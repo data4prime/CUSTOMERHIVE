@@ -1,4 +1,5 @@
 
+dd($form);
 @if(isset($form['datatable']))
 @if(isset($form['relationship_table']))
 @push('bottom')
@@ -155,7 +156,7 @@ echo $enum;
             @endif
             @if(isset($form['datatable']))
             @if(isset($form['relationship_table']))
-                dd($form);
+                
             <?php
                     $table_name = explode(',', $form['datatable'])[0];
                     $select_title = explode(',', $form['datatable'])[1];
