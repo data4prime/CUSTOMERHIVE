@@ -1,13 +1,4 @@
-@php 
-$table_name = explode(',', $form['datatable'])[0];
-$foreignKey = CRUDBooster::getForeignKey($table, $form['relationship_table']);
-$foreignKey2 = CRUDBooster::getForeignKey($table_name, $form['relationship_table']);
-//$value = DB::table($form['relationship_table'])->where($foreignKey, (isset($id) ? $id : 0))->get();
-$value = DB::table($form['relationship_table'])->where($foreignKey, (isset($id) ? $id : 0))->toSql();
-//$value = $value->pluck($foreignKey2)->toArray();
 
-dd("ID {$id} - Value {$value} - Table {$table} - Relationship Table {$form['relationship_table']} - Foreign Key {$foreignKey} - Foreign Key 2 {$foreignKey2}");
-@endphp
 
 @if(isset($form['datatable']))
 @if(isset($form['relationship_table']))
