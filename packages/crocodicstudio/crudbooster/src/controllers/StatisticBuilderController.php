@@ -97,7 +97,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         $layout = $row->layout;
 
-        $layout = DB::table('dashboard_layouts')->where('id', $layout)->first()->code_layout;
+        $layout = DB::table('dashboard_layouts')->where('id', $layout)->first();
 
         if ($layout) {
             $code_layout = $layout->code_layout;
