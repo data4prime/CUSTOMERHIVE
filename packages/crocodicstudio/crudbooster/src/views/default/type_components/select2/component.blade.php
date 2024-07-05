@@ -179,9 +179,9 @@ echo $enum;
                       $foreignKey = CRUDBooster::getForeignKey($table, $form['relationship_table']);
                       $foreignKey2 = CRUDBooster::getForeignKey($table_name, $form['relationship_table']);
                         if ($foreignKey == 'qlik_confs_id' || $foreignKey2 == 'qlik_confs_id') {
-                      echo "foreignKey - {$foreignKey} - {$table} - {$form['relationship_table']}";
+                        echo "foreignKey - {$foreignKey} - {$table} - {$form['relationship_table']}";
                         echo "foreignKey2 - {$foreignKey2} - {$table_name} - {$form['relationship_table']}";
-                            die();
+                            die("foreignKey - {$foreignKey} - {$table} - {$form['relationship_table']}");
                         }
                       $value = DB::table($form['relationship_table'])->where($foreignKey, (isset($id) ? $id : 0))->get();
                       $value = $value->pluck($foreignKey2)->toArray();
