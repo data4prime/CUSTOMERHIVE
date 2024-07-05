@@ -1,4 +1,4 @@
-
+@php dd($form); @endphp
 @if(isset($form['datatable']))
 @if(isset($form['relationship_table']))
 @push('bottom')

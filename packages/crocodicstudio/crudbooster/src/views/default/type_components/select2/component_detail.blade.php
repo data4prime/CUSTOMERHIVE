@@ -13,7 +13,6 @@ if (isset($datatable) && ! isset($form['relationship_table'])) {
 if (isset($datatable) && isset($form['relationship_table'])) {
     $datatable_table = explode(',', $datatable)[0];
     $datatable_field = explode(',', $datatable)[1];
-    dd($form);
     if(isset($form['datatable_orig']) && $form['datatable_orig']  != ''){
         $params = explode("|", $form['datatable_orig']);
         if(!isset($params[2])) $params[2] = "id";
