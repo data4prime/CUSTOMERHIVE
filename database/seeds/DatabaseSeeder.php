@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             ];
         DB::table('cms_moduls')->insert($mod);  */
 
- /*
+ 
 $mod = [
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'Qlik Mashups',
@@ -41,7 +41,9 @@ $mod = [
                 'is_active' => 1,
             ];
         DB::table('cms_moduls')->insert($mod); 
-*/ 
+
+
+/*
 $mod = [
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'Dashboard Layouts',
@@ -53,5 +55,6 @@ $mod = [
                 'is_active' => 1,
             ];
         DB::table('cms_moduls')->insert($mod); 
+*/
     }
 }
