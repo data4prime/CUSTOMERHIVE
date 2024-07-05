@@ -1,13 +1,16 @@
-
-@if(isset($form['datatable']))
-@if(isset($form['relationship_table']))
-
+@php 
 $foreignKey = CRUDBooster::getForeignKey($table, $form['relationship_table']);
 $foreignKey2 = CRUDBooster::getForeignKey($table_name, $form['relationship_table']);
 $value = DB::table($form['relationship_table'])->where($foreignKey, (isset($id) ? $id : 0))->get();
 $value = $value->pluck($foreignKey2)->toArray();
 
 dd($value);
+@endphp
+
+@if(isset($form['datatable']))
+@if(isset($form['relationship_table']))
+
+
 
 @push('bottom')
 <script type="text/javascript">
