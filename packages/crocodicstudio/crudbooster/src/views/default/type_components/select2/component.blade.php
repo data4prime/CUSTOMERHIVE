@@ -7,6 +7,8 @@ $foreignKey2 = CRUDBooster::getForeignKey($table_name, $form['relationship_table
 $value = DB::table($form['relationship_table'])->where($foreignKey, (isset($id) ? $id : 0))->get();
 $value = $value->pluck($foreignKey2)->toArray();
 
+dd($value);
+
 @push('bottom')
 <script type="text/javascript">
     $(function () {
