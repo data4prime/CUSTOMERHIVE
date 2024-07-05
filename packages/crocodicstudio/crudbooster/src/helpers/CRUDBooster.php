@@ -1122,12 +1122,13 @@ return Request::segment($segment);
         $parent_table = CRUDBooster::parseSqlTable($parent_table)['table'];
         $child_table = CRUDBooster::parseSqlTable($child_table)['table'];
         //file_put_contents(__CLASS__."/getForeignKey.txt","RO1021\n" .json_encode($parent_table)."\n\n", FILE_APPEND);
-        file_put_contents(__DIR__."/getForeignKey.txt","{$parent_table} - {$child_table}\n\n", FILE_APPEND);
+        file_put_contents(__DIR__."/getForeignKey.txt","{$parent_table} - {$child_table}\n", FILE_APPEND);
         //#RAMA menu n:n groups
         if ($parent_table == 'cms_menus' and $child_table == 'menu_groups') {
             return 'menu_id';
         }
         if ($parent_table == 'groups' and $child_table == 'menu_groups') {
+            file_put_contents(__DIR__."/getForeignKey.txt"," - group_id\n\n", FILE_APPEND);
             return 'group_id';
         }
         //#RAMA menu n:n tenants
