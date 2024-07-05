@@ -187,6 +187,8 @@ return [
     'UserPermissions' => 'User Permissions',
     'Qlik_Development_Tools' => 'Qlik Platform',
     'Qlik_Configuration' => 'Qlik Configuration',
+    'Qlik_Mashups' => 'Qlik Apps',
+    'Dashboard_Layouts' => 'Dashboard Layouts',
     'Qlik_Sense_Hub' => 'Qlik Sense HUB',
     'Qlik_Sense_QMC' => 'Qlik Sense QMC',
     'click_here' => 'Click here',
@@ -220,7 +222,7 @@ return [
     'email_setting' => 'Email Setting',
     'application_setting' => 'Application Setting',
     'qlik_conf' => 'Qlik Configuration',
-
+    'qlik_mashups' => 'Qlik Mashups',
     // table filter & sort
     'filter_select_operator_type' => 'Select Operator Type',
     'filter_ascending' => 'ASCENDING',

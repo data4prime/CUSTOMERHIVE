@@ -152,6 +152,24 @@
 
         </li>
 
+        <!--<li data-collapse="3" class='treeview'>
+          <a href='{{url("admin/dashboard_layouts")}}'>
+            <img class="menu qlik_logo" src=/images/apps.png />
+            <span>{{ trans('crudbooster.Dashboard_Layouts') }}</span> <i class="fa fa-angle-{{ trans("
+              crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
+          </a>
+
+        </li>-->
+
+        <li data-collapse="3" class='treeview'>
+          <a href='{{url("admin/qlik_mashups")}}'>
+            <img class="menu qlik_logo" src=/images/qlik_logo.png />
+            <span>{{ trans('crudbooster.Qlik_Mashups') }}</span> <i class="fa fa-angle-{{ trans("
+              crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
+          </a>
+
+        </li>
+
         @if(CRUDBooster::isSuperadmin())
         <li data-collapse="3" class="treeview">
           <a href="#"><i class='fa fa-wrench'></i> <span>{{ trans('crudbooster.settings') }}</span> <i
@@ -211,6 +229,16 @@
                 href='{{Route("StatisticBuilderControllerGetIndex")}}'><i class='fa fa-bars'></i>
                 <span>{{ trans('crudbooster.List_Statistic') }}</span></a></li>
           </ul>
+          <ul  class='treeview-menu'>
+<li data-collapse="3" class='treeview'>
+          <a href='{{url("admin/dashboard_layouts")}}'>
+            <img class="menu qlik_logo" src=/images/apps.png />
+            <span>{{ trans('crudbooster.Dashboard_Layouts') }}</span> <i class="fa fa-angle-{{ trans("
+              crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
+          </a>
+
+        </li>
+</ul>
         </li>
 
         <li data-collapse="3" class='treeview'>
