@@ -1,6 +1,12 @@
 
 @if(isset($form['datatable']))
 @if(isset($form['relationship_table']))
+
+$foreignKey = CRUDBooster::getForeignKey($table, $form['relationship_table']);
+$foreignKey2 = CRUDBooster::getForeignKey($table_name, $form['relationship_table']);
+$value = DB::table($form['relationship_table'])->where($foreignKey, (isset($id) ? $id : 0))->get();
+$value = $value->pluck($foreignKey2)->toArray();
+
 @push('bottom')
 <script type="text/javascript">
     $(function () {
@@ -183,8 +189,8 @@ echo $enum;
                         echo "foreignKey2 - {$foreignKey2} - {$table_name} - {$form['relationship_table']}";
                             die("foreignKey - {$foreignKey} - {$table} - {$form['relationship_table']}");
                         }*/
-                        file_put_contents(__DIR__."/getForeignKey.txt",DB::table($form['relationship_table'])->where($foreignKey, (isset($id) ? $id : 0))->toSql(), FILE_APPEND);
-                      //$value = DB::table($form['relationship_table'])->where($foreignKey, (isset($id) ? $id : 0))->get();
+                       
+                      $value = DB::table($form['relationship_table'])->where($foreignKey, (isset($id) ? $id : 0))->get();
                       $value = $value->pluck($foreignKey2)->toArray();
                     }
 
