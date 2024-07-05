@@ -155,6 +155,7 @@ echo $enum;
             @endif
             @if(isset($form['datatable']))
             @if(isset($form['relationship_table']))
+                dd($form);
             <?php
                     $table_name = explode(',', $form['datatable'])[0];
                     $select_title = explode(',', $form['datatable'])[1];
@@ -237,7 +238,7 @@ echo $enum;
 @push('bottom')
 @if(isset($form['datatable']) AND isset($form['relationship_table']) AND isset($form['parent_select']))
 <?php
-dd($form);
+
     $exploded_parent = explode(",", $form['parent_select']);
     $parent_select = count($exploded_parent) > 1 ? $exploded_parent : $form['parent_select'];
     $parent = is_array($parent_select) ? $parent_select[0] : $parent_select;
