@@ -340,18 +340,27 @@ if(ModuleHelper::is_manually_generated($module->table)) {
       //var_dump('can edit true1'.$row->id);
       return true;
     }
+    $created_by = ModuleHelper::get_created_by_id($module, $row);
 
-    if(ModuleHelper::is_manually_generated($module->table)) {
+    $entity_group = ModuleHelper::get_group_id($module, $row);
+    $entity_tenant = ModuleHelper::get_tenant_id($module, $row);
+
+    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+      return true;
+    }
+
+
+    /*if(ModuleHelper::is_manually_generated($module->table)) {
       $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
       $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
 
-      //check tenant admin
+
       if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
         return true;
       }
     } else {
 
-    }
+    }*/
 
 
     if ($module->table == 'cms_menus') {
@@ -458,7 +467,15 @@ if(ModuleHelper::is_manually_generated($module->table)) {
       //var_dump('can edit true1'.$row->id);
       return true;
     }
+    $created_by = ModuleHelper::get_created_by_id($module, $row);
 
+    $entity_group = ModuleHelper::get_group_id($module, $row);
+    $entity_tenant = ModuleHelper::get_tenant_id($module, $row);
+if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+      return true;
+    }
+
+/*
 if(ModuleHelper::is_manually_generated($module->table)) {
     $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
     $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
@@ -469,7 +486,7 @@ if(ModuleHelper::is_manually_generated($module->table)) {
     }
 } else {
 
-}
+}*/
 
 
     if ($module->table == 'cms_menus') {
@@ -576,7 +593,15 @@ if(ModuleHelper::is_manually_generated($module->table)) {
       return true;
     }
 
-if(ModuleHelper::is_manually_generated($module->table)) {
+    $created_by = ModuleHelper::get_created_by_id($module, $row);
+
+    $entity_group = ModuleHelper::get_group_id($module, $row);
+    $entity_tenant = ModuleHelper::get_tenant_id($module, $row);
+if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+      return true;
+    }
+
+/*if(ModuleHelper::is_manually_generated($module->table)) {
     $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
     $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
 
@@ -586,7 +611,7 @@ if(ModuleHelper::is_manually_generated($module->table)) {
     }
 } else {
 
-}
+}*/
 
 
     if ($module->table == 'cms_menus') {
