@@ -175,8 +175,11 @@ echo $enum;
                       $value = DB::table($params[0])->where($params[2], $id)->first()->{$params[1]};
                       $value = explode(",", $value);
                     } else {
+                     
                       $foreignKey = CRUDBooster::getForeignKey($table, $form['relationship_table']);
                       $foreignKey2 = CRUDBooster::getForeignKey($table_name, $form['relationship_table']);
+                      echo "foreignKey - {$foreignKey} - {$table} - {$form['relationship_table']}";
+                        echo "foreignKey2 - {$foreignKey2} - {$table_name} - {$form['relationship_table']}";
                       $value = DB::table($form['relationship_table'])->where($foreignKey, (isset($id) ? $id : 0))->get();
                       $value = $value->pluck($foreignKey2)->toArray();
                     }
