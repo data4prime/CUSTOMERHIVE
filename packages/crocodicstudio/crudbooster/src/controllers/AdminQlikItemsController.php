@@ -451,7 +451,12 @@ class AdminQlikItemsController extends CBController
 		$type = $conf->type;
 		//$type = CRUDBooster::getSetting('type');
 		//add menu settings
-		$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '89');
+		if (isset($_GET['m'])) {
+			$menu = Menu::find($_GET['m']);
+		} else {
+			$menu = Menu::where('name', 'Dashboard')->where('is_active', 1)->where('is_dashboard', 1)->first();
+		}
+		//$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '89');
 		if (empty($menu)) {
 			$data['row']->frame_width = '100%';
 			$data['row']->frame_height = '100%';
@@ -467,16 +472,20 @@ class AdminQlikItemsController extends CBController
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['debug'] = $conf->debug;
 
+		$data['row']->url = htmlspecialchars_decode($data['row']->url);
+
 
 		if ($type == 'On-Premise') {
 
 			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item_id);
 
+			//dd($qlik_ticket);
+
 
 			if (empty($qlik_ticket)) {
 				$data['error'] = 'Qlik authentication failed. Ask an admin to fix it';
-				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+				//CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
 			}
 
 
@@ -748,25 +757,24 @@ class AdminQlikItemsController extends CBController
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
-
-
 		$data = [];
-		//dd($qlik_item);
-$conf = DB::table('qlik_confs')->where('id', $qlik_item)->first();
+		$conf = DB::table('qlik_confs')->where('id', $qlik_item)->first();
+		//file_put_contents(__DIR__."/hub.txt", "CONF \n".json_encode($conf)."\n\n", FILE_APPEND);
 
-	$view = 'qlik_items.view';
-$data = [];
+		$view = 'qlik_items.view';
+		$data = [];
 		if (QlikHelper::confIsSAAS($conf->id)) {
 			
-		$url = $conf->url;
-		//$url .= ':443'
-		//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-		//$url .= $conf->endpoint;
-		$url .= '/chive';
-		$url .= '/hub/';
-		
+			$url = $conf->url;
+			//$url .= ':443'
+			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+			//$url .= $conf->endpoint;
+			$url .= '/chive';
+			$url .= '/hub/';
+			
 
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+			//file_put_contents(__DIR__."/hub.txt", "TOKEN \n".json_encode($token)."\n\n", FILE_APPEND);
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
 				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
@@ -780,12 +788,12 @@ $data = [];
 			$view = 'qlik_items.view_saas';
 
 		} else {
-		$url = $conf->qrsurl;
-		//$url .= ':443'
-		//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-		//$url .= $conf->endpoint;
-		$url .= '/chive';
-		$url .= '/hub/';
+			$url = $conf->qrsurl;
+			//$url .= ':443'
+			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+			//$url .= $conf->endpoint;
+			$url .= '/chive';
+			$url .= '/hub/';
 			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
@@ -805,10 +813,11 @@ $data = [];
 		$data['page_title'] = $data['row']->title;
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
-		$data['item_url'] = $data['row']->url;
-$data['debug'] = $conf->debug;
+		$data['item_url'] =  htmlspecialchars_decode($data['row']->url);
+		$data['debug'] = $conf->debug;
+		//file_put_contents(__DIR__."/hub.txt", "DATA \n".json_encode($data)."\n\n", FILE_APPEND);
 
-		$this->cbView('qlik_items.view', $data);
+		$this->cbView($view, $data);
 	}
 
 	public function GetRouteSenseQMC($qlik_item)
@@ -825,17 +834,20 @@ $data['debug'] = $conf->debug;
 		
 		$view = 'qlik_items.view';
 $data = [];
-		if (QlikHelper::confIsSAAS($conf->id)) {
+
+
+if (QlikHelper::confIsSAAS($conf->id)) {
 			
-		$url = $conf->url;
-		//$url .= ':443'
-		//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-		//$url .= $conf->endpoint;
-		$url .= '/chive';
-		$url .= '/qmc/';
-		
+			$url = $conf->url;
+			//$url .= ':443'
+			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+			//$url .= $conf->endpoint;
+			$url .= '/chive';
+			$url .= '/qmc/';
+			
 
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+			//file_put_contents(__DIR__."/hub.txt", "TOKEN \n".json_encode($token)."\n\n", FILE_APPEND);
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
 				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
@@ -849,20 +861,17 @@ $data = [];
 			$view = 'qlik_items.view_saas';
 
 		} else {
-		$url = $conf->qrsurl;
-		//$url .= ':443'
-		//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-		//$url .= $conf->endpoint;
-		$url .= '/chive';
-		$url .= '/qmc/';
+			$url = $conf->qrsurl;
+			//$url .= ':443'
+			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+			//$url .= $conf->endpoint;
+			$url .= '/chive';
+			$url .= '/hub/';
 			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
 			$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
 		}
-
-		
-		//dd($qlik_ticket);
 
 		
 
@@ -879,7 +888,7 @@ $data = [];
 		$data['page_title'] = $data['row']->title;
 		$data['help'] = $data['row']->description;
 		$data['subtitle'] = $data['row']->subtitle;
-		$data['item_url'] = $data['row']->url;
+		$data['item_url'] =  htmlspecialchars_decode($data['row']->url);
 		$data['debug'] = $conf->debug;
 
 		$this->cbView($view, $data);

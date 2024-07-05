@@ -57,7 +57,7 @@
             <nav class="navbar navbar-static-top">
                 <div class="container">
                     <div class="navbar-header">
-                        <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get(' appname')}}'
+                        <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}'
                             class="navbar-brand">{{CRUDBooster::getSetting('appname')}}</a>
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                             data-target="#navbar-collapse">
@@ -159,6 +159,14 @@
                         <a href="#" data-component='chartbar' class='btn-add-widget add-chart-bar'>
                             <img src='{{asset("vendor/crudbooster/assets/statistic_builder/chart_bar.png")}}' />
                             <div class='title'>Chart Bar</div>
+                        </a>
+                    </div>
+                </li>
+                <li class='connectedSortable' title='Drag To Main Area'>
+                    <div id='btn-qlikwidget' class='button-widget-area'>
+                        <a href="#" data-component='qlikwidget' class='btn-add-widget add-qlikwidget'>
+                            <img style="width: 50%;" src='/images/qlik_logo.png' />
+                            <div class='title'>Qlik Widget</div>
                         </a>
                     </div>
                 </li>

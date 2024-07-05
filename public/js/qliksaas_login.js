@@ -19,7 +19,7 @@ const JWTTOKEN = "{{ $token}}";*/
     const check = await checkLoggedIn();
 
 
-    //console.log(check);
+    console.log(check.text());
 
     //const qcsHeaders = await getQCSHeaders();
 
@@ -32,7 +32,7 @@ async function qlikLogin() {
     const tokenRes = await (await getJWTToken());
     //console.log("Login Res");
     const loginRes = await jwtLogin(tokenRes);
-    //console.log(loginRes);
+    console.log(loginRes.text());
 
     return true;
 }

@@ -180,18 +180,19 @@ class AdminCmsUsersController extends CBController
 		$this->form[] = array("label" => "Photo", "name" => "photo", "type" => "upload", "help" => "Recommended resolution is 200x200px", 'required' => false, 'validation' => 'image|max:1000', 'resize_width' => 90, 'resize_height' => 90);
 		$this->form[] = array("label" => "Password", "name" => "password", "type" => "password", "help" => "Leave empty if no change is needed");
 		$this->form[] = array("label" => "Password Confirmation", "name" => "password_confirmation", "type" => "password", "help" => "Leave empty if no change is needed");
+
+if (!CRUDBooster::isAddPage() && !CRUDBooster::isProfilePage() ) {
 //QLIK USERS START
 		$columns[] = ['label'=>'Qlik Conf','name'=>'qlik_conf_id','type'=>'datamodal','datamodal_table'=>'qlik_confs','datamodal_columns'=>'confname,type','datamodal_select_to'=>'confname:confname,type:type','datamodal_where'=>'','datamodal_size'=>'large'];
 		$columns[] = array("label" => "Qlik login", "name" => "qlik_login", 'type'=>'text', 'help' => 'Compilare a mano se la configurazione scelta è di tipo On-Premise');
 		$columns[] = array("label" => "User directory", "name" => "user_directory", 'type'=>'text', 'help' => 'Compilare a mano se la configurazione scelta è di tipo On-Premise');
 		$columns[] = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik", 'type'=>'text', 'help' => 'Se la configurazione scelta è di tipo SAAS, il campo verrà valorizzato dopo aver salvato l\'utenza se lasciato vuoto. Se si vuole ottenere un IDP diverso, cancellare il valore attuale e salvare l\'utenza, il sistema creerà un nuovo IDP in automatico.');
-		//$columns = array("label" => "");
-/*
-$columns[] = ['label'=>'User','name'=>'user_id','type'=>'datamodal','datamodal_table'=>'cms_users','datamodal_columns'=>'name','datamodal_select_to'=>'email:email','datamodal_where'=>'','datamodal_size'=>'large'];
-$this->form[] = ['label'=>'Group members','name'=>'users_groups','type'=>'child','columns'=>$columns,'table'=>'users_groups','foreign_key'=>'group_id'];
-*/
-		$this->form[] = ['label'=>'Utenze Qlik','name'=>'qlik_users','type'=>'child','columns'=>$columns,'table'=>'qlik_users','foreign_key'=>'user_id'];
+
+		
+			$this->form[] = ['label'=>'Utenze Qlik','name'=>'qlik_users','type'=>'child','columns'=>$columns, 'required' => true,'table'=>'qlik_users','foreign_key'=>'user_id'];
+
 //QLIK USERS END
+}
 		
 
 # END FORM DO NOT REMOVE THIS LINE
@@ -254,6 +255,7 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 
 	public function hook_before_edit(&$postdata, $user_id)
 	{
+		
 		unset($postdata['password_confirmation']);
 		//se il tenant è cambiato
 		$old_tenant_id = UserHelper::tenant($user_id);
@@ -270,7 +272,9 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 			GroupHelper::remove($old_primary_group_id, $user_id);
 		}
 
-		if (isset(Request::all()['utenzeqlik-qlik_conf_id'])) {
+		AdminCmsUsersController::prepare_qlik_users();
+
+		/*if (isset(Request::all()['utenzeqlik-qlik_conf_id'])) {
 		$qlik_conf_ids = Request::all()['utenzeqlik-qlik_conf_id'];
 		$qlik_logins = Request::all()['utenzeqlik-qlik_login'];
 		$qlik_user_directory = Request::all()['utenzeqlik-user_directory'];
@@ -295,17 +299,51 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 				Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
 			}
 		}
+		}*/
+
+		
+		//file_put_contents(__DIR__."/create_user.txt", "utenzeqlik-idp_qlik  \n".json_encode(Request::all()['utenzeqlik-idp_qlik'])."\n\n", FILE_APPEND);
+
+		//dd(Request::all());
+		
+
+		//dd(Request::all());
+	}
+
+	public static function prepare_qlik_users() {
+		//dd(Request::all());
+		if (isset(Request::all()['utenzeqlik-qlik_conf_id'])) {
+			$qlik_conf_ids = Request::all()['utenzeqlik-qlik_conf_id'];
+			$qlik_logins = Request::all()['utenzeqlik-qlik_login'];
+			$qlik_user_directory = Request::all()['utenzeqlik-user_directory'];
+			$qlik_idp_qlik = Request::all()['utenzeqlik-idp_qlik'];
+
+			$id_user = DB::table('cms_users')->select('id')->where('email',Request::all()['email'] )->first()->id;
+			//$updated_idp_qlik = $qlik_idp_qlik;
+			$updated_idp_qlik = [];
+
+			foreach($qlik_conf_ids as $k => $v) {
+				if (!empty($v)) {
+					if (QlikHelper::confIsSAAS($v)) {
+						if (!empty($qlik_idp_qlik[$k])) {
+							$idp = $qlik_idp_qlik[$k];
+						} else {
+							$idp = QlikHelper::createUser($id_user, $v);
+						}
+						
+						//file_put_contents(__DIR__."/log.txt", $idp."\n\n", FILE_APPEND);
+						$updated_idp_qlik[$k] = $idp;
+						//Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
+						//Request::all()['utenzeqlik-idp_qlik'][$k] = $idp;
+						Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
+					}
+				}
+			}
 		}
 
-		file_put_contents(__DIR__."/create_user.txt", "AdminCmsUsers\n".json_encode(Request::all()['utenzeqlik-idp_qlik'])."\n\n", FILE_APPEND);
 
 		
 
-
-		//dd(Request::all());
-		
-
-		//dd(Request::all());
 	}
 
 	public function hook_after_edit($id)
@@ -317,6 +355,8 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 	public function hook_before_add(&$postdata)
 	{
 		unset($postdata['password_confirmation']);
+		//dd(Request::all());
+		AdminCmsUsersController::prepare_qlik_users();
 	}
 
 	public function hook_after_add($id)

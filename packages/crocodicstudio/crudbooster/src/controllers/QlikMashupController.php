@@ -7,16 +7,17 @@ use Request;
 use DB;
 use CRUDBooster;
 use \crocodicstudio\crudbooster\helpers\UserHelper;
+use \crocodicstudio\crudbooster\helpers\QlikHelper;
 
 
-class QlikConfController extends CBController
+class QlikMashupController extends CBController
 {
 
 	public function cbInit()
 	{
 
 		# START CONFIGURATION DO NOT REMOVE THIS LINE
-		$this->title_field = "confname";
+		$this->title_field = "mashupname";
 		$this->limit = "20";
 		$this->orderby = "id,desc";
 		$this->global_privilege = true;
@@ -29,81 +30,61 @@ class QlikConfController extends CBController
 		$this->button_detail = true;
 		$this->button_show = true;
 		$this->button_filter = true;
-		$this->button_import = true;
-		$this->button_export = true;
-		$this->table = "qlik_confs";
+		$this->button_import = false;
+		$this->button_export = false;
+		$this->table = "qlik_mashups";
 		# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = [];
-		$this->col[] = ["label" => "Configuration Name", "name" => "confname"];
-		$this->col[] = ["label" => "Type", "name" => "type"];
-        //$this->col[] = ["label" => "qrsurl", "name" => "QRS Url"];
-        //$this->col[] = ["label" => "Endpoint", "name" => "endpoint"];
-        //$this->col[] = ["label" => "QRSCertfile", "name" => "QRSCertfile"];
-        //$this->col[] = ["label" => "QRSCertkeyfile", "name" => "QRSCertkeyfile"];
-        //$this->col[] = ["label" => "QRSCertkeyfilePassword", "name" => "QRSCertkeyfilePassword"];
-        //$this->col[] = ["label" => "url", "name" => "url"];
-        //$this->col[] = ["label" => "keyid", "name" => "keyid"];
-        //$this->col[] = ["label" => "issuer", "name" => "issuer"];
-        //$this->col[] = ["label" => "web_int_id", "name" => "web_int_id"];
-        //$this->col[] = ["label" => "private_key", "name" => "private_key"];
-        $this->col[] = ["label" => "debug", "name" => "debug"];
+		$this->col[] = ["label" => "Mashup Name", "name" => "mashupname"];
+        $this->col[] = ["label" => "App ID", "name" => "appid"];
+		$this->col[] = ["label" => "Conf", "name" => "conf"];
+
 
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
 
 		# START FORM DO NOT REMOVE THIS LINE
 		$this->form = [];
-		$this->form[] = ['label' => 'Configuration Name', 'name' => 'confname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Configuration Name'];
-        $this->form[] = ['label' => 'Type', 'name' => 'type', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'On-Premise;SAAS'];
-        $this->form[] = ['label' => 'QRS Url', 'name' => 'qrsurl', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRS Url'];
-        $this->form[] = ['label' => 'URL', 'name' => 'url', 'type' => 'text',  'width' => 'col-sm-10', 'placeholder' => 'Enter URL'];
+		$this->form[] = ['label' => 'Mashup Name', 'name' => 'mashupname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Mashup Name'];
+        $this->form[] = ['label' => 'App ID', 'name' => 'appid', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter App ID'];
+        $this->form[] = ['label' => 'Conf', 'name' => 'conf', 'type' => 'select', 'width' => 'col-sm-10',
+                            "datatable" => "qlik_confs,confname",
+                            "relationship_table" => "qlik_confs",
+                            'required' => true,
+                        ];
 
-        $this->form[] = ['label' => 'Port', 'name' => 'port', 'type' => 'text',  'width' => 'col-sm-10', 'placeholder' => 'Port'];
 
-        $this->form[] = ['label' => 'Endpoint', 'name' => 'endpoint', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Endpoint'];
-        $this->form[] = ['label' => 'QRSCertfile', 'name' => 'QRSCertfile', 'type' => 'upload', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertfile'];
-        $this->form[] = ['label' => 'QRSCertkeyfile', 'name' => 'QRSCertkeyfile', 'type' => 'upload', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertkeyfile'];
-        $this->form[] = ['label' => 'QRSCertkeyfilePassword', 'name' => 'QRSCertkeyfilePassword', 'type' => 'password', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertkeyfilePassword'];
 
-        $this->form[] = ['label' => 'Key ID', 'name' => 'keyid', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Key ID'];
-        $this->form[] = ['label' => 'Issuer', 'name' => 'issuer', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Issuer'];
-        $this->form[] = ['label' => 'Web Int ID', 'name' => 'web_int_id', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Web Int ID'];
-        $this->form[] = ['label' => 'Private Key', 'name' => 'private_key', 'type' => 'upload', 'width' => 'col-sm-10', 'placeholder' => 'Enter Private Key'];
-
-        $this->form[] = ['label' => 'Debug', 'name' => 'debug', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'Inactive;Active'];
-	$this->form[] = ['label' => 'Tenant Path', 'name' => 'tenant_path', 'type' => 'hidden', 'width' => 'col-sm-10', 'value' => env('APP_URL')];
-
-		//only superadmin can edit tenant
     if (CRUDBooster::isSuperadmin()) {
       $this->form[] = [
         'label' => 'Tenant',
-        'name' => 'qlikconfs_tenants',
+        'name' => 'qlikmashups_tenants',
         "type" => "select2",
         "select2_multiple" => true,
         "datatable" => "tenants,name",
-        "relationship_table" => "qlikconfs_tenants",
+        "relationship_table" => "qlikmashups_tenants",
         'required' => true,
         'validation' => 'required',
-        'value' => UserHelper::current_user_tenant() //default value per creazione nuovo record
+        'value' => UserHelper::current_user_tenant()
       ];
-      //superadmin vede i gruppi come cascading dropdown in base al tenant
+
       $this->form[] = [
         "label" => "Group",
-        "name" => "qlikconfs_groups",
+        "name" => "qlikmashups_groups",
         "type" => "select2",
         "select2_multiple" => true,
         "datatable" => "groups,name",
-        "relationship_table" => "qlikconfs_groups",
+        "relationship_table" => "qlikmashups_groups",
         "required" => true,
-        'parent_select' => 'qlikconfs_tenants',
+        'parent_select' => 'qlikmashups_tenants',
         'parent_crosstable' => 'group_tenants',
         'fk_name' => 'tenant_id',
         'child_crosstable_fk_name' => 'group_id'
       ];
     } elseif (UserHelper::isTenantAdmin()) {
-      //Tenantadmin vede tenant in readonly (disabled) ma può modificare il group
+
       $this->form[] = [
         "label" => "Tenant",
         "name" => "tenant",
@@ -114,7 +95,7 @@ class QlikConfController extends CBController
         'value' => UserHelper::current_user_tenant(),
         'disabled' => true
       ];
-      //Tenantadmin vede solo i gruppi del proprio tenant
+
       $this->form[] = [
         "label" => "Group",
         "name" => "menu_groups",
@@ -172,11 +153,7 @@ class QlikConfController extends CBController
 		$this->addaction = array();
 		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'fa fa-user', 'color' => 'info', 'title' => 'Members'];
 		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'fa fa-shield', 'color' => 'warning', 'title' => 'Items'];
-		if (CRUDBooster::isSuperadmin()) {
-            $this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseHub/[id]'), 'icon' => 'fa fa-desktop', 'color' => 'primary', 'title' => 'Qlik Sense Hub'];
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseQMC/[id]'), 'icon' => 'fa fa-code', 'color' => 'primary', 'title' => 'Qlik Sense QMC'];
-            //$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Tenants'];
-		}
+
 		/*
         | ----------------------------------------------------------------------
         | Add More Button Selected
@@ -244,151 +221,7 @@ class QlikConfController extends CBController
         | $this->script_js = "function() { ... }";
         |
         */
-		$this->script_js = "
-
-$(document).ready(function () {
-
-    var type = $('[name=\"type\"]').first();
-    var type_val = type.val();
-    var on_premise = ['qrsurl', /*'endpoint',*/ 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
-
-    var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
-    if (type_val == 'On-Premise') {
-
-        saas.forEach(element => {
-
-            to_hide = document.getElementsByName(element);
-
-            to_hide.forEach(hide => {
-                hide.parentNode.parentNode.style.display = 'none';
-		//hide.setAttribute('disabled', true);
-
-            });
-
-
-        });
-
-        on_premise.forEach(element => {
-
-            to_show = document.getElementsByName(element);
-
-            to_show.forEach(show => {
-                //
-		show.parentNode.parentNode.style.display = '';
-		//show.removeAttribute('disabled');
-
-            });
-
-
-        });
-
-
-    } else if (type_val == 'SAAS') {
-        on_premise.forEach(element => {
-
-            to_hide = document.getElementsByName(element);
-
-            to_hide.forEach(hide => {
-                hide.parentNode.parentNode.style.display = 'none';
-		//hide.setAttribute('disabled', true);
-
-            });
-
-
-        });
-
-        saas.forEach(element => {
-
-            to_show = document.getElementsByName(element);
-
-            to_show.forEach(show => {
-                show.parentNode.parentNode.style.display = '';
-		//show.removeAttribute('disabled');
-
-            });
-
-
-        });
-
-    }
-
-    type.change(function () {
-        // Code to be executed when the value of the select changes
-        var selectedValue = $(this).val();
-        var on_premise = ['qrsurl', /*'endpoint',*/ 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
-
-        var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
-
-        //console.log(document.getElementsByName('type')[0]);
-
-        //var type = document.getElementsByName('type')[0].value;
-
-        var type = $('[name=\"type\"]').first().val();
-
-        if (type == 'On-Premise') {
-
-            saas.forEach(element => {
-
-                to_hide = document.getElementsByName(element);
-
-                to_hide.forEach(hide => {
-                    hide.parentNode.parentNode.style.display = 'none';
-		    //hide.setAttribute('disabled', true);
-
-                });
-
-
-            });
-
-            on_premise.forEach(element => {
-
-                to_show = document.getElementsByName(element);
-
-                to_show.forEach(show => {
-                    show.parentNode.parentNode.style.display = '';
-		    //show.removeAttribute('disabled');
-
-                });
-
-
-            });
-
-
-        } else if (type == 'SAAS') {
-            on_premise.forEach(element => {
-
-                to_hide = document.getElementsByName(element);
-				console.log(to_hide);
-
-                to_hide.forEach(hide => {
-                    hide.parentNode.parentNode.style.display = 'none';
-		    //hide.setAttribute('disabled', true);
-
-                });
-
-
-            });
-
-            saas.forEach(element => {
-
-                to_show = document.getElementsByName(element);
-
-                to_show.forEach(show => {
-                    show.parentNode.parentNode.style.display = '';
-		    //show.setAttribute('disabled', false);
-
-                });
-
-
-            });
-
-        }
-
-    });
-});
-
-
-";
+		$this->script_js = "";
 
 
 		/*
@@ -448,6 +281,87 @@ $(document).ready(function () {
         |
         */
 		$this->load_css = array();
+	}
+
+	public static function getMashupFromCompID($compID) {
+		$mashup = DB::table('cms_statistic_components')->where('componentID', $compID)->first();
+		if (isset($mashup)){
+			$mashup = json_decode($mashup->config);
+			if (isset($mashup)) {
+				$mashup = $mashup->mashups;
+			$mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
+			} else {
+				$mashup = null;
+			}
+
+			
+		} else {
+			$mashup = null;
+		}
+
+		return $mashup;
+
+	}
+
+	public static function getConf($id) {
+		$qlik_conf = DB::table('qlik_confs')->where('id', $id)->first();
+		//dd($id);
+		//dd($qlik_conf);
+		$return = [];
+
+		$return['type'] = $qlik_conf->type;
+
+		if (isset($id) && $qlik_conf) {
+				$return['id'] = $qlik_conf->id;
+				$return['host'] = $qlik_conf->qrsurl;
+				$return['webIntegrationId'] = '';
+				$return['port'] = $qlik_conf->port;
+				$return['prefix'] = $qlik_conf->endpoint;
+			if (QlikHelper::confIsSAAS($id)) {
+				$return['id'] = $qlik_conf->id;
+				$return['host'] = $qlik_conf->url;
+				$return['webIntegrationId'] = $qlik_conf->web_int_id;
+				$return['port'] = $qlik_conf->port;
+				$return['prefix'] = $qlik_conf->endpoint;
+			} 
+		}
+
+		$return = (object) $return;
+		return $return;
+
+	}
+
+	public static function getMashups() {
+		//se super admin prendo tutti i mashups
+		if (CRUDBooster::isSuperadmin()) {
+			$mashups = DB::table('qlik_mashups')
+			->select('qlik_mashups.*')
+			//join qlink_conf per avere il nome della conf
+			/*->join('qlik_confs', 'qlik_mashups.conf', '=', 'qlik_confs.id')
+			->where('qlik_confs.type', 'SAAS')*/
+			->get();
+		} elseif (UserHelper::isTenantAdmin()) {
+			$mashups = DB::table('qlik_mashups')
+				->select('qlik_mashups.*')
+				->join('qlikmashups_tenants', 'qlik_mashups.id', '=', 'qlikmashups_tenants.qlikmashup_id')
+				/*->join('qlik_confs', 'qlik_mashups.conf', '=', 'qlik_confs.id')
+					->where('qlik_confs.type', 'SAAS')*/
+				->where('tenant_id', UserHelper::current_user_tenant())
+
+				->get();
+		} else {
+			$mashups = DB::table('qlik_mashups')
+->select('qlik_mashups.*')
+				->join('qlikmashups_groups', 'qlik_mashups.id', '=', 'qlikmashups_groups.qlikmashup_id')
+				->join('group_users', 'group_users.group_id', '=', 'qlikmashups_groups.group_id')
+/*->join('qlik_confs', 'qlik_mashups.conf', '=', 'qlik_confs.id')*/
+				->where('group_users.user_id', CRUDBooster::myId())
+//->where('qlik_confs.type', 'SAAS')
+				->get();
+		}
+
+		return $mashups;
+
 	}
 
 

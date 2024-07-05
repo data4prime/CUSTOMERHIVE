@@ -31,6 +31,56 @@ use crocodicstudio\crudbooster\helpers\UserHelper;
 
 class CRUDBooster
 {
+
+
+    public static function isEditPage() {
+
+        $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+        //dd($currentUrl);
+
+        $pattern = '/edit\/\d+.*/';
+
+        if (preg_match($pattern, $currentUrl)) {
+
+            return true;
+
+        }
+        return false;
+    }
+
+    public static function isAddPage() {
+
+        $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+        //dd($currentUrl);
+
+        $pattern = "/users/add";
+
+        if (str_contains($currentUrl, $pattern)) {
+
+            return true;
+
+        }
+        return false;
+    }
+
+public static function isProfilePage() {
+
+        $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+        //dd($currentUrl);
+
+        $pattern = "/users/profile";
+
+        if (str_contains($currentUrl, $pattern)) {
+
+            return true;
+
+        }
+        return false;
+    }
+
     /**
      *	Comma-delimited data output from the child table
      */
@@ -90,7 +140,7 @@ class CRUDBooster
             $filename = str_slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
             //$filesize = $file->getClientSize() / 1024;
             $filesize = $file->getSize() / 1024;
-            $file_path = 'uploads/' . $userID . '/' . date('Y-m');
+            $file_path = '/uploads/' . $userID . '/' . date('Y-m');
 
             //Create Directory Monthly
             Storage::makeDirectory($file_path);
@@ -105,7 +155,12 @@ class CRUDBooster
             if (Storage::putFileAs($file_path, $file, $filename)) {
                 self::resizeImage($file_path . '/' . $filename, $resize_width, $resize_height, $ext);
 
-                return $file_path . '/' . $filename;
+                //return '/storage'.$file_path . '/' . $filename;
+                //return $file_path . '/' . $filename;
+                //get host
+                $host = $_SERVER['HTTP_HOST'];
+                return 'http://' . $host . '/storage' . $file_path . '/' . $filename;
+
             } else {
                 return null;
             }
@@ -1066,6 +1121,7 @@ return Request::segment($segment);
 	    
         $parent_table = CRUDBooster::parseSqlTable($parent_table)['table'];
         $child_table = CRUDBooster::parseSqlTable($child_table)['table'];
+        //file_put_contents(__CLASS__."/getForeignKey.txt","RO1021\n" .json_encode($parent_table)."\n\n", FILE_APPEND);
         //#RAMA menu n:n groups
         if ($parent_table == 'cms_menus' and $child_table == 'menu_groups') {
             return 'menu_id';
@@ -1077,20 +1133,32 @@ return Request::segment($segment);
         if ($parent_table == 'cms_menus' and $child_table == 'menu_tenants') {
             return 'menu_id';
         }
-	if ($parent_table == 'tenants' and $child_table == 'qlikconfs_tenants') {
-            return 'tenant_id';
-        }
+
         if ($parent_table == 'tenants' and $child_table == 'menu_tenants') {
             return 'tenant_id';
         }
-        //#RAMA group n:n tenants
+        //#
         if ($parent_table == 'groups' and $child_table == 'group_tenants') {
             return 'group_id';
         }
-	if ($parent_table == 'groups' and $child_table == 'qlikconfs_groups') {
+
+
+
+        if ($parent_table == 'tenants' and $child_table == 'group_tenants') {
+            return 'tenant_id';
+        }
+//qlik mashups 
+        if ($parent_table == 'groups' and $child_table == 'qlikmashups_groups') {
             return 'group_id';
         }
-        if ($parent_table == 'tenants' and $child_table == 'group_tenants') {
+	    if ($parent_table == 'tenants' and $child_table == 'qlikmashups_tenants') {
+            return 'tenant_id';
+        }
+//qlik confs
+        if ($parent_table == 'groups' and $child_table == 'qlikconfs_groups') {
+            return 'group_id';
+        }
+        if ($parent_table == 'tenants' and $child_table == 'qlikconfs_tenants') {
             return 'tenant_id';
         }
         if (Schema::hasColumn($child_table, 'id_' . $parent_table)) {
@@ -1552,7 +1620,7 @@ crocodicstudio\crudbooster\controllers\
 
         $php = trim($php);
         $path = base_path("app/Http/Controllers/");
-        file_put_contents($path . 'Api' . $controller_name . 'Controller.php', $php);
+        //file_put_contents($path . 'Api' . $controller_name . 'Controller.php', $php);
     }
 
     public static function makeControllerName($name)
@@ -2107,7 +2175,7 @@ crocodicstudio\crudbooster\controllers\
         $php = trim($php);
 
         //create file controller
-        file_put_contents($path . 'Admin' . $controllername . '.php', $php);
+        //file_put_contents($path . 'Admin' . $controllername . '.php', $php);
 
         return 'Admin' . $controllername;
     }

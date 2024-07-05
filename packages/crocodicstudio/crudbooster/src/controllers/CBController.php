@@ -585,22 +585,22 @@ class CBController extends Controller
                 if (isset($col['visible']) && $col['visible'] === false) {
                     continue;
                 }
-
                 $value = @$row->{$col['field']};
                 $title = @$row->{$this->title_field};
                 $label = $col['label'];
 
                 if (isset($col['image'])) {
                     if ($value == '') {
-                        $value = "<a  data-lightbox='roadtrip' rel='group_{{$table}}' title='$label: $title' href='" . UserHelper::icon(@$row->id) . "'><img width='40px' height='40px' src='" . UserHelper::icon(@$row->id) . "'/></a>";
+                        $value = "<a  data-lightbox='roadtrip' rel='group_{{$table}}' title='$label: $title' href='/storage" . UserHelper::icon(@$row->id) . "'><img width='40px' height='40px' src='/storage" . UserHelper::icon(@$row->id) . "'/></a>";
                     } else {
                         $pic = (strpos($value, 'http://') !== false) ? $value : asset($value);
+                        $pic = '/storage' . $value;
                         $value = "<a data-lightbox='roadtrip'  rel='group_{{$table}}' title='$label: $title' href='" . $pic . "'><img width='40px' height='40px' src='" . $pic . "'/></a>";
                     }
                 }
 
                 if (@$col['download']) {
-                    $url = (strpos($value, 'http://') !== false) ? $value : asset($value) . '?download=1';
+                    $url = '/storage'. (strpos($value, 'http://') !== false) ? $value : asset($value) . '?download=1';
                     if ($value) {
                         $value = "<a class='btn btn-xs btn-primary' href='$url' target='_blank' title='Download File'><i class='fa fa-download'></i> Download</a>";
                     } else {
@@ -704,41 +704,10 @@ class CBController extends Controller
             case 'xls':
                 return Excel::download(new ExportData($response, $filename, $paperorientation), $filename . '.xlsx');
 
-
-                /*
-                Excel::create($filename, function ($excel) use ($response) {
-                    $excel->setTitle($filename)->setCreator("crudbooster.com")->setCompany(CRUDBooster::getSetting('appname'));
-                    $excel->sheet($filename, function ($sheet) use ($response) {
-                        $sheet->setOrientation($paperorientation);
-                        $sheet->loadview('crudbooster::export', $response);
-                    });
-                })->export('xls');
-*/
-
-                /*
-                Excel::create($filename, function ($excel) use ($response) {
-                    $excel->setTitle($filename)->setCreator("crudbooster.com")->setCompany(CRUDBooster::getSetting('appname'));
-                    $excel->sheet($filename, function ($sheet) use ($response) {
-                        $sheet->setOrientation($paperorientation);
-                        $sheet->loadview('crudbooster::export', $response);
-                    });
-                })->export('xls');
-*/
-
-
-
                 break;
             case 'csv':
                 return Excel::download(new ExportData($response, $filename, $paperorientation), $filename . '.csv');
-                /*
-                Excel::create($filename, function ($excel) use ($response) {
-                    $excel->setTitle($filename)->setCreator("crudbooster.com")->setCompany(CRUDBooster::getSetting('appname'));
-                    $excel->sheet($filename, function ($sheet) use ($response) {
-                        $sheet->setOrientation($paperorientation);
-                        $sheet->loadview('crudbooster::export', $response);
-                    });
-                })->export('csv');
-*/
+
                 break;
         }
     }
@@ -1018,6 +987,7 @@ class CBController extends Controller
             }
 
             if (isset($di['type']) && $di['type'] == 'child') {
+                //file_put_contents(__CLASS__."/child_log.txt","RO1021\n" .json_encode($ro)."\n\n", FILE_APPEND);
                 $slug_name = str_slug($di['label'], '');
                 foreach ($di['columns'] as $child_col) {
                     if (isset($child_col['validation'])) {
@@ -1228,7 +1198,7 @@ class CBController extends Controller
 
             if (@$ro['type'] == 'filemanager') {
                 $filename = str_replace('/' . config('lfm.prefix') . '/' . config('lfm.files_folder_name') . '/', '', $this->arr[$name]);
-                $url = 'uploads/' . $filename;
+                $url = 'storage/uploads/' . $filename;
                 $this->arr[$name] = $url;
             }
         }
@@ -1360,6 +1330,7 @@ class CBController extends Controller
             }
 
             if (isset($ro['type']) && $ro['type']  == 'child') {
+                //file_put_contents(__CLASS__."/child_log.txt","RO\n" .json_encode($ro)."\n\n", FILE_APPEND);
                 $name = str_slug($ro['label'], '');
                 $columns = $ro['columns'];
                 $getColName = Request::get($name . '-' . $columns[0]['name']);
@@ -1386,6 +1357,7 @@ class CBController extends Controller
                 }
 
                 $childtable = CRUDBooster::parseSqlTable($ro['table'])['table'];
+                
                 DB::table($childtable)->insert($child_array);
             }
         }
@@ -1546,6 +1518,7 @@ class CBController extends Controller
             }
 
             if (isset($ro['type']) && $ro['type']  == 'child') {
+                //file_put_contents(__DIR__."/child_log.txt","RO1550\n" .json_encode($ro)."\n\n", FILE_APPEND);
                 $name = str_slug($ro['label'], '');
                 $columns = $ro['columns'];
                 $getColName = Request::get($name . '-' . $columns[0]['name']);
@@ -1971,12 +1944,14 @@ class CBController extends Controller
 
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
 
-        $file = str_replace('uploads/', '', $row->{$column});
+        $file = str_replace('/storage/uploads/', '', $row->{$column});
         if (Storage::exists($file)) {
             Storage::delete($file);
         }
 
         DB::table($this->table)->where($this->primary_key, $id)->update([$column => null]);
+
+        //dd($this);
 
         CRUDBooster::insertLog(trans("crudbooster.log_delete_image", [
             'name' => $row->{$this->title_field},

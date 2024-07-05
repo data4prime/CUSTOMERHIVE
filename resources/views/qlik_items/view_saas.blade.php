@@ -73,7 +73,7 @@ $debug_url = $item_url;
   .qi_iframe {
     width: @php echo $row->frame_width @endphp !important;
 
-    height: @php $row->frame_height @endphp !important;
+    height: @php echo $row->frame_height @endphp !important;
   }
 </style>
 @endpush
