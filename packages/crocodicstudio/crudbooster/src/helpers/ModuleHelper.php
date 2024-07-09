@@ -45,7 +45,7 @@ class ModuleHelper
       }
     }
 
-    return $entity_group;
+    return isset($entity_group) ? $entity_group : true;
   }
 
   public static function get_tenant_id($module, $row)
