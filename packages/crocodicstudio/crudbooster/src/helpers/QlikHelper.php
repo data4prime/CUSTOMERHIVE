@@ -232,12 +232,14 @@ class QlikHelper
 
     $conf_id = DB::table('qlik_items')->where('id',$qlik_item_id )->first();//->qlik_conf;
 
+
     if (!$conf_id) {
       $qlik_conf = DB::table('qlik_confs')->where('id', $qlik_item_id)->first();
     } else {
       $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id->qlik_conf)->first();
     }
     
+
 
     $qlik_user = DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->first();
     if (!$qlik_user) {
@@ -262,11 +264,6 @@ class QlikHelper
     $endpoint = $qlik_conf->endpoint . "/ticket?xrfkey=" . $xrfkey;
 
 
-    //$QRSCertfile = asset(CRUDBooster::getSetting('QRSCertfile'));
-    //$QRSCertkeyfile = asset(CRUDBooster::getSetting('QRSCertkeyfile'));
-
-    //$QRSCertfile = env('APP_PATH').'/storage/app/'.CRUDBooster::getSetting('QRSCertfile');
-    //$QRSCertfile = env('APP_PATH').'/storage/app/public'.$qlik_conf->QRSCertfile;
     $QRSCertfile =$qlik_conf->QRSCertfile;
 
 
