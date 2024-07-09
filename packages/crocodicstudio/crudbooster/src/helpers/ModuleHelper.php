@@ -8,6 +8,7 @@ use App\GroupTenants;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Session;
+use crocodicstudio\crudbooster\helpers\QlikHelper;
 
 class ModuleHelper
 {
@@ -37,6 +38,13 @@ class ModuleHelper
         }
 
       } 
+      if ($module->table == "qlik_mashups") {
+        $entity_group = DB::table("qlikmashups_groups")->where('qlik_mashups_id', $row->id)->where('group_id',UserHelper::primary_group(UserHelper::me()->id))->first();//->group_id;
+        if ($entity_group) {
+          $entity_group = $entity_group->group_id;
+        }
+
+      }
       if ($module->table == "groups") {
         $entity_group = DB::table("group_tenants")->where('group_id', $row->id)->where('group_id',UserHelper::current_user_tenant() )->first()->group_id;
       }
@@ -45,7 +53,7 @@ class ModuleHelper
       }
     }
 
-    return $entity_group;
+    return isset($entity_group) ? $entity_group : true;
   }
 
   public static function get_tenant_id($module, $row)
@@ -60,7 +68,16 @@ class ModuleHelper
         if ($entity_tenant) {
           $entity_tenant = $entity_tenant->tenant_id;
         }
-      } 
+      }
+
+      if ($module->table == "qlik_mashups") {
+        $entity_tenant = DB::table("qlikmashups_tenants")->where('qlik_mashups_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant())->first();//->group_id;
+        if ($entity_tenant) {
+          $entity_tenant = $entity_tenant->tenant_id;
+        }
+
+      }
+
       if ($module->table == "groups") {
         $entity_tenant = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->tenant_id;
       }
@@ -69,7 +86,7 @@ class ModuleHelper
       }
     }
 
-    return $entity_tenant;
+    return isset($entity_tenant) ? $entity_tenant : true;
   }
 
   /**
@@ -144,17 +161,17 @@ class ModuleHelper
 
     
 
-if(ModuleHelper::is_manually_generated($module->table)) {
-    $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
-    $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
+    if(ModuleHelper::is_manually_generated($module->table)) {
+        $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
+        $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;
 
-    //check tenant admin
-    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
-      return true;
+        //check tenant admin
+        if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+          return true;
+        }
+    } else {
+
     }
-} else {
-
-}
 
     //check correct privilege role
     if (
@@ -208,14 +225,18 @@ if(ModuleHelper::is_manually_generated($module->table)) {
 
 
 
-if(ModuleHelper::is_manually_generated($module->table)) {
+    if(ModuleHelper::is_manually_generated($module->table)) {
 
 
-    //check tenant admin
-    return ($entity_tenant == UserHelper::current_user_tenant());
+        //check tenant admin
+        return ($entity_tenant == UserHelper::current_user_tenant());
+
+    } elseif($module->table == 'qlik_items') {
+      //dd($row);
+      return QlikHelper::can_see_item($row->id);
 
 
-} else {
+    } else {
 
 
   if ($module->table == "groups") {
@@ -241,6 +262,12 @@ if(ModuleHelper::is_manually_generated($module->table)) {
 
   if ($module->table == "qlik_confs") {
       //dd(UserHelper::current_user_tenant()." ".$entity_tenant);
+      if (UserHelper::current_user_tenant() == $entity_tenant && UserHelper::isTenantAdmin(CRUDBooster::myId()) ) {
+        return true;
+      }
+  }
+
+if ($module->table == "qlik_mashups") {
       if (UserHelper::current_user_tenant() == $entity_tenant && UserHelper::isTenantAdmin(CRUDBooster::myId()) ) {
         return true;
       }
@@ -345,9 +372,13 @@ if(ModuleHelper::is_manually_generated($module->table)) {
     $entity_group = ModuleHelper::get_group_id($module, $row);
     $entity_tenant = ModuleHelper::get_tenant_id($module, $row);
 
-    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+
+
+
+
+    /*if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
       return true;
-    }
+    }*/
 
 
     /*if(ModuleHelper::is_manually_generated($module->table)) {
@@ -471,7 +502,14 @@ if(ModuleHelper::is_manually_generated($module->table)) {
 
     $entity_group = ModuleHelper::get_group_id($module, $row);
     $entity_tenant = ModuleHelper::get_tenant_id($module, $row);
-if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+
+    if (UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+        if(ModuleHelper::can_tenant_admin_view($module, $row, $entity_group, $entity_tenant)) {
+          return true;
+        } 
+    }
+
+    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
       return true;
     }
 
@@ -514,6 +552,8 @@ if(ModuleHelper::is_manually_generated($module->table)) {
       //var_dump('can edit false2'.$row->id);
       return false;
     }
+
+
 
     //from here checks should be only for tenantadmin
 
@@ -600,9 +640,9 @@ if(ModuleHelper::is_manually_generated($module->table)) {
 
     
 
-    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+    /*if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
       return true;
-    }
+    }*/
 
 /*if(ModuleHelper::is_manually_generated($module->table)) {
     $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;

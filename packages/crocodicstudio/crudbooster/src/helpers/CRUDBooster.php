@@ -1122,31 +1122,45 @@ return Request::segment($segment);
         $parent_table = CRUDBooster::parseSqlTable($parent_table)['table'];
         $child_table = CRUDBooster::parseSqlTable($child_table)['table'];
         //file_put_contents(__CLASS__."/getForeignKey.txt","RO1021\n" .json_encode($parent_table)."\n\n", FILE_APPEND);
+        file_put_contents(__DIR__."/getForeignKey.txt","{$parent_table} - {$child_table}\n", FILE_APPEND);
         //#RAMA menu n:n groups
         if ($parent_table == 'cms_menus' and $child_table == 'menu_groups') {
             return 'menu_id';
         }
         if ($parent_table == 'groups' and $child_table == 'menu_groups') {
+            file_put_contents(__DIR__."/getForeignKey.txt"," - group_id\n\n", FILE_APPEND);
             return 'group_id';
         }
         //#RAMA menu n:n tenants
         if ($parent_table == 'cms_menus' and $child_table == 'menu_tenants') {
             return 'menu_id';
         }
-	if ($parent_table == 'tenants' and $child_table == 'qlikconfs_tenants') {
-            return 'tenant_id';
-        }
+
         if ($parent_table == 'tenants' and $child_table == 'menu_tenants') {
             return 'tenant_id';
         }
-        //#RAMA group n:n tenants
+        //#
         if ($parent_table == 'groups' and $child_table == 'group_tenants') {
             return 'group_id';
         }
-	if ($parent_table == 'groups' and $child_table == 'qlikconfs_groups') {
+
+
+
+        if ($parent_table == 'tenants' and $child_table == 'group_tenants') {
+            return 'tenant_id';
+        }
+//qlik mashups 
+        if ($parent_table == 'groups' and $child_table == 'qlikmashups_groups') {
             return 'group_id';
         }
-        if ($parent_table == 'tenants' and $child_table == 'group_tenants') {
+	    if ($parent_table == 'tenants' and $child_table == 'qlikmashups_tenants') {
+            return 'tenant_id';
+        }
+//qlik confs
+        if ($parent_table == 'groups' and $child_table == 'qlikconfs_groups') {
+            return 'group_id';
+        }
+        if ($parent_table == 'tenants' and $child_table == 'qlikconfs_tenants') {
             return 'tenant_id';
         }
         if (Schema::hasColumn($child_table, 'id_' . $parent_table)) {

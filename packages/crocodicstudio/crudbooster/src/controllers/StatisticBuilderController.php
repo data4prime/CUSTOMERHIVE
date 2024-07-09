@@ -3,6 +3,10 @@
 namespace crocodicstudio\crudbooster\controllers;
 
 use CRUDBooster;
+use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
+
+
+use \crocodicstudio\crudbooster\controllers\QlikMashupController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Excel;
 use Illuminate\Support\Facades\PDF;
@@ -32,6 +36,7 @@ class StatisticBuilderController extends CBController
 
         $this->col = [];
         $this->col[] = ["label" => "Name", "name" => "name"];
+        $this->col[] = ["label" => "Layout", "name" => "layout"];
 
         $this->form = [];
         $this->form[] = [
@@ -40,12 +45,26 @@ class StatisticBuilderController extends CBController
             "type" => "text",
             "required" => true,
             "validation" => "required|min:3|max:255",
-            "placeholder" => "You can only enter the letter only",
+            "placeholder" => "",
+        ];
+
+        $this->form[] = [
+            "label" => "Layout",
+            "name" => "layout",
+            "type" => "select",
+            "required" => true,
+            "datatable" => "dashboard_layouts,layoutname",
+            "validation" => "required",
+            "placeholder" => "",
         ];
 
         $this->addaction = [];
-        $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('builder') . '/[id]', 'icon' => 'fa fa-wrench'];
+$this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('builder') . '/[id]', 'icon' => 'fa fa-wrench'];
+
+
     }
+
+
 
     public function getShowDashboard()
     {
@@ -59,6 +78,8 @@ class StatisticBuilderController extends CBController
 
         $id_cms_statistics = $row->id;
         $page_title = $row->name;
+
+        
 
         return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics'));
     }
@@ -74,13 +95,26 @@ class StatisticBuilderController extends CBController
         $id_cms_statistics = isset($row->id) ? $row->id : 0;
         $page_title = isset($row->name) ? $row->name : 'Dashboard';
 
+        $layout = $row->layout;
 
-        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics'));
+        $layout = DB::table('dashboard_layouts')->where('id', $layout)->first();
+
+        if ($layout) {
+            $code_layout = $layout->code_layout;
+        } else {
+            $code_layout = '';
+        }
+
+
+
+
+
+        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout', 'code_layout'));
     }
 
     public function getShow($slug)
     {
-        //dd("AAA");
+
         $this->cbLoader();
         $row = CRUDBooster::first($this->table, ['slug' => $slug]);
         $id_cms_statistics = $row->id;
@@ -100,12 +134,17 @@ class StatisticBuilderController extends CBController
 
         $page_title = 'Statistic Builder';
 
-        return view('crudbooster::statistic_builder.builder', compact('page_title', 'id_cms_statistics'));
+        
+        $layout = CRUDBooster::first($this->table, ['id' => $id_cms_statistics])->layout;
+        $layout = DB::table('dashboard_layouts')->where('id', $layout)->first()->code_layout;
+
+        return view('crudbooster::statistic_builder.builder', compact('page_title', 'id_cms_statistics', 'layout'));
     }
 
     public function getListComponent($id_cms_statistics, $area_name)
     {
-        $rows = DB::table('cms_statistic_components')->where('id_cms_statistics', $id_cms_statistics)->where('area_name', $area_name)->orderby('sorting', 'asc')->get();
+        $rows = DB::table('cms_statistic_components')->where('id_cms_statistics', $id_cms_statistics)->where('area_name', $area_name)
+                ->orderby('sorting', 'asc')->get();
 
         return response()->json(['components' => $rows]);
     }
@@ -114,23 +153,46 @@ class StatisticBuilderController extends CBController
     {
 
         $component = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
+
+
+
         $command = 'layout';
-        $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID'))->render();
+        $config = json_decode($component->config);
+        if ($config) {
+            $mashup = DB::table('qlik_mashups')->where('id', $config->mashups)->first();
+            if ($mashup) {
+                $conf = QlikMashupController::getConf($mashup->conf);
+            } else {
+                $conf = null;
+            }
+        } else {
+            $conf = null;
+            $config = new \stdClass();
+            $config->mashups = 0;
+            $config->object = 0;
+        }
+        $mashup = QlikMashupController::getMashupFromCompID($componentID);
+        if (isset($conf->id)) {
+        $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+            } else {
+                $token = '';
+            }
+        $layout = view('crudbooster::statistic_builder.components.' . $component->component_name, compact('command', 'componentID', 'conf', 'config','mashup', 'token'))->render();
 
         $component_name = $component->component_name;
         $area_name = $component->area_name;
-        $config = json_decode($component->config);
+
         if ($config) {
             foreach ($config as $key => $value) {
                 if ($value) {
                     $command = 'showFunction';
-                    $value = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'value', 'key', 'config', 'componentID'))->render();
+                    $value = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'value', 'key', 'config', 'conf', 'componentID', 'mashup', 'token'))->render();
                     $layout = str_replace('[' . $key . ']', $value, $layout);
                 }
             }
         }
 
-        return response()->json(compact('componentID', 'layout'));
+        return response()->json(compact('componentID', 'layout', 'config', 'conf'));
     }
 
     public function postAddComponent()
@@ -145,6 +207,7 @@ class StatisticBuilderController extends CBController
 
         $command = 'layout';
         $layout = view('crudbooster::statistic_builder.components.' . $component_name, compact('command', 'componentID'))->render();
+
 
         $data = [
             'id_cms_statistics' => $id_cms_statistics,
@@ -171,6 +234,7 @@ class StatisticBuilderController extends CBController
 
     public function getEditComponent($componentID)
     {
+        $errors = [];
         $this->cbLoader();
 
         if (!CRUDBooster::isSuperadmin()) {
@@ -182,9 +246,44 @@ class StatisticBuilderController extends CBController
 
         $config = json_decode($component_row->config);
 
+
+        if (!$config) {
+            $errors[] = 'Widget configuration is empty. Please, add configuration for this widget.';
+
+        }
+
+        /*if ($errors) {
+            return view('crudbooster::statistic_builder.components.error', compact('errors'));
+        }*/
+
+        if (isset($config->mashups)) {
+            $conf = QlikMashupController::getConf($config->mashups);
+        } else {
+            $errors[] = 'Mashup is not selected. Please, select mashup for this widget.';
+        }
+
         $command = 'configuration';
 
-        return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config'));
+        $mashups = QlikMashupController::getMashups();
+        $mashup = QlikMashupController::getMashupFromCompID($componentID);
+
+        if (!$mashup) {
+            $errors[] = 'Mashup is not selected. Please, select mashup for this widget.';
+        }
+
+        if (isset($conf) ) {
+            $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+        } else {
+            //$errors[] = 'Qlik configuration is empty or not selected.';
+            $conf = null;
+            $token = null;
+        }
+
+        /*if ($errors) {
+            return view('crudbooster::statistic_builder.components.error', compact('errors'));
+        }*/
+
+        return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf', 'mashup', 'token', 'errors'));
     }
 
     public function postSaveComponent()
@@ -211,7 +310,76 @@ class StatisticBuilderController extends CBController
 
     public function hook_before_add(&$arr)
     {
-        //Your code here
         $arr['slug'] = str_slug($arr['name']);
     }
+
+    public function mashup($componentID) {
+
+            $mashups = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
+
+            $qlik_conf = null;
+            $mashup = null;
+
+            if ($mashups) {
+                $mashups = json_decode($mashups->config);
+
+                if (isset($mashups->mashups)) {
+                    $mashup = DB::table('qlik_mashups')->where('id', $mashups->mashups)->first();
+                    if ($mashup) {
+                        $qlik_conf_record = DB::table('qlik_confs')->where('id', $mashup->conf)->first();
+                        if ($qlik_conf_record) {
+                            $qlik_conf = $qlik_conf_record->id;
+                        }
+                    }
+                }
+            }
+
+            if ($mashup && $qlik_conf) {
+                return view('mashup', compact('componentID', 'mashup', 'qlik_conf', 'mashups'));
+            }
+
+
+
+    }
+
+    public function mashup_objects($mashup, $componentID, $objectid) {
+        $comp = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
+
+        $config = new \stdClass();
+        $config->mashups = 0;
+        $config->object = 0;
+
+        if ($comp) {
+            $decodedConfig = json_decode($comp->config);
+            if ($decodedConfig) {
+                $config = $decodedConfig;
+            }
+        }
+
+        if (!isset($config->mashups)) {
+            $config->mashups = 0;
+        }
+        if (!isset($config->object)) {
+            $config->object = 0;
+        }
+
+        $mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
+        $qlik_conf = null;
+
+        if ($mashup) {
+            $qlik_conf_record = DB::table('qlik_confs')->where('id', $mashup->conf)->first();
+            if ($qlik_conf_record) {
+                $qlik_conf = $qlik_conf_record->id;
+            }
+        }
+
+        if ($mashup && $qlik_conf) {
+            return view('mashup_objects', compact('componentID', 'mashup', 'qlik_conf', 'config'));
+        }
+
+    }
+
+
+
+
 }

@@ -164,7 +164,14 @@ class AdminCmsUsersController extends CBController
 		}
 */
 
-		$this->form[] = array("label" => "Data scadenza", "type" => "date", "name" => "data_scadenza", 'required' => false, 'validation' => 'date');
+		$this->form[] = array(
+			"label" => "Data scadenza", 
+			"type" => "date", 
+			"name" => "data_scadenza", 
+			'required' => false, 
+			'validation' => 'date',
+			'disable' => UserHelper::isTenantAdmin() || CRUDBooster::isSuperadmin() ? false : true,
+		);
 
 
 
@@ -175,7 +182,7 @@ class AdminCmsUsersController extends CBController
 			'type' => 'select',
 			'dataenum' => ['Inactive'],
 			'default' => 'Active',
-			'disabled' => false
+			'disabled' => UserHelper::isTenantAdmin() || CRUDBooster::isSuperadmin() ? false : true,
 		];
 		$this->form[] = array("label" => "Photo", "name" => "photo", "type" => "upload", "help" => "Recommended resolution is 200x200px", 'required' => false, 'validation' => 'image|max:1000', 'resize_width' => 90, 'resize_height' => 90);
 		$this->form[] = array("label" => "Password", "name" => "password", "type" => "password", "help" => "Leave empty if no change is needed");
@@ -341,6 +348,8 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 			}
 		}
 
+
+		
 
 	}
 
