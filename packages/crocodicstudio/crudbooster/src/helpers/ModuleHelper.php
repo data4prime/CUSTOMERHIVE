@@ -373,6 +373,14 @@ if ($module->table == "qlik_mashups") {
     $entity_group = ModuleHelper::get_group_id($module, $row);
     $entity_tenant = ModuleHelper::get_tenant_id($module, $row);
 
+if (UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+        if(ModuleHelper::can_tenant_admin_view($module, $row, $entity_group, $entity_tenant)) {
+          return true;
+        } 
+    }
+
+
+
     if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
       return true;
     }
@@ -499,6 +507,11 @@ if ($module->table == "qlik_mashups") {
 
     $entity_group = ModuleHelper::get_group_id($module, $row);
     $entity_tenant = ModuleHelper::get_tenant_id($module, $row);
+if (UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+        if(ModuleHelper::can_tenant_admin_view($module, $row, $entity_group, $entity_tenant)) {
+          return true;
+        } 
+    }
 if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
       return true;
     }
@@ -542,6 +555,8 @@ if(ModuleHelper::is_manually_generated($module->table)) {
       //var_dump('can edit false2'.$row->id);
       return false;
     }
+
+
 
     //from here checks should be only for tenantadmin
 
