@@ -38,7 +38,7 @@ class ModuleHelper
 
       } 
       if ($module->table == "qlik_mashups") {
-        $entity_group = DB::table("qlikmashups_groups")->where('qlik_mashups_id', $row->id)->whereIn('group_id',UserHelper::primary_group())->first();//->group_id;
+        $entity_group = DB::table("qlikmashups_groups")->where('qlik_mashups_id', $row->id)->whereIn('group_id',UserHelper::primary_group(UserHelper::me()->id))->first();//->group_id;
         if ($entity_group) {
           $entity_group = $entity_group->group_id;
         }
