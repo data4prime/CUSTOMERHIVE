@@ -373,12 +373,7 @@ if ($module->table == "qlik_mashups") {
     $entity_group = ModuleHelper::get_group_id($module, $row);
     $entity_tenant = ModuleHelper::get_tenant_id($module, $row);
 
-if (UserHelper::isTenantAdmin(CRUDBooster::myId())) {
-        if(ModuleHelper::can_tenant_admin_view($module, $row, $entity_group, $entity_tenant)) {
-          //dd(ModuleHelper::can_tenant_admin_view($module, $row, $entity_group, $entity_tenant));
-          return true;
-        } 
-    }
+
 
 
 

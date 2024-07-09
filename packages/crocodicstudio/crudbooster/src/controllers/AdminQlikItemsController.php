@@ -523,9 +523,9 @@ class AdminQlikItemsController extends CBController
 	public function access($item_id, $alert_id = null)
 	{
 		//check auth
-		/*if (!CRUDBooster::isSuperadmin()) {
+		if (!CRUDBooster::isSuperadmin()) {
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
-		}*/
+		}
 		$data['item_id'] = $item_id;
 		$data['qlik_item'] = QlikItem::find($item_id);
 		$data['groups'] = ItemsAllowed::where('item_id', $item_id)
