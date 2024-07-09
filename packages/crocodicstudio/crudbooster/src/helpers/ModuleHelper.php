@@ -642,9 +642,9 @@ if(ModuleHelper::is_manually_generated($module->table)) {
 
     
 
-    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+    /*if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
       return true;
-    }
+    }*/
 
 /*if(ModuleHelper::is_manually_generated($module->table)) {
     $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
