@@ -70,7 +70,7 @@ class ModuleHelper
       }
 
       if ($module->table == "qlik_mashups") {
-        $entity_tenant = DB::table("qlikmashups_tenants")->where('qlik_mashups_id', $row->id)->where('tenants_id',UserHelper::current_user_tenant())->first();//->group_id;
+        $entity_tenant = DB::table("qlikmashups_tenants")->where('qlik_mashups_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant())->first();//->group_id;
         if ($entity_tenant) {
           $entity_tenant = $entity_tenant->tenant_id;
         }
