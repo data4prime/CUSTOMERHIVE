@@ -8,6 +8,7 @@ use App\GroupTenants;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Session;
+use crocodicstudio\crudbooster\helpers\QlikHelper;
 
 class ModuleHelper
 {
@@ -229,6 +230,10 @@ if(ModuleHelper::is_manually_generated($module->table)) {
 
     //check tenant admin
     return ($entity_tenant == UserHelper::current_user_tenant());
+
+} elseif($module->table == 'qlik_items') {
+
+  return QlikHelper::can_see_item($row_id);
 
 
 } else {
