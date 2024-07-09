@@ -1,6 +1,10 @@
 
+
 @if(isset($form['datatable']))
 @if(isset($form['relationship_table']))
+
+
+
 @push('bottom')
 <script type="text/javascript">
     $(function () {
@@ -155,6 +159,7 @@ echo $enum;
             @endif
             @if(isset($form['datatable']))
             @if(isset($form['relationship_table']))
+                
             <?php
                     $table_name = explode(',', $form['datatable'])[0];
                     $select_title = explode(',', $form['datatable'])[1];
@@ -174,8 +179,15 @@ echo $enum;
                       $value = DB::table($params[0])->where($params[2], $id)->first()->{$params[1]};
                       $value = explode(",", $value);
                     } else {
+                     
                       $foreignKey = CRUDBooster::getForeignKey($table, $form['relationship_table']);
                       $foreignKey2 = CRUDBooster::getForeignKey($table_name, $form['relationship_table']);
+                        /*if ($foreignKey == 'qlik_confs_id' || $foreignKey2 == 'qlik_confs_id') {
+                        echo "foreignKey - {$foreignKey} - {$table} - {$form['relationship_table']}";
+                        echo "foreignKey2 - {$foreignKey2} - {$table_name} - {$form['relationship_table']}";
+                            die("foreignKey - {$foreignKey} - {$table} - {$form['relationship_table']}");
+                        }*/
+                       
                       $value = DB::table($form['relationship_table'])->where($foreignKey, (isset($id) ? $id : 0))->get();
                       $value = $value->pluck($foreignKey2)->toArray();
                     }
@@ -237,6 +249,7 @@ echo $enum;
 @push('bottom')
 @if(isset($form['datatable']) AND isset($form['relationship_table']) AND isset($form['parent_select']))
 <?php
+
     $exploded_parent = explode(",", $form['parent_select']);
     $parent_select = count($exploded_parent) > 1 ? $exploded_parent : $form['parent_select'];
     $parent = is_array($parent_select) ? $parent_select[0] : $parent_select;
@@ -367,6 +380,7 @@ echo $enum;
 @endpush
 @elseif(isset($form['datatable']) AND isset($form['parent_crosstable']) AND isset($form['parent_select']))
 <?php
+    
     $exploded_parent = explode(",", $form['parent_select']);
     $parent_select = count($exploded_parent) > 1 ? $exploded_parent : $form['parent_select'];
     $parent = is_array($parent_select) ? $parent_select[0] : $parent_select;
