@@ -37,6 +37,13 @@ class ModuleHelper
         }
 
       } 
+      if ($module->table == "qlik_mashups") {
+        $entity_group = DB::table("qlikmashups_groups")->where('qlik_mashups_id', $row->id)->where('group_id',UserHelper::current_user_tenant())->first();//->group_id;
+        if ($entity_group) {
+          $entity_group = $entity_group->group_id;
+        }
+
+      }
       if ($module->table == "groups") {
         $entity_group = DB::table("group_tenants")->where('group_id', $row->id)->where('group_id',UserHelper::current_user_tenant() )->first()->group_id;
       }
@@ -60,7 +67,16 @@ class ModuleHelper
         if ($entity_tenant) {
           $entity_tenant = $entity_tenant->tenant_id;
         }
-      } 
+      }
+
+      if ($module->table == "qlik_mashups") {
+        $entity_tenant = DB::table("qlikmashups_tenants")->where('qlik_mashups_id', $row->id)->where('tenants_id',UserHelper::current_user_tenant())->first();//->group_id;
+        if ($entity_tenant) {
+          $entity_tenant = $entity_tenant->tenant_id;
+        }
+
+      }
+
       if ($module->table == "groups") {
         $entity_tenant = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->tenant_id;
       }
