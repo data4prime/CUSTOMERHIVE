@@ -69,7 +69,7 @@ class ModuleHelper
       }
     }
 
-    return $entity_tenant;
+    return isset($entity_tenant) ? $entity_tenant : true;
   }
 
   /**
