@@ -232,7 +232,7 @@ if(ModuleHelper::is_manually_generated($module->table)) {
     return ($entity_tenant == UserHelper::current_user_tenant());
 
 } elseif($module->table == 'qlik_items') {
-
+  dd($row);
   return QlikHelper::can_see_item($row->id);
 
 
