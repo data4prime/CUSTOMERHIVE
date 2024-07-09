@@ -65,7 +65,7 @@ class QlikHelper
       add_log_ch('can see item', 'qlik item not found id: ' . $qlik_item_id);
       return false;
     }
-    if (!MyHelper::is_int($qlik_item)) {
+    if (!MyHelper::is_int($qlik_item_id)) {
       add_log_ch('can see item', 'qlik item id is not int: ' . $qlik_item_id);
       return false;
     }
