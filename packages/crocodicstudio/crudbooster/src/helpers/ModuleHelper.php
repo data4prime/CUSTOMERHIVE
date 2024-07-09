@@ -233,7 +233,7 @@ if(ModuleHelper::is_manually_generated($module->table)) {
 
 } elseif($module->table == 'qlik_items') {
 
-  return QlikHelper::can_see_item($row_id);
+  return QlikHelper::can_see_item($row->id);
 
 
 } else {
