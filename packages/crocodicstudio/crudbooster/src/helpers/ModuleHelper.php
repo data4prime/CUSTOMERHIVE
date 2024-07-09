@@ -377,9 +377,9 @@ if ($module->table == "qlik_mashups") {
 
 
 
-    if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
+    /*if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
       return true;
-    }
+    }*/
 
 
     /*if(ModuleHelper::is_manually_generated($module->table)) {
@@ -506,7 +506,6 @@ if ($module->table == "qlik_mashups") {
 
     if (UserHelper::isTenantAdmin(CRUDBooster::myId())) {
         if(ModuleHelper::can_tenant_admin_view($module, $row, $entity_group, $entity_tenant)) {
-        dd(ModuleHelper::can_tenant_admin_view($module, $row, $entity_group, $entity_tenant));
           return true;
         } 
     }
