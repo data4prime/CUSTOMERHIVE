@@ -704,41 +704,10 @@ class CBController extends Controller
             case 'xls':
                 return Excel::download(new ExportData($response, $filename, $paperorientation), $filename . '.xlsx');
 
-
-                /*
-                Excel::create($filename, function ($excel) use ($response) {
-                    $excel->setTitle($filename)->setCreator("crudbooster.com")->setCompany(CRUDBooster::getSetting('appname'));
-                    $excel->sheet($filename, function ($sheet) use ($response) {
-                        $sheet->setOrientation($paperorientation);
-                        $sheet->loadview('crudbooster::export', $response);
-                    });
-                })->export('xls');
-*/
-
-                /*
-                Excel::create($filename, function ($excel) use ($response) {
-                    $excel->setTitle($filename)->setCreator("crudbooster.com")->setCompany(CRUDBooster::getSetting('appname'));
-                    $excel->sheet($filename, function ($sheet) use ($response) {
-                        $sheet->setOrientation($paperorientation);
-                        $sheet->loadview('crudbooster::export', $response);
-                    });
-                })->export('xls');
-*/
-
-
-
                 break;
             case 'csv':
                 return Excel::download(new ExportData($response, $filename, $paperorientation), $filename . '.csv');
-                /*
-                Excel::create($filename, function ($excel) use ($response) {
-                    $excel->setTitle($filename)->setCreator("crudbooster.com")->setCompany(CRUDBooster::getSetting('appname'));
-                    $excel->sheet($filename, function ($sheet) use ($response) {
-                        $sheet->setOrientation($paperorientation);
-                        $sheet->loadview('crudbooster::export', $response);
-                    });
-                })->export('csv');
-*/
+
                 break;
         }
     }

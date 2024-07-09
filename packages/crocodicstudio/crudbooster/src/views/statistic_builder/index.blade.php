@@ -1,6 +1,6 @@
 @push('bottom')
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>-->
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
 
@@ -29,6 +29,11 @@
 @endpush
 @push('head')
 <style type="text/css">
+.statistic-row>div {
+
+/*overflow: auto;*/
+
+}
     .control-sidebar ul {
         padding: 0 0 0 0;
         margin: 0 0 0 0;
@@ -146,6 +151,10 @@
         display: block;
     }
 
+    .panel {
+        margin-bottom: 0px;
+    }
+
     .panel-heading,
     .inner-box,
     .box-header,
@@ -185,7 +194,7 @@
 
         var cloneSidebar = $('.control-sidebar').clone();
 
-        @if (CRUDBooster:: getCurrentMethod() == 'getBuilder')
+        @if (CRUDBooster::getCurrentMethod() == 'getBuilder')
     createSortable();
 
     @endif
@@ -341,6 +350,7 @@
 </script>
 @endpush
 
+
 <div id='modal-statistic' class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -363,8 +373,9 @@
 
 <div id='statistic-area'>
 
+@php echo str_replace("\r\n", "", $layout) @endphp
 
-    <div class="statistic-row row">
+    <!--<div class="statistic-row row">
         <div id='area1' class="col-sm-3 connectedSortable">
 
         </div>
@@ -379,10 +390,44 @@
         </div>
     </div>
 
-    <div class='statistic-row row'>
-        <div id='area5' class="col-sm-12 connectedSortable">
+<div class="statistic-row row">
+        <div id='area5' class="col-sm-3 connectedSortable">
+
+        </div>
+        <div id='area6' class="col-sm-3 connectedSortable">
+
+        </div>
+        <div id='area7' class="col-sm-3 connectedSortable">
+
+        </div>
+        <div id='area8' class="col-sm-3 connectedSortable">
 
         </div>
     </div>
 
+    <div class='statistic-row row'>
+        <div id='area9' class="col-sm-12 connectedSortable">
+
+        </div>-->
+    </div>
+
 </div><!--END STATISTIC AREA-->
+
+<script defer>
+
+if (window.location.href.includes('statistic_builder/builder')) {
+
+    const statisticRows = document.querySelectorAll('.statistic-row');
+
+    statisticRows.forEach(row => {
+
+        //row.style.border = '1px solid black';
+
+        const childNodes = row.querySelectorAll('*');
+        childNodes.forEach(child => {
+            child.style.border = '1px dotted black';
+        });
+    });
+}
+
+</script>

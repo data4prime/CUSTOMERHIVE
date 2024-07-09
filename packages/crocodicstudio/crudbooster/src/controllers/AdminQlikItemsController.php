@@ -480,10 +480,12 @@ class AdminQlikItemsController extends CBController
 			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item_id);
 
+			//dd($qlik_ticket);
+
 
 			if (empty($qlik_ticket)) {
 				$data['error'] = 'Qlik authentication failed. Ask an admin to fix it';
-				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+				//CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
 			}
 
 
