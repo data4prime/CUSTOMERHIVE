@@ -807,7 +807,7 @@ class ModulsController extends CBController
     $file_controller .= "\t\t\t# END COLUMNS DO NOT REMOVE THIS LINE\n\n";
     $file_controller .= "\t\t\t" . trim($rraw[1]);
 
-    //file_put_contents(app_path('Http/Controllers/' . $row->controller . '.php'), $file_controller);
+    file_put_contents(app_path('Http/Controllers/' . $row->controller . '.php'), $file_controller);
 
     //return redirect(Route("ModulsControllerGetStep4", ["id" => $id]));
     return redirect(Route("ModulsControllerGetStep4") . "/{$id}");
@@ -935,7 +935,7 @@ class ModulsController extends CBController
     $file_controller .= "\t\t\t" . trim($bottom_script);
 
     //CREATE FILE CONTROLLER
-    //file_put_contents(app_path('Http/Controllers/' . $row->controller . '.php'), $file_controller);
+    file_put_contents(app_path('Http/Controllers/' . $row->controller . '.php'), $file_controller);
 
     //return redirect(Route("ModulsControllerGetStep5", ["id" => $id]));
     return redirect(Route("ModulsControllerGetStep5") . "/{$id}");
@@ -1012,7 +1012,7 @@ class ModulsController extends CBController
     $file_controller .= "\t\t\t# END CONFIGURATION DO NOT REMOVE THIS LINE\n\n";
     $file_controller .= "\t\t\t" . trim($rraw[1]);
 
-    //file_put_contents(app_path('Http/Controllers/' . $row->controller . '.php'), $file_controller);
+    file_put_contents(app_path('Http/Controllers/' . $row->controller . '.php'), $file_controller);
 
     // #RAMA sposta creazione tabella qui?
 
