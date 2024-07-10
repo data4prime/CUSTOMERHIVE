@@ -591,10 +591,11 @@ class CBController extends Controller
 
                 if (isset($col['image'])) {
                     if ($value == '') {
-                        $value = "<a  data-lightbox='roadtrip' rel='group_{{$table}}' title='$label: $title' href='/storage" . UserHelper::icon(@$row->id) . "'><img width='40px' height='40px' src='/storage" . UserHelper::icon(@$row->id) . "'/></a>";
+                        //$value = "<a  data-lightbox='roadtrip' rel='group_{{$table}}' title='$label: $title' href='/storage" . UserHelper::icon(@$row->id) . "'><img width='40px' height='40px' src='/storage" . UserHelper::icon(@$row->id) . "'/></a>";
+                        $value = "<a  data-lightbox='roadtrip' rel='group_{{$table}}' title='$label: $title' href='" . UserHelper::icon(@$row->id) . "'><img width='40px' height='40px' src='" . UserHelper::icon(@$row->id) . "'/></a>";
                     } else {
                         $pic = (strpos($value, 'http://') !== false) ? $value : asset($value);
-                        $pic = '/storage' . $value;
+                        //$pic = '/storage' . $value;
                         $value = "<a data-lightbox='roadtrip'  rel='group_{{$table}}' title='$label: $title' href='" . $pic . "'><img width='40px' height='40px' src='" . $pic . "'/></a>";
                     }
                 }
