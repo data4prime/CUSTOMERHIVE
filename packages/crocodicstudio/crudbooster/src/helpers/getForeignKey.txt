@@ -149,3 +149,35 @@ cms_menus - menu_groups
 groups - menu_groups
  - group_id
 
+qlik_confs - qlikconfs_tenants
+tenants - qlikconfs_tenants
+qlik_confs - qlikconfs_groups
+groups - qlikconfs_groups
+qlik_confs - qlikconfs_tenants
+tenants - qlikconfs_tenants
+qlik_confs - qlikconfs_groups
+groups - qlikconfs_groups
+tenants - qlikconfs_tenants
+qlik_confs - qlikconfs_tenants
+groups - qlikconfs_groups
+qlik_confs - qlikconfs_groups
+qlik_confs - qlikconfs_tenants
+tenants - qlikconfs_tenants
+qlik_confs - qlikconfs_groups
+groups - qlikconfs_groups
+qlik_confs - qlikconfs_tenants
+tenants - qlikconfs_tenants
+qlik_confs - qlikconfs_groups
+groups - qlikconfs_groups
+tenants - qlikconfs_tenants
+qlik_confs - qlikconfs_tenants
+groups - qlikconfs_groups
+qlik_confs - qlikconfs_groups
+qlik_confs - qlikconfs_tenants
+tenants - qlikconfs_tenants
+qlik_confs - qlikconfs_groups
+groups - qlikconfs_groups
+qlik_confs - qlikconfs_tenants
+tenants - qlikconfs_tenants
+qlik_confs - qlikconfs_groups
+groups - qlikconfs_groups
