@@ -374,7 +374,7 @@
 <div id='statistic-area'>
 
 @if (!empty($code_layout)) 
-    {{ str_replace("\r\n", "", $code_layout)}} 
+    @php echo  str_replace("\r\n", "", $code_layout) @endphp
 @else 
 
 <div class="statistic-row row">
