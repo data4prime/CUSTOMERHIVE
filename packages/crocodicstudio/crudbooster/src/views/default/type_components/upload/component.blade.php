@@ -8,6 +8,13 @@
     <div class="{{$col_width?:'col-sm-10'}}">
         @if($value)
             <?php
+if (function_exists('checkHttpStatus') === false) {
+    /**
+     * Verifica lo stato HTTP di un URL
+     *
+     * @param string $url URL da verificare
+     * @return bool Restituisce true se lo stato HTTP è 200, altrimenti false
+     */
 function checkHttpStatus($url) {
     // Inizializza una sessione cURL
     $ch = curl_init($url);
@@ -33,6 +40,7 @@ function checkHttpStatus($url) {
     } else {
         return false;
     }
+}
 }
             //if(Storage::exists($value) || file_exists($value)):
             if(checkHttpStatus($value)):
