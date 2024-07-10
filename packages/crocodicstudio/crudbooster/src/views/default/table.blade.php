@@ -605,9 +605,19 @@ $('#mass_editing_button').click(function () {
             <div class="modal-header">
                 <button class="close" aria-label="Close" type="button" data-dismiss="modal">
                     <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title"><i class='fa fa-filter'></i>Mass Edit</h4>
+                <h4 class="modal-title"><i class='fa fa-pencil'></i> Mass Edit</h4>
             </div>
+<form action="">
 <div class="modal-body">@include("crudbooster::default.form_body")</div>
+
+<div class="modal-footer" align="right">
+                    <button class="btn btn-default" type="button"
+                        data-dismiss="modal">{{trans("crudbooster.button_close")}}</button>
+                    <button class="btn btn-primary btn-submit"
+                        type="submit">{{trans('crudbooster.button_submit')}}</button>
+                </div>
+</form>
+
 
 
         </div>
