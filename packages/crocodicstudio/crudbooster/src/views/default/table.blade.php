@@ -609,7 +609,7 @@ $('#mass_editing_button').click(function () {
             </div>
             <form method='get' action=''>
                 <div class="modal-body">
-{!! dd($columns); !!}
+{!! dd(get_defined_vars()); !!}
                     <?php foreach($columns as $key => $col):?>
                     <?php if (isset($col['image']) || isset($col['download']) || (isset($col['visible']) && $col['visible'] === FALSE)) continue;?>
 
