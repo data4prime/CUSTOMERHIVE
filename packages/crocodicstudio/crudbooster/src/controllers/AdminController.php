@@ -171,7 +171,6 @@ class AdminController extends CBController
     $background_image_src = CRUDBooster::getBackgroundImage($tenant);
     $background = $background_color . " url(" . $background_image_src . ")";
 
-    dd($favicon);
 
     return view('crudbooster::forgot',compact('tenant', 'favicon', 'logo', 'background'));
   }
