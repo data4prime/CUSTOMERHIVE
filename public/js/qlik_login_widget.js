@@ -122,7 +122,7 @@ function objectsOptions(app) {
 
 async function jwtLogin() {
     const authHeader = 'Bearer ' + qlik_token;
-    //console.log(authHeader);
+    console.log(authHeader);
 
     const response = await fetch(`${host}/login/jwt-session`, {
         credentials: 'include',
