@@ -73,9 +73,13 @@
                     <span class="fa fa-caret-down"></span></button>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="javascript:void(0)" data-name='mass-edit' title="Mass Edit">
-                            <i class="fa fa-trash"></i>Mass Edit</a>
+                    <a style="margin-top:-23px" href="javascript:void(0)" id='mass_editing_button'
+                                    data-url-parameter='{{$build_query}}' title='Mass Edit'
+                                    class="btn btn-sm btn-default">
+                                    <i class="fa fa-pencil"></i> Mass Edit
+                                </a>
                     </li>
+                    
                     @if($button_delete && CRUDBooster::isDelete())
                     <li>
                         <a href="javascript:void(0)" data-name='delete' title="{{trans('crudbooster.action_delete_selected')}}">
