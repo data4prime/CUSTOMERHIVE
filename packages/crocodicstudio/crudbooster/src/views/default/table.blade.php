@@ -22,6 +22,7 @@
             $('#form-table input[name="button_name"]').val(name);
             var title = $(this).attr('title');
 
+            if (title != 'Mass Edit') {
             swal({
                 title: "{{trans("crudbooster.confirmation_title")}}",
                 text: "{{trans("crudbooster.alert_bulk_action_button")}} " + title + " ?",
@@ -35,6 +36,9 @@
                 function () {
                     $('#form-table').submit();
                 });
+            }
+
+
 
         })
 
