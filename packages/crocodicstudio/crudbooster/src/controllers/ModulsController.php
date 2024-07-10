@@ -722,7 +722,7 @@ class ModulsController extends CBController
     $data['columns'] = $columns;
     $data['columns_human_readable'] = $columns_human_readable;
     $data['table_list'] = $table_list;
-    $data['cb_col'] = $cb_col;
+    $data['cb_col'] = isset($cb_col) ? $cb_col : [];
     $data['active_tab'] = 3;
     $messages = explode(',', $messages);
     $data['messages'] = array();
