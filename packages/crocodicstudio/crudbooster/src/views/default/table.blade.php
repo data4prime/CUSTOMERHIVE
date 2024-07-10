@@ -609,7 +609,7 @@ $('#mass_editing_button').click(function () {
             </div>
             <form method='get' action=''>
                 <div class="modal-body">
-{!! dd(get_defined_vars()); !!}
+
                     <?php foreach($columns as $key => $col):?>
                     <?php if (isset($col['image']) || isset($col['download']) || (isset($col['visible']) && $col['visible'] === FALSE)) continue;?>
 
@@ -620,6 +620,7 @@ $('#mass_editing_button').click(function () {
                             <div class="col-sm-2">
                                 <strong>{{$col['label']}}</strong>
                             </div>
+@include("crudbooster::default.form_body")
 
                             <div class='col-sm-5'>
                                 <input type='text' class='filter-value form-control' style='{{ isset($col["field_with"]) &&
