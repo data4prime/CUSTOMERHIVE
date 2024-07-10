@@ -50,8 +50,7 @@
     <div class="login-box">
         <div class="login-logo">
             <a href="{{url('/')}}">
-                <img title='{!!(isset($appname))? $appname : "<b>CRUD</b>Booster"!!}' src='{{
-                CRUDBooster::getSetting("logo")?asset(CRUDBooster::getSetting("logo")):asset("vendor/crudbooster/assets/logo_crudbooster.png") }}'
+                <img title='{!!(isset($appname))? $appname : "<b>CRUD</b>Booster"!!}' src='{{ $logo }}'
                     style='max-width: 100%;max-height:170px' />
             </a>
         </div><!-- /.login-logo -->
