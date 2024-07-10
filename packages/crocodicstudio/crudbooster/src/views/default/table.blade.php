@@ -605,10 +605,10 @@ $('#mass_editing_button').click(function () {
             <div class="modal-header">
                 <button class="close" aria-label="Close" type="button" data-dismiss="modal">
                     <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title"><i class='fa fa-filter'></i> {{trans("crudbooster.filter_dialog_title")}}</h4>
+                <h4 class="modal-title"><i class='fa fa-filter'></i>Mass Edit</h4>
             </div>
+<div class="modal-body">@include("crudbooster::default.form_body")</div>
 
-@include("crudbooster::default.form_body")
 
         </div>
         <!-- /.modal-content -->
