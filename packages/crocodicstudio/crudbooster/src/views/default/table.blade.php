@@ -608,7 +608,7 @@ $('#mass_editing_button').click(function () {
                 <h4 class="modal-title"><i class='fa fa-pencil'></i> Mass Edit</h4>
             </div>
 <form action="">
-<div class="modal-body">@include("crudbooster::default.form_body")</div>
+<div class="modal-body">@include("crudbooster::mass_edit.form_body")</div>
 
 <div class="modal-footer" align="right">
                     <button class="btn btn-default" type="button"
