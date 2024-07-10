@@ -586,7 +586,11 @@ $total = $result->total();
     </div>
 </div>
 
-
+<script>
+$('#mass_editing_button').click(function () {
+    $('#mass_editing_modal').modal('show');
+})
+</script>
 
 
 
