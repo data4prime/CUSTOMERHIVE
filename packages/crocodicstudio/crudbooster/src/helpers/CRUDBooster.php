@@ -32,6 +32,53 @@ use crocodicstudio\crudbooster\helpers\UserHelper;
 class CRUDBooster
 {
 
+    public static function getFavicon($tenant) {
+
+        if (isset($tenant->favicon)) {
+        //tenant favicon
+            return $tenant->favicon;
+        } elseif (CRUDBooster::getSetting('favicon')) {
+        //default site favicon
+            return asset(CRUDBooster::getSetting('favicon'));
+        } else {
+        //default crudbooster favicon
+            return asset('vendor/crudbooster/assets/logo_crudbooster.png');
+        }
+
+    }
+
+
+    public static function getLogo($tenant) {
+        if (isset($tenant->logo)) {
+        return $tenant->logo;
+        } elseif (CRUDBooster::getSetting('logo')) {
+        return asset(CRUDBooster::getSetting('logo'));
+        } else {
+        return "";
+        }
+
+    }
+
+    public static function getBackgroundColor($tenant) {
+        if (isset($tenant->login_background_color)) {
+            return $tenant->login_background_color;
+        } elseif (CRUDBooster::getSetting('login_background_color')) {
+            return asset(CRUDBooster::getSetting('login_background_color'));
+        } else {
+            return '#dddddd';
+        }
+    }
+
+    public static function getBackgroundImage($tenant) {
+        if (isset($tenant->login_background_image)) {
+            return $tenant->login_background_image;
+        } elseif (CRUDBooster::getSetting('login_background_image')) {
+            return asset(CRUDBooster::getSetting('login_background_image'));
+        } else {
+            return asset('vendor/crudbooster/assets/bg_blur3.jpg');
+        }
+    }
+
 
     public static function isEditPage() {
 
