@@ -72,10 +72,13 @@
                     {{trans("crudbooster.button_selected_action")}}
                     <span class="fa fa-caret-down"></span></button>
                 <ul class="dropdown-menu">
+                    <li>
+                        <a href="javascript:void(0)" data-name='mass-edit' title="Mass Edit">
+                            <i class="fa fa-trash"></i>Mass Edit</a>
+                    </li>
                     @if($button_delete && CRUDBooster::isDelete())
                     <li>
-                        <a href="javascript:void(0)" data-name='delete' title='{{trans('
-                            crudbooster.action_delete_selected')}}'>
+                        <a href="javascript:void(0)" data-name='delete' title="{{trans('crudbooster.action_delete_selected')}}">
                             <i class="fa fa-trash"></i> {{trans('crudbooster.action_delete_selected')}}
                         </a>
                     </li>
