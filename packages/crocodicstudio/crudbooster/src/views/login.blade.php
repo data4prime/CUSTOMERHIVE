@@ -38,7 +38,7 @@
         .register-page {
             background: {{ $background }};
 
-            color: {{ $tenant->login_font_color ?: '#ffffff'}} !important;
+            color: {{ ($tenant && isset($tenant->login_font_color)) ?: '#666666'}} !important;
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
