@@ -29,9 +29,12 @@
     <style type="text/css">
         .login-page,
         .register-page {
-            background: {{ $background }};
+            background: @php echo CRUDBooster::getSetting("login_background_color")?:'#dddddd'@endphp ;
 
-            color: {{ $tenant->login_font_color ?: '#ffffff'}} !important;
+
+            url('{{ CRUDBooster::getSetting("login_background_image")?asset(CRUDBooster::getSetting("login_background_image")):asset("vendor/crudbooster/assets/bg_blur3.jpg") }}');
+
+            color: @php echo CRUDBooster::getSetting("login_font_color")?:'#ffffff'@endphp !important;
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;

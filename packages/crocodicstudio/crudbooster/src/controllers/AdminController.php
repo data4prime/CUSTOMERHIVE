@@ -75,7 +75,7 @@ class AdminController extends CBController
     $tenant = Tenant::where('domain_name', $tenant_domain_name)->first();
     if (isset($tenant->favicon)) {
       //tenant favicon
-      $favicon = '/' . $tenant->favicon;
+      $favicon = $tenant->favicon;
     } elseif (CRUDBooster::getSetting('favicon')) {
       //default site favicon
       $favicon = asset(CRUDBooster::getSetting('favicon'));
