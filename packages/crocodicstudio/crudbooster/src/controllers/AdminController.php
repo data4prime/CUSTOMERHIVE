@@ -110,7 +110,7 @@ class AdminController extends CBController
 
     if (isset($tenant->login_background_image)) {
       //tenant background_image
-      $background_image_src = '/' . $tenant->login_background_image;
+      $background_image_src =  $tenant->login_background_image;
     } elseif (CRUDBooster::getSetting('login_background_image')) {
       //default site background_image
       $background_image_src = asset(CRUDBooster::getSetting('login_background_image'));
