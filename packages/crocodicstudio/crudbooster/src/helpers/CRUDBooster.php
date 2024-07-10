@@ -1668,7 +1668,7 @@ crocodicstudio\crudbooster\controllers\
 
         $php = trim($php);
         $path = base_path("app/Http/Controllers/");
-        //file_put_contents($path . 'Api' . $controller_name . 'Controller.php', $php);
+        file_put_contents($path . 'Api' . $controller_name . 'Controller.php', $php);
     }
 
     public static function makeControllerName($name)
@@ -2223,7 +2223,7 @@ crocodicstudio\crudbooster\controllers\
         $php = trim($php);
 
         //create file controller
-        //file_put_contents($path . 'Admin' . $controllername . '.php', $php);
+        file_put_contents($path . 'Admin' . $controllername . '.php', $php);
 
         return 'Admin' . $controllername;
     }
