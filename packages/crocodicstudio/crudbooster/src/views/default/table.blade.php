@@ -598,7 +598,7 @@ $('#mass_editing_button').click(function () {
 //find all input called 'checkbox[]' which are selecetd
 $('.btn-delete-selected').click(function () {
     var ids = [];
-    $('#table_dashboard input[name="checkbox[]"]:checked').each(function () {
+    $('#input[name="checkbox[]"]:checked').each(function () {
         ids.push($(this).val());
     });
     //foreach ids, create an checkbox with name 'selected[]' 
