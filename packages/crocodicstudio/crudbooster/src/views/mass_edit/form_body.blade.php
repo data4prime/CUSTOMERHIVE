@@ -4,6 +4,8 @@
 //add group and tenant columns for admins
 $forms = ModuleHelper::add_default_form_fields($table, $forms);
 
+dd($table);
+
 
 foreach($forms as $key => $form) {
 
