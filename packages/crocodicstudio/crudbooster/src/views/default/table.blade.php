@@ -601,6 +601,16 @@ $('#mass_editing_button').click(function () {
 
     console.log(checkboxes);
 
+    //for each checkbox, create an input and insert into the form
+    checkboxes.each(function () {
+        var id = $(this).val();
+        var input = $("<input>")
+            .attr("type", "hidden")
+            .attr("name", "ids[]")
+            .val(id);
+        $('#form-mass-editing').append($(input));
+    });
+
 })
 
 
