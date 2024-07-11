@@ -592,6 +592,8 @@ $total = $result->total();
 
 <script>
 $('#mass_editing_button').click(function () {
+
+    console.log("CLICKED");
     $('#mass_editing_modal').modal('show');
 
             $("#table_dashboard #checkall").click(function () {
