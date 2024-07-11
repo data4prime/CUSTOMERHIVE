@@ -1981,29 +1981,19 @@ class CBController extends Controller
     //function for mass editing
     public function postMassEdit()
     {
-//dd($this);
+        dd($this->arr);
         //$module = CRUDBooster::getCurrentModule();
         $this->cbLoader();
         //dd($this);
         $id_selected = Request::input('ids');
-if (!$id_selected) {
+        if (!$id_selected) {
             CRUDBooster::redirect($_SERVER['HTTP_REFERER'], trans("crudbooster.alert_select_a_data"), 'warning');
         }
         $table = Request::input('table');
 
         $changed = Request::all();
      
-        //remove all empty fields from request $_POST array
         $changed = array_filter($changed);
-
-
-        $_POST = $changed;
-
-        dd(Request::all());
-
-
-
-
 
         $tablePK = CB::pk($table);
 
