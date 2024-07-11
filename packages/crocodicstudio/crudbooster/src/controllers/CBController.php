@@ -1983,6 +1983,7 @@ class CBController extends Controller
     {
         //$module = CRUDBooster::getCurrentModule();
         //$this->cbLoader();
+        dd($this);
         $id_selected = Request::input('ids');
         $table = Request::input('table');
         $changed = Request::input('changed');
