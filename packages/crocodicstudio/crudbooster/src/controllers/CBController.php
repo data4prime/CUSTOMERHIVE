@@ -1996,7 +1996,8 @@ if (!$id_selected) {
 
         $tablePK = CB::pk($table);
 
-        foreach ($id_selected as $id) {
+        foreach ($id_selected as $k => $id) {
+            if (isset($changed[$k]) && $changed[$k] == 'on')
             $this->postEditSave($id, 'validate');
         }
 
