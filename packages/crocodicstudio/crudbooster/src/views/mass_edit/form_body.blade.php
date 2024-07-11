@@ -30,6 +30,7 @@ foreach($forms as $key => $form) {
 @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php')))
 @include('vendor.crudbooster.type_components.'.$type.'.asset')
 @endif
+<input type="checkbox" name="changed[]">
 <?php
 
   $asset_already[] = $type;

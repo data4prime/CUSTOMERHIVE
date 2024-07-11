@@ -1982,9 +1982,8 @@ class CBController extends Controller
     public function postMassEdit()
     {
         $this->cbLoader();
-        $column = Request::get('column');
-        $value = Request::get('value');
-        $id_selected = Request::get('id_selected');
+        $id_selected = Request::input('ids');
+        $table = Request::input('table');
 
     }
 
