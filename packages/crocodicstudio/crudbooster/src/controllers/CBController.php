@@ -2000,7 +2000,7 @@ class CBController extends Controller
 
         $new_data_input = [];
 
-        foreach($this->data_input as $k => $v) {
+        foreach($this->data_inputan as $k => $v) {
 
             if (isset($changed["mass_edit_".$v['name']])) {
                 $new_data_input[] = $v;
@@ -2009,8 +2009,8 @@ class CBController extends Controller
 
         }
 
-        $this->data_input = $new_data_input;
-dd($this->data_input);
+        $this->data_inputan = $new_data_input;
+dd($this->data_inputan);
         foreach ($id_selected as $k => $id) {
 
             $this->postEditSave($id, 'validate');
