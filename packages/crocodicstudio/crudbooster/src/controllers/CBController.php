@@ -1986,6 +1986,9 @@ class CBController extends Controller
         $this->cbLoader();
         //dd($this);
         $id_selected = Request::input('ids');
+if (!$id_selected) {
+            CRUDBooster::redirect($_SERVER['HTTP_REFERER'], trans("crudbooster.alert_select_a_data"), 'warning');
+        }
         $table = Request::input('table');
         $changed = Request::input('changed');
 
