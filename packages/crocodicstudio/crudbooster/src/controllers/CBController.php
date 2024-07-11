@@ -1992,6 +1992,8 @@ if (!$id_selected) {
         $table = Request::input('table');
         $changed = Request::input('changed');
 
+        dd($changed);
+
         $tablePK = CB::pk($table);
 
         foreach ($id_selected as $id) {
