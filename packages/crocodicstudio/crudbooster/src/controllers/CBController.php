@@ -1984,7 +1984,7 @@ class CBController extends Controller
         //dd($this->arr);
         //$module = CRUDBooster::getCurrentModule();
         $this->cbLoader();
-        dd($this->arr);
+        dd($this->data_inputan);
         //dd($this);
         $id_selected = Request::input('ids');
         if (!$id_selected) {
