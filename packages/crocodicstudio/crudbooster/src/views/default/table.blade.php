@@ -596,14 +596,10 @@ $('#mass_editing_button').click(function () {
     console.log("CLICKED");
     $('#mass_editing_modal').modal('show');
 
-            $("#table_dashboard #checkall").click(function () {
-            var is_checked = $(this).is(":checked");
+    //get inputs with checkbox name
+    var checkboxes = $("input[name='checkbox[]']:checked");
 
-            if (is_checked) {
-                console.log("CHECKED");
-            }
-
-            });
+    console.log(checkboxes);
 
 })
 
