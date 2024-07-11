@@ -599,6 +599,7 @@ $('#mass_editing_button').click(function () {
 $('.btn-delete-selected').click(function () {
     var ids = [];
     $('#input[name="checkbox[]"]:checked').each(function () {
+        console.log($(this).val());
         ids.push($(this).val());
     });
     //foreach ids, create an checkbox with name 'selected[]' 
