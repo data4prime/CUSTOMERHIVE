@@ -11,6 +11,8 @@ foreach($forms as $key => $form) {
 
 }
 
+dd($forms);
+
 $asset_already = [];
 
 foreach($forms as $key => $form) {
