@@ -2010,7 +2010,7 @@ class CBController extends Controller
         }
 
         $this->data_inputan = $new_data_input;
-dd($this->data_inputan);
+//dd($this->data_inputan);
         foreach ($id_selected as $k => $id) {
 
             $this->postEditSave($id, 'validate');
