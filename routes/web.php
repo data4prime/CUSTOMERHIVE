@@ -89,3 +89,7 @@ Route::post('admin/module_generator/save_enable', $controllers_base_path . 'Modu
 Route::get('/mashup/{componentID}',$controllers_base_path . 'StatisticBuilderController@mashup');
 
 Route::get('/mashup-objects/{mashup}/{componentID}/{objectid}',$controllers_base_path .'StatisticBuilderController@mashup_objects' );
+
+
+//maass editing
+Route::get('/admin/mass_editing',$controllers_base_path .'StatisticBuilderController@mashup_objects' );

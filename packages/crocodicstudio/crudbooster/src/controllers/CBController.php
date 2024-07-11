@@ -1977,6 +1977,20 @@ class CBController extends Controller
         }
     }
 
+
+    //function for mass editing
+    public function postMassEdit()
+    {
+        $this->cbLoader();
+        $column = Request::get('column');
+        $value = Request::get('value');
+        $id_selected = Request::get('id_selected');
+
+    }
+
+
+
+
     public function actionButtonSelected($id_selected, $button_name)
     {
     }

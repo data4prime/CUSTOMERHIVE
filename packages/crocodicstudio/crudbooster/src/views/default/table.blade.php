@@ -594,7 +594,24 @@ $total = $result->total();
 $('#mass_editing_button').click(function () {
     $('#mass_editing_modal').modal('show');
 })
+
+//find all input called 'checkbox[]' which are selecetd
+$('.btn-delete-selected').click(function () {
+    var ids = [];
+    $('#table_dashboard input[name="checkbox[]"]:checked').each(function () {
+        ids.push($(this).val());
+    });
+    //foreach ids, create an checkbox with name 'selected[]' 
+    $.each(ids, function (index, value) {
+        $('#form-mass-editing').append('<input type="hidden" name="selected[]" value="' + value + '" />');
+    });
+});
+
+
+ 
+
 </script>
+
 
 
 
