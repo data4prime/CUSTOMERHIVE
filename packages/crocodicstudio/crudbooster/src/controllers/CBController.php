@@ -1992,16 +1992,25 @@ if (!$id_selected) {
         $table = Request::input('table');
 
         $changed = Request::all();
+     
+        //remove all empty fields from request $_POST array
+        $changed = array_filter($changed);
 
-        dd($changed);
-        
+
+        $_POST = $changed;
+
+        dd(Request::all());
+
+
+
+
 
         $tablePK = CB::pk($table);
 
         foreach ($id_selected as $k => $id) {
-            /*if (isset($changed[$k]) && $changed[$k] == 'on') {
+
             $this->postEditSave($id, 'validate');
-            }*/
+
         }
 
 
