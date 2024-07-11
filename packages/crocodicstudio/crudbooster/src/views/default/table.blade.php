@@ -610,6 +610,7 @@ $('#mass_editing_button').click(function () {
 <form method='post' action='/admin/mass_editing' id='form-mass-editing'>
     
 <input type='hidden' name='_token' value='{{csrf_token()}}' />
+<input type='hidden' name='table' value='{{$table}}' />
 <div class="modal-body">@include("crudbooster::mass_edit.form_body")</div>
 
 <div class="modal-footer" align="right">
