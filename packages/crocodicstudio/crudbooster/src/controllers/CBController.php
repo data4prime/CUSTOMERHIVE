@@ -1985,6 +1985,7 @@ class CBController extends Controller
     //function for mass editing
     public function postMassEdit()
     {
+dd($this);
         //$module = CRUDBooster::getCurrentModule();
         $this->cbLoader();
         dd($this);
