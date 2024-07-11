@@ -1984,7 +1984,7 @@ class CBController extends Controller
         //dd($this->arr);
         //$module = CRUDBooster::getCurrentModule();
         $this->cbLoader();
-        dd($this->data_inputan);
+        
         //dd($this);
         $id_selected = Request::input('ids');
         if (!$id_selected) {
@@ -1998,6 +1998,19 @@ class CBController extends Controller
 
         $tablePK = CB::pk($table);
 
+        $new_data_input = [];
+
+        foreach($this->data_input as $k => $v) {
+
+            if (isset($changed["mass_edit_".$v['name']])) {
+                $new_data_input[] = $v;
+                
+            }
+
+        }
+
+        $this->data_input = $new_data_input;
+dd($this->data_inputan);
         foreach ($id_selected as $k => $id) {
 
             $this->postEditSave($id, 'validate');
