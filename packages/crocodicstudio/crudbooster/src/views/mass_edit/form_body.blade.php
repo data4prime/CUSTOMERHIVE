@@ -30,7 +30,7 @@ foreach($forms as $key => $form) {
 @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php')))
 @include('vendor.crudbooster.type_components.'.$type.'.asset')
 @endif
-<input type="checkbox" name="changed[]">
+
 <?php
 
   $asset_already[] = $type;
@@ -146,6 +146,7 @@ foreach($forms as $index => $form) {
         @else
         <p class='text-danger'>{{$type}} is not found in type component system</p><br />
         @endif
+<input type="checkbox" name="changed[]">
         @if($name == 'group')
       </div>
     </div>
