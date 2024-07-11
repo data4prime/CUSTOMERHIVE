@@ -407,7 +407,6 @@ class CBController extends Controller
         }
 
         if (Request::get('q')) {
-            //dd($request);
             $result->where(function ($w) use ($columns_table) {
                 foreach ($columns_table as $col) {
                     if (!$col['field_with']) {
@@ -556,7 +555,6 @@ class CBController extends Controller
         }
 
         $mainpath = CRUDBooster::mainpath();
-        //dd($mainpath);
         //$orig_mainpath = $this->data['mainpath'];
         $orig_mainpath = $mainpath;
         $title_field = $this->title_field;
@@ -580,7 +578,6 @@ class CBController extends Controller
                 $number++;
             }
 
-            //dd($columns_table);
             foreach ($columns_table as $col) {
                 if (isset($col['visible']) && $col['visible'] === false) {
                     continue;
@@ -1016,7 +1013,6 @@ class CBController extends Controller
                             //$uniqueIgnoreId = isset($parseUnique[2]) ?: (($id) ?: '');
                             $uniqueIgnoreId = isset($parseUnique[2]) ? $parseUnique[2] : (($id) ?: '');
 
-                            //dd("uniqueTable: $uniqueTable, uniqueColumn: $uniqueColumn, uniqueIgnoreId: $uniqueIgnoreId");
 
                             //Make sure table name
                             $uniqueTable = CB::parseSqlTable($uniqueTable)['table'];
@@ -1216,7 +1212,6 @@ class CBController extends Controller
         $page_menu = Route::getCurrentRoute()->getActionName();
         $command = 'add';
 
-        //dd(Request::get('m'));
         $target_layout = \App\Menu::find(Request::get('m'));
         $target_layout = isset($target_layout) ? $target_layout->target_layout : 'default';
 
@@ -1414,8 +1409,6 @@ class CBController extends Controller
     public function postEditSave($id)
     {
 
-        dd($this);
-        dd($_POST);
 
         $module = CRUDBooster::getCurrentModule();
         $this->cbLoader();
@@ -1985,10 +1978,10 @@ class CBController extends Controller
     //function for mass editing
     public function postMassEdit()
     {
-dd($this);
+//dd($this);
         //$module = CRUDBooster::getCurrentModule();
         $this->cbLoader();
-        dd($this);
+        //dd($this);
         $id_selected = Request::input('ids');
         $table = Request::input('table');
         $changed = Request::input('changed');

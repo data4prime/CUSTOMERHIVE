@@ -92,4 +92,4 @@ Route::get('/mashup-objects/{mashup}/{componentID}/{objectid}',$controllers_base
 
 
 //maass editing
-Route::post('/admin/mass_editing',$controllers_base_path .'CBController@postMassEdit' );
+//Route::post('/admin/mass_editing',$controllers_base_path .'ModulsController@postMassEdit' );
