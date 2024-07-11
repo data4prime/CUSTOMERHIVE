@@ -1117,7 +1117,7 @@ class ModulsController extends CBController
     }
   }
 
-  public function postEditSave($id)
+  public function postEditSave($id, $vaidate = null)
   {
     $this->cbLoader();
 

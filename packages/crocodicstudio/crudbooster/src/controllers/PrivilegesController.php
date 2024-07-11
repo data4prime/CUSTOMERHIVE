@@ -197,7 +197,7 @@ class PrivilegesController extends CBController
         return view('crudbooster::privileges', compact('row', 'page_title', 'moduls', 'page_menu'));
     }
 
-    public function postEditSave($id)
+    public function postEditSave($id, $validate = null)
     {
         $this->cbLoader();
 
