@@ -593,16 +593,16 @@ $total = $result->total();
 <script>
 $('#mass_editing_button').click(function () {
     $('#mass_editing_modal').modal('show');
-    var ids = [];
-    $('#input[name="checkbox[]"]:checked').each(function () {
-        
-        console.log("CHECKBOX: "+$(this).val());
-        ids.push($(this).val());
-    });
-    //foreach ids, create an checkbox with name 'selected[]' 
-    $.each(ids, function (index, value) {
-        $('#form-mass-editing').append('<input type="hidden" name="selected[]" value="' + value + '" />');
-    });
+
+            $("#table_dashboard #checkall").click(function () {
+            var is_checked = $(this).is(":checked");
+
+            if (is_checked) {
+                console.log("CHECKED");
+            }
+
+            });
+
 })
 
 
