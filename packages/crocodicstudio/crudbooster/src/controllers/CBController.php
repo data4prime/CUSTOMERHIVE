@@ -1413,7 +1413,10 @@ class CBController extends Controller
 
     public function postEditSave($id)
     {
+
+        dd($this);
         dd($_POST);
+
         $module = CRUDBooster::getCurrentModule();
         $this->cbLoader();
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
