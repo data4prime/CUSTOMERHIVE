@@ -1990,15 +1990,18 @@ if (!$id_selected) {
             CRUDBooster::redirect($_SERVER['HTTP_REFERER'], trans("crudbooster.alert_select_a_data"), 'warning');
         }
         $table = Request::input('table');
-        $changed = Request::input('changed');
+
+        $changed = Request::all();
 
         dd($changed);
+        
 
         $tablePK = CB::pk($table);
 
         foreach ($id_selected as $k => $id) {
-            if (isset($changed[$k]) && $changed[$k] == 'on')
+            /*if (isset($changed[$k]) && $changed[$k] == 'on') {
             $this->postEditSave($id, 'validate');
+            }*/
         }
 
 
