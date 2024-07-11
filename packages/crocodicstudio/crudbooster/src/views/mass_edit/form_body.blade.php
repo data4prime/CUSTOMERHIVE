@@ -9,7 +9,11 @@ $forms = ModuleHelper::add_default_form_fields($table, $forms);
 
 foreach($forms as $key => $form) {
 
-  $forms[$key]['validation'] = str_replace('required', '', $form['validation']);
+  if (isset($forms[$key]['validation'])) {
+    $forms[$key]['validation'] = str_replace('required', '', $form['validation']);
+  }
+
+  
 
 }
 
