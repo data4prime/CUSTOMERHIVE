@@ -1984,6 +1984,15 @@ class CBController extends Controller
         $this->cbLoader();
         $id_selected = Request::input('ids');
         $table = Request::input('table');
+        $changed = Request::input('changed');
+
+        $tablePK = CB::pk($table);
+
+        foreach ($id_selected as $id) {
+            $this->postEditSave($id);
+        }
+
+
 
     }
 
