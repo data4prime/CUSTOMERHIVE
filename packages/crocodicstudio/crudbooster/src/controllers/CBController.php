@@ -1406,7 +1406,7 @@ class CBController extends Controller
         return view('crudbooster::default.form', compact('id', 'row', 'page_menu', 'page_title', 'command', 'target_layout'));
     }
 
-    public function postEditSave($id)
+    public function postEditSave($id, $validate = null)
     {
 
 
@@ -1425,8 +1425,11 @@ class CBController extends Controller
         }
 
 
-        $this->validation($id);
-        //dd($id);
+        if (!$validate) {
+            $this->validation($id);
+        }
+
+        
         $this->input_assignment($id);
 
         if (Schema::hasColumn($this->table, 'updated_at')) {
@@ -1989,7 +1992,7 @@ class CBController extends Controller
         $tablePK = CB::pk($table);
 
         foreach ($id_selected as $id) {
-            $this->postEditSave($id);
+            $this->postEditSave($id, 'validate');
         }
 
 
