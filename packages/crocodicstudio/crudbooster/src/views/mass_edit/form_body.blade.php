@@ -147,4 +147,4 @@
             </div>
         </div>
     @endif
-
+@php } @ endphp
