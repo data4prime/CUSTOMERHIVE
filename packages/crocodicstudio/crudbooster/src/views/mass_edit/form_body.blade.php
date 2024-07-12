@@ -22,13 +22,12 @@
     @endphp
 
     @if(!in_array($type, $asset_already))
-      <div class="row">
+      
         @if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/asset.blade.php')))
             @include('crudbooster::default.type_components.'.$type.'.asset')
         @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php')))
             @include('vendor.crudbooster.type_components.'.$type.'.asset')
         @endif      
-      </div>
 
 
         @php
@@ -133,6 +132,7 @@
                     <div class="box-body no-padding">
     @endif
 
+<div class="row">
     @if(file_exists(base_path('packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/component.blade.php')))
         @include('crudbooster::default.type_components.'.$type.'.component')
     @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/component.blade.php')))
@@ -141,8 +141,9 @@
         <p class='text-danger'>{{ $type }} is not found in type component system</p><br />
     @endif
 
-    <input type="checkbox" class="col-sm-2" name="mass_edit_{{ $name }}">
 
+    <input type="checkbox" class="col-sm-2" name="mass_edit_{{ $name }}">
+</div>
     @if($name == 'group')
                     </div>
                 </div>
