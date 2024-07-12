@@ -99,7 +99,7 @@
         $readonly = (@$form['readonly']) ? "readonly" : "";
         $disabled = (@$form['disabled']) ? "disabled" : "";
         $placeholder = (@$form['placeholder']) ? "placeholder='".$form['placeholder']."'" : "";
-        $col_width = @$form['width'] ?: "col-sm-9";
+        $col_width = @$form['width'] ?: "col-sm-8";
 
         if (isset($parent_field) && $parent_field == $name) {
             $type = 'hidden';
