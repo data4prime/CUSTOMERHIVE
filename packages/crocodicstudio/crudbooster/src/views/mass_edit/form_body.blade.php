@@ -13,13 +13,14 @@ foreach($forms as $key => $form) {
     $forms[$key]['validation'] = str_replace('required', '', $form['validation']);
   }
 
+/*
   if ( isset($forms[$key]['width']) ) {
 
     $forms[$key]['width'] = 'col-sm-6';
   
 
   }
-
+*/
   
 
 }
