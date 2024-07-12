@@ -16,22 +16,26 @@ foreach($forms as $key => $form) {
 
 $asset_already = [];
 
-foreach($forms as $key => $form) {
-  
-  $type = isset($form['type']) ? $form['type'] : 'text';
-  $name = isset($form['name']) ? $form['name'] : '';
+@foreach($forms as $key => $form)
+    @php
+        $type = isset($form['type']) ? $form['type'] : 'text';
+        $name = isset($form['name']) ? $form['name'] : '';
+    @endphp
 
-  if (in_array($type, $asset_already)) continue;
+    @if(!in_array($type, $asset_already))
+        @if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/asset.blade.php')))
+            @include('crudbooster::default.type_components.'.$type.'.asset')
+        @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php')))
+            @include('vendor.crudbooster.type_components.'.$type.'.asset')
+        @endif
 
-  if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/asset.blade.php'))) {
-    include('crudbooster::default.type_components.'.$type.'.asset');
-  } elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php'))) {
+        @php
+            $asset_already[] = $type;
+        @endphp
+    @endif
+@endforeach
 
-    include('vendor.crudbooster.type_components.'.$type.'.asset');
-  }
-
-  $asset_already[] = $type;
-}
+@php
 
 
 //Loading input components
