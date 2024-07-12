@@ -1,6 +1,5 @@
 @php
     // Loading Assets
-
     $forms = ModuleHelper::add_default_form_fields($table, $forms);
 
     foreach($forms as $key => $form) {
@@ -100,7 +99,7 @@
         $placeholder = (@$form['placeholder']) ? "placeholder='".$form['placeholder']."'" : "";
         $col_width = @$form['width'] ?: "col-sm-9";
 
-        if ($parent_field == $name) {
+        if (isset($parent_field) && $parent_field == $name) {
             $type = 'hidden';
             $value = $parent_id;
         }
@@ -147,4 +146,4 @@
             </div>
         </div>
     @endif
-@php } @ endphp
+@endforeach
