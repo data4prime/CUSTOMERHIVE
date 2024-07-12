@@ -2000,16 +2000,20 @@ class CBController extends Controller
 
         $new_data_input = [];
 
-        foreach($this->data_inputan as $k => $v) {
-
+        foreach($this->form as $k => $v) {
             if (isset($changed["mass_edit_".$v['name']])) {
                 $new_data_input[] = $v;
-                
             }
-
         }
-        dd($this->form);
+        foreach($this->data_inputan as $k => $v) {
+            if (isset($changed["mass_edit_".$v['name']])) {
+                $new_data_input[] = $v;
+            }
+        }
+
+        //dd($this->form);
         $this->data_inputan = $new_data_input;
+        $this->form = $new_data_input;
 //dd($this->data_inputan);
         foreach ($id_selected as $k => $id) {
 
