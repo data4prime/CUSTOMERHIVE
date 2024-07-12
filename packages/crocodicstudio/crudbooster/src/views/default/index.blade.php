@@ -72,26 +72,31 @@
                     {{trans("crudbooster.button_selected_action")}}
                     <span class="fa fa-caret-down"></span></button>
                 <ul class="dropdown-menu">
-                    <li>
 <?php
                                 $parameters = Request::all();
                                 unset($parameters['q']);
                                 $build_query = urldecode(http_build_query($parameters));
                                 $build_query = ($build_query) ? "?".$build_query : "";
                                 $build_query = (Request::all()) ? $build_query : "";
+                                $module = CRUDBooster::getCurrentModule();
 
-//get url
-$module = CRUDBooster::getCurrentModule();
-dd($module);
+//if $module->path contians 'mg_'
+if(strpos($module->path, 'mg_') !== false){ ?>
+                    <li>
 
-
-                                ?>
                     <a style="margin-top:-23px" href="javascript:void(0)" id='mass_editing_button'
                                     data-url-parameter='{{$build_query}}' title='Mass Edit'
                                     class="btn btn-sm btn-default">
                                     <i class="fa fa-pencil"></i> Mass Edit
                                 </a>
                     </li>
+
+
+<?php }
+
+?>
+
+
                     
                     @if($button_delete && CRUDBooster::isDelete())
                     <li>
