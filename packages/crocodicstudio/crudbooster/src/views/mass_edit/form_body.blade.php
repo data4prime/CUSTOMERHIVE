@@ -112,39 +112,39 @@
         }
     @endphp
 
+    @if($name == 'tenant')
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="box box-info collapsed-box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <strong>
+                                <i class='{{ CRUDBooster::getCurrentModule()->icon }}'></i> Informazioni di sistema
+                            </strong>
+                        </h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box-body no-padding">
+    @endif
 
-@if($name == 'tenant')
-<div class="row">
-  <div class="col-sm-12 col-md-12">
-    <div class="box box-info collapsed-box">
-      <div class="box-header with-border">
-        <h3 class="box-title">
-          <strong>
-            <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Informazioni di sistema
-          </strong>
-        </h3>
-        <div class="box-tools pull-right">
-          <!-- <span class="label label-info">0 righe</span> -->
-          <button type="button" class="btn btn-box-tool" data-widget="collapse">
-            <i class="fa fa-plus"></i>
-          </button>
-        </div>
-      </div>
-      <div class="box-body no-padding">
-        @endif
-
-        @if(file_exists(base_path('packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/component.blade.php')))
-
+    @if(file_exists(base_path('packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/component.blade.php')))
         @include('crudbooster::default.type_components.'.$type.'.component')
-        @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/component.blade.php')))
+    @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/component.blade.php')))
         @include('vendor.crudbooster.type_components.'.$type.'.component')
-        @else
-        <p class='text-danger'>{{$type}} is not found in type component system</p><br />
-        @endif
-<input type="checkbox" class="col-sm-2" name="mass_edit_{{$name}}">
-        @if($name == 'group')
-      </div>
-    </div>
-  </div>
-</div>
-@endif
+    @else
+        <p class='text-danger'>{{ $type }} is not found in type component system</p><br />
+    @endif
+
+    <input type="checkbox" class="col-sm-2" name="mass_edit_{{ $name }}">
+
+    @if($name == 'group')
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+@endforeach
