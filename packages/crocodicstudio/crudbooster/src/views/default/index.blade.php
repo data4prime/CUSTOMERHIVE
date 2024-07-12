@@ -84,9 +84,8 @@
 if(strpos($module->path, 'mg_') !== false){ ?>
                     <li>
 
-                    <a style="margin-top:-23px" href="javascript:void(0)" id='mass_editing_button'
-                                    data-url-parameter='{{$build_query}}' title='Mass Edit'
-                                    class="btn btn-sm btn-default">
+                    <a style="border-bottom: 1px solid;" href="javascript:void(0)" id='mass_editing_button'
+                                    data-url-parameter='{{$build_query}}' title='Mass Edit' >
                                     <i class="fa fa-pencil"></i> Mass Edit
                                 </a>
                     </li>
