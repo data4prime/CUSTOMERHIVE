@@ -109,7 +109,7 @@
         } else {
             $header_group_class = ($header_group_class) ?: "header-group-$index";
         }
-    @endphp
+@endphp
 
     @if($name == 'tenant')
         <div class="row">
@@ -146,4 +146,7 @@
             </div>
         </div>
     @endif
-@endforeach
+
+@php
+    }
+@endphp
