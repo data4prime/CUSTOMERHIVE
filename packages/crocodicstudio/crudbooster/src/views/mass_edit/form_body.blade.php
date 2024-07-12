@@ -1,20 +1,20 @@
 @php
-//Loading Assets
+    // Loading Assets
 
-$forms = ModuleHelper::add_default_form_fields($table, $forms);
+    $forms = ModuleHelper::add_default_form_fields($table, $forms);
 
-foreach($forms as $key => $form) {
+    foreach($forms as $key => $form) {
+        if (isset($forms[$key]['validation'])) {
+            $forms[$key]['validation'] = str_replace('required', '', $form['validation']);
+        }
 
-  if (isset($forms[$key]['validation'])) {
-    $forms[$key]['validation'] = str_replace('required', '', $form['validation']);
-  }
+        if (isset($forms[$key]['width'])) {
+            $forms[$key]['width'] = 'col-sm-8';
+        }
+    }
 
-  if ( isset($forms[$key]['width']) ) {
-    $forms[$key]['width'] = 'col-sm-8';
-  }
-}
-
-$asset_already = [];
+    $asset_already = [];
+@endphp
 
 @foreach($forms as $key => $form)
     @php
@@ -36,89 +36,83 @@ $asset_already = [];
 @endforeach
 
 @php
+    // Loading input components
+    $header_group_class = "";
+    foreach($forms as $index => $form) {
+        unset($value);
+        
+        // #RAMA add default value for group on mg_ for edit form
+        if($form['name'] == 'group' && isset($row) && isset($row->group)) {
+            $form['default'] = \App\Group::find($row->group)->name;
+        }
 
+        $name = $form['name'];
+        @$join = $form['join'];
 
-//Loading input components
-$header_group_class = "";
-foreach($forms as $index => $form) {
-  unset($value);
-  /*
-  * #RAMA add default value for group on mg_ for edit form
-  */
-  if($form['name']=='group' AND isset($row) AND isset($row->group)){
-    $form['default']=\App\Group::find($row->group)->name;
-  }
+        if(isset($row->{$name})) {
+            @$value = $row->{$name};
+        } elseif(isset($form['value'])) {
+            @$value = $form['value'];
+        } else {
+            @$value = '';
+        }
 
-  $name = $form['name'];
-  @$join = $form['join'];
+        $old = old($name);
+        $value = (!empty($old)) ? $old : $value;
 
+        $validation = [];
+        $validation_raw = isset($form['validation']) ? explode('|', $form['validation']) : [];
+        if ($validation_raw) {
+            foreach ($validation_raw as $vr) {
+                $vr_a = explode(':', $vr);
+                if (isset($vr_a[1]) && $vr_a[1]) {
+                    $key = $vr_a[0];
+                    $validation[$key] = $vr_a[1];
+                } else {
+                    $validation[$vr] = true;
+                }
+            }
+        }
 
+        if (isset($form['callback_php'])) {
+            @eval("\$value = ".$form['callback_php'].";");
+        }
 
-  if(isset($row->{$name})){
-    @$value = $row->{$name};
-  }
-  elseif(isset($form['value'])){
-    @$value = $form['value'];
-  }
-  else{
-    @$value = '';
-  }
+        if (isset($form['callback'])) {
+            $value = call_user_func($form['callback'], $row);
+        }
 
-  $old = old($name);
-  $value = (! empty($old)) ? $old : $value;
+        if ($join && @$row) {
+            $join_arr = explode(',', $join);
+            array_walk($join_arr, 'trim');
+            $join_table = $join_arr[0];
+            $join_title = $join_arr[1];
+            ${"join_query_".$join_table} = DB::table($join_table)->select($join_title)->where("id", $row->{'id_'.$join_table})->first();
+            $value = @${"join_query_".$join_table}->{$join_title};
+        }
+        
+        $form['type'] = $form['type'] ?? 'text';
+        $type = $form['type'];
+        $required = (isset($form['required']) && $form['required'] == true) ? "required" : "";
+        $required = (@strpos($form['validation'], 'required') !== false) ? "required" : $required;
+        $readonly = (@$form['readonly']) ? "readonly" : "";
+        $disabled = (@$form['disabled']) ? "disabled" : "";
+        $placeholder = (@$form['placeholder']) ? "placeholder='".$form['placeholder']."'" : "";
+        $col_width = @$form['width'] ?: "col-sm-9";
 
-  $validation = array();
-  $validation_raw = isset($form['validation']) ? explode('|', $form['validation']) : array();
-  if ($validation_raw) {
-    foreach ($validation_raw as $vr) {
-      $vr_a = explode(':', $vr);
-      if (isset($vr_a[1]) && $vr_a[1]) {
-        $key = $vr_a[0];
-        $validation[$key] = $vr_a[1];
-      } else {
-        $validation[$vr] = TRUE;
-      }
-    }
-  }
+        if ($parent_field == $name) {
+            $type = 'hidden';
+            $value = $parent_id;
+        }
 
-  if (isset($form['callback_php'])) {
-    @eval("\$value = ".$form['callback_php'].";");
-  }
+        if ($type == 'header') {
+            $header_group_class = "header-group-$index";
+        } else {
+            $header_group_class = ($header_group_class) ?: "header-group-$index";
+        }
+    @endphp
+@endforeach
 
-
-  if (isset($form['callback'])) {
-    $value = call_user_func($form['callback'], $row);
-  }
-
-  if ($join && @$row) {
-    $join_arr = explode(',', $join);
-    array_walk($join_arr, 'trim');
-    $join_table = $join_arr[0];
-    $join_title = $join_arr[1];
-    ${"join_query_".$join_table} = DB::table($join_table)->select($join_title)->where("id", $row->{'id_'.$join_table})->first();
-    //${"join_query_".$join_table} = DB::table($join_table)->select($join_title)->where("id", $row->{'id_'.$join_table})->first();
-    $value = @${"join_query_".$join_table}->{$join_title};
-  }
-  $form['type'] = (isset($form['type'])) ? $form['type']: 'text';
-  $type = isset($form['type']) ? $form['type'] : 'text';
-  $required = (isset($form['required']) && $form['required'] == true ) ? "required" : "";
-  $required = (@strpos($form['validation'], 'required') !== FALSE) ? "required" : $required;
-  $readonly = (@$form['readonly']) ? "readonly" : "";
-  $disabled = (@$form['disabled']) ? "disabled" : "";
-  $placeholder = (@$form['placeholder']) ? "placeholder='".$form['placeholder']."'" : "";
-  $col_width = @$form['width'] ?: "col-sm-9";
-
-  if ($parent_field == $name) {
-    $type = 'hidden';
-    $value = $parent_id;
-  }
-
-  if ($type == 'header') {
-    $header_group_class = "header-group-$index";
-  } else {
-    $header_group_class = ($header_group_class) ?: "header-group-$index";
-  }
-  @endphp
 @if($name == 'tenant')
 <div class="row">
   <div class="col-sm-12 col-md-12">
