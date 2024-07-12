@@ -158,7 +158,7 @@ foreach($forms as $index => $form) {
         @else
         <p class='text-danger'>{{$type}} is not found in type component system</p><br />
         @endif
-<input type="checkbox" class="col-sm-8" name="mass_edit_{{$name}}">
+<input type="checkbox" class="col-sm-2" name="mass_edit_{{$name}}">
         @if($name == 'group')
       </div>
     </div>
