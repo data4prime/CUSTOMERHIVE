@@ -79,6 +79,7 @@
                                 $build_query = urldecode(http_build_query($parameters));
                                 $build_query = ($build_query) ? "?".$build_query : "";
                                 $build_query = (Request::all()) ? $build_query : "";
+                                dd($build_query);
                                 ?>
                     <a style="margin-top:-23px" href="javascript:void(0)" id='mass_editing_button'
                                     data-url-parameter='{{$build_query}}' title='Mass Edit'
