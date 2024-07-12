@@ -630,7 +630,8 @@ $('#mass_editing_button').click(function () {
                     <span aria-hidden="true">×</span></button>
                 <h4 class="modal-title"><i class='fa fa-pencil'></i> Mass Edit</h4>
             </div>
-            <form class="modal-body" method='post' action='{{ CRUDBooster::mainpath("mass-edit") }}' id='form-mass-editing'>
+        <div class="modal-body">
+            <form  method='post' action='{{ CRUDBooster::mainpath("mass-edit") }}' id='form-mass-editing'>
                 
             <input type='hidden' name='_token' value='{{csrf_token()}}' />
             <input type='hidden' name='table' value='{{$table}}' />
@@ -643,6 +644,8 @@ $('#mass_editing_button').click(function () {
                         type="submit">{{trans('crudbooster.button_submit')}}</button>
                 </div>
 </form>
+</div>
+
 
 
 
