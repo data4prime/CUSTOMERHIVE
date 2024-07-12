@@ -675,7 +675,7 @@ inputs.each(function () {
 quando un campo nel form mass_editing_modal cambia, selezionail checkbox corrispondente
 
 */
-$('#mass_editing_modal input').change(function () {
+$('#mass_editing_modal input, #mass_editing_modal select').change(function () {
     console.log("CHANGE");
     var name = $(this).attr('name');
     console.log(name);
