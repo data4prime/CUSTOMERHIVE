@@ -2001,20 +2001,21 @@ class CBController extends Controller
         $new_data_input = [];
 
         foreach($this->form as $k => $v) {
-            if (isset($changed["mass_edit_".$v['name']])) {
+            if (isset($changed["mass_edit_".$v['name']])  && $changed["mass_edit_".$v['name']] == 'on') {
                 $new_data_input[] = $v;
             }
         }
         foreach($this->data_inputan as $k => $v) {
-            if (isset($changed["mass_edit_".$v['name']])) {
+            if (isset($changed["mass_edit_".$v['name']]) && $changed["mass_edit_".$v['name']] == 'on' ) {
                 $new_data_input[] = $v;
             }
         }
 
-        //dd($this->form);
+        
         $this->data_inputan = $new_data_input;
         $this->form = $new_data_input;
-//dd($this->data_inputan);
+        //dd($this->data_inputan);
+        dd($this->form);
         foreach ($id_selected as $k => $id) {
 
             $this->postEditSave($id, 'validate');
