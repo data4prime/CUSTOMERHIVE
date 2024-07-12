@@ -2018,7 +2018,7 @@ class CBController extends Controller
         
         $this->form = $new_data_input;
         //dd($this->data_inputan);
-        dd($this->form);
+        //dd($this->form);
         foreach ($id_selected as $k => $id) {
 
             $this->postEditSave($id, 'validate');
