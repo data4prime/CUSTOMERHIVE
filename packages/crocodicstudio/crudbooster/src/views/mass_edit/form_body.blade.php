@@ -9,19 +9,10 @@ foreach($forms as $key => $form) {
     $forms[$key]['validation'] = str_replace('required', '', $form['validation']);
   }
 
-
   if ( isset($forms[$key]['width']) ) {
-
     $forms[$key]['width'] = 'col-sm-8';
-  
-
   }
-
-  
-
 }
-
-
 
 $asset_already = [];
 
@@ -33,10 +24,10 @@ foreach($forms as $key => $form) {
   if (in_array($type, $asset_already)) continue;
 
   if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/asset.blade.php'))) {
-    include('crudbooster::default.type_components.'.$type.'.asset')
-  }elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php'))) {
+    include('crudbooster::default.type_components.'.$type.'.asset');
+  } elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php'))) {
 
-    include('vendor.crudbooster.type_components.'.$type.'.asset')
+    include('vendor.crudbooster.type_components.'.$type.'.asset');
   }
 
   $asset_already[] = $type;
