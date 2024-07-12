@@ -667,6 +667,7 @@ $('#mass_editing_modal input').change(function () {
     }else{
         checkbox.prop('checked', false);
     }
+})
 
 
 
