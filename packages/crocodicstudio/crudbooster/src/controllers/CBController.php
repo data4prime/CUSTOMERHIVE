@@ -1411,8 +1411,12 @@ class CBController extends Controller
 
 
         $module = CRUDBooster::getCurrentModule();
-        //DELETE COMMENT
-        //$this->cbLoader();
+
+
+        if (!$validate) {
+            $this->cbLoader();
+        }
+
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
         //kicks out if user shouldn't edit the record $row
         if (!ModuleHelper::can_edit($this, $row)) {
