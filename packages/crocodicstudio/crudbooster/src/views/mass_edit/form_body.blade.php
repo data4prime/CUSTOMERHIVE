@@ -148,6 +148,3 @@
   </div>
 </div>
 @endif
-<?php
-}
-?>
