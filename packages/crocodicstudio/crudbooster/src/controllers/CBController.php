@@ -1578,7 +1578,7 @@ class CBController extends Controller
                     CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_update_data_success"), 'success');
                 }
             }
-        }
+        } 
 
 
     }
@@ -2032,6 +2032,10 @@ class CBController extends Controller
 
             $this->postEditSave($id, 'validate');
 
+        }
+
+        if ($this->return_url) {
+            CRUDBooster::redirect($this->return_url, trans("crudbooster.alert_update_data_success"), 'success');
         }
 
 
