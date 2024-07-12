@@ -661,12 +661,12 @@ $('#mass_editing_modal input').change(function () {
     var name = $(this).attr('name');
     var value = $(this).val();
     var checkbox = $("input[name='mass_edit"+name+"']");
-    if ($(this).is(':checked')) {
+    //if value is not empty, check the checkbox
+    if(value){
         checkbox.prop('checked', true);
-    } else {
+    }else{
         checkbox.prop('checked', false);
     }
-})
 
 
 
