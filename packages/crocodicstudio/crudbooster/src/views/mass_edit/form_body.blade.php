@@ -111,7 +111,7 @@
             $header_group_class = ($header_group_class) ?: "header-group-$index";
         }
     @endphp
-@endforeach
+
 
 @if($name == 'tenant')
 <div class="row">
