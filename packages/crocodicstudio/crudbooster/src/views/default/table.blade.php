@@ -651,6 +651,21 @@ $('#mass_editing_button').click(function () {
     </div>
 </div>
 <script defer>
+
+//prendi tutti gli input nel form mass_editing_modal col nome che inizia con 'mass_edit_'
+var inputs = $('#mass_editing_modal input[name^="mass_edit_"]');
+console.log(inputs);
+
+//per ogni input, ricaare il div che lo segue, e inserire l'input nel div
+inputs.each(function () {
+    var name = $(this).attr('name');
+    var div = $(this).prev();
+    $(this).appendTo(div);
+});
+
+
+
+
 /*
 quando un campo nel form mass_editing_modal cambia, selezionail checkbox corrispondente
 
