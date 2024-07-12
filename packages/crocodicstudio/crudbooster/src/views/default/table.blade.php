@@ -637,16 +637,16 @@ $('#mass_editing_button').click(function () {
             <input type='hidden' name='table' value='{{$table}}' />
             @include("crudbooster::mass_edit.form_body")
 
-            <div class="modal-footer" align="right">
+            
+</form>
+</div>
+
+<div class="modal-footer" align="right">
                     <button class="btn btn-default" type="button"
                         data-dismiss="modal">{{trans("crudbooster.button_close")}}</button>
                     <button class="btn btn-primary btn-submit"
                         type="submit">{{trans('crudbooster.button_submit')}}</button>
                 </div>
-</form>
-</div>
-
-
 
 
         </div>
