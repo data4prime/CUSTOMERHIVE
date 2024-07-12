@@ -613,24 +613,6 @@ $('#mass_editing_button').click(function () {
 
 })
 
-/*
-quando un campo nel form mass_editing_modal cambia, selezionail checkbox corrispondente
-
-*/
-$('#mass_editing_modal input').change(function () {
-    console.log("CHANGE");
-    console.log($(this));
-    var name = $(this).attr('name');
-    var value = $(this).val();
-    var checkbox = $("input[name='mass_edit"+name+"']");
-    if ($(this).is(':checked')) {
-        checkbox.prop('checked', true);
-    } else {
-        checkbox.prop('checked', false);
-    }
-})
-
-
 
  
 
@@ -668,5 +650,26 @@ $('#mass_editing_modal input').change(function () {
         <!-- /.modal-content -->
     </div>
 </div>
+<script defer>
+/*
+quando un campo nel form mass_editing_modal cambia, selezionail checkbox corrispondente
+
+*/
+$('#mass_editing_modal input').change(function () {
+    console.log("CHANGE");
+    console.log($(this));
+    var name = $(this).attr('name');
+    var value = $(this).val();
+    var checkbox = $("input[name='mass_edit"+name+"']");
+    if ($(this).is(':checked')) {
+        checkbox.prop('checked', true);
+    } else {
+        checkbox.prop('checked', false);
+    }
+})
+
+
+
+</script>
 @endpush
 @endif
