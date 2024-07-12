@@ -13,14 +13,14 @@ foreach($forms as $key => $form) {
     $forms[$key]['validation'] = str_replace('required', '', $form['validation']);
   }
 
-/*
+
   if ( isset($forms[$key]['width']) ) {
 
-    $forms[$key]['width'] = 'col-sm-6';
+    $forms[$key]['width'] = 'col-sm-8';
   
 
   }
-*/
+
   
 
 }
@@ -158,7 +158,7 @@ foreach($forms as $index => $form) {
         @else
         <p class='text-danger'>{{$type}} is not found in type component system</p><br />
         @endif
-<input type="checkbox" name="mass_edit_{{$name}}">
+<input type="checkbox" class="col-sm-8" name="mass_edit_{{$name}}">
         @if($name == 'group')
       </div>
     </div>
