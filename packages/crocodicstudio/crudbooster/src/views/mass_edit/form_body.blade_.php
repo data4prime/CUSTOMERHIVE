@@ -1,7 +1,11 @@
-@php
-//Loading Assets
+<?php
 
+//Loading Assets
+//add group and tenant columns for admins
 $forms = ModuleHelper::add_default_form_fields($table, $forms);
+
+//dd($forms);
+
 
 foreach($forms as $key => $form) {
 
@@ -32,12 +36,14 @@ foreach($forms as $key => $form) {
 
   if (in_array($type, $asset_already)) continue;
 
-  if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/asset.blade.php'))) {
-    include('crudbooster::default.type_components.'.$type.'.asset')
-  }elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php'))) {
+  ?>
+@if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/asset.blade.php')))
+@include('crudbooster::default.type_components.'.$type.'.asset')
+@elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php')))
+@include('vendor.crudbooster.type_components.'.$type.'.asset')
+@endif
 
-    include('vendor.crudbooster.type_components.'.$type.'.asset')
-  }
+<?php
 
   $asset_already[] = $type;
 }
@@ -123,7 +129,7 @@ foreach($forms as $index => $form) {
   } else {
     $header_group_class = ($header_group_class) ?: "header-group-$index";
   }
-  @endphp
+  ?>
 @if($name == 'tenant')
 <div class="row">
   <div class="col-sm-12 col-md-12">
