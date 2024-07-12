@@ -1568,15 +1568,19 @@ class CBController extends Controller
             'module' => CRUDBooster::getCurrentModule()->name,
         ]), LogsController::displayDiff($old_values, $this->arr));
 
-        if ($this->return_url) {
-            CRUDBooster::redirect($this->return_url, trans("crudbooster.alert_update_data_success"), 'success');
-        } else {
-            if (Request::get('submit') == trans('crudbooster.button_save_more')) {
-                CRUDBooster::redirect(CRUDBooster::mainpath('add'), trans("crudbooster.alert_update_data_success"), 'success');
+        if (!$validate) {
+            if ($this->return_url) {
+                CRUDBooster::redirect($this->return_url, trans("crudbooster.alert_update_data_success"), 'success');
             } else {
-                CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_update_data_success"), 'success');
+                if (Request::get('submit') == trans('crudbooster.button_save_more')) {
+                    CRUDBooster::redirect(CRUDBooster::mainpath('add'), trans("crudbooster.alert_update_data_success"), 'success');
+                } else {
+                    CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_update_data_success"), 'success');
+                }
             }
         }
+
+
     }
 
     public function getDelete($id)
