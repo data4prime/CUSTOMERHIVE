@@ -2008,7 +2008,7 @@ class CBController extends Controller
             }
 
         }
-
+        dd($this->form);
         $this->data_inputan = $new_data_input;
 //dd($this->data_inputan);
         foreach ($id_selected as $k => $id) {
