@@ -657,10 +657,12 @@ quando un campo nel form mass_editing_modal cambia, selezionail checkbox corrisp
 */
 $('#mass_editing_modal input').change(function () {
     console.log("CHANGE");
-    console.log($(this));
     var name = $(this).attr('name');
+    console.log(name);
     var value = $(this).val();
-    var checkbox = $("input[name='mass_edit"+name+"']");
+    console.log(value);
+    var checkbox = $("input[name='mass_edit_"+name+"']");
+    console.log(checkbox);
     //if value is not empty, check the checkbox
     if(value){
         checkbox.prop('checked', true);
