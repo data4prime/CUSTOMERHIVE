@@ -27,8 +27,8 @@
         // Set an option during instantiation
         var editor = new JSONEditor(document.getElementById('{{$name}}'), {
             theme: 'bootstrap2',
-            startval: <?php echo json_encode(json_decode($value, false))?>,
-            schema: <?php echo json_encode(json_decode(isset($form["schema"]) ? $form["schema"] : '', false))?>
+            startval: @php echo json_encode(json_decode($value, false)) @endphp,
+            schema: @php echo json_encode(json_decode(isset($form["schema"]) ? $form["schema"] : '', false)) @endphp
         });
 
         $('[name="{{$name}}"]').parents('form').on('submit', function () {
