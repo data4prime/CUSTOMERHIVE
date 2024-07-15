@@ -25,27 +25,26 @@
     @push('bottom')
     <script>
         $(document).ready(function () {
-            var max_fields_{{ $name }}    = "{{ @$form['max_fields'] }}";
-        var max_fields_{{ $name }}    = parseInt(max_fields_{{ $name }}) ? max_fields_{ { $name } } : 5; //maximum input boxes allowed
-        var wrapper_{{ $name }}       = $(".input_fields_wrap").filter(".{{$name}}"); //Fields wrapper
-        var add_button_{{ $name }}    = $(".add_field_button").filter(".{{$name}}"); //Add button ID
 
-        console.log(add_button_{{ $name }});
+        var max_fields_{{ $name }} = "{{ @$form['max_fields'] }}";
+        var max_fields_{{ $name }} = parseInt(max_fields_{{ $name }}) ? max_fields_{{ $name }} : 5;
+        var wrapper_{{ $name }} = $(".input_fields_wrap").filter(".{{$name}}");
+        var add_button_{{ $name }} = $(".add_field_button").filter(".{{$name}}");
 
-
-        var count_{{ $name }} = 1; //initlal text box count
-        $(add_button_{{ $name }}).click(function (e) { //on add input button click
+        var count_{{ $name }} = 1;
+        $(add_button_{{ $name }}).click(function (e) {
+            console.log(add_button_{{ $name }});
             e.preventDefault();
-            if (count_{{ $name }} < max_fields_{{ $name }} ) { //max input box allowed
-                        count_{{ $name }} ++; //text box increment
-            $(wrapper_{{ $name }}).append('<div><input class="form-control" {{$required}} {{$readonly}} {!!$placeholder!!} {{$disabled}} {{isset($validation['max'])?"maxlength=".$validation['max']:""}} type="text" name="{{$name}}[]"/><a href="#" class="remove_field {{$name}}"><i class="fa fa-minus"></a></div>'); //add input box
-                    }
-                });
+            if (count_{{ $name }} < max_fields_{{ $name }} ) {
+                count_{{ $name }} ++;
+                $(wrapper_{{ $name }}).append('<div><input class="form-control" {{$required}} {{$readonly}} {!!$placeholder!!} {{$disabled}} {{isset($validation['max'])?"maxlength=".$validation['max']:""}} type="text" name="{{$name}}[]"/><a href="#" class="remove_field {{$name}}"><i class="fa fa-minus"></a></div>'); //add input box
+            }
+        });
 
-        $(wrapper_{{ $name }}).on("click", ".remove_field ", function (e) { //user click on remove text
+        $(wrapper_{{ $name }}).on("click", ".remove_field ", function (e) {
             e.preventDefault();
             $(this).parent('div').remove();
-                    count_{{ $name }} --;
+            count_{{ $name }}--;
         })
 
         function Load() {
