@@ -10,7 +10,7 @@
         <div class="input-group">
             <input type='number' step="{{isset($form['step'])? $form['step']:'1'}}" title="{{$form['label']}}"
                 {{$required}} {{$readonly}} {!!$placeholder!!} {{$disabled}}
-                {{$validation['min']?"min=".$validation['min']:""}}
+                {{ isset($validation['min'])? "min=".$validation['min']:""}}
                  {{isset($validation['max'])?" max=".$validation['max']:""}}
                  class='form-control'
                  name=" {{$name}}" id="{{$name}}" value='{{$value}}' />
