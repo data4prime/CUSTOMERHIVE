@@ -15,6 +15,8 @@
     $asset_already = [];
 @endphp
 
+dd($forms);
+
 @foreach($forms as $key => $form)
     @php
         $type = isset($form['type']) ? $form['type'] : 'text';
