@@ -1141,7 +1141,7 @@ class CBController extends Controller
             if (isset($ro['type']) && $ro['type']  == 'checkbox') {
 
                 if (is_array($inputdata)) {
-                    if ($ro['datatable'] != '') {
+                    if (isset($ro['datatable']) && $ro['datatable'] != '') {
                         $table_checkbox = explode(',', $ro['datatable'])[0];
                         $field_checkbox = explode(',', $ro['datatable'])[1];
                         $table_checkbox_pk = CB::pk($table_checkbox);
