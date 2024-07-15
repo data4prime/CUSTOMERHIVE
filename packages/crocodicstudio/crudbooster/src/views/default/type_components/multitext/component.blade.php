@@ -30,6 +30,8 @@
         var wrapper_{{ $name }}       = $(".input_fields_wrap").filter(".{{$name}}"); //Fields wrapper
         var add_button_{{ $name }}    = $(".add_field_button").filter(".{{$name}}"); //Add button ID
 
+        console.log(add_button_{{ $name }});
+
 
         var count_{{ $name }} = 1; //initlal text box count
         $(add_button_{{ $name }}).click(function (e) { //on add input button click
