@@ -15,8 +15,10 @@
 $fields_to_eliminate = ['multitext', 'password'];
 
     foreach($forms as $key => $form) {
-        if(in_array($form['type'], $fields_to_eliminate)) {
-            unset($forms[$key]);
+        if (isset($form['type'])) {
+            if(in_array($form['type'], $fields_to_eliminate)) {
+                unset($forms[$key]);
+            }
         }
 
     }

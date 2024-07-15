@@ -6,7 +6,7 @@ id='form-group-{{$name}}' style="{!! @$form['style'] !!}">
     <span class='text-danger' title="{!! trans('crudbooster.this_field_is_required') !!}" >*</span>
     @endif
   </label>
-  <div class="{{ isset($col_width)? $col_width:'col-sm-10'}}">
+  <div class="{{ isset($col_width)? $col_width : 'col-sm-10'}}">
 
     <?php
         $single = !isset($form['dataenum']) && !isset($form['datatable']) && !isset($form['dataquery']);
