@@ -16,7 +16,7 @@ id='form-group-{{$name}}' style="{!! @$form['style'] !!}">
           if ($single) {
             $checked = (!empty($checked) OR !empty($value)) ? "checked" : "";
 
-          }
+          //}
           ?>
     <div class="checkbox {{$disabled}}">
       <label>
