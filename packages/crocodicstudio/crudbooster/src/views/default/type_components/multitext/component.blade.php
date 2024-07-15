@@ -1,7 +1,7 @@
 <div class='form-group {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='form-group-{{$name}}'
-    style="{{@$form['style']}}">
+    style="{{isset($form['style']) ? $form['style'] : ''}}">
     <label class='control-label col-sm-2'>{{$form['label']}}
-        @if($required)
+        @if(isset($required))
         <span class='text-danger' title='{!! trans(' crudbooster.this_field_is_required') !!}'>*</span>
         @endif
     </label>
@@ -12,7 +12,7 @@
             <input type='text' title="{{$form['label']}}" {{$required}} {{$readonly}} {!!$placeholder!!} {{$disabled}}
                 {{isset($validation['max'])?"maxlength=".$validation['max']:""}} class='form-control {{$name}} first_value'
                    name=" {{$name}}[]" id="{{$name}}" value='{{$value}}' /> <span class="input-group-addon"
-                style="padding: 1px;"><button class="add_field_button {{$name}}  btn btn-danger  btn-xs"><i
+                style="padding: 1px;"><button type="button" class="add_field_button {{$name}}  btn btn-danger  btn-xs"><i
                         class='fa fa-plus'></i></button></span>
         </div>
 
@@ -34,8 +34,8 @@
         var count_{{ $name }} = 1; //initlal text box count
         $(add_button_{{ $name }}).click(function (e) { //on add input button click
             e.preventDefault();
-            if (count_{ { $name } } < max_fields_{{ $name }} ) { //max input box allowed
-                        count_{ { $name } } ++; //text box increment
+            if (count_{{ $name }} < max_fields_{{ $name }} ) { //max input box allowed
+                        count_{{ $name }} ++; //text box increment
             $(wrapper_{{ $name }}).append('<div><input class="form-control" {{$required}} {{$readonly}} {!!$placeholder!!} {{$disabled}} {{isset($validation['max'])?"maxlength=".$validation['max']:""}} type="text" name="{{$name}}[]"/><a href="#" class="remove_field {{$name}}"><i class="fa fa-minus"></a></div>'); //add input box
                     }
                 });
@@ -43,7 +43,7 @@
         $(wrapper_{{ $name }}).on("click", ".remove_field ", function (e) { //user click on remove text
             e.preventDefault();
             $(this).parent('div').remove();
-                    count_{ { $name } } --;
+                    count_{{ $name }} --;
         })
 
         function Load() {
