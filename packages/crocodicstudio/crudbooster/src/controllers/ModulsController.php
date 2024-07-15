@@ -878,7 +878,7 @@ class ModulsController extends CBController
         $form['type'] = $type[$i];
         $form['validation'] = $validation[$i];
         $form['width'] = $width[$i];
-        if ($option[$i]) {
+        if (isset($option[$i])) {
           $form = array_merge($form, $option[$i]);
         }
 
