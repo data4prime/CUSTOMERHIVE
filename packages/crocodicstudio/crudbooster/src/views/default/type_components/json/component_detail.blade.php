@@ -15,8 +15,8 @@
             disable_collapse: true,
             disable_edit_json: true,
             disable_properties: true,
-            startval: <?=json_encode(json_decode($value, false))?>,
-            schema: <?=json_encode(json_decode($form["schema"], false))?>
+            startval: @php echo json_encode(json_decode($value, false)) @endphp,
+            schema: @php echo json_encode(json_decode($form["schema"], false)) @endphp
         });
         editor.disable();
     });
