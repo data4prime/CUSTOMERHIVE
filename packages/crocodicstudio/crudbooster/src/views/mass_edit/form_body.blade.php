@@ -26,7 +26,7 @@ $fields_to_eliminate = ['multitext', 'password'];
 
 
 
-dd($forms);
+//dd($forms);
 @endphp
 
 
