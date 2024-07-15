@@ -33,7 +33,7 @@ id='form-group-{{$name}}' style="{!! @$form['style'] !!}">
               } else {
                 $val = $label = $d;
               }
-              $checked = ($checked OR ($value && in_array($val, $value))) ? "checked" : "";
+              $checked = (isset($checked) OR ($value && in_array($val, $value))) ? "checked" : "";
             ?>
     <div class="checkbox {{$disabled}}">
       <label>
