@@ -7,7 +7,7 @@
     </label>
     <div class="{{$col_width?:'col-sm-10'}}">
 
-        @if(!$form['dataenum'] && !$form['datatable'] && !$form['dataquery'])
+        @if(!isset($form['dataenum']) && !isset($form['datatable']) && !isset($form['dataquery']))
         <em>{{trans('crudbooster.there_is_no_option')}}</em>
         @endif
 
