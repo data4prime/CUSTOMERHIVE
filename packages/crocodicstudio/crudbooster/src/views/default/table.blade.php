@@ -686,14 +686,11 @@ $('#mass_editing_modal input, #mass_editing_modal select').change(function () {
     var type = $(this).attr('type');
     console.log(type);
     if(type == 'checkbox'){
-        if(value){
-            checkbox.prop('checked', true);
-        }else{
-            checkbox.prop('checked', false);
-        }
+            checkbox.prop('checked', $(this).is_checked);
+
     }else{
         //if value is not empty, check the checkbox
-        if(value){
+        if(value != ''){
             checkbox.prop('checked', true);
         }else{
             checkbox.prop('checked', false);
