@@ -683,11 +683,21 @@ $('#mass_editing_modal input, #mass_editing_modal select').change(function () {
     console.log(value);
     var checkbox = $("input[name='mass_edit_"+name+"']");
     console.log(checkbox);
-    //if value is not empty, check the checkbox
-    if(value){
-        checkbox.prop('checked', true);
+    var type = $(this).attr('type');
+    console.log(type);
+    if(type == 'checkbox'){
+        if(value){
+            checkbox.prop('checked', true);
+        }else{
+            checkbox.prop('checked', false);
+        }
     }else{
-        checkbox.prop('checked', false);
+        //if value is not empty, check the checkbox
+        if(value){
+            checkbox.prop('checked', true);
+        }else{
+            checkbox.prop('checked', false);
+        }
     }
 })
 
