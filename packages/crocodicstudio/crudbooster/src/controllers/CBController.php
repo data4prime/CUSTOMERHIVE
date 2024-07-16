@@ -2002,6 +2002,7 @@ class CBController extends Controller
         $table = Request::input('table');
 
         $changed = Request::all();
+        dd(Request::all());
      
         $changed = array_filter($changed);
 
