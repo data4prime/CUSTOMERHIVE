@@ -271,7 +271,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $errors[] = 'Mashup is not selected. Please, select mashup for this widget.';
         }
 
-        if (isset($conf) ) {
+        if (isset($conf) && isset($conf->id)) {
             $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
         } else {
             //$errors[] = 'Qlik configuration is empty or not selected.';
