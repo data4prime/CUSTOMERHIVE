@@ -2012,18 +2012,32 @@ class CBController extends Controller
         //dd($changed);
         //dd($this->form);
         foreach($this->form as $k => $v) {
-            if ($k == 1) {
-                dd($changed["mass_edit_".$v['name']]);
-            }
-            if (isset($changed["mass_edit_".$v['name']])  && $changed["mass_edit_".$v['name']] == 'on') {
-                $new_data_input[] = $v;
+
+            if (is_array($changed["mass_edit_".$v['name']])) {
+                if (isset($changed["mass_edit_".$v['name']][0])  && $changed["mass_edit_".$v['name']][0] == 'on') {
+                    $new_data_input[] = $v;
+                }
+            } else {
+
+
+                if (isset($changed["mass_edit_".$v['name']])  && $changed["mass_edit_".$v['name']] == 'on') {
+                    $new_data_input[] = $v;
+                }
             }
         }
         $this->data_inputan = $new_data_input;
         $new_data_input = [];
         foreach($this->data_inputan as $k => $v) {
-            if (isset($changed["mass_edit_".$v['name']]) && $changed["mass_edit_".$v['name']] == 'on' ) {
-                $new_data_input[] = $v;
+            if (is_array($changed["mass_edit_".$v['name']])) {
+                if (isset($changed["mass_edit_".$v['name']][0])  && $changed["mass_edit_".$v['name']][0] == 'on') {
+                    $new_data_input[] = $v;
+                }
+            } else {
+
+
+                if (isset($changed["mass_edit_".$v['name']])  && $changed["mass_edit_".$v['name']] == 'on') {
+                    $new_data_input[] = $v;
+                }
             }
         }
 
