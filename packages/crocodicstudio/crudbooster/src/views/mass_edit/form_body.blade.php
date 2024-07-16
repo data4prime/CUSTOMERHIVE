@@ -159,8 +159,15 @@ $fields_to_eliminate = ['multitext', 'password'];
         <p class='text-danger'>{{ $type }} is not found in type component system</p><br />
     @endif
 
+    @if($type == 'checkbox')
+        <input type="checkbox" class="col-sm-2" name="mass_edit_{{ $name }}[]">
+    @else
+        <input type="checkbox" class="col-sm-2" name="mass_edit_{{ $name }}">
+    @endif
 
-    <input type="checkbox" class="col-sm-2" name="mass_edit_{{ $name }}">
+
+
+    
 </div>
     @if($name == 'group')
                     </div>
