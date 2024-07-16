@@ -309,7 +309,7 @@ class QlikMashupController extends CBController
 		//dd($qlik_conf);
 		$return = [];
 
-		$return['type'] = $qlik_conf->type;
+		$return['type'] = isset($qlik_conf->type) ? $qlik_conf->type : null;
 
 		if (isset($id) && $qlik_conf) {
 				$return['id'] = $qlik_conf->id;
