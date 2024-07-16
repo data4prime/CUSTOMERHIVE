@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::table('cms_settings', function (Blueprint $table) {
             //
+
+            $rows = DB::table('cms_settings')->where('group_setting', 'Qlik Configuration')->get();
+            foreach ($rows as $row) {
+                DB::table('cms_settings')->where('id', $row->id)->delete();
+            }
         });
     }
 
