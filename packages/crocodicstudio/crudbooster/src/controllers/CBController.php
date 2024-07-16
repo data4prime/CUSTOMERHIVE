@@ -2013,7 +2013,7 @@ class CBController extends Controller
         //dd($this->form);
         foreach($this->form as $k => $v) {
             if ($k == 1) {
-                dd($changed);
+                dd($changed["mass_edit_".$v['name']]);
             }
             if (isset($changed["mass_edit_".$v['name']])  && $changed["mass_edit_".$v['name']] == 'on') {
                 $new_data_input[] = $v;
