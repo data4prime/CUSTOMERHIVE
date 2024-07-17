@@ -415,8 +415,12 @@ class ModulsController extends CBController
       ->where('path', 'like', '%' . $module->controller . '%')
       ->delete();
 
+    
+
     //On Cascade Delete Controller
     @unlink(app_path('Http/Controllers/' . $module->controller . '.php'));
+
+    //$module->delete();
   }
 
   public function getTableColumns($table)
