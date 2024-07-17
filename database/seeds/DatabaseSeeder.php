@@ -11,13 +11,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
-        //$this->call(CBSeeder::class);
-        //$this->command->info('Qlik settings...');
-        //$this->call(Qlik_Sett::class);
+        $this->call(UsersTableSeeder::class);
+        $this->call(CBSeeder::class);
+        $this->command->info('Qlik settings...');
+        $this->call(Qlik_Sett::class);
 
 
-/* $mod = [
+ $mod = [
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'Qlik Configuration',
                 'icon' => 'fa fa-cog',
@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
                 'is_protected' => 1,
                 'is_active' => 1,
             ];
-        DB::table('cms_moduls')->insert($mod);  */
+        DB::table('cms_moduls')->insert($mod);  
 
  
 $mod = [
@@ -43,7 +43,7 @@ $mod = [
         DB::table('cms_moduls')->insert($mod); 
 
 
-/*
+
 $mod = [
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'Dashboard Layouts',
@@ -55,6 +55,6 @@ $mod = [
                 'is_active' => 1,
             ];
         DB::table('cms_moduls')->insert($mod); 
-*/
+
     }
 }
