@@ -239,7 +239,7 @@ class Cms_settingsSeeder extends Seeder
             ],
 
             //QLIK CONFIGURATION
-            [
+            /*[
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'confname',
                 'label' => 'Configuration Name',
@@ -375,10 +375,10 @@ class Cms_settingsSeeder extends Seeder
                 'group_setting' => trans('crudbooster.qlik_conf'),
                 'dataenum' => 'Active, Inactive',
                 'helper' => null,
-            ]
+            ]*/
         ];
 
-        foreach ($data as $row) {
+        /*foreach ($data as $row) {
             $count = DB::table('cms_settings')->where('name', $row['name'])->count();
             if ($count) {
                 if ($count > 1) {
@@ -389,6 +389,7 @@ class Cms_settingsSeeder extends Seeder
             }
             DB::table('cms_settings')->insert($row);
         }
+            */
     }
 }
 

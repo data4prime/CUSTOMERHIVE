@@ -11,10 +11,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(UsersTableSeeder::class);
+        //$this->call(UsersTableSeeder::class);
         $this->call(CBSeeder::class);
-        $this->command->info('Qlik settings...');
-        $this->call(Qlik_Sett::class);
+        //$this->command->info('Qlik settings...');
+        //$this->call(Qlik_Sett::class);
 
 
  $mod = [
