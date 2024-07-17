@@ -2,7 +2,7 @@
 /public/storage
 !/public/storage/uploads/1/2020-01/*
 /storage
-!/storage/uploads/1/2020-01/*
+!/storage/app/uploads/1/2020-01/*
 /vendor
 /.idea
 Homestead.json
