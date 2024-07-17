@@ -581,6 +581,7 @@ class ModulsController extends CBController
         ->where('id_cms_privileges', CRUDBooster::myPrivilegeId())
         ->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')
         ->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')
+        ->where('cms_moduls.deleted_at', null)
         ->get();
 
       Session::put('admin_privileges_roles', $roles);
