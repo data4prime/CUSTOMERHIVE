@@ -271,9 +271,13 @@ class QlikHelper
 
     $QRSCertkeyfilePassword =$qlik_conf->QRSCertkeyfilePassword;
 
+    //get host with protocol
+    $host = $_SERVER['HTTP_HOST'];
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
 
-    $QRSCertfile = str_replace('http://dae.thecustomerhive.com', '/var/www/dae.thecustomerhive.com/public', $QRSCertfile);
-    $QRSCertkeyfile = str_replace('http://dae.thecustomerhive.com', '/var/www/dae.thecustomerhive.com/public', $QRSCertkeyfile);
+
+    $QRSCertfile = str_replace($protocol.$host, '/var/www/dae.thecustomerhive.com/public', $QRSCertfile);
+    $QRSCertkeyfile = str_replace($protocol.$host, '/var/www/dae.thecustomerhive.com/public', $QRSCertkeyfile);
 
 
   
