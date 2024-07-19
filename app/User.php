@@ -60,13 +60,13 @@ class User extends Authenticatable
         return $this->photo;
       }
       elseif($this->isSuperAdmin()){
-        return asset('/imgaes/user/admin.jpeg');
+        return asset('/images/user/admin.jpeg');
       }
       elseif($this->isTenantAdmin()){
-        return asset('/imgaes/user/manager.jpeg');
+        return asset('/images/user/manager.jpeg');
       }
       else{
-        return asset('/imgaes/user/user.png');
+        return asset('/images/user/user.png');
       }
     }
 }
