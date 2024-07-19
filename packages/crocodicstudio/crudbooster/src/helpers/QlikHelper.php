@@ -277,8 +277,8 @@ class QlikHelper
 
 
 
-    $QRSCertfile = str_replace($protocol.$host, '/var/www/dae.thecustomerhive.com/public', $QRSCertfile);
-    $QRSCertkeyfile = str_replace($protocol.$host, '/var/www/dae.thecustomerhive.com/public', $QRSCertkeyfile);
+    $QRSCertfile = str_replace($protocol.$host, $protocol.$host.'/public', $QRSCertfile);
+    $QRSCertkeyfile = str_replace($protocol.$host, $protocol.$host.'/public', $QRSCertkeyfile);
 
 
   
