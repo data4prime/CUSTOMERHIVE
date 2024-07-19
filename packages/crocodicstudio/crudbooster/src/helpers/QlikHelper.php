@@ -279,6 +279,7 @@ class QlikHelper
 
     $QRSCertfile = str_replace($protocol.$host, $protocol.$host.'/public', $QRSCertfile);
     $QRSCertkeyfile = str_replace($protocol.$host, $protocol.$host.'/public', $QRSCertkeyfile);
+ file_put_contents(__DIR__.'/qlik_ticket.txt', $QRSCertfile."\n", FILE_APPEND);
 
 
   
