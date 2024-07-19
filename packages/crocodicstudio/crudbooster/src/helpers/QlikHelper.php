@@ -271,6 +271,12 @@ class QlikHelper
 
     $QRSCertkeyfilePassword =$qlik_conf->QRSCertkeyfilePassword;
 
+
+    $QRSCertfile = str_replace('http://dae.thecustomerhive.com', '/var/www/dae.thecustomerhive.com/public', $QRSCertfile);
+    $QRSCertkeyfile = str_replace('http://dae.thecustomerhive.com', '/var/www/dae.thecustomerhive.com/public', $QRSCertkeyfile);
+
+
+  
     $QRSCertfile = '/var/www/dae.thecustomerhive.com/public/storage/uploads/1/2024-07/client.pem';
     $QRSCertkeyfile = 'h/var/www/dae.thecustomerhive.com/public/storage/uploads/1/2024-07/client_key.pem';
 
