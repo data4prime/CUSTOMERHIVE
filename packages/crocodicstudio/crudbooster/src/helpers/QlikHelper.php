@@ -285,7 +285,7 @@ class QlikHelper
    // $QRSCertfile = '/var/www/dae.thecustomerhive.com/public/storage/uploads/1/2024-07/client.pem';
     //$QRSCertkeyfile = 'h/var/www/dae.thecustomerhive.com/public/storage/uploads/1/2024-07/client_key.pem';
 
-    file_put_contents(__DIR__ . '/qrscertfile.txt', file_get_contents($QRSCertfile)."\n", FILE_APPEND);
+    //file_put_contents(__DIR__ . '/qrscertfile.txt', file_get_contents($QRSCertfile)."\n", FILE_APPEND);
 
     $headers = array(
       'Accept: application/json',
