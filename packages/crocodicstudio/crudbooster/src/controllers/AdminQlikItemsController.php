@@ -862,7 +862,7 @@ if (QlikHelper::confIsSAAS($conf->id)) {
 			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
 			//$url .= $conf->endpoint;
 			$url .= '/chive';
-			$url .= '/hub/';
+			$url .= '/qmc/';
 			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
