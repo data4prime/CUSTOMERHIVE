@@ -160,7 +160,7 @@ class UserHelper
   {
     $user = User::find($user_id);
     if (empty($user_id) or empty($user)) {
-      return asset('/uploads/1/2020-01/user.png');
+      return asset('/images/user/user.png');
     } else {
       return $user->photo();
     }
