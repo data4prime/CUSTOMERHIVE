@@ -378,7 +378,7 @@ class Cms_settingsSeeder extends Seeder
             ]*/
         ];
 
-        /*foreach ($data as $row) {
+        foreach ($data as $row) {
             $count = DB::table('cms_settings')->where('name', $row['name'])->count();
             if ($count) {
                 if ($count > 1) {
@@ -389,7 +389,7 @@ class Cms_settingsSeeder extends Seeder
             }
             DB::table('cms_settings')->insert($row);
         }
-            */
+            
     }
 }
 
