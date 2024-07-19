@@ -206,7 +206,8 @@ public static function isProfilePage() {
                 //return $file_path . '/' . $filename;
                 //get host
                 $host = $_SERVER['HTTP_HOST'];
-                return 'http://' . $host . '/storage' . $file_path . '/' . $filename;
+                $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+                return $protocol . $host . '/storage' . $file_path . '/' . $filename;
 
             } else {
                 return null;

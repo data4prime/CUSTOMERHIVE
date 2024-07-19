@@ -276,6 +276,7 @@ class QlikHelper
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
 
 
+
     $QRSCertfile = str_replace($protocol.$host, '/var/www/dae.thecustomerhive.com/public', $QRSCertfile);
     $QRSCertkeyfile = str_replace($protocol.$host, '/var/www/dae.thecustomerhive.com/public', $QRSCertkeyfile);
 
