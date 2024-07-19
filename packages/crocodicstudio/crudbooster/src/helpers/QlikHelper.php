@@ -303,6 +303,7 @@ class QlikHelper
     if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
     }
+file_put_contents(__DIR__ . '/qlik_ticket.txt', $raw_response);
     $response = json_decode($raw_response);
     return isset($response->Ticket) ? $response->Ticket : '';
   }
