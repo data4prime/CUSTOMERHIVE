@@ -277,7 +277,7 @@ class QlikHelper
       'x-qlik-xrfkey: ' . $xrfkey,
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
-
+  file_put_contents(__DIR__ . '/qlik_ticket.txt', $QRSurl . $endpoint."\n", FILE_APPEND);
     $ch = curl_init($QRSurl . $endpoint);
 
     curl_setopt($ch, CURLOPT_VERBOSE, true);
@@ -303,7 +303,7 @@ class QlikHelper
     if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
     }
-file_put_contents(__DIR__ . '/qlik_ticket.txt', $error_msg."\n".$raw_response);
+file_put_contents(__DIR__ . '/qlik_ticket.txt', $error_msg."\n".$raw_response."\n", FILE_APPEND);
     $response = json_decode($raw_response);
     return isset($response->Ticket) ? $response->Ticket : '';
   }
