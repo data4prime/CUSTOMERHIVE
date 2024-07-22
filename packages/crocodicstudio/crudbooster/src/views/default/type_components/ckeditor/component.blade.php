@@ -19,13 +19,10 @@
             ClassicEditor
                 .create( document.querySelector( '#editor' ), {
                     plugins: [ Essentials, Paragraph, Bold, Italic, Font ],
-                    toolbar: [
-						'undo', 'redo', '|', 'bold', 'italic', '|',
-						'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
-					]
+                    toolbar: Array.from( editor.ui.componentFactory.names()),
                 } )
                 .then( editor => {          
-                    console.log(Array.from( editor.ui.componentFactory.names() )),
+                    //console.log(Array.from( editor.ui.componentFactory.names() )),
                     window.editor = editor;
                 } )
                 .catch( error => {
