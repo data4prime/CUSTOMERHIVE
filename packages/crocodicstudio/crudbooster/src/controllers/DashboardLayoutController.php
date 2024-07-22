@@ -45,7 +45,7 @@ class DashboardLayoutController extends CBController
 		$this->form = [];
 		$this->form[] = ['label' => 'Layout Name', 'name' => 'layoutname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Layout Name'];
         //$this->form[] = ['label' => 'Code Layout', 'name' => 'code_layout', 'type' => 'textarea', 'width' => 'col-sm-10', 'placeholder' => 'Enter Code Layout'];
-$this->form[] = ['label' => 'Code Layout', 'name' => 'code_layout', 'type' => 'wysiwyg', 'width' => 'col-sm-10', 'placeholder' => 'Enter Code Layout'];
+$this->form[] = ['label' => 'Code Layout', 'name' => 'code_layout', 'type' => 'tinymce', 'width' => 'col-sm-10', 'placeholder' => 'Enter Code Layout'];
 //wysiwyg
 
 
