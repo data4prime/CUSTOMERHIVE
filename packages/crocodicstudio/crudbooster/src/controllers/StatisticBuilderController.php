@@ -36,7 +36,8 @@ class StatisticBuilderController extends CBController
 
         $this->col = [];
         $this->col[] = ["label" => "Name", "name" => "name"];
-        $this->col[] = ["label" => "Layout", "name" => "layout"];
+        //$this->col[] = ["label" => "Layout", "name" => "layout"];
+        $this->col[] = array("label" => "Layout", "name" => "layout", "join" => "dashboard_layouts,layoutname");
 
         $this->form = [];
         $this->form[] = [
