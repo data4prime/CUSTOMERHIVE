@@ -100,7 +100,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         $layout = DB::table('dashboard_layouts')->where('id', $layout)->first();
 
-        dd($layout);
+        //dd($layout);
 
         if ($layout) {
             $code_layout = $layout->code_layout;
@@ -140,7 +140,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         
         $layout = CRUDBooster::first($this->table, ['id' => $id_cms_statistics])->layout;
         $layout = DB::table('dashboard_layouts')->where('id', $layout)->first();//->code_layout;
-        dd($layout);
+        //dd($layout);
 
         if ($layout) {
             $code_layout = $layout->code_layout;
