@@ -39,7 +39,8 @@ class QlikMashupController extends CBController
 		$this->col = [];
 		$this->col[] = ["label" => "Mashup Name", "name" => "mashupname"];
         $this->col[] = ["label" => "App ID", "name" => "appid"];
-		$this->col[] = ["label" => "Conf", "name" => "conf"];
+		//$this->col[] = ["label" => "Conf", "name" => "conf"];
+		$this->col[] = array("label" => "Qlik Conf", "name" => "conf", "join" => "qlik_confs,confname");
 
 
 		# END COLUMNS DO NOT REMOVE THIS LINE
