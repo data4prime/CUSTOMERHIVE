@@ -411,17 +411,21 @@ console.log(row.nextElementSibling);
 
 	}
 
-	function aggiungiIdAElemTd($html) {
-		$n = 0;
+function aggiungiIdAElemTd($html) {
+    $n = 0;
 
-		$html = preg_replace_callback('/<td([^>]*)>/i', function($matches) use (&$n) {
-			$n++;
-			$id = 'area' . $n;
-			return '<td id="' . $id . '"' . $matches[1] . '>';
-		}, $html);
+    $html = preg_replace_callback('/<td([^>]*)\s*id\s*=\s*"[^"]*"([^>]*)>/i', function($matches) {
+        return $matches[0];
+    }, $html);
 
-		return $html;
-	}
+    $html = preg_replace_callback('/<td([^>]*)>(?:(?!id=).)*<\/td>/i', function($matches) use (&$n) {
+        $n++;
+        $id = 'area' . $n;
+        return '<td id="' . $id . '"' . $matches[1] . '>';
+    }, $html);
+
+    return $html;
+}
 
 
 }
