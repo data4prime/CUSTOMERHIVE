@@ -340,7 +340,7 @@ console.log(row.nextElementSibling);
 	{
 		//Your code here
 		$postdata['code_layout'] = $this->aggiungiIdAElemTd($postdata['code_layout']);
-		//$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
+		$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
 	}
 
 	/*
@@ -369,7 +369,7 @@ console.log(row.nextElementSibling);
 	{
 		//dd($postdata);
 		$postdata['code_layout'] = $this->aggiungiIdAElemTd($postdata['code_layout']);
-		//$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
+		$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
 		
 	}
 
