@@ -103,7 +103,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         //dd($layout);
 
         if ($layout) {
-            $code_layout = $layout->code_layout;
+            $code_layout = html_entity_decode($layout->code_layout);
         } else {
             $code_layout = '';
         }
@@ -143,7 +143,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         //dd($layout);
 
         if ($layout) {
-            $code_layout = $layout->code_layout;
+            $code_layout = html_entity_decode($layout->code_layout);
         } else {
             $code_layout = '';
         }
