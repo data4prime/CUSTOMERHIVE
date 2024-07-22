@@ -353,7 +353,7 @@ console.log(row.nextElementSibling);
 	public function hook_after_add($id)
 	{
 
-
+		$postdata['code_layout'] = $this->aggiungiIdAElemTd($postdata['code_layout']);
 
 	}
 
@@ -367,7 +367,8 @@ console.log(row.nextElementSibling);
 	    */
 	public function hook_before_edit(&$postdata, $id)
 	{
-		dd($postdata);
+		//dd($postdata);
+		$postdata['code_layout'] = $this->aggiungiIdAElemTd($postdata['code_layout']);
 		//$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
 		
 	}
@@ -408,6 +409,18 @@ console.log(row.nextElementSibling);
 	{
 		//Your code here
 
+	}
+
+	function aggiungiIdAElemTd($html) {
+		$n = 0;
+
+		$html = preg_replace_callback('/<td([^>]*)>/i', function($matches) use (&$n) {
+			$n++;
+			$id = 'area' . $n;
+			return '<td id="' . $id . '"' . $matches[1] . '>';
+		}, $html);
+
+		return $html;
 	}
 
 
