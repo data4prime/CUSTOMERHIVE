@@ -148,7 +148,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $code_layout = '';
         }
 
-        return view('crudbooster::statistic_builder.builder', compact('page_title', 'id_cms_statistics', 'layout'));
+        return view('crudbooster::statistic_builder.builder', compact('page_title', 'id_cms_statistics', 'layout', 'code_layout'));
     }
 
     public function getListComponent($id_cms_statistics, $area_name)
