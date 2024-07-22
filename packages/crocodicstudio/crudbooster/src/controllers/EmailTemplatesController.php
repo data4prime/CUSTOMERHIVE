@@ -41,8 +41,8 @@ class EmailTemplatesController extends \crocodicstudio\crudbooster\controllers\C
         ];
         $this->form[] = ["label" => "Slug", "type" => "text", "name" => "slug", "required" => true, 'validation' => 'required|unique:cms_email_templates,slug'];
         $this->form[] = ["label" => "Subject", "name" => "subject", "type" => "text", "required" => true, "validation" => "required|min:3|max:255"];
-        //$this->form[] = ["label" => "Content", "name" => "content", "type" => "wysiwyg", "required" => true, "validation" => "required"];
-        $this->form[] = ["label" => "Content", "name" => "content", "type" => "ckeditor", "required" => true, "validation" => "required"];
+        $this->form[] = ["label" => "Content", "name" => "content", "type" => "wysiwyg", "required" => true, "validation" => "required"];
+        //$this->form[] = ["label" => "Content", "name" => "content", "type" => "ckeditor", "required" => true, "validation" => "required"];
         $this->form[] = ["label" => "Description", "name" => "description", "type" => "text", "required" => true, "validation" => "required|min:3|max:255"];
 
         $this->form[] = [
