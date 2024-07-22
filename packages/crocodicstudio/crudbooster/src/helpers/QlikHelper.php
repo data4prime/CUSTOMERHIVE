@@ -277,8 +277,8 @@ class QlikHelper
 
 
 
-    $QRSCertfile = str_replace($protocol.$host, env('APP_PATH').'/public', $QRSCertfile);
-    $QRSCertkeyfile = str_replace($protocol.$host, env('APP_PATH').'/public', $QRSCertkeyfile);
+    $QRSCertfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertfile);
+    $QRSCertkeyfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertkeyfile);
  file_put_contents(__DIR__.'/qlik_ticket.txt', $QRSCertfile."\n", FILE_APPEND);
 
 
