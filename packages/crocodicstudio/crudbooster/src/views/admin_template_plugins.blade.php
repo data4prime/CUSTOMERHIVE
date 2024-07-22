@@ -42,7 +42,8 @@
 <script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/datatables/dataTables.bootstrap.min.js')}}"></script>
 
-
+<!--TINYMCE-->
+<script src="{{ asset('tinymce/js/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
 
 <!--<script type="text/javascript" src="https://sense.izsvenezie.it/pub/resources/assets/external/requirejs/require.js"></script>-->
 

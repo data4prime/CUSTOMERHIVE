@@ -266,6 +266,8 @@
     <script type="text/javascript">@php echo  $script_js @endphp</script>
 
 
+
+
     @stack('bottom')
 
     @if(isset($target_layout) && $target_layout == 2)
