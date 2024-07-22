@@ -339,8 +339,8 @@ console.log(row.nextElementSibling);
 	public function hook_before_add(&$postdata)
 	{
 		//Your code here
-
-		$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
+		$postdata['code_layout'] = $this->aggiungiIdAElemTd($postdata['code_layout']);
+		//$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
 	}
 
 	/*
@@ -353,7 +353,7 @@ console.log(row.nextElementSibling);
 	public function hook_after_add($id)
 	{
 
-		$postdata['code_layout'] = $this->aggiungiIdAElemTd($postdata['code_layout']);
+		
 
 	}
 
