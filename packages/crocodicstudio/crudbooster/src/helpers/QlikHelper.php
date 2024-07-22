@@ -279,7 +279,7 @@ class QlikHelper
 
     $QRSCertfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertfile);
     $QRSCertkeyfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertkeyfile);
- file_put_contents(__DIR__.'/qlik_ticket.txt', $QRSCertfile."\n", FILE_APPEND);
+ //file_put_contents(__DIR__.'/qlik_ticket.txt', $QRSCertfile."\n", FILE_APPEND);
 
 
   
@@ -294,7 +294,7 @@ class QlikHelper
       'x-qlik-xrfkey: ' . $xrfkey,
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
-  file_put_contents(__DIR__ . '/qlik_ticket.txt', $QRSurl . '/'.$endpoint."\n", FILE_APPEND);
+  //file_put_contents(__DIR__ . '/qlik_ticket.txt', $QRSurl . '/'.$endpoint."\n", FILE_APPEND);
     $ch = curl_init($QRSurl . '/'.$endpoint);
 
     curl_setopt($ch, CURLOPT_VERBOSE, true);
