@@ -24,7 +24,8 @@
 						'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
 					]
                 } )
-                .then( editor => {
+                .then( editor => {          
+                    console.log(Array.from( editor.ui.componentFactory.names() )),
                     window.editor = editor;
                 } )
                 .catch( error => {
