@@ -1,8 +1,8 @@
 		<script type="importmap">
 			{
 				"imports": {
-					"ckeditor5": "./ckeditor5/ckeditor5.js",
-					"ckeditor5/": "./ckeditor5/"
+					"ckeditor5": "{{asset('ckeditor5/ckeditor5.js')}}",
+					"ckeditor5/": "{{asset('ckeditor5')}}"
 				}
 			}
 		</script>
