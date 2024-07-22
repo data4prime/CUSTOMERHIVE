@@ -367,7 +367,7 @@ console.log(row.nextElementSibling);
 	    */
 	public function hook_before_edit(&$postdata, $id)
 	{
-
+		dd($postdata);
 		//$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
 		
 	}
