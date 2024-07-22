@@ -216,7 +216,7 @@ class Cms_settingsSeeder extends Seeder
 
             //QLIK CONF
 
-            [
+           /* [
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'confname',
                 'label' => 'Configuration Name',
@@ -380,7 +380,7 @@ class Cms_settingsSeeder extends Seeder
                 'group_setting' => trans('crudbooster.qlik_conf'),
                 'dataenum' => null,
                 'helper' => null,
-            ]
+            ]*/
         ];
 
         foreach ($data as $row) {
