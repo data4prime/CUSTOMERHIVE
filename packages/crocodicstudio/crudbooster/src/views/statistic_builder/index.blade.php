@@ -418,6 +418,7 @@
 
 <script defer>
 
+/*
 if (window.location.href.includes('statistic_builder/builder')) {
 
     const statisticRows = document.querySelectorAll('.statistic-row');
@@ -435,5 +436,6 @@ if (window.location.href.includes('statistic_builder/builder')) {
         });
     });
 }
+*/
 
 </script>
