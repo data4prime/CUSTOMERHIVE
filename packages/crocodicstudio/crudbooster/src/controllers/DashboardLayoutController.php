@@ -170,7 +170,7 @@ if (window.location.href.includes('dashboard_layouts/detail/')) {
 			child.style.borderCollapse = 'collapse';
 			//if child is a br element, delete it
 			if (child.tagName == 'BR') {
-				child.remove();
+				//child.remove();
 			}
         });
     });
@@ -182,7 +182,7 @@ console.log(row.nextElementSibling);
 
 
 			if (row.nextElementSibling != null && row.nextElementSibling.tagName == 'BR') {
-				row.nextElementSibling.remove();
+				//row.nextElementSibling.remove();
 				console.log(row.nextElementSibling);
 			}
 	});
