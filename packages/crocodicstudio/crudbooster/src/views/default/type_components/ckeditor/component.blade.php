@@ -17,7 +17,14 @@
             } from 'ckeditor5';
 
             ClassicEditor
-                .create( document.querySelector( '#editor' ), {
+.create( document.querySelector( '#editor' ) )
+	.then( editor => {
+		window.editor = editor;
+	} )
+	.catch( error => {
+		console.error( 'There was a problem initializing the editor.', error );
+	} );
+               /* .create( document.querySelector( '#editor' ), {
                     plugins: [ Essentials, Paragraph, Bold, Italic, Font ],
                     toolbar:  [
     "accessibilityHelp",
@@ -48,7 +55,7 @@
                 } )
                 .catch( error => {
                     console.error( error );
-                } );
+                } );*/
         </script>
         <!-- A friendly reminder to run on a server, remove this during the integration. -->
         <script>
