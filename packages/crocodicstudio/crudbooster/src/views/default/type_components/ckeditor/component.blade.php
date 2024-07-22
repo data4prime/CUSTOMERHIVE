@@ -19,10 +19,28 @@
             ClassicEditor
                 .create( document.querySelector( '#editor' ), {
                     plugins: [ Essentials, Paragraph, Bold, Italic, Font ],
-                    toolbar: [
-						'undo', 'redo', '|', 'bold', 'italic', '|',
-						'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
-					]
+                    toolbar:  [
+    "accessibilityHelp",
+    "menuBar:accessibilityHelp",
+    "selectAll",
+    "menuBar:selectAll",
+    "undo",
+    "menuBar:undo",
+    "redo",
+    "menuBar:redo",
+    "bold",
+    "menuBar:bold",
+    "italic",
+    "menuBar:italic",
+    "fontFamily",
+    "menuBar:fontFamily",
+    "fontSize",
+    "menuBar:fontSize",
+    "fontColor",
+    "menuBar:fontColor",
+    "fontBackgroundColor",
+    "menuBar:fontBackgroundColor"
+]
                 } )
                 .then( editor => {          
                     console.log(Array.from( editor.ui.componentFactory.names() )),
