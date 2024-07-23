@@ -419,6 +419,17 @@
 
 <script defer>
 
+if (window.location.href.includes('statistic_builder/builder')) {
+
+    //selectd td elements with id containing 'area'
+    const areas = document.querySelectorAll('td[id^="area"]');
+
+    areas.forEach(area => {
+        area.style.border = '1px solid black';
+    });
+
+}
+
 /*
 if (window.location.href.includes('statistic_builder/builder')) {
 
