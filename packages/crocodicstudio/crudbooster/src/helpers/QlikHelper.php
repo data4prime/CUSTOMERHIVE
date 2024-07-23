@@ -175,11 +175,21 @@ class QlikHelper
     $xrfkey = '0123456789abcdef';
     $endpoint = $qlik_conf->endpoint . "/ticket?xrfkey=" . $xrfkey;
 
-	  $QRSCertfile =$qlik_conf->tenant_path.$qlik_conf->QRSCertfile;
+    $QRSCertfile =$qlik_conf->QRSCertfile;
 
-    $QRSCertkeyfile = $qlik_conf->tenant_path.$qlik_conf->QRSCertkeyfile;
+
+    $QRSCertkeyfile = $qlik_conf->QRSCertkeyfile;
 
     $QRSCertkeyfilePassword =$qlik_conf->QRSCertkeyfilePassword;
+
+    //get host with protocol
+    $host = $_SERVER['HTTP_HOST'];
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+
+
+
+    $QRSCertfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertfile);
+    $QRSCertkeyfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertkeyfile);
 
     $headers = array(
       'Accept: application/json',
