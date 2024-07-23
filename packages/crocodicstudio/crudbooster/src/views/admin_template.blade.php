@@ -310,6 +310,12 @@
         });
     </script>
 
+    <script >
+        window.onerror = function(error, url, line) {
+    controller.sendLog({acc:'error', data:'ERR:'+error+' URL:'+url+' L:'+line});
+};
+    </script>
+
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
       Both of these plugins are recommended to enhance the
       user experience -->
