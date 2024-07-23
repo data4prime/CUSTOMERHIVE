@@ -312,7 +312,8 @@
 
     <script >
         window.onerror = function(error, url, line) {
-    controller.sendLog({acc:'error', data:'ERR:'+error+' URL:'+url+' L:'+line});
+        alert("An error occurred: " + error + " on line " + line + " in " + url);
+    //controller.sendLog({acc:'error', data:'ERR:'+error+' URL:'+url+' L:'+line});
 };
     </script>
 
