@@ -295,6 +295,7 @@ $this->form[] = ['label' => 'Code Layout', 'name' => 'code_layout', 'type' => 't
 		//dd($postdata);
 		$postdata['code_layout'] = $this->aggiungiIdAElemTd($postdata['code_layout']);
 		$postdata['code_layout'] = $this->aggiungiClassAElemTd($postdata['code_layout']);
+		dd($postdata);
 		//$postdata['code_layout'] = htmlentities($postdata['code_layout']);
 		//$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
 		
