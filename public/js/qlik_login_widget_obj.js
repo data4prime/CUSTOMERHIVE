@@ -82,7 +82,7 @@ option_cs.value =  "CurrentSelections";
 option_cs.innerHTML = "Current Selections";
 
 
-if (hidden_object.value == "CurrentSelections"  && hidden_app.value == mashupId) {
+if (hidden_object && (hidden_object.value == "CurrentSelections"  && hidden_app.value == mashupId)) {
 
  option_cs.selected = true;
 }
