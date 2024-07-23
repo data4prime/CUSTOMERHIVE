@@ -72,6 +72,7 @@
     var id_cms_statistics = '{{$id_cms_statistics}}';
 
     function addWidget(id_cms_statistics, area, component) {
+        console.log("Add Widget " + component + " to " + area);
         var id = new Date().getTime();
         $('#' + area).append("<div id='" + id + "' class='area-loading'><i class='fa fa-spin fa-spinner'></i></div>");
 
