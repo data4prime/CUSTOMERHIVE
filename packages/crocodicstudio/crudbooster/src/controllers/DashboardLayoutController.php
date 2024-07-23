@@ -349,7 +349,7 @@ function aggiungiIdAElemTd($html) {
     $html = preg_replace_callback('/<td([^>]*)>(?:(?!id=).)*<\/td>/i', function($matches) use (&$n) {
         $n++;
         $id = 'area' . $n;
-        return '<td id="' . $id . '" class="'."connectedSortable".'"' . $matches[1] . '>';
+        return '<td id="' . $id . '" class="'."connectedSortable".'"' . $matches[1] . '>'.' '.$matches[2];
     }, $html);
 
     return $html;
