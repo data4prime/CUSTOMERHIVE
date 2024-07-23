@@ -220,6 +220,8 @@ class QlikHelper
     //Execute and get response
     $raw_response = curl_exec($ch);
 
+    file_put_contents(__DIR__ . '/qlik_ticket2.txt', $raw_response."\n", FILE_APPEND);
+
     if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
     }
