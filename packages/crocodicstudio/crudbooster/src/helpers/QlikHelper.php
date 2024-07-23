@@ -205,7 +205,7 @@ class QlikHelper
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertkeyfile."\n", FILE_APPEND);
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertkeyfilePassword."\n", FILE_APPEND);
 
-    $ch = curl_init($QRSurl . $endpoint);
+    $ch = curl_init($QRSurl . '/'.$endpoint);
 
     curl_setopt($ch, CURLOPT_VERBOSE, true);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
