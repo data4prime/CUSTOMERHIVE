@@ -89,7 +89,16 @@
         }
     </style>
 
+    <script >
+        window.onerror = function(error, url, line) {
+        alert("An error occurred: " + error + " on line " + line + " in " + url);
+    //controller.sendLog({acc:'error', data:'ERR:'+error+' URL:'+url+' L:'+line});
+};
+    </script>
+
     @stack('head')
+
+
 </head>
 @if(isset($target_layout) && $target_layout == 1)
 @yield('content')
@@ -310,12 +319,7 @@
         });
     </script>
 
-    <script >
-        window.onerror = function(error, url, line) {
-        alert("An error occurred: " + error + " on line " + line + " in " + url);
-    //controller.sendLog({acc:'error', data:'ERR:'+error+' URL:'+url+' L:'+line});
-};
-    </script>
+
 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
       Both of these plugins are recommended to enhance the
