@@ -361,7 +361,7 @@ function aggiungiClassAElemTd($html) {
         return $matches[0];
     }, $html);
 
-    $html = preg_replace_callback('/<td([^>]*)>(?:(?!class=).)*<\/td>/i', function($matches) use (&$n) {
+    $html = preg_replace_callback('/<td([^>]*)>(?:(?!class=).)*<\/td>/i', function($matches)  {
         $id = 'connectedSortable';
         return '<td class="' . $id . '"' . $matches[1] . '>';
     }, $html);
