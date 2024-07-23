@@ -292,7 +292,7 @@ $this->form[] = ['label' => 'Code Layout', 'name' => 'code_layout', 'type' => 't
 	    */
 	public function hook_before_edit(&$postdata, $id)
 	{
-		dd($postdata['code_layout']);
+		//dd($postdata['code_layout']);
 		$postdata['code_layout'] = $this->aggiungiIdAElemTd($postdata['code_layout']);
 		//$postdata['code_layout'] = $this->aggiungiClassAElemTd($postdata['code_layout']);
 		//dd($postdata);
@@ -347,6 +347,7 @@ function aggiungiIdAElemTd($html) {
     }, $html);
 
     $html = preg_replace_callback('/<td([^>]*)>(?:(?!id=).)*<\/td>/i', function($matches) use (&$n) {
+		dd($matches);
         $n++;
         $id = 'area' . $n;
         return '<td id="' . $id . '" class="'."connectedSortable".'"' . $matches[1] . '>'.' '.'</td>';
