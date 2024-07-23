@@ -46,7 +46,12 @@
 <script src="{{ asset('tinymce/js/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
 
 <!--<script type="text/javascript" src="https://sense.izsvenezie.it/pub/resources/assets/external/requirejs/require.js"></script>-->
-
+    <script >
+        window.onerror = function(error, url, line) {
+        alert("An error occurred: " + error + " on line " + line + " in " + url);
+    //controller.sendLog({acc:'error', data:'ERR:'+error+' URL:'+url+' L:'+line});
+};
+    </script>
 <script>
     var ASSET_URL = "{{asset('/')}}";
     var APP_NAME = "{{Session::get('appname')}}";

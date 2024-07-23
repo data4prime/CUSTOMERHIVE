@@ -29,12 +29,7 @@
     <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
     <link href="{{ asset('vendor/crudbooster/assets/rtl.css')}}" rel="stylesheet" type="text/css" />
     @endif
-    <script >
-        window.onerror = function(error, url, line) {
-        alert("An error occurred: " + error + " on line " + line + " in " + url);
-    //controller.sendLog({acc:'error', data:'ERR:'+error+' URL:'+url+' L:'+line});
-};
-    </script>
+
     @php
     $main_css = asset("vendor/crudbooster/assets/css/main.css").'?r='.time();
     $custom_css = asset('css/custom.css').'?r='.time();
