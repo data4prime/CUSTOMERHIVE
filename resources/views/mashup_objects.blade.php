@@ -39,6 +39,7 @@ $param = $conf->type == 'On-Premise' ? "?qlikTicket=$token" : "";
 var type = '{{$conf->type}}';
 
 var qlik_token = '{{$conf->type == "SAAS" ? $token : ""}}';
+var qlik_ticket = '{{$conf->type == "On-Premise" ? $token : ""}}';
 var host = '{{$conf->host}}';
 var prefix = '{{$conf->prefix}}';
 var port = '{{$conf->port}}';
@@ -55,6 +56,6 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');
   <div id="title">Loading Qlik App. Please wait.</div>
 
 <input type="hidden" id="state_page" name="state_page">
-<script   src="{{asset('js/qlik_login_widget_obj.js')}}"></script>
+<script  defer src="{{asset('js/qlik_login_widget_obj.js')}}"></script>
 @endif
 
