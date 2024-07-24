@@ -63,9 +63,12 @@ if (webIntegrationId !== '') {
 
         var x = document.cookie;
 
-        var app = qlik.openApp(appId, config);
-        console.log('app: ');
-        console.log(app);
+        //var app = qlik.openApp(appId, config);
+        var sessionAppFromApp = qlik.sessionAppFromApp(appId, config);
+        console.log('sessionAppFromApp: ');
+        console.log(sessionAppFromApp);
+        /*console.log('app: ');
+        console.log(app);*/
 
         objectsOptions(app);
 
