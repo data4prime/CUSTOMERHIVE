@@ -38,9 +38,10 @@ if (webIntegrationId !== '') {
 
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
+    console.log('baseUrl: '+baseUrl);
     require.config({
         baseUrl: baseUrl + 'resources/',
-        //webIntegrationId: config.webIntegrationId
+        webIntegrationId: config.webIntegrationId
     });
 
     require(["js/qlik"], function (qlik) {
@@ -63,6 +64,8 @@ if (webIntegrationId !== '') {
         var x = document.cookie;
 
         var app = qlik.openApp(appId, config);
+        console.log('app: ');
+        console.log(app);
 
         objectsOptions(app);
 
