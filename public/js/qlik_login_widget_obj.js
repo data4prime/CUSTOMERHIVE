@@ -27,7 +27,7 @@ if (webIntegrationId !== '') {
 
     var config = {
         host: host_q, 
-        prefix: "/", 
+        prefix: "/"+prefix, 
         port: 443, 
         isSecure: true, 
     };
