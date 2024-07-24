@@ -15,7 +15,7 @@ if ($conf->type == 'SAAS') {
 
   //in realta sarebbe il ticket
   $token = HelpersQlikHelper::getTicketFromConf($conf->id) ;
-  $src = $conf->host . "/qps/resources/assets/external/requirejs/require.js?qlikTicket=$token";
+  $src = $conf->host . "/resources/assets/external/requirejs/require.js?qlikTicket=$token";
 }
 
 
