@@ -65,6 +65,7 @@ if (webIntegrationId !== '') {
 
         //var app = qlik.openApp(appId, config);
         var sessionAppFromApp = qlik.sessionAppFromApp(appId, config);
+        var app = sessionAppFromApp;
         console.log('sessionAppFromApp: ');
         console.log(sessionAppFromApp);
         /*console.log('app: ');
