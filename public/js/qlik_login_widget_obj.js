@@ -65,6 +65,17 @@ if (webIntegrationId !== '') {
 
         //var app = qlik.openApp(appId, config);
         var sessionAppFromApp = qlik.sessionAppFromApp(appId, config);
+        sessionAppFromApp.doReload().then(function(result){
+                if( result ){
+                    console.log('Reload successful');
+
+                    console.log(result);
+                    //sessionAppFromApp.getObject('QV01', 'HrZsPG');
+                } 
+                else {
+                    console.log('Reload failed');
+                }
+            });
         var app = sessionAppFromApp;
         console.log('sessionAppFromApp: ');
         console.log(sessionAppFromApp);
