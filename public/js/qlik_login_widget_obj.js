@@ -27,7 +27,7 @@ if (webIntegrationId !== '') {
 
     var config = {
         host: host_q, 
-        prefix: "/", 
+        prefix: "", 
         port: 443, 
         isSecure: true, 
     };
@@ -40,7 +40,7 @@ if (webIntegrationId !== '') {
 
     console.log('baseUrl: '+baseUrl);
     require.config({
-        baseUrl: baseUrl + 'resources/',
+        baseUrl: baseUrl + '/resources',
         webIntegrationId: config.webIntegrationId
     });
 
