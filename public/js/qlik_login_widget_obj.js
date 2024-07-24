@@ -69,6 +69,9 @@ if (webIntegrationId !== '') {
 
         objectsOptions(app);
 
+       
+
+
         var title = document.getElementById('title');
         title.innerHTML = "";
 
@@ -101,6 +104,8 @@ if (hidden_object && (hidden_object.value == "CurrentSelections"  && hidden_app.
 parent.document.getElementById('mashup_object').appendChild(option_cs);
 
     app.getAppObjectList('masterobject', function (reply) {
+        console.log('reply: ');
+        console.log(reply);
         var str = "";
 
         $.each(reply.qAppObjectList.qItems, function (key, value) {
