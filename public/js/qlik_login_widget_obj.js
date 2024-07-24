@@ -71,7 +71,7 @@ if (webIntegrationId !== '') {
         /*console.log('app: ');
         console.log(app);*/
 
-        objectsOptions(app);
+        //objectsOptions(app);
 
        
 
