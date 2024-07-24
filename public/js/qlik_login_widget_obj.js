@@ -63,8 +63,8 @@ if (webIntegrationId !== '') {
 
         var x = document.cookie;
 
-        //var app = qlik.openApp(appId, config);
-        var sessionAppFromApp = qlik.sessionAppFromApp(appId, config);
+        var app = qlik.openApp(appId, config);
+        /*var sessionAppFromApp = qlik.sessionAppFromApp(appId, config);
         sessionAppFromApp.doReload().then(function(result){
                 if( result ){
                     console.log('Reload successful');
@@ -78,9 +78,9 @@ if (webIntegrationId !== '') {
             });
         var app = sessionAppFromApp;
         console.log('sessionAppFromApp: ');
-        console.log(sessionAppFromApp);
-        /*console.log('app: ');
-        console.log(app);*/
+        console.log(sessionAppFromApp);*/
+        console.log('app: ');
+        console.log(app);
 
         //objectsOptions(app);
 
