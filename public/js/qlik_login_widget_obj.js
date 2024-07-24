@@ -36,13 +36,21 @@ if (webIntegrationId !== '') {
         config.webIntegrationId = webIntegrationId;
     }
 
+
+
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
-    console.log('baseUrl: '+baseUrl);
-    require.config({
+
+    var req_conf = {
         baseUrl: baseUrl + '/resources',
-        webIntegrationId: config.webIntegrationId
-    });
+    };
+
+    if (webIntegrationId !== '') {
+        req_conf.webIntegrationId = webIntegrationId;
+    }
+
+    console.log('baseUrl: '+baseUrl);
+    require.config(req_conf);
 
     require(["js/qlik"], function (qlik) {
         if (!qlik) {
