@@ -1,10 +1,17 @@
 async function main() {
 
+console.log('main');
+console.log('webIntegrationId: '+webIntegrationId);
 if (webIntegrationId !== '') {
+    
     const check = await checkLoggedIn();
+    console.log('check: ');
+    console.log(check);
 
     if (check.status === 401) {
         const isLoggedIn = await jwtLogin();
+        console.log('isLoggedIn: ');
+        console.log(isLoggedIn);
 
     }
 }
