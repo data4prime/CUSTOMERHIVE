@@ -27,7 +27,7 @@ if (webIntegrationId !== '') {
 
     var config = {
         host: host_q, 
-        prefix: "/"+prefix+"/", 
+        prefix: "/", 
         port: 443, 
         isSecure: true, 
     };
@@ -40,7 +40,7 @@ if (webIntegrationId !== '') {
 
     require.config({
         baseUrl: baseUrl + 'resources/',
-        webIntegrationId: config.webIntegrationId
+        //webIntegrationId: config.webIntegrationId
     });
 
     require(["js/qlik"], function (qlik) {
