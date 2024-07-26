@@ -8,7 +8,7 @@ async function main() {
     console.log(check);
 
     if (check.status === 401) {*/
-        const isLoggedIn = await getTicket();
+        //const isLoggedIn = await getTicket();
         /*console.log('isLoggedIn: ');
         console.log(isLoggedIn);
 
