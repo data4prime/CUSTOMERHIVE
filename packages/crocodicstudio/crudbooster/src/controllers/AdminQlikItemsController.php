@@ -481,7 +481,7 @@ class AdminQlikItemsController extends CBController
 			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item_id);
 
-			//dd($qlik_ticket);
+			dd($qlik_ticket);
 
 
 			if (empty($qlik_ticket)) {
