@@ -30,6 +30,15 @@ async function main() {
     }
 
     console.log('baseUrl: '+baseUrl);
+
+//if require is not defined, load it from the cdn
+    if (typeof require === 'undefined') {
+        var script = document.createElement('script');
+        script.src = src_js;
+        document.head.appendChild(script);
+    }
+
+
     require.config(req_conf);
 
     require(["js/qlik"], function (qlik) {
