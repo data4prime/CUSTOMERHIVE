@@ -2,7 +2,7 @@ async function main() {
 
 console.log('main');
 //console.log('webIntegrationId: '+webIntegrationId);
-if (webIntegrationId !== '') {
+if (webIntegrationId && webIntegrationId !== '') {
     
     const check = await checkLoggedIn();
     console.log('check: ');
