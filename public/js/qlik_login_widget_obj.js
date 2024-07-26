@@ -65,7 +65,7 @@ if (webIntegrationId !== '') {
             if (text_danger.length > 0) {
                 text_danger[0].append(error.message);
             } else {
-                console.error(error.message);
+                alert(error.message);
             }
         });
 
