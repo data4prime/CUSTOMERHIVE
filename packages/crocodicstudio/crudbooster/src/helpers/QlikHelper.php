@@ -407,6 +407,10 @@ class QlikHelper
       'QRSCertkeyfile' => $QRSCertkeyfile,
       'QRSCertkeyfilePassword' => $QRSCertkeyfilePassword,
       'headers' => $headers,
+      'body' => [
+        "UserId" => $qlik_login,
+        "UserDirectory" => $user_directory  
+      ],
 
 
     ]);

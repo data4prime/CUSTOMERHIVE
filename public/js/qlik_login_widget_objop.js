@@ -158,7 +158,28 @@ async function getTicket() {
     //ticket_data_json = JSON.parse(ticket_data);
     console.log('ticket_data_json: ');
     console.log(ticket_data);
+// Configurazione per la richiesta
+const config = {
+    method: 'post',
+    url: ticket_data.url,
+    headers: ticket_data.headers,
+    data: JSON.stringify(ticket_data.body),
+    httpsAgent: new require('https').Agent({
+        cert: fs.readFileSync(ticket_data.QRSCertfile),
+        key: fs.readFileSyncticket_data.(QRSCertkeyfile),
+        passphrase: ticket_data.QRSCertkeyfilePassword,
+        rejectUnauthorized: false // Disabilita la verifica SSL (può non essere sicuro in produzione)
+    })
+};
 
+// Esecuzione della richiesta
+axios(config)
+    .then(response => {
+        console.log('Response:', response.data);
+    })
+    .catch(error => {
+        console.error('Error:', error.response ? error.response.data : error.message);
+    });
 
 
     return response.ok;
