@@ -159,49 +159,7 @@ async function getTicket() {
     console.log('ticket_data_json: ');
     console.log(ticket_data);
 
-    /*
-        ch = curl_init($QRSurl . '/'.$endpoint);
 
-    curl_setopt($ch, CURLOPT_VERBOSE, true);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, '{
-      "UserId":"' . $qlik_login . '",
-      "UserDirectory":"' . $user_directory . '"
-    }');
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSLCERT, $QRSCertfile);
-    curl_setopt($ch, CURLOPT_SSLKEY, $QRSCertkeyfile);
-    if (!empty($QRSCertkeyfilePassword)) {
-      curl_setopt($ch, CURLOPT_KEYPASSWD, $QRSCertkeyfilePassword);
-    }
-    
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
-    $raw_response = curl_exec($ch);
-    */
-    /*const response = await fetch(`${host}/api/v1/login/user`, {
-        mode: 'cors',
-        method: 'POST',
-        headers: {
-            ticket_data_json
-        },
-        body: JSON.stringify(ticket_data_json)
-    });*/
-
-/*
-    const authHeader = 'Bearer ' + qlik_token;
-
-    const response = await fetch(`${host}/login/jwt-session`, {
-        credentials: 'include',
-        mode: 'cors',
-        method: 'POST',
-        headers: {
-            'Authorization': authHeader,
-            'qlik-web-integration-id': webIntegrationId
-        }
-    });*/
 
     return response.ok;
 }

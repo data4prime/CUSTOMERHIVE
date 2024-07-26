@@ -31,6 +31,7 @@ $param = $conf->type == 'On-Premise' ? "?qlikTicket=$token" : "";
 <link rel="stylesheet" href="{{ $css }}">
 
 <script type="text/javascript"  src="{{$src}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
                                                     
 
 

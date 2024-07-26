@@ -407,8 +407,8 @@ class QlikHelper
       'QRSCertkeyfile' => $QRSCertkeyfile,
       'QRSCertkeyfilePassword' => $QRSCertkeyfilePassword,
       'headers' => $headers,
-      'qlik_login' => $qlik_login,
-      'user_directory' => $user_directory
+
+
     ]);
     file_put_contents(__DIR__ . '/qlik_ticket3.txt', $ret."\n", FILE_APPEND);
 
