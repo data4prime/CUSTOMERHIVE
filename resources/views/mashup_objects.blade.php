@@ -52,6 +52,7 @@ var host = '{{$conf->host}}';
 var prefix = '{{$conf->prefix}}';
 var port = '{{$conf->port}}';
 var webIntegrationId = '{{$conf->webIntegrationId}}';
+console.log(webIntegrationId);
 var appId = '{{$mashup->appid}}';
 var mashupId = '{{$mashup->id}}';
 var objectid = '{{$config->object}}';
