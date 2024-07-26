@@ -154,11 +154,10 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
 }
 
 async function getTicket() {
-//json to array 
-    //ticket_data_json = JSON.parse(ticket_data);
+
     console.log('ticket_data_json: ');
     console.log(ticket_data);
-// Configurazione per la richiesta
+
 const config = {
     method: 'post',
     url: ticket_data.url,
@@ -168,7 +167,7 @@ const config = {
         cert: fs.readFileSync(ticket_data.QRSCertfile),
         key: fs.readFileSync(ticket_data.QRSCertkeyfile),
         passphrase: ticket_data.QRSCertkeyfilePassword,
-        rejectUnauthorized: false // Disabilita la verifica SSL (può non essere sicuro in produzione)
+        rejectUnauthorized: false 
     })
 };
 

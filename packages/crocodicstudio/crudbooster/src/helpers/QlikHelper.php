@@ -198,7 +198,7 @@ class QlikHelper
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
 
-    file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSurl . $endpoint."\n", FILE_APPEND);
+    file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSurl . '/'.$endpoint."\n", FILE_APPEND);
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', json_encode($headers)."\n", FILE_APPEND);
 
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertfile."\n", FILE_APPEND);

@@ -31,7 +31,7 @@ $param = $conf->type == 'On-Premise' ? "?qlikTicket=$token" : "";
 <link rel="stylesheet" href="{{ $css }}">
 
 <script type="text/javascript"  src="{{$src}}"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>-->
                                                     
 
 
@@ -45,7 +45,7 @@ var type = '{{$conf->type}}';
 var qlik_token = '{{$conf->type == "SAAS" ? $token : ""}}';
 var qlik_ticket = '{{$conf->type == "On-Premise" ? $token : ""}}';
 
-var ticket_data = @php echo $data_ticket @endphp;
+var ticket_data = @php echo isset($data_ticket) ? $data_ticket : null @endphp;
 console.log(ticket_data);
 
 var host = '{{$conf->host}}';
