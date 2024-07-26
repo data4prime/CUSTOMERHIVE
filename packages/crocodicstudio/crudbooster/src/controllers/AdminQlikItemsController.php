@@ -491,9 +491,9 @@ class AdminQlikItemsController extends CBController
 
 			//if in data['row'] has no get parameter, add qlik ticket
 			if (strpos($data['row']->url, '?') === false) {
-				$data['item_url'] = $data['row']->url . '&qlikTicket=' . $qlik_ticket;
-			} else {
 				$data['item_url'] = $data['row']->url . '?qlikTicket=' . $qlik_ticket;
+			} else {
+				$data['item_url'] = $data['row']->url . '&qlikTicket=' . $qlik_ticket;
 			}
 
 
