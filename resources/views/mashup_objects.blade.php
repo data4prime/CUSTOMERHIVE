@@ -44,7 +44,7 @@ var type = '{{$conf->type}}';
 var qlik_token = '{{$conf->type == "SAAS" ? $token : ""}}';
 var qlik_ticket = '{{$conf->type == "On-Premise" ? $token : ""}}';
 
-var ticket_data = '{{$conf->type == "On-Premise" ? $data_ticket : ""}}';
+var ticket_data = "{{$conf->type == 'On-Premise' ? $data_ticket : ''}}";
 console.log(ticket_data);
 
 var host = '{{$conf->host}}';
