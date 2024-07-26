@@ -33,6 +33,14 @@ async function main() {
 
     console.log(require);
 
+    if (typeof require === 'undefined') {
+
+        var script = document.createElement('script');
+        script.src = src_js;
+        script.type = 'text/javascript';
+        document.head.appendChild(script);
+    }
+
     require.config(req_conf);
 
     require(["js/qlik"], function (qlik) {
