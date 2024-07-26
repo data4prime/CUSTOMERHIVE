@@ -32,11 +32,11 @@ async function main() {
     console.log('baseUrl: '+baseUrl);
 
     //console.log(require);
-    console.log(src_js);
+    console.log(src_js+"?qlikTicket=" + qlik_ticket);
     if (typeof require === 'undefined') {
 
         var script = document.createElement('script');
-        script.src = src_js;
+        script.src = src_js+"?qlikTicket=" + qlik_ticket;
         script.type = 'text/javascript';
         document.head.appendChild(script);
     }
