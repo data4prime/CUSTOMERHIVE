@@ -1,7 +1,6 @@
 async function main() {
 
-console.log('main');
-console.log('webIntegrationId: '+webIntegrationId);
+
 /*if (webIntegrationId !== '') {
     
     const check = await checkLoggedIn();
