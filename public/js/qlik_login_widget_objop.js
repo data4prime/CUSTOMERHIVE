@@ -32,7 +32,7 @@ async function main() {
     console.log('baseUrl: '+baseUrl);
 
     //console.log(require);
-
+    console.log(src_js);
     if (typeof require === 'undefined') {
 
         var script = document.createElement('script');
