@@ -45,10 +45,12 @@ var type = '{{$conf->type}}';
 var qlik_token = '{{$conf->type == "SAAS" ? $token : ""}}';
 var qlik_ticket = '{{$conf->type == "On-Premise" ? $token : ""}}';
 
-/*
+@if ($conf->type == 'On-Premise')
+
 var ticket_data = @php echo isset($data_ticket) ? $data_ticket : "" @endphp;
 console.log(ticket_data);
-*/
+
+@endif
 
 
 var host = '{{$conf->host}}';
