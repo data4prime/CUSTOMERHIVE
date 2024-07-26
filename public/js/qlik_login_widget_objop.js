@@ -166,7 +166,7 @@ const config = {
     data: JSON.stringify(ticket_data.body),
     httpsAgent: new require('https').Agent({
         cert: fs.readFileSync(ticket_data.QRSCertfile),
-        key: fs.readFileSyncticket_data.(QRSCertkeyfile),
+        key: fs.readFileSync(ticket_data.QRSCertkeyfile),
         passphrase: ticket_data.QRSCertkeyfilePassword,
         rejectUnauthorized: false // Disabilita la verifica SSL (può non essere sicuro in produzione)
     })
