@@ -155,9 +155,9 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
 
 async function getTicket() {
 //json to array 
-    ticket_data_json = JSON.parse(ticket_data);
+    //ticket_data_json = JSON.parse(ticket_data);
     console.log('ticket_data_json: ');
-    console.log(ticket_data_json);
+    console.log(ticket_data);
 
     /*
         ch = curl_init($QRSurl . '/'.$endpoint);
