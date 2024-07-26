@@ -31,7 +31,7 @@ async function main() {
 
     console.log('baseUrl: '+baseUrl);
 
-    console.log(require);
+    //console.log(require);
 
     if (typeof require === 'undefined') {
 
