@@ -298,11 +298,11 @@ class QlikHelper
 
     $QRSCertfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertfile);
     $QRSCertkeyfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertkeyfile);
- //file_put_contents(__DIR__.'/qlik_ticket.txt', $QRSCertfile."\n", FILE_APPEND);
+    //file_put_contents(__DIR__.'/qlik_ticket.txt', $QRSCertfile."\n", FILE_APPEND);
 
 
   
-   // $QRSCertfile = '/var/www/dae.thecustomerhive.com/public/storage/uploads/1/2024-07/client.pem';
+    // $QRSCertfile = '/var/www/dae.thecustomerhive.com/public/storage/uploads/1/2024-07/client.pem';
     //$QRSCertkeyfile = 'h/var/www/dae.thecustomerhive.com/public/storage/uploads/1/2024-07/client_key.pem';
 
     //file_put_contents(__DIR__ . '/qrscertfile.txt', file_get_contents($QRSCertfile)."\n", FILE_APPEND);
@@ -313,7 +313,7 @@ class QlikHelper
       'x-qlik-xrfkey: ' . $xrfkey,
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
-  //file_put_contents(__DIR__ . '/qlik_ticket.txt', $QRSurl . '/'.$endpoint."\n", FILE_APPEND);
+    //file_put_contents(__DIR__ . '/qlik_ticket.txt', $QRSurl . '/'.$endpoint."\n", FILE_APPEND);
     $ch = curl_init($QRSurl . '/'.$endpoint);
 
     curl_setopt($ch, CURLOPT_VERBOSE, true);
@@ -343,6 +343,102 @@ class QlikHelper
 
     $response = json_decode($raw_response);
     return isset($response->Ticket) ? $response->Ticket : '';
+  }
+
+  public static function dataForTicketConf($conf_id) 
+  {
+        //get user data
+    $current_user_id = CRUDBooster::myId();
+    $current_user = \App\User::find($current_user_id);
+
+    $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
+
+
+    $qlik_user = DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->first();
+    if (!$qlik_user) {
+      $data['error'] = 'User not found!';
+      CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+      exit;
+    }
+
+    $qlik_login = $qlik_user->qlik_login;
+    $user_directory = $qlik_user->user_directory;
+
+    if (empty($qlik_login) or empty($user_directory)) {
+      $data['error'] = 'User credentials missing. Ask an admin to set your qlik id and user directory';
+      CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+      exit;
+    }
+
+
+    $QRSurl = $qlik_conf->qrsurl .':'.$qlik_conf->port;
+
+    $xrfkey = '0123456789abcdef';
+    $endpoint = $qlik_conf->endpoint . "/ticket?xrfkey=" . $xrfkey;
+
+    $QRSCertfile =$qlik_conf->QRSCertfile;
+
+
+    $QRSCertkeyfile = $qlik_conf->QRSCertkeyfile;
+
+    $QRSCertkeyfilePassword =$qlik_conf->QRSCertkeyfilePassword;
+
+    //get host with protocol
+    $host = $_SERVER['HTTP_HOST'];
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+
+
+
+    $QRSCertfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertfile);
+    $QRSCertkeyfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertkeyfile);
+
+    $headers = array(
+      'Accept: application/json',
+      'Content-Type: application/json',
+      'x-qlik-xrfkey: ' . $xrfkey,
+      'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
+    );
+
+    return json_encode([
+      'QRSurl' => $QRSurl,
+      'endpoint' => $endpoint,
+      'headers' => $headers,
+      'url' => $QRSurl . '/'.$endpoint,
+      'QRSCertfile' => $QRSCertfile,
+      'QRSCertkeyfile' => $QRSCertkeyfile,
+      'QRSCertkeyfilePassword' => $QRSCertkeyfilePassword,
+      'headers' => $headers,
+      'qlik_login' => $qlik_login,
+      'user_directory' => $user_directory
+    ]);
+
+    /*$ch = curl_init($QRSurl . '/'.$endpoint);
+
+    curl_setopt($ch, CURLOPT_VERBOSE, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, '{
+      "UserId":"' . $qlik_login . '",
+      "UserDirectory":"' . $user_directory . '"
+    }');
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSLCERT, $QRSCertfile);
+    curl_setopt($ch, CURLOPT_SSLKEY, $QRSCertkeyfile);
+    if (!empty($QRSCertkeyfilePassword)) {
+      curl_setopt($ch, CURLOPT_KEYPASSWD, $QRSCertkeyfilePassword);
+    }
+    
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+    $raw_response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+      $error_msg = curl_error($ch);
+    }
+    $response = json_decode($raw_response);
+    return isset($response->Ticket) ? $response->Ticket : '';
+*/
   }
 
   public static function getJWTToken($id, $conf_id)
