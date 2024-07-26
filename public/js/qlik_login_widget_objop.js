@@ -1,24 +1,5 @@
 async function main() {
 
-
-/*if (webIntegrationId !== '') {
-    
-    const check = await checkLoggedIn();
-    console.log('check: ');
-    console.log(check);
-
-    if (check.status === 401) {*/
-        //const isLoggedIn = await getTicket();
-        /*console.log('isLoggedIn: ');
-        console.log(isLoggedIn);
-
-    }
-}*/
-
-    var selState;
-    var query;
-    var filters;
-
     var host_q = '';
     if (host.includes("https://") || host.includes("http://")) {
         host_q = host.split("//")[1];
@@ -68,24 +49,9 @@ async function main() {
             }
         });
 
-        var x = document.cookie;
+        document.cookie;
 
-        var app = qlik.openApp(appId, config);
-        /*var sessionAppFromApp = qlik.sessionAppFromApp(appId, config);
-        sessionAppFromApp.doReload().then(function(result){
-                if( result ){
-                    console.log('Reload successful');
-
-                    console.log(result);
-                    //sessionAppFromApp.getObject('QV01', 'HrZsPG');
-                } 
-                else {
-                    console.log('Reload failed');
-                }
-            });
-        var app = sessionAppFromApp;
-        console.log('sessionAppFromApp: ');
-        console.log(sessionAppFromApp);*/
+        var app = qlik.openApp(app, config);
         console.log('app: ');
         console.log(app);
 
@@ -129,11 +95,11 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
     app.getAppObjectList('masterobject', function (reply) {
         console.log('reply: ');
         console.log(reply);
-        var str = "";
 
-        $.each(reply.qAppObjectList.qItems, function (key, value) {
+
+        $.each(reply.qAppObjectList.qItems, function () {
             var sheetId = value.qInfo.qId;
-            var sheetTitle = value.qData.title;
+
             var name = value.qData.name;
 
             var option = document.createElement('option');
@@ -152,52 +118,6 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
 
 
 }
-
-async function getTicket() {
-
-    console.log('ticket_data_json: ');
-    console.log(ticket_data);
-
-const config = {
-    method: 'post',
-    url: ticket_data.url,
-    headers: ticket_data.headers,
-    data: JSON.stringify(ticket_data.body),
-    httpsAgent: new require('https').Agent({
-        cert: fs.readFileSync(ticket_data.QRSCertfile),
-        key: fs.readFileSync(ticket_data.QRSCertkeyfile),
-        passphrase: ticket_data.QRSCertkeyfilePassword,
-        rejectUnauthorized: false 
-    })
-};
-
-// Esecuzione della richiesta
-axios(config)
-    .then(response => {
-        console.log('Response:', response.data);
-    })
-    .catch(error => {
-        console.error('Error:', error.response ? error.response.data : error.message);
-    });
-
-
-    return response.ok;
-}
-
-async function checkLoggedIn() {
-    const response = await fetch(`${host}/api/v1/users/me`, {
-        mode: 'cors',
-        credentials: 'include',
-        headers: {
-            'qlik-web-integration-id': webIntegrationId,
-            'Authorization': 'Bearer ' + qlik_token
-        }
-    });
-
-    return response;
-}
-
-// Avvia la funzione principale
 
 
 main();
