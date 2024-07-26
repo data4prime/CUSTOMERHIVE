@@ -489,9 +489,15 @@ class AdminQlikItemsController extends CBController
 				//CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
 			}
 
+			//if in data['row'] has no get parameter, add qlik ticket
+			if (strpos($data['row']->url, '?') === false) {
+				$data['item_url'] = $data['row']->url . '?qlikTicket=' . $qlik_ticket;
+			} else {
+				$data['item_url'] = $data['row']->url . '&qlikTicket=' . $qlik_ticket;
+			}
 
 
-			$data['item_url'] = $data['row']->url . '&qlikTicket=' . $qlik_ticket;
+			
 
 			if ($menu->target_layout == 1) {
 				//iframe only
