@@ -58,6 +58,6 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');
   <div id="title">Loading Qlik App. Please wait.</div>
 
 <input type="hidden" id="state_page" name="state_page">
-<script defer  src="{{asset('js/qlik_login_widget_obj.js')}}"></script>
+<script defer  src="{{asset('js/qlik_login_widget_objop.js')}}"></script>
 @endif
 
