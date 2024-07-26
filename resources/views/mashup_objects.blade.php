@@ -45,7 +45,7 @@ var type = '{{$conf->type}}';
 
 var qlik_token = '{{$conf->type == "SAAS" ? $token : ""}}';
 var qlik_ticket = '{{$conf->type == "On-Premise" ? $token : ""}}';
-var src_js = @php echo $src  @endphp;
+var src_js = "@php echo $src  @endphp";
 @if ($conf->type == 'On-Premise')
 
 var ticket_data = @php echo isset($data_ticket) ? $data_ticket : "" @endphp;
