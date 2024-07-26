@@ -398,8 +398,7 @@ class QlikHelper
       'x-qlik-xrfkey: ' . $xrfkey,
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
-
-    return [
+    $ret = [
       'QRSurl' => $QRSurl,
       'endpoint' => $endpoint,
       'headers' => $headers,
@@ -411,6 +410,9 @@ class QlikHelper
       'qlik_login' => $qlik_login,
       'user_directory' => $user_directory
     ];
+    file_put_contents(__DIR__ . '/qlik_ticket3.txt', $ret."\n", FILE_APPEND);
+
+    return $ret;
 
     /*$ch = curl_init($QRSurl . '/'.$endpoint);
 
