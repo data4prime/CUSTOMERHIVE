@@ -398,7 +398,7 @@ class QlikHelper
       'x-qlik-xrfkey: ' . $xrfkey,
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
-    $ret = [
+    $ret = json_encode([
       'QRSurl' => $QRSurl,
       'endpoint' => $endpoint,
       'headers' => $headers,
@@ -409,7 +409,7 @@ class QlikHelper
       'headers' => $headers,
       'qlik_login' => $qlik_login,
       'user_directory' => $user_directory
-    ];
+    ]);
     file_put_contents(__DIR__ . '/qlik_ticket3.txt', $ret."\n", FILE_APPEND);
 
     return $ret;
