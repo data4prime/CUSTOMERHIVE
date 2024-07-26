@@ -399,7 +399,7 @@ class QlikHelper
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
 
-    return json_encode([
+    return [
       'QRSurl' => $QRSurl,
       'endpoint' => $endpoint,
       'headers' => $headers,
@@ -410,7 +410,7 @@ class QlikHelper
       'headers' => $headers,
       'qlik_login' => $qlik_login,
       'user_directory' => $user_directory
-    ]);
+    ];
 
     /*$ch = curl_init($QRSurl . '/'.$endpoint);
 
