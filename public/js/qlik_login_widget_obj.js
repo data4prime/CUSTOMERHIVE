@@ -1,7 +1,6 @@
 async function main() {
 
 console.log('main');
-//console.log('webIntegrationId: '+webIntegrationId);
 if (webIntegrationId && webIntegrationId !== '') {
     
     const check = await checkLoggedIn();
@@ -16,9 +15,7 @@ if (webIntegrationId && webIntegrationId !== '') {
     }
 }
 
-    var selState;
-    var query;
-    var filters;
+
 
     var host_q = '';
     if (host.includes("https://") || host.includes("http://")) {
