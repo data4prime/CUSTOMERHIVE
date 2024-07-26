@@ -59,7 +59,7 @@ var objectid = '{{$config->object}}';
 var hidden_object = parent.document.getElementById('mashup_object_hidden');
 var hidden_app = parent.document.getElementById('mashup_app_hidden');
 
-
+console.log(webIntegrationId);
 
 </script>
 
