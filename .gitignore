@@ -2,7 +2,8 @@
 
 /storage/app/public/*
 /storage/logs/*
-
+/storage/storage
+/public/storage/*
 /vendor
 /.idea
 Homestead.json
