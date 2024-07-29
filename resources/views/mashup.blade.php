@@ -106,7 +106,7 @@ var mashupId = '{{$mashup->id}}';
 console.log("mashupId");
 console.log(mashupId);
 
-var objectid = '{{$config->object}}';
+var objectid = '{{$mashups->object}}';
 console.log("objectid");
 console.log(objectid);
 </script>
