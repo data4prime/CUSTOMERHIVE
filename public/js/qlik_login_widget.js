@@ -37,7 +37,7 @@ if (webIntegrationId && webIntegrationId !== '') {
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
     require.config({
-        baseUrl: baseUrl + 'resources/',
+        baseUrl: baseUrl + 'resources',
         webIntegrationId: config.webIntegrationId
     });
 
