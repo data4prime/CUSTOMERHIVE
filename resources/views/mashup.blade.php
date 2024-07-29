@@ -5,7 +5,7 @@ use crocodicstudio\crudbooster\controllers\QlikMashupController;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 $conf = QlikMashupController::getConf($qlik_conf);
-dd($conf);
+
 //$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 $state = bin2hex(random_bytes(16));
 

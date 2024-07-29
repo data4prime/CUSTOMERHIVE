@@ -182,7 +182,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $config->object = 0;
         }
         $mashup = QlikMashupController::getMashupFromCompID($componentID);
-        if (isset($conf->id)) {
+        if ($conf && isset($conf->id) && $conf->type == 'SAAS') {
         $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
             } else {
                 $token = '';
@@ -281,7 +281,7 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $errors[] = 'Mashup is not selected. Please, select mashup for this widget.';
         }
 
-        if (isset($conf) && isset($conf->id)) {
+        if (isset($conf) && isset($conf->id) && $conf->type == 'SAAS') {
             $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
         } else {
             //$errors[] = 'Qlik configuration is empty or not selected.';
