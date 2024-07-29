@@ -22,7 +22,7 @@ async function main() {
 
 
     require.config({
-		baseUrl: baseUrl + '/resources',
+		baseUrl: baseUrl + 'resources',
 	});
 
     require(["js/qlik"], function (qlik) {
