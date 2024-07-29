@@ -46,7 +46,9 @@ console.log(config);
         document.head.appendChild(script);
     }
 
-    require.config(req_conf);
+    require.config({
+						baseUrl: baseUrl + '/resources/',
+			});
 
     require(["js/qlik"], function (qlik) {
         if (!qlik) {
