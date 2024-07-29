@@ -1,5 +1,7 @@
 async function main() {
 
+    console.log('main');
+
     var host_q = '';
     if (host.includes("https://") || host.includes("http://")) {
         host_q = host.split("//")[1];
@@ -11,44 +13,17 @@ async function main() {
         port: 443, 
         isSecure: true, 
     };
-console.log('config: ');
-console.log(config);
-    if (webIntegrationId !== '') {
-        config.webIntegrationId = webIntegrationId;
-    }
-
-
+    console.log('config: ');
+    console.log(config);
 
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
-
-
-    var req_conf = {
-        baseUrl: baseUrl + '/resources',
-    };
-
-    console.log('req_conf: ');
-    console.log(req_conf);
-
-    if (webIntegrationId !== '') {
-        req_conf.webIntegrationId = webIntegrationId;
-    }
-
     console.log('baseUrl: '+baseUrl);
 
-    //console.log(require);
-    console.log(src_js+"?qlikTicket=" + qlik_ticket);
-    if (typeof require === 'undefined') {
-
-        var script = document.createElement('script');
-        script.src = src_js+"?qlikTicket=" + qlik_ticket;
-        script.type = 'text/javascript';
-        document.head.appendChild(script);
-    }
 
     require.config({
-						baseUrl: baseUrl + '/resources/',
-			});
+		baseUrl: baseUrl + '/resources/',
+	});
 
     require(["js/qlik"], function (qlik) {
         if (!qlik) {
@@ -67,7 +42,7 @@ console.log(config);
             }
         });
 
-        document.cookie;
+        //document.cookie;
 
         var app = qlik.openApp(app, config);
         console.log('app: ');
