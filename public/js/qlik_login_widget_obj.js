@@ -45,7 +45,7 @@ if (webIntegrationId && webIntegrationId !== '') {
 
 
     require.config({
-        baseUrl: baseUrl + '/resources',
+        baseUrl: baseUrl + 'resources',
         webIntegrationId:  webIntegrationId
     });
 
@@ -167,10 +167,17 @@ async function checkLoggedIn() {
     return response;
 }
 
+/*
 $(document).ready(function () {
     console.log("document ready -------------------");
+*/
     main();
+/*
 });
+*/
+
+
+
 
 
 
