@@ -67,7 +67,7 @@ if (webIntegrationId && webIntegrationId !== '') {
             }
         });
 
-        var x = document.cookie;
+        //var x = document.cookie;
 
         var app = qlik.openApp(appId, config);
 
