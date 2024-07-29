@@ -11,7 +11,8 @@ async function main() {
         port: 443, 
         isSecure: true, 
     };
-
+console.log('config: ');
+console.log(config);
     if (webIntegrationId !== '') {
         config.webIntegrationId = webIntegrationId;
     }
@@ -21,9 +22,13 @@ async function main() {
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
 
+
     var req_conf = {
         baseUrl: baseUrl + '/resources',
     };
+
+    console.log('req_conf: ');
+    console.log(req_conf);
 
     if (webIntegrationId !== '') {
         req_conf.webIntegrationId = webIntegrationId;
