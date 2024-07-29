@@ -9,7 +9,7 @@ async function main() {
 
     var config = {
         host: host_q, 
-        prefix: "", 
+        prefix: "/", 
         port: 443, 
         isSecure: true, 
     };
