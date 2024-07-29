@@ -27,7 +27,7 @@ async function main() {
 
     require(["js/qlik"], function (qlik) {
         if (!qlik) {
-            console.error("Il modulo qlik non è stato caricato correttamente.");
+            alert("Il modulo qlik non è caricato.");
             return;
         }
         
