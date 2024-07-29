@@ -1,10 +1,13 @@
 async function main() {
+
+if (webIntegrationId && webIntegrationId !== '') {
     const check = await checkLoggedIn();
 
     if (check.status === 401) {
         const isLoggedIn = await jwtLogin();
 
     }
+}
 
     
     
