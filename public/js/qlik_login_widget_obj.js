@@ -163,7 +163,10 @@ async function checkLoggedIn() {
     return response;
 }
 
-// Avvia la funzione principale
+$(document).ready(function () {
+    console.log("document ready -------------------");
+    main();
+});
 
 
-main();
+
