@@ -27,27 +27,23 @@ if (webIntegrationId && webIntegrationId !== '') {
         prefix: "", 
         port: 443, 
         isSecure: true, 
+        webIntegrationId: webIntegrationId
     };
-
-    if (webIntegrationId !== '') {
-        config.webIntegrationId = webIntegrationId;
-    }
-
-
 
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
 
-    var req_conf = {
-        baseUrl: baseUrl + '/resources',
-    };
-
-    if (webIntegrationId !== '') {
-        req_conf.webIntegrationId = webIntegrationId;
-    }
 
     console.log('baseUrl: '+baseUrl);
-    require.config(req_conf);
+
+    console.log('config: ');
+    console.log(config);
+
+
+    require.config({
+        baseUrl: baseUrl + '/resources',
+        webIntegrationId:  webIntegrationId
+    });
 
     require(["js/qlik"], function (qlik) {
         if (!qlik) {
@@ -70,21 +66,7 @@ if (webIntegrationId && webIntegrationId !== '') {
         var x = document.cookie;
 
         var app = qlik.openApp(appId, config);
-        /*var sessionAppFromApp = qlik.sessionAppFromApp(appId, config);
-        sessionAppFromApp.doReload().then(function(result){
-                if( result ){
-                    console.log('Reload successful');
 
-                    console.log(result);
-                    //sessionAppFromApp.getObject('QV01', 'HrZsPG');
-                } 
-                else {
-                    console.log('Reload failed');
-                }
-            });
-        var app = sessionAppFromApp;
-        console.log('sessionAppFromApp: ');
-        console.log(sessionAppFromApp);*/
         console.log('app: ');
         console.log(app);
 
