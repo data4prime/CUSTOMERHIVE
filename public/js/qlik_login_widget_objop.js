@@ -113,7 +113,12 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
 }
 
 
+$(document).ready(function () {
+    console.log("document ready -------------------");
+    main();
+
+});
 
 
 
-main();
+

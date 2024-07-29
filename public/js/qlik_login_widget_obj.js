@@ -17,10 +17,14 @@ if (webIntegrationId && webIntegrationId !== '') {
 
 
 
+
     var host_q = '';
     if (host.includes("https://") || host.includes("http://")) {
         host_q = host.split("//")[1];
     }
+
+    console.log('host_q: '+host_q);
+    console.log('host: '+host);
 
     var config = {
         host: host_q, 
