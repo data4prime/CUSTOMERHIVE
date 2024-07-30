@@ -30,12 +30,17 @@ $param = $conf->type == 'On-Premise' ? "?qlikTicket=$token" : "";
 
 @endphp 
 @if (isset($conf) && $conf) 
-
+<!DOCTYPE html>
+<html>
+<head>
 <link rel="stylesheet" href="{{ $css }}">
 
 <script type="text/javascript"  src="{{$src}}"></script>
 
-<div id="{{$mashup->appid}}" >
+</head>
+
+<body>
+  <div id="{{$mashup->appid}}" >
 <script  type="text/javascript" >
 
 console.log("css");
@@ -109,4 +114,8 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');
 <input type="hidden" id="state_page" name="state_page">
 <script defer  src="{{asset($js_defer)}}"></script>
 @endif
+</body>
+
+
+</html>
 
