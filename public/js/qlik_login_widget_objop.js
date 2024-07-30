@@ -1,6 +1,6 @@
 async function main() {
 
-    const isLoggedIn = await getHub();
+    
 
     console.log('main');
 
@@ -21,7 +21,7 @@ async function main() {
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
     console.log('baseUrl: '+baseUrl);
-
+    const isLoggedIn = await getHub(baseUrl);
 
     require.config({
 		baseUrl: baseUrl + 'resources',
@@ -115,12 +115,12 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
 
 }
 
-async function getHub() {
+async function getHub(baseUrl) {
     //const authHeader = 'Bearer ' + qlik_token;
     //console.log(authHeader);
 
     //write a get fetch request to the server
-    const response = await fetch(`${host}/login/hub?qlikTicket=`+token4, {
+    const response = await fetch(`${baseUrl}hub?qlikTicket=`+token4, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
