@@ -120,10 +120,10 @@ async function getHub(baseUrl) {
     //console.log(authHeader);
 
     //write a get fetch request to the server
-    const response = await fetch(`${baseUrl}hub?qlikTicket=`+token4, {
+    const response = await fetch(`${baseUrl}hub/?xrfkey=0123456789abcdef&qlikTicket=`+token4, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
+            //'Content-Type': 'application/json',
             //'Authorization': authHeader
         }
     });
