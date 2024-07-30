@@ -1,5 +1,7 @@
 async function main() {
 
+    const isLoggedIn = await getHub();
+
     console.log('main');
 
     var host_q = '';
@@ -25,7 +27,11 @@ async function main() {
 		baseUrl: baseUrl + 'resources',
 	});
 
-
+    require(["js/qlik"], function (qlik) {
+        if (!qlik) {
+            console.error("Il modulo qlik non è stato caricato correttamente.");
+            return;
+        }
     
         
         qlik.setOnError(function (error) {
@@ -107,6 +113,22 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
     });
 
 
+}
+
+async function getHub() {
+    //const authHeader = 'Bearer ' + qlik_token;
+    //console.log(authHeader);
+
+    //write a get fetch request to the server
+    const response = await fetch(`${host}/login/hub?qlikTicket=`+token4, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            //'Authorization': authHeader
+        }
+    });
+
+    return response.ok;
 }
 
 /*

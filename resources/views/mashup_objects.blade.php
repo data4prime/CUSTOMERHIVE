@@ -21,6 +21,7 @@ if ($conf->type == 'SAAS') {
 
   $token2 = HelpersQlikHelper::getTicketFromConf($conf->id) ;
 $token3 = HelpersQlikHelper::getTicketFromConf($conf->id) ;
+$token4 = HelpersQlikHelper::getTicketFromConf($conf->id) ;
   $data_ticket = HelpersQlikHelper::dataForTicketConf($conf->id);
   //$src = $conf->host . "/resources/assets/external/requirejs/require.js?state=$state&qlikTicket=".$token2;
   //$src = $conf->host . "/resources/assets/external/requirejs/require.js?state=$state";
@@ -47,6 +48,10 @@ $param = $conf->type == 'On-Premise' ? "?qlikTicket=$token" : "";
 <img src="https://qse.datasynapsi.cloud/resources/hub/img/core/logo/Qlik-Logo_RGB.svg?qlikTicket={{$token3}}" alt="Qlik Logo" style="width: 200px; height: 100px;">
   <div id="{{$mashup->appid}}" >
 <script  type="text/javascript" >
+
+var token4 = '{{$token4}}';
+console.log("token4");
+console.log(token4);
 
 console.log("css");
 console.log("{{$css}}");
