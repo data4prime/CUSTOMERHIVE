@@ -25,11 +25,8 @@ async function main() {
 		baseUrl: baseUrl + 'resources',
 	});
 
-    require(["js/qlik?qlikTicket"], function (qlik) {
-        if (!qlik) {
-            alert("Il modulo qlik non è caricato.");
-            return;
-        }
+
+    
         
         qlik.setOnError(function (error) {
             var appdoc = document.getElementById(appId);
