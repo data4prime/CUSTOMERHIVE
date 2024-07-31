@@ -770,17 +770,27 @@ class AdminQlikItemsController extends CBController
 
 		$view = 'qlik_items.view';
 		$data = [];
-		if (QlikHelper::confIsSAAS($conf->id)) {
-			
-			$url = $conf->url;
-			//$url .= ':443'
-			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-			//$url .= $conf->endpoint;
-			$url .= '/chive';
-			$url .= '/hub/';
-			
+		if ($conf->auth == 'JWT') {
 
-			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+			if ($conf->type == 'SAAS') {
+
+				$url = $conf->url;
+				$url .= '/chive';
+				$url .= '/hub/';
+				
+
+				$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+			} else {
+				$url = $conf->url;
+				$url .= '/'.$conf->endpoint;
+				$url .= '/hub/';
+				
+
+				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
+
+			}
+
+
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
 				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
