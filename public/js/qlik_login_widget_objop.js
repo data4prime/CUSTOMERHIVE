@@ -119,15 +119,15 @@ async function jwtLogin(token) {
     const authHeader = `Bearer ${token}`;
     console.log(authHeader);
     //console.log(WEBINTEGRATIONID);
-    return await fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
+    return await fetch(`${host}/${prefix}/qrs/about?xrfkey=12345678qwertyui`, {
         credentials: 'include',
         mode: 'cors',
         method: 'GET',
         headers: {
+            'X-Qlik-Xrfkey': '12345678qwertyui',
             'Authorization': authHeader,
-            //'qlik-web-integration-id': WEBINTEGRATIONID
         },
-    })
+    });
 }
 
 /*
@@ -142,3 +142,14 @@ $(document).ready(function () {
 
 
 
+/*
+
+return await fetch(`https://qse.datasynapsi.cloud/jwt/qrs/about?xrfkey=0123456789abcdef`, {
+        credentials: 'include',
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtYXJjby56YW1waWVyaSIsInVzZXJEaXJlY3RvcnkiOiJDSElWRSJ9.LQoHYvaegttx85sVZzH-uBdwNAB0WhZZxBn8DfSM8Z89_HyhTl3zLIg_Xkn_ezhGjjCvIqFNK3csgKi_4-GqrIyT3VYbooXjfLzSjhKsVTvzxY4c7deVlspU8nnt6Fo6YAelOuJWTWE8gYOEaWyuT_yBcEXdsIu7Zcj02SYn-FnBnhIKhKgf3v8iLO2mpKpXNR3RHivfeY3OWyWOMqFfMEgj2NQb2YUOJujvTyDQIZ8d0MwWFy0csveP9QLp2leX5iU6KqOsfn7NMMJUEJZqTIq2VvlCisjcTO6rDzT-3tkf9uy2WRoVPwOW7yzXTEGLtcGM8EeaZDsutyu_Iv1wPA',
+        },
+    });
+*/
