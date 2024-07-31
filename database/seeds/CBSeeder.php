@@ -39,7 +39,7 @@ $this->call('GroupSeeder');
 
 
 
-$this->call('QlikSett');
+        //$this->call('QlikSett');
 
 
 

@@ -45,7 +45,7 @@ $param = $conf->type == 'On-Premise' ? "?qlikTicket=$token" : "";
 </head>
 
 <body>
-<iframe src="https://qse.datasynapsi.cloud/hub/?xrfkey=0123456789abcdef&QlikTicket={{$token3}}" ></iframe>
+<!--<iframe src="https://qse.datasynapsi.cloud/hub/?xrfkey=0123456789abcdef&QlikTicket={{$token3}}" ></iframe>-->
 <!--<img src="https://qse.datasynapsi.cloud/resources/hub/img/core/logo/Qlik-Logo_RGB.svg?qlikTicket={{$token3}}" alt="Qlik Logo" style="width: 200px; height: 100px;">-->
   <div id="{{$mashup->appid}}" >
 <script  type="text/javascript" >

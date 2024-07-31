@@ -447,6 +447,65 @@ class QlikHelper
 */
   }
 
+  public static function getJWTTokenOP($id, $conf_id)
+  {
+
+    return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtYXJjby56YW1waWVyaSIsInVzZXJEaXJlY3RvcnkiOiJDSElWRSJ9.LQoHYvaegttx85sVZzH-uBdwNAB0WhZZxBn8DfSM8Z89_HyhTl3zLIg_Xkn_ezhGjjCvIqFNK3csgKi_4-GqrIyT3VYbooXjfLzSjhKsVTvzxY4c7deVlspU8nnt6Fo6YAelOuJWTWE8gYOEaWyuT_yBcEXdsIu7Zcj02SYn-FnBnhIKhKgf3v8iLO2mpKpXNR3RHivfeY3OWyWOMqFfMEgj2NQb2YUOJujvTyDQIZ8d0MwWFy0csveP9QLp2leX5iU6KqOsfn7NMMJUEJZqTIq2VvlCisjcTO6rDzT-3tkf9uy2WRoVPwOW7yzXTEGLtcGM8EeaZDsutyu_Iv1wPA";
+
+    $current_user = \App\User::find($id);
+
+    $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
+
+    //$issuedAt = Carbon::now();
+    //$issuedA2 = Carbon::now();
+
+    $expire = $issuedA2->addMinutes(60)->timestamp;
+
+    
+    $QRSCertkeyfile = $qlik_conf->QRSCertkeyfile;
+
+    $QRSCertkeyfilePassword =$qlik_conf->QRSCertkeyfilePassword;
+
+    //$privateKey =$qlik_conf->privateKey;
+    $privateKey = file_get_contents($privateKey);
+
+    $keyid = $qlik_conf->keyid;
+
+
+    $qlik_user = DB::table('qlik_users')->where('user_id', $id)->where('qlik_conf_id', $conf_id)->first();
+    if (!$qlik_user) {
+      $data['error'] = 'User not found!';
+      CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+      exit;
+    }
+
+    $qlik_login = $qlik_user->qlik_login;
+    $user_directory = $qlik_user->user_directory;
+
+    $header = [
+      'alg' => 'RS256',
+      'typ' => 'JWT',
+
+    ];
+
+/*
+{
+"userId":"marco.zampieri",
+"userDirectory":"CHIVE"
+}
+*/
+    // Payload data
+    $payload = [
+
+      'userId' => $current_user->email,
+      'userDirectory' => 'CHIVE',
+    ];
+
+    $myToken = JWT::encode($payload, $privateKey, 'RS256', $keyid, $header);
+
+    return $myToken;
+  }
+
   public static function getJWTToken($id, $conf_id)
   {
 
