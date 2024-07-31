@@ -479,7 +479,7 @@ class AdminQlikItemsController extends CBController
 		$js_login = '';
 		if ($auth == 'Ticket') {
 
-			$js_login = "qlik_login";
+			$js_login = "js/qlik_login,js";
 
 			$qlik_ticket = QlikHelper::getTicket($qlik_item_id);
 			if (empty($qlik_ticket)) {
@@ -502,10 +502,10 @@ class AdminQlikItemsController extends CBController
 		} else if ($auth == 'JWT') {
 			if ($type == 'SAAS') {
 				$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
-				$js_login = "qliksaas_login";
+				$js_login = "js/qliksaas_login.js";
 			} else {
 				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
-				$js_login = "qlik_op_jwt_login";
+				$js_login = "js/qlik_op_jwt_login.js";
 			}
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
