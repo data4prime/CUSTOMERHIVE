@@ -57,11 +57,6 @@ $param = $conf->type == 'On-Premise' ? "?qlikTicket=$token" : "";
   <div id="{{$mashup->appid}}" >
 <script  type="text/javascript" >
 
-/*
-var token4 = '{{$token4}}';
-console.log("token4");
-console.log(token4);
-*/
 
 console.log("css");
 console.log("{{$css}}");
