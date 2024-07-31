@@ -476,6 +476,8 @@ class AdminQlikItemsController extends CBController
 
 		$data['row']->url = htmlspecialchars_decode($data['row']->url);
 
+		$js_login = '';
+
 
 		if ($type == 'On-Premise') {
 

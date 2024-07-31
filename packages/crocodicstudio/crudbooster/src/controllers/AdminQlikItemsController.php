@@ -476,9 +476,10 @@ class AdminQlikItemsController extends CBController
 
 		$data['row']->url = htmlspecialchars_decode($data['row']->url);
 
-
+		$js_login = '';
 		if ($auth == 'Ticket') {
 
+			$js_login = "qlik_login";
 
 			$qlik_ticket = QlikHelper::getTicket($qlik_item_id);
 			if (empty($qlik_ticket)) {
@@ -490,7 +491,7 @@ class AdminQlikItemsController extends CBController
 				$data['item_url'] = $data['row']->url . '&qlikTicket=' . $qlik_ticket;
 			}
 
-
+			$data['js_login'] = $js_login;
 			
 
 			if ($menu->target_layout == 1) {
@@ -500,9 +501,11 @@ class AdminQlikItemsController extends CBController
 			}
 		} else if ($auth == 'JWT') {
 			if ($type == 'SAAS') {
-			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+				$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+				$js_login = "qliksaas_login";
 			} else {
 				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
+				$js_login = "qlik_op_jwt_login";
 			}
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
@@ -513,6 +516,8 @@ class AdminQlikItemsController extends CBController
 
 			$data['tenant'] = $conf->url;
 			$data['web_int_id'] = $conf->web_int_id;
+
+			$data['js_login'] = $js_login;
 
 			if ($menu->target_layout == 1) {
 				$this->cbView('qlik_items.fullscreen_view_saas', $data);

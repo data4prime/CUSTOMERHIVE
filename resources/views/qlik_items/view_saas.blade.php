@@ -66,7 +66,7 @@ $debug_url = $item_url;
   const APPID = '##APP##';
   const JWTTOKEN = "{{ $token}}";
 </script>
-<script defer src="{{asset('js/qliksaas_login.js')}}"></script>
+<script defer src="{{asset('js/{{$js_login}}.js')}}"></script>
 @push('head')
 <style>
   /*set iframe size*/
