@@ -71,16 +71,17 @@ console.log(type);
 var qlik_token = '{{$conf->type == "SAAS" ? $token : ""}}';
 console.log("qlik_token");
 console.log(qlik_token);
-
+@if ($conf->type == 'On-Premise' && $conf->auth == "Ticket")
 var qlik_ticket = '{{$conf->type == "On-Premise" && $conf->auth == "Ticket" ? $token : ""}}';
 console.log("qlik_ticket");
 console.log(qlik_ticket);
+@endif
 
 var src_js = "@php echo $src  @endphp";
 console.log("src_js");
 console.log(src_js);
 
-@if ($conf->type == 'On-Premise')
+@if ($conf->type == 'On-Premise' && $conf->auth == "Ticket")
 
 var ticket_data = @php echo isset($data_ticket) ? $data_ticket : "" @endphp;
 console.log("ticket_data");
