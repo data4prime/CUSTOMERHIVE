@@ -1,6 +1,6 @@
 async function main() {
 
-    
+    const login = await jwtLogin(qlik_token);
 
     console.log('main');
 
@@ -115,20 +115,19 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
 
 }
 
-async function getHub(baseUrl) {
-    //const authHeader = 'Bearer ' + qlik_token;
-    //console.log(authHeader);
-
-    //write a get fetch request to the server
-    const response = await fetch(`${baseUrl}hub/?xrfkey=0123456789abcdef&qlikTicket=`+token4, {
+async function jwtLogin(token) {
+    const authHeader = `Bearer ${JWTTOKEN}`;
+    console.log(authHeader);
+    //console.log(WEBINTEGRATIONID);
+    return await fetch(`${TENANT}/qrs/about?xrfkey=0123456789abcdef`, {
+        credentials: 'include',
+        mode: 'cors',
         method: 'GET',
         headers: {
-            //'Content-Type': 'application/json',
-            //'Authorization': authHeader
-        }
-    });
-
-    return response.ok;
+            'Authorization': authHeader,
+            //'qlik-web-integration-id': WEBINTEGRATIONID
+        },
+    })
 }
 
 /*
