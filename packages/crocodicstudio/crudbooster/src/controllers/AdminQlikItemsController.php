@@ -516,7 +516,7 @@ class AdminQlikItemsController extends CBController
 
 			$data['tenant'] = $conf->url;
 			$data['web_int_id'] = $conf->web_int_id;
-			$data['prefix'] = $conf->prefix;
+			$data['prefix'] = $conf->endpoint;
 
 			$data['js_login'] = $js_login;
 
