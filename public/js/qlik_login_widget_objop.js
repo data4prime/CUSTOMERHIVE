@@ -21,7 +21,7 @@ async function main() {
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
     console.log('baseUrl: '+baseUrl);
-    const isLoggedIn = await getHub(baseUrl);
+    //const isLoggedIn = await getHub(baseUrl);
 
     require.config({
 		baseUrl: baseUrl + 'resources',
