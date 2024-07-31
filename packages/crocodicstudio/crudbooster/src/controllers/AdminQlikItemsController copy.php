@@ -477,7 +477,7 @@ class AdminQlikItemsController extends CBController
 		$data['row']->url = htmlspecialchars_decode($data['row']->url);
 
 
-		if ($auth == 'Ticket') {
+		if ($type == 'On-Premise') {
 
 
 			$qlik_ticket = QlikHelper::getTicket($qlik_item_id);
@@ -498,12 +498,8 @@ class AdminQlikItemsController extends CBController
 			} else {
 				$this->cbView('qlik_items.view', $data);
 			}
-		} else if ($auth == 'JWT') {
-			if ($type == 'SAAS') {
+		} else if ($type == 'SAAS') {
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
-			} else {
-				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
-			}
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
 				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);

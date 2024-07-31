@@ -38,6 +38,7 @@ class QlikConfController extends CBController
 		$this->col = [];
 		$this->col[] = ["label" => "Configuration Name", "name" => "confname"];
 		$this->col[] = ["label" => "Type", "name" => "type"];
+        $this->col[] = ["label" => "Auth", "name" => "auth"];
         //$this->col[] = ["label" => "qrsurl", "name" => "QRS Url"];
         //$this->col[] = ["label" => "Endpoint", "name" => "endpoint"];
         //$this->col[] = ["label" => "QRSCertfile", "name" => "QRSCertfile"];
