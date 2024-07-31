@@ -68,7 +68,7 @@ var type = '{{$conf->type}}';
 console.log("type");
 console.log(type);
 
-var qlik_token = '{{$conf->type == "SAAS" ? $token : ""}}';
+var qlik_token = '{{$conf->auth == "JWT" ? $token : ""}}';
 console.log("qlik_token");
 console.log(qlik_token);
 @if ($conf->type == 'On-Premise' && $conf->auth == "Ticket")
