@@ -789,7 +789,7 @@ class AdminQlikItemsController extends CBController
 			$url = $conf->qrsurl;
 			//$url .= ':443'
 			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-			//$url .= $conf->endpoint;
+			$url .= $conf->endpoint;
 			//$url .= '/chive';
 			$url .= '/hub/';
 			//get qlik ticket
