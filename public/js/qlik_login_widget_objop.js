@@ -116,7 +116,7 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
 }
 
 async function jwtLogin(token) {
-    const authHeader = `Bearer ${JWTTOKEN}`;
+    const authHeader = `Bearer ${token}`;
     console.log(authHeader);
     //console.log(WEBINTEGRATIONID);
     return await fetch(`${TENANT}/qrs/about?xrfkey=0123456789abcdef`, {
