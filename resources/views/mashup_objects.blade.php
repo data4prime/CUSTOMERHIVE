@@ -72,7 +72,7 @@ var qlik_token = '{{$conf->type == "SAAS" ? $token : ""}}';
 console.log("qlik_token");
 console.log(qlik_token);
 
-var qlik_ticket = '{{$conf->type == "On-Premise" ? $token : ""}}';
+var qlik_ticket = '{{$conf->type == "On-Premise" && $conf->auth == "Ticket" ? $token : ""}}';
 console.log("qlik_ticket");
 console.log(qlik_ticket);
 
