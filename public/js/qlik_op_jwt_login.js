@@ -16,7 +16,7 @@ const JWTTOKEN = "{{ $token}}";*/
     //console.log("print isLoggedIn");
     //console.log(isLoggedIn);
     //console.log("CHECK");
-    const check = await checkLoggedIn();
+    //const check = await checkLoggedIn();
 
 
     console.log(check.text());
@@ -63,7 +63,7 @@ async function jwtLogin(token) {
     console.log(authHeader);
     //console.log(WEBINTEGRATIONID);
     return await fetch(`${TENANT}/qrs/about?xrfkey=0123456789abcdef`, {
-        credentials: 'include',
+        //credentials: 'include',
         mode: 'no-cors',
         method: 'GET',
         headers: {
