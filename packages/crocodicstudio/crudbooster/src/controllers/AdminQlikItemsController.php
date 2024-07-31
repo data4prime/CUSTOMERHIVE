@@ -770,6 +770,7 @@ class AdminQlikItemsController extends CBController
 
 		$view = 'qlik_items.view';
 		$data = [];
+		$js_login = '';
 		if ($conf->auth == 'JWT') {
 
 			if ($conf->type == 'SAAS') {
@@ -780,6 +781,10 @@ class AdminQlikItemsController extends CBController
 				
 
 				$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+
+				$js_login = "js/qliksaas_login.js";
+
+
 			} else {
 				$url = $conf->url;
 				$url .= '/'.$conf->endpoint;
@@ -787,6 +792,8 @@ class AdminQlikItemsController extends CBController
 				
 
 				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
+
+				$js_login = "js/qlik_op_jwt_login.js";
 
 			}
 
@@ -797,6 +804,8 @@ class AdminQlikItemsController extends CBController
 			}
 			$data['token'] = $token;
 			$data['item_url'] = $conf->url;
+
+			$data['prefix'] = $conf->endpoint;
 
 			$data['tenant'] = $conf->url;
 			$data['web_int_id'] = $conf->web_int_id;
@@ -814,6 +823,10 @@ class AdminQlikItemsController extends CBController
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
 			$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
+
+			$js_login = "js/qlik_login.js";
+
+
 		}
 
 		$row = new \stdClass;
@@ -831,6 +844,8 @@ class AdminQlikItemsController extends CBController
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] =  htmlspecialchars_decode($data['row']->url);
 		$data['debug'] = $conf->debug;
+
+		$data['js_login'] = $js_login;
 
 		$this->cbView($view, $data);
 	}
