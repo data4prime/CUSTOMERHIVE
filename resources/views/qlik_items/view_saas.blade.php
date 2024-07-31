@@ -66,7 +66,7 @@ $debug_url = $item_url;
   const APPID = '##APP##';
   const JWTTOKEN = "{{ $token}}";
 </script>
-<script defer src="@php echo asset($js_login) @endphp"></script>
+<script src="@php echo asset($js_login) @endphp"></script>
 @push('head')
 <style>
   /*set iframe size*/
