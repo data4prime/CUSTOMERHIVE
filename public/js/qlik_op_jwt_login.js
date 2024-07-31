@@ -63,8 +63,8 @@ async function jwtLogin(token) {
     console.log(authHeader);
     //console.log(WEBINTEGRATIONID);
     return await fetch(`${TENANT}/qrs/about?xrfkey=0123456789abcdef`, {
-        //credentials: 'include',
-        mode: 'no-cors',
+        credentials: 'include',
+        mode: 'cors',
         method: 'GET',
         headers: {
             'Authorization': authHeader,
