@@ -787,7 +787,7 @@ class AdminQlikItemsController extends CBController
 
 			} else {
 				$url = $conf->url;
-				$url .= '/chive/';
+				$url .= '/chive';
 				$url .= '/hub/';
 				
 
