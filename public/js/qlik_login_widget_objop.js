@@ -2,6 +2,10 @@ async function main() {
 
     const login = await jwtLogin(qlik_token);
 
+    var response = await login.text();
+
+    console.log('response: '+response);
+
     console.log('main');
 
     var host_q = '';
