@@ -60,7 +60,9 @@ $debug_url = $item_url;
 
 @endpush
 <script>
-  const TENANT = '{{ $tenant }}/{{$prefix}}';
+  //const TENANT = '{{ $tenant }}/{{$prefix}}';
+
+  const TENANT = '{{ $tenant }}';
 
   const WEBINTEGRATIONID = '{{ $web_int_id }}';
   const APPID = '##APP##';
