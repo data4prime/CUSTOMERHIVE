@@ -776,7 +776,7 @@ class AdminQlikItemsController extends CBController
 			if ($conf->type == 'SAAS') {
 
 				$url = $conf->url;
-				//$url .= '/chive';
+				$url .= '/'.$conf->endpooint;
 				$url .= '/hub/';
 				
 
@@ -818,7 +818,7 @@ class AdminQlikItemsController extends CBController
 			//$url .= ':443'
 			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
 			//$url .= $conf->endpoint;
-			//$url .= '/chive';
+			$url .= '/chive';
 			$url .= '/hub/';
 			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
