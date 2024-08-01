@@ -64,6 +64,8 @@ $debug_url = $item_url;
 
   const TENANT = '{{ $tenant }}';
 
+  const PREFIX = '{{ $prefix }}';
+
   const WEBINTEGRATIONID = '{{ $web_int_id }}';
   const APPID = '##APP##';
   const JWTTOKEN = "{{ $token}}";
