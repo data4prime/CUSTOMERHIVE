@@ -944,6 +944,7 @@ $data = [];
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] =  htmlspecialchars_decode($data['row']->url);
 		$data['debug'] = $conf->debug;
+$data['js_login'] = $js_login;
 
 		$this->cbView($view, $data);
 	}
