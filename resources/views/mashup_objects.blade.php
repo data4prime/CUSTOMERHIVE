@@ -9,6 +9,9 @@ $conf = QlikMashupController::getConf($qlik_conf);
 //generate a random string
 $state = bin2hex(random_bytes(16));
 
+$token = '';
+$src = '';
+$css = '';
 
 if ($conf->type == 'SAAS') {
   $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
