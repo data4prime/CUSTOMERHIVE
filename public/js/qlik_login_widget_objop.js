@@ -46,7 +46,7 @@ async function main() {
 
     //import script javascript
     var script = document.createElement('script');
-    script.src = baseUrl + 'resources/assets/external/requirejs/require.js';
+    script.src = baseUrl + 'jwt/resources/assets/external/requirejs/require.js';
     script.type = 'text/javascript';
     document.head.appendChild(script);
 
