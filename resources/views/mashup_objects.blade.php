@@ -53,15 +53,6 @@ $param = $conf->type == 'On-Premise' ? "?qlikTicket=$token" : "";
 <!DOCTYPE html>
 <html>
 <head>
-
-<script  src="{{asset($js_defer)}}"></script>
-<link rel="stylesheet" href="{{ $css }}">
-
-</head>
-
-<body>
-
-  <div id="{{$mashup->appid}}" >
 <script  type="text/javascript" >
 
 
@@ -131,6 +122,15 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');
 
 
 </script>
+<script  src="{{asset($js_defer)}}"></script>
+<link rel="stylesheet" href="{{ $css }}">
+
+</head>
+
+<body>
+
+  <div id="{{$mashup->appid}}" >
+
 
   <div id="title">Loading Qlik App. Please wait.</div>
 
