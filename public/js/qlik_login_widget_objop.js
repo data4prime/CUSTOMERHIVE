@@ -8,7 +8,12 @@ async function main() {
         var title = document.getElementById('title');
         //add the error message to the div
         title.innerHTML = "Errore durante il login: " + login.status + ' - ' + login.statusText;
-        console.error('Errore durante il login: ' + login.status + ' - ' + login.statusText);
+        //console.error('Errore durante il login: ' + login.status + ' - ' + login.statusText);
+
+        //in parent document find iframe with id 'configuration' and change height to 80%
+        parent.document.getElementById('configuration').style.height = '80%';
+
+
         return;
     }
 
