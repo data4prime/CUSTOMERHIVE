@@ -45,10 +45,13 @@ async function main() {
     //const isLoggedIn = await getHub(baseUrl);
 
     //import script javascript
+
+/*
     var script = document.createElement('script');
     script.src = baseUrl + 'jwt/resources/assets/external/requirejs/require.js';
     script.type = 'text/javascript';
     document.head.appendChild(script);
+*/
 
     require.config({
 		baseUrl: baseUrl + 'resources',
