@@ -2,7 +2,15 @@ async function main() {
 
     const login = await jwtLogin(qlik_token);
 
+    //if code is not 200, add the response to the error message
+    if (!login.ok) {
+        console.error('Errore durante il login: ' + login.status + ' - ' + login.statusText);
+        return;
+    }
+
     var response = await login.text();
+
+    
 
     console.log('response: '+response);
 
