@@ -27,6 +27,12 @@ async function main() {
     console.log('baseUrl: '+baseUrl);
     //const isLoggedIn = await getHub(baseUrl);
 
+    //import script javascript
+    var script = document.createElement('script');
+    script.src = baseUrl + 'resources/assets/external/requirejs/require.js';
+    script.type = 'text/javascript';
+    document.head.appendChild(script);
+
     require.config({
 		baseUrl: baseUrl + 'resources',
 	});
