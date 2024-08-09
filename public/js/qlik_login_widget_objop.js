@@ -4,6 +4,10 @@ async function main() {
 
     //if code is not 200, add the response to the error message
     if (!login.ok) {
+        //find div with id 'title'
+        var title = document.getElementById('title');
+        //add the error message to the div
+        title.innerHTML = "Errore durante il login: " + login.status + ' - ' + login.statusText;
         console.error('Errore durante il login: ' + login.status + ' - ' + login.statusText);
         return;
     }
