@@ -42,22 +42,12 @@ async function main() {
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
     console.log('baseUrl: '+baseUrl);
-    //const isLoggedIn = await getHub(baseUrl);
-
-    //import script javascript
-
-/*
-    var script = document.createElement('script');
-    script.src = baseUrl + 'jwt/resources/assets/external/requirejs/require.js';
-    script.type = 'text/javascript';
-    document.head.appendChild(script);
-*/
 
     require.config({
 		baseUrl: baseUrl + 'resources',
 	});
 
-    require(["js/qlik"], function (qlik) {
+    /*require(["js/qlik"], function (qlik) {
         if (!qlik) {
             console.error("Il modulo qlik non è stato caricato correttamente.");
             return;
@@ -75,7 +65,7 @@ async function main() {
             }
         });
 
-        //document.cookie;
+
 
         var app = qlik.openApp(app, config);
         console.log('app: ');
@@ -92,7 +82,7 @@ async function main() {
         var mashup_object = parent.document.getElementById('mashup_object');
         mashup_object.removeAttribute('disabled');
 
-    });
+    });*/
 }
 
 
