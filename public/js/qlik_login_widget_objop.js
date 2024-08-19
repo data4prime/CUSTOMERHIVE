@@ -17,6 +17,7 @@ async function main() {
         return;
     }
 
+    /*
     var response = await login.text();
 
     
@@ -46,6 +47,7 @@ async function main() {
     require.config({
 		baseUrl: baseUrl + 'resources',
 	});
+*/
 
     /*require(["js/qlik"], function (qlik) {
         if (!qlik) {
