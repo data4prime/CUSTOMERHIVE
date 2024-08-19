@@ -1,6 +1,6 @@
 async function main() {
 
-    const login = await jwtLogin(qlik_token);
+    const login = await jwtLoginOP(qlik_token);
 
     //if code is not 200, add the response to the error message
     if (!login.ok) {
@@ -141,7 +141,7 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
 
 }
 
-async function jwtLogin(token) {
+async function jwtLoginOP(token) {
     const authHeader = `Bearer ${token}`;
     console.log(authHeader);
     //console.log(WEBINTEGRATIONID);
