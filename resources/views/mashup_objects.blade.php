@@ -146,7 +146,8 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');
 
 @endif
 </body>
-<script type="text/javascript" defer  src="{{$src}}"></script>
+
+<!--<script type="text/javascript" defer  src="{{$src}}"></script>-->
 
 
 <script defer type="text/javascript"  src="{{asset($js_defer)}}2.js"></script>
