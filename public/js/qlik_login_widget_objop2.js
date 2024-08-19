@@ -123,7 +123,7 @@ async function jwtLogin(token) {
     const authHeader = `Bearer ${token}`;
     console.log(authHeader);
     //console.log(WEBINTEGRATIONID);
-    return await fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
+    return await fetch(`${host}/${prefix}/about?xrfkey=0123456789abcdef`, {
         credentials: 'include',
         mode: 'cors',
         method: 'GET',
