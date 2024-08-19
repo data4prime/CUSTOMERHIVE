@@ -119,6 +119,7 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
 
 }
 
+/*
 async function jwtLogin(token) {
     const authHeader = `Bearer ${token}`;
     console.log(authHeader);
@@ -133,7 +134,7 @@ async function jwtLogin(token) {
         },
     });
 }
-
+*/
 /*
 $(document).ready(function () {
     console.log("document ready -------------------");
