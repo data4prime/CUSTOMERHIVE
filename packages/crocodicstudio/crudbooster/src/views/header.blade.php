@@ -14,8 +14,9 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
 
-                <li class="dropdown notifications-menu">
-<a href="#" class="dropdown-toggle" data-toggle="dropdown" title='Notifications' aria-expanded="false">
+<li class="dropdown notifications-menu">
+
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" title='Notifications' aria-expanded="false">
                         <i id='icon_notification' class="fa fa-bell-o"></i>
                         <span id='notification_count' class="label label-danger" style="display:none">0</span>
                     </a>
@@ -40,6 +41,10 @@
                         </li>
                         <li class="footer"><a href="{{route('NotificationsControllerGetIndex')}}">{{trans("crudbooster.text_view_all_notification")}}</a></li>
                     </ul>
+                </li>
+
+                <li class="dropdown notifications-menu">
+
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" title='Notifications' aria-expanded="false">
                         <i id='icon_notification' class="fa fa-bell-o"></i>
                         <span id='notification_count' class="label label-danger" style="display:none">0</span>
