@@ -139,6 +139,7 @@ $(document).ready(function () {
     console.log("document ready -------------------");
 */
     main();
+console.log("qlik_login_widget_objop2");
 /*
 });
 */
