@@ -17,16 +17,6 @@
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
     console.log('baseUrl: '+baseUrl);
-    //const isLoggedIn = await getHub(baseUrl);
-
-    //import script javascript
-
-/*
-    var script = document.createElement('script');
-    script.src = baseUrl + 'jwt/resources/assets/external/requirejs/require.js';
-    script.type = 'text/javascript';
-    document.head.appendChild(script);
-*/
 
     require.config({
 		baseUrl: baseUrl + 'resources',
@@ -139,7 +129,7 @@ async function jwtLogin(token) {
 $(document).ready(function () {
     console.log("document ready -------------------");
 */
-    main();
+    //main();
 console.log("qlik_login_widget_objop2");
 /*
 });
