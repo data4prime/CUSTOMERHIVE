@@ -18,7 +18,10 @@ async function main() {
     }
  var response = await login.text();
 
-    
+        var script = document.createElement('script');
+    script.src = baseUrl + 'jwt/resources/assets/external/requirejs/require.js';
+    script.type = 'text/javascript';
+    document.head.appendChild(script);
 
     console.log('response: '+response);
     /*

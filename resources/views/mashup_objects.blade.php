@@ -122,7 +122,7 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');
 
 
 </script>
-<script  src="{{asset($js_defer)}}.js"></script>
+<script type="text/javascript"  src="{{asset($js_defer)}}.js"></script>
 
 
 
@@ -147,7 +147,9 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');
 @endif
 </body>
 <script type="text/javascript" defer  src="{{$src}}"></script>
-<script defer  src="{{asset($js_defer)}}2.js"></script>
+
+
+<script defer type="text/javascript"  src="{{asset($js_defer)}}2.js"></script>
 
 
 </html>
