@@ -16,7 +16,11 @@ async function main() {
 
         return;
     }
+ var response = await login.text();
 
+    
+
+    console.log('response: '+response);
     /*
     var response = await login.text();
 
@@ -157,6 +161,7 @@ $(document).ready(function () {
     console.log("document ready -------------------");
 */
     main();
+console.log("qlik_login_widget_objop");
 /*
 });
 */
