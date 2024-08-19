@@ -44,7 +44,7 @@ async function jwtLoginOP(token) {
 }
 
 
-  await  mainOP();
+  const main_op = await  mainOP();
 console.log("qlik_login_widget_objop");
 
 
