@@ -139,12 +139,12 @@ async function jwtLogin(token) {
     const authHeader = `Bearer ${token}`;
     console.log(authHeader);
     //console.log(WEBINTEGRATIONID);
-    return await fetch(`${host}/${prefix}/qrs/about?xrfkey=12345678qwertyui`, {
+    return await fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
         credentials: 'include',
         mode: 'cors',
         method: 'GET',
         headers: {
-            'X-Qlik-Xrfkey': '12345678qwertyui',
+            'X-Qlik-Xrfkey': '0123456789abcdef',
             'Authorization': authHeader,
         },
     });

@@ -68,7 +68,7 @@ async function jwtLogin(token) {
         method: 'GET',
         headers: {
             'Authorization': authHeader,
-            'X-Qlik-Xrfkey': '12345678qwertyui',
+            'X-Qlik-Xrfkey': '0123456789abcdef',
             //'qlik-web-integration-id': WEBINTEGRATIONID
         },
     })
