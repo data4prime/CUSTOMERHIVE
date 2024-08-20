@@ -36,8 +36,8 @@ if ($conf->type == 'On-Premise' && $conf->auth == 'Ticket') {
   $token = HelpersQlikHelper::getTicketFromConf($conf->id) ;
 
   $token2 = HelpersQlikHelper::getTicketFromConf($conf->id) ;
-$token3 = HelpersQlikHelper::getTicketFromConf($conf->id) ;
-$token4 = HelpersQlikHelper::getTicketFromConf($conf->id) ;
+  $token3 = HelpersQlikHelper::getTicketFromConf($conf->id) ;
+  $token4 = HelpersQlikHelper::getTicketFromConf($conf->id) ;
   $data_ticket = HelpersQlikHelper::dataForTicketConf($conf->id);
   //$src = $conf->host . "/resources/assets/external/requirejs/require.js?state=$state&qlikTicket=".$token2;
   //$src = $conf->host . "/resources/assets/external/requirejs/require.js?state=$state";
