@@ -1,6 +1,6 @@
 
 
-function objectsOptions(app) {
+function objectsOptionsOBJ(app) {
 
 var hidden_object = parent.document.getElementById('mashup_object_hidden');
 
@@ -132,7 +132,7 @@ async function main() {
         console.log('app: ');
         console.log(app);
 
-        objectsOptions(app);
+        objectsOptionsOBJ(app);
 
        
 
