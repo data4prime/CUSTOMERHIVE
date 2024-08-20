@@ -44,6 +44,17 @@ var script = document.createElement('script');
     script.src = baseUrl + 'jwt/resources/assets/external/requirejs/require.js';
     script.type = 'text/javascript';
     document.head.appendChild(script);
+
+    //wait until require.js is loaded
+    await new Promise((resolve, reject) => {
+        script.onload = resolve;
+        script.onerror = reject;
+    });
+
+
+
+
+
     console.log('baseUrl: '+baseUrl);
 
     require.config({
