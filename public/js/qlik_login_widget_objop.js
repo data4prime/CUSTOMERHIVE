@@ -1,3 +1,39 @@
+async function loadScript(url) {
+    return new Promise((resolve, reject) => {
+        var script = document.createElement('script');
+        script.src = url;
+        script.type = 'text/javascript';
+        script.async = false;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error(`Error loading ${url}`));
+        document.head.appendChild(script);
+    });
+}
+
+async function mainOP() {
+    const authHeader = `Bearer ${qlik_token}`;
+
+    const response = await fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
+        credentials: 'include',
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+            'X-Qlik-Xrfkey': '0123456789abcdef',
+            'Authorization': authHeader,
+        },
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+    await loadScript(`${host}/${prefix}/resources/assets/external/requirejs/require.js`);
+
+}
+
+mainOP();
+
+
+/*
 const authHeader = `Bearer ${qlik_token}`;
 console.log(authHeader);
 fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
@@ -82,7 +118,7 @@ fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
 .catch(error => {
     console.error('Error:', error);
 });
-
+*/
 
 
 
