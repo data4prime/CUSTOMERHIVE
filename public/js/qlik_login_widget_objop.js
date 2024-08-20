@@ -25,29 +25,6 @@ async function mainOP() {
 
     console.log('response: '+response);
 
-}
-
-
-async function jwtLoginOP(token) {
-    const authHeader = `Bearer ${token}`;
-    console.log(authHeader);
-    //console.log(WEBINTEGRATIONID);
-    return await fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
-        credentials: 'include',
-        mode: 'cors',
-        method: 'GET',
-        headers: {
-            'X-Qlik-Xrfkey': '0123456789abcdef',
-            'Authorization': authHeader,
-        },
-    });
-}
-
-
-  const main_op = mainOP();
-console.log("qlik_login_widget_objop");
-
-
 
     var host_q = '';
     if (host.includes("https://") || host.includes("http://")) {
@@ -107,6 +84,31 @@ console.log("qlik_login_widget_objop");
         mashup_object.removeAttribute('disabled');
 
     });
+
+
+}
+
+
+async function jwtLoginOP(token) {
+    const authHeader = `Bearer ${token}`;
+    console.log(authHeader);
+    //console.log(WEBINTEGRATIONID);
+    return await fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
+        credentials: 'include',
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+            'X-Qlik-Xrfkey': '0123456789abcdef',
+            'Authorization': authHeader,
+        },
+    });
+}
+
+
+  const main_op = mainOP();
+console.log("qlik_login_widget_objop");
+
+
 
 
 
