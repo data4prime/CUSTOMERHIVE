@@ -126,12 +126,14 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');
 
 
 
-
+<!--
 <link rel="stylesheet" href="{{ $css }}">
 <script type="text/javascript"   src="{{$src}}"></script>
 
 
 <script  type="text/javascript"  src="{{asset($js_defer)}}2.js"></script>
+-->
+
 </head>
 
 <body>
