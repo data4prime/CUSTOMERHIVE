@@ -47,10 +47,10 @@ async function mainOP() {
 */
 
     //wait until require.js is loaded
-    await new Promise((resolve, reject) => {
+   /* await new Promise((resolve, reject) => {
         script.onload = resolve;
         script.onerror = reject;
-    });
+    });*/
 
 
 
