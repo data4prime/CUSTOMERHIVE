@@ -18,10 +18,9 @@ async function jwtLoginOP(token) {
 }
 */
 
-function jwtLoginOP(token) {
+//function jwtLoginOP(token) {
     const authHeader = `Bearer ${token}`;
     console.log(authHeader);
-
     fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
         credentials: 'include',
         mode: 'cors',
@@ -40,8 +39,9 @@ function jwtLoginOP(token) {
     .catch(error => {
         console.error('Error:', error);
     });
-}
+//}
 
+/*
 function mainOP() {
     const title = document.getElementById('title');
     
@@ -50,7 +50,6 @@ function mainOP() {
             return login.text();
         })
         .then(response => {
-            // Puoi gestire "response" qui se necessario.
         })
         .catch(error => {
             title.innerHTML = "Errore durante il login: " + error.message;
@@ -60,6 +59,7 @@ function mainOP() {
 
 mainOP();
 console.log("qlik_login_widget_objop");
+*/
 
 /*
 async function mainOP() {
