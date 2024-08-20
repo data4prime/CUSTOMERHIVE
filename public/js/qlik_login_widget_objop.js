@@ -17,6 +17,65 @@ fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
     script.src = `${host}/${prefix}/resources/assets/external/requirejs/require.js`;
     script.type = 'text/javascript';
     document.head.appendChild(script);
+
+    var host_q = '';
+    if (host.includes("https://") || host.includes("http://")) {
+        host_q = host.split("//")[1];
+    }
+
+    var config = {
+        host: host_q, 
+        prefix: "/", 
+        port: 443, 
+        isSecure: true, 
+    };
+    console.log('config: ');
+    console.log(config);
+
+    const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
+
+    console.log('baseUrl: '+baseUrl);
+
+    require.config({
+		baseUrl: baseUrl + 'resources',
+	});
+
+    require(["js/qlik"], function (qlik) {
+        if (!qlik) {
+            console.error("Il modulo qlik non è stato caricato correttamente.");
+            return;
+        }
+    
+        
+        qlik.setOnError(function (error) {
+            var appdoc = document.getElementById(appId);
+            var text_danger = appdoc.getElementsByClassName('text-danger');
+            
+            if (text_danger.length > 0) {
+                text_danger[0].append(error.message);
+            } else {
+                alert(error.message);
+            }
+        });
+
+        //document.cookie;
+
+        var app = qlik.openApp(app, config);
+        console.log('app: ');
+        console.log(app);
+
+        objectsOptions(app);
+
+       
+
+
+        var title = document.getElementById('title');
+        title.innerHTML = "";
+
+        var mashup_object = parent.document.getElementById('mashup_object');
+        mashup_object.removeAttribute('disabled');
+
+    });
     return response;
 })
 .catch(error => {
