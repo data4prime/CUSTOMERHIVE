@@ -174,7 +174,7 @@ fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
 
 @endif
 </body>
-<script defer type="text/javascript"   src="{{$src}}"></script>
+<!--<script defer type="text/javascript"   src="{{$src}}"></script>-->
 <!--<script type="text/javascript" defer  src="{{$src}}"></script>-->
 
 

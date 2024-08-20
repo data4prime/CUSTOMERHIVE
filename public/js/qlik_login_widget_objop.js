@@ -13,6 +13,10 @@ fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
+    var script = document.createElement('script');
+    script.src = `${host}/${prefix}/resources/assets/external/requirejs/require.js`;
+    script.type = 'text/javascript';
+    document.head.appendChild(script);
     return response;
 })
 .catch(error => {
