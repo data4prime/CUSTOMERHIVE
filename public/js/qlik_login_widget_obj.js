@@ -29,6 +29,8 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
         $.each(reply.qAppObjectList.qItems, function () {
             var sheetId = value.qInfo.qId;
 
+            console.log("sheetID: "+sheetId);
+
             var name = value.qData.name;
 
             var option = document.createElement('option');
@@ -115,6 +117,7 @@ async function main() {
         qlik.setOnError(function (error) {
             var appdoc = document.getElementById(appId);
             var text_danger = appdoc.getElementsByClassName('text-danger');
+
             
             if (text_danger.length > 0) {
                 text_danger[0].append(error.message);
