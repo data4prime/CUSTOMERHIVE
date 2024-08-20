@@ -85,7 +85,7 @@ async function mainOP() {
 
     var config = {
         host: host_q, 
-        prefix: "/jwt", 
+        prefix: "/jwt/", 
         port: 443, 
         isSecure: true, 
     };
