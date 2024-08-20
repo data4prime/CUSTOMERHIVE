@@ -1,4 +1,4 @@
-
+/*
 async function jwtLoginOP(token) {
     const authHeader = `Bearer ${token}`;
     console.log(authHeader);
@@ -11,14 +11,57 @@ async function jwtLoginOP(token) {
             'Authorization': authHeader,
         },
     });
-
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
-
     return response;
 }
+*/
 
+function jwtLoginOP(token) {
+    const authHeader = `Bearer ${token}`;
+    console.log(authHeader);
+
+    fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
+        credentials: 'include',
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+            'X-Qlik-Xrfkey': '0123456789abcdef',
+            'Authorization': authHeader,
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function mainOP() {
+    const title = document.getElementById('title');
+    
+    jwtLoginOP(qlik_token)
+        .then(login => {
+            return login.text();
+        })
+        .then(response => {
+            // Puoi gestire "response" qui se necessario.
+        })
+        .catch(error => {
+            title.innerHTML = "Errore durante il login: " + error.message;
+            parent.document.getElementById('configuration').style.height = '80%';
+        });
+}
+
+mainOP();
+console.log("qlik_login_widget_objop");
+
+/*
 async function mainOP() {
     try {
         const login = await jwtLoginOP(qlik_token);
@@ -29,11 +72,11 @@ async function mainOP() {
         parent.document.getElementById('configuration').style.height = '80%';
     }
 }
-
 (async () => {
     await mainOP();
     console.log("qlik_login_widget_objop");
 })();
+*/
 /*
 
 async function mainOP() {
