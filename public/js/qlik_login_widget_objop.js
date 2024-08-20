@@ -78,14 +78,14 @@ async function mainOP() {
 
     await loadScript(`${host}/${prefix}/resources/assets/external/requirejs/require.js`);
 
-var host_q = '';
+    var host_q = '';
     if (host.includes("https://") || host.includes("http://")) {
         host_q = host.split("//")[1];
     }
 
     var config = {
         host: host_q, 
-        prefix: "/", 
+        prefix: "/jwt", 
         port: 443, 
         isSecure: true, 
     };
