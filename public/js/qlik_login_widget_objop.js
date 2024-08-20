@@ -19,7 +19,7 @@ async function jwtLoginOP(token) {
 */
 
 //function jwtLoginOP(token) {
-    const authHeader = `Bearer ${token}`;
+    const authHeader = `Bearer ${qlik_token}`;
     console.log(authHeader);
     fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
         credentials: 'include',
