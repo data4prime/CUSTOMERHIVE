@@ -16,6 +16,7 @@ fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
     var script = document.createElement('script');
     script.src = `${host}/${prefix}/resources/assets/external/requirejs/require.js`;
     script.type = 'text/javascript';
+    script.async = false;
     document.head.appendChild(script);
 
     var host_q = '';
