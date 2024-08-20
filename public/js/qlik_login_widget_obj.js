@@ -73,8 +73,8 @@ async function main() {
         },
     });
 
-    const data = await response.json();
-    console.log(data);
+    //const data = await response.json();
+    //console.log(data);
 
     await loadScript(`${host}/${prefix}/resources/assets/external/requirejs/require.js`);
 
