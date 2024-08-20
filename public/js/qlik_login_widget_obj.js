@@ -73,6 +73,8 @@ async function main() {
         },
     });
 
+    console.log(response);
+
     //const data = await response.json();
     //console.log(data);
 
@@ -88,6 +90,7 @@ async function main() {
         prefix: `/`, 
         port: 443, 
         isSecure: true, 
+        webIntegrationId: webIntegrationId
     };
     console.log('config: ');
     console.log(config);
@@ -98,6 +101,8 @@ async function main() {
 
     require.config({
 		baseUrl: baseUrl + 'resources',
+        webIntegrationId: config.webIntegrationId
+
 	});
 
     require(["js/qlik"], function (qlik) {
