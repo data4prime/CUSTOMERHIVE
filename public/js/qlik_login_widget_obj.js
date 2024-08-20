@@ -68,7 +68,7 @@ async function main() {
         mode: 'cors',
         method: 'GET',
         headers: {
-            'X-Qlik-Xrfkey': '0123456789abcdef',
+            //'X-Qlik-Xrfkey': '0123456789abcdef',
             'Authorization': authHeader,
         },
     });
