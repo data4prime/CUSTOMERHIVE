@@ -76,7 +76,7 @@ async function main() {
     //const data = await response.json();
     //console.log(data);
 
-    await loadScript(`${host}/${prefix}/resources/assets/external/requirejs/require.js`);
+    await loadScript(`${host}/resources/assets/external/requirejs/require.js`);
 
     var host_q = '';
     if (host.includes("https://") || host.includes("http://")) {
@@ -85,7 +85,7 @@ async function main() {
 
     var config = {
         host: host_q, 
-        prefix: `/${prefix}/`, 
+        prefix: `/`, 
         port: 443, 
         isSecure: true, 
     };
