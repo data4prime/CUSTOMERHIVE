@@ -1,3 +1,37 @@
+const authHeader = `Bearer ${qlik_token}`;
+console.log(authHeader);
+fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
+    credentials: 'include',
+    mode: 'cors',
+    method: 'GET',
+    headers: {
+        'X-Qlik-Xrfkey': '0123456789abcdef',
+        'Authorization': authHeader,
+    },
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response;
+})
+.catch(error => {
+    console.error('Error:', error);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 async function jwtLoginOP(token) {
     const authHeader = `Bearer ${token}`;
@@ -19,26 +53,7 @@ async function jwtLoginOP(token) {
 */
 
 //function jwtLoginOP(token) {
-    const authHeader = `Bearer ${qlik_token}`;
-    console.log(authHeader);
-    fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
-        credentials: 'include',
-        mode: 'cors',
-        method: 'GET',
-        headers: {
-            'X-Qlik-Xrfkey': '0123456789abcdef',
-            'Authorization': authHeader,
-        },
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response;
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+
 //}
 
 /*

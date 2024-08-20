@@ -121,16 +121,38 @@ var hidden_object = parent.document.getElementById('mashup_object_hidden');
 var hidden_app = parent.document.getElementById('mashup_app_hidden');
 
 
+const authHeader = `Bearer ${qlik_token}`;
+console.log(authHeader);
+fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
+    credentials: 'include',
+    mode: 'cors',
+    method: 'GET',
+    headers: {
+        'X-Qlik-Xrfkey': '0123456789abcdef',
+        'Authorization': authHeader,
+    },
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response;
+})
+.catch(error => {
+    console.error('Error:', error);
+});
+
+
 </script>
-<script type="text/javascript"  src="{{asset($js_defer)}}.js"></script>
-
-
-
+<!--<script type="text/javascript"  src="{{asset($js_defer)}}.js"></script>-->
 
 <link rel="stylesheet" href="{{ $css }}">
 <script type="text/javascript"   src="{{$src}}"></script>
 
 <!--
+
+
+
 <script  type="text/javascript"  src="{{asset($js_defer)}}2.js"></script>
 -->
 
