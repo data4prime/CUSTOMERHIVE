@@ -20,7 +20,7 @@ async function mainOP() {
 
 
 
-        
+        /*
 
     console.log('response: '+response);
 
@@ -40,17 +40,6 @@ async function mainOP() {
     console.log(config);
 
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
-/*var script = document.createElement('script');
-    script.src = baseUrl + 'jwt/resources/assets/external/requirejs/require.js';
-    script.type = 'text/javascript';
-    document.head.appendChild(script);
-*/
-
-    //wait until require.js is loaded
-   /* await new Promise((resolve, reject) => {
-        script.onload = resolve;
-        script.onerror = reject;
-    });*/
 
 
 
@@ -99,7 +88,7 @@ async function mainOP() {
 
     });
 
-
+*/
 }
 
 
@@ -125,7 +114,7 @@ console.log("qlik_login_widget_objop");
 
 
 
-
+/*
 function objectsOptions(app) {
 
 var hidden_object = parent.document.getElementById('mashup_object_hidden');
@@ -195,7 +184,7 @@ $(document).ready(function () {
     console.log("document ready -------------------");
 */
     //main();
-console.log("qlik_login_widget_objop2");
+//console.log("qlik_login_widget_objop2");
 /*
 });
 */
