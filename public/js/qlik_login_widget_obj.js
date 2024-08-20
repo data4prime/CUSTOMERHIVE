@@ -63,13 +63,13 @@ async function loadScript(url) {
 async function main() {
     const authHeader = `Bearer ${qlik_token}`;
 
-    const response = await fetch(`${host}/login/jwt-session`, {
+    return await fetch(`${TENANT}/login/jwt-session`, {
         credentials: 'include',
         mode: 'cors',
-        method: 'GET',
+        method: 'POST',
         headers: {
-            //'X-Qlik-Xrfkey': '0123456789abcdef',
             'Authorization': authHeader,
+            'qlik-web-integration-id': webIntegrationId
         },
     });
 
