@@ -18,6 +18,9 @@ async function mainOP() {
     }
  var response = await login.text();
 
+    const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
+
+
         var script = document.createElement('script');
     script.src = baseUrl + 'jwt/resources/assets/external/requirejs/require.js';
     script.type = 'text/javascript';
@@ -40,7 +43,7 @@ async function mainOP() {
     console.log('config: ');
     console.log(config);
 
-    const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
+    //const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
     console.log('baseUrl: '+baseUrl);
 
