@@ -63,7 +63,7 @@ async function loadScript(url) {
 async function main() {
     const authHeader = `Bearer ${qlik_token}`;
 
-    return await fetch(`${host}/login/jwt-session`, {
+    const response = await fetch(`${host}/login/jwt-session`, {
         credentials: 'include',
         mode: 'cors',
         method: 'POST',
