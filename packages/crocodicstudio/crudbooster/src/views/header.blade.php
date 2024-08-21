@@ -114,34 +114,3 @@
 </header>
 
 
-<!-- Chat -->
-<script>
-
-var isChatOpen = false;
-
-document.getElementById('toggle-chat').addEventListener('click', function() {
-    event.preventDefault();
-
-    if (isChatOpen) {
-        document.getElementById('list_assistance').style.display = 'none';
-        isChatOpen = false;
-    } else {
-        document.getElementById('list_assistance').style.display = 'block';
-        isChatOpen = true;
-    }
-});
-
-document.addEventListener('click', function(event) {
-    var chatMenu = document.getElementById('list_assistance');
-    var chatIcon = document.getElementById('toggle-chat');
-
-    if (isChatOpen && !chatMenu.contains(event.target) && !chatIcon.contains(event.target)) {
-        chatMenu.style.display = 'none';
-        isChatOpen = false;
-    }
-
-});
-
-
-
-</script>
