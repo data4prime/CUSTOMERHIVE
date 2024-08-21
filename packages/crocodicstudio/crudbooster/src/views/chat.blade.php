@@ -315,8 +315,8 @@ button, input, optgroup, select, textarea {
 <div class="col-md-6">
             <div class="card card-bordered">
               <div class="card-header">
-                <h4 class="card-title"><strong>Chat</strong></h4>
-                <a class="btn btn-xs btn-secondary" href="#" data-abc="true">Let's Chat App</a>
+                <h4 class="card-title"><strong>AI Assistance</strong></h4>
+                <!--<a class="btn btn-xs btn-secondary" href="#" data-abc="true">Let's Chat App</a>-->
               </div>
 
 
