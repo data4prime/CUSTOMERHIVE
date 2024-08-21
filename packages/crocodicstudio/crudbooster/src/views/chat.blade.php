@@ -396,7 +396,7 @@ button, input, optgroup, select, textarea {
               <div class="publisher bt-1 border-light">
                 <img class="avatar avatar-xs" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
                 <input class="publisher-input" type="text" placeholder="Write something">
-                <button class="publisher-btn text-info" href="#" data-abc="true"><i class="fa fa-paper-plane"></i></button>
+                <button class="publisher-btn text-info"  type="button"><i class="fa fa-paper-plane"></i></button>
               </div>
 
              </div>
@@ -416,6 +416,7 @@ $('.publisher-btn').click(function(){
         var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>'+message+'</p><p class="meta"><time datetime="2018">00:12</time></p></div></div>';
         $('#chat-content').append(html);
         $('.publisher-input').val('');
+
     }
 });
 
