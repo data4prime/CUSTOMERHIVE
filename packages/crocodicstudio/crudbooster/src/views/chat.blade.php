@@ -337,7 +337,7 @@ button, input, optgroup, select, textarea {
 
               <div class="publisher bt-1 border-light">
                 <img class="avatar avatar-xs" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
-                <input class="publisher-input" type="text" placeholder="Write something">
+                <input class="publisher-input" type="text" placeholder="Scrivi qui">
                 <button id="send-btn" class="publisher-btn text-info"  type="button"><i class="fa fa-paper-plane"></i></button>
               </div>
 
