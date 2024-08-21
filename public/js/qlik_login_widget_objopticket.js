@@ -77,7 +77,7 @@ async function mainOP() {
     console.log(data);
     */
 
-    await loadScript(`${host}/${prefix}/${src_js}`);
+    await loadScript(`${host}/${src_js}`);
 
     var host_q = '';
     if (host.includes("https://") || host.includes("http://")) {
