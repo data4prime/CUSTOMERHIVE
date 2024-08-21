@@ -307,10 +307,11 @@ button, input, optgroup, select, textarea {
 }
 
 </style>
-
+<!--
 <div class="page-content page-container" id="page-content">
     <div class="padding">
         <div class="row container d-flex justify-content-center">
+-->
 <div class="col-md-6">
             <div class="card card-bordered">
               <div class="card-header">
@@ -404,8 +405,10 @@ button, input, optgroup, select, textarea {
 
              </div>
           </div>
+<!--
           </div>
           </div>
           </div>
+-->
 
 
