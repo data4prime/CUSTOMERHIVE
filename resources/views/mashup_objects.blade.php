@@ -47,6 +47,8 @@ if ($conf->type == 'On-Premise' && $conf->auth == 'Ticket') {
 
 $js_defer = $conf->type == "On-Premise" ? "js/qlik_login_widget_objop" : "js/qlik_login_widget_obj";
 
+$js_defer = ($conf->auth == "Ticket" && $conf->type == "On-Premise") ? "js/qlik_login_widget_objopticket" : $js_defer;
+
 $param = $conf->type == 'On-Premise' ? "?qlikTicket=$token" : "";
 
 @endphp 

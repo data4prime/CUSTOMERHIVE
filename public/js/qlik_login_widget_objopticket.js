@@ -61,7 +61,7 @@ async function loadScript(url) {
 }
 
 async function mainOP() {
-    const authHeader = `Bearer ${qlik_token}`;
+    /*const authHeader = `Bearer ${qlik_token}`;
 
     const response = await fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
         credentials: 'include',
@@ -75,6 +75,7 @@ async function mainOP() {
 
     const data = await response.json();
     console.log(data);
+    */
 
     await loadScript(`${host}/${prefix}/${src_js}`);
 
