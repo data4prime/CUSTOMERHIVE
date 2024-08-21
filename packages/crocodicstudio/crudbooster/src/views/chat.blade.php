@@ -412,6 +412,7 @@ button, input, optgroup, select, textarea {
 
 $('.publisher-btn').click(function(){
     var message = $('.publisher-input').val();
+    console.log(message);
     if(message != ''){
         var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>'+message+'</p><p class="meta"><time datetime="2018">00:12</time></p></div></div>';
         $('#chat-content').append(html);
