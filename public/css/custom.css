@@ -69,7 +69,7 @@ h1 .qlik_logo{
 .navbar-nav > .assistance-menu > .dropdown-menu,
 .navbar-nav > .messages-menu > .dropdown-menu,
 .navbar-nav > .tasks-menu > .dropdown-menu {
-  width: 280px;
+  width: 600px;
   padding: 0 0 0 0;
   margin: 0;
   top: 100%;
@@ -129,7 +129,7 @@ h1 .qlik_logo{
 .navbar-nav > .assistance-menu > .dropdown-menu > li .menu,
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu,
 .navbar-nav > .tasks-menu > .dropdown-menu > li .menu {
-  max-height: 200px;
+  /*max-height: 200px;*/
   margin: 0;
   padding: 0;
   list-style: none;
