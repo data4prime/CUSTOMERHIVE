@@ -14,7 +14,7 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
 
-                <li class="dropdown assistance-menu">
+                <li class="assistance-menu">
                     <a href="#" class="dropdown-toggle" id="toggle-chat" title='AI Assistance' aria-expanded="false">
                         <i id='icon_assistance' class="fa fa-comments-o">
                         </i>
