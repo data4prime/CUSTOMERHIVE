@@ -15,7 +15,7 @@
             <ul class="nav navbar-nav">
 
                 <li class="dropdown assistance-menu">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" title='AI Assistance' aria-expanded="false">
+                    <a href="#" class="dropdown-toggle" id="toggle-chat" title='AI Assistance' aria-expanded="false">
                         <i id='icon_assistance' class="fa fa-comments-o">
                         </i>
                         <span id='assistance_count' class="label label-danger" style="display:none">0</span>
@@ -112,3 +112,36 @@
         </div>
     </nav>
 </header>
+
+
+<!-- Chat -->
+<script>
+
+var isChatOpen = false;
+
+document.getElementById('toggle-chat').addEventListener('click', function() {
+    event.preventDefault();
+
+    if (isChatOpen) {
+        document.getElementById('list_assistance').style.display = 'none';
+        isChatOpen = false;
+    } else {
+        document.getElementById('list_assistance').style.display = 'block';
+        isChatOpen = true;
+    }
+});
+
+document.addEventListener('click', function(event) {
+    var chatMenu = document.getElementById('list_assistance');
+    var chatIcon = document.getElementById('toggle-chat');
+
+    if (isChatOpen && !chatMenu.contains(event.target) && !chatIcon.contains(event.target)) {
+        chatMenu.style.display = 'none';
+        isChatOpen = false;
+    }
+
+});
+
+
+
+</script>
