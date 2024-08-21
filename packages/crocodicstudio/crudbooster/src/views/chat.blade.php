@@ -390,17 +390,13 @@ button, input, optgroup, select, textarea {
                   </div>
                 </div>
 
-              <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div></div></div>
+              <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
+                <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div></div></div>
 
               <div class="publisher bt-1 border-light">
                 <img class="avatar avatar-xs" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
                 <input class="publisher-input" type="text" placeholder="Write something">
-                <!--<span class="publisher-btn file-group">
-                  <i class="fa fa-paperclip file-browser"></i>
-                  <input type="file">
-                </span>
-                <a class="publisher-btn" href="#" data-abc="true"><i class="fa fa-smile"></i></a>-->
-                <a class="publisher-btn text-info" href="#" data-abc="true"><i class="fa fa-paper-plane"></i></a>
+                <button class="publisher-btn text-info" href="#" data-abc="true"><i class="fa fa-paper-plane"></i></button>
               </div>
 
              </div>
@@ -409,6 +405,23 @@ button, input, optgroup, select, textarea {
           </div>
           </div>
           </div>
+
+<script>
+
+//on click of send button
+
+$('.publisher-btn').click(function(){
+    var message = $('.publisher-input').val();
+    if(message != ''){
+        var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>'+message+'</p><p class="meta"><time datetime="2018">00:12</time></p></div></div>';
+        $('#chat-content').append(html);
+        $('.publisher-input').val('');
+    }
+});
+
+
+
+</script>
 
 
 
