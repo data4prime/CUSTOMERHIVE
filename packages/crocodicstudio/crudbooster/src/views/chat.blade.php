@@ -421,6 +421,14 @@ document.getElementById('send-btn').addEventListener('click', function() {
         document.querySelector('.publisher-input').value = '';
 
     }
+
+    //scroll to bottom chat
+    var objDiv = document.getElementById("chat-content");
+    objDiv.scrollTop = objDiv.scrollHeight;
+
+
+    
+
 });
 
 
