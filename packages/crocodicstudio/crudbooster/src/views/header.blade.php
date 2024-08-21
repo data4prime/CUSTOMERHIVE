@@ -14,14 +14,14 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
 
-                <li class="dropdown assistance-menu">
+                <li class="dropdown notifications-menu">
 
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" title='AI Assistance' aria-expanded="false">
-                        <i id='icon_assistance' class="fa fa-comments-o">
+                        <i id='icon_notifications' class="fa fa-comments-o">
                         </i>
                         <span id='notification_count' class="label label-danger" style="display:none">0</span>
                     </a>
-                    <ul id='list_assistance' class="dropdown-menu">
+                    <ul id='list_notifications' class="dropdown-menu">
                         <li class="header"></li>
                         <li>
                             <!-- inner menu: contains the actual data -->
