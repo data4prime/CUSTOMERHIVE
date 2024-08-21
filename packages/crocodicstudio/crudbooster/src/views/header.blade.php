@@ -17,7 +17,7 @@
                 <li class="dropdown notifications-menu">
 
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" title='Notifications' aria-expanded="false">
-                        <i id='icon_notification' class="fa fa-comment-o">
+                        <i id='icon_notification' class="fa fa-comments-o">
                         </i>
                         <span id='notification_count' class="label label-danger" style="display:none">0</span>
                     </a>
