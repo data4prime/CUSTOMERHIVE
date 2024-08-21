@@ -312,7 +312,7 @@ button, input, optgroup, select, textarea {
     <div>
         <div class="row container d-flex justify-content-center">
 
-<div class="col-md-6">
+<div class="col-md-6" style="padding-left: 0px;padding-right: 0px;">
             <div class="card card-bordered">
               <div class="card-header">
                 <h4 class="card-title"><strong>AI Assistance</strong></h4>
