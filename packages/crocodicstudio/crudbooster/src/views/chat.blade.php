@@ -327,7 +327,7 @@ button, input, optgroup, select, textarea {
                     <p>Ciao</p>
                     <p>Sono il tuo assistente AI</p>
                     <p>Come posso aiutarti?</p>
-                    <p class="meta"><time datetime="2018">23:58</time></p>
+                    <!--<p class="meta"><time datetime="2018">23:58</time></p>-->
                   </div>
                 </div>
 
@@ -358,7 +358,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
     var message = document.querySelector('.publisher-input').value;
     console.log(message);
     if(message != ''){
-        var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>'+message+'</p><p class="meta"><time datetime="2018">00:12</time></p></div></div>';
+        var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>'+message+'</p></div></div>';
         document.getElementById('chat-content').innerHTML += html;
         document.querySelector('.publisher-input').value = '';
 
@@ -373,7 +373,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
     //simulazione risposta
 
     setTimeout(function(){
-        var html = '<div class="media media-chat"><img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="..."><div class="media-body"><p>Risposta alla tua domanda </p><p class="meta"><time datetime="2018">00:10</time></p></div></div>';
+        var html = '<div class="media media-chat"><img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="..."><div class="media-body"><p>Risposta alla tua domanda </p></div></div>';
         document.getElementById('chat-content').innerHTML += html;
 
         //scroll to bottom chat
