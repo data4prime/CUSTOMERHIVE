@@ -411,6 +411,10 @@ button, input, optgroup, select, textarea {
 //on click of send button
 
 $('.publisher-btn').click(function(){
+
+    console.log('clicked');
+
+
     var message = $('.publisher-input').val();
     console.log(message);
     if(message != ''){
