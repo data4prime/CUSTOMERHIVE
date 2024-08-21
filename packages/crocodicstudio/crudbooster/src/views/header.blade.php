@@ -22,7 +22,7 @@
                         <span id='notification_count' class="label label-danger" style="display:none">0</span>
                     </a>
                     <ul id='list_notifications' class="dropdown-menu">
-                        <li class="header">{{trans("crudbooster.text_no_notification")}}</li>
+                        <li class="header"></li>
                         <li>
                             <!-- inner menu: contains the actual data -->
                             <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;">
