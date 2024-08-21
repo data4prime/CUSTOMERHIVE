@@ -25,7 +25,7 @@
                         <li class="header"></li>
                         <li>
                             <!-- inner menu: contains the actual data -->
-                            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;">
+                            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto;">
 
                                 <!--include contengte from chat.blade.php file-->
                                 @include('crudbooster::chat')
