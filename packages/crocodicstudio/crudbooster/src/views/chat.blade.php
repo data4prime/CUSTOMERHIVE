@@ -395,11 +395,11 @@ button, input, optgroup, select, textarea {
               <div class="publisher bt-1 border-light">
                 <img class="avatar avatar-xs" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
                 <input class="publisher-input" type="text" placeholder="Write something">
-                <span class="publisher-btn file-group">
+                <!--<span class="publisher-btn file-group">
                   <i class="fa fa-paperclip file-browser"></i>
                   <input type="file">
                 </span>
-                <a class="publisher-btn" href="#" data-abc="true"><i class="fa fa-smile"></i></a>
+                <a class="publisher-btn" href="#" data-abc="true"><i class="fa fa-smile"></i></a>-->
                 <a class="publisher-btn text-info" href="#" data-abc="true"><i class="fa fa-paper-plane"></i></a>
               </div>
 
