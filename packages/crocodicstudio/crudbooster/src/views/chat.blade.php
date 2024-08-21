@@ -324,71 +324,13 @@ button, input, optgroup, select, textarea {
                 <div class="media media-chat">
                   <img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
                   <div class="media-body">
-                    <p>Hi</p>
-                    <p>How are you ...???</p>
-                    <p>What are you doing tomorrow?<br> Can we come up a bar?</p>
+                    <p>Ciao</p>
+                    <p>Sono il tuo assistente AI</p>
+                    <p>Come posso aiutarti?</p>
                     <p class="meta"><time datetime="2018">23:58</time></p>
                   </div>
                 </div>
 
-                <div class="media media-meta-day">Today</div>
-
-                <div class="media media-chat media-chat-reverse">
-                  <div class="media-body">
-                    <p>Hiii, I'm good.</p>
-                    <p>How are you doing?</p>
-                    <p>Long time no see! Tomorrow office. will be free on sunday.</p>
-                    <p class="meta"><time datetime="2018">00:06</time></p>
-                  </div>
-                </div>
-
-                <div class="media media-chat">
-                  <img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
-                  <div class="media-body">
-                    <p>Okay</p>
-                    <p>We will go on sunday? </p>
-                    <p class="meta"><time datetime="2018">00:07</time></p>
-                  </div>
-                </div>
-
-                <div class="media media-chat media-chat-reverse">
-                  <div class="media-body">
-                    <p>That's awesome!</p>
-                    <p>I will meet you Sandon Square sharp at 10 AM</p>
-                    <p>Is that okay?</p>
-                    <p class="meta"><time datetime="2018">00:09</time></p>
-                  </div>
-                </div>
-
-                <div class="media media-chat">
-                  <img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
-                  <div class="media-body">
-                    <p>Okay i will meet you on Sandon Square </p>
-                    <p class="meta"><time datetime="2018">00:10</time></p>
-                  </div>
-                </div>
-
-                <div class="media media-chat media-chat-reverse">
-                  <div class="media-body">
-                    <p>Do you have pictures of Matley Marriage?</p>
-                    <p class="meta"><time datetime="2018">00:10</time></p>
-                  </div>
-                </div>
-
-                <div class="media media-chat">
-                  <img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
-                  <div class="media-body">
-                    <p>Sorry I don't have. i changed my phone.</p>
-                    <p class="meta"><time datetime="2018">00:12</time></p>
-                  </div>
-                </div>
-
-                <div class="media media-chat media-chat-reverse">
-                  <div class="media-body">
-                    <p>Okay then see you on sunday!!</p>
-                    <p class="meta"><time datetime="2018">00:12</time></p>
-                  </div>
-                </div>
 
               <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
                 <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div></div></div>
@@ -431,9 +373,15 @@ document.getElementById('send-btn').addEventListener('click', function() {
     //simulazione risposta
 
     setTimeout(function(){
-        var html = '<div class="media media-chat"><img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="..."><div class="media-body"><p>Okay i will meet you on Sandon Square </p><p class="meta"><time datetime="2018">00:10</time></p></div></div>';
+        var html = '<div class="media media-chat"><img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="..."><div class="media-body"><p>Risposta alla tua domanda </p><p class="meta"><time datetime="2018">00:10</time></p></div></div>';
         document.getElementById('chat-content').innerHTML += html;
-        
+
+        //scroll to bottom chat
+        var objDiv = document.getElementById("chat-content");
+        objDiv.scrollTop = objDiv.scrollHeight;
+
+    }, 1000);
+
 
 
 
