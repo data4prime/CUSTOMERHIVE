@@ -310,7 +310,7 @@ button, input, optgroup, select, textarea {
 
 <div class="page-content page-container" id="page-content">
     <div>
-        <div class="row container d-flex justify-content-center">
+        <div class="row  d-flex justify-content-center">
 
 <div class="col-md-6" style="padding-left: 0px;padding-right: 0px;">
             <div class="card card-bordered">
