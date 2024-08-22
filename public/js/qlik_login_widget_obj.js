@@ -39,7 +39,8 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
 		sheetDiv.className = 'masterobject-option';
 		sheetDiv.value = sheetId;
 		sheetDiv.innerHTML = name+' ('+sheetId+')';
-        document.getElementById(appId).appendChild(sheetDiv);
+        //document.getElementById(appId).appendChild(sheetDiv);
+        parent.document.getElementById('mashup_object').
 
         app.visualization.get(value.qInfo.qId).then(function(vis){
 		    vis.show(value.qInfo.qId);
