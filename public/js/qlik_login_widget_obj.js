@@ -115,7 +115,7 @@ async function main() {
 
     var config = {
         host: host_q, 
-        prefix: `/`, 
+        prefix: `/jwt`, 
         port: 443, 
         isSecure: true, 
         webIntegrationId: webIntegrationId
