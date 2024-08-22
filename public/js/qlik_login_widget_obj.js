@@ -159,7 +159,7 @@ async function main() {
         var title = document.getElementById('title');
         title.innerHTML = "";
 
-        if (!parent.document.getElementById('mashup_object')) {
+        if (parent.document.getElementById('mashup_object')) {
             var mashup_object = parent.document.getElementById('mashup_object');
             mashup_object.removeAttribute('disabled');
         }
