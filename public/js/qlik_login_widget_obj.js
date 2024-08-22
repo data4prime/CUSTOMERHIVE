@@ -50,6 +50,20 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
 
 }
 
+async function checkLoggedIn() {
+    //console.log("JWTTOKEN");
+    //console.log(JWTTOKEN);
+    return await fetch(`${host}/api/v1/users/me`, {
+        //redirect: 'follow'
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+            'Authorization': `Bearer ${qlik_token}`,
+            'qlik-web-integration-id': webIntegrationId
+        },
+    })
+}
+
 async function loadScript(url) {
     return new Promise((resolve, reject) => {
         var script = document.createElement('script');
@@ -63,6 +77,14 @@ async function loadScript(url) {
 }
 
 async function main() {
+
+    const check = await checkLoggedIn();
+    console.log('check: ');
+    console.log(check);
+
+
+
+
     const authHeader = `Bearer ${qlik_token}`;
 
     const response = await fetch(`${host}/login/jwt-session`, {
