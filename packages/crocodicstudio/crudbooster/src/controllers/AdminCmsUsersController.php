@@ -39,10 +39,6 @@ class AdminCmsUsersController extends CBController
 		$this->col[] = array("label" => "Email", "name" => "email");
 		$this->col[] = array("label" => "Privilege", "name" => "id_cms_privileges", "join" => "cms_privileges,name");
 		$this->col[] = array("label" => "User directory", "name" => "user_directory");
-		//$this->col[] = array("label" => "Qlik login", "name" => "qlik_login");
-		//$this->col[] = array("label" => "User directory", "name" => "user_directory");
-		//$this->col[] = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik");
-
 
 
 		$this->col[] = array("label" => "Data scadenza", "name" => "data_scadenza");
@@ -154,16 +150,6 @@ class AdminCmsUsersController extends CBController
 			];
 		}
 
-/*
-
-		if (CRUDBooster::getSetting('type') == 'On-Premise') {
-			$this->form[] = array("label" => "User directory", "name" => "user_directory", 'required' => false, 'validation' => 'min:3');
-			$this->form[] = array("label" => "Qlik login", "name" => "qlik_login", 'required' => false, 'validation' => 'min:3');
-		} else {
-			$this->form[] = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik", 'required' => false, 'validation' => 'min:3');
-		}
-*/
-
 		$this->form[] = array(
 			"label" => "Data scadenza", 
 			"type" => "date", 
@@ -188,45 +174,45 @@ class AdminCmsUsersController extends CBController
 		$this->form[] = array("label" => "Password", "name" => "password", "type" => "password", "help" => "Leave empty if no change is needed");
 		$this->form[] = array("label" => "Password Confirmation", "name" => "password_confirmation", "type" => "password", "help" => "Leave empty if no change is needed");
 
-if (!CRUDBooster::isAddPage() && !CRUDBooster::isProfilePage() ) {
-//QLIK USERS START
-		$columns[] = ['label'=>'Qlik Conf','name'=>'qlik_conf_id','type'=>'datamodal','datamodal_table'=>'qlik_confs','datamodal_columns'=>'confname,type','datamodal_select_to'=>'confname:confname,type:type','datamodal_where'=>'','datamodal_size'=>'large'];
-		$columns[] = array("label" => "Qlik login", "name" => "qlik_login", 'type'=>'text', 'help' => 'Compilare a mano se la configurazione scelta è di tipo On-Premise');
-		$columns[] = array("label" => "User directory", "name" => "user_directory", 'type'=>'text', 'help' => 'Compilare a mano se la configurazione scelta è di tipo On-Premise');
-		$columns[] = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik", 'type'=>'text', 'help' => 'Se la configurazione scelta è di tipo SAAS, il campo verrà valorizzato dopo aver salvato l\'utenza se lasciato vuoto. Se si vuole ottenere un IDP diverso, cancellare il valore attuale e salvare l\'utenza, il sistema creerà un nuovo IDP in automatico.');
+		if (!CRUDBooster::isAddPage() && !CRUDBooster::isProfilePage() ) {
+		//QLIK USERS START
+				$columns[] = ['label'=>'Qlik Conf','name'=>'qlik_conf_id','type'=>'datamodal','datamodal_table'=>'qlik_confs','datamodal_columns'=>'confname,type','datamodal_select_to'=>'confname:confname,type:type','datamodal_where'=>'','datamodal_size'=>'large'];
+				$columns[] = array("label" => "Qlik login", "name" => "qlik_login", 'type'=>'text', 'help' => 'Compilare a mano se la configurazione scelta è di tipo On-Premise');
+				$columns[] = array("label" => "User directory", "name" => "user_directory", 'type'=>'text', 'help' => 'Compilare a mano se la configurazione scelta è di tipo On-Premise');
+				$columns[] = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik", 'type'=>'text', 'help' => 'Se la configurazione scelta è di tipo SAAS, il campo verrà valorizzato dopo aver salvato l\'utenza se lasciato vuoto. Se si vuole ottenere un IDP diverso, cancellare il valore attuale e salvare l\'utenza, il sistema creerà un nuovo IDP in automatico.');
 
-		
-			$this->form[] = ['label'=>'Utenze Qlik','name'=>'qlik_users','type'=>'child','columns'=>$columns, 'required' => true,'table'=>'qlik_users','foreign_key'=>'user_id'];
+				
+					$this->form[] = ['label'=>'Utenze Qlik','name'=>'qlik_users','type'=>'child','columns'=>$columns, 'required' => true,'table'=>'qlik_users','foreign_key'=>'user_id'];
 
-//QLIK USERS END
-}
-		
+		//QLIK USERS END
+		}
+				
 
 # END FORM DO NOT REMOVE THIS LINE
 		$user_id = CRUDBooster::myId();
 		$this->script_js = "
-/*
-var row = document.getElementById('idp_qlik').parentNode;
-row.className = ' col-sm-5';
+			/*
+			var row = document.getElementById('idp_qlik').parentNode;
+			row.className = ' col-sm-5';
 
 
-var newColumn = document.createElement('div');
-newColumn.className = 'col-sm-5';
+			var newColumn = document.createElement('div');
+			newColumn.className = 'col-sm-5';
 
 
-var newButton = document.createElement('a');
-newButton.innerHTML = 'Create Qlik user';
-newButton.className='btn btn-info';
-newButton.href = '/admin/qlik/user/creare/{$user_id}';
+			var newButton = document.createElement('a');
+			newButton.innerHTML = 'Create Qlik user';
+			newButton.className='btn btn-info';
+			newButton.href = '/admin/qlik/user/creare/{$user_id}';
 
 
-newColumn.appendChild(newButton);
+			newColumn.appendChild(newButton);
 
 
-row.parentNode.insertBefore(newColumn, row.nextSibling);
+			row.parentNode.insertBefore(newColumn, row.nextSibling);
 
-*/
-";
+			*/
+			";
 
 		$this->addaction = array();
 		//TODO tenantadmin can't update users with superadmin or tenantadmin privilege
@@ -235,11 +221,8 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 
 	public function create_qlik_user($id)
 	{
-		//dd(redirect()->back());
 		$ret = QlikHelper::createUser($id);
-		//dd(url()->previous());
 		CRUDBooster::redirect(url()->previous(),  trans($ret['mex']), $ret['style']);
-		//return url()->previous();
 	}
 
 	public function getProfile()
@@ -285,7 +268,6 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 	}
 
 	public static function prepare_qlik_users() {
-		//dd(Request::all());
 		if (isset(Request::all()['utenzeqlik-qlik_conf_id'])) {
 			$qlik_conf_ids = Request::all()['utenzeqlik-qlik_conf_id'];
 			$qlik_logins = Request::all()['utenzeqlik-qlik_login'];
@@ -293,7 +275,6 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 			$qlik_idp_qlik = Request::all()['utenzeqlik-idp_qlik'];
 
 			$id_user = DB::table('cms_users')->select('id')->where('email',Request::all()['email'] )->first()->id;
-			//$updated_idp_qlik = $qlik_idp_qlik;
 			$updated_idp_qlik = [];
 
 			foreach($qlik_conf_ids as $k => $v) {
@@ -306,8 +287,7 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 						}
 						
 						$updated_idp_qlik[$k] = $idp;
-						//Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
-						//Request::all()['utenzeqlik-idp_qlik'][$k] = $idp;
+
 						Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
 					}
 				}
@@ -328,7 +308,6 @@ row.parentNode.insertBefore(newColumn, row.nextSibling);
 	public function hook_before_add(&$postdata)
 	{
 		unset($postdata['password_confirmation']);
-		//dd(Request::all());
 		AdminCmsUsersController::prepare_qlik_users();
 	}
 

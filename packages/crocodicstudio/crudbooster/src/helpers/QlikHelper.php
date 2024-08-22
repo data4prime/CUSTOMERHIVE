@@ -197,13 +197,15 @@ class QlikHelper
       'x-qlik-xrfkey: ' . $xrfkey,
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
-
+    //DEBUG Qlik Ticket
+/*
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSurl . '/'.$endpoint."\n", FILE_APPEND);
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', json_encode($headers)."\n", FILE_APPEND);
 
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertfile."\n", FILE_APPEND);
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertkeyfile."\n", FILE_APPEND);
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertkeyfilePassword."\n", FILE_APPEND);
+*/
 
     $ch = curl_init($QRSurl . '/'.$endpoint);
 
@@ -226,8 +228,8 @@ class QlikHelper
 
     //Execute and get response
     $raw_response = curl_exec($ch);
-
-    file_put_contents(__DIR__ . '/qlik_ticket2.txt', $raw_response."\n", FILE_APPEND);
+    //DEBUG Qlik Ticket
+    //file_put_contents(__DIR__ . '/qlik_ticket2.txt', $raw_response."\n", FILE_APPEND);
 
     if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
@@ -251,15 +253,12 @@ class QlikHelper
 
     $conf_id = DB::table('qlik_items')->where('id',$qlik_item_id )->first();//->qlik_conf;
 
-
     if (!$conf_id) {
       $qlik_conf = DB::table('qlik_confs')->where('id', $qlik_item_id)->first();
     } else {
       $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id->qlik_conf)->first();
     }
     
-
-
     $qlik_user = DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->first();
     if (!$qlik_user) {
       $data['error'] = 'User not found!';
@@ -276,36 +275,22 @@ class QlikHelper
       exit;
     }
 
-
     $QRSurl = $qlik_conf->qrsurl .':'.$qlik_conf->port;
 
     $xrfkey = '0123456789abcdef';
     $endpoint = $qlik_conf->endpoint . "/ticket?xrfkey=" . $xrfkey;
 
-
     $QRSCertfile =$qlik_conf->QRSCertfile;
-
 
     $QRSCertkeyfile = $qlik_conf->QRSCertkeyfile;
 
     $QRSCertkeyfilePassword =$qlik_conf->QRSCertkeyfilePassword;
 
-    //get host with protocol
     $host = $_SERVER['HTTP_HOST'];
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
 
-
-
     $QRSCertfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertfile);
     $QRSCertkeyfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertkeyfile);
-    //file_put_contents(__DIR__.'/qlik_ticket.txt', $QRSCertfile."\n", FILE_APPEND);
-
-
-  
-    // $QRSCertfile = '/var/www/dae.thecustomerhive.com/public/storage/uploads/1/2024-07/client.pem';
-    //$QRSCertkeyfile = 'h/var/www/dae.thecustomerhive.com/public/storage/uploads/1/2024-07/client_key.pem';
-
-    //file_put_contents(__DIR__ . '/qrscertfile.txt', file_get_contents($QRSCertfile)."\n", FILE_APPEND);
 
     $headers = array(
       'Accept: application/json',
@@ -347,12 +332,11 @@ class QlikHelper
 
   public static function dataForTicketConf($conf_id) 
   {
-        //get user data
+    //get user data
     $current_user_id = CRUDBooster::myId();
     $current_user = \App\User::find($current_user_id);
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
-
 
     $qlik_user = DB::table('qlik_users')->where('user_id', $current_user_id)->where('qlik_conf_id', $qlik_conf->id)->first();
     if (!$qlik_user) {
@@ -370,7 +354,6 @@ class QlikHelper
       exit;
     }
 
-
     $QRSurl = $qlik_conf->qrsurl .':'.$qlik_conf->port;
 
     $xrfkey = '0123456789abcdef';
@@ -386,8 +369,6 @@ class QlikHelper
     //get host with protocol
     $host = $_SERVER['HTTP_HOST'];
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
-
-
 
     $QRSCertfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertfile);
     $QRSCertkeyfile = str_replace($protocol.'://'.$host, env('APP_PATH').'/public', $QRSCertkeyfile);
@@ -418,33 +399,6 @@ class QlikHelper
 
     return $ret;
 
-    /*$ch = curl_init($QRSurl . '/'.$endpoint);
-
-    curl_setopt($ch, CURLOPT_VERBOSE, true);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, '{
-      "UserId":"' . $qlik_login . '",
-      "UserDirectory":"' . $user_directory . '"
-    }');
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSLCERT, $QRSCertfile);
-    curl_setopt($ch, CURLOPT_SSLKEY, $QRSCertkeyfile);
-    if (!empty($QRSCertkeyfilePassword)) {
-      curl_setopt($ch, CURLOPT_KEYPASSWD, $QRSCertkeyfilePassword);
-    }
-    
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
-    $raw_response = curl_exec($ch);
-
-    if (curl_errno($ch)) {
-      $error_msg = curl_error($ch);
-    }
-    $response = json_decode($raw_response);
-    return isset($response->Ticket) ? $response->Ticket : '';
-*/
   }
 
   public static function getJWTTokenOP($id, $conf_id)
@@ -456,21 +410,15 @@ class QlikHelper
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
-    //$issuedAt = Carbon::now();
-    //$issuedA2 = Carbon::now();
-
     $expire = $issuedA2->addMinutes(60)->timestamp;
 
-    
     $QRSCertkeyfile = $qlik_conf->QRSCertkeyfile;
 
     $QRSCertkeyfilePassword =$qlik_conf->QRSCertkeyfilePassword;
 
-    //$privateKey =$qlik_conf->privateKey;
     $privateKey = file_get_contents($privateKey);
 
     $keyid = $qlik_conf->keyid;
-
 
     $qlik_user = DB::table('qlik_users')->where('user_id', $id)->where('qlik_conf_id', $conf_id)->first();
     if (!$qlik_user) {
@@ -488,12 +436,7 @@ class QlikHelper
 
     ];
 
-/*
-{
-"userId":"marco.zampieri",
-"userDirectory":"CHIVE"
-}
-*/
+
     // Payload data
     $payload = [
 
@@ -520,7 +463,6 @@ class QlikHelper
 
     $privateKey = $qlik_conf->private_key;
 
-    //$privateKey =$qlik_conf->privateKey;
     $privateKey = file_get_contents($privateKey);
 
     $keyid = $qlik_conf->keyid;

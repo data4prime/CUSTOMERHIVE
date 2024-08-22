@@ -60,7 +60,7 @@ class StatisticBuilderController extends CBController
         ];
 
         $this->addaction = [];
-$this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('builder') . '/[id]', 'icon' => 'fa fa-wrench'];
+        $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('builder') . '/[id]', 'icon' => 'fa fa-wrench'];
 
 
     }
@@ -100,17 +100,11 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         $layout = DB::table('dashboard_layouts')->where('id', $layout)->first();
 
-        //dd($layout);
-
         if ($layout) {
             $code_layout = html_entity_decode($layout->code_layout);
         } else {
             $code_layout = '';
         }
-
-
-
-
 
         return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout', 'code_layout'));
     }
@@ -137,10 +131,8 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         $page_title = 'Statistic Builder';
 
-        
         $layout = CRUDBooster::first($this->table, ['id' => $id_cms_statistics])->layout;
         $layout = DB::table('dashboard_layouts')->where('id', $layout)->first();//->code_layout;
-        //dd($layout);
 
         if ($layout) {
             $code_layout = html_entity_decode($layout->code_layout);
@@ -163,8 +155,6 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
     {
 
         $component = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
-
-
 
         $command = 'layout';
         $config = json_decode($component->config);
@@ -262,10 +252,6 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
 
         }
 
-        /*if ($errors) {
-            return view('crudbooster::statistic_builder.components.error', compact('errors'));
-        }*/
-
         if (isset($config->mashups)) {
             $conf = QlikMashupController::getConf($config->mashups);
         } else {
@@ -288,10 +274,6 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
             $conf = null;
             $token = null;
         }
-
-        /*if ($errors) {
-            return view('crudbooster::statistic_builder.components.error', compact('errors'));
-        }*/
 
         return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf', 'mashup', 'token', 'errors'));
     }
@@ -348,8 +330,6 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
                 return view('mashup', compact('componentID', 'mashup', 'qlik_conf', 'mashups'));
             }
 
-
-
     }
 
     public function mashup_objects($mashup, $componentID, $objectid) {
@@ -388,8 +368,6 @@ $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('buil
         }
 
     }
-
-
 
 
 }

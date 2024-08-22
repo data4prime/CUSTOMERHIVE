@@ -1,47 +1,23 @@
 
-//    CONFIGURATION
-
-/*
-const TENANT = '<?php echo $tenant ?>';
-console.log(TENANT);
-const WEBINTEGRATIONID = '{{ $web_int_id }}';
-const APPID = '##APP##';
-const JWTTOKEN = "{{ $token}}";*/
-
-//    MAIN
-
 (async function main() {
 
     const isLoggedIn = await qlikLogin();
-    //console.log("print isLoggedIn");
-    //console.log(isLoggedIn);
-    //console.log("CHECK");
-    //const check = await checkLoggedIn();
 
-
-    //console.log(check.text());
-
-    //const qcsHeaders = await getQCSHeaders();
-
-    //renderSingleIframe();
 })();
 
 //    LOGIN
 
 async function qlikLogin() {
     const tokenRes = await (await getJWTToken());
-    //console.log("Login Res");
     const loginRes = await jwtLogin(tokenRes);
-    //console.log(loginRes.text());
+
 
     return true;
 }
 
 async function checkLoggedIn() {
-    //console.log("JWTTOKEN");
-    //console.log(JWTTOKEN);
+
     return await fetch(`${TENANT}/api/v1/users/me`, {
-        //redirect: 'follow'
         mode: 'cors',
         credentials: 'include',
         headers: {
@@ -61,7 +37,6 @@ async function getJWTToken() {
 async function jwtLogin(token) {
     const authHeader = `Bearer ${JWTTOKEN}`;
     console.log(authHeader);
-    //console.log(WEBINTEGRATIONID);
     return await fetch(`${TENANT}/${PREFIX}/qrs/about?xrfkey=0123456789abcdef`, {
         credentials: 'include',
         mode: 'cors',
@@ -69,7 +44,6 @@ async function jwtLogin(token) {
         headers: {
             'Authorization': authHeader,
             'X-Qlik-Xrfkey': '0123456789abcdef',
-            //'qlik-web-integration-id': WEBINTEGRATIONID
         },
     })
 }
@@ -83,10 +57,8 @@ async function getQCSHeaders() {
             'qlik-web-integration-id': WEBINTEGRATIONID
         },
     })
-    //console.log(response);
 
     const csrfToken = new Map(response.headers).get('qlik-csrf-token');
-    //console.log(csrfToken);
     return {
         'qlik-web-integration-id': WEBINTEGRATIONID,
         'qlik-csrf-token': csrfToken,

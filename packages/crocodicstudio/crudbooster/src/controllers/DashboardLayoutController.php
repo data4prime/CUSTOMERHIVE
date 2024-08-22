@@ -45,8 +45,8 @@ class DashboardLayoutController extends CBController
 		$this->form = [];
 		$this->form[] = ['label' => 'Layout Name', 'name' => 'layoutname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Layout Name'];
         //$this->form[] = ['label' => 'Code Layout', 'name' => 'code_layout', 'type' => 'textarea', 'width' => 'col-sm-10', 'placeholder' => 'Enter Code Layout'];
-$this->form[] = ['label' => 'Code Layout', 'name' => 'code_layout', 'type' => 'tinymce', 'width' => 'col-sm-10', 'placeholder' => 'Enter Code Layout'];
-//wysiwyg
+		$this->form[] = ['label' => 'Code Layout', 'name' => 'code_layout', 'type' => 'tinymce', 'width' => 'col-sm-10', 'placeholder' => 'Enter Code Layout'];
+		//wysiwyg
 
 
 
@@ -262,10 +262,7 @@ $this->form[] = ['label' => 'Code Layout', 'name' => 'code_layout', 'type' => 't
 	{
 		//Your code here
 		$postdata['code_layout'] = $this->aggiungiIdAElemTd($postdata['code_layout']);
-		//$postdata['code_layout'] = $this->aggiungiClassAElemTd($postdata['code_layout']);
-		//$postdata['code_layout'] = htmlentities($postdata['code_layout']);
-		//dd($postdata);
-		//$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
+
 	}
 
 	/*
@@ -292,13 +289,9 @@ $this->form[] = ['label' => 'Code Layout', 'name' => 'code_layout', 'type' => 't
 	    */
 	public function hook_before_edit(&$postdata, $id)
 	{
-		//dd($postdata['code_layout']);
+
 		$postdata['code_layout'] = $this->aggiungiIdAElemTd($postdata['code_layout']);
-		//$postdata['code_layout'] = $this->aggiungiClassAElemTd($postdata['code_layout']);
-		//dd($postdata);
-		//$postdata['code_layout'] = htmlentities($postdata['code_layout']);
-		//$postdata['code_layout'] = str_replace("\r\n", "", $postdata['code_layout']);
-		
+
 	}
 
 	/*
@@ -339,22 +332,22 @@ $this->form[] = ['label' => 'Code Layout', 'name' => 'code_layout', 'type' => 't
 
 	}
 
-function aggiungiIdAElemTd($html) {
-    $n = 0;
+	function aggiungiIdAElemTd($html) {
+		$n = 0;
 
-    $html = preg_replace_callback('/<td([^>]*)\s*id\s*=\s*"[^"]*"([^>]*)>/i', function($matches) {
-        return $matches[0];
-    }, $html);
+		$html = preg_replace_callback('/<td([^>]*)\s*id\s*=\s*"[^"]*"([^>]*)>/i', function($matches) {
+			return $matches[0];
+		}, $html);
 
-    $html = preg_replace_callback('/<td([^>]*)>(?:(?!id=).)*<\/td>/i', function($matches) use (&$n) {
-		//dd($matches);
-        $n++;
-        $id = 'area' . $n;
-        return '<td id="' . $id . '" class="'."connectedSortable".'"'  . '>'.'&nbsp;'.'</td>';
-    }, $html);
+		$html = preg_replace_callback('/<td([^>]*)>(?:(?!id=).)*<\/td>/i', function($matches) use (&$n) {
+			//dd($matches);
+			$n++;
+			$id = 'area' . $n;
+			return '<td id="' . $id . '" class="'."connectedSortable".'"'  . '>'.'&nbsp;'.'</td>';
+		}, $html);
 
-    return $html;
-}
+		return $html;
+	}
 
 
 

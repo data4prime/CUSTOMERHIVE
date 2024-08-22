@@ -39,16 +39,6 @@ class QlikConfController extends CBController
 		$this->col[] = ["label" => "Configuration Name", "name" => "confname"];
 		$this->col[] = ["label" => "Type", "name" => "type"];
         $this->col[] = ["label" => "Auth", "name" => "auth"];
-        //$this->col[] = ["label" => "qrsurl", "name" => "QRS Url"];
-        //$this->col[] = ["label" => "Endpoint", "name" => "endpoint"];
-        //$this->col[] = ["label" => "QRSCertfile", "name" => "QRSCertfile"];
-        //$this->col[] = ["label" => "QRSCertkeyfile", "name" => "QRSCertkeyfile"];
-        //$this->col[] = ["label" => "QRSCertkeyfilePassword", "name" => "QRSCertkeyfilePassword"];
-        //$this->col[] = ["label" => "url", "name" => "url"];
-        //$this->col[] = ["label" => "keyid", "name" => "keyid"];
-        //$this->col[] = ["label" => "issuer", "name" => "issuer"];
-        //$this->col[] = ["label" => "web_int_id", "name" => "web_int_id"];
-        //$this->col[] = ["label" => "private_key", "name" => "private_key"];
         $this->col[] = ["label" => "debug", "name" => "debug"];
 
 		# END COLUMNS DO NOT REMOVE THIS LINE
@@ -248,149 +238,149 @@ class QlikConfController extends CBController
         */
 		$this->script_js = "
 
-$(document).ready(function () {
+            $(document).ready(function () {
 
-    var type = $('[name=\"type\"]').first();
-    var type_val = type.val();
-    var on_premise = ['qrsurl', /*'endpoint',*/ 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
+                var type = $('[name=\"type\"]').first();
+                var type_val = type.val();
+                var on_premise = ['qrsurl', /*'endpoint',*/ 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
 
-    var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
-    if (type_val == 'On-Premise') {
+                var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
+                if (type_val == 'On-Premise') {
 
-        saas.forEach(element => {
+                    saas.forEach(element => {
 
-            to_hide = document.getElementsByName(element);
+                        to_hide = document.getElementsByName(element);
 
-            to_hide.forEach(hide => {
-                hide.parentNode.parentNode.style.display = 'none';
-		//hide.setAttribute('disabled', true);
+                        to_hide.forEach(hide => {
+                            hide.parentNode.parentNode.style.display = 'none';
+                    //hide.setAttribute('disabled', true);
 
-            });
-
-
-        });
-
-        on_premise.forEach(element => {
-
-            to_show = document.getElementsByName(element);
-
-            to_show.forEach(show => {
-                //
-		show.parentNode.parentNode.style.display = '';
-		//show.removeAttribute('disabled');
-
-            });
+                        });
 
 
-        });
+                    });
 
+                    on_premise.forEach(element => {
 
-    } else if (type_val == 'SAAS') {
-        on_premise.forEach(element => {
+                        to_show = document.getElementsByName(element);
 
-            to_hide = document.getElementsByName(element);
-
-            to_hide.forEach(hide => {
-                hide.parentNode.parentNode.style.display = 'none';
-		//hide.setAttribute('disabled', true);
-
-            });
-
-
-        });
-
-        saas.forEach(element => {
-
-            to_show = document.getElementsByName(element);
-
-            to_show.forEach(show => {
-                show.parentNode.parentNode.style.display = '';
-		//show.removeAttribute('disabled');
-
-            });
-
-
-        });
-
-    }
-
-    type.change(function () {
-        // Code to be executed when the value of the select changes
-        var selectedValue = $(this).val();
-        var on_premise = ['qrsurl', /*'endpoint',*/ 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
-
-        var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
-
-        //console.log(document.getElementsByName('type')[0]);
-
-        //var type = document.getElementsByName('type')[0].value;
-
-        var type = $('[name=\"type\"]').first().val();
-
-        if (type == 'On-Premise') {
-
-            saas.forEach(element => {
-
-                to_hide = document.getElementsByName(element);
-
-                to_hide.forEach(hide => {
-                    hide.parentNode.parentNode.style.display = 'none';
-		    //hide.setAttribute('disabled', true);
-
-                });
-
-
-            });
-
-            on_premise.forEach(element => {
-
-                to_show = document.getElementsByName(element);
-
-                to_show.forEach(show => {
+                        to_show.forEach(show => {
+                            //
                     show.parentNode.parentNode.style.display = '';
-		    //show.removeAttribute('disabled');
+                    //show.removeAttribute('disabled');
+
+                        });
+
+
+                    });
+
+
+                } else if (type_val == 'SAAS') {
+                    on_premise.forEach(element => {
+
+                        to_hide = document.getElementsByName(element);
+
+                        to_hide.forEach(hide => {
+                            hide.parentNode.parentNode.style.display = 'none';
+                    //hide.setAttribute('disabled', true);
+
+                        });
+
+
+                    });
+
+                    saas.forEach(element => {
+
+                        to_show = document.getElementsByName(element);
+
+                        to_show.forEach(show => {
+                            show.parentNode.parentNode.style.display = '';
+                    //show.removeAttribute('disabled');
+
+                        });
+
+
+                    });
+
+                }
+
+                type.change(function () {
+                    // Code to be executed when the value of the select changes
+                    var selectedValue = $(this).val();
+                    var on_premise = ['qrsurl', /*'endpoint',*/ 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
+
+                    var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
+
+                    //console.log(document.getElementsByName('type')[0]);
+
+                    //var type = document.getElementsByName('type')[0].value;
+
+                    var type = $('[name=\"type\"]').first().val();
+
+                    if (type == 'On-Premise') {
+
+                        saas.forEach(element => {
+
+                            to_hide = document.getElementsByName(element);
+
+                            to_hide.forEach(hide => {
+                                hide.parentNode.parentNode.style.display = 'none';
+                        //hide.setAttribute('disabled', true);
+
+                            });
+
+
+                        });
+
+                        on_premise.forEach(element => {
+
+                            to_show = document.getElementsByName(element);
+
+                            to_show.forEach(show => {
+                                show.parentNode.parentNode.style.display = '';
+                        //show.removeAttribute('disabled');
+
+                            });
+
+
+                        });
+
+
+                    } else if (type == 'SAAS') {
+                        on_premise.forEach(element => {
+
+                            to_hide = document.getElementsByName(element);
+                            console.log(to_hide);
+
+                            to_hide.forEach(hide => {
+                                hide.parentNode.parentNode.style.display = 'none';
+                        //hide.setAttribute('disabled', true);
+
+                            });
+
+
+                        });
+
+                        saas.forEach(element => {
+
+                            to_show = document.getElementsByName(element);
+
+                            to_show.forEach(show => {
+                                show.parentNode.parentNode.style.display = '';
+                        //show.setAttribute('disabled', false);
+
+                            });
+
+
+                        });
+
+                    }
 
                 });
-
-
             });
 
 
-        } else if (type == 'SAAS') {
-            on_premise.forEach(element => {
-
-                to_hide = document.getElementsByName(element);
-				console.log(to_hide);
-
-                to_hide.forEach(hide => {
-                    hide.parentNode.parentNode.style.display = 'none';
-		    //hide.setAttribute('disabled', true);
-
-                });
-
-
-            });
-
-            saas.forEach(element => {
-
-                to_show = document.getElementsByName(element);
-
-                to_show.forEach(show => {
-                    show.parentNode.parentNode.style.display = '';
-		    //show.setAttribute('disabled', false);
-
-                });
-
-
-            });
-
-        }
-
-    });
-});
-
-
-";
+            ";
 
 
 		/*

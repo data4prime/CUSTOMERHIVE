@@ -1,13 +1,13 @@
 async function main() {
 
-if (webIntegrationId && webIntegrationId !== '') {
-    const check = await checkLoggedIn();
+    if (webIntegrationId && webIntegrationId !== '') {
+        const check = await checkLoggedIn();
 
-    if (check.status === 401) {
-        const isLoggedIn = await jwtLogin();
+        if (check.status === 401) {
+            const isLoggedIn = await jwtLogin();
 
+        }
     }
-}
 
     
     
@@ -21,7 +21,6 @@ if (webIntegrationId && webIntegrationId !== '') {
         host_q = host.split("//")[1];
     }
 
-    //console.log(host_q);
     
     var config = {
         host: host_q, 
@@ -63,11 +62,6 @@ if (webIntegrationId && webIntegrationId !== '') {
         var app = qlik.openApp(appId, config);
         objectDisplay(app);
 
-        //console.log("objectDisplay(app)");
-
-        //objectsOptions(app);
-
-        //find the div with title 'title' and change innerhtml to "Qlik App Loaded."
         var title = document.getElementById('title');
         title.innerHTML = "";
 
@@ -85,8 +79,7 @@ function objectDisplay(app) {
     }
 }
 function navbar(app) {
-    //console.log("navbar");
-    //console.log($(parent.document).find('#CurrentSelections'));
+
     app.getObject($('#CurrentSelections'), 'CurrentSelections');
     app.getObject($(parent.document).find('#CurrentSelections'), 'CurrentSelections');
 }
@@ -104,10 +97,6 @@ function objectsOptions(app) {
             sheetDiv.className = 'masterobject-option';
             sheetDiv.value = sheetId;
             sheetDiv.innerHTML = name + ' (' + sheetId + ')';
-			//console.log("mashup_object");
-			//console.log(parent.document.getElementById('mashup_object'));
-
-
 
             parent.document.getElementById('mashup_object').appendChild(sheetDiv);
 
@@ -152,8 +141,6 @@ async function checkLoggedIn() {
 
     return response;
 }
-
-// Avvia la funzione principale
 
 
 main();

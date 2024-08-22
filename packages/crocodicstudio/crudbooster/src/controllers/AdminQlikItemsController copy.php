@@ -481,7 +481,6 @@ class AdminQlikItemsController extends CBController
 
 		if ($type == 'On-Premise') {
 
-
 			$qlik_ticket = QlikHelper::getTicket($qlik_item_id);
 			if (empty($qlik_ticket)) {
 				$data['error'] = 'Qlik authentication failed. Ask an admin to fix it';
@@ -492,14 +491,12 @@ class AdminQlikItemsController extends CBController
 				$data['item_url'] = $data['row']->url . '&qlikTicket=' . $qlik_ticket;
 			}
 
-
-			
-
 			if ($menu->target_layout == 1) {
 				$this->cbView('qlik_items.fullscreen_view', $data);
 			} else {
 				$this->cbView('qlik_items.view', $data);
 			}
+
 		} else if ($type == 'SAAS') {
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 			if (empty($token)) {
@@ -765,13 +762,9 @@ class AdminQlikItemsController extends CBController
 		if (QlikHelper::confIsSAAS($conf->id)) {
 			
 			$url = $conf->url;
-			//$url .= ':443'
-			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-			//$url .= $conf->endpoint;
 			$url .= '/chive';
 			$url .= '/hub/';
 			
-
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
@@ -787,12 +780,9 @@ class AdminQlikItemsController extends CBController
 
 		} else {
 			$url = $conf->qrsurl;
-			//$url .= ':443'
-			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
+
 			$url .= $conf->endpoint;
-			//$url .= '/chive';
 			$url .= '/hub/';
-			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
 			$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
@@ -830,19 +820,16 @@ class AdminQlikItemsController extends CBController
 
 		
 		$view = 'qlik_items.view';
-$data = [];
+		$data = [];
 
 
-if (QlikHelper::confIsSAAS($conf->id)) {
+		if (QlikHelper::confIsSAAS($conf->id)) {
 			
 			$url = $conf->url;
-			//$url .= ':443'
-			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-			//$url .= $conf->endpoint;
+
 			$url .= '/chive';
 			$url .= '/qmc/';
 			
-
 			$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
@@ -858,19 +845,13 @@ if (QlikHelper::confIsSAAS($conf->id)) {
 
 		} else {
 			$url = $conf->qrsurl;
-			//$url .= ':443'
-			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-			//$url .= $conf->endpoint;
-			//$url .= '/chive';
 			$url .= '/qmc/';
-			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
 			$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
 		}
 
 		
-
 		$row = new \stdClass;
 		$row->frame_width = '100%';
 		$row->frame_height = '100%';

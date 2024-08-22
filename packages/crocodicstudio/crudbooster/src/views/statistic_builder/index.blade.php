@@ -430,24 +430,4 @@ if (window.location.href.includes('statistic_builder/builder')) {
 
 }
 
-/*
-if (window.location.href.includes('statistic_builder/builder')) {
-
-    const statisticRows = document.querySelectorAll('.statistic-row');
-
-    
-
-
-    statisticRows.forEach(row => {
-
-        //row.style.border = '1px solid black';
-
-        const childNodes = row.querySelectorAll('*');
-        childNodes.forEach(child => {
-            child.style.border = '1px dotted black';
-        });
-    });
-}
-*/
-
 </script>

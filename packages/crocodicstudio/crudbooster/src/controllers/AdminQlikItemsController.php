@@ -774,26 +774,16 @@ class AdminQlikItemsController extends CBController
 		if ($conf->auth == 'JWT') {
 
 			if ($conf->type == 'SAAS') {
-
 				$url = $conf->url;
-				//$url .= '/'.$conf->endpoint;
 				$url .= '/hub/';
-				
-
 				$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
-
 				$js_login = "js/qliksaas_login.js";
 
 
 			} else {
 				$url = $conf->url;
-				//$url .= '/chive';
-				//$url .= '/'.$conf->endpoint;
 				$url .= '/hub/';
-				
-
 				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
-
 				$js_login = "js/qlik_op_jwt_login.js";
 
 			}
@@ -815,16 +805,10 @@ class AdminQlikItemsController extends CBController
 
 		} else {
 			$url = $conf->qrsurl;
-			//$url .= ':443'
-			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-			//$url .= '/'.$conf->endpoint;
-			//$url .= '/chive';
 			$url .= '/hub/';
-			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
 			$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
-
 			$js_login = "js/qlik_login.js";
 
 
@@ -861,10 +845,8 @@ class AdminQlikItemsController extends CBController
 
 		$conf = DB::table('qlik_confs')->where('id', $qlik_item)->first();
 
-
-		
 		$view = 'qlik_items.view';
-$data = [];
+		$data = [];
 
 
 		$js_login = '';
@@ -873,28 +855,20 @@ $data = [];
 			if ($conf->type == 'SAAS') {
 
 				$url = $conf->url;
-				//$url .= '/'.$conf->endpoint;
 				$url .= '/qmc/';
-				
-
 				$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 
 				$js_login = "js/qliksaas_login.js";
 
-
 			} else {
 				$url = $conf->url;
-				//$url .= '/chive';
-				//$url .= '/'.$conf->endpoint;
 				$url .= '/qmc/';
-				
-
+			
 				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
 
 				$js_login = "js/qlik_op_jwt_login.js";
 
 			}
-
 
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
@@ -912,12 +886,7 @@ $data = [];
 
 		} else {
 			$url = $conf->qrsurl;
-			//$url .= ':443'
-			//$url .= !empty($conf->port) ? ':' .$conf->port :':' . '443';
-			//$url .= '/'.$conf->endpoint;
-			//$url .= '/chive';
 			$url .= '/qmc/';
-			//get qlik ticket
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
 			$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
@@ -944,7 +913,7 @@ $data = [];
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] =  htmlspecialchars_decode($data['row']->url);
 		$data['debug'] = $conf->debug;
-$data['js_login'] = $js_login;
+		$data['js_login'] = $js_login;
 
 		$this->cbView($view, $data);
 	}
