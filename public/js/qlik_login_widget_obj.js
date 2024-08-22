@@ -17,6 +17,11 @@ function objectsOptionsOBJ(app) {
     option_cs.selected = true;
     }
 
+    //if parent document is not available, stop script
+    if (!parent.document) {
+        return;
+    }
+
 
 parent.document.getElementById('mashup_object').appendChild(option_cs);
     console.log('objectsOptions');
