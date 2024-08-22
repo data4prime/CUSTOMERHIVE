@@ -25,26 +25,31 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
         console.log('reply: ');
         console.log(reply);
 
+	var str = "";
 
-        $.each(reply.qAppObjectList.qItems, function () {
-            var sheetId = value.qInfo.qId;
+	$.each(reply.qAppObjectList.qItems, function(key, value) {
+        //console.log(value);
+        var sheetId = value.qInfo.qId;
+        var sheetTitle = value.qData.title;
+		var name = value.qData.name;
+        //console.log(sheetId);
+        //console.log(sheetTitle);
+        var sheetDiv = document.createElement('option');
+        //sheetDiv.id = sheetId;
+		sheetDiv.className = 'masterobject-option';
+		sheetDiv.value = sheetId;
+		sheetDiv.innerHTML = name+' ('+sheetId+')';
+        document.getElementById(appId).appendChild(sheetDiv);
 
-            console.log("sheetID: "+sheetId);
-
-            var name = value.qData.name;
-
-            var option = document.createElement('option');
-            option.className = 'masterobject-option';
-            option.value = sheetId;
-            option.innerHTML = name + ' (' + sheetId + ')';
-
-            if ( hidden_object.value == sheetId && hidden_app.value == mashupId) {
-
-                option.selected = true;
-            }
-
-            parent.document.getElementById('mashup_object').appendChild(option);
-        });
+        app.visualization.get(value.qInfo.qId).then(function(vis){
+		    vis.show(value.qInfo.qId);
+	    });
+		str +=  value.qData.title + ' ';
+		$.each(value.qData.cells, function(k,v){
+			str +=  v.name + ' ';
+ 
+		});
+	});
     });
 
 
