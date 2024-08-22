@@ -77,30 +77,27 @@ async function loadScript(url) {
 }
 
 async function main() {
-
+    const authHeader = `Bearer ${qlik_token}`;
     const check = await checkLoggedIn();
     console.log('check: ');
     console.log(check);
 
+    if (check.status === 401) {
 
 
+        const response = await fetch(`${host}/login/jwt-session`, {
+            credentials: 'include',
+            mode: 'cors',
+            method: 'POST',
+            headers: {
+                'Authorization': authHeader,
+                'qlik-web-integration-id': webIntegrationId
+            },
+        });
 
-    const authHeader = `Bearer ${qlik_token}`;
+        console.log(response);
+    }
 
-    const response = await fetch(`${host}/login/jwt-session`, {
-        credentials: 'include',
-        mode: 'cors',
-        method: 'POST',
-        headers: {
-            'Authorization': authHeader,
-            'qlik-web-integration-id': webIntegrationId
-        },
-    });
-
-    console.log(response);
-
-    //const data = await response.json();
-    //console.log(data);
 
     await loadScript(`${host}/resources/assets/external/requirejs/require.js`);
 
