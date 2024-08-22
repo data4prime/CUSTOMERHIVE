@@ -18,7 +18,7 @@ function objectsOptionsOBJ(app) {
     }
 
     //if parent document is not available, stop script
-    if (!parent.document) {
+    if (!parent.document.getElementById('mashup_object')) {
         return;
     }
 
