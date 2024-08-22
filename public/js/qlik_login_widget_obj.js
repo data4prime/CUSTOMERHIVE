@@ -40,7 +40,7 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
 		sheetDiv.value = sheetId;
 		sheetDiv.innerHTML = name+' ('+sheetId+')';
         //document.getElementById(appId).appendChild(sheetDiv);
-        parent.document.getElementById('mashup_object').
+        parent.document.getElementById('mashup_object').appendChild(sheetDiv);
 
         app.visualization.get(value.qInfo.qId).then(function(vis){
 		    vis.show(value.qInfo.qId);
