@@ -80,9 +80,14 @@ async function mainOP() {
 
     require.config({
 		baseUrl: baseUrl + 'resources',
+        paths : {
+            qlik: 'js/qlik.js?qlikTicket='+qlik_ticket3+'&v=' + (new Date()).getTime()
+		}
 	});
 
-    require(["js/qlik"], function (qlik) {
+    
+
+    require(["qlik"], function (qlik) {
         if (!qlik) {
             console.error("Il modulo qlik non è stato caricato correttamente.");
             return;

@@ -59,6 +59,7 @@ var type = '{{$conf->type}}';
 var qlik_token = '{{$conf->auth == "JWT" ? $token : ""}}';
 @if ($conf->type == 'On-Premise' && $conf->auth == "Ticket")
 var qlik_ticket = '{{$conf->type == "On-Premise" && $conf->auth == "Ticket" ? $token : ""}}';
+var qlik_ticket3 = '{{$conf->type == "On-Premise" && $conf->auth == "Ticket" ? $token3 : ""}}';
 
 //DEBUG Qlik Mashup objects
 /*
