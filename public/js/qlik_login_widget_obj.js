@@ -39,6 +39,12 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
 		sheetDiv.className = 'masterobject-option';
 		sheetDiv.value = sheetId;
 		sheetDiv.innerHTML = name+' ('+sheetId+')';
+
+        if (hidden_object.value == sheetId && hidden_app.value == mashupId) {
+            sheetDiv.selected = true;
+        }
+
+
         //document.getElementById(appId).appendChild(sheetDiv);
         parent.document.getElementById('mashup_object').appendChild(sheetDiv);
 
