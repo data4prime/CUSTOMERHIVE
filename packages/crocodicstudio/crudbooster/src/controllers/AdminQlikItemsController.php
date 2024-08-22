@@ -776,7 +776,7 @@ class AdminQlikItemsController extends CBController
 			if ($conf->type == 'SAAS') {
 
 				$url = $conf->url;
-				$url .= '/'.$conf->endpoint;
+				//$url .= '/'.$conf->endpoint;
 				$url .= '/hub/';
 				
 
@@ -788,7 +788,7 @@ class AdminQlikItemsController extends CBController
 			} else {
 				$url = $conf->url;
 				//$url .= '/chive';
-				$url .= '/'.$conf->endpoint;
+				//$url .= '/'.$conf->endpoint;
 				$url .= '/hub/';
 				
 
@@ -873,7 +873,7 @@ $data = [];
 			if ($conf->type == 'SAAS') {
 
 				$url = $conf->url;
-				$url .= '/'.$conf->endpoint;
+				//$url .= '/'.$conf->endpoint;
 				$url .= '/qmc/';
 				
 
@@ -885,7 +885,7 @@ $data = [];
 			} else {
 				$url = $conf->url;
 				//$url .= '/chive';
-				$url .= '/'.$conf->endpoint;
+				//$url .= '/'.$conf->endpoint;
 				$url .= '/qmc/';
 				
 
