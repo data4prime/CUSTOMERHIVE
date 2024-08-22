@@ -147,7 +147,7 @@ async function main() {
 
         //document.cookie;
 
-        var app = qlik.openApp(app, config);
+        var app = qlik.openApp(appId, config);
         console.log('app: ');
         console.log(app);
 
