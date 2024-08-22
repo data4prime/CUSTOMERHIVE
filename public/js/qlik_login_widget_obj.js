@@ -18,12 +18,12 @@ function objectsOptionsOBJ(app) {
     }
 
     //if parent document is not available, stop script
-    if (!parent.document.getElementById('mashup_object')) {
-        return;
+    if (parent.document.getElementById('mashup_object')) {
+        parent.document.getElementById('mashup_object').appendChild(option_cs);
     }
 
 
-parent.document.getElementById('mashup_object').appendChild(option_cs);
+
     console.log('objectsOptions');
     console.log(app.getAppObjectList('masterobject'));
     app.getAppObjectList('masterobject', function (reply) {
@@ -159,8 +159,12 @@ async function main() {
         var title = document.getElementById('title');
         title.innerHTML = "";
 
-        var mashup_object = parent.document.getElementById('mashup_object');
-        mashup_object.removeAttribute('disabled');
+        if (!parent.document.getElementById('mashup_object')) {
+            var mashup_object = parent.document.getElementById('mashup_object');
+            mashup_object.removeAttribute('disabled');
+        }
+
+        
 
     });
 
