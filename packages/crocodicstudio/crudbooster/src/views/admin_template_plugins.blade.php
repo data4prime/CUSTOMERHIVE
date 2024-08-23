@@ -16,10 +16,10 @@ document.getElementById('toggle-chat').addEventListener('click', function() {
     event.preventDefault();
 
     if (isChatOpen) {
-        document.getElementById('list_assistance').style.display = 'none';
+        //document.getElementById('list_assistance').style.display = 'none';
         isChatOpen = false;
     } else {
-        document.getElementById('list_assistance').style.display = 'block';
+        //document.getElementById('list_assistance').style.display = 'block';
         isChatOpen = true;
     }
 });

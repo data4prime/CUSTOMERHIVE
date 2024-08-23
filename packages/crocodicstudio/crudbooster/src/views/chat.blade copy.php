@@ -368,9 +368,6 @@ document.getElementById('send-btn').addEventListener('click', function() {
     var objDiv = document.getElementById("chat-content");
     objDiv.scrollTop = objDiv.scrollHeight;
 
-    //qua ci sarà la chiamata ajax per inviare il messaggio al server
-
-    //simulazione risposta
 
     setTimeout(function(){
         var html = '<div class="media media-chat"><img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="..."><div class="media-body"><p>Risposta alla tua domanda </p></div></div>';
