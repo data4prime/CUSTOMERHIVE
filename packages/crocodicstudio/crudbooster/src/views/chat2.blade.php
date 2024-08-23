@@ -1,33 +1,32 @@
 <style>
-
-.card-bordered {
+  .card-bordered {
     border: 1px solid #ebebeb;
-}
+  }
 
-.card {
+  .card {
     border: 0;
     border-radius: 0px;
     margin-bottom: 30px;
-    -webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.03);
-    box-shadow: 0 2px 3px rgba(0,0,0,0.03);
+    -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.03);
     -webkit-transition: .5s;
     transition: .5s;
-}
+  }
 
-.padding {
-    padding: 3rem !important
-}
+  .padding {
+    padding: 3rem !important;
+  }
 
-body {
-    background-color: #f9f9fa
-}
+  body {
+    background-color: #f9f9fa;
+    overflow-x: hidden; /* Prevent horizontal scroll when sidebar is open */
+  }
 
-.card-header:first-child {
+  .card-header:first-child {
     border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
-}
+  }
 
-
-.card-header {
+  .card-header {
     display: -webkit-box;
     display: flex;
     -webkit-box-pack: justify;
@@ -36,83 +35,80 @@ body {
     align-items: center;
     padding: 15px 20px;
     background-color: transparent;
-    border-bottom: 1px solid rgba(77,82,89,0.07);
-}
+    border-bottom: 1px solid rgba(77, 82, 89, 0.07);
+  }
 
-.card-header .card-title {
+  .card-header .card-title {
     padding: 0;
     border: none;
-}
+  }
 
-h4.card-title {
+  h4.card-title {
     font-size: 17px;
-}
+  }
 
-.card-header>*:last-child {
+  .card-header>*:last-child {
     margin-right: 0;
-}
+  }
 
-.card-header>* {
+  .card-header>* {
     margin-left: 8px;
     margin-right: 8px;
-}
+  }
 
-.btn-secondary {
+  .btn-secondary {
     color: #4d5259 !important;
     background-color: #e4e7ea;
     border-color: #e4e7ea;
     color: #fff;
-}
+  }
 
-.btn-xs {
+  .btn-xs {
     font-size: 11px;
     padding: 2px 8px;
     line-height: 18px;
-}
-.btn-xs:hover{
-    color:#fff !important;
-}
+  }
 
+  .btn-xs:hover {
+    color: #fff !important;
+  }
 
-
-
-.card-title {
-    font-family: Roboto,sans-serif;
+  .card-title {
+    font-family: Roboto, sans-serif;
     font-weight: 300;
     line-height: 1.5;
     margin-bottom: 0;
     padding: 15px 20px;
-    border-bottom: 1px solid rgba(77,82,89,0.07);
-}
+    border-bottom: 1px solid rgba(77, 82, 89, 0.07);
+  }
 
-
-.ps-container {
+  .ps-container {
     position: relative;
-}
+  }
 
-.ps-container {
+  .ps-container {
     -ms-touch-action: auto;
     touch-action: auto;
-    overflow: hidden!important;
+    overflow: hidden !important;
     -ms-overflow-style: none;
-}
+  }
 
-.media-chat {
+  .media-chat {
     padding-right: 64px;
     margin-bottom: 0;
-}
+  }
 
-.media {
+  .media {
     padding: 16px 12px;
     -webkit-transition: background-color .2s linear;
     transition: background-color .2s linear;
-}
+  }
 
-.media .avatar {
+  .media .avatar {
     flex-shrink: 0;
-}
+  }
 
-.avatar {
+  .avatar {
     position: relative;
     display: inline-block;
     width: 36px;
@@ -123,39 +119,39 @@ h4.card-title {
     background-color: #f5f6f7;
     color: #8b95a5;
     text-transform: uppercase;
-}
+  }
 
-.media-chat .media-body {
+  .media-chat .media-body {
     -webkit-box-flex: initial;
     flex: initial;
     display: table;
-}
+  }
 
-.media-body {
+  .media-body {
     min-width: 0;
-}
+  }
 
-.media-chat .media-body p {
+  .media-chat .media-body p {
     position: relative;
     padding: 6px 8px;
     margin: 4px 0;
     background-color: #f5f6f7;
     border-radius: 3px;
     font-weight: 100;
-    color:#9b9b9b;
-}
+    color: #9b9b9b;
+  }
 
-.media>* {
+  .media>* {
     margin: 0 8px;
-}
+  }
 
-.media-chat .media-body p.meta {
+  .media-chat .media-body p.meta {
     background-color: transparent !important;
     padding: 0;
     opacity: .8;
-}
+  }
 
-.media-meta-day {
+  .media-meta-day {
     -webkit-box-pack: justify;
     justify-content: space-between;
     -webkit-box-align: center;
@@ -164,80 +160,73 @@ h4.card-title {
     color: #8b95a5;
     opacity: .8;
     font-weight: 400;
-}
+  }
 
-.media {
+  .media {
     padding: 16px 12px;
     -webkit-transition: background-color .2s linear;
     transition: background-color .2s linear;
-}
+  }
 
-.media-meta-day::before {
+  .media-meta-day::before {
     margin-right: 16px;
-}
+  }
 
-.media-meta-day::before, .media-meta-day::after {
+  .media-meta-day::before,
+  .media-meta-day::after {
     content: '';
     -webkit-box-flex: 1;
     flex: 1 1;
     border-top: 1px solid #ebebeb;
-}
+  }
 
-.media-meta-day::after {
-    content: '';
-    -webkit-box-flex: 1;
-    flex: 1 1;
-    border-top: 1px solid #ebebeb;
-}
-
-.media-meta-day::after {
+  .media-meta-day::after {
     margin-left: 16px;
-}
+  }
 
-.media-chat.media-chat-reverse {
+  .media-chat.media-chat-reverse {
     padding-right: 12px;
     padding-left: 64px;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: reverse;
     flex-direction: row-reverse;
-}
+  }
 
-.media-chat {
+  .media-chat {
     padding-right: 64px;
     margin-bottom: 0;
-}
+  }
 
-.media {
+  .media {
     padding: 16px 12px;
     -webkit-transition: background-color .2s linear;
     transition: background-color .2s linear;
-}
+  }
 
-.media-chat.media-chat-reverse .media-body p {
+  .media-chat.media-chat-reverse .media-body p {
     /*float: right;*/
     clear: right;
     background-color: #48b0f7;
     color: #fff;
-}
+  }
 
-.media-chat .media-body p {
+  .media-chat .media-body p {
     position: relative;
     padding: 6px 8px;
     margin: 4px 0;
     background-color: #f5f6f7;
     border-radius: 3px;
-}
+  }
 
-
-.border-light {
+  .border-light {
     border-color: #f1f2f3 !important;
-}
+  }
 
-.bt-1 {
+  .bt-1 {
     border-top: 1px solid #ebebeb !important;
-}
+  }
 
-.publisher {
+  .publisher {
     position: relative;
     display: -webkit-box;
     display: flex;
@@ -245,30 +234,34 @@ h4.card-title {
     align-items: center;
     padding: 12px 20px;
     background-color: #f9fafb;
-}
+  }
 
-.publisher>*:first-child {
+  .publisher>*:first-child {
     margin-left: 0;
-}
+  }
 
-.publisher>* {
+  .publisher>* {
     margin: 0 8px;
-}
+  }
 
-.publisher-input {
+  .publisher-input {
     -webkit-box-flex: 1;
     flex-grow: 1;
     border: none;
     outline: none !important;
     background-color: transparent;
-}
+  }
 
-button, input, optgroup, select, textarea {
-    font-family: Roboto,sans-serif;
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: Roboto, sans-serif;
     font-weight: 300;
-}
+  }
 
-.publisher-btn {
+  .publisher-btn {
     background-color: transparent;
     border: none;
     color: #8b95a5;
@@ -277,14 +270,14 @@ button, input, optgroup, select, textarea {
     overflow: -moz-hidden-unscrollable;
     -webkit-transition: .2s linear;
     transition: .2s linear;
-}
+  }
 
-.file-group {
+  .file-group {
     position: relative;
     overflow: hidden;
-} 
+  }
 
-.publisher-btn {
+  .publisher-btn {
     background-color: transparent;
     border: none;
     color: #cac7c7;
@@ -293,51 +286,65 @@ button, input, optgroup, select, textarea {
     overflow: -moz-hidden-unscrollable;
     -webkit-transition: .2s linear;
     transition: .2s linear;
-} 
+  }
 
-.file-group input[type="file"] {
+  .file-group input[type="file"] {
     position: absolute;
     opacity: 0;
-    z-index: -1; 
+    z-index: -1;
     width: 20px;
-}
+  }
 
-.text-info {
+  .text-info {
     color: #48b0f7 !important;
-}
+  }
 
-.main-chatai, .left-side {
-    position: absolute;
+  .main-chatai {
+    position: fixed;
     top: 0;
-    right: 0;
+    right: -400px; /* Start hidden to the right */
     padding-top: 50px;
     min-height: 100%;
     width: 400px;
     z-index: 810;
-    -webkit-transition: -webkit-transform .3s ease-in-out, width .3s ease-in-out;
-    -moz-transition: -moz-transform .3s ease-in-out, width .3s ease-in-out;
-    -o-transition: -o-transform .3s ease-in-out, width .3s ease-in-out;
-    transition: transform .3s ease-in-out, width .3s ease-in-out;
-}
+    background-color: #fff;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    -webkit-transition: right .3s ease-in-out;
+    -moz-transition: right .3s ease-in-out;
+    -o-transition: right .3s ease-in-out;
+    transition: right .3s ease-in-out;
+  }
 
+  .main-chatai.open {
+    right: 0; /* When open, the sidebar is visible */
+  }
+
+  .toggle-sidebar-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 900;
+    cursor: pointer;
+  }
 </style>
-<!-- Left side column. contains the sidebar -->
-<aside class="main-chatai">
+
+<!-- Toggle Button for Sidebar -->
+<button class="toggle-sidebar-btn">Toggle Sidebar</button>
+
+<!-- Sidebar -->
+<aside class="main-chatai" id="sidebar">
 
   <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
 
-<div class="page-content page-container" id="page-content">
-    <div>
+    <div class="page-content page-container" id="page-content">
+      <div>
         <div class="row  d-flex justify-content-center">
-
-<div  style="padding-left: 0px;padding-right: 0px;">
+          <div style="padding-left: 0px;padding-right: 0px;">
             <div class="card card-bordered">
               <div class="card-header">
                 <h4 class="card-title"><strong>AI Assistance</strong></h4>
-                <!--<a class="btn btn-xs btn-secondary" href="#" data-abc="true">Let's Chat App</a>-->
               </div>
-
 
               <div class="ps-container ps-theme-default ps-active-y" id="chat-content" style="overflow-y: scroll !important; height:400px !important;">
                 <div class="media media-chat">
@@ -346,72 +353,63 @@ button, input, optgroup, select, textarea {
                     <p>Ciao</p>
                     <p>Sono il tuo assistente AI</p>
                     <p>Come posso aiutarti?</p>
-                    <!--<p class="meta"><time datetime="2018">23:58</time></p>-->
                   </div>
                 </div>
 
-
-              <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
-                <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div></div></div>
+                <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
+                  <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                </div>
+                <div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;">
+                  <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div>
+                </div>
+              </div>
 
               <div class="publisher bt-1 border-light">
                 <img class="avatar avatar-xs" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
                 <input class="publisher-input" type="text" placeholder="Scrivi qui">
-                <button id="send-btn" class="publisher-btn text-info"  type="button"><i class="fa fa-paper-plane"></i></button>
+                <button id="send-btn" class="publisher-btn text-info" type="button"><i class="fa fa-paper-plane"></i></button>
               </div>
 
-             </div>
+            </div>
           </div>
-
-          </div>
-          </div>
-          </div>
+        </div>
+      </div>
+    </div>
   </section>
   <!-- /.sidebar -->
 </aside>
 
-
 <script>
+  // Toggle Sidebar Open and Close
+  document.querySelector('.toggle-sidebar-btn').addEventListener('click', function () {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
 
-document.getElementById('send-btn').addEventListener('click', function() {
+  document.getElementById('send-btn').addEventListener('click', function (event) {
     event.preventDefault();
 
     console.log('clicked');
 
     var message = document.querySelector('.publisher-input').value;
     console.log(message);
-    if(message != ''){
-        var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>'+message+'</p></div></div>';
-        document.getElementById('chat-content').innerHTML += html;
-        document.querySelector('.publisher-input').value = '';
-
+    if (message != '') {
+      var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>' + message + '</p></div></div>';
+      document.getElementById('chat-content').innerHTML += html;
+      document.querySelector('.publisher-input').value = '';
     }
 
     //scroll to bottom chat
     var objDiv = document.getElementById("chat-content");
     objDiv.scrollTop = objDiv.scrollHeight;
 
-    //qua ci sarà la chiamata ajax per inviare il messaggio al server
+    // Simulation response
+    setTimeout(function () {
+      var html = '<div class="media media-chat"><img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="..."><div class="media-body"><p>Risposta alla tua domanda </p></div></div>';
+      document.getElementById('chat-content').innerHTML += html;
 
-    //simulazione risposta
-
-    setTimeout(function(){
-        var html = '<div class="media media-chat"><img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="..."><div class="media-body"><p>Risposta alla tua domanda </p></div></div>';
-        document.getElementById('chat-content').innerHTML += html;
-
-        //scroll to bottom chat
-        var objDiv = document.getElementById("chat-content");
-        objDiv.scrollTop = objDiv.scrollHeight;
-
+      //scroll to bottom chat
+      var objDiv = document.getElementById("chat-content");
+      objDiv.scrollTop = objDiv.scrollHeight;
     }, 1000);
-
-
-
-
-});
-
-
+  });
 </script>
-
-
-
