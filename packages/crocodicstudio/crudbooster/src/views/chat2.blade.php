@@ -321,7 +321,6 @@
 
   .toggle-sidebar-btn {
     position: fixed;
-    top: 20px;
     right: 20px;
     z-index: 900;
     cursor: pointer;
