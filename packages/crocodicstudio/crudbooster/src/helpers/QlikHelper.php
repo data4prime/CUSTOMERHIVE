@@ -198,14 +198,14 @@ class QlikHelper
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
     //DEBUG Qlik Ticket
-/*
+
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSurl . '/'.$endpoint."\n", FILE_APPEND);
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', json_encode($headers)."\n", FILE_APPEND);
 
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertfile."\n", FILE_APPEND);
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertkeyfile."\n", FILE_APPEND);
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertkeyfilePassword."\n", FILE_APPEND);
-*/
+
 
     $ch = curl_init($QRSurl . '/'.$endpoint);
 
@@ -229,7 +229,7 @@ class QlikHelper
     //Execute and get response
     $raw_response = curl_exec($ch);
     //DEBUG Qlik Ticket
-    //file_put_contents(__DIR__ . '/qlik_ticket2.txt', $raw_response."\n", FILE_APPEND);
+    file_put_contents(__DIR__ . '/qlik_ticket2.txt', $raw_response."\n", FILE_APPEND);
 
     if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
