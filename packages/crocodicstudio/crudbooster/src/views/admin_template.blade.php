@@ -109,6 +109,9 @@
         <!-- Sidebar -->
         @include('crudbooster::sidebar')
 
+        <!-- AI Chat -->
+        @include('crudbooster::chat')
+
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
 
