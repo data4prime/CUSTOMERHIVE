@@ -60,7 +60,7 @@ async function loadScript(url) {
 async function mainOP() {
 
 
-    await loadScript(`${host}/${src_js}`);
+    await loadScript(`${host}/${prefix}/${src_js}`);
 
     var host_q = '';
     if (host.includes("https://") || host.includes("http://")) {
