@@ -278,7 +278,9 @@ class QlikHelper
     $QRSurl = $qlik_conf->qrsurl .':'.$qlik_conf->port;
 
     $xrfkey = '0123456789abcdef';
-    $endpoint = $qlik_conf->endpoint ."/qps". "/ticket?xrfkey=" . $xrfkey;
+    //$endpoint = $qlik_conf->endpoint ."/qps". "/ticket?xrfkey=" . $xrfkey;
+
+    $endpoint =   "qps/".$qlik_conf->endpoint."/ticket?xrfkey=" . $xrfkey;
 
     $QRSCertfile =$qlik_conf->QRSCertfile;
 
