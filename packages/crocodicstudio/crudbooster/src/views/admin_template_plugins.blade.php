@@ -28,10 +28,10 @@ document.addEventListener('click', function(event) {
     var chatMenu = document.getElementById('list_assistance');
     var chatIcon = document.getElementById('toggle-chat');
 
-    if (isChatOpen && !chatMenu.contains(event.target) && !chatIcon.contains(event.target)) {
+    /*if (isChatOpen && !chatMenu.contains(event.target) && !chatIcon.contains(event.target)) {
         chatMenu.style.display = 'none';
         isChatOpen = false;
-    }
+    }*/
 
 });
 
