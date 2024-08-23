@@ -64,6 +64,14 @@
         $('.datatables-simple').DataTable();
     })
 </script>
+
+<script>
+// JavaScript to toggle sidebar visibility
+document.querySelector('.toggle-sidebar-btn').addEventListener('click', function () {
+  document.querySelector('.main-sidebar-right').classList.toggle('open');
+});
+
+</script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="{{asset('vendor/crudbooster/assets/js/main.js').'?r='.time()}}"></script>
 
