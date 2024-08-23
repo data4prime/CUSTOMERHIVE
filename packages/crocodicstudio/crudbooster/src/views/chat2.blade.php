@@ -60,8 +60,9 @@
 
 </style>
 
-<!-- Toggle Sidebar Button -->
+<!-- Toggle Sidebar Button 
 <button class="toggle-sidebar-btn">Toggle Sidebar</button>
+-->
 
 <!-- Right side column. contains the sidebar -->
 <aside class="main-sidebar main-sidebar-right">
