@@ -309,10 +309,10 @@ button, input, optgroup, select, textarea {
 .main-chatai, .left-side {
     position: absolute;
     top: 0;
-    right: 230px;
+    right: 30px;
     padding-top: 50px;
     min-height: 100%;
-    width: 230px;
+    width: 400px;
     z-index: 810;
     -webkit-transition: -webkit-transform .3s ease-in-out, width .3s ease-in-out;
     -moz-transition: -moz-transform .3s ease-in-out, width .3s ease-in-out;
