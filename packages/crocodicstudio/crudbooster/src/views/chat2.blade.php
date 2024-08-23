@@ -327,7 +327,7 @@
 </style>
 
 <!-- Toggle Button for Sidebar -->
-<button class="toggle-sidebar-btn">Toggle Sidebar</button>
+<!--<button class="toggle-sidebar-btn">Toggle Sidebar</button>-->
 
 <!-- Sidebar -->
 <aside class="main-chatai" id="sidebar">
