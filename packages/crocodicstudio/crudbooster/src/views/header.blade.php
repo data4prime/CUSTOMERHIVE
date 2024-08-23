@@ -15,7 +15,7 @@
             <ul class="nav navbar-nav">
 
                 <li class="assistance-menu">
-                    <a href="#" class="dropdown-toggle" id="toggle-chat" title='AI Assistance' aria-expanded="false">
+                    <a href="#" class="toggle-sidebar-btn" id="toggle-chat" title='AI Assistance' aria-expanded="false">
                         <i id='icon_assistance' class="fa fa-comments-o">
                         </i>
                         <span id='assistance_count' class="label label-danger" style="display:none">0</span>
