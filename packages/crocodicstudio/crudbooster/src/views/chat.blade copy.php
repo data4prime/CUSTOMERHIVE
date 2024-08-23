@@ -307,11 +307,6 @@ button, input, optgroup, select, textarea {
 }
 
 </style>
-<!-- Left side column. contains the sidebar -->
-<aside class="main-sidebar">
-
-  <!-- sidebar: style can be found in sidebar.less -->
-  <section class="sidebar">
 
 <div class="page-content page-container" id="page-content">
     <div>
@@ -352,10 +347,6 @@ button, input, optgroup, select, textarea {
           </div>
           </div>
           </div>
-  </section>
-  <!-- /.sidebar -->
-</aside>
-
 
 <script>
 
