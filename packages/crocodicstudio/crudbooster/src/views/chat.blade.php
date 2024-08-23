@@ -306,9 +306,23 @@ button, input, optgroup, select, textarea {
     color: #48b0f7 !important;
 }
 
+.main-chatai, .left-side {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-top: 50px;
+    min-height: 100%;
+    width: 230px;
+    z-index: 810;
+    -webkit-transition: -webkit-transform .3s ease-in-out, width .3s ease-in-out;
+    -moz-transition: -moz-transform .3s ease-in-out, width .3s ease-in-out;
+    -o-transition: -o-transform .3s ease-in-out, width .3s ease-in-out;
+    transition: transform .3s ease-in-out, width .3s ease-in-out;
+}
+
 </style>
 <!-- Left side column. contains the sidebar -->
-<aside class="main-sidebar">
+<aside class="main-chatai">
 
   <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
