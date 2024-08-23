@@ -309,7 +309,7 @@ button, input, optgroup, select, textarea {
 .main-chatai, .left-side {
     position: absolute;
     top: 0;
-    right: 0;
+    right: 230px;
     padding-top: 50px;
     min-height: 100%;
     width: 230px;
