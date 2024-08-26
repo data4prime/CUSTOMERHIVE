@@ -65,11 +65,11 @@ $mod = [
 
         $mod =  [
                         'created_at' => date('Y-m-d H:i:s'),
-                        'name' => 'Qlik Items',
-                        'icon' => 'fa fa-cog',
-                        'path' => 'qlik_items',
-                        'table_name' => 'qlik_items',
-                        'controller' => 'AdminQlikItemsController',
+                        'name' => 'Chat AI',
+                        'icon' => '',
+                        'path' => 'chat_ai',
+                        'table_name' => 'chatai_confs',
+                        'controller' => 'AdminChatAIController',
                         'is_protected' => 0,
                         'is_active' => 1,
                 ];
