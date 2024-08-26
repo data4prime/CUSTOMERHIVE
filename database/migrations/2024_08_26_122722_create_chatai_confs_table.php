@@ -27,7 +27,6 @@ return new class extends Migration
         $table->dateTime('modified_at')->nullable();
         $table->unsignedInteger('deleted_by')->nullable();
         $table->dateTime('deleted_at')->nullable();
-            $table->timestamps();
         });
     }
 
