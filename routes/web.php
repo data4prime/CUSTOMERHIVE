@@ -106,3 +106,5 @@ Route::get('admin/chat_ai/tenant/{chat_ai_id}/alert/{alert_id}', $controllers_ba
 Route::get('admin/chat_ai/tenant/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@tenant');
 Route::post('admin/chat_ai/{chat_ai_id}/add_tenant', $controllers_base_path . 'AdminChatAIController@add_tenant');
 Route::get('admin/chat_ai/{chat_ai_id}/remove_tenant/{tenant_id}', $controllers_base_path . 'AdminChatAIController@remove_tenant');
+
+Route::post('admin/chat_ai/send_message', $controllers_base_path . 'AdminChatAIController@send_message');

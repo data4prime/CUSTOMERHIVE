@@ -564,164 +564,21 @@ class AdminChatAIController extends CBController
 		return view('qlik_items.form', compact('row', 'page_menu', 'page_title', 'command', 'id'));
 	}
 
-	public function GetRouteSenseHub($qlik_item)
-	{
-		$this->cbLoader();
-		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module' => CRUDBooster::getCurrentModule()->name]));
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+	public function send_message() {
+		//TODO
+
+		//check if user is logged
+		if (!CRUDBooster::isLogged()) {
+			return redirect(CRUDBooster::adminPath('login'));
 		}
 
-		$data = [];
-		$conf = DB::table('qlik_confs')->where('id', $qlik_item)->first();
+		//get post value
+		$message = $_POST['message'];
 
-		$view = 'qlik_items.view';
-		$data = [];
-		$js_login = '';
-		if ($conf->auth == 'JWT') {
-
-			if ($conf->type == 'SAAS') {
-				$url = $conf->url;
-				$url .= '/hub/';
-				$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
-				$js_login = "js/qliksaas_login.js";
+		return json_encode(['status' => 'ok', 'message' => $message]);
 
 
-			} else {
-				$url = $conf->url;
-				$url .= '/hub/';
-				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
-				$js_login = "js/qlik_op_jwt_login.js";
-
-			}
-
-
-			if (empty($token)) {
-				$data['error'] = 'JWT Token generation failed!';
-				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
-			}
-			$data['token'] = $token;
-			$data['item_url'] = $conf->url;
-
-			$data['prefix'] = $conf->endpoint;
-
-			$data['tenant'] = $conf->url;
-			$data['web_int_id'] = $conf->web_int_id;
-
-			$view = 'qlik_items.view_saas';
-
-		} else {
-			$url = $conf->qrsurl;
-			$url .= '/hub/';
-			$qlik_ticket = QlikHelper::getTicket($qlik_item);
-			$url .= '?';
-			$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
-			$js_login = "js/qlik_login.js";
-
-
-		}
-
-		$row = new \stdClass;
-		$row->frame_width = '100%';
-		$row->frame_height = '100%';
-		$row->url = $url;
-		$row->title = 'Qlik Sense';
-		$row->subtitle = 'Hub';
-		$row->description = '';
-
-		$data['row'] = $row;
-		$data['page_icon'] = 'qlik_icon';
-		$data['page_title'] = $data['row']->title;
-		$data['help'] = $data['row']->description;
-		$data['subtitle'] = $data['row']->subtitle;
-		$data['item_url'] =  htmlspecialchars_decode($data['row']->url);
-		$data['debug'] = $conf->debug;
-
-		$data['js_login'] = $js_login;
-
-		$this->cbView($view, $data);
 	}
 
-	public function GetRouteSenseQMC($qlik_item)
-	{
-		$this->cbLoader();
-		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module' => CRUDBooster::getCurrentModule()->name]));
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
-		}
 
-		$conf = DB::table('qlik_confs')->where('id', $qlik_item)->first();
-
-		$view = 'qlik_items.view';
-		$data = [];
-
-
-		$js_login = '';
-		if ($conf->auth == 'JWT') {
-
-			if ($conf->type == 'SAAS') {
-
-				$url = $conf->url;
-				$url .= '/qmc/';
-				$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
-
-				$js_login = "js/qliksaas_login.js";
-
-			} else {
-				$url = $conf->url;
-				$url .= '/qmc/';
-			
-				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
-
-				$js_login = "js/qlik_op_jwt_login.js";
-
-			}
-
-			if (empty($token)) {
-				$data['error'] = 'JWT Token generation failed!';
-				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
-			}
-			$data['token'] = $token;
-			$data['item_url'] = $conf->url;
-
-			$data['prefix'] = $conf->endpoint;
-
-			$data['tenant'] = $conf->url;
-			$data['web_int_id'] = $conf->web_int_id;
-
-			$view = 'qlik_items.view_saas';
-
-		} else {
-			$url = $conf->qrsurl;
-			$url .= '/qmc/';
-			$qlik_ticket = QlikHelper::getTicket($qlik_item);
-			$url .= '?';
-			$url .= 'xrfkey=0123456789abcdef&QlikTicket=' . $qlik_ticket;
-
-			$js_login = "js/qlik_login.js";
-
-
-		}
-
-		
-
-		$row = new \stdClass;
-		$row->frame_width = '100%';
-		$row->frame_height = '100%';
-		$row->url = $url;
-		$row->title = 'Qlik Sense';
-		$row->subtitle = 'qmc';
-		$row->description = '';
-
-		$data['row'] = $row;
-		$data['page_icon'] = 'qlik_icon';
-		$data['page_title'] = $data['row']->title;
-		$data['help'] = $data['row']->description;
-		$data['subtitle'] = $data['row']->subtitle;
-		$data['item_url'] =  htmlspecialchars_decode($data['row']->url);
-		$data['debug'] = $conf->debug;
-		$data['js_login'] = $js_login;
-
-		$this->cbView($view, $data);
-	}
 }

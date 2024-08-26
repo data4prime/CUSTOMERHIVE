@@ -431,6 +431,25 @@ document.getElementById('send-btn').addEventListener('click', function() {
 
     }
 
+    //send a post request to the server
+    fetch('/chat_ai/send_message', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message: message }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
+
+
+
     //scroll to bottom chat
     var objDiv = document.getElementById("chat-content");
     objDiv.scrollTop = objDiv.scrollHeight;
