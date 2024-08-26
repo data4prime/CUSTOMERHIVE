@@ -599,6 +599,12 @@ class AdminChatAIController extends CBController
 
 		$response = curl_exec($curl);
 
+		curl_close($curl);
+
+		//dd($response);
+
+		$message = json_decode($response)->message;
+
 
 
 
