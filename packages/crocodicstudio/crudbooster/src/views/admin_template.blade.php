@@ -281,6 +281,7 @@
     @if(isset($target_layout) && $target_layout == 2)
     <script type="text/javascript">
         $(document).ready(function () {
+            $('.toggle-sidebar-btn').click();
             //shrink sidebar
             $('.sidebar-toggle').click();
             //expand container
