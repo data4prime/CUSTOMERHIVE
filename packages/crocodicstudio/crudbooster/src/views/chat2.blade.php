@@ -60,54 +60,51 @@
 
 </style>
 
-<!-- Toggle Sidebar Button 
-<button class="toggle-sidebar-btn">Toggle Sidebar</button>
--->
 
-<!-- Right side column. contains the sidebar -->
+
 <aside class=" main-sidebar-right">
-  <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
-    <!-- Sidebar user panel (optional) -->
-    <div class="user-panel">
-      <div class="pull-right image">
-        <img src="{{ CRUDBooster::myPhoto() }}" class="img-circle" alt="{{ trans('crudbooster.user_image') }}" />
-      </div>
-      <div class="pull-right info">
-        <p>{{ CRUDBooster::myName() }}</p>
-        <!-- Status -->
-        <a href="#"><i class="fa fa-circle text-success"></i> {{ trans('crudbooster.online') }}</a>
-      </div>
-    </div>
+<div class="page-content page-container" id="page-content">
+    <div>
+        <div class="row  d-flex justify-content-center">
 
-    <div class='main-menu'>
-      <!-- Sidebar Menu -->
-      <ul class="sidebar-menu">
-        <li class="header">{{trans("crudbooster.menu_navigation")}}
-          <div class="my-collapse-sidebar pull-right" data-collapse-btn="1">
-            <i class="fa fa-minus"></i>
+<div  style="padding-left: 0px;padding-right: 0px;">
+            <div class="card card-bordered">
+              <div class="card-header">
+                <h4 class="card-title"><strong>AI Assistance</strong></h4>
+                <!--<a class="btn btn-xs btn-secondary" href="#" data-abc="true">Let's Chat App</a>-->
+              </div>
+
+
+              <div class="ps-container ps-theme-default ps-active-y" id="chat-content" style="overflow-y: scroll !important; height:400px !important;">
+                <div class="media media-chat">
+                  <img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
+                  <div class="media-body">
+                    <p>Ciao</p>
+                    <p>Sono il tuo assistente AI</p>
+                    <p>Come posso aiutarti?</p>
+                    <!--<p class="meta"><time datetime="2018">23:58</time></p>-->
+                  </div>
+                </div>
+
+
+              <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
+                <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div></div></div>
+
+              <div class="publisher bt-1 border-light">
+                <img class="avatar avatar-xs" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
+                <input class="publisher-input" type="text" placeholder="Scrivi qui">
+                <button id="send-btn" class="publisher-btn text-info"  type="button"><i class="fa fa-paper-plane"></i></button>
+              </div>
+
+             </div>
           </div>
-        </li>
 
-        <?php $dashboard = CRUDBooster::sidebarDashboard();?>
-        @if($dashboard)
-        <li data-id='{{$dashboard->id}}' data-collapse="1" class="{{ (Request::is(config('crudbooster.ADMIN_PATH'))) ? 'active' : '' }}">
-          <a href='{{CRUDBooster::adminPath()}}' class='{{($dashboard->color)?"text-".$dashboard->color:""}}'>
-            <i class='fa fa-dashboard'></i>
-            <span>{{trans("crudbooster.text_dashboard")}}</span>
-          </a>
-        </li>
-        @endif
-
-        <?=\crocodicstudio\crudbooster\helpers\MenuHelper::build_main_sidebar()?>
-
-        <!-- Additional Menu Items here... -->
-        <!-- The rest of your menu items go here -->
-        
-      </ul><!-- /.sidebar-menu -->
-    </div>
+          </div>
+          </div>
+          </div>
   </section>
-  <!-- /.sidebar -->
+
 </aside>
 
 
