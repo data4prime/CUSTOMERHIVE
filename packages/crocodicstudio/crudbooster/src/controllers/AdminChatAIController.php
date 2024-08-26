@@ -578,6 +578,9 @@ class AdminChatAIController extends CBController
 
 		curl_setopt_array($curl, array(
 		CURLOPT_URL => $chatai_conf->url,
+		CURL_POST => true,
+		CURLOPT_POSTFIELDS => json_encode(['message' => $message]),
+
 		CURLOPT_RETURNTRANSFER => true,
 		CURLOPT_ENCODING => '',
 		CURLOPT_MAXREDIRS => 10,
@@ -587,7 +590,7 @@ class AdminChatAIController extends CBController
 		CURLOPT_CUSTOMREQUEST => 'POST',
 		CURLOPT_COOKIESESSION => true,
 		CURLOPT_HTTPHEADER => array(
-			"Authorization: Bearer "+$chatai_conf->token,
+			"Authorization: Bearer ".$chatai_conf->token,
 		),
 		));
 
