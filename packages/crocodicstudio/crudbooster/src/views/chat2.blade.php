@@ -20,10 +20,10 @@
 /* Styling for toggle button */
 .toggle-sidebar-btn {
   position: fixed;
-  right: 10px;
-  top: 10px;
+  /*right: 10px;
+  top: 10px;*/
   z-index: 1100;
-  background-color: #fff;
+  /*background-color: #fff;*/
   border: none;
   cursor: pointer;
   padding: 5px 10px;
