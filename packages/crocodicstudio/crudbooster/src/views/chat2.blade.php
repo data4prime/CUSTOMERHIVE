@@ -2,7 +2,7 @@
 
 /* Basic styling for the right sidebar */
 .main-sidebar-right {
-  position: fixed;
+  position: absolute;
   right: -250px; /* Hide initially */
   top: 0;
   height: 100%;
@@ -10,6 +10,7 @@
   /*background-color: #222d32;*/
   transition: right 0.3s ease;
   z-index: 1000;
+    padding-top: 50px;
 }
 
 /* Sidebar open state */
