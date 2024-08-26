@@ -567,10 +567,7 @@ class AdminChatAIController extends CBController
 	public function send_message() {
 		//TODO
 
-		//check if user is logged
-		if (!CRUDBooster::isLogged()) {
-			return redirect(CRUDBooster::adminPath('login'));
-		}
+
 
 		//get post value
 		$message = $_POST['message'];
