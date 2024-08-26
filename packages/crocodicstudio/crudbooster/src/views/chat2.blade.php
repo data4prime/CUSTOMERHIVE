@@ -60,6 +60,14 @@
   text-decoration: none;
 }
 
+.publisher-input {
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+    border: none;
+    outline: none !important;
+    background-color: transparent;
+}
+
 </style>
 
 
