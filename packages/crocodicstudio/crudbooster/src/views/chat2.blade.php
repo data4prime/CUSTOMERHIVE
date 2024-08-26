@@ -437,7 +437,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ message: message }),
+      body: JSON.stringify({ 'message': message }),
     })
       .then((response) => response.json())
       .then((data) => {
