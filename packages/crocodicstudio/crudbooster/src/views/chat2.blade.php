@@ -3,10 +3,10 @@
 /* Basic styling for the right sidebar */
 .main-sidebar-right {
   position: absolute;
-  right: 0; /* Hide initially */
+  right: -350; /* Hide initially */
   top: 0;
   height: 100%;
-  width: -350px;
+  width: 350px;
   background-color: #fdfdfe;
   transition: right 0.3s ease;
   z-index: 1000;
