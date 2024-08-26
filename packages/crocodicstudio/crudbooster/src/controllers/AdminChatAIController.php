@@ -578,11 +578,17 @@ class AdminChatAIController extends CBController
 		curl_setopt_array($curl, array(
 		CURLOPT_URL => $chatai_conf->url,
 		CURLOPT_POST => true,
-		CURLOPT_POSTFIELDS => json_encode([
-							"action" => "sendMessage",
-							"sessionId" => "33990a7e-e1cb-451a-9712-65393fb4f871",
-							'chatInput' => $message
-							]),
+		CURLOPT_POSTFIELDS => '
+{
+ 
+"action": "sendMessage",
+ 
+"sessionId": "33990a7e-e1cb-451a-9712-65393fb4f871",
+ 
+"chatInput": "'.$message+'"
+ 
+}
+',
 
 		CURLOPT_RETURNTRANSFER => true,
 		CURLOPT_ENCODING => '',
