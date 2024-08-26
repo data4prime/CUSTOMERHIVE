@@ -576,8 +576,7 @@ class AdminChatAIController extends CBController
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-		//CURLOPT_URL => $chatai_conf->url,
-		CURLOPT_URL => "https://qactive.dasycloud.com/6f1789af-ff21-433f-abfe-18584fb6cebd",
+		CURLOPT_URL => $chatai_conf->url,
 		CURLOPT_POST => true,
 		CURLOPT_POSTFIELDS => [
 							"action" => "sendMessage",
@@ -594,6 +593,8 @@ class AdminChatAIController extends CBController
 		CURLOPT_CUSTOMREQUEST => 'POST',
 		CURLOPT_COOKIESESSION => true,
 		CURLOPT_HTTPHEADER => array(
+			"Content-Type: application/json",
+			
 			"Authorization: Bearer ".$chatai_conf->token,
 		),
 		));
