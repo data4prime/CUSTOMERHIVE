@@ -585,7 +585,7 @@ class AdminChatAIController extends CBController
  
 "sessionId": "33990a7e-e1cb-451a-9712-65393fb4f871",
  
-"chatInput": "'.$message+'"
+"chatInput": "'.$message.'"
  
 }
 ',
