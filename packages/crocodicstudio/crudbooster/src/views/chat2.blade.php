@@ -417,6 +417,8 @@ button, input, optgroup, select, textarea {
 
 <script>
 
+console.log('chat ai');
+
 console.log(document.querySelector('.toggle-sidebar-btn'));
 
 document.getElementById('send-btn').addEventListener('click', function() {
