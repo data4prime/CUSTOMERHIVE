@@ -65,7 +65,7 @@
 -->
 
 <!-- Right side column. contains the sidebar -->
-<aside class="main-sidebar main-sidebar-right">
+<aside class=" main-sidebar-right">
   <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
     <!-- Sidebar user panel (optional) -->
