@@ -384,7 +384,7 @@ button, input, optgroup, select, textarea {
               </div>
 
 
-              <div class="ps-container ps-theme-default ps-active-y" id="chat-content" style="overflow-y: scroll !important; height:400px !important;">
+              <div class="ps-container ps-theme-default ps-active-y" id="chat-content" style="overflow-y: scroll !important; height:550px !important;">
                 <div class="media media-chat">
                   <img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
                   <div class="media-body">
