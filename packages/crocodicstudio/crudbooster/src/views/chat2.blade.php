@@ -7,7 +7,7 @@
   top: 0;
   height: 100%;
   width: 250px;
-  background-color: #222d32;
+  /*background-color: #222d32;*/
   transition: right 0.3s ease;
   z-index: 1000;
 }
