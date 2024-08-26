@@ -6,7 +6,7 @@
   right: 0; /* Hide initially */
   top: 0;
   height: 100%;
-  width: 350px;
+  width: -350px;
   background-color: #fdfdfe;
   transition: right 0.3s ease;
   z-index: 1000;
@@ -15,7 +15,7 @@
 
 /* Sidebar open state */
 .main-sidebar-right.open {
-  right: -350px;
+  right: 0;
   padding: 10px;
 }
 
