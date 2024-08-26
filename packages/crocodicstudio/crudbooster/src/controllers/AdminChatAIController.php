@@ -567,10 +567,9 @@ class AdminChatAIController extends CBController
 	public function send_message() {
 		//TODO
 
-		dd(Request::all());
+		//dd(Request::all());
 
-		//get post value
-		$message = $_POST['message'];
+		$message = Request::all()['message'];
 
 		return json_encode(['status' => 'ok', 'message' => $message]);
 
