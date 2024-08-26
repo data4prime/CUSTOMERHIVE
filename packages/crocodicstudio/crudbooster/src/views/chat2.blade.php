@@ -3,7 +3,7 @@
 /* Basic styling for the right sidebar */
 .main-sidebar-right {
   position: absolute;
-  right: -350; /* Hide initially */
+  right: -350px; /* Hide initially */
   top: 0;
   height: 100%;
   width: 350px;
