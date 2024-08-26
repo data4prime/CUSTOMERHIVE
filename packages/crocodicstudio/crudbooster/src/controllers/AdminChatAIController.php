@@ -603,7 +603,7 @@ class AdminChatAIController extends CBController
 
 		//dd($response);
 
-		$message = json_decode($response)->message;
+		$message = json_decode($response);
 
 
 
