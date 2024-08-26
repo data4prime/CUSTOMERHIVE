@@ -93,3 +93,16 @@ Route::get('/mashup-objects/{mashup}/{componentID}/{objectid}',$controllers_base
 
 //maass editing
 //Route::post('/admin/mass_editing',$controllers_base_path .'ModulsController@postMassEdit' );
+
+
+//chat ai
+Route::get('admin/chat_ai/content/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@content_view');
+//chat ai authorization
+Route::get('admin/chat_ai/access/{chat_ai_id}/alert/{alert_id}', $controllers_base_path . 'AdminChatAIController@access');
+Route::get('admin/chat_ai/access/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@access');
+Route::post('admin/chat_ai/{chat_ai_id}/auth', $controllers_base_path . 'AdminChatAIController@add_authorization');
+Route::get('admin/chat_ai/{chat_ai_id}/deauth/{group_id}', $controllers_base_path . 'AdminChatAIController@remove_authorization');
+Route::get('admin/chat_ai/tenant/{chat_ai_id}/alert/{alert_id}', $controllers_base_path . 'AdminChatAIController@tenant');
+Route::get('admin/chat_ai/tenant/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@tenant');
+Route::post('admin/chat_ai/{chat_ai_id}/add_tenant', $controllers_base_path . 'AdminChatAIController@add_tenant');
+Route::get('admin/chat_ai/{chat_ai_id}/remove_tenant/{tenant_id}', $controllers_base_path . 'AdminChatAIController@remove_tenant');

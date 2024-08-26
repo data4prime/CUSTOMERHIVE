@@ -12,10 +12,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         //$this->call(UsersTableSeeder::class);
-        $this->call(CBSeeder::class);
+
+
+        //$this->call(CBSeeder::class);
+
+
         //$this->command->info('Qlik settings...');
         //$this->call(Qlik_Sett::class);
 
+/*
 
  $mod = [
                 'created_at' => date('Y-m-d H:i:s'),
@@ -55,6 +60,20 @@ $mod = [
                 'is_active' => 1,
             ];
         DB::table('cms_moduls')->insert($mod); 
+*/
+
+
+        $mod =  [
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'name' => 'Qlik Items',
+                        'icon' => 'fa fa-cog',
+                        'path' => 'qlik_items',
+                        'table_name' => 'qlik_items',
+                        'controller' => 'AdminQlikItemsController',
+                        'is_protected' => 0,
+                        'is_active' => 1,
+                ];
+            DB::table('cms_moduls')->insert($mod);
 
     }
 }
