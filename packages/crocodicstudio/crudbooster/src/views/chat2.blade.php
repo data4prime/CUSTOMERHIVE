@@ -15,7 +15,7 @@
 
 /* Sidebar open state */
 .main-sidebar-right.open {
-  right: 350px;
+  right: -350px;
   padding: 10px;
 }
 
