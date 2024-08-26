@@ -66,7 +66,7 @@
   <section class="sidebar">
 <div class="page-content page-container" id="page-content">
     <div>
-        <div class="row  d-flex justify-content-center">
+        <div style="margin: 0;" class="row  d-flex justify-content-center">
 
 <div  style="padding-left: 0px;padding-right: 0px;">
             <div class="card card-bordered">
