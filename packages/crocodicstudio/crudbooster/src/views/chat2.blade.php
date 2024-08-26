@@ -421,6 +421,8 @@ console.log('chat ai');
 
 console.log(document.querySelector('.toggle-sidebar-btn'));
 
+document.querySelector('.toggle-sidebar-btn').click();
+
 document.getElementById('send-btn').addEventListener('click', function() {
     event.preventDefault();
 
