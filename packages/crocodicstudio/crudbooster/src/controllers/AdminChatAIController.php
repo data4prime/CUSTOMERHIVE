@@ -567,7 +567,7 @@ class AdminChatAIController extends CBController
 	public function send_message() {
 		//TODO
 
-		dd($_POST);
+		dd(Request::all());
 
 		//get post value
 		$message = $_POST['message'];
