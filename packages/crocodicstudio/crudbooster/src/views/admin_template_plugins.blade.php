@@ -66,6 +66,8 @@
 </script>
 
 <script>
+document.querySelector('.toggle-sidebar-btn').click();
+document.querySelector('.toggle-sidebar-btn').click();
 // JavaScript to toggle sidebar visibility
 document.querySelector('.toggle-sidebar-btn').addEventListener('click', function () {
   document.querySelector('.main-sidebar-right').classList.toggle('open');
