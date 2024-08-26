@@ -14,13 +14,13 @@ class DatabaseSeeder extends Seeder
         //$this->call(UsersTableSeeder::class);
 
 
-        //$this->call(CBSeeder::class);
+        $this->call(CBSeeder::class);
 
 
         //$this->command->info('Qlik settings...');
         //$this->call(Qlik_Sett::class);
 
-/*
+
 
  $mod = [
                 'created_at' => date('Y-m-d H:i:s'),
@@ -60,7 +60,7 @@ $mod = [
                 'is_active' => 1,
             ];
         DB::table('cms_moduls')->insert($mod); 
-*/
+
 
 
         $mod =  [

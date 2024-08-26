@@ -37,7 +37,7 @@ class AdminChatAIController extends CBController
 		$this->button_filter = true;
 		$this->button_import = false;
 		$this->button_export = false;
-		$this->table = "qlik_items";
+		$this->table = "chatai_confs";
 		# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
