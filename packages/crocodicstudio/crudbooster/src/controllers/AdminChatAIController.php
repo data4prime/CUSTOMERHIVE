@@ -579,7 +579,7 @@ class AdminChatAIController extends CBController
 		curl_setopt_array($curl, array(
 		CURLOPT_URL => $chatai_conf->url,
 		CURLOPT_POST => true,
-		CURLOPT_POSTFIELDS => json_encode(['message' => $message]),
+		CURLOPT_POSTFIELDS => $message,
 
 		CURLOPT_RETURNTRANSFER => true,
 		CURLOPT_ENCODING => '',
