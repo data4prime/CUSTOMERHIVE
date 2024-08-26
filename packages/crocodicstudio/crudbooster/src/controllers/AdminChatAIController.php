@@ -365,7 +365,7 @@ class AdminChatAIController extends CBController
 		$data['command'] = 'add';
 		$data['button_addmore'] = false;
 
-		$this->cbView('qlik_items.access', $data);
+		$this->cbView('chat_ai.access', $data);
 	}
 
 	public function tenant($item_id, $alert_id = null)
@@ -400,7 +400,7 @@ class AdminChatAIController extends CBController
 
 		$data['command'] = 'add';
 		$data['button_addmore'] = false;
-		$this->cbView('qlik_items.tenant', $data);
+		$this->cbView('chat_ai.tenant', $data);
 	}
 
 	public function add_tenant($item_id)
@@ -450,7 +450,7 @@ class AdminChatAIController extends CBController
 			->where('tenant_id', $tenant_id)
 			->delete();
 
-		return redirect('admin/qlik_items/tenant/' . $item_id);
+		return redirect('admin/chat_ai/tenant/' . $item_id);
 	}
 
 	//aggiungi un gruppo a quelli autorizzati a vedere il qlik item
@@ -502,7 +502,7 @@ class AdminChatAIController extends CBController
 			->where('group_id', $group_id)
 			->delete();
 
-		return redirect('admin/qlik_items/access/' . $item_id);
+		return redirect('admin/chat_ai/access/' . $item_id);
 	}
 
 	//load edit page
@@ -530,12 +530,11 @@ class AdminChatAIController extends CBController
 		$command = 'edit';
 		Session::put('current_row_id', $id);
 
-		$qlik_item = QlikItem::find($id);
-		$is_public = $qlik_item->isPublic();
+
 		$button_save = true;
 
 
-		return view('qlik_items.form', compact('id', 'row', 'page_menu', 'page_title', 'command', 'is_public', 'button_save'));
+		return view('chat_ai.form', compact('id', 'row', 'page_menu', 'page_title', 'command',  'button_save'));
 	}
 
 	//overwrite default method
@@ -561,7 +560,7 @@ class AdminChatAIController extends CBController
 
 		Session::put('current_row_id', $id);
 
-		return view('qlik_items.form', compact('row', 'page_menu', 'page_title', 'command', 'id'));
+		return view('chat_ai.form', compact('row', 'page_menu', 'page_title', 'command', 'id'));
 	}
 
 	public function send_message() {
