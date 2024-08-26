@@ -68,6 +68,49 @@
     background-color: transparent;
 }
 
+button, input, optgroup, select, textarea {
+    font-family: Roboto,sans-serif;
+    font-weight: 300;
+}
+
+.publisher-btn {
+    background-color: transparent;
+    border: none;
+    color: #8b95a5;
+    font-size: 16px;
+    cursor: pointer;
+    overflow: -moz-hidden-unscrollable;
+    -webkit-transition: .2s linear;
+    transition: .2s linear;
+}
+
+.file-group {
+    position: relative;
+    overflow: hidden;
+} 
+
+.publisher-btn {
+    background-color: transparent;
+    border: none;
+    color: #cac7c7;
+    font-size: 16px;
+    cursor: pointer;
+    overflow: -moz-hidden-unscrollable;
+    -webkit-transition: .2s linear;
+    transition: .2s linear;
+} 
+
+.file-group input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    z-index: -1; 
+    width: 20px;
+}
+
+.text-info {
+    color: #48b0f7 !important;
+}
+
 </style>
 
 
