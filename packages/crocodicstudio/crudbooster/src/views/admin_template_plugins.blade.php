@@ -72,8 +72,7 @@ document.querySelector('.toggle-sidebar-btn').addEventListener('click', function
   document.querySelector('.main-sidebar-right').classList.toggle('open');
 });
 
-document.querySelector('.toggle-sidebar-btn').click();
-document.querySelector('.toggle-sidebar-btn').click();
+
 
 </script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>

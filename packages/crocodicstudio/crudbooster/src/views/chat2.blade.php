@@ -109,4 +109,7 @@
 
 </aside>
 
-
+<script>
+document.querySelector('.toggle-sidebar-btn').click();
+document.querySelector('.toggle-sidebar-btn').click();
+</script>
