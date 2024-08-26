@@ -109,7 +109,16 @@
 
 </aside>
 
+<!--script on document ready-->
 <script>
+
+//on docuemnt ready
+$(document).ready(function() {
+  // JavaScript to toggle sidebar visibility
+  document.querySelector('.toggle-sidebar-btn').click();
 document.querySelector('.toggle-sidebar-btn').click();
-document.querySelector('.toggle-sidebar-btn').click();
+
+
+});
+
 </script>
