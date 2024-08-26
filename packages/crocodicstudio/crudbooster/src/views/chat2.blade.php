@@ -432,7 +432,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
     }
 
     //send a post request to the server
-    fetch('/chat_ai/send_message', {
+    fetch('/admin/chat_ai/send_message', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
