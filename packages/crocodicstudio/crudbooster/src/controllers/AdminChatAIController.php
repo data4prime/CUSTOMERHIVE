@@ -573,53 +573,43 @@ class AdminChatAIController extends CBController
 		$chatai_conf = DB::table('chatai_confs')->first();
 
 
-		$curl = curl_init();
+		$url = $chatai_conf->url;
+		$token = $chatai_conf->token;
 
-		curl_setopt_array($curl, array(
-		CURLOPT_URL => $chatai_conf->url,
-		CURLOPT_POST => true,
-		CURLOPT_POSTFIELDS => '
-{
- 
-"action": "sendMessage",
- 
-"sessionId": "33990a7e-e1cb-451a-9712-65393fb4f871",
- 
-"chatInput": "'.$message.'"
- 
-}
-',
+		// Imposta i dati da inviare nel corpo della richiesta
+		$data = [
+			"action" => "sendMessage",
+			"sessionId" => "33990a7e-e1cb-451a-9712-65393fb4f871",
+			"chatInput" => $message
+		];
 
-		CURLOPT_RETURNTRANSFER => true,
-		CURLOPT_ENCODING => '',
-		CURLOPT_MAXREDIRS => 10,
-		CURLOPT_TIMEOUT => 0,
-		CURLOPT_FOLLOWLOCATION => true,
-		CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		CURLOPT_CUSTOMREQUEST => 'POST',
-		CURLOPT_COOKIESESSION => true,
-		CURLOPT_HTTPHEADER => array(
-			"Content-Type: application/json",
-			
-			"Authorization: ".$chatai_conf->token,
-		),
-		));
+		// Inizializza cURL
+		$ch = curl_init($url);
 
-		$response = curl_exec($curl);
+		// Configura le opzioni cURL
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, [
+			'Accept: application/json',
+			'Content-Type: application/json',
+			"Authorization: Bearer $token"
+		]);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
 		curl_close($curl);
 
-		dd($response);
+		$response = curl_exec($ch);
 
-		$message = json_decode($response);
+		// Controlla se ci sono errori
+		if (curl_errno($ch)) {
+			echo 'Errore cURL: ' . curl_error($ch);
+		}
 
+		// Chiudi la sessione cURL
+		curl_close($ch);
 
-
-
-
-
-
-		return json_encode(['status' => 'ok', 'message' => $message]);
+		// Stampa la risposta
+		echo $response;
 
 
 	}

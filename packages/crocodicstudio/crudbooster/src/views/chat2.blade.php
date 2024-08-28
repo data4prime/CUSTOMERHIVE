@@ -464,7 +464,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
 
     }
 
-        fetch("{{$chatai_conf->url}}", { 
+        /*fetch("{{$chatai_conf->url}}", { 
 
 
         method: 'POST',
@@ -487,17 +487,16 @@ document.getElementById('send-btn').addEventListener('click', function() {
         console.log(data);
         var html = '<div class="media media-chat"><img class="avatar" src="/images/user/admin.jpeg"><div class="media-body"><p>'+data.text+'</p></div></div>';
         document.getElementById('chat-content').innerHTML += html;  
-        //scroll to bottom chat
         var objDiv = document.getElementById("chat-content");
         objDiv.scrollTop = objDiv.scrollHeight;
         })
 
         .catch(err => {
         console.error(err);
-        });
+        });*/
 
 
-/*
+
     fetch('/admin/chat_ai/send_message', {
       method: 'POST',
       headers: {
@@ -518,7 +517,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
       .catch((error) => {
         console.error('Error:', error);
       });
-*/
+
 
 
 
