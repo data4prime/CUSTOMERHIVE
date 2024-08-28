@@ -437,7 +437,31 @@ document.getElementById('send-btn').addEventListener('click', function() {
 
     }
 
-    //send a post request to the server
+        fetch("https://qactive.dasycloud.com/6f1789af-ff21-433f-abfe-18584fb6cebd", { //Replace with n8n URL
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.fifX7GHblsyatYqMGJfhINKPZ3Lrkeq31bB9Y7ZXAAY"
+        },
+        "body": {
+ 
+                    "action": "sendMessage",
+                    
+                    "sessionId": "33990a7e-e1cb-451a-9712-65393fb4f871",
+                    
+                    "chatInput": message,
+ 
+                }
+        })
+        .then(response => {
+        console.log(response);
+        })
+        .catch(err => {
+        console.error(err);
+        });
+
+
+/*
     fetch('/admin/chat_ai/send_message', {
       method: 'POST',
       headers: {
@@ -458,6 +482,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
       .catch((error) => {
         console.error('Error:', error);
       });
+*/
 
 
 
