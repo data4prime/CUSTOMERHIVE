@@ -460,8 +460,17 @@ document.getElementById('send-btn').addEventListener('click', function() {
                 })
         })
         .then(response => {
-        console.log(response);
+        
+        return response.json();
+        }).then(data => {
+        console.log(data);
+        var html = '<div class="media media-chat"><img class="avatar" src="https://img.icons8.com/color/36/000000/administrator" alt="..."><div class="media-body"><p>'+data.chatOutput+'</p></div></div>';
+        document.getElementById('chat-content').innerHTML += html;  
+        //scroll to bottom chat
+        var objDiv = document.getElementById("chat-content");
+        objDiv.scrollTop = objDiv.scrollHeight;
         })
+
         .catch(err => {
         console.error(err);
         });
