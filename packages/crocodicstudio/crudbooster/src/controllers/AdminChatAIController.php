@@ -601,7 +601,7 @@ class AdminChatAIController extends CBController
 		CURLOPT_HTTPHEADER => array(
 			"Content-Type: application/json",
 			
-			"Authorization: Bearer ".$chatai_conf->token,
+			"Authorization: ".$chatai_conf->token,
 		),
 		));
 
