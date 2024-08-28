@@ -471,7 +471,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
     console.log(message);
     if(message != ''){
         var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>'+message+'</p></div></div>';
-        document.getElementById('chat-content').innerHTML += html;
+        document.querySelector('.publisher').insertAdjacentHTML('beforebegin', html);
         document.querySelector('.publisher-input').value = '';
 
     }
