@@ -69,7 +69,7 @@
 
 // JavaScript to toggle sidebar visibility
 document.querySelector('.toggle-sidebar-btn').addEventListener('click', function () {
-  document.querySelector('.main-sidebar-right').classList.toggle('open');
+  document.querySelector('.main-sidebar-right').classList.toggle('close');
 });
 
 

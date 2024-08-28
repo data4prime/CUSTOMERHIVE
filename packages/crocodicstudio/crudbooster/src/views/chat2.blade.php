@@ -31,6 +31,12 @@
   padding: 10px;
 }
 
+/* Sidebar open state */
+.main-sidebar-right.close {
+  right: -350px;
+  padding: 10px;
+}
+
 /* Styling for toggle button */
 .toggle-sidebar-btn {
   position: fixed;
@@ -434,7 +440,7 @@ console.log('chat ai');
 
 console.log(document.querySelector('.toggle-sidebar-btn'));
 
-document.querySelector('.toggle-sidebar-btn').click();
+//document.querySelector('.toggle-sidebar-btn').click();
 
 document.getElementById('send-btn').addEventListener('click', function() {
     event.preventDefault();
