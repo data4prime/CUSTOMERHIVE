@@ -29,7 +29,7 @@ $chatai_conf = AdminChatAIController::getConf();
     background-color: #fdfdfe;
     transition: right 0.3s ease;
     z-index: 1000;
-    padding-top: 50px;
+    /*padding-top: 50px;*/
     display: none;
  }
 
@@ -93,7 +93,7 @@ $chatai_conf = AdminChatAIController::getConf();
 .card {
     border: 0;
     border-radius: 0px;
-    margin-bottom: 30px;
+    /*margin-bottom: 30px;*/
     -webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.03);
     box-shadow: 0 2px 3px rgba(0,0,0,0.03);
     -webkit-transition: .5s;
@@ -398,7 +398,7 @@ button, input, optgroup, select, textarea {
 
 
 <aside class=" main-sidebar-right" id="draggable">
-  <section class="sidebar">
+  <section class="sidebar" style="padding-bottom: 0px;">
 <div class="page-content page-container" id="page-content">
     <div>
         <div style="margin: 0;" class="row  d-flex justify-content-center">
@@ -406,7 +406,7 @@ button, input, optgroup, select, textarea {
 <div  style="padding-left: 0px;padding-right: 0px;">
             <div class="card card-bordered">
               <div class="card-header">
-                <h4 class="card-title"><strong>AI Assistance</strong></h4>
+                <h4 class="card-title"><strong>Chat AI</strong></h4>
                 <!--<a class="btn btn-xs btn-secondary" href="#" data-abc="true">Let's Chat App</a>-->
               </div>
 
