@@ -65,7 +65,7 @@
     $(function () {
         $('.datatables-simple').DataTable();
 $("#draggable").draggable();
-$("#draggable-resizable").resizable();
+$("#draggable").resizable();
     })
 
 
