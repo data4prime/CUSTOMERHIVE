@@ -395,13 +395,13 @@ button, input, optgroup, select, textarea {
 
 </style>
 
-
+<!--row  d-flex justify-content-center -->
 
 <aside class=" main-sidebar-right" id="draggable">
   <section class="sidebar" style="padding-bottom: 0px;">
 <div class="page-content page-container" id="page-content">
     <div>
-        <div style="margin: 0;" class="row  d-flex justify-content-center">
+        <div style="margin: 0;">
 
 <div  style="padding-left: 0px;padding-right: 0px;">
             <div class="card card-bordered">
