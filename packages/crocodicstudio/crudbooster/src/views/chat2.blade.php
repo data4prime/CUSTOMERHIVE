@@ -449,11 +449,11 @@ document.getElementById('send-btn').addEventListener('click', function() {
       //'Access-Control-Allow-Credentials': true, 
     },
 
-        body: JSON.stringify({
+        body: JSON.stringify([{
   "action": "sendMessage",
   "sessionId": "33990a7e-e1cb-451a-9712-65393fb4f871",
   "chatInput": "che cosa è javascript?"
-})
+}])
         })
         .then(response => {
         
