@@ -625,7 +625,7 @@ class AdminChatAIController extends CBController
 	}
 
 
-	public function getConf() {
+	public static function getConf() {
 
 
 		$chatai_conf = DB::table('chatai_confs')->first();
