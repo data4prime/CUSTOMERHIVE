@@ -154,8 +154,8 @@
 
         <li data-collapse="3" class='treeview'>
           <a href='{{url("admin/qlik_confs")}}'>
-            <img class="menu qlik_logo" src=/images/qlik_logo.png />
-            <span>Chat AI</span> <i class="fa fa-comments-o"></i>
+            <i class="fa fa-comments-o"></i>
+            <span>Chat AI</span> 
           </a>
 
         </li>
