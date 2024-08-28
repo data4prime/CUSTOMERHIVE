@@ -23,7 +23,7 @@ $chatai_conf = AdminChatAIController::getConf();
  .main-sidebar-right {   
     position: absolute;
     right: -350px;
-    top: 0;
+    top: 100px;
     /*height: 100%;*/
     width: 350px;
     background-color: #fdfdfe;
@@ -411,7 +411,7 @@ button, input, optgroup, select, textarea {
               </div>
 
 
-              <div class="ps-container ps-theme-default ps-active-y" id="chat-content" style="overflow-y: scroll !important; height:550px !important;">
+              <div class="ps-container ps-theme-default ps-active-y" id="chat-content" style="overflow-y: scroll !important; height:500px !important;">
                 <div class="media media-chat">
                   <img class="avatar" src="/images/user/admin.jpeg" alt="...">
                   <div class="media-body">
