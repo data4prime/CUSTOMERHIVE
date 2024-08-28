@@ -424,11 +424,11 @@ button, input, optgroup, select, textarea {
                 <img class="avatar avatar-xs" src="/images/user/admin.jpeg" alt="...">
                 <input class="publisher-input" type="text" placeholder="Scrivi qui">
                 <button id="send-btn" class="publisher-btn text-info"  type="button"><i class="fa fa-paper-plane"></i></button>
-              <div class="publisher bt-1 border-light">
-                <!--<img class="avatar avatar-xs" src="/images/user/admin.jpeg" alt="...">
+              <!--<div class="publisher bt-1 border-light">
+                <img class="avatar avatar-xs" src="/images/user/admin.jpeg" alt="...">
                 <input class="publisher-input" type="text" placeholder="Scrivi qui">
-                <button id="send-btn" class="publisher-btn text-info"  type="button"><i class="fa fa-paper-plane"></i></button>-->
-              </div>
+                <button id="send-btn" class="publisher-btn text-info"  type="button"><i class="fa fa-paper-plane"></i></button>
+              </div>-->
 
              </div>
 
