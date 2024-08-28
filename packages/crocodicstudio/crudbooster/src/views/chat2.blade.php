@@ -443,9 +443,9 @@ button, input, optgroup, select, textarea {
 </aside>
 
 
-<script type="module">
-import interact from 
-'https://cdn.interactjs.io/v1.10.27/interactjs/index.js'
+<script>
+
+
 
 interact('.resize-drag')
   .resizable({
