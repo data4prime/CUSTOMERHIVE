@@ -15,14 +15,14 @@
 
  .main-sidebar-right {   
     position: absolute;
-    /*right: -350px;*/
+    right: -350px;
     top: 0;
     height: 100%;
     width: 350px;
     background-color: #fdfdfe;
     transition: right 0.3s ease;
     z-index: 1000;
-    /*padding-top: 50px*/
+    padding-top: 50px;
  }
 
 /* Sidebar open state */
