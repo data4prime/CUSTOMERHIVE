@@ -596,7 +596,6 @@ class AdminChatAIController extends CBController
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
-		curl_close($ch);
 
 		$response = curl_exec($ch);
 
