@@ -520,7 +520,9 @@ document.getElementById('send-btn').addEventListener('click', function() {
       .then((data) => {
         console.log('Success:', data);
         var html = '<div class="media media-chat"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
-        document.getElementById('chat-content').innerHTML += html;
+        
+//insert html variable before the div with classpublisher
+        document.querySelector('.publisher').insertAdjacentHTML('beforebegin', html);
 
         //scroll to bottom chat
         var objDiv = document.getElementById("chat-content");
