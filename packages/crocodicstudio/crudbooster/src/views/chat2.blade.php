@@ -400,16 +400,15 @@ button, input, optgroup, select, textarea {
     height: 100%; /* Fa sì che il contenitore occupi l'intera altezza disponibile */
   }
 
-  /* Rende l'area della chat flessibile per occupare lo spazio disponibile */
+/*
   .media.media-chat {
-    flex: 1; /* Fa sì che il contenuto della chat si espanda per riempire lo spazio rimanente */
-    overflow-y: auto; /* Aggiunge lo scroll se necessario */
+    flex: 1; 
   }
 
-  /* Mantiene il publisher sempre in fondo */
+
   .publisher {
-    flex-shrink: 0; /* Impedisce al div di ridursi */
-  }
+    flex-shrink: 0; 
+  }*/
 
 </style>
 
