@@ -1,3 +1,10 @@
+@php 
+use DB;
+
+$chatai_conf = DB::table('chatai_confs')->first();
+
+@endphp 
+
 <style>
 /*
 .main-sidebar-right {
@@ -457,16 +464,14 @@ document.getElementById('send-btn').addEventListener('click', function() {
 
     }
 
-        fetch("https://qactive.dasycloud.com/webhook/6f1789af-ff21-433f-abfe-18584fb6cebd", { 
+        fetch("{{$chatai_conf->url}}", { 
 
 
         method: 'POST',
-    //credentials: 'include',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json', 
-      'Authorization': "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.fifX7GHblsyatYqMGJfhINKPZ3Lrkeq31bB9Y7ZXAAY",
-      //'Access-Control-Allow-Credentials': true, 
+      'Authorization': "Bearer {{$chatai_conf->token}}",
     },
 
         body: JSON.stringify({
