@@ -397,7 +397,7 @@ button, input, optgroup, select, textarea {
 
 
 
-<aside class=" main-sidebar-right">
+<aside class=" main-sidebar-right" id="draggable">
   <section class="sidebar">
 <div class="page-content page-container" id="page-content">
     <div>
@@ -443,6 +443,10 @@ button, input, optgroup, select, textarea {
 </aside>
 
 <script>
+
+$(function() {
+  $("#draggable").draggable();
+});
 
 console.log('chat ai');
 
