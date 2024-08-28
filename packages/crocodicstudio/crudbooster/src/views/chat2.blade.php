@@ -399,7 +399,6 @@ button, input, optgroup, select, textarea {
 
 <aside class=" main-sidebar-right" id="draggable">
   <section class="sidebar" style="padding-bottom: 0px;">
-<div class="page-content page-container" id="page-content">
 
             <div class="card card-bordered">
               <div class="card-header">
@@ -430,7 +429,6 @@ button, input, optgroup, select, textarea {
               </div>
 
              </div>
-          </div>
 
   </section>
 
