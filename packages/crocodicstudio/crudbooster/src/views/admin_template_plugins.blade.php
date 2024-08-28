@@ -62,7 +62,10 @@
 
     $(function () {
         $('.datatables-simple').DataTable();
+        $("#draggable").draggable();
     })
+
+
 </script>
 
 <script>

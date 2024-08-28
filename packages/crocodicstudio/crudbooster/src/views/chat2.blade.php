@@ -444,9 +444,7 @@ button, input, optgroup, select, textarea {
 
 <script>
 
-$(function() {
-  $("#draggable").draggable();
-});
+
 
 console.log('chat ai');
 
