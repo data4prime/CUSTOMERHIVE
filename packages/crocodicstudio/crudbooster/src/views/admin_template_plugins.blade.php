@@ -47,6 +47,9 @@
 <!--TINYMCE-->
 <script src="{{ asset('tinymce/js/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
 
+<!--interact-->
+<script src="https://cdn.interactjs.io/v1.10.27/interactjs/index.js"></script>
+
 <!--<script type="text/javascript" src="https://sense.izsvenezie.it/pub/resources/assets/external/requirejs/require.js"></script>-->
 
 <script>
@@ -62,7 +65,6 @@
 
     $(function () {
         $('.datatables-simple').DataTable();
-        $("#draggable").draggable();
     })
 
 
