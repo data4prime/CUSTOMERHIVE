@@ -446,7 +446,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
       'Accept': 'application/json',
       'Content-Type': 'application/json', 
       //'Authorization': "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.fifX7GHblsyatYqMGJfhINKPZ3Lrkeq31bB9Y7ZXAAY",
-      'Access-Control-Allow-Credentials': true, 
+      //'Access-Control-Allow-Credentials': true, 
     },
 
         body: {
