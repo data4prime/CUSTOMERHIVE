@@ -389,7 +389,7 @@ button, input, optgroup, select, textarea {
 
 
 
-<aside class=" main-sidebar-right close">
+<aside class=" main-sidebar-right">
   <section class="sidebar">
 <div class="page-content page-container" id="page-content">
     <div>
