@@ -449,7 +449,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
       //'Access-Control-Allow-Credentials': true, 
     },
 
-        body: JSON.stringify({
+        body: {
  
                     "action": "sendMessage",
                     
@@ -457,7 +457,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
                     
                     "chatInput": message,
  
-                })
+                }
         })
         .then(response => {
         
