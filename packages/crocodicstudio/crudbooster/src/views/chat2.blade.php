@@ -188,7 +188,7 @@ h4.card-title {
 .media-chat .media-body {
     -webkit-box-flex: initial;
     flex: initial;
-    display: table;
+    /*display: table;*/
 }
 
 .media-body {
@@ -203,6 +203,7 @@ h4.card-title {
     border-radius: 3px;
     font-weight: 100;
     color:#9b9b9b;
+    white-space: normal;
 }
 
 .media>* {
