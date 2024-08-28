@@ -17,7 +17,7 @@
     position: absolute;
     right: -350px;
     top: 0;
-    height: 100%;
+    /*height: 100%;*/
     width: 350px;
     background-color: #fdfdfe;
     transition: right 0.3s ease;
