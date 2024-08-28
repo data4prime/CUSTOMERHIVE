@@ -507,7 +507,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
       .then((response) => response.json())
       .then((data) => {
         console.log('Success:', data);
-        var html = '<div class="media media-chat"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+data.message+'</p></div></div>';
+        var html = '<div class="media media-chat"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
         document.getElementById('chat-content').innerHTML += html;
 
         //scroll to bottom chat
