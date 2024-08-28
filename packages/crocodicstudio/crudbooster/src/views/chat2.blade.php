@@ -400,7 +400,7 @@ button, input, optgroup, select, textarea {
     height: 100%; /* Fa sì che il contenitore occupi l'intera altezza disponibile */
   }
 
-/*
+
   .media.media-chat {
     flex: 1; 
   }
@@ -408,7 +408,7 @@ button, input, optgroup, select, textarea {
 
   .publisher {
     flex-shrink: 0; 
-  }*/
+  }
 
 </style>
 
