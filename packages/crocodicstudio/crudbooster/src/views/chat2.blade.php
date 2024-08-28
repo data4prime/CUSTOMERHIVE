@@ -437,7 +437,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
 
     }
 
-        fetch("https://qactive.dasycloud.com/webhook-test/6f1789af-ff21-433f-abfe-18584fb6cebd", { 
+        fetch("https://qactive.dasycloud.com/6f1789af-ff21-433f-abfe-18584fb6cebd", { 
 
 
         method: 'POST',
