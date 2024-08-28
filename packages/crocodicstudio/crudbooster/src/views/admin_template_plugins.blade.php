@@ -70,13 +70,17 @@
 // JavaScript to toggle sidebar visibility
 document.querySelector('.toggle-sidebar-btn').addEventListener('click', function () {
 
-  //edit the right css property
-  document.querySelector('.main-sidebar').style.right = '0px';
-  document.querySelector('.main-sidebar').style.display = 'block';
+  var chatai = document.querySelector('.main-sidebar-right');
 
+  //if right is 0px, then close the sidebar by setting right to -300px
+  if (chatai.style.right === '0px') {
+    chatai.style.right = '-350px';
+    chatai.style.display = 'none';
+  } else {
+    chatai.style.right = '0';
+    chatai.style.display = 'block';
+  }
 
-
-  //document.querySelector('.main-sidebar-right').classList.toggle('close');
 
 
 });
