@@ -23,6 +23,7 @@
     transition: right 0.3s ease;
     z-index: 1000;
     padding-top: 50px;
+    display: none;
  }
 
 /* Sidebar open state */

@@ -70,6 +70,11 @@
 // JavaScript to toggle sidebar visibility
 document.querySelector('.toggle-sidebar-btn').addEventListener('click', function () {
 
+  //edit the right css property
+  document.querySelector('.main-sidebar').style.right = '0px';
+  document.querySelector('.main-sidebar').style.display = 'block';
+
+
 
   //document.querySelector('.main-sidebar-right').classList.toggle('close');
 
