@@ -460,7 +460,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
         return response.json();
         }).then(data => {
         console.log(data);
-        var html = '<div class="media media-chat"><img class="avatar" src="https://img.icons8.com/color/36/000000/administrator" alt="..."><div class="media-body"><p>'+data.chatOutput+'</p></div></div>';
+        var html = '<div class="media media-chat"><img class="avatar" src="https://img.icons8.com/color/36/000000/administrator" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
         document.getElementById('chat-content').innerHTML += html;  
         //scroll to bottom chat
         var objDiv = document.getElementById("chat-content");
