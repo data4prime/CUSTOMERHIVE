@@ -1,7 +1,7 @@
 @php 
-use DB;
+use crocodicstudio\crudbooster\controllers\AdminChatAIController;
 
-$chatai_conf = DB::table('chatai_confs')->first();
+$chatai_conf = AdminChatAIController::getConf();
 
 @endphp 
 
