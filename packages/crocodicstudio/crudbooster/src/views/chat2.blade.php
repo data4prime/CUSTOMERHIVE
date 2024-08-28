@@ -393,9 +393,26 @@ button, input, optgroup, select, textarea {
     color: #48b0f7 !important;
 }
 
+  /* Imposta Flexbox per il contenitore della chat */
+  #chat-content {
+    display: flex;
+    flex-direction: column; /* Dispone gli elementi in una colonna */
+    height: 100%; /* Fa sì che il contenitore occupi l'intera altezza disponibile */
+  }
+
+  /* Rende l'area della chat flessibile per occupare lo spazio disponibile */
+  .media.media-chat {
+    flex: 1; /* Fa sì che il contenuto della chat si espanda per riempire lo spazio rimanente */
+    overflow-y: auto; /* Aggiunge lo scroll se necessario */
+  }
+
+  /* Mantiene il publisher sempre in fondo */
+  .publisher {
+    flex-shrink: 0; /* Impedisce al div di ridursi */
+  }
+
 </style>
 
-<!--row  d-flex justify-content-center -->
 
 <aside class=" main-sidebar-right" id="draggable">
   <section class="sidebar" style="padding-bottom: 0px;">
@@ -403,7 +420,6 @@ button, input, optgroup, select, textarea {
             <div class="card card-bordered">
               <div class="card-header">
                 <h4 class="card-title"><strong>Chat AI</strong></h4>
-                <!--<a class="btn btn-xs btn-secondary" href="#" data-abc="true">Let's Chat App</a>-->
               </div>
 
 
@@ -414,7 +430,6 @@ button, input, optgroup, select, textarea {
                     <p>Ciao</p>
                     <p>Sono il tuo assistente AI</p>
                     <p>Come posso aiutarti?</p>
-                    <!--<p class="meta"><time datetime="2018">23:58</time></p>-->
                   </div>
                 </div>
 
@@ -428,11 +443,7 @@ button, input, optgroup, select, textarea {
 <div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;">
 <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div></div></div>
 
-              <!--<div class="publisher bt-1 border-light">
-                <img class="avatar avatar-xs" src="/images/user/admin.jpeg" alt="...">
-                <input class="publisher-input" type="text" placeholder="Scrivi qui">
-                <button id="send-btn" class="publisher-btn text-info"  type="button"><i class="fa fa-paper-plane"></i></button>
-              </div>-->
+
 
              </div>
 
