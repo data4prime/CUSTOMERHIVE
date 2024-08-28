@@ -415,9 +415,9 @@ button, input, optgroup, select, textarea {
 
 
 <aside class=" main-sidebar-right" id="draggable">
-  <section class="sidebar" style="padding-bottom: 0px;">
+  <section class="sidebar" style="padding-bottom: 0px;height:inherit;">
 
-            <div class="card card-bordered">
+            <div class="card card-bordered" style="height:inherit;">
               <div class="card-header">
                 <h4 class="card-title"><strong>Chat AI</strong></h4>
               </div>
