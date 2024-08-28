@@ -440,7 +440,8 @@ document.getElementById('send-btn').addEventListener('click', function() {
         fetch("https://qactive.dasycloud.com/6f1789af-ff21-433f-abfe-18584fb6cebd", { //Replace with n8n URL
         "method": "POST",
         "headers": {
-            
+                    "credentials": 'include',
+        "mode": 'cors',
             "Content-Type": "application/json",
             "Authorization" : "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.fifX7GHblsyatYqMGJfhINKPZ3Lrkeq31bB9Y7ZXAAY"
         },
