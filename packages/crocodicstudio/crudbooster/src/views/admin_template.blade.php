@@ -299,6 +299,7 @@
     <script type="text/javascript">
         //sidebar #RAMA
         $(document).ready(function () {
+            $('.toggle-sidebar-btn').click();
             //collapsable navigation groups
             $('.my-collapse-sidebar').click(function () {
                 var collapse_id = $(this).data('collapse-btn');
