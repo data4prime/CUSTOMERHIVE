@@ -15,7 +15,7 @@
 
  .main-sidebar-right {   
     position: absolute;
-    right: 0;
+    right: -350px;
     top: 0;
     height: 100%;
     width: 350px;
