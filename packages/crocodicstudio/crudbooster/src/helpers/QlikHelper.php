@@ -465,7 +465,14 @@ class QlikHelper
 
     $privateKey = $qlik_conf->private_key;
 
-    $privateKey = file_get_contents($privateKey);
+    //if provateKey is not empty, get the content of the file
+    if (!empty($privateKey)) {
+      $privateKey = file_get_contents($privateKey);
+    } else {
+      $privateKey = "";
+    }
+
+    
 
     $keyid = $qlik_conf->keyid;
 
