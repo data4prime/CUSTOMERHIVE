@@ -34,6 +34,8 @@ async function main() {
         }
     } else {
 
+        console.log('no web int');
+
         const authHeader = `Bearer ${qlik_token}`;
 
         const response = await fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
