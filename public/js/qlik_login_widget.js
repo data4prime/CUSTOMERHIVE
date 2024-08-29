@@ -53,7 +53,7 @@ async function main() {
     }
 
     
-    await loadScript(`${host}/${prefix}/${src_js}`);
+    await loadScript(`${host}${prefix}${src}`);
 
     var selState;
     var query;
