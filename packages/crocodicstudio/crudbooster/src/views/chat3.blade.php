@@ -18,8 +18,8 @@
         }
 
         .chat-header {
-            background-color: #007bff;
-            color: white;
+            /*background-color: #007bff;
+            color: white;*/
             padding: 10px;
             cursor: move; /* Cursore per il trascinamento */
         }
