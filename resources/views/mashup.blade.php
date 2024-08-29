@@ -44,8 +44,9 @@ $param = $conf->type == 'On-Premise' ? "?qlikTicket=$token" : "";
 
 <link rel="stylesheet" href="{{ $css }}">
 
+<!--
 <script type="text/javascript"  src="{{$src}}"></script>
-
+-->
 
 
 <div id="{{$mashup->appid}}" >

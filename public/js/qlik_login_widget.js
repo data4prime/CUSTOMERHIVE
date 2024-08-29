@@ -48,12 +48,12 @@ async function main() {
 
         const data = await response.json();
 
-        await loadScript(`${host}/${prefix}/${src_js}`);
+        
 
     }
 
     
-    
+    await loadScript(`${host}/${prefix}/${src_js}`);
 
     var selState;
     var query;
