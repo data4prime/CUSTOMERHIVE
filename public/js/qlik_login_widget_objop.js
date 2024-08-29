@@ -127,15 +127,15 @@ async function mainOP() {
         });
 
 
-        qlik.getAppList(function(list){
+        /*qlik.getAppList(function(list){
 		var str = "";
 		list.forEach(function(value) {
 			str +=  value.qDocName + "("+ value.qDocId +") ";
 		});
 		console.log(str);
-	}, config);
+	}, config);*/
 
-/*
+
         console.log('appId');
         console.log(appId);
 
@@ -156,7 +156,7 @@ async function mainOP() {
         var mashup_object = parent.document.getElementById('mashup_object');
         mashup_object.removeAttribute('disabled');
 
-*/
+
 
     });
 
