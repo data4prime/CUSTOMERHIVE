@@ -64,8 +64,19 @@
 
     $(function () {
         $('.datatables-simple').DataTable();
+/*
 $("#draggable").draggable();
 $("#draggable").resizable();
+*/ 
+
+        $("#chatWindow").draggable({
+            handle: ".chat-header"
+        }).resizable();
+
+        $("#openChat").click(function() {
+            $("#chatWindow").toggle();
+        });
+
     })
 
 

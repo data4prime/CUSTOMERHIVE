@@ -1,8 +1,6 @@
 
     <style>
-        body {
-            padding-top: 56px; /* Altezza della navbar */
-        }
+
 
         .chat-window {
             width: 350px;
