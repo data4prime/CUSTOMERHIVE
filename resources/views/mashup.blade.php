@@ -75,7 +75,7 @@ console.log(src_js);
 
 @if ($conf->type == 'On-Premise')
 
-var ticket_data = @php echo isset($data_ticket) ? $data_ticket : "" @endphp;
+var ticket_data = "@php echo isset($data_ticket) ? $data_ticket : '' @endphp";
 //DEBUG Qlik Mashup view
 /*
 console.log("ticket_data");
