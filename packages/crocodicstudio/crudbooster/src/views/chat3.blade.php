@@ -142,7 +142,7 @@ h4.chat-title {
 
 
 <div class="chat-window" id="chatWindow">
-    <div class="chat-header">Chat AI</div>
+    <div class="chat-header"><h4 class="card-title"><strong>Chat AI</strong></h4></div>
     <div class="chat-body">
         <div class="media media-chat">
                   <img class="avatar" src="/images/user/admin.jpeg" alt="...">
@@ -155,7 +155,7 @@ h4.chat-title {
     </div>
     <div class="chat-footer">
         <div class="chat-input">
-            <input type="text" class="form-control" placeholder="Scrivi un messaggio...">
+            <input type="text" id="publisher-input" class="form-control" placeholder="Scrivi un messaggio...">
             <div class="input-group-append">
                 <button id="send-btn" class="btn btn-primary" type="button">Invia</button>
             </div>
@@ -174,7 +174,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
 
     console.log('clicked');
 
-    /*var message = document.querySelector('.publisher-input').value;
+    var message = document.querySelector('#publisher-input').value;
     console.log(message);
     if(message != ''){
         var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>'+message+'</p></div></div>';
@@ -198,7 +198,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
         
         document.querySelector('.publisher').insertAdjacentHTML('beforebegin', html);
 
-        var objDiv = document.getElementById("chat-content");
+        var objDiv = document.getElementById("chat-body");
         objDiv.scrollTop = objDiv.scrollHeight;
       })
       .catch((error) => {
@@ -206,8 +206,8 @@ document.getElementById('send-btn').addEventListener('click', function() {
       });
 
 
-    var objDiv = document.getElementById("chat-content");
-    objDiv.scrollTop = objDiv.scrollHeight;*/
+    var objDiv = document.getElementById("chat-body");
+    objDiv.scrollTop = objDiv.scrollHeight;
 
 
 });
