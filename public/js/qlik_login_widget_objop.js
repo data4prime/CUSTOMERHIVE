@@ -21,7 +21,6 @@ if (hidden_object && (hidden_object.value == "CurrentSelections"  && hidden_app.
 parent.document.getElementById('mashup_object').appendChild(option_cs);
     console.log('objectsOptions');
     app.getAppObjectList('masterobject', function (reply) {
-    app.getAppObjectList('sheet', function (reply) {
         console.log('reply: ');
         console.log(reply);
 
