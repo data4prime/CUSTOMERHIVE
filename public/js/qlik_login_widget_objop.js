@@ -126,9 +126,16 @@ async function mainOP() {
             }
         });
 
-        
+        console.log('appId');
+        console.log(appId);
+
+        console.log('config');
+        console.log(config);
+
 
         var app = qlik.openApp(appId, config);
+        console.log('app');
+        console.log(app);
 
 /*
         objectsOptions(app);
