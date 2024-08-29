@@ -48,7 +48,7 @@ class QlikConfController extends CBController
 		$this->form = [];
 		$this->form[] = ['label' => 'Configuration Name', 'name' => 'confname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Configuration Name'];
         $this->form[] = ['label' => 'Type', 'name' => 'type', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'On-Premise;SAAS'];
-        $this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'JWT;Ticket'];
+        $this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'JWT'];
         $this->form[] = ['label' => 'QRS Url', 'name' => 'qrsurl', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRS Url'];
         $this->form[] = ['label' => 'URL', 'name' => 'url', 'type' => 'text',  'width' => 'col-sm-10', 'placeholder' => 'Enter URL'];
 
@@ -245,6 +245,7 @@ class QlikConfController extends CBController
                 var on_premise = ['qrsurl', /*'endpoint',*/ 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
 
                 var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
+
                 if (type_val == 'On-Premise') {
 
                     saas.forEach(element => {
