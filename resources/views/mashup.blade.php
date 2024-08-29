@@ -87,7 +87,7 @@ console.log(ticket_data);
 var host = '{{$conf->host}}';
 var prefix = '{{$conf->prefix}}';
 var port = '{{$conf->port}}';
-var webIntegrationId = '{{$conf->webIntegrationId}}';
+var webIntegrationId = '@php echo $conf->webIntegrationId @endphp';
 var appId = '{{$mashup->appid}}';
 var mashupId = '{{$mashup->id}}';
 var objectid = '{{$mashups->object}}';
