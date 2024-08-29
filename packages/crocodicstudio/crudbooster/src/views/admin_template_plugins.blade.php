@@ -76,9 +76,11 @@ $("#draggable").resizable();
 // JavaScript to toggle sidebar visibility
 document.querySelector('.toggle-sidebar-btn').addEventListener('click', function () {
 
+$("#chatWindow").toggle();
+
+/*
   var chatai = document.querySelector('.main-sidebar-right');
 
-  //if right is 0px, then close the sidebar by setting right to -300px
   if (chatai.style.right === '0px') {
     chatai.style.right = '-350px';
     chatai.style.display = 'none';
@@ -86,7 +88,7 @@ document.querySelector('.toggle-sidebar-btn').addEventListener('click', function
     chatai.style.right = '0';
     chatai.style.display = 'block';
   }
-
+*/
 
 
 });
