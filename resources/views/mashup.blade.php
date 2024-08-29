@@ -94,6 +94,8 @@ var host = '{{$conf->host}}';
 var prefix = '{{$conf->prefix}}';
 var port = '{{$conf->port}}';
 var webIntegrationId = '@php echo $conf->webIntegrationId @endphp';
+console.log("webIntegrationId");
+console.log(webIntegrationId);
 var appId = '{{$mashup->appid}}';
 var mashupId = '{{$mashup->id}}';
 var objectid = '{{$mashups->object}}';
