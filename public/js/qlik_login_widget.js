@@ -24,10 +24,14 @@ async function main() {
     
     var config = {
         host: host_q, 
-        prefix: "/"+prefix+"/", 
+        prefix: "/", 
         port: 443, 
         isSecure: true, 
     };
+
+    if (webIntegrationId !== '') {
+        config.prefix = "/"+prefix+"/";
+    }
 
     if (webIntegrationId !== '') {
         config.webIntegrationId = webIntegrationId;
