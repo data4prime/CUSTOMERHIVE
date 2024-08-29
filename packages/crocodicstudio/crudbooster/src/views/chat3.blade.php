@@ -180,8 +180,10 @@ document.getElementById('send-btn').addEventListener('click', function() {
     console.log(message);
     if(message != ''){
         var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>'+message+'</p></div></div>';
-        document.querySelector('.publisher').insertAdjacentHTML('beforebegin', html);
-        document.querySelector('.publisher-input').value = '';
+        //insert html in the chat-body div
+        document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
+        //clear the input field
+        document.querySelector('#publisher-input').value = '';
 
     }
 
@@ -198,7 +200,8 @@ document.getElementById('send-btn').addEventListener('click', function() {
         console.log('Success:', data);
         var html = '<div class="media media-chat"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
         
-        document.querySelector('.publisher').insertAdjacentHTML('beforebegin', html);
+        //insert html in the chat-body div
+        document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
 
         var objDiv = document.getElementById("chat-body");
         objDiv.scrollTop = objDiv.scrollHeight;
