@@ -57,6 +57,7 @@ var type = '{{$conf->type}}';
 var qlik_token = '@php echo  $token @endphp';
 var qlik_ticket = '{{$conf->type == "On-Premise" ? $token : ""}}';
 var src_js = "@php echo $src  @endphp";
+var src = "@php echo $src  @endphp";
 
 //DEBUG Qlik Mashup view
 /*
