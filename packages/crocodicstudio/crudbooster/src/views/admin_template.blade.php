@@ -107,7 +107,7 @@
         @include('crudbooster::header')
 
 <!-- AI Chat -->
-        @include('crudbooster::chat2')
+        @include('crudbooster::chat3')
 
         <!-- Sidebar -->
         @include('crudbooster::sidebar')
