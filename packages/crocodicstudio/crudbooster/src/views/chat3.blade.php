@@ -203,7 +203,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
         //insert html in the chat-body div
         document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
 
-        var objDiv = document.getElementById("chat-body");
+        var objDiv = document.querySelector('.chat-body');
         objDiv.scrollTop = objDiv.scrollHeight;
       })
       .catch((error) => {
@@ -211,7 +211,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
       });
 
 
-    var objDiv = document.getElementById("chat-body");
+    var objDiv = document.querySelector('.chat-body');
     objDiv.scrollTop = objDiv.scrollHeight;
 
 
