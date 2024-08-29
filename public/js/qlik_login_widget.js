@@ -24,7 +24,7 @@ async function main() {
     
     var config = {
         host: host_q, 
-        prefix: "/", 
+        prefix: "/"+prefix+"/", 
         port: 443, 
         isSecure: true, 
     };
@@ -35,10 +35,15 @@ async function main() {
 
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
-    require.config({
+    var configuration = {
         baseUrl: baseUrl + 'resources',
-        webIntegrationId: config.webIntegrationId
-    });
+    };
+
+    if (webIntegrationId !== '') {
+        configuration.webIntegrationId = webIntegrationId;
+    }
+
+    require.config(configuration);
 
     require(["js/qlik"], function (qlik) {
         if (!qlik) {
