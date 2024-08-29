@@ -126,6 +126,16 @@ async function mainOP() {
             }
         });
 
+
+        qlik.getAppList(function(list){
+		var str = "";
+		list.forEach(function(value) {
+			str +=  value.qDocName + "("+ value.qDocId +") ";
+		});
+		console.log(str);
+	}, config);
+
+/*
         console.log('appId');
         console.log(appId);
 
@@ -137,7 +147,7 @@ async function mainOP() {
         console.log('app');
         console.log(app);
 
-/*
+
         objectsOptions(app);
 
         var title = document.getElementById('title');
