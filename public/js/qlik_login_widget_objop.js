@@ -126,6 +126,8 @@ async function mainOP() {
             }
         });
 
+        /*
+
         var app = qlik.openApp(appId, config);
 
 
@@ -136,6 +138,8 @@ async function mainOP() {
 
         var mashup_object = parent.document.getElementById('mashup_object');
         mashup_object.removeAttribute('disabled');
+
+*/
 
     });
 
