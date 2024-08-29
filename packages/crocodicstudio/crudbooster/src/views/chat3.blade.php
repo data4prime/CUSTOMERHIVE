@@ -101,6 +101,41 @@
     opacity: .8;
 }
 
+.card-header:first-child {
+    border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+}
+
+
+.card-header {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: transparent;
+    border-bottom: 1px solid rgba(77,82,89,0.07);
+}
+
+.card-header .card-title {
+    padding: 0;
+    border: none;
+}
+
+h4.card-title {
+    font-size: 17px;
+}
+
+.card-header>*:last-child {
+    margin-right: 0;
+}
+
+.card-header>* {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
     </style>
 
 
