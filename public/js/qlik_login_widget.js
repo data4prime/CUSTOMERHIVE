@@ -12,6 +12,10 @@ async function loadScript(url) {
 
 async function main() {
 
+    console.log('main');
+
+    console.log(webIntegrationId);
+
     if (webIntegrationId && webIntegrationId !== '') {
         const check = await checkLoggedIn();
 
