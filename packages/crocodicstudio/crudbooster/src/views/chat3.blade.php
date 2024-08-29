@@ -106,7 +106,7 @@
 }
 
 
-.card-header {
+.chat-header {
     display: -webkit-box;
     display: flex;
     -webkit-box-pack: justify;
@@ -118,20 +118,20 @@
     border-bottom: 1px solid rgba(77,82,89,0.07);
 }
 
-.card-header .card-title {
+.chat-header .chat-title {
     padding: 0;
     border: none;
 }
 
-h4.card-title {
+h4.chat-title {
     font-size: 17px;
 }
 
-.card-header>*:last-child {
+.chat-header>*:last-child {
     margin-right: 0;
 }
 
-.card-header>* {
+.chat-header>* {
     margin-left: 8px;
     margin-right: 8px;
 }
