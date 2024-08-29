@@ -125,13 +125,13 @@ async function mainOP() {
         });
 
 
-        /*qlik.getAppList(function(list){
+        qlik.getAppList(function(list){
 		var str = "";
 		list.forEach(function(value) {
 			str +=  value.qDocName + "("+ value.qDocId +") ";
 		});
 		console.log(str);
-	}, config);*/
+	}, config);
 
 
         console.log('appId');
