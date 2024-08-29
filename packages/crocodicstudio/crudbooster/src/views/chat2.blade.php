@@ -433,15 +433,19 @@ button, input, optgroup, select, textarea {
                   </div>
                 </div>
 
+
+              <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
+                <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div>
+<div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;">
+<div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div></div></div>
+
+<div class="card-footer">
 <div class="publisher bt-1 border-light">
                 <img class="avatar avatar-xs" src="/images/user/admin.jpeg" alt="...">
                 <input class="publisher-input" type="text" placeholder="Scrivi qui">
                 <button id="send-btn" class="publisher-btn text-info"  type="button"><i class="fa fa-paper-plane"></i></button>
               </div>
-              <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
-                <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div>
-<div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;">
-<div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div></div></div>
+</div>
 
 
 
