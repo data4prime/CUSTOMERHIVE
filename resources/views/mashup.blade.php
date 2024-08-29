@@ -7,7 +7,7 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 $conf = QlikMashupController::getConf($qlik_conf);
 
 
-dd($conf);
+//dd($conf);
 
 $state = bin2hex(random_bytes(16));
 
