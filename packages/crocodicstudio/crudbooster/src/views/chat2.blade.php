@@ -401,12 +401,11 @@ button, input, optgroup, select, textarea {
   }
 
 
-/*
 
   .media.media-chat {
     flex: 1; 
   }
-*/
+
 
   .publisher {
     flex-shrink: 0; 
