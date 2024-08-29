@@ -142,7 +142,7 @@ h4.chat-title {
 
 
 <div class="chat-window" id="chatWindow">
-    <div class="chat-header"><h4 class="card-title"><strong>Chat AI</strong></h4></div>
+    <div class="chat-header">Chat AI</div>
     <div class="chat-body">
         <div class="media media-chat">
                   <img class="avatar" src="/images/user/admin.jpeg" alt="...">
