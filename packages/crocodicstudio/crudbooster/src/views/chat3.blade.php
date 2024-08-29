@@ -47,6 +47,17 @@
             border-radius: 5px;
         }
 
+.media-chat {
+    padding-right: 64px;
+    margin-bottom: 0;
+}
+
+.media {
+    padding: 16px 12px;
+    -webkit-transition: background-color .2s linear;
+    transition: background-color .2s linear;
+}
+
 
     </style>
 
@@ -56,8 +67,14 @@
 <div class="chat-window" id="chatWindow">
     <div class="chat-header">Chat AI</div>
     <div class="chat-body">
-        <!-- Contenuto della chat -->
-        <p>Benvenuto nella chat!</p>
+        <div class="media media-chat">
+                  <img class="avatar" src="/images/user/admin.jpeg" alt="...">
+                  <div class="media-body">
+                    <p>Ciao</p>
+                    <p>Sono il tuo assistente AI</p>
+                    <p>Come posso aiutarti?</p>
+                  </div>
+                </div>
     </div>
     <div class="chat-footer">
         <div class="chat-input">
