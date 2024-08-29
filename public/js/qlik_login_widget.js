@@ -14,6 +14,15 @@ async function main() {
 
     console.log('main');
 
+    //check if webIntegrationId variable exists 
+
+    if (typeof webIntegrationId === 'undefined') {
+        var webIntegrationId = '';
+    }
+
+
+
+
     console.log(webIntegrationId);
 
     if (webIntegrationId && webIntegrationId !== '') {
