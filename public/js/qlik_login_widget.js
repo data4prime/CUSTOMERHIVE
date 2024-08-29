@@ -43,6 +43,9 @@ async function main() {
         configuration.webIntegrationId = webIntegrationId;
     }
 
+    console.log('configuration');
+    console.log(configuration);
+
     require.config(configuration);
 
     require(["js/qlik"], function (qlik) {
