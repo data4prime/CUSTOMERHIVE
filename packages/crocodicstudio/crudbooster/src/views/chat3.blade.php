@@ -114,8 +114,10 @@
     -webkit-box-align: center;
     align-items: center;
     padding: 15px 20px;
-    background-color: transparent;
+    /*background-color: transparent;*/
     border-bottom: 1px solid rgba(77,82,89,0.07);
+    /*text black color*/
+    color: #4d5259;
 }
 
 .chat-header .chat-title {
