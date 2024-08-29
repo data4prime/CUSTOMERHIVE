@@ -126,11 +126,11 @@ async function mainOP() {
             }
         });
 
-        /*
+        
 
         var app = qlik.openApp(appId, config);
 
-
+/*
         objectsOptions(app);
 
         var title = document.getElementById('title');
