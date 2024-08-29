@@ -16,9 +16,9 @@ async function main() {
 
     //check if webIntegrationId variable exists 
 
-    if (typeof webIntegrationId === 'undefined') {
+    /*if (typeof webIntegrationId === 'undefined') {
         var webIntegrationId = '';
-    }
+    }*/
 
 
 
