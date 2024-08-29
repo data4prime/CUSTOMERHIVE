@@ -29,7 +29,7 @@ async function main() {
         isSecure: true, 
     };
 
-    if (webIntegrationId !== '') {
+    if (webIntegrationId == '') {
         config.prefix = "/"+prefix+"/";
     }
 
