@@ -34,6 +34,20 @@
             padding: 10px;
             border-top: 1px solid #ccc;
         }
+
+        .chat-input {
+            width: 100%;
+            display: flex;
+
+        }
+
+        .chat-input input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+
     </style>
 
 
@@ -46,7 +60,7 @@
         <p>Benvenuto nella chat!</p>
     </div>
     <div class="chat-footer">
-        <div class="input-group">
+        <div class="chat-input">
             <input type="text" class="form-control" placeholder="Scrivi un messaggio...">
             <div class="input-group-append">
                 <button id="send-btn" class="btn btn-primary" type="button">Invia</button>
