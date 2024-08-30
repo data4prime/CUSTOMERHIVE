@@ -414,6 +414,7 @@ class QlikHelper
 
     //$expire = $issuedA2->addMinutes(60)->timestamp;
 
+    file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($qlik_conf)."\n", FILE_APPEND);
 
     $privateKey = $qlik_conf->private_key;
 
