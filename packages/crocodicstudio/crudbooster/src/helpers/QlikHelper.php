@@ -412,7 +412,7 @@ class QlikHelper
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
-    $expire = $issuedA2->addMinutes(60)->timestamp;
+    //$expire = $issuedA2->addMinutes(60)->timestamp;
 
 
     $privateKey = $qlik_conf->private_key;
