@@ -178,7 +178,7 @@ h4.chat-title {
     </div>
     <div class="chat-body">
         <div class="media media-chat">
-                  <img class="avatar" src="/images/user/admin.jpeg" alt="...">
+                  <img class="avatar" src="/images/user/chatai.jpg" alt="...">
                   <div class="media-body">
                     <p>Ciao</p>
                     <p>Sono il tuo assistente AI</p>
@@ -218,7 +218,7 @@ function sendMessage(event) {
     var message = document.querySelector('#publisher-input').value;
     console.log(message);
     if(message != ''){
-        var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>'+message+'</p></div></div>';
+        var html = '<div class="media media-chat media-chat-reverse"><img class="avatar" src="/images/user/admin.jpg" alt="..."><div class="media-body"><p>'+message+'</p></div></div>';
         document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
         document.querySelector('#publisher-input').value = '';
     }
@@ -235,12 +235,12 @@ function sendMessage(event) {
         console.log('Success:', data);
         //if data.text exists
         if(data.text){
-            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
+            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
             document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
         }
 
         if(data.message){
-            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+data.message+'</p></div></div>';
+            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body"><p>'+data.message+'</p></div></div>';
             document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
         }
 
@@ -281,7 +281,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
       .then((response) => response.json())
       .then((data) => {
         console.log('Success:', data);
-        var html = '<div class="media media-chat"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
+        var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
         document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
         var objDiv = document.querySelector('.chat-body');
         objDiv.scrollTop = objDiv.scrollHeight;
