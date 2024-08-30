@@ -343,7 +343,7 @@ class AdminChatAIController extends CBController
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$data['item_id'] = $item_id;
-		$data['chat_ai'] = QlikItem::find($item_id);
+		$data['chat_ai'] = ChatAIConf::find($item_id);
 		$data['groups'] = ItemsAllowed::where('item_id', $item_id)
 			->join('groups', 'groups.id', '=', 'items_allowed.group_id')
 			->get();
@@ -377,7 +377,7 @@ class AdminChatAIController extends CBController
 		}
 
 		$data['item_id'] = $item_id;
-		$data['chat_ai'] = QlikItem::find($item_id);
+		$data['chat_ai'] = ChatAIConf::find($item_id);
 		$data['tenants'] = TenantsAllowed::where('item_id', $item_id)
 			->join('tenants', 'tenants.id', '=', 'tenants_allowed.tenant_id')
 			->get();
