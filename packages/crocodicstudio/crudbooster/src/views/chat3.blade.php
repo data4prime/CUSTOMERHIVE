@@ -218,7 +218,7 @@ function sendMessage(event) {
     var message = document.querySelector('#publisher-input').value;
     console.log(message);
     if(message != ''){
-        var html = '<div class="media media-chat media-chat-reverse"><img class="avatar" src="/images/user/admin.jpg" alt="..."><div class="media-body"><p>'+message+'</p></div></div>';
+        var html = '<div class="media media-chat media-chat-reverse"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+message+'</p></div></div>';
         document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
         document.querySelector('#publisher-input').value = '';
     }
