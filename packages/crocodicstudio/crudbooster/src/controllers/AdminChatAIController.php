@@ -580,7 +580,7 @@ class AdminChatAIController extends CBController
 		// Imposta i dati da inviare nel corpo della richiesta
 		$data = [
 			"action" => "sendMessage",
-			"sessionId" => "33990a7e-e1cb-451a-9712-65393fb4f871",
+			"sessionId" => '"'.CRUDBooster::myId().'"',
 			"chatInput" => $message
 		];
 
