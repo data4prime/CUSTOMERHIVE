@@ -253,7 +253,7 @@ class QlikConfController extends CBController
                 // Hide all fields initially
                 Object.keys(fields).forEach(key => {
                     fields[key].forEach(fieldId => {
-                        document.getElementsByName(fieldId)[0].classList.add('hidden');
+                        document.getElementsByName(fieldId)[0].parntNode.parentNode.classList.add('hidden');
                     });
                 });
 
@@ -271,7 +271,7 @@ class QlikConfController extends CBController
                 // If the key exists in the fields object, show the corresponding fields
                 if (fields[fieldKey]) {
                     fields[fieldKey].forEach(fieldId => {
-                        document.getElementsByName(fieldId)[0].classList.remove('hidden');
+                        document.getElementsByName(fieldId)[0].parntNode.parentNode.classList.remove('hidden');
                     });
                 }
             }
