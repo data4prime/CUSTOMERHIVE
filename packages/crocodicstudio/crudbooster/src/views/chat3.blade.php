@@ -233,8 +233,17 @@ function sendMessage(event) {
     .then((response) => response.json())
     .then((data) => {
         console.log('Success:', data);
-        var html = '<div class="media media-chat"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
-        document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
+        //if data.text exists
+        if(data.text){
+            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
+            document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
+        }
+
+        if(data.message){
+            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+data.message+'</p></div></div>';
+            document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
+        }
+
         var objDiv = document.querySelector('.chat-body');
         objDiv.scrollTop = objDiv.scrollHeight;
     })
