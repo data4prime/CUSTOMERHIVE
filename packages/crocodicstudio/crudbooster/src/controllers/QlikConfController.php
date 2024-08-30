@@ -240,7 +240,9 @@ class QlikConfController extends CBController
         document.addEventListener('DOMContentLoaded', function() {
 
             const typeSelect = document.getElementsByName('type')[0];
+            console.log(document.getElementsByName('type'));
             const authSelect = document.getElementsByName('auth')[0];
+            console.log(document.getElementsByName('auth'));
 
             const fields = {
                 'On-Premise_JWT': ['confname', 'type', 'auth', 'qrsurl', 'port', 'endpoint', 'private_key'],
