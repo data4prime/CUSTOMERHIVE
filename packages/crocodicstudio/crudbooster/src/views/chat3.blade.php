@@ -200,7 +200,53 @@ h4.chat-title {
 
 <script>
 
+document.getElementById('send-btn').addEventListener('click', function(event) {
+    sendMessage(event);
+});
 
+document.getElementById('publisher-input').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        sendMessage(event);
+    }
+});
+
+function sendMessage(event) {
+    event.preventDefault();
+
+    console.log('clicked');
+
+    var message = document.querySelector('#publisher-input').value;
+    console.log(message);
+    if(message != ''){
+        var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>'+message+'</p></div></div>';
+        document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
+        document.querySelector('#publisher-input').value = '';
+    }
+
+    fetch('/admin/chat_ai/send_message', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 'message': message }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        console.log('Success:', data);
+        var html = '<div class="media media-chat"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
+        document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
+        var objDiv = document.querySelector('.chat-body');
+        objDiv.scrollTop = objDiv.scrollHeight;
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+
+    var objDiv = document.querySelector('.chat-body');
+    objDiv.scrollTop = objDiv.scrollHeight;
+}
+
+/*
 
 document.getElementById('send-btn').addEventListener('click', function() {
     event.preventDefault();
@@ -211,11 +257,8 @@ document.getElementById('send-btn').addEventListener('click', function() {
     console.log(message);
     if(message != ''){
         var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>'+message+'</p></div></div>';
-        //insert html in the chat-body div
         document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
-        //clear the input field
         document.querySelector('#publisher-input').value = '';
-
     }
 
 
@@ -230,10 +273,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
       .then((data) => {
         console.log('Success:', data);
         var html = '<div class="media media-chat"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
-        
-        //insert html in the chat-body div
         document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
-
         var objDiv = document.querySelector('.chat-body');
         objDiv.scrollTop = objDiv.scrollHeight;
       })
@@ -247,6 +287,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
 
 
 });
+*/
 
 
 </script>
