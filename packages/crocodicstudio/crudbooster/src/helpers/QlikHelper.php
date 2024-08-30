@@ -449,7 +449,7 @@ class QlikHelper
       'userDirectory' => $user_directory,
     ];
 
-    dd($payload);
+    file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($payload)."\n", FILE_APPEND);
 
     $myToken = JWT::encode($payload, $privateKey, 'RS256');
     //$myToken = JWT::encode($payload, $privateKey, 'RS256', $keyid, $header);
