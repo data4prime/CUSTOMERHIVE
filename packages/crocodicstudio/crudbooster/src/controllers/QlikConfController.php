@@ -277,6 +277,7 @@ class QlikConfController extends CBController
             }
 
             console.log(typeSelect);
+            updateVisibility();
 
             // Add event listeners to update visibility on change
             typeSelect.addEventListener('change', updateVisibility);
