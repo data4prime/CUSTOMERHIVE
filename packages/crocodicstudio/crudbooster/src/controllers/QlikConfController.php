@@ -263,7 +263,6 @@ class QlikConfController extends CBController
 
 
                 // Construct the key for the fields object
-                //const fieldKey = `${selectedType}_${selectedAuth}`;
                 const fieldKey = selectedType + '_' + selectedAuth;
 
                 // If the key exists in the fields object, show the corresponding fields
