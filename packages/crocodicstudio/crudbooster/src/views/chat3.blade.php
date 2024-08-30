@@ -1,3 +1,8 @@
+@php 
+
+use use Session;
+
+@endphp
 
     <style>
 

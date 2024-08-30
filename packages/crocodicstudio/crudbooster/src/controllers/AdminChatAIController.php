@@ -565,9 +565,13 @@ class AdminChatAIController extends CBController
 	}
 
 	public function send_message() {
-		//TODO
 
-		//dd(Request::all());
+		//check if in the session exists chat_messages array
+		if (!Session::has('chat_messages')) {
+			Session::put('chat_messages', []);
+		}
+
+		
 
 		$message = Request::all()['message'];
 
@@ -607,6 +611,21 @@ class AdminChatAIController extends CBController
 
 		// Chiudi la sessione cURL
 		curl_close($ch);
+
+		$response_message = json_decode($response, true);
+
+		if (isset($response_message->text)) {
+			$response_message = $response_message->text;
+		} else {
+			$response_message = $response_message->message;
+		}
+
+
+		//put in the session the message
+		$chat_messages = Session::get('chat_messages');
+		$chat_messages[] = ['message' => $message, 'response' => $response_message];
+
+		Session::put('chat_messages', $chat_messages);
 
 		// Stampa la risposta
 		echo $response;
