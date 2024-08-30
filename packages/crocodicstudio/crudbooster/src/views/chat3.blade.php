@@ -145,7 +145,7 @@ h4.chat-title {
     color: #fff;
 }
 
-
+/*
 #x-close-chatai {
     position: absolute;
     right: 10px;
@@ -163,7 +163,7 @@ h4.chat-title {
     background-color: #f9f9f9;
     cursor: pointer;
     transition: all 0.3s ease;
-}
+}*/
 
     </style>
 
@@ -171,7 +171,7 @@ h4.chat-title {
 
 
 <div class="chat-window" id="chatWindow">
-    <div id="x-close-chatai" >X</div>
+    <div id="x-close-chatai" ><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
     <div class="chat-header">Chat AI</div>
     <div class="chat-body">
         <div class="media media-chat">
