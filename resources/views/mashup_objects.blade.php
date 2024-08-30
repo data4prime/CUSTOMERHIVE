@@ -27,7 +27,7 @@ if ($conf->type == 'On-Premise' && $conf->auth == 'JWT') {
 
   
 } 
-dd($token);
+//dd($token);
 
 if ($conf->type == 'On-Premise' && $conf->auth == 'Ticket') {
 
