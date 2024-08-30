@@ -171,8 +171,11 @@ h4.chat-title {
 
 
 <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+        Chat AI
     <div id="x-close-chatai" ><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-    <div class="chat-header">Chat AI</div>
+
+    </div>
     <div class="chat-body">
         <div class="media media-chat">
                   <img class="avatar" src="/images/user/admin.jpeg" alt="...">
