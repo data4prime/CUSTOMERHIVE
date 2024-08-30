@@ -448,6 +448,9 @@ class QlikHelper
       'userId' => $qlik_login,
       'userDirectory' => $user_directory,
     ];
+
+    dd($payload);
+
     $myToken = JWT::encode($payload, $privateKey, 'RS256');
     //$myToken = JWT::encode($payload, $privateKey, 'RS256', $keyid, $header);
 
