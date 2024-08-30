@@ -145,13 +145,33 @@ h4.chat-title {
     color: #fff;
 }
 
+
+#x-close-chatai {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
     </style>
 
 
 
 
 <div class="chat-window" id="chatWindow">
-    <div id="x-close-chatai" style="position: absolute;right: 5px;width:10px;font-size: large;padding-right: 15px;border: 1px solid black;padding-left: 5px;top: 5px;cursor: pointer;">X</div>
+    <div id="x-close-chatai" >X</div>
     <div class="chat-header">Chat AI</div>
     <div class="chat-body">
         <div class="media media-chat">
