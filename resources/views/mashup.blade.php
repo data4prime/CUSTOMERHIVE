@@ -38,6 +38,8 @@ if ($conf->auth == 'JWT' && $conf->type == 'SAAS') {
 
 }
 
+
+
 $js_defer = $conf->type == "On-Premise" ? "js/qlik_login_widget_objop.js" : "js/qlik_login_widget_obj.js";
 
 $param = $conf->type == 'On-Premise' ? "?qlikTicket=$token" : "";
