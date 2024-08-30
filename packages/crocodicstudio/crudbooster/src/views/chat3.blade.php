@@ -1,8 +1,4 @@
-@php 
 
-use Session;
-
-@endphp
 
     <style>
 
