@@ -448,8 +448,8 @@ class QlikHelper
       'userId' => $current_user->email,
       'userDirectory' => 'CHIVE',
     ];
-
-    $myToken = JWT::encode($payload, $privateKey, 'RS256', $keyid, $header);
+    $myToken = JWT::encode($payload, $privateKey, 'RS256');
+    //$myToken = JWT::encode($payload, $privateKey, 'RS256', $keyid, $header);
 
     return $myToken;
   }
