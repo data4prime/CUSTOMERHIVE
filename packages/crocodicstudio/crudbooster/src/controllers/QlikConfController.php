@@ -246,7 +246,7 @@ class QlikConfController extends CBController
 
             const fields = {
                 'On-Premise_JWT': ['confname', 'type', 'auth', 'qrsurl', 'port', 'endpoint', 'private_key'],
-                'SAAS_JWT': ['confname', 'type', 'auth', 'qrsurl', 'port', 'endpoint', 'keyid', 'issuer', 'web_int_id', 'private_key']
+                'SAAS_JWT': ['confname', 'type', 'auth', 'url', 'port', 'endpoint', 'keyid', 'issuer', 'web_int_id', 'private_key']
             };
 
             function updateVisibility() {
