@@ -237,43 +237,150 @@ class QlikConfController extends CBController
         |
         */
 		$this->script_js = "
-        document.addEventListener('DOMContentLoaded', function() {
-            const typeSelect = document.getElementById('typeSelect');
-            const authSelect = document.getElementById('authSelect');
 
-            const fields = {
-                'On-Premise_JWT': ['confname', 'type', 'auth', 'qrsurl', 'port', 'endpoint', 'private_key'],
-                'SAAS_JWT': ['confname', 'type', 'auth', 'qrsurl', 'port', 'endpoint', 'keyid', 'issuer', 'web_int_id', 'private_key']
-            };
+            $(document).ready(function () {
 
-            function updateVisibility() {
-                // Hide all fields initially
-                Object.keys(fields).forEach(key => {
-                    fields[key].forEach(fieldId => {
-                        document.getElementById(fieldId).classList.add('hidden');
+                var type = $('[name=\"type\"]').first();
+                var type_val = type.val();
+                var on_premise = ['qrsurl', /*'endpoint',*/ 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
+
+                var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
+
+                if (type_val == 'On-Premise') {
+
+                    saas.forEach(element => {
+
+                        to_hide = document.getElementsByName(element);
+
+                        to_hide.forEach(hide => {
+                            hide.parentNode.parentNode.style.display = 'none';
+                    //hide.setAttribute('disabled', true);
+
+                        });
+
+
                     });
-                });
 
-                // Determine the selected options
-                const selectedType = typeSelect.value;
-                const selectedAuth = authSelect.value;
+                    on_premise.forEach(element => {
 
-                // Construct the key for the fields object
-                const fieldKey = `${selectedType}_${selectedAuth}`;
+                        to_show = document.getElementsByName(element);
 
-                // If the key exists in the fields object, show the corresponding fields
-                if (fields[fieldKey]) {
-                    fields[fieldKey].forEach(fieldId => {
-                        document.getElementById(fieldId).classList.remove('hidden');
+                        to_show.forEach(show => {
+                            //
+                    show.parentNode.parentNode.style.display = '';
+                    //show.removeAttribute('disabled');
+
+                        });
+
+
                     });
+
+
+                } else if (type_val == 'SAAS') {
+                    on_premise.forEach(element => {
+
+                        to_hide = document.getElementsByName(element);
+
+                        to_hide.forEach(hide => {
+                            hide.parentNode.parentNode.style.display = 'none';
+                    //hide.setAttribute('disabled', true);
+
+                        });
+
+
+                    });
+
+                    saas.forEach(element => {
+
+                        to_show = document.getElementsByName(element);
+
+                        to_show.forEach(show => {
+                            show.parentNode.parentNode.style.display = '';
+                    //show.removeAttribute('disabled');
+
+                        });
+
+
+                    });
+
                 }
-            }
 
-            // Add event listeners to update visibility on change
-            typeSelect.addEventListener('change', updateVisibility);
-            authSelect.addEventListener('change', updateVisibility);
-        });
-            
+                type.change(function () {
+                    // Code to be executed when the value of the select changes
+                    var selectedValue = $(this).val();
+                    var on_premise = ['qrsurl', /*'endpoint',*/ 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
+
+                    var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
+
+                    //console.log(document.getElementsByName('type')[0]);
+
+                    //var type = document.getElementsByName('type')[0].value;
+
+                    var type = $('[name=\"type\"]').first().val();
+
+                    if (type == 'On-Premise') {
+
+                        saas.forEach(element => {
+
+                            to_hide = document.getElementsByName(element);
+
+                            to_hide.forEach(hide => {
+                                hide.parentNode.parentNode.style.display = 'none';
+                        //hide.setAttribute('disabled', true);
+
+                            });
+
+
+                        });
+
+                        on_premise.forEach(element => {
+
+                            to_show = document.getElementsByName(element);
+
+                            to_show.forEach(show => {
+                                show.parentNode.parentNode.style.display = '';
+                        //show.removeAttribute('disabled');
+
+                            });
+
+
+                        });
+
+
+                    } else if (type == 'SAAS') {
+                        on_premise.forEach(element => {
+
+                            to_hide = document.getElementsByName(element);
+                            console.log(to_hide);
+
+                            to_hide.forEach(hide => {
+                                hide.parentNode.parentNode.style.display = 'none';
+                        //hide.setAttribute('disabled', true);
+
+                            });
+
+
+                        });
+
+                        saas.forEach(element => {
+
+                            to_show = document.getElementsByName(element);
+
+                            to_show.forEach(show => {
+                                show.parentNode.parentNode.style.display = '';
+                        //show.setAttribute('disabled', false);
+
+                            });
+
+
+                        });
+
+                    }
+
+                });
+            });
+
+
             ";
 
 
