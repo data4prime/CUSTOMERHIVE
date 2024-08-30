@@ -26,6 +26,7 @@ async function main() {
     console.log(webIntegrationId);
 
     if (webIntegrationId && webIntegrationId !== '') {
+        console.log('yes web int');
         const check = await checkLoggedIn();
 
         if (check.status === 401) {
@@ -54,8 +55,15 @@ async function main() {
 
     }
 
+    if (webIntegrationId && webIntegrationId !== '') {
+        await loadScript(`${host}/${src}`);
+    } else {
+        await loadScript(`${host}/${prefix}/${src}`);
+    }
+
+
     
-    await loadScript(`${host}/${prefix}/${src}`);
+    
 
     var selState;
     var query;
