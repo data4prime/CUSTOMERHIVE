@@ -1,6 +1,6 @@
 @php 
 
-use use Session;
+use Session;
 
 @endphp
 
