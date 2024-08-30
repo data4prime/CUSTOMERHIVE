@@ -258,6 +258,10 @@ class QlikConfController extends CBController
                 const selectedType = typeSelect.value;
                 const selectedAuth = authSelect.value;
 
+                console.log(selectedType);
+                console.log(selectedAuth);
+
+
                 // Construct the key for the fields object
                 const fieldKey = `${selectedType}_${selectedAuth}`;
 
