@@ -151,7 +151,7 @@ h4.chat-title {
 
 
 <div class="chat-window" id="chatWindow">
-    <div style="position: absolute;right: 0;width:10px;">X</div>
+    <div id="x-close-chatai" style="position: absolute;right: 5px;width:10px;font-size: large;padding-right: 15px;border: 1px solid black;padding-left: 5px;top: 5px;cursor: pointer;">X</div>
     <div class="chat-header">Chat AI</div>
     <div class="chat-body">
         <div class="media media-chat">

@@ -84,7 +84,14 @@ $("#draggable").resizable();
 
 <script>
 
-// JavaScript to toggle sidebar visibility
+document.querySelector('#x-close-chatai').addEventListener('click', function () {
+
+$("#chatWindow").toggle();
+
+
+
+});
+
 document.querySelector('.toggle-sidebar-btn').addEventListener('click', function () {
 
 $("#chatWindow").toggle();
