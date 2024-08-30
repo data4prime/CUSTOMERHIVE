@@ -44,6 +44,10 @@ $js_defer = $conf->type == "On-Premise" ? "js/qlik_login_widget_objop.js" : "js/
 
 $param = $conf->type == 'On-Premise' ? "?qlikTicket=$token" : "";
 
+if (!isset($mashups->object)) {
+  $mashups->object = "object";
+}
+
 @endphp 
 @if (isset($conf) && $conf) 
 
