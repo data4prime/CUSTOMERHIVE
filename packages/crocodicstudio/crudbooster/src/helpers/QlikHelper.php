@@ -414,7 +414,7 @@ class QlikHelper
 
     //$expire = $issuedA2->addMinutes(60)->timestamp;
 
-    file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($qlik_conf)."\n", FILE_APPEND);
+    //file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($qlik_conf)."\n", FILE_APPEND);
 
     $privateKey = $qlik_conf->private_key;
 
@@ -425,7 +425,7 @@ class QlikHelper
       $privateKey = "";
     }
 
-    file_put_contents(__DIR__ . '/qlik_token.txt', $privateKey."\n", FILE_APPEND);
+    //file_put_contents(__DIR__ . '/qlik_token.txt', $privateKey."\n", FILE_APPEND);
 
 
     $qlik_user = DB::table('qlik_users')->where('user_id', $id)->where('qlik_conf_id', $conf_id)->first();
@@ -452,7 +452,7 @@ class QlikHelper
       'userDirectory' => $user_directory,
     ];
 
-    file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($payload)."\n", FILE_APPEND);
+    //file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($payload)."\n", FILE_APPEND);
 
     $myToken = JWT::encode($payload, $privateKey, 'RS256');
     //$myToken = JWT::encode($payload, $privateKey, 'RS256', $keyid, $header);
