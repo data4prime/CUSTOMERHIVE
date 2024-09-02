@@ -215,6 +215,7 @@ class MenusController extends CBController
                 $('#form-group-token').show();
 
                 $('#form-group-path').hide();
+                $('#form-group-module').hide();
 
 /*
                 $('input[name=path]').attr('placeholder','Please enter the Route');
@@ -409,10 +410,10 @@ class MenusController extends CBController
       "style" => "display:none",
     ];
 
-    $this->form[] = ['label' => 'Method', 'name' => 'method', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'GET;POST;PUT;DELETE', 'placeholder' => 'Method to call the API' , "style" => "display:none",];
-		$this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'JWT;', 'placeholder' => 'Authentication method', "style" => "display:none",];
-		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API endpoint', "style" => "display:none",];
-		$this->form[] = ['label' => 'Token', 'name' => 'token', 'type' => 'textarea', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API token', "style" => "display:none",];
+    $this->form[] = ['label' => 'Method', 'name' => 'method', 'type' => 'select', 'validation' => 'required',  'dataenum' => 'GET;POST;PUT;DELETE', 'placeholder' => 'Method to call the API' , "style" => "display:none",];
+		$this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'validation' => 'required',  'dataenum' => 'JWT;', 'placeholder' => 'Authentication method', "style" => "display:none",];
+		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|string',  'placeholder' => 'API endpoint', "style" => "display:none",];
+		$this->form[] = ['label' => 'Token', 'name' => 'token', 'type' => 'textarea', 'validation' => 'required|string',  'placeholder' => 'API token', "style" => "display:none",];
 
 
     $fontawesome = Fontawesome::getIcons();
