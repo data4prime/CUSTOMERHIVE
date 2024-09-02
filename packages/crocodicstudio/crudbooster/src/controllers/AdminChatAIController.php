@@ -637,7 +637,7 @@ class AdminChatAIController extends CBController
 
 			$response = new \stdClass();
 
-			$response->message = 'Errore nella richiesta. Verifica la configurazione attiva!';
+			//$response->message = 'Errore nella richiesta. Verifica la configurazione attiva!';
 
 			$response_message = ['message' => 'Errore nella richiesta. Verifica la configurazione attiva!'];
 
@@ -661,8 +661,10 @@ class AdminChatAIController extends CBController
 
 		Session::put('chat_messages', $chat_messages);
 
+		echo json_encode($response_message);
+
 		// Stampa la risposta
-		echo $response;
+		//echo $response;
 
 
 	}
