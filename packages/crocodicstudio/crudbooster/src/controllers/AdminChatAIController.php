@@ -328,12 +328,9 @@ class AdminChatAIController extends CBController
 
 		dd($record);
 
-		//if is_active = 1
-		if ($record->is_active == 1) {
-			//edit all configuration, set is_active to 0
-			ChatAIConf::where('id', '!=', $id)
-				->update(['is_active' => 'Non Attivo']);
-		}
+		DB::table('chatai_confs')
+			->where('id', '!=', $id)
+			->update(['is_active' => 'Non Attivo']);
 
 
 	}
