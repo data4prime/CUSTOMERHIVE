@@ -643,6 +643,7 @@ class AdminChatAIController extends CBController
 
 
 		} else {
+			$response_message = json_decode($response, true);
 			if (isset($response_message["text"])) {
 				$response_message = $response_message["text"];
 			} else {
@@ -654,7 +655,7 @@ class AdminChatAIController extends CBController
 
 		curl_close($ch);
 
-		$response_message = json_decode($response, true);
+		
 
 		$chat_messages = Session::get('chat_messages');
 		$chat_messages[] = ['message' => $message, 'response' => $response_message];
