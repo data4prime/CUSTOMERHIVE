@@ -411,7 +411,7 @@ class MenusController extends CBController
     ];
 
     $this->form[] = ['label' => 'Method', 'name' => 'method', 'type' => 'select', 'validation' => 'required',  'dataenum' => 'GET;POST;PUT;DELETE', 'placeholder' => 'Method to call the API' , "style" => "display:none",];
-		$this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'validation' => 'required',  'dataenum' => 'JWT;', 'placeholder' => 'Authentication method', "style" => "display:none",];
+		//$this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'validation' => 'required',  'dataenum' => 'JWT;', 'placeholder' => 'Authentication method', "style" => "display:none",];
 		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|string',  'placeholder' => 'API endpoint', "style" => "display:none",];
 		$this->form[] = ['label' => 'Token', 'name' => 'token', 'type' => 'textarea', 'validation' => 'required|string',  'placeholder' => 'API token', "style" => "display:none",];
 
