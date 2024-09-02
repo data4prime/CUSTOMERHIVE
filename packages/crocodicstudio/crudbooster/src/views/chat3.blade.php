@@ -209,7 +209,7 @@ h4.chat-title {
             <div class="media media-chat">
                 <img class="avatar" src="/images/user/chatai.jpg" alt="...">
                 <div class="media-body">
-                    <p>{{$chat_message['response]}}</p>
+                    <p>{{$chat_message['response']}}</p>
 
                 </div>
             </div>
