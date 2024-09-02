@@ -601,7 +601,7 @@ class AdminChatAIController extends CBController
 
 		$message = Request::all()['message'];
 
-		$chatai_conf = DB::table('chatai_confs')->where('is_active', 1)->first();
+		$chatai_conf = DB::table('chatai_confs')->where('is_active', 'Attivo')->first();
 
 
 		$url = $chatai_conf->url;
@@ -629,6 +629,8 @@ class AdminChatAIController extends CBController
 
 
 		$response = curl_exec($ch);
+
+		dd($response);
 
 		// Controlla se ci sono errori
 		if (curl_errno($ch)) {
