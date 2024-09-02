@@ -1,4 +1,13 @@
+@php 
 
+use Illuminate\Support\Facades\Session;
+
+$chat_messages = Session::get('chat_messages');
+
+dd($chat_messages);
+
+
+@endphp 
 
     <style>
 
