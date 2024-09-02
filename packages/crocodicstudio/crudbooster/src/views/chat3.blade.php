@@ -287,7 +287,7 @@ function sendMessage(event) {
 }
 
 var objDiv = document.querySelector('.chat-body');
-    objDiv.scrollTop = objDiv.scrollHeight;
+objDiv.scrollTop = objDiv.scrollHeight;
 
 
 </script>

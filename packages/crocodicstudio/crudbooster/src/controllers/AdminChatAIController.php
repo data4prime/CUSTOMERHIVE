@@ -47,6 +47,8 @@ class AdminChatAIController extends CBController
 		$this->col[] = ["label" => "Method", "name" => "method"];
 		$this->col[] = ["label" => "Auth", "name" => "auth"];
 		$this->col[] = ["label" => "Url", "name" => "url"];
+		//is_active
+		$this->col[] = ["label" => "Is Active", "name" => "is_active", "callback_php" => "(\$row->is_active == 1) ? 'Attivo' : 'Non Attivo'"];
 
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
@@ -57,6 +59,7 @@ class AdminChatAIController extends CBController
 		$this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'JWT;', 'placeholder' => 'Authentication method'];
 		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API endpoint'];
 		$this->form[] = ['label' => 'Token', 'name' => 'token', 'type' => 'textarea', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API token'];
+		$this->form[] = ['label' => 'Is Active', 'name' => 'is_active', 'type' => 'radio', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => '1;0', 'placeholder' => 'Is active'];
 		# END FORM DO NOT REMOVE THIS LINE
 
 

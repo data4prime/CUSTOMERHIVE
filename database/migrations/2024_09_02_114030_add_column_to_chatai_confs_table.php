@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::table('chatai_confs', function (Blueprint $table) {
             //
+            //checkbox field
+            $table->boolean('is_active')->default(0);
         });
     }
 
