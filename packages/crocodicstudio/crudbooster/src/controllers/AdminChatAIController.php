@@ -59,7 +59,7 @@ class AdminChatAIController extends CBController
 		$this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'JWT;', 'placeholder' => 'Authentication method'];
 		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API endpoint'];
 		$this->form[] = ['label' => 'Token', 'name' => 'token', 'type' => 'textarea', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API token'];
-		$this->form[] = ['label' => 'Is Active', 'name' => 'is_active', 'type' => 'radio', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => '1;0', 'placeholder' => 'Is active'];
+		$this->form[] = ['label' => 'Is Active', 'name' => 'is_active', 'type' => 'radio', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'Attivo;Non Attivo', 'placeholder' => 'Is active'];
 		# END FORM DO NOT REMOVE THIS LINE
 
 
@@ -285,6 +285,10 @@ class AdminChatAIController extends CBController
 	{
 		//Your code here
 
+		//edit all configuration, set is_active to 0
+		ChatAIConf::where('id', '!=', $id)
+			->update(['is_active' => 0]);
+
 	}
 
 	/*
@@ -310,6 +314,9 @@ class AdminChatAIController extends CBController
 	public function hook_after_edit($id)
 	{
 		//Your code here
+		//edit all configuration, set is_active to 0
+		ChatAIConf::where('id', '!=', $id)
+			->update(['is_active' => 0]);
 	}
 
 	/*
@@ -578,7 +585,7 @@ class AdminChatAIController extends CBController
 
 		$message = Request::all()['message'];
 
-		$chatai_conf = DB::table('chatai_confs')->first();
+		$chatai_conf = DB::table('chatai_confs')->where('is_active', 1)->first();
 
 
 		$url = $chatai_conf->url;
