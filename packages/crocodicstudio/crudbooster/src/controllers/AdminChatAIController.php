@@ -328,6 +328,11 @@ class AdminChatAIController extends CBController
 
 		//dd($record);
 
+		$confs = DB::table('chatai_confs')
+			->where('id', '!=', $id)->get();
+
+		dd($confs);
+
 		DB::table('chatai_confs')
 			->where('id', '!=', $id)
 			->update(['is_active' => 'Non Attivo']);
