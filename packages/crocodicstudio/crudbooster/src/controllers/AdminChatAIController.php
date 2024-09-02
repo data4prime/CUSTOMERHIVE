@@ -48,7 +48,7 @@ class AdminChatAIController extends CBController
 		$this->col[] = ["label" => "Auth", "name" => "auth"];
 		$this->col[] = ["label" => "Url", "name" => "url"];
 		//is_active
-		$this->col[] = ["label" => "Is Active", "name" => "is_active", "callback_php" => "(\$row->is_active == 1) ? 'Attivo' : 'Non Attivo'"];
+		$this->col[] = ["label" => "Is Active", "name" => "is_active"];
 
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
