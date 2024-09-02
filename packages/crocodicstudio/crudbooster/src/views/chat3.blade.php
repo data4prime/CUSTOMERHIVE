@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\Session;
 
 $chat_messages = Session::get('chat_messages');
 
-
+/*
 dd($chat_messages);
+*/
 
 
 
@@ -189,6 +190,10 @@ h4.chat-title {
 
     </div>
     <div class="chat-body">
+
+
+
+
         <div class="media media-chat">
                   <img class="avatar" src="/images/user/chatai.jpg" alt="...">
                   <div class="media-body">
@@ -197,6 +202,20 @@ h4.chat-title {
                     <p>Come posso aiutarti?</p>
                   </div>
                 </div>
+    @if ($chat_messages)
+        @foreach ($chat_messages as $chat_message)
+            <div class="media media-chat media-chat-reverse"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>{{ $chat_message['message'] }}</p></div></div>
+
+        <div class="media media-chat">
+                  <img class="avatar" src="/images/user/chatai.jpg" alt="...">
+                  <div class="media-body">
+                    <p>{{$chat_message['response]}}</p>
+
+                  </div>
+                </div>
+        @endforeach
+            
+    @endif
     </div>
     <div class="chat-footer">
         <div class="chat-input">
