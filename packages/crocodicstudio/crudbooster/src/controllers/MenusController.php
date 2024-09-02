@@ -209,6 +209,11 @@ class MenusController extends CBController
   					}
             else if (n == 'Agent AI')
             {
+                
+                $('#form-group-method').show();
+                $('#form-group-url').show();
+                $('#form-group-token').show();
+
                 $('input[name=path]').attr('placeholder','Please enter the Route');
 
                 $('#path').prop('required',true);
