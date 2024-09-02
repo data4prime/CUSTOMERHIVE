@@ -4,11 +4,6 @@ use Illuminate\Support\Facades\Session;
 
 $chat_messages = Session::get('chat_messages');
 
-/*
-dd($chat_messages);
-*/
-
-
 
 @endphp 
 
@@ -204,15 +199,20 @@ h4.chat-title {
                 </div>
     @if ($chat_messages)
         @foreach ($chat_messages as $chat_message)
-            <div class="media media-chat media-chat-reverse"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>{{ $chat_message['message'] }}</p></div></div>
+            <div class="media media-chat media-chat-reverse">
+                <img class="avatar" src="/images/user/admin.jpeg" alt="...">
+                <div class="media-body">
+                    <p>{{ $chat_message['message'] }}</p>
+                </div>
+            </div>
 
-        <div class="media media-chat">
-                  <img class="avatar" src="/images/user/chatai.jpg" alt="...">
-                  <div class="media-body">
+            <div class="media media-chat">
+                <img class="avatar" src="/images/user/chatai.jpg" alt="...">
+                <div class="media-body">
                     <p>{{$chat_message['response]}}</p>
 
-                  </div>
                 </div>
+            </div>
         @endforeach
             
     @endif
@@ -285,49 +285,6 @@ function sendMessage(event) {
     var objDiv = document.querySelector('.chat-body');
     objDiv.scrollTop = objDiv.scrollHeight;
 }
-
-/*
-
-document.getElementById('send-btn').addEventListener('click', function() {
-    event.preventDefault();
-
-    console.log('clicked');
-
-    var message = document.querySelector('#publisher-input').value;
-    console.log(message);
-    if(message != ''){
-        var html = '<div class="media media-chat media-chat-reverse"><div class="media-body"><p>'+message+'</p></div></div>';
-        document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
-        document.querySelector('#publisher-input').value = '';
-    }
-
-
-    fetch('/admin/chat_ai/send_message', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ 'message': message }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Success:', data);
-        var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
-        document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
-        var objDiv = document.querySelector('.chat-body');
-        objDiv.scrollTop = objDiv.scrollHeight;
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-
-
-    var objDiv = document.querySelector('.chat-body');
-    objDiv.scrollTop = objDiv.scrollHeight;
-
-
-});
-*/
 
 
 </script>
