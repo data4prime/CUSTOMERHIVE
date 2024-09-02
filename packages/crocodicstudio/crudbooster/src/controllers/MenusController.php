@@ -271,7 +271,7 @@ class MenusController extends CBController
       "name" => "type",
       "type" => "radio",
       "required" => true,
-      'dataenum' => ['Module', 'Qlik', 'Statistic', 'URL', 'Controller & Method', 'Route'],
+      'dataenum' => ['Module', 'Qlik', 'Statistic', 'URL', 'Controller & Method', 'Route', 'Agent AI'],
       'value' => 'Module'
     ];
 
