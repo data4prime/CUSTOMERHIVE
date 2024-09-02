@@ -207,6 +207,18 @@ class MenusController extends CBController
   						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
     					$('#form-group-frame_width,#form-group-frame_height').hide();
   					}
+            else if (n == 'Agent AI')
+            {
+                $('input[name=path]').attr('placeholder','Please enter the Route');
+
+                $('#path').prop('required',true);
+                $('#form-group-path label .text-danger').remove();
+                $('#form-group-path label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
+
+                $('#form-group-path').show();
+                $('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
+                $('#form-group-frame_width,#form-group-frame_height').hide();
+  					}
             else
             {
   						$('#module_slug,#statistic_slug,#qlik_slug').prop('required',false);
@@ -432,6 +444,11 @@ class MenusController extends CBController
     $this->form[] = ['label' => '', 'name' => 'frame_width_unit', 'type' => 'select', 'validation' => '', 'width' => 'col-sm-2', 'dataenum' => 'px', 'default' => '%'];
     $this->form[] = ['label' => 'Height', 'name' => 'frame_height', 'type' => 'number', 'validation' => 'required|int|min:1|max:10000', 'width' => 'col-sm-2', 'value' => '100'];
     $this->form[] = ['label' => '', 'name' => 'frame_height_unit', 'type' => 'select', 'validation' => '', 'width' => 'col-sm-2', 'dataenum' => 'px', 'default' => '%'];
+		
+    $this->form[] = ['label' => 'Method', 'name' => 'method', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'GET;POST;PUT;DELETE', 'placeholder' => 'Method to call the API' , "style" => "display:none",];
+		$this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'JWT;', 'placeholder' => 'Authentication method', "style" => "display:none",];
+		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API endpoint', "style" => "display:none",];
+		$this->form[] = ['label' => 'Token', 'name' => 'token', 'type' => 'textarea', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API token', "style" => "display:none",];
 
     $id_cms_privileges = Request::get('id_cms_privileges');
     $this->form[] = ["label" => "id_cms_privileges", "name" => "id_cms_privileges", "type" => "hidden", "value" => $id_cms_privileges];

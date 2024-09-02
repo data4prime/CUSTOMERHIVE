@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::table('cms_menus', function (Blueprint $table) {
             //
+            $table->string('method')->nullable();
+            $table->string('auth')->nullable();
+            $table->string('url')->nullable();
+            $table->text('token')->nullable();
         });
     }
 
