@@ -630,28 +630,28 @@ class AdminChatAIController extends CBController
 
 		$response = curl_exec($ch);
 
-		dd($response);
+		//dd($response);
 
-		// Controlla se ci sono errori
-		if (curl_errno($ch)) {
-			echo 'Errore cURL: ' . curl_error($ch);
+		if ($response === false) {
+			//echo json_encode(['message' => 'Errore nella richiesta. Verifica la configurazione attiva!']);
+
+			$response_message = ['message' => 'Errore nella richiesta. Verifica la configurazione attiva!'];
+
+
+		} else {
+			if (isset($response_message["text"])) {
+				$response_message = $response_message["text"];
+			} else {
+				$response_message = $response_message["message"];
+			}
 		}
 
-		// Chiudi la sessione cURL
+
+
 		curl_close($ch);
 
 		$response_message = json_decode($response, true);
 
-		//dd($response_message);
-
-		if (isset($response_message["text"])) {
-			$response_message = $response_message["text"];
-		} else {
-			$response_message = $response_message["message"];
-		}
-
-
-		//put in the session the message
 		$chat_messages = Session::get('chat_messages');
 		$chat_messages[] = ['message' => $message, 'response' => $response_message];
 
