@@ -616,10 +616,10 @@ class AdminChatAIController extends CBController
 
 		dd($response_message);
 
-		if (isset($response_message->text)) {
-			$response_message = $response_message->text;
+		if (isset($response_message["text"])) {
+			$response_message = $response_message["text"];
 		} else {
-			$response_message = $response_message->message;
+			$response_message = $response_message["message"];
 		}
 
 
