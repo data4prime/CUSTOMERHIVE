@@ -285,9 +285,17 @@ class AdminChatAIController extends CBController
 	{
 		//Your code here
 
-		//edit all configuration, set is_active to 0
-		ChatAIConf::where('id', '!=', $id)
-			->update(['is_active' => 0]);
+
+		//get record with id = $id
+		$record = ChatAIConf::find($id);
+
+		//if is_active = 1
+		if ($record->is_active == 1) {
+			//edit all configuration, set is_active to 0
+			ChatAIConf::where('id', '!=', $id)
+				->update(['is_active' => 'Non Attivo']);
+		}
+
 
 	}
 
@@ -314,9 +322,18 @@ class AdminChatAIController extends CBController
 	public function hook_after_edit($id)
 	{
 		//Your code here
-		//edit all configuration, set is_active to 0
-		ChatAIConf::where('id', '!=', $id)
-			->update(['is_active' => 0]);
+
+		//get record with id = $id
+		$record = ChatAIConf::find($id);
+
+		//if is_active = 1
+		if ($record->is_active == 1) {
+			//edit all configuration, set is_active to 0
+			ChatAIConf::where('id', '!=', $id)
+				->update(['is_active' => 'Non Attivo']);
+		}
+
+
 	}
 
 	/*
