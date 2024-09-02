@@ -214,7 +214,7 @@ class MenusController extends CBController
                 $('#form-group-url').show();
                 $('#form-group-token').show();
 
-                $('#form-group-path').hide);
+                $('#form-group-path').hide();
 
 /*
                 $('input[name=path]').attr('placeholder','Please enter the Route');
