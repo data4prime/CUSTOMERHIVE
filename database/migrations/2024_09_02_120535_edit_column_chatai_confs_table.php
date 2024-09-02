@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::table('chatai_confs', function (Blueprint $table) {
             //
+
+            //edit column is_active to string type
+            $table->string('is_active')->default('Non Attivo')->nullable()->change();
+
         });
     }
 
