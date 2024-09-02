@@ -326,6 +326,8 @@ class AdminChatAIController extends CBController
 		//get record with id = $id
 		$record = ChatAIConf::find($id);
 
+		dd($record);
+
 		//if is_active = 1
 		if ($record->is_active == 1) {
 			//edit all configuration, set is_active to 0
