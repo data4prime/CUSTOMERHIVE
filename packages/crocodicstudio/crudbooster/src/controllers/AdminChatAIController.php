@@ -639,7 +639,8 @@ class AdminChatAIController extends CBController
 
 			//$response->message = 'Errore nella richiesta. Verifica la configurazione attiva!';
 
-			$response_message = ['message' => 'Errore nella richiesta. Verifica la configurazione attiva!'];
+			//$response_message = ['message' => 'Errore nella richiesta. Verifica la configurazione attiva!'];
+			$response_message = 'Errore nella richiesta. Verifica la configurazione attiva!';
 
 
 		} else {
