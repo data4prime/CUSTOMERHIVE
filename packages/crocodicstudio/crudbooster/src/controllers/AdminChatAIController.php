@@ -635,12 +635,13 @@ class AdminChatAIController extends CBController
 		if ($response === false) {
 			//echo json_encode(['message' => 'Errore nella richiesta. Verifica la configurazione attiva!']);
 
-			$response = new \stdClass();
 
 			//$response->message = 'Errore nella richiesta. Verifica la configurazione attiva!';
 
 			//$response_message = ['message' => 'Errore nella richiesta. Verifica la configurazione attiva!'];
 			$response_message = 'Errore nella richiesta. Verifica la configurazione attiva!';
+
+			$response = json_encode(["message" => $response_message]);
 
 
 		} else {
@@ -663,10 +664,10 @@ class AdminChatAIController extends CBController
 
 		Session::put('chat_messages', $chat_messages);
 
-		echo json_encode($response_message);
+		//echo json_encode($response_message);
 
 		// Stampa la risposta
-		//echo $response;
+		echo $response;
 
 
 	}
