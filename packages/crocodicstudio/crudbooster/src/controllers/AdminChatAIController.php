@@ -48,7 +48,7 @@ class AdminChatAIController extends CBController
 		$this->col[] = ["label" => "Auth", "name" => "auth"];
 		$this->col[] = ["label" => "Url", "name" => "url"];
 		//is_active
-		$this->col[] = ["label" => "Is Active", "name" => "is_active"];
+		$this->col[] = ["label" => "Stato", "name" => "is_active"];
 
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
@@ -59,7 +59,7 @@ class AdminChatAIController extends CBController
 		$this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'JWT;', 'placeholder' => 'Authentication method'];
 		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API endpoint'];
 		$this->form[] = ['label' => 'Token', 'name' => 'token', 'type' => 'textarea', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API token'];
-		$this->form[] = ['label' => 'Is Active', 'name' => 'is_active', 'type' => 'radio', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'Attivo;Non Attivo', 'placeholder' => 'Is active'];
+		$this->form[] = ['label' => 'Stato', 'name' => 'is_active', 'type' => 'radio', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'Attivo;Non Attivo', 'placeholder' => 'Is active'];
 		# END FORM DO NOT REMOVE THIS LINE
 
 
