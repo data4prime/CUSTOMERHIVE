@@ -701,9 +701,7 @@ class AdminChatAIController extends CBController
 
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.missing_item"));
 		}
-		$conf = static::getConf($qlik_item_id);
-		$type = $conf->type;
-		$auth = $conf->auth;
+
 		//$type = CRUDBooster::getSetting('type');
 		//add menu settings
 		if (isset($_GET['m'])) {
