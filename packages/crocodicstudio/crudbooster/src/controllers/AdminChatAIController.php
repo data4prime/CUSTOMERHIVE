@@ -65,7 +65,7 @@ class AdminChatAIController extends CBController
 		$this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'JWT;', 'placeholder' => 'Authentication method'];
 		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API endpoint'];
 		$this->form[] = ['label' => 'Token', 'name' => 'token', 'type' => 'textarea', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API token'];
-		$this->form[] = ['label' => 'Primary', 'name' => 'primary', 'type' => 'checkbox', 'width' => 'col-sm-10', 'placeholder' => 'Primary configuration',
+		$this->form[] = ['label' => 'Primary', 'name' => 'primary', 'type' => 'checkbox', 'value' => 1, 'width' => 'col-sm-10', 'placeholder' => 'Primary configuration',
 
 						];
 		# END FORM DO NOT REMOVE THIS LINE
