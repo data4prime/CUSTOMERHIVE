@@ -697,7 +697,7 @@ class AdminChatAIController extends CBController
 		}
 		$data = [];
 		$data['row'] = ChatAIConf::find($qlik_item_id);
-		dd($data);
+		//dd($data);
 		if (empty($data['row'])) {
 
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.missing_item"));
@@ -710,6 +710,7 @@ class AdminChatAIController extends CBController
 		} else {
 			$menu = Menu::where('name', 'Dashboard')->where('is_active', 1)->where('is_dashboard', 1)->first();
 		}
+		dd($menu);
 		//$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '89');
 		if (empty($menu)) {
 			$data['row']->frame_width = '100%';
