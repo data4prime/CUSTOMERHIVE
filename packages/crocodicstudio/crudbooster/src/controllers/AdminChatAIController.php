@@ -696,7 +696,7 @@ class AdminChatAIController extends CBController
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$data = [];
-		$data['row'] = QlikItem::find($qlik_item_id);
+		$data['row'] = ChatAIConf::find($qlik_item_id);
 		if (empty($data['row'])) {
 
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.missing_item"));
