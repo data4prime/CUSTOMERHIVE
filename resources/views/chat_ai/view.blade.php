@@ -66,15 +66,9 @@ $chat_messages = Session::get('chat_messages');
 @else
 <!-- default -->
 @section('content')
-<div class="box qi_box">
-  <h4 class="qi_subtitle">{{ $subtitle }}</h4>
 
-  <div class="qi_iframe_container">
 <div class="chat-window-view" id="chatWindowView">
-    <div class="chat-header">
-        Chat AI
 
-    </div>
     <div class="chat-body">
 
 
@@ -117,8 +111,7 @@ $chat_messages = Session::get('chat_messages');
         </div>
     </div>
 </div>
-  </div>
-</div>
+
 @endsection
 @endif
 
@@ -190,19 +183,18 @@ objDiv.scrollTop = objDiv.scrollHeight;
     <style>
 
 
-        .chat-window {
-            width: 350px;
-            min-width: 200px;
-            height: 400px;
-            min-height: 200px;
+        .chat-window-view {
+            /*width: 350px;
+            min-width: 200px;*/
+            /*height: 400px;
+            min-height: 200px;*/
             border: 1px solid #ccc;
             background-color: white;
-            position: fixed; /* Cambiato a fixed per posizione iniziale */
+            /*position: fixed;
             top: 100px;
-            right: 0; /* Posizione iniziale a destra */
-            display: none; /* Nascondi la chat all'inizio */
+            right: 0;
+            display: none;*/
             box-shadow: 0 0 10px rgba(0,0,0,0.2);
-            z-index: 1000; /* Assicurati che la finestra di chat sia sopra altri elementi */
         }
 
         .chat-header {
