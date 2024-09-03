@@ -647,6 +647,16 @@ public static function isProfilePage() {
                         }
                         $url = self::adminPath($menu->path);
                         break;
+                    case 'Agent AI':
+                        //controlla se utente corrente è abilitato a vedere oggetto
+                        $menu->item_id = MenuHelper::parse_path_for_chat_ai_id($menu->path);
+                        $menu->allowed = ChatAIHelper::can_see_item($menu->item_id);
+                        // var_dump($menu->allowed);exit;
+                        if (!$menu->allowed) {
+                            unset($menu_active[$key]);
+                        }
+                        $url = self::adminPath($menu->path);
+                        break;
                 }
 
                 $menu->is_broken = false;
