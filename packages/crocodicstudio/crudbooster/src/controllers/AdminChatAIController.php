@@ -735,5 +735,88 @@ class AdminChatAIController extends CBController
 		
 	}
 
+	public function send_message_agent() {
+		//check if in the session exists chat_messages array
+		if (!Session::has('chat_messages')) {
+			Session::put('chat_messages', []);
+		}
+
+		
+
+		$message = Request::all()['message'];
+
+		$agent_id = Request::all()['agent_id'];
+
+		$chatai_conf = DB::table('chatai_confs')->where('id', $agent_id)->first();
+
+
+		$url = $chatai_conf->url;
+		$token = $chatai_conf->token;
+
+		// Imposta i dati da inviare nel corpo della richiesta
+		$data = [
+			"action" => "sendMessage",
+			"sessionId" => '"'.CRUDBooster::myId().'"',
+			"chatInput" => $message
+		];
+
+		// Inizializza cURL
+		$ch = curl_init($url);
+
+		// Configura le opzioni cURL
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, [
+			'Accept: application/json',
+			'Content-Type: application/json',
+			"Authorization: Bearer $token"
+		]);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+
+		$response = curl_exec($ch);
+
+		//dd($response);
+
+		if ($response === false) {
+			//echo json_encode(['message' => 'Errore nella richiesta. Verifica la configurazione attiva!']);
+
+
+			//$response->message = 'Errore nella richiesta. Verifica la configurazione attiva!';
+
+			//$response_message = ['message' => 'Errore nella richiesta. Verifica la configurazione attiva!'];
+			$response_message = 'Errore nella richiesta. Verifica la configurazione attiva!';
+
+			$response = json_encode(["message" => $response_message]);
+
+
+		} else {
+			$response_message = json_decode($response, true);
+			if (isset($response_message["text"])) {
+				$response_message = $response_message["text"];
+			} else {
+				$response_message = $response_message["message"];
+			}
+		}
+
+
+
+		curl_close($ch);
+
+		
+
+		$chat_messages = Session::get('chat_messages');
+		$chat_messages[] = ['message' => $message, 'response' => $response_message];
+
+		Session::put('chat_messages', $chat_messages);
+
+		//echo json_encode($response_message);
+
+		// Stampa la risposta
+		echo $response;
+
+
+	}
+
 
 }

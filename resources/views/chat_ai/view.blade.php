@@ -134,6 +134,7 @@ function sendMessage(event) {
     console.log('clicked');
 
     var message = document.querySelector('#publisher-input').value;
+    var agent_id = '{{$row->id}}';
     console.log(message);
     if(message != ''){
         var html = '<div class="media media-chat media-chat-reverse"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+message+'</p></div></div>';
@@ -141,12 +142,12 @@ function sendMessage(event) {
         document.querySelector('#publisher-input').value = '';
     }
 
-    fetch('/admin/chat_ai/send_message', {
+    fetch('/admin/chat_ai/send_message_agent', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ 'message': message }),
+      body: JSON.stringify({ 'message': message, 'agent_id' : agent_id}),
     })
     .then((response) => response.json())
     .then((data) => {
