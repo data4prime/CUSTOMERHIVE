@@ -279,7 +279,15 @@ class AdminChatAIController extends CBController
 	    */
 	public function hook_before_add(&$postdata)
 	{
+		if ($postdata['primary'] == "primary") {
 
+			$postdata['primary'] = 1;
+
+		} else {
+
+			$postdata['primary'] = 0;
+
+		}
 	}
 
 	/*
