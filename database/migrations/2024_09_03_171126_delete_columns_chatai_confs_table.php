@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('chatai_confs', function (Blueprint $table) {
             //
+            $table->boolean('primary')->default(false);
         });
     }
 

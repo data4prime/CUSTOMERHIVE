@@ -14,7 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::table('cms_menus', function (Blueprint $table) {
-            //
+            //drop method, url, auth, token columns
+            $table->dropColumn('method');
+            $table->dropColumn('url');
+            $table->dropColumn('auth');
+            $table->dropColumn('token');
+
+            //add new column boolean by deafult false, called 'primary'
+            //$table->boolean('primary')->default(false);
+
         });
     }
 

@@ -49,8 +49,12 @@ class AdminChatAIController extends CBController
 		$this->col[] = ["label" => "Method", "name" => "method"];
 		$this->col[] = ["label" => "Auth", "name" => "auth"];
 		$this->col[] = ["label" => "Url", "name" => "url"];
-		//is_active
-		$this->col[] = ["label" => "Stato", "name" => "is_active"];
+
+
+		//primary
+		$this->col[] = ["label" => "Primary", "name" => "primary", "callback_php" => "if(\$row->primary == 1) { return 'Yes'; } else { return 'No'; }"];
+
+		
 
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
@@ -61,7 +65,7 @@ class AdminChatAIController extends CBController
 		$this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'JWT;', 'placeholder' => 'Authentication method'];
 		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API endpoint'];
 		$this->form[] = ['label' => 'Token', 'name' => 'token', 'type' => 'textarea', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API token'];
-		$this->form[] = ['label' => 'Stato', 'name' => 'is_active', 'type' => 'radio', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'Attivo;Non Attivo', 'placeholder' => 'Is active'];
+		$this->form[] = ['label' => 'Primary', 'name' => 'primary', 'type' => 'radio', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => '1;0', 'placeholder' => 'Primary configuration'];
 		# END FORM DO NOT REMOVE THIS LINE
 
 
@@ -291,11 +295,11 @@ class AdminChatAIController extends CBController
 		//get record with id = $id
 		$record = ChatAIConf::find($id);
 
-		//if is_active = 1
-		if ($record->is_active == 1) {
-			//edit all configuration, set is_active to 0
+		//if primary = 1
+		if ($record->primary == 1) {
+			//edit all configuration, set primary to 0
 			ChatAIConf::where('id', '!=', $id)
-				->update(['is_active' => 'Non Attivo']);
+				->update(['primary' => 0]);
 		}
 
 
@@ -328,10 +332,12 @@ class AdminChatAIController extends CBController
 		//get record with id = $id
 		$record = ChatAIConf::find($id);
 
-
-		DB::table('chatai_confs')
-			->where('id', '!=', $id)
-			->update(['is_active' => 'Non Attivo']);
+		//if primary = 1
+		if ($record->primary == 1) {
+			//edit all configuration, set primary to 0
+			ChatAIConf::where('id', '!=', $id)
+				->update(['primary' => 0]);
+		}
 
 
 
@@ -603,7 +609,7 @@ class AdminChatAIController extends CBController
 
 		$message = Request::all()['message'];
 
-		$chatai_conf = DB::table('chatai_confs')->where('is_active', 'Attivo')->first();
+		$chatai_conf = DB::table('chatai_confs')->where('primary', 1)->first();
 
 
 		$url = $chatai_conf->url;
