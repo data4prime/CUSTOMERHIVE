@@ -687,5 +687,51 @@ class AdminChatAIController extends CBController
 
 	}
 
+	public function content_view($qlik_item_id)
+	{
+		$allowed = ChatAIHelper::can_see_item($qlik_item_id);
+		if (!$allowed) {
+			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+		}
+		$data = [];
+		$data['row'] = QlikItem::find($qlik_item_id);
+		if (empty($data['row'])) {
+
+			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.missing_item"));
+		}
+		$conf = static::getConf($qlik_item_id);
+		$type = $conf->type;
+		$auth = $conf->auth;
+		//$type = CRUDBooster::getSetting('type');
+		//add menu settings
+		if (isset($_GET['m'])) {
+			$menu = Menu::find($_GET['m']);
+		} else {
+			$menu = Menu::where('name', 'Dashboard')->where('is_active', 1)->where('is_dashboard', 1)->first();
+		}
+		//$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '89');
+		if (empty($menu)) {
+			$data['row']->frame_width = '100%';
+			$data['row']->frame_height = '100%';
+		} else {
+			$data['row']->frame_width = $menu->frame_width;
+			$data['row']->frame_height = $menu->frame_height;
+		}
+		$data['row']->target_layout = isset($menu) ? $menu->target_layout : '';
+
+		$data['page_icon'] = '';
+		$data['page_title'] = $data['row']->title;
+		$data['help'] = $data['row']->description;
+		$data['subtitle'] = $data['row']->subtitle;
+
+
+			if ($menu->target_layout == 1) {
+				$this->cbView('qlik_items.fullscreen_view', $data);
+			} else {
+				$this->cbView('qlik_items.view', $data);
+			}
+		
+	}
+
 
 }
