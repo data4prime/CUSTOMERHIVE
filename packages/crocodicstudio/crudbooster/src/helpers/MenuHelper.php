@@ -58,6 +58,13 @@ class MenuHelper
     return $last_element_exploded[0];
   }
 
+  public static function parse_path_for_chat_ai_id($URI)
+  {
+    $last_element = end(explode('/', $URI));
+    $last_element_exploded = explode('?', $last_element);
+    return $last_element_exploded[0];
+  }
+
   /**
    *	Get menus
    *
