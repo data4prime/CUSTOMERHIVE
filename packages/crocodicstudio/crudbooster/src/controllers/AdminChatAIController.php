@@ -738,7 +738,7 @@ class AdminChatAIController extends CBController
 	public function send_message_agent() {
 		//check if in the session exists chat_messages array
 		if (!Session::has('chat_messages')) {
-			Session::put('chat_messages', []);
+			//Session::put('chat_messages', []);
 		}
 
 		
@@ -808,7 +808,7 @@ class AdminChatAIController extends CBController
 		$chat_messages = Session::get('chat_messages');
 		$chat_messages[] = ['message' => $message, 'response' => $response_message];
 
-		Session::put('chat_messages', $chat_messages);
+		//Session::put('chat_messages', $chat_messages);
 
 		//echo json_encode($response_message);
 
