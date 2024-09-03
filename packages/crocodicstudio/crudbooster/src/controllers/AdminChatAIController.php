@@ -726,9 +726,9 @@ class AdminChatAIController extends CBController
 
 
 			if ($menu->target_layout == 1) {
-				$this->cbView('qlik_items.fullscreen_view', $data);
+				$this->cbView('chat_ai.fullscreen_view', $data);
 			} else {
-				$this->cbView('qlik_items.view', $data);
+				$this->cbView('chat_ai.view', $data);
 			}
 		
 	}
