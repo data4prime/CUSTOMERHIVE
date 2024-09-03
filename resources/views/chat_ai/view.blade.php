@@ -3,7 +3,7 @@
 @if(isset($row->target_layout) && $row->target_layout == 2)
 <!-- fill content settings -->
 @section('content')
-<div class="chat-window" id="chatWindow">
+<div class="chat-window-view" id="chatWindowView">
     <div class="chat-header">
         Chat AI
     <div id="x-close-chatai" ><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
