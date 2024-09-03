@@ -52,7 +52,7 @@ class AdminChatAIController extends CBController
 
 
 		//primary
-		$this->col[] = ["label" => "Primary", "name" => "primary", "callback_php" => "if(\$row->primary == 1) { return 'Yes'; } else { return 'No'; }"];
+		$this->col[] = ["label" => "Primary", "name" => "primary", "callback_php" => '($row->primary == 1) ? "Yes" : "No" }'];
 
 		
 
