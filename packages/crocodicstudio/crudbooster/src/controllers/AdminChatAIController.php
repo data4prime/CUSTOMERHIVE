@@ -725,7 +725,7 @@ class AdminChatAIController extends CBController
 		$data['subtitle'] = $data['row']->subtitle;
 
 
-			if ($menu->target_layout == 1) {
+			if ($data['row']->target_layout == 1) {
 				$this->cbView('chat_ai.fullscreen_view', $data);
 			} else {
 				$this->cbView('chat_ai.view', $data);
