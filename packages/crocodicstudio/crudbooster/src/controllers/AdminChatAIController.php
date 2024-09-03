@@ -10,6 +10,8 @@ use GroupHelper;
 
 use Illuminate\Support\Facades\Route;
 
+use crocodicstudio\crudbooster\helpers\ChatAIHelper;
+
 use App\ChatAIConf;
 use App\ItemsAllowed;
 use App\TenantsAllowed;
