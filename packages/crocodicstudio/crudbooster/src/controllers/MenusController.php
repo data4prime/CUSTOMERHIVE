@@ -47,7 +47,7 @@ class MenusController extends CBController
     $row = (Request::segment(3) == 'edit') ? $row : null;
 
     //id da preselezionare nelle dropdown del form dopo la scelta del type della voce di menu
-    $id_module = $id_statistic = $id_qlik_item = 0;
+    $id_module = $id_statistic = $id_qlik_item = $id_chat_ai = 0;
 
     //dd($row);
     if (isset($row) && isset($row->type) && $row->type == 'Module') {
@@ -60,6 +60,9 @@ class MenusController extends CBController
     } elseif (isset($row) && isset($row->type) && $row->type == 'Qlik') {
       //ricava id del qlik item a cui fa riferimento questa voce di menu dal path cioè l'href della voce di menu
       $id_qlik_item = str_replace('qlik_items/content/', '', $row->path);
+    } elseif (isset($row) && isset($row->type) && $row->type == 'Chat AI') {
+      //ricava id del qlik item a cui fa riferimento questa voce di menu dal path cioè l'href della voce di menu
+      $id_qlik_item = str_replace('chat_ai/content/', '', $row->path);
     }
 
     if (isset($row) && isset($row->type)) {
@@ -106,7 +109,16 @@ class MenusController extends CBController
   					$('#form-group-statistic_slug,#form-group-path').hide();
   					$('#qlik_slug').prop('required',true);
   					$('#form-group-qlik_slug label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
-  				}
+  				}else if(type_menu == 'Chat AI')
+          {
+  					$('#form-group-chat_ai').show();
+  					$('#form-group-frame_width,#form-group-frame_height').show();
+  					$('#module_slug').prop('required',false);
+  					$('#statistic_slug').prop('required',false);
+  					$('#form-group-module_slug,#form-group-path').hide();
+  					$('#form-group-statistic_slug,#form-group-path').hide();
+  					$('#chat_ai').prop('required',true);
+  					$('#form-group-chat_ai label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
           else
           {
   					$('#module_slug').prop('required',false);
@@ -209,6 +221,20 @@ class MenusController extends CBController
   					}
             else if (n == 'Agent AI')
             {
+
+  						$('#form-group-path').hide();
+  						$('#form-group-module_slug').hide();
+  						$('#form-group-statistic_slug').hide();
+  						$('#module_slug,#path').prop('required',false);
+  						$('#statistic_slug,#path').prop('required',false);
+
+  						$('#form-group-chat_ai').show();
+    					$('#form-group-frame_width,#form-group-frame_height').show();
+  						$('#chat_ai').prop('required',true);
+  						$('#form-group-chat_ai label .text-danger').remove();
+  						$('#form-group-chat_ai label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
+
+/*
                 
                 $('#form-group-method').show();
                 $('#form-group-url').show();
@@ -216,6 +242,7 @@ class MenusController extends CBController
 
                 $('#form-group-path').hide();
                 $('#form-group-module_slug').hide();
+*/
 
 /*
                 $('input[name=path]').attr('placeholder','Please enter the Route');
@@ -402,6 +429,20 @@ class MenusController extends CBController
     ];
 
     $this->form[] = [
+      "label" => "Chat AI",
+      "name" => "chat_ai",
+      "type" => "select",
+      "default" => "** Select a Chat AI",
+      "dataquery" => "SELECT chatai_confs.title as label, chatai_confs.id as value
+                            FROM chatai_confs
+                            LEFT JOIN tenants_allowed
+                            ON tenants_allowed.item_id = chatai_confs.id
+                            WHERE (tenants_allowed.tenant_id=" . UserHelper::current_user_tenant() . ")
+                            AND chatai_confs.deleted_at IS NULL",
+      "value" => $id_chat_ai,
+    ];
+
+    $this->form[] = [
       "label" => "Value",
       "name" => "path",
       "type" => "text",
@@ -538,6 +579,9 @@ class MenusController extends CBController
     } elseif ($postdata['type'] == 'Qlik') {
       $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
       $postdata['path'] = 'qlik_items/content/' . $postdata['qlik_slug'];
+    }elseif ($postdata['type'] == 'Chat AI') {
+      $stat = CRUDBooster::first('chatai_confs', ['id' => $postdata['chat_ai']]);
+      $postdata['path'] = 'chat_ai/content/' . $postdata['chat_ai'];
     }
     //id that this menu will be saved with
     $id = (Menu::orderby('id', 'desc')->first()->id) + 1;
@@ -547,6 +591,7 @@ class MenusController extends CBController
     unset($postdata['module_slug']);
     unset($postdata['statistic_slug']);
     unset($postdata['qlik_slug']);
+    unset($postdata['chat_ai']);
     //frame width and height data
     $postdata['frame_width'] .= $postdata['frame_width_unit'];
     $postdata['frame_height'] .= $postdata['frame_height_unit'];
@@ -609,6 +654,9 @@ class MenusController extends CBController
     } elseif ($postdata['type'] == 'Qlik') {
       $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
       $postdata['path'] = 'qlik_items/content/' . $postdata['qlik_slug'];
+    } elseif ($postdata['type'] == 'Chat AI') {
+      $stat = CRUDBooster::first('chatai_confs', ['id' => $postdata['chat_ai']]);
+      $postdata['path'] = 'chat_ai/content/' . $postdata['chat_ai'];
     }
     //add menu id as GET parameter for target layout fullpage/fillcontent
 
@@ -629,6 +677,7 @@ class MenusController extends CBController
     unset($postdata['module_slug']);
     unset($postdata['statistic_slug']);
     unset($postdata['qlik_slug']);
+    unset($postdata['chat_ai']);
     if (!UserHelper::isSuperAdmin()) {
       //only superadmin can update menu's tenants
       unset($postdata['tenant']);
