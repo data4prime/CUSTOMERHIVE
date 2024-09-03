@@ -60,7 +60,41 @@
   <h4 class="qi_subtitle">{{ $subtitle }}</h4>
 
   <div class="qi_iframe_container">
+<div class="chat-window-view" id="chatWindowView">
+    <div class="chat-header">
+        Chat AI
+    <div id="x-close-chatai" ><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
 
+    </div>
+    <div class="chat-body">
+
+
+
+
+        <div class="media media-chat">
+                  <img class="avatar" src="/images/user/chatai.jpg" alt="...">
+                  <div class="media-body">
+                    <p>Ciao</p>
+                    <p>Sono il tuo assistente AI</p>
+                    <p>Come posso aiutarti?</p>
+                  </div>
+                </div>
+    @if ($chat_messages)
+        @foreach ($chat_messages as $chat_message)
+            <div class="media media-chat media-chat-reverse">
+                <img class="avatar" src="/images/user/admin.jpeg" alt="...">
+                <div class="media-body">
+                    <p>{{ $chat_message['message'] }}</p>
+                </div>
+            </div>
+
+            <div class="media media-chat">
+                <img class="avatar" src="/images/user/chatai.jpg" alt="...">
+                <div class="media-body">
+                    <p>{{$chat_message['response']}}</p>
+
+                </div>
+            </div>
   </div>
 </div>
 @endsection
