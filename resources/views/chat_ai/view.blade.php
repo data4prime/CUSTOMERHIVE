@@ -1,3 +1,13 @@
+@php 
+
+use Illuminate\Support\Facades\Session;
+
+$chat_messages = Session::get('chat_messages');
+
+
+
+@endphp 
+
 @extends('crudbooster::admin_template',['target_layout' => isset($row->target_layout) ? $row->target_layout : null ])
 
 @if(isset($row->target_layout) && $row->target_layout == 2)
@@ -95,6 +105,9 @@
 
                 </div>
             </div>
+        @endforeach
+            
+    @endif
   </div>
 </div>
 @endsection
