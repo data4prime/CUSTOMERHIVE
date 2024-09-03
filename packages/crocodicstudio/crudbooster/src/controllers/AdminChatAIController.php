@@ -697,6 +697,7 @@ class AdminChatAIController extends CBController
 		}
 		$data = [];
 		$data['row'] = ChatAIConf::find($qlik_item_id);
+		dd($data);
 		if (empty($data['row'])) {
 
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.missing_item"));
