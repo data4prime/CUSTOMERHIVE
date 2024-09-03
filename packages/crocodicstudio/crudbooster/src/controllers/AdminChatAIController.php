@@ -318,7 +318,7 @@ class AdminChatAIController extends CBController
 	public function hook_before_edit(&$postdata, $id)
 	{
 
-		dd($postdata);
+		//dd($postdata);
 
 		if ($postdata['primary'] == "primary") {
 
