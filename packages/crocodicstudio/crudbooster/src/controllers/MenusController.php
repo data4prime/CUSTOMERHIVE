@@ -60,7 +60,7 @@ class MenusController extends CBController
     } elseif (isset($row) && isset($row->type) && $row->type == 'Qlik') {
       //ricava id del qlik item a cui fa riferimento questa voce di menu dal path cioè l'href della voce di menu
       $id_qlik_item = str_replace('qlik_items/content/', '', $row->path);
-    } elseif (isset($row) && isset($row->type) && $row->type == 'Chat AI') {
+    } elseif (isset($row) && isset($row->type) && $row->type == 'Agent AI') {
       //ricava id del qlik item a cui fa riferimento questa voce di menu dal path cioè l'href della voce di menu
       $id_qlik_item = str_replace('chat_ai/content/', '', $row->path);
     }
@@ -109,7 +109,7 @@ class MenusController extends CBController
   					$('#form-group-statistic_slug,#form-group-path').hide();
   					$('#qlik_slug').prop('required',true);
   					$('#form-group-qlik_slug label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
-  				}else  if(type_menu == 'Chat AI')
+  				}else  if(type_menu == 'Agent AI')
           {
   					$('#form-group-chat_ai').show();
   					$('#form-group-frame_width,#form-group-frame_height').show();
@@ -429,10 +429,10 @@ class MenusController extends CBController
     ];
 
     $this->form[] = [
-      "label" => "Chat AI",
+      "label" => "Agent AI",
       "name" => "chat_ai",
       "type" => "select",
-      "default" => "** Select a Chat AI",
+      "default" => "** Select a Agent AI",
       "dataquery" => "SELECT chatai_confs.title as label, chatai_confs.id as value
                             FROM chatai_confs
                             LEFT JOIN tenants_allowed
@@ -579,7 +579,7 @@ class MenusController extends CBController
     } elseif ($postdata['type'] == 'Qlik') {
       $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
       $postdata['path'] = 'qlik_items/content/' . $postdata['qlik_slug'];
-    }elseif ($postdata['type'] == 'Chat AI') {
+    }elseif ($postdata['type'] == 'Agent AI') {
       $stat = CRUDBooster::first('chatai_confs', ['id' => $postdata['chat_ai']]);
       $postdata['path'] = 'chat_ai/content/' . $postdata['chat_ai'];
     }
@@ -654,7 +654,7 @@ class MenusController extends CBController
     } elseif ($postdata['type'] == 'Qlik') {
       $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
       $postdata['path'] = 'qlik_items/content/' . $postdata['qlik_slug'];
-    } elseif ($postdata['type'] == 'Chat AI') {
+    } elseif ($postdata['type'] == 'Agent AI') {
       $stat = CRUDBooster::first('chatai_confs', ['id' => $postdata['chat_ai']]);
       $postdata['path'] = 'chat_ai/content/' . $postdata['chat_ai'];
     }
