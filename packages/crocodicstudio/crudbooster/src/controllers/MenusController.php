@@ -109,7 +109,7 @@ class MenusController extends CBController
   					$('#form-group-statistic_slug,#form-group-path').hide();
   					$('#qlik_slug').prop('required',true);
   					$('#form-group-qlik_slug label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
-  				}else if(type_menu == 'Chat AI')
+  				}else  if(type_menu == 'Chat AI')
           {
   					$('#form-group-chat_ai').show();
   					$('#form-group-frame_width,#form-group-frame_height').show();
@@ -119,7 +119,7 @@ class MenusController extends CBController
   					$('#form-group-statistic_slug,#form-group-path').hide();
   					$('#chat_ai').prop('required',true);
   					$('#form-group-chat_ai label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
-          else
+          } else
           {
   					$('#module_slug').prop('required',false);
   					$('#statistic_slug').prop('required',false);
