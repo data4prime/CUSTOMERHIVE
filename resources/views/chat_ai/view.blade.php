@@ -108,6 +108,16 @@ $chat_messages = Session::get('chat_messages');
         @endforeach
             
     @endif
+    </div>
+    <div class="chat-footer">
+        <div class="chat-input">
+            <input type="text" id="publisher-input" style="margin-right: 5px ;" class="form-control" placeholder="Chiedi qualcosa...">
+            <div class="input-group-append">
+                <button id="send-btn" class="btn btn-primary" type="button">Invia</button>
+            </div>
+        </div>
+    </div>
+</div>
   </div>
 </div>
 @endsection
