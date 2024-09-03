@@ -320,6 +320,17 @@ class AdminChatAIController extends CBController
 
 		dd($postdata);
 
+		if ($postdata['primary'] == "primary") {
+
+			$postdata['primary'] = 1;
+
+		} else {
+
+			$postdata['primary'] = 0;
+
+		}
+
+
 	}
 
 	/*
