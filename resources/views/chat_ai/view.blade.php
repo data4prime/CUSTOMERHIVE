@@ -73,7 +73,6 @@ $chat_messages = Session::get('chat_messages');
 <div class="chat-window-view" id="chatWindowView">
     <div class="chat-header">
         Chat AI
-    <div id="x-close-chatai" ><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
 
     </div>
     <div class="chat-body">
