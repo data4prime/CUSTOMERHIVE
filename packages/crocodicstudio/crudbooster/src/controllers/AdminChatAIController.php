@@ -710,7 +710,7 @@ class AdminChatAIController extends CBController
 		} else {
 			$menu = Menu::where('name', 'Dashboard')->where('is_active', 1)->where('is_dashboard', 1)->first();
 		}
-		dd($menu);
+		//dd($menu);
 		//$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '89');
 		if (empty($menu)) {
 			$data['row']->frame_width = '100%';
