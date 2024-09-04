@@ -119,6 +119,23 @@ class MenusController extends CBController
   					$('#form-group-statistic_slug,#form-group-path').hide();
               $('#form-group-qlik_slug').hide();
               $('#qlik_slug,#path').prop('required',false);
+
+            $('#form-group-is_dashboard').hide();
+            $('#is_dashboard,#path').prop('required',false);
+
+            $('#form-group-target_layout').hide();
+            $('#target_layout,#path').prop('required',false);
+
+            $('#form-group-target_layout').hide();
+            $('#target_layout,#path').prop('required',false);
+
+            $('#form-group-frame_width').hide();
+            $('#frame_width,#path').prop('required',false);
+
+            $('#form-group-frame_width').hide();
+            $('#frame_width,#path').prop('required',false);
+
+
   					$('#chat_ai').prop('required',true);
   					$('#form-group-chat_ai label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
           } else
@@ -234,6 +251,20 @@ class MenusController extends CBController
               $('#qlik_slug,#path').prop('required',false);
 
 
+            $('#form-group-is_dashboard').hide();
+            $('#is_dashboard,#path').prop('required',false);
+
+            $('#form-group-target_layout').hide();
+            $('#target_layout,#path').prop('required',false);
+
+            $('#form-group-target_layout').hide();
+            $('#target_layout,#path').prop('required',false);
+
+            $('#form-group-frame_width').hide();
+            $('#frame_width,#path').prop('required',false);
+
+            $('#form-group-frame_width').hide();
+            $('#frame_width,#path').prop('required',false);
 
   						$('#form-group-chat_ai').show();
     					$('#form-group-frame_width,#form-group-frame_height').show();
