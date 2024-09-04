@@ -132,8 +132,8 @@ class MenusController extends CBController
             $('#form-group-frame_width').hide();
             $('#frame_width,#path').prop('required',false);
 
-            $('#form-group-frame_width').hide();
-            $('#frame_width,#path').prop('required',false);
+            $('#form-group-frame_height').hide();
+            $('#frame_height,#path').prop('required',false);
 
 
   					$('#chat_ai').prop('required',true);
@@ -263,8 +263,8 @@ class MenusController extends CBController
             $('#form-group-frame_width').hide();
             $('#frame_width,#path').prop('required',false);
 
-            $('#form-group-frame_width').hide();
-            $('#frame_width,#path').prop('required',false);
+            $('#form-group-frame_height').hide();
+            $('#frame_height,#path').prop('required',false);
 
   						$('#form-group-chat_ai').show();
     					$('#form-group-frame_width,#form-group-frame_height').show();
