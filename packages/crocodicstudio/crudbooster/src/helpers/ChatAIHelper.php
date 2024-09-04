@@ -154,7 +154,11 @@ class ChatAIHelper
 
 
     //get last chat history
-    $last_chat_history = DB::table('chat_ai_history')->where('chat_ai_id', $chat_ai_id)->where('tenant', $current_tenant)->orderBy('id', 'desc')->first();
+    $last_chat_history = DB::table('chat_ai_history')
+                        ->where('chat_ai_id', $chat_ai_id)
+                        ->where('tenant', $current_tenant)
+                        ->where('user_id', CRUDBooster::myId())
+                        ->orderBy('id', 'desc')->first();
 
     if ($last_chat_history) {
 
@@ -180,11 +184,19 @@ class ChatAIHelper
         'chat_ai_id' => $chat_ai_id,
         'messages' => json_encode($array_messages),
         'tenant' => $current_tenant,
+        'user_id' => CRUDBooster::myId(),
       ]);
 
 
 
     } else {
+
+      $array_messages = json_decode($last_messages, true);
+      $array_messages[] = $json_obj;
+
+      DB::table('chat_ai_history')->where('id', $last_chat_history->id)->update([
+        'messages' => json_encode($array_messages),
+      ]);
 
 
 

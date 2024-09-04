@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::table('chat_ai_history', function (Blueprint $table) {
             //
+            //unsignedBigInteger
+            $table->unsignedBigInteger('user_id')->nullable();
         });
     }
 
