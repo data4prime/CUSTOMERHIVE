@@ -154,7 +154,7 @@ class ChatAIHelper
 
 
     //get last chat history
-    $last_chat_history = DB::table('chat_ai_history')->where('chat_ai_id', $chat_ai_id)->where('tenant', $current_tenant)->orderBy('created_at', 'desc')->first();
+    $last_chat_history = DB::table('chat_ai_history')->where('chat_ai_id', $chat_ai_id)->where('tenant', $current_tenant)->orderBy('id', 'desc')->first();
 
     if ($last_chat_history) {
 
