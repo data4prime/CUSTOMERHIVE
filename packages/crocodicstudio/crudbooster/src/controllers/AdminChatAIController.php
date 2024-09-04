@@ -839,7 +839,7 @@ class AdminChatAIController extends CBController
 		$chat_messages = Session::get('chat_messages_'.$agent_id);
 		$chat_messages[] = ['message' => $message, 'response' => $response_message];
 
-		//Session::put('chat_messages', $chat_messages);
+		Session::put('chat_messages_'.$agent_id, $chat_messages);
 
 		//echo json_encode($response_message);
 
