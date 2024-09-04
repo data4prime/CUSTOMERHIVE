@@ -163,7 +163,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
         }
 
         .chat-body-{{$row->id}} {
-            height: calc(100% - 110px);
+            height: calc(100vh - 120px - 51px - 42px);
             overflow-y: auto;
             padding: 10px;
         }
