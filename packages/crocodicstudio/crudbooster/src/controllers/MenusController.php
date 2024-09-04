@@ -62,7 +62,7 @@ class MenusController extends CBController
       $id_qlik_item = str_replace('qlik_items/content/', '', $row->path);
     } elseif (isset($row) && isset($row->type) && $row->type == 'Agent AI') {
       //ricava id del qlik item a cui fa riferimento questa voce di menu dal path cioè l'href della voce di menu
-      $id_qlik_item = str_replace('chat_ai/content/', '', $row->path);
+      $id_chat_ai = str_replace('chat_ai/content/', '', $row->path);
     }
 
     if (isset($row) && isset($row->type)) {
@@ -224,9 +224,14 @@ class MenusController extends CBController
 
   						$('#form-group-path').hide();
   						$('#form-group-module_slug').hide();
+              
   						$('#form-group-statistic_slug').hide();
   						$('#module_slug,#path').prop('required',false);
   						$('#statistic_slug,#path').prop('required',false);
+              $('#form-group-qlik_slug').hide();
+              $('#qlik_slug,#path').prop('required',false);
+
+
 
   						$('#form-group-chat_ai').show();
     					$('#form-group-frame_width,#form-group-frame_height').show();
