@@ -15,7 +15,17 @@ return new class extends Migration
     {
         Schema::create('chat_ai_history', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+
+            $table->unsignedInteger('chat_ai_id')->nullable();
+
+            //longtext 
+            $table->text('messages')->nullable();
+
+            $table->unsignedInteger('tenant')->nullable();
+
+
+
+
         });
     }
 

@@ -133,6 +133,65 @@ class ChatAIHelper
     }
   }
 
+  //function to save chat history
+  public static function saveChatHistory($chat_ai_id, $messages)
+  {
+
+    //prepare json of messsages
+    $messages_json = json_encode($messages);
+
+    //json object 
+
+    $json_obj = [
+      'messages' => $messages_json,
+      'created_by' => CRUDBooster::myId(),
+      'created_at' => Carbon::now(),
+    ];
+
+
+    //current tenant
+    $current_tenant = UserHelper::current_user_tenant();
+
+
+    //get last chat history
+    $last_chat_history = DB::table('chat_ai_history')->where('chat_ai_id', $chat_ai_id)->where('tenant', $current_tenant)->orderBy('created_at', 'desc')->first();
+
+    if ($last_chat_history) {
+
+        $last_messages = $last_chat_history->messages;
+
+    } else {
+
+        $last_messages = '';
+
+    }
+
+    $count_last_messages = strlen($last_messages);
+    $count_json_obj = strlen(json_encode($json_obj));
+
+    if ($count_json_obj + $count_last_messages > 65500) {
+
+      $array_messages = [];
+      $array_messages[] = $messages_json;
+
+      DB::table('chat_ai_history')->insert([
+        'chat_ai_id' => $chat_ai_id,
+        'messages' => json_encode($array_messages),
+        'tenant' => $current_tenant,
+      ]);
+
+
+
+    } else {
+
+
+
+    }
+
+
+
+
+  }
 
 
 }
