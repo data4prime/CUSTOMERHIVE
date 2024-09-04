@@ -117,6 +117,8 @@ class MenusController extends CBController
   					$('#statistic_slug').prop('required',false);
   					$('#form-group-module_slug,#form-group-path').hide();
   					$('#form-group-statistic_slug,#form-group-path').hide();
+              $('#form-group-qlik_slug').hide();
+              $('#qlik_slug,#path').prop('required',false);
   					$('#chat_ai').prop('required',true);
   					$('#form-group-chat_ai label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
           } else
