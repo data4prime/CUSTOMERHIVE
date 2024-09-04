@@ -841,6 +841,8 @@ class AdminChatAIController extends CBController
 
 		Session::put('chat_messages_'.$agent_id, $chat_messages);
 
+		ChatAIHelper::saveChatHistory($agent_id, ['message' => $message, 'response' => $response_message]);
+
 		//echo json_encode($response_message);
 
 		// Stampa la risposta
