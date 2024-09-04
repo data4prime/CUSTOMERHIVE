@@ -169,12 +169,12 @@ class ChatAIHelper
     $count_last_messages = strlen($last_messages);
     $count_json_obj = strlen(json_encode($json_obj));
 
-    file_put_contents(__DIR__.'/logchatai.txt', 'count_last_messages: ' . $count_last_messages . ' count_json_obj: ' . $count_json_obj . PHP_EOL, FILE_APPEND);
+    //file_put_contents(__DIR__.'/logchatai.txt', 'count_last_messages: ' . $count_last_messages . ' count_json_obj: ' . $count_json_obj . PHP_EOL, FILE_APPEND);
 
     if (($count_json_obj + $count_last_messages > 65500) || !$last_chat_history) {
 
       $array_messages = [];
-      $array_messages[] = $messages_json;
+      $array_messages[] = $json_obj;
 
       DB::table('chat_ai_history')->insert([
         'chat_ai_id' => $chat_ai_id,
