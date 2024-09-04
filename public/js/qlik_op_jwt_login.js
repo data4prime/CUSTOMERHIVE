@@ -3,6 +3,9 @@
 
     const isLoggedIn = await qlikLogin();
 
+    renderSingleIframe();
+
+
 })();
 
 //    LOGIN
@@ -69,6 +72,9 @@ async function getQCSHeaders() {
 //    HELPER FUNCTION TO GENERATE IFRAME
 
 function renderSingleIframe() {
+
+    var iframe_ = document.querySelector('.qi_iframe');
+    iframe_.src = "{{ $item_url }}";
     //var url = "{{ $item_url }}";
     //console.log(url);
     //document.querySelector('.qi_iframe').src = url;
