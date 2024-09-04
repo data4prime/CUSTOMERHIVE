@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Session;
 
 $chat_messages = Session::get('chat_messages_'.$row->id);
 
+/*
 dd($chat_messages);
+*/
 
 
 
