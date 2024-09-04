@@ -169,7 +169,7 @@ class ChatAIHelper
     $count_last_messages = strlen($last_messages);
     $count_json_obj = strlen(json_encode($json_obj));
 
-    if ($count_json_obj + $count_last_messages > 65500) {
+    if (($count_json_obj + $count_last_messages > 65500) || !$last_chat_history) {
 
       $array_messages = [];
       $array_messages[] = $messages_json;
