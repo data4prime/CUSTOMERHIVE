@@ -58,10 +58,11 @@ class ChatAIHelper
       return false;
     }
 
+/*
     if ($chat_ai->isPublic()) {
-      //tutti possono vedere un item pubblico
       return true;
     }
+*/
 
     //check tenants_allowed
     //get user tenant
