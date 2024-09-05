@@ -253,7 +253,10 @@ class QlikConfController extends CBController
                 // Hide all fields initially
                 Object.keys(fields).forEach(key => {
                     fields[key].forEach(fieldId => {
-                        document.getElementsByName(fieldId)[0].parentNode.parentNode.classList.add('hidden');
+
+                        if (document.getElementsByName(fieldId)[0]) {
+                            document.getElementsByName(fieldId)[0].parentNode.parentNode.classList.add('hidden');
+                        }
                     });
                 });
 
