@@ -863,7 +863,7 @@ class AdminQlikItemsController extends CBController
 
 			} else {
 				$url = $conf->url;
-				$url .= '/'.$url->endpoint;
+				$url .= '/'.$conf->endpoint;
 				$url .= '/qmc/';
 			
 				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
