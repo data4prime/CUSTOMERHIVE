@@ -855,6 +855,7 @@ class AdminQlikItemsController extends CBController
 			if ($conf->type == 'SAAS') {
 
 				$url = $conf->url;
+				$url .= '/'.$url->endpoint;
 				$url .= '/qmc/';
 				$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 
@@ -862,6 +863,7 @@ class AdminQlikItemsController extends CBController
 
 			} else {
 				$url = $conf->url;
+				$url .= '/'.$url->endpoint;
 				$url .= '/qmc/';
 			
 				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
