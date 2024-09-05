@@ -75,8 +75,12 @@ async function getQCSHeaders() {
 
 function renderSingleIframe() {
 
+/*
     var iframe_ = document.querySelector('.qi_iframe');
     iframe_.src = iframe_.getAttribute('data-src');
+*/
+
+
     //var url = "{{ $item_url }}";
     //console.log(url);
     //document.querySelector('.qi_iframe').src = url;
