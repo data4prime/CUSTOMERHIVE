@@ -96,7 +96,8 @@ $chat_messages = Session::get('chat_messages');
     background-color: #f5f6f7;
     border-radius: 3px;
     font-weight: 100;
-    color:#9b9b9b;
+    /*color:#9b9b9b;*/
+    color: #000;    
     white-space: normal;
 }
 
