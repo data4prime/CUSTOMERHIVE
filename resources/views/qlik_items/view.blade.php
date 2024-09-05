@@ -30,6 +30,7 @@ $debug_url = $item_url;
 @endif
 
 @push('bottom')
+<script src="@php echo asset($js_login) @endphp"></script>
 <script type="text/javascript">
   $(document).ready(function () {
     //aggiungi icona al titolo delle pagine iframe qlik
