@@ -271,6 +271,7 @@ class QlikConfController extends CBController
                 // If the key exists in the fields object, show the corresponding fields
                 if (fields[fieldKey]) {
                     fields[fieldKey].forEach(fieldId => {
+                        console.log('fieldID '+fieldId);
                         document.getElementsByName(fieldId)[0].parentNode.parentNode.classList.remove('hidden');
                     });
                 }
