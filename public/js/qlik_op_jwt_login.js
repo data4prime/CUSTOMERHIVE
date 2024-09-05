@@ -3,7 +3,7 @@
 
     const isLoggedIn = await qlikLogin();
 
-    renderSingleIframe();
+    //renderSingleIframe();
 
 
 })();
