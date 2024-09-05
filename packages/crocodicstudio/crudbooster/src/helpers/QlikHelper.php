@@ -439,13 +439,13 @@ class QlikHelper
     $user_directory = $qlik_user->user_directory;
 
     $header = [
-      'alg' => 'RS256',
       'typ' => 'JWT',
+      'alg' => 'RS256',
+      
 
     ];
 
 
-    // Payload data
     $payload = [
 
       'userId' => $qlik_login,
