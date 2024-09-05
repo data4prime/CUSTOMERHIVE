@@ -55,7 +55,6 @@ $debug_url = $item_url;
       var qlik_logo = '<img class="qlik_logo" src=/images/qlik_logo.png />';
       $(qlik_logo).insertBefore($('#title_icon'));
     }
-    renderSingleIframe();
   })
 </script>
 @endpush
