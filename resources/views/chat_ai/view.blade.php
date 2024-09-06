@@ -235,7 +235,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
     /*color:#9b9b9b;*/
     color: #000;
     white-space: normal;
-    display: block;
+    /*display: block;*/
     margin-bottom: 10px;
 }
 
