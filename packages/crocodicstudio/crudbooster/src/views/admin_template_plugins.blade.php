@@ -49,6 +49,9 @@
 <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 
 
+
+<link rel="stylesheet" href="{{ asset ('css/chatai.css')}}">
+
 <!--<script type="text/javascript" src="https://sense.izsvenezie.it/pub/resources/assets/external/requirejs/require.js"></script>-->
 
 <script>
