@@ -33,11 +33,21 @@ dd($chat_messages);
 
         <div class="media media-chat">
                   <img class="avatar" src="/images/user/chatai.jpg" alt="...">
-                  <div class="media-body">
+                    <div class="media-body">
+                    <p>Ciao</p>
+
+                  </div>
+                    <div class="media-body">
+                    <p>Sono il tuo assistente AI</p>
+                  </div>
+                    <div class="media-body">
+                    <p>Come posso aiutarti?</p>
+                  </div>
+                  <!--<div class="media-body">
                     <p>Ciao</p>
                     <p>Sono il tuo assistente AI</p>
                     <p>Come posso aiutarti?</p>
-                  </div>
+                  </div>-->
                 </div>
     @if ($chat_messages)
         @foreach ($chat_messages as $chat_message)
@@ -216,6 +226,15 @@ objDiv.scrollTop = objDiv.scrollHeight;
 
 .media-body {
     min-width: 0;
+    position: relative;
+    padding: 6px 8px;
+    margin: 4px 0;
+    background-color: #f5f6f7;
+    border-radius: 3px;
+    font-weight: 100;
+    /*color:#9b9b9b;*/
+    color: #000;
+    white-space: normal;
 }
 
 .media-chat .media-body p {
