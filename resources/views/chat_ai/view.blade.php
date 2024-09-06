@@ -104,7 +104,7 @@ function sendMessage{{$row->id}}(event) {
     var agent_id = '{{$row->id}}';
     console.log(message);
     if(message != ''){
-        var html = '<div class="media media-chat media-chat-reverse"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+message+'</p></div></div>';
+        var html = '<div class="media media-chat media-chat-reverse"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body">'+message+'</div></div>';
         document.querySelector('.chat-body-{{$row->id}}').insertAdjacentHTML('beforeend', html);
         document.querySelector('#publisher-input-{{$row->id}}').value = '';
     }
