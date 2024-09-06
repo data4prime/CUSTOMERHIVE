@@ -406,7 +406,7 @@ class QlikHelper
   public static function getJWTTokenOP($id, $conf_id)
   {
 
-    //return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkYXN5c2VydmljZSIsInVzZXJEaXJlY3RvcnkiOiJEQVNZIn0.KBmZFS4AOFwxnqkmDp6-RrHwKW6tRpXpRinoaCXaoT5k-k78CxMONTK9cVK533qYk9snUD1l_CdUB1_3lukJGdD-hABss67GramtU07DA70uzNVreoaOn6_Vz4RTaioJbBnyfyWB6js7BNDRcLOsdbnlQyK_ilfWy6Fc-koolYNsNoKn9VOhnoRwXM5JAPGsSGW2SZuBQ5y_6m17tX-4XTxqyZjqgizo1BnWtSfMBdNeFVK7vcsOlasPIwp4x5fM3Nca_BJWuDXXcDT8bG9gyuG9YmlcGgtcUQo76oec7o6797MxUjqZ-HFtAEDFghMvRXK7TjeFa25JQDP3HlSV0A";
+    return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkYXN5c2VydmljZSIsInVzZXJEaXJlY3RvcnkiOiJEQVNZIn0.KBmZFS4AOFwxnqkmDp6-RrHwKW6tRpXpRinoaCXaoT5k-k78CxMONTK9cVK533qYk9snUD1l_CdUB1_3lukJGdD-hABss67GramtU07DA70uzNVreoaOn6_Vz4RTaioJbBnyfyWB6js7BNDRcLOsdbnlQyK_ilfWy6Fc-koolYNsNoKn9VOhnoRwXM5JAPGsSGW2SZuBQ5y_6m17tX-4XTxqyZjqgizo1BnWtSfMBdNeFVK7vcsOlasPIwp4x5fM3Nca_BJWuDXXcDT8bG9gyuG9YmlcGgtcUQo76oec7o6797MxUjqZ-HFtAEDFghMvRXK7TjeFa25JQDP3HlSV0A";
     $current_user = \App\User::find($id);
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();

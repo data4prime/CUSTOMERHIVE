@@ -504,7 +504,7 @@ class AdminQlikItemsController extends CBController
 				$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 				$js_login = "js/qliksaas_login.js";
 			} else {
-				$token = HelpersQlikHelper::getJWTTokenOP2(CRUDBooster::myId(), $conf->id);
+				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
 				$js_login = "js/qlik_op_jwt_login.js";
 			}
 			if (empty($token)) {
@@ -785,7 +785,7 @@ class AdminQlikItemsController extends CBController
 				$url = $conf->url;
 				$url .= '/'.$conf->endpoint;
 				$url .= '/hub/';
-				$token = HelpersQlikHelper::getJWTTokenOP2(CRUDBooster::myId(), $conf->id);
+				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
 				$js_login = "js/qlik_op_jwt_login.js";
 
 			}
@@ -868,7 +868,7 @@ class AdminQlikItemsController extends CBController
 				$url .= '/'.$conf->endpoint;
 				$url .= '/qmc/';
 			
-				$token = HelpersQlikHelper::getJWTTokenOP2(CRUDBooster::myId(), $conf->id);
+				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
 
 				$js_login = "js/qlik_op_jwt_login.js";
 
