@@ -407,7 +407,6 @@ class QlikHelper
   {
 
     //return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkYXN5c2VydmljZSIsInVzZXJEaXJlY3RvcnkiOiJEQVNZIn0.KBmZFS4AOFwxnqkmDp6-RrHwKW6tRpXpRinoaCXaoT5k-k78CxMONTK9cVK533qYk9snUD1l_CdUB1_3lukJGdD-hABss67GramtU07DA70uzNVreoaOn6_Vz4RTaioJbBnyfyWB6js7BNDRcLOsdbnlQyK_ilfWy6Fc-koolYNsNoKn9VOhnoRwXM5JAPGsSGW2SZuBQ5y_6m17tX-4XTxqyZjqgizo1BnWtSfMBdNeFVK7vcsOlasPIwp4x5fM3Nca_BJWuDXXcDT8bG9gyuG9YmlcGgtcUQo76oec7o6797MxUjqZ-HFtAEDFghMvRXK7TjeFa25JQDP3HlSV0A";
-
     $current_user = \App\User::find($id);
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
@@ -441,10 +440,7 @@ class QlikHelper
     $header = [
       'typ' => 'JWT',
       'alg' => 'RS256',
-      
-
     ];
-
 
     $payload = [
 
@@ -454,14 +450,83 @@ class QlikHelper
 
     file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($payload)."\n", FILE_APPEND);
 
-    $myToken = JWT::encode($payload, $privateKey, 'RS256', null, $header);
 
-    //$myToken = JWT::encode($payload, $privateKey, 'RS256', $keyid, $header);
+
+
+
 
     file_put_contents(__DIR__ . '/qlik_token.txt', $myToken."\n", FILE_APPEND);
 
 
-    //$myToken = JWT::encode($payload, $privateKey, 'RS256', $keyid, $header);
+    return $myToken;
+  }
+
+  public static function getJWTTokenOP2($id, $conf_id)
+  {
+
+    //return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkYXN5c2VydmljZSIsInVzZXJEaXJlY3RvcnkiOiJEQVNZIn0.KBmZFS4AOFwxnqkmDp6-RrHwKW6tRpXpRinoaCXaoT5k-k78CxMONTK9cVK533qYk9snUD1l_CdUB1_3lukJGdD-hABss67GramtU07DA70uzNVreoaOn6_Vz4RTaioJbBnyfyWB6js7BNDRcLOsdbnlQyK_ilfWy6Fc-koolYNsNoKn9VOhnoRwXM5JAPGsSGW2SZuBQ5y_6m17tX-4XTxqyZjqgizo1BnWtSfMBdNeFVK7vcsOlasPIwp4x5fM3Nca_BJWuDXXcDT8bG9gyuG9YmlcGgtcUQo76oec7o6797MxUjqZ-HFtAEDFghMvRXK7TjeFa25JQDP3HlSV0A";
+    $current_user = \App\User::find($id);
+
+    $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
+
+    //$expire = $issuedA2->addMinutes(60)->timestamp;
+
+    file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($qlik_conf)."\n", FILE_APPEND);
+
+    $privateKey = $qlik_conf->private_key;
+
+    //if provateKey is not empty, get the content of the file
+    if (!empty($privateKey)) {
+      $privateKey = file_get_contents($privateKey);
+    } else {
+      $privateKey = "";
+    }
+
+    file_put_contents(__DIR__ . '/qlik_token.txt', $privateKey."\n", FILE_APPEND);
+
+
+    $qlik_user = DB::table('qlik_users')->where('user_id', $id)->where('qlik_conf_id', $conf_id)->first();
+    if (!$qlik_user) {
+      $data['error'] = 'User not found!';
+      CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+      exit;
+    }
+
+    $qlik_login = $qlik_user->qlik_login;
+    $user_directory = $qlik_user->user_directory;
+
+    $header = json_encode([
+        'typ' => 'JWT',
+        'alg' => 'RS256',
+    ]);
+
+    $payload = json_encode([
+      'iss'   => '12345678-1234-1234-1234-123456123456',
+      'sub'   => '12345678-1234-1234-1234-123456123456',
+      'aud'   => $qlik_conf->qrsurl,
+      'iat'   => 1663792210,
+      'exp'   => 1979411410,
+      'scope' => 'everything',
+    ]);
+
+    file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($payload)."\n", FILE_APPEND);
+
+
+    $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
+
+    $base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
+
+    $data = $base64UrlHeader . "." . $base64UrlPayload;
+
+    openssl_sign($data, $signature, $privateKey, OPENSSL_ALGO_SHA256);
+
+    $base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
+
+    // Your JWT signed with the supplied private key
+    $myToken = $data . "." . $base64UrlSignature;
+
+    file_put_contents(__DIR__ . '/qlik_token.txt', $myToken."\n", FILE_APPEND);
+
 
     return $myToken;
   }
