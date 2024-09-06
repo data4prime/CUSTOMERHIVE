@@ -507,6 +507,8 @@ class QlikHelper
       'iat'   => 1663792210,
       'exp'   => 1979411410,
       'scope' => 'everything',
+      'userId' => $qlik_login,
+      'userDirectory' => $user_directory,
     ]);
 
     file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($payload)."\n", FILE_APPEND);
