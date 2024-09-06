@@ -235,6 +235,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
     /*color:#9b9b9b;*/
     color: #000;
     white-space: normal;
+    display: block;
 }
 
 .media-chat .media-body p {
