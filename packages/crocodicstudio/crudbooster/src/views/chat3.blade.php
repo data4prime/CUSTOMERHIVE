@@ -58,7 +58,7 @@ $chat_messages = Session::get('chat_messages');
 
 .media-chat {
     /*padding-right: 64px;*/
-    margin-bottom: 0;
+    /*margin-bottom: 0;*/
 }
 
 .media {
