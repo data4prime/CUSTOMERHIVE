@@ -36,7 +36,7 @@ $chat_messages = Session::get('chat_messages');
         .chat-body {
             height: calc(100% - 110px);
             overflow-y: auto;
-            padding: 10px;
+            /*padding: 10px;*/
         }
 
         .chat-footer {
@@ -57,7 +57,7 @@ $chat_messages = Session::get('chat_messages');
         }
 
 .media-chat {
-    padding-right: 64px;
+    /*padding-right: 64px;*/
     margin-bottom: 0;
 }
 
