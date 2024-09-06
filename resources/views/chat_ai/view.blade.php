@@ -121,12 +121,12 @@ function sendMessage{{$row->id}}(event) {
         console.log('Success:', data);
         //if data.text exists
         if(data.text){
-            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
+            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body">'+data.text+'</div></div>';
             document.querySelector('.chat-body-{{$row->id}}').insertAdjacentHTML('beforeend', html);
         }
 
         if(data.message){
-            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body"><p>'+data.message+'</p></div></div>';
+            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body">'+data.message+'</div></div>';
             document.querySelector('.chat-body-{{$row->id}}').insertAdjacentHTML('beforeend', html);
         }
 
