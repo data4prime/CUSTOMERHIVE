@@ -452,6 +452,8 @@ class QlikHelper
 
 
 
+    //generate token
+    $myToken = JWT::encode($payload, $privateKey, 'RS256', null, $header);
 
 
 
