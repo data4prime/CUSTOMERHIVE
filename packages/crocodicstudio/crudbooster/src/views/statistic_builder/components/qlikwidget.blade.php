@@ -86,9 +86,9 @@ function update_objects(select){
             <option value='0'>Choose App</option>
             @foreach($mashups as $m)
             @if(isset($config) && $m->id == $config->mashups)
-            <option selected value='{{$m->id}}'>{{$m->mashupname}}</option>
+            <option selected value='{{$m->id}}'>{{$m->appname}}</option>
             @else
-            <option  value='{{$m->id}}'>{{$m->mashupname}}</option>
+            <option  value='{{$m->id}}'>{{$m->appname}}</option>
             @endif
             @endforeach
         </select>

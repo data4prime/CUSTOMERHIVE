@@ -17,7 +17,7 @@ class QlikAppController extends CBController
 	{
 
 		# START CONFIGURATION DO NOT REMOVE THIS LINE
-		$this->title_field = "mashupname";
+		$this->title_field = "appname";
 		$this->limit = "20";
 		$this->orderby = "id,desc";
 		$this->global_privilege = true;
@@ -37,7 +37,7 @@ class QlikAppController extends CBController
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = [];
-		$this->col[] = ["label" => "App Name", "name" => "mashupname"];
+		$this->col[] = ["label" => "App Name", "name" => "appname"];
         $this->col[] = ["label" => "App ID", "name" => "appid"];
 		//$this->col[] = ["label" => "Conf", "name" => "conf"];
 		$this->col[] = array("label" => "Qlik Conf", "name" => "conf", "join" => "qlik_confs,confname");
@@ -48,7 +48,7 @@ class QlikAppController extends CBController
 
 		# START FORM DO NOT REMOVE THIS LINE
 		$this->form = [];
-		$this->form[] = ['label' => 'App Name', 'name' => 'mashupname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter App Name'];
+		$this->form[] = ['label' => 'App Name', 'name' => 'appname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter App Name'];
         $this->form[] = ['label' => 'App ID', 'name' => 'appid', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter App ID'];
         $this->form[] = ['label' => 'Conf', 'name' => 'conf', 'type' => 'select', 'width' => 'col-sm-10',
                             "datatable" => "qlik_confs,confname",

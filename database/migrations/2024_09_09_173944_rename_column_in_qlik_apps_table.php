@@ -14,7 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::table('qlik_apps', function (Blueprint $table) {
-            //
+            
+            if (Schema::hasColumn('qlik_apps', 'mashupname')) {
+                $table->renameColumn('mashupname', 'appname');
+            }
         });
     }
 
