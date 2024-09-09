@@ -82,11 +82,16 @@ $chat_messages = Session::get('chat_messages');
 .media-chat .media-body {
     -webkit-box-flex: initial;
     flex: initial;
-    /*display: table;*/
+    display: table;
 }
 
 .media-body {
     min-width: 0;
+}
+.media-chat-reverse > .media-body{
+    clear: right;
+    background-color: #48b0f7;
+    color: #fff;
 }
 
 .media-chat .media-body p {
@@ -208,14 +213,14 @@ h4.chat-title {
             <div class="media media-chat media-chat-reverse">
                 <img class="avatar" src="/images/user/admin.jpeg" alt="...">
                 <div class="media-body">
-                    <p>{{ $chat_message['message'] }}</p>
+                    @php echo  $chat_message['message'] @endphp
                 </div>
             </div>
 
             <div class="media media-chat">
                 <img class="avatar" src="/images/user/chatai.jpg" alt="...">
                 <div class="media-body">
-                    <p>{{$chat_message['response']}}</p>
+                    @php echo $chat_message['response'] @endphp
 
                 </div>
             </div>
