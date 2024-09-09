@@ -14,6 +14,17 @@ return new class extends Migration
     public function up()
     {
         //
+            if (Schema::hasColumn('qlikapps_groups', 'qlik_mashups_id')) {
+                Schema::table('qlikapps_groups', function (Blueprint $table) {
+                    $table->renameColumn('qlik_mashups_id', 'qlik_apps_id');
+                });
+            }
+
+            if (Schema::hasColumn('qlikapps_tenants', 'qlik_mashups_id')) {
+                Schema::table('qlikapps_tenant', function (Blueprint $table) {
+                    $table->renameColumn('qlik_mashups_id', 'qlik_apps_id');
+                });
+            }
     }
 
     /**
