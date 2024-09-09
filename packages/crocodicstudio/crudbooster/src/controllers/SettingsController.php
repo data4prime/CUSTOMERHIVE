@@ -137,6 +137,11 @@ class SettingsController extends CBController
                 }
             }
 
+            $host = $_SERVER['HTTP_HOST'];
+            $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+
+            $content = $protocol .'://'. $host . '/storage/' .$content;
+
             DB::table('cms_settings')->where('name', $set->name)->update(['content' => $content]);
 
             Cache::forget('setting_' . $set->name);
