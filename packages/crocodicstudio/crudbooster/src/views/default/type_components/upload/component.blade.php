@@ -15,32 +15,24 @@ if (function_exists('checkHttpStatus') === false) {
      * @param string $url URL da verificare
      * @return bool Restituisce true se lo stato HTTP è 200, altrimenti false
      */
-function checkHttpStatus($url) {
-    // Inizializza una sessione cURL
-    $ch = curl_init($url);
-    
-    // Imposta le opzioni per la sessione cURL
-    curl_setopt($ch, CURLOPT_NOBODY, true); // Non ritorna il corpo della risposta
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Ritorna il trasferimento come stringa
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Segue i reindirizzamenti
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Timeout di 10 secondi
-    
-    // Esegue la sessione cURL
-    curl_exec($ch);
-    
-    // Ottiene il codice di stato HTTP
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    
-    // Chiude la sessione cURL
-    curl_close($ch);
-    
-    // Verifica se il codice di stato è 200
-    if ($httpCode == 200) {
-        return true;
-    } else {
-        return false;
+    function checkHttpStatus($url) {
+
+        dd($value);
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_NOBODY, true); 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); 
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10); 
+        curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($httpCode == 200) {
+            return true;
+        } else {
+            return false;
+        }
     }
-}
 }
             //if(Storage::exists($value) || file_exists($value)):
             if(checkHttpStatus($value)):
