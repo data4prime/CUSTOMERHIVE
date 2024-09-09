@@ -41,12 +41,20 @@ class DatabaseSeeder extends Seeder
 
         if ($mod) {
 
-            $mod->update([
+            /*$mod->update([
+                    'name' => 'Qlik Apps',
+                    'path' => 'qlik_apps',
+                    'table_name' => 'qlik_apps',
+                    'controller' => 'QlikAppController',
+                ]);*/
+
+            DB::table('cms_moduls')->where('name', 'Qlik Mashups')->update([
                     'name' => 'Qlik Apps',
                     'path' => 'qlik_apps',
                     'table_name' => 'qlik_apps',
                     'controller' => 'QlikAppController',
                 ]);
+        
         }
 
         $mod = DB::table('cms_moduls')->where('name', 'Qlik Apps')->first();
