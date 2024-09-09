@@ -255,7 +255,9 @@ class QlikConfController extends CBController
                     fields[key].forEach(fieldId => {
 
                         if (document.getElementsByName(fieldId)[0]) {
-                            document.getElementsByName(fieldId)[0].parentNode.parentNode.classList.add('hidden');
+                            if (fieldId == != 'confname' && fieldId != 'type' && fieldId != 'auth') {
+                                document.getElementsByName(fieldId)[0].parentNode.parentNode.classList.add('hidden');
+                            }
                         }
                     });
                 });
