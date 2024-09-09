@@ -174,6 +174,19 @@ h4.chat-title {
     margin-right: 8px;
 }
 
+.media-chat-reverse {
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    /*margin: 10px 0;*/
+
+
+    clear: right;
+    /*background-color: #48b0f7;*/
+    color: #fff;
+}
+
 .media-chat.media-chat-reverse  p {
     /*float: right;*/
     clear: right;
