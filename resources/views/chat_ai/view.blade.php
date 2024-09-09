@@ -307,7 +307,7 @@ h4.chat-title {
 
 
     clear: right;
-    background-color: #48b0f7;
+    /*background-color: #48b0f7;*/
     color: #fff;
 }
 
