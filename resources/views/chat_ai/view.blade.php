@@ -298,12 +298,12 @@ h4.chat-title {
 }
 
 
-.media-chat-reverse > .media-body{
+.media-chat-reverse {
 
     display: flex;
     justify-content: flex-end;
     align-items: flex-start;
-    margin: 10px 0;
+    /*margin: 10px 0;*/
 
 
     clear: right;
