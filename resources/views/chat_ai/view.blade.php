@@ -300,8 +300,8 @@ h4.chat-title {
     margin-right: 8px;
 }
 
-.media-chat.media-chat-reverse {
-    /*float: right;*/
+
+.media-chat.media-chat-reverse.media-chat-reverse{
     clear: right;
     background-color: #48b0f7;
     color: #fff;
