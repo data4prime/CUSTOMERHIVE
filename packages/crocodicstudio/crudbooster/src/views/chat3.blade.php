@@ -202,9 +202,14 @@ h4.chat-title {
 
         <div class="media media-chat">
                   <img class="avatar" src="/images/user/chatai.jpg" alt="...">
-                  <div class="media-body">
+                    <div class="media-body">
                     <p>Ciao</p>
+
+                  </div>
+                    <div class="media-body">
                     <p>Sono il tuo assistente AI</p>
+                  </div>
+                    <div class="media-body">
                     <p>Come posso aiutarti?</p>
                   </div>
                 </div>
