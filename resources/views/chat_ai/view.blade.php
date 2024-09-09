@@ -54,14 +54,14 @@ dd($chat_messages);
             <div class="media media-chat media-chat-reverse">
                 <img class="avatar" src="/images/user/admin.jpeg" alt="...">
                 <div class="media-body">
-                    <p>{{ $chat_message['message'] }}</p>
+                    {{ $chat_message['message'] }}
                 </div>
             </div>
 
             <div class="media media-chat">
                 <img class="avatar" src="/images/user/chatai.jpg" alt="...">
                 <div class="media-body">
-                    <p>{{$chat_message['response']}}</p>
+                    {{$chat_message['response']}}
 
                 </div>
             </div>
