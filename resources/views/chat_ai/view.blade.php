@@ -221,7 +221,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
 .media-chat .media-body {
     -webkit-box-flex: initial;
     flex: initial;
-    /*display: table;*/
+    display: table;
 }
 
 .media-body {
