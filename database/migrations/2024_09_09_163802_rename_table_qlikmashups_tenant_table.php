@@ -27,7 +27,7 @@ return new class extends Migration
                 Schema::rename('qlikmashups_groups', 'qlikapps_groups');
             }
  
-            if (Schema::hasColumn('qlikapps_groups', 'qlik_mashups_id')) {
+           /* if (Schema::hasColumn('qlikapps_groups', 'qlik_mashups_id')) {
                 Schema::table('qlikapps_groups', function (Blueprint $table) {
                     $table->renameColumn('qlik_mashups_id', 'qlik_apps_id');
                 });
@@ -37,7 +37,7 @@ return new class extends Migration
                 Schema::table('qlikapps_tenant', function (Blueprint $table) {
                     $table->renameColumn('qlik_mashups_id', 'qlik_apps_id');
                 });
-            } 
+            } */
 
 
         });
