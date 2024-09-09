@@ -1208,10 +1208,10 @@ return Request::segment($segment);
             return 'tenant_id';
         }
 //Qlik Apps 
-        if ($parent_table == 'groups' and $child_table == 'qlikmashups_groups') {
+        if ($parent_table == 'groups' and $child_table == 'qlikapps_groups') {
             return 'group_id';
         }
-	    if ($parent_table == 'tenants' and $child_table == 'qlikmashups_tenants') {
+	    if ($parent_table == 'tenants' and $child_table == 'qlikapps_tenants') {
             return 'tenant_id';
         }
 //qlik confs

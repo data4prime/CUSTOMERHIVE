@@ -61,11 +61,11 @@ class QlikAppController extends CBController
     if (CRUDBooster::isSuperadmin()) {
       $this->form[] = [
         'label' => 'Tenant',
-        'name' => 'qlikmashups_tenants',
+        'name' => 'qlikapps_tenants',
         "type" => "select2",
         "select2_multiple" => true,
         "datatable" => "tenants,name",
-        "relationship_table" => "qlikmashups_tenants",
+        "relationship_table" => "qlikapps_tenants",
         'required' => true,
         'validation' => 'required',
         'value' => UserHelper::current_user_tenant()
@@ -73,13 +73,13 @@ class QlikAppController extends CBController
 
       $this->form[] = [
         "label" => "Group",
-        "name" => "qlikmashups_groups",
+        "name" => "qlikapps_groups",
         "type" => "select2",
         "select2_multiple" => true,
         "datatable" => "groups,name",
-        "relationship_table" => "qlikmashups_groups",
+        "relationship_table" => "qlikapps_groups",
         "required" => true,
-        'parent_select' => 'qlikmashups_tenants',
+        'parent_select' => 'qlikapps_tenants',
         'parent_crosstable' => 'group_tenants',
         'fk_name' => 'tenant_id',
         'child_crosstable_fk_name' => 'group_id'
@@ -103,7 +103,7 @@ class QlikAppController extends CBController
         "type" => "select2",
         "select2_multiple" => true,
         "datatable" => "groups,name",
-        "relationship_table" => "qlikmashups_groups",
+        "relationship_table" => "qlikapps_groups",
         "required" => true,
         'parent_select' => 'tenant',
         'parent_crosstable' => 'group_tenants',
@@ -342,7 +342,7 @@ class QlikAppController extends CBController
 		} elseif (UserHelper::isTenantAdmin()) {
 			$mashups = DB::table('qlik_apps')
 				->select('qlik_apps.*')
-				->join('qlikmashups_tenants', 'qlik_apps.id', '=', 'qlikmashups_tenants.qlikmashup_id')
+				->join('qlikapps_tenants', 'qlik_apps.id', '=', 'qlikapps_tenants.qlikmashup_id')
 
 				->where('tenant_id', UserHelper::current_user_tenant())
 
@@ -350,8 +350,8 @@ class QlikAppController extends CBController
 		} else {
 			$mashups = DB::table('qlik_apps')
 						->select('qlik_apps.*')
-				->join('qlikmashups_groups', 'qlik_apps.id', '=', 'qlikmashups_groups.qlikmashup_id')
-				->join('group_users', 'group_users.group_id', '=', 'qlikmashups_groups.group_id')
+				->join('qlikapps_groups', 'qlik_apps.id', '=', 'qlikapps_groups.qlikmashup_id')
+				->join('group_users', 'group_users.group_id', '=', 'qlikapps_groups.group_id')
 				->where('group_users.user_id', CRUDBooster::myId())
 				->get();
 		}

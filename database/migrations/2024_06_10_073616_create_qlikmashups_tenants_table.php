@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('qlikmashups_tenants', function (Blueprint $table) {
+        Schema::create('qlikapps_tenants', function (Blueprint $table) {
             //
             $table->increments('id');
             $table->unsignedBigInteger('qlik_apps_id');
@@ -31,7 +31,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('qlikmashups_tenants', function (Blueprint $table) {
+        Schema::table('qlikapps_tenants', function (Blueprint $table) {
             //
         });
     }
