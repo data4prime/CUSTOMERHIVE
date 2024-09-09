@@ -50,7 +50,7 @@ class CRUDBooster
 
     public static function getLogo($tenant) {
         if (isset($tenant->logo)) {
-        return $tenant->logo;
+        return 'storage/'.$tenant->logo;
         } elseif (CRUDBooster::getSetting('logo')) {
         return asset(CRUDBooster::getSetting('logo'));
         } else {
