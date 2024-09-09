@@ -225,6 +225,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
 }
 
 .media-body {
+width: inherit;
     min-width: 0;
     position: relative;
     /*padding: 6px 8px;*/
@@ -251,11 +252,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
     white-space: normal;
 }
 
-/*
-.media>* {
-    margin: 0 8px;
-}
-*/
+
 
 .media-chat .media-body p.meta {
     background-color: transparent !important;

@@ -86,6 +86,7 @@ $chat_messages = Session::get('chat_messages');
 }
 
 .media-body {
+    width: inherit;
     min-width: 0;
 }
 .media-chat-reverse > .media-body{
@@ -203,14 +204,14 @@ h4.chat-title {
         <div class="media media-chat">
                   <img class="avatar" src="/images/user/chatai.jpg" alt="...">
                     <div class="media-body">
-                    <p>Ciao</p>
+                    Ciao
 
                   </div>
                     <div class="media-body">
-                    <p>Sono il tuo assistente AI</p>
+                    Sono il tuo assistente AI
                   </div>
                     <div class="media-body">
-                    <p>Come posso aiutarti?</p>
+                    Come posso aiutarti?
                   </div>
                 </div>
     @if ($chat_messages)
