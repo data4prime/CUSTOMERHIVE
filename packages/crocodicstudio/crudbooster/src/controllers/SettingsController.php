@@ -135,12 +135,13 @@ class SettingsController extends CBController
                 if ($storeFile) {
                     $content = $directory . '/' . $filename;
                 }
-            }
-
             $host = $_SERVER['HTTP_HOST'];
             $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
 
             $content = $protocol .'://'. $host . '/storage/' .$content;
+            }
+
+
 
             DB::table('cms_settings')->where('name', $set->name)->update(['content' => $content]);
 
