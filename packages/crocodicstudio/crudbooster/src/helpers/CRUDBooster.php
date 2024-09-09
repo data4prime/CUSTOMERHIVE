@@ -1207,7 +1207,7 @@ return Request::segment($segment);
         if ($parent_table == 'tenants' and $child_table == 'group_tenants') {
             return 'tenant_id';
         }
-//qlik mashups 
+//Qlik Apps 
         if ($parent_table == 'groups' and $child_table == 'qlikmashups_groups') {
             return 'group_id';
         }

@@ -6,7 +6,7 @@ use CRUDBooster;
 use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 
 
-use \crocodicstudio\crudbooster\controllers\QlikMashupController;
+use \crocodicstudio\crudbooster\controllers\QlikAppController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Excel;
 use Illuminate\Support\Facades\PDF;
@@ -159,9 +159,9 @@ class StatisticBuilderController extends CBController
         $command = 'layout';
         $config = json_decode($component->config);
         if ($config) {
-            $mashup = DB::table('qlik_mashups')->where('id', $config->mashups)->first();
+            $mashup = DB::table('qlik_apps')->where('id', $config->mashups)->first();
             if ($mashup) {
-                $conf = QlikMashupController::getConf($mashup->conf);
+                $conf = QlikAppController::getConf($mashup->conf);
             } else {
                 $conf = null;
             }
@@ -171,7 +171,7 @@ class StatisticBuilderController extends CBController
             $config->mashups = 0;
             $config->object = 0;
         }
-        $mashup = QlikMashupController::getMashupFromCompID($componentID);
+        $mashup = QlikAppController::getMashupFromCompID($componentID);
         if ($conf && isset($conf->id) && $conf->type == 'SAAS') {
         $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
             } else {
@@ -253,15 +253,15 @@ class StatisticBuilderController extends CBController
         }
 
         if (isset($config->mashups)) {
-            $conf = QlikMashupController::getConf($config->mashups);
+            $conf = QlikAppController::getConf($config->mashups);
         } else {
             $errors[] = 'Mashup is not selected. Please, select mashup for this widget.';
         }
 
         $command = 'configuration';
 
-        $mashups = QlikMashupController::getMashups();
-        $mashup = QlikMashupController::getMashupFromCompID($componentID);
+        $mashups = QlikAppController::getMashups();
+        $mashup = QlikAppController::getMashupFromCompID($componentID);
 
         if (!$mashup) {
             $errors[] = 'Mashup is not selected. Please, select mashup for this widget.';
@@ -316,7 +316,7 @@ class StatisticBuilderController extends CBController
                 $mashups = json_decode($mashups->config);
 
                 if (isset($mashups->mashups)) {
-                    $mashup = DB::table('qlik_mashups')->where('id', $mashups->mashups)->first();
+                    $mashup = DB::table('qlik_apps')->where('id', $mashups->mashups)->first();
                     if ($mashup) {
                         $qlik_conf_record = DB::table('qlik_confs')->where('id', $mashup->conf)->first();
                         if ($qlik_conf_record) {
@@ -353,7 +353,7 @@ class StatisticBuilderController extends CBController
             $config->object = 0;
         }
 
-        $mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
+        $mashup = DB::table('qlik_apps')->where('id', $mashup)->first();
         $qlik_conf = null;
 
         if ($mashup) {

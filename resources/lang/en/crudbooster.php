@@ -224,7 +224,7 @@ return [
     'email_setting' => 'Email Setting',
     'application_setting' => 'Application Setting',
     'qlik_conf' => 'Qlik Configuration',
-    'qlik_mashups' => 'Qlik Mashups',
+    'qlik_apps' => 'Qlik Apps',
     // table filter & sort
     'filter_select_operator_type' => 'Select Operator Type',
     'filter_ascending' => 'ASCENDING',

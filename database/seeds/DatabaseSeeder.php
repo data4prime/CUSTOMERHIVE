@@ -14,43 +14,50 @@ class DatabaseSeeder extends Seeder
         //$this->call(UsersTableSeeder::class);
 
 
-        //$this->call(CBSeeder::class);
+        $this->call(CBSeeder::class);
 
 
         //$this->command->info('Qlik settings...');
         //$this->call(Qlik_Sett::class);
 
 
-/*
+        $mod = DB::table('cms_moduls')->where('name', 'Qlik Configuration')->first();
 
- $mod = [
-                'created_at' => date('Y-m-d H:i:s'),
-                'name' => 'Qlik Configuration',
-                'icon' => 'fa fa-cog',
-                'path' => 'qlik_confs',
-                'table_name' => 'qlik_confs',
-                'controller' => 'QlikConfController',
-                'is_protected' => 1,
-                'is_active' => 1,
-            ];
-        DB::table('cms_moduls')->insert($mod);  
+        if (!$mod) {
+            $mod = [
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'name' => 'Qlik Configuration',
+                    'icon' => 'fa fa-cog',
+                    'path' => 'qlik_confs',
+                    'table_name' => 'qlik_confs',
+                    'controller' => 'QlikConfController',
+                    'is_protected' => 1,
+                    'is_active' => 1,
+                    ];
+            DB::table('cms_moduls')->insert($mod);  
+        }
 
+        $mod = DB::table('cms_moduls')->where('name', 'Qlik Apps')->first();
+
+        if (!$mod) {
+            $mod = [
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'name' => 'Qlik Apps',
+                    'icon' => 'fa fa-cog',
+                    'path' => 'qlik_apps',
+                    'table_name' => 'qlik_apps',
+                    'controller' => 'QlikAppController',
+                    'is_protected' => 1,
+                    'is_active' => 1,
+                ];
+            DB::table('cms_moduls')->insert($mod);
+        }
  
-$mod = [
-                'created_at' => date('Y-m-d H:i:s'),
-                'name' => 'Qlik Mashups',
-                'icon' => 'fa fa-cog',
-                'path' => 'qlik_mashups',
-                'table_name' => 'qlik_mashups',
-                'controller' => 'QlikMashupController',
-                'is_protected' => 1,
-                'is_active' => 1,
-            ];
-        DB::table('cms_moduls')->insert($mod); 
+ 
+        $mod = DB::table('cms_moduls')->where('name', 'Dashboard Layouts')->first();
 
-
-
-$mod = [
+        if (!$mod) {
+            $mod = [
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'Dashboard Layouts',
                 'icon' => 'fa fa-cog',
@@ -60,9 +67,15 @@ $mod = [
                 'is_protected' => 1,
                 'is_active' => 1,
             ];
-        DB::table('cms_moduls')->insert($mod); 
+            DB::table('cms_moduls')->insert($mod); 
+        }
 
-*/
+
+
+        $mod = DB::table('cms_moduls')->where('name', 'Chat AI')->first();
+
+        if (!$mod) {
+
 
         $mod =  [
                         'created_at' => date('Y-m-d H:i:s'),
@@ -75,6 +88,7 @@ $mod = [
                         'is_active' => 1,
                 ];
             DB::table('cms_moduls')->insert($mod);
+        }
 
     }
 }

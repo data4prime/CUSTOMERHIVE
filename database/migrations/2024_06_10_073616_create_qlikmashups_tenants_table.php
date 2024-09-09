@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('qlikmashups_tenants', function (Blueprint $table) {
             //
             $table->increments('id');
-            $table->unsignedBigInteger('qlik_mashups_id');
+            $table->unsignedBigInteger('qlik_apps_id');
             $table->unsignedInteger('tenant_id');
-            $table->unique(['qlik_mashups_id', 'tenant_id'], 'unique');
-            $table->foreign('qlik_mashups_id')->references('id')->on('qlik_mashups')->onDelete('cascade');
+            $table->unique(['qlik_apps_id', 'tenant_id'], 'unique');
+            $table->foreign('qlik_apps_id')->references('id')->on('qlik_apps')->onDelete('cascade');
             $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
         });
     }

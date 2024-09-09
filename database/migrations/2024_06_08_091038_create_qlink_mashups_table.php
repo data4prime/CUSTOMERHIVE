@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('qlik_mashups', function (Blueprint $table) {
+        Schema::create('qlik_apps', function (Blueprint $table) {
             //
                         $table->id();
         $table->string('mashupname');
@@ -31,7 +31,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::create('qlik_mashups', function (Blueprint $table) {
+        Schema::create('qlik_apps', function (Blueprint $table) {
             //
         });
     }

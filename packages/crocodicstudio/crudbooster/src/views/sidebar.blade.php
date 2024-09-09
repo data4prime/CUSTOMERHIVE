@@ -218,7 +218,7 @@
 
 
         <li data-collapse="3" class='treeview'>
-          <a href='{{url("admin/qlik_mashups")}}'>
+          <a href='{{url("admin/qlik_apps")}}'>
             <img class="menu qlik_logo" src=/images/qlik_logo.png />
             <span>{{ trans('crudbooster.Qlik_Apps') }}</span> <i class="fa fa-angle-{{ trans("
               crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>

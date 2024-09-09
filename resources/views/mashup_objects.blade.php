@@ -2,10 +2,10 @@
 @php 
 
 use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
-use crocodicstudio\crudbooster\controllers\QlikMashupController;
+use crocodicstudio\crudbooster\controllers\QlikAppController;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
-$conf = QlikMashupController::getConf($qlik_conf);
+$conf = QlikAppController::getConf($qlik_conf);
 //generate a random string
 $state = bin2hex(random_bytes(16));
 

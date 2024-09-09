@@ -38,8 +38,8 @@ class ModuleHelper
         }
 
       } 
-      if ($module->table == "qlik_mashups") {
-        $entity_group = DB::table("qlikmashups_groups")->where('qlik_mashups_id', $row->id)->where('group_id',UserHelper::primary_group(UserHelper::me()->id))->first();//->group_id;
+      if ($module->table == "qlik_apps") {
+        $entity_group = DB::table("qlikmashups_groups")->where('qlik_apps_id', $row->id)->where('group_id',UserHelper::primary_group(UserHelper::me()->id))->first();//->group_id;
         if ($entity_group) {
           $entity_group = $entity_group->group_id;
         }
@@ -70,8 +70,8 @@ class ModuleHelper
         }
       }
 
-      if ($module->table == "qlik_mashups") {
-        $entity_tenant = DB::table("qlikmashups_tenants")->where('qlik_mashups_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant())->first();//->group_id;
+      if ($module->table == "qlik_apps") {
+        $entity_tenant = DB::table("qlikmashups_tenants")->where('qlik_apps_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant())->first();//->group_id;
         if ($entity_tenant) {
           $entity_tenant = $entity_tenant->tenant_id;
         }
@@ -267,7 +267,7 @@ class ModuleHelper
       }
   }
 
-if ($module->table == "qlik_mashups") {
+if ($module->table == "qlik_apps") {
       if (UserHelper::current_user_tenant() == $entity_tenant && UserHelper::isTenantAdmin(CRUDBooster::myId()) ) {
         return true;
       }

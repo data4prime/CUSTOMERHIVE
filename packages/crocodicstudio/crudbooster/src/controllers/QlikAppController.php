@@ -10,7 +10,7 @@ use \crocodicstudio\crudbooster\helpers\UserHelper;
 use \crocodicstudio\crudbooster\helpers\QlikHelper;
 
 
-class QlikMashupController extends CBController
+class QlikAppController extends CBController
 {
 
 	public function cbInit()
@@ -32,7 +32,7 @@ class QlikMashupController extends CBController
 		$this->button_filter = true;
 		$this->button_import = false;
 		$this->button_export = false;
-		$this->table = "qlik_mashups";
+		$this->table = "qlik_apps";
 		# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
@@ -290,7 +290,7 @@ class QlikMashupController extends CBController
 			$mashup = json_decode($mashup->config);
 			if (isset($mashup)) {
 				$mashup = $mashup->mashups;
-			$mashup = DB::table('qlik_mashups')->where('id', $mashup)->first();
+			$mashup = DB::table('qlik_apps')->where('id', $mashup)->first();
 			} else {
 				$mashup = null;
 			}
@@ -335,22 +335,22 @@ class QlikMashupController extends CBController
 	public static function getMashups() {
 		//se super admin prendo tutti i mashups
 		if (CRUDBooster::isSuperadmin()) {
-			$mashups = DB::table('qlik_mashups')
-			->select('qlik_mashups.*')
+			$mashups = DB::table('qlik_apps')
+			->select('qlik_apps.*')
 
 			->get();
 		} elseif (UserHelper::isTenantAdmin()) {
-			$mashups = DB::table('qlik_mashups')
-				->select('qlik_mashups.*')
-				->join('qlikmashups_tenants', 'qlik_mashups.id', '=', 'qlikmashups_tenants.qlikmashup_id')
+			$mashups = DB::table('qlik_apps')
+				->select('qlik_apps.*')
+				->join('qlikmashups_tenants', 'qlik_apps.id', '=', 'qlikmashups_tenants.qlikmashup_id')
 
 				->where('tenant_id', UserHelper::current_user_tenant())
 
 				->get();
 		} else {
-			$mashups = DB::table('qlik_mashups')
-						->select('qlik_mashups.*')
-				->join('qlikmashups_groups', 'qlik_mashups.id', '=', 'qlikmashups_groups.qlikmashup_id')
+			$mashups = DB::table('qlik_apps')
+						->select('qlik_apps.*')
+				->join('qlikmashups_groups', 'qlik_apps.id', '=', 'qlikmashups_groups.qlikmashup_id')
 				->join('group_users', 'group_users.group_id', '=', 'qlikmashups_groups.group_id')
 				->where('group_users.user_id', CRUDBooster::myId())
 				->get();
