@@ -50,7 +50,7 @@ class CRUDBooster
 
     public static function getLogo($tenant) {
         if (isset($tenant->logo)) {
-        return 'storage/'.$tenant->logo;
+        return $tenant->logo;
         } elseif (CRUDBooster::getSetting('logo')) {
         return asset(CRUDBooster::getSetting('logo'));
         } else {
@@ -207,6 +207,7 @@ public static function isProfilePage() {
                 //get host
                 $host = $_SERVER['HTTP_HOST'];
                 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+                dd($protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
                 return $protocol .'://'. $host . '/storage' . $file_path . '/' . $filename;
 
             } else {
