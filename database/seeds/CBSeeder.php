@@ -16,7 +16,7 @@ class CBSeeder extends Seeder
         $this->command->info('Please wait updating the data...');
 
                 
-$this->call('GroupSeeder');
+        $this->call('GroupSeeder');
         $this->call('TenantSeeder');
         $this->call('Cms_statistics');
         $this->call('Cms_menus');
@@ -612,17 +612,17 @@ class Cms_menusPrivileges extends Seeder
 
                 $check = DB::table('cms_menus_privileges')->where('id_cms_menus', $menu->id)->where('id_cms_privileges', $privilege->id)->count();
 
-                if ($check > 0) {
-                    continue;
+                if ($check == 0) {
+                    DB::table('cms_menus_privileges')->insert([
+
+                        'id_cms_menus' => $menu->id,
+                        'id_cms_privileges' => $privilege->id
+
+                    ]);
                 }
 
 
-                DB::table('cms_menus_privileges')->insert([
 
-                    'id_cms_menus' => $menu->id,
-                    'id_cms_privileges' => $privilege->id
-
-                ]);
             }
         }
     }
@@ -635,18 +635,18 @@ class Cms_statistics extends Seeder
 
         $check = DB::table('cms_statistics')->where('slug', 'dashboard')->first();
 
-        if ($check) {
-            return;
+        if ($check == 0) {
+            DB::table('cms_statistics')->insert([
+
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'Dashboard',
+                'slug' => 'dashboard',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => null,
+            ]);
         }
 
-        DB::table('cms_statistics')->insert([
 
-            'created_at' => date('Y-m-d H:i:s'),
-            'name' => 'Dashboard',
-            'slug' => 'dashboard',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => null,
-        ]);
     }
 }
 
@@ -663,15 +663,15 @@ class Cms_menusGroups extends Seeder
 
                 $check = DB::table('menu_groups')->where('menu_id', $menu->id)->where('group_id', $group->id)->count();
 
-                if ($check > 0) {
-                    continue;
+                if ($check == 0) {
+                    DB::table('menu_groups')->insert([
+                        'menu_id' => $menu->id,
+                        'group_id' => $group->id,
+                    ]);
                 }
 
 
-                DB::table('menu_groups')->insert([
-                    'menu_id' => $menu->id,
-                    'group_id' => $group->id,
-                ]);
+
             }
         }
     }
@@ -689,15 +689,15 @@ class Cms_menusTenants extends Seeder
 
                 $check = DB::table('menu_tenants')->where('menu_id', $menu->id)->where('tenant_id', $group->id)->count();
 
-                if ($check > 0) {
-                    continue;
+                if ($check == 0) {
+                    DB::table('menu_tenants')->insert([
+                        'menu_id' => $menu->id,
+                        'tenant_id' => $group->id,
+                    ]);
                 }
 
 
-                DB::table('menu_tenants')->insert([
-                    'menu_id' => $menu->id,
-                    'tenant_id' => $group->id,
-                ]);
+
             }
         }
     }
@@ -715,15 +715,14 @@ class Cms_groupTenants extends Seeder
 
                 $check = DB::table('group_tenants')->where('group_id', $menu->id)->where('tenant_id', $tenant->id)->count();
 
-                if ($check > 0) {
-                    continue;
+                if ($check == 0) {
+                    DB::table('group_tenants')->insert([
+                        'group_id' => $menu->id,
+                        'tenant_id' => $tenant->id,
+                    ]);
                 }
 
 
-                DB::table('group_tenants')->insert([
-                    'group_id' => $menu->id,
-                    'tenant_id' => $tenant->id,
-                ]);
             }
         }
     }
@@ -742,14 +741,14 @@ class Cms_usersGroups extends Seeder
 
                 $check = DB::table('users_groups')->where('user_id', $user->id)->where('group_id', $group->id)->count();
 
-                if ($check > 0) {
-                    continue;
-                }
+                if ($check == 0) {
+                    DB::table('users_groups')->insert([
+                        'user_id' => $user->id,
+                        'group_id' => $group->id,
+                    ]);
+                } 
 
-                DB::table('users_groups')->insert([
-                    'user_id' => $user->id,
-                    'group_id' => $group->id,
-                ]);
+
             }
         }
     }
