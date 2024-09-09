@@ -20,7 +20,7 @@ if (function_exists('checkHttpStatus') === false) {
         $host = $_SERVER['HTTP_HOST'];
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
 
-        $to_replace = $protocol .'://'. $host . '/storage/' .$content;
+        $to_replace = $protocol .'://'. $host ;
 
         $result = str_replace($to_replace, "", $url);
 
