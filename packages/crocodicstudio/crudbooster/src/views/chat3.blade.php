@@ -95,6 +95,22 @@ $chat_messages = Session::get('chat_messages');
     color: #fff;
 }
 
+.media-body {
+width: inherit;
+    min-width: 0;
+    position: relative;
+    /*padding: 6px 8px;*/
+    /*margin: 4px 0;*/
+    background-color: #f5f6f7;
+    border-radius: 3px;
+    font-weight: 100;
+    /*color:#9b9b9b;*/
+    color: #000;
+    white-space: normal;
+    /*display: block;*/
+    margin-bottom: 10px;
+}
+
 .media-chat .media-body p {
     position: relative;
     /*padding: 6px 8px;*/
