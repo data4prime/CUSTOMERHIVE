@@ -612,7 +612,7 @@ class Cms_menusPrivileges extends Seeder
 
                 $check = DB::table('cms_menus_privileges')->where('id_cms_menus', $menu->id)->where('id_cms_privileges', $privilege->id)->count();
 
-                if ($check) {
+                if ($check > 0) {
                     continue;
                 }
 
@@ -663,7 +663,7 @@ class Cms_menusGroups extends Seeder
 
                 $check = DB::table('menu_groups')->where('menu_id', $menu->id)->where('group_id', $group->id)->count();
 
-                if ($check) {
+                if ($check > 0) {
                     continue;
                 }
 
@@ -689,7 +689,7 @@ class Cms_menusTenants extends Seeder
 
                 $check = DB::table('menu_tenants')->where('menu_id', $menu->id)->where('tenant_id', $group->id)->count();
 
-                if ($check) {
+                if ($check > 0) {
                     continue;
                 }
 
@@ -715,7 +715,7 @@ class Cms_groupTenants extends Seeder
 
                 $check = DB::table('group_tenants')->where('group_id', $menu->id)->where('tenant_id', $tenant->id)->count();
 
-                if ($check) {
+                if ($check > 0) {
                     continue;
                 }
 
@@ -742,7 +742,7 @@ class Cms_usersGroups extends Seeder
 
                 $check = DB::table('users_groups')->where('user_id', $user->id)->where('group_id', $group->id)->count();
 
-                if ($check) {
+                if ($check > 0) {
                     continue;
                 }
 
