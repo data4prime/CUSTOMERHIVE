@@ -99,7 +99,7 @@ $chat_messages = Session::get('chat_messages');
 width: inherit;
     min-width: 0;
     position: relative;
-    /*padding: 6px 8px;*/
+    padding: 6px 8px;
     /*margin: 4px 0;*/
     background-color: #f5f6f7;
     border-radius: 3px;
