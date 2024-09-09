@@ -17,7 +17,7 @@ if (function_exists('checkHttpStatus') === false) {
      */
     function checkHttpStatus($url) {
 
-        dd($value);
+        dd($url);
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_NOBODY, true); 
