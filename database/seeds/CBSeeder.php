@@ -708,6 +708,7 @@ class Cms_groupTenants extends Seeder
     public function run()
     {
 
+        /*
         $menus = DB::table('cms_menus')->get();
         $tenants = DB::table('tenants')->get();
         foreach ($menus as $menu) {
@@ -718,6 +719,24 @@ class Cms_groupTenants extends Seeder
                 if ($check == 0) {
                     DB::table('group_tenants')->insert([
                         'group_id' => $menu->id,
+                        'tenant_id' => $tenant->id,
+                    ]);
+                }
+
+
+            }
+        }*/ 
+
+        $groups  = DB::table('groups')->get();
+        $tenants = DB::table('tenants')->get();
+        foreach ($groups as $group) {
+            foreach ($tenants as $tenant) {
+
+                $check = DB::table('group_tenants')->where('group_id', $group->id)->where('tenant_id', $tenant->id)->count();
+
+                if ($check == 0) {
+                    DB::table('group_tenants')->insert([
+                        'group_id' => $group->id,
                         'tenant_id' => $tenant->id,
                     ]);
                 }
