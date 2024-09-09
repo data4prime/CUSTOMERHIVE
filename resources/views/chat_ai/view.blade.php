@@ -300,8 +300,10 @@ h4.chat-title {
 
 .media-chat-reverse > .media-body{
 
-    position: relative;
-    left: 50%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    margin: 10px 0;
 
 
     clear: right;
