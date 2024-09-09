@@ -301,7 +301,7 @@ h4.chat-title {
 }
 
 
-.media-chat.media-chat-reverse.media-chat-reverse{
+.media-chat.media-chat-reverse.media-body{
     clear: right;
     background-color: #48b0f7;
     color: #fff;
