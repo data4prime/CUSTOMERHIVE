@@ -17,9 +17,20 @@ if (function_exists('checkHttpStatus') === false) {
      */
     function checkHttpStatus($url) {
 
-        dd($url);
+        $host = $_SERVER['HTTP_HOST'];
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
 
-        $ch = curl_init($url);
+        $to_replace = $protocol .'://'. $host . '/storage/' .$content;
+
+        $result = str_replace($to_replace, "", $url);
+
+        if (file_exists($result)) {
+            return true;
+        } else {
+            return false;
+        }
+
+        /*$ch = curl_init($url);
         curl_setopt($ch, CURLOPT_NOBODY, true); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); 
@@ -31,7 +42,7 @@ if (function_exists('checkHttpStatus') === false) {
             return true;
         } else {
             return false;
-        }
+        }*/
     }
 }
             //if(Storage::exists($value) || file_exists($value)):
