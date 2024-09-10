@@ -20,7 +20,7 @@ class AdminTenantsController extends CBController
 	{
 
 		# START CONFIGURATION DO NOT REMOVE THIS LINE
-		$this->title_field = "Name";
+		$this->title_field = "name";
 		$this->limit = "20";
 		$this->orderby = "id,desc";
 		$this->global_privilege = false;
