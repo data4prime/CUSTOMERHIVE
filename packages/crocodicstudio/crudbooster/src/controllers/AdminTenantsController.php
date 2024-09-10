@@ -55,7 +55,7 @@ class AdminTenantsController extends CBController
 		$this->form = [];
 		$this->form[] = ['label' => 'Name', 'name' => 'name', 'type' => 'text', 'validation' => 'required', 'width' => 'col-sm-9'];
 		$this->form[] = ['label' => 'Description', 'name' => 'description', 'type' => 'text', 'width' => 'col-sm-9'];
-		$this->form[] = ['label' => 'Logo', 'name' => 'logo', 'type' => 'upload', 'width' => 'col-sm-9'/*, 'validation' => 'image|max:10000'*/, 'help' => 'Supported types: jpg, png, gif. Max 10 MB'];
+		$this->form[] = ['label' => 'Logo', 'name' => 'logo', 'type' => 'upload', 'width' => 'col-sm-9', 'validation' => 'image|max:10000', 'help' => 'Supported types: jpg, png, gif. Max 10 MB'];
 		$this->form[] = ['label' => 'Favicon', 'name' => 'favicon', 'type' => 'upload', 'width' => 'col-sm-9', 'validation' => 'image|max:10000', 'help' => 'Supported types: jpg, png, gif. Max 10 MB'];
 		$this->form[] = ['label' => 'Background Color', 'name' => 'login_background_color', 'type' => 'text', 'width' => 'col-sm-9', 'help' => 'use hex format i.e.: #4287f5'];
 		$this->form[] = ['label' => 'Background Image', 'name' => 'login_background_image', 'type' => 'upload', 'width' => 'col-sm-9', 'validation' => 'image|max:10000', 'help' => 'Supported types: jpg, png, gif. Max 10 MB'];
