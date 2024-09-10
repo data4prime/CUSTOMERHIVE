@@ -42,7 +42,7 @@ class CRUDBooster
             return asset(CRUDBooster::getSetting('favicon'));
         } else {
         //default crudbooster favicon
-            return asset('vendor/crudbooster/assets/logo_crudbooster.png');
+            return asset('images/favicon.jpg');
         }
 
     }
@@ -54,7 +54,7 @@ class CRUDBooster
         } elseif (CRUDBooster::getSetting('logo')) {
         return asset(CRUDBooster::getSetting('logo'));
         } else {
-        return "";
+        return asset('/images/customerhive-logo.png');
         }
 
     }
@@ -75,7 +75,7 @@ class CRUDBooster
         } elseif (CRUDBooster::getSetting('login_background_image')) {
             return asset(CRUDBooster::getSetting('login_background_image'));
         } else {
-            return asset('vendor/crudbooster/assets/bg_blur3.jpg');
+            return asset('images/main-bg.jpg');
         }
     }
 
