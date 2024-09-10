@@ -42,7 +42,7 @@ class CRUDBooster
             return asset(CRUDBooster::getSetting('favicon'));
         } else {
         //default crudbooster favicon
-            return asset('images/favicon.jpg');
+            return asset('images/favicon.png');
         }
 
     }
