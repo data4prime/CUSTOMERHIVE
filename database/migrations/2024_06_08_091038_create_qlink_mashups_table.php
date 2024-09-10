@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('qlik_apps', function (Blueprint $table) {
             //
                         $table->id();
-        $table->string('mashupname');
+        $table->string('appname');
         $table->string('conf');
         $table->string('appid');
 

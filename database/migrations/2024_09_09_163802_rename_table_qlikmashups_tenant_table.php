@@ -13,8 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('qlikmashups_tenants', function (Blueprint $table) {
-            //
+
             if (Schema::hasTable('qlikmashups_tenants')) {
                 Schema::rename('qlikmashups_tenants', 'qlikapps_tenants');
             }
@@ -29,7 +28,6 @@ return new class extends Migration
 
 
 
-        });
     }
 
     /**
