@@ -21,7 +21,7 @@ return new class extends Migration
             }
 
             if (Schema::hasColumn('qlikapps_tenants', 'qlik_mashups_id')) {
-                Schema::table('qlikapps_tenant', function (Blueprint $table) {
+                Schema::table('qlikapps_tenants', function (Blueprint $table) {
                     $table->renameColumn('qlik_mashups_id', 'qlik_apps_id');
                 });
             }
