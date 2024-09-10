@@ -54,7 +54,7 @@ class CRUDBooster
         } elseif (CRUDBooster::getSetting('logo')) {
         return asset(CRUDBooster::getSetting('logo'));
         } else {
-        return asset('images/customerhive-trasparente.png');
+        return asset('images/customerhive_trasparente.png');
         }
 
     }
