@@ -58,7 +58,7 @@
         <div class="lockscreen-item">
             <!-- lockscreen image -->
             <div class="lockscreen-image">
-                <img src="{{ (Session::get('admin_photo'))?:asset('assets/adminlte/dist/img/user2-160x160.jpg') }}"
+                <img src="{{ (Session::get('admin_photo'))?:asset('/images/user/user.png') }}"
                     alt="user image" />
             </div>
             <!-- /.lockscreen-image -->

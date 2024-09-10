@@ -146,6 +146,8 @@ class AdminController extends CBController
       $cb_hook_session = new \App\Http\Controllers\CBHook;
       $cb_hook_session->afterLogin();
 
+      dd(Session::all());
+
       return redirect(CRUDBooster::adminPath());
     } else {
       return redirect()->route('getLogin')->with('message', trans('crudbooster.alert_password_wrong'));
