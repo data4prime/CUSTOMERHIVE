@@ -51,11 +51,10 @@
                     style='max-width: 100%;max-height:170px' />
             </a>
         </div>
-        <!-- User name -->
-        <div class="lockscreen-name">{{Session::get('admin_name')}}</div>
+
 
         <!-- START LOCK SCREEN ITEM -->
-        <div class="lockscreen-item">
+        <div class="login-box-body">
 
             <!-- /.lockscreen-image -->
 
