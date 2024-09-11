@@ -5,7 +5,7 @@ namespace App\Classes\Custom;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Config;
 
-use App\Custom\License;
+use App\Classes\Custom\License;
 use LaravelReady\LicenseServer\Support\DomainSupport;
 use LaravelReady\LicenseServer\Exceptions\LicenseException;
 
