@@ -60,7 +60,7 @@
             <!-- /.lockscreen-image -->
 
             <!-- lockscreen credentials (contains the form) -->
-            <form class="lockscreen-credentials" method='post'
+            <form  method='post'
                 action="{{url(config('crudbooster.ADMIN_PATH').'/unlock-screen')}}">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
