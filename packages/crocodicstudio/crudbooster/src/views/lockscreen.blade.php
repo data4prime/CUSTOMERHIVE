@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>::LOCKSCREEN::</title>
+    <title>LOCKSCREEN</title>
     <meta name='generator' content='CustomerHive' />
     <meta name='robots' content='noindex,nofollow' />
     <link rel="shortcut icon"
