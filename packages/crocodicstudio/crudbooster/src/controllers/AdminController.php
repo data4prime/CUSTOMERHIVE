@@ -105,14 +105,14 @@ class AdminController extends CBController
   {
 
 
-      $licenseKey = ChiveLicenseService::getLicenseByDomain($_SERVER['HTTP_HOST'])->license_key;
+      $licenseKey = ChiveLicenseService::getLicenseByDomain($_SERVER['HTTP_HOST']);//->license_key;
 
       if (!$licenseKey)  {
         $this->getLicensescreen();
       }  
 
 
-      $connectorService = new ConnectorService($licenseKey);
+      $connectorService = new ConnectorService($licenseKey->license_key);
 
       $isLicenseValid = $connectorService->validateLicense();
 
