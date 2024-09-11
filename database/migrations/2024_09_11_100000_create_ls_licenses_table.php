@@ -28,6 +28,8 @@ class CreateLsLicensesTable extends Migration
             Schema::create($this->table, function (Blueprint $table) {
                 $table->bigIncrements('id');
 
+
+                $table->unsignedInteger('user_id');
                 $table->foreignId('user_id')
                     ->nullable()
                     ->constrained('cms_users')

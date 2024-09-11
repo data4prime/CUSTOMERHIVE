@@ -38,7 +38,7 @@ class CreateLsLicensableProductsTable extends Migration
                     ->nullable()
                     ->constrained("{$this->prefix}_licenses")
                     ->onDelete('cascade');
-
+                $table->unsignedInteger('user_id');
                 $table->foreignId('user_id')
                     ->nullable()
                     ->constrained("cms_users")
