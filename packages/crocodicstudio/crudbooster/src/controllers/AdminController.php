@@ -16,6 +16,8 @@ use crocodicstudio\crudbooster\helpers\UserHelper;
 
 use LaravelReady\LicenseConnector\Services\ConnectorService;
 
+use App\Classes\Custom\ChiveLicenseService;
+
 class AdminController extends CBController
 {
   function getIndex()
@@ -103,7 +105,7 @@ class AdminController extends CBController
   {
 
 
-      $licenseKey = '46fad906-bc51-435f-9929-db46cb4baf13';
+      $licenseKey = ChiveLicenseService::getLicenseByDomain(null);
       $connectorService = new ConnectorService($licenseKey);
 
       $isLicenseValid = $connectorService->validateLicense();
