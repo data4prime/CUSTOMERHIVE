@@ -14,6 +14,8 @@ use \App\Group;
 use \App\AccessLog;
 use crocodicstudio\crudbooster\helpers\UserHelper;
 
+use LaravelReady\LicenseConnector\Services\ConnectorService;
+
 class AdminController extends CBController
 {
   function getIndex()
@@ -87,6 +89,21 @@ class AdminController extends CBController
 
   public function postLogin()
   {
+
+    $licenseKey = '46fad906-bc51-435f-9929-db46cb4baf13';
+    $connectorService = new ConnectorService($licenseKey);
+
+    $isLicenseValid = $connectorService->validateLicense();
+
+    if ($isLicenseValid) {
+        // License is valid
+        echo 'License is valid';
+
+        print_r($connectorService->license);
+    } else {
+        // License is invalid
+        echo 'License is not valid';
+    }
 
     $validator = Validator::make(Request::all(), [
       'email' => 'required|email|exists:' . config('crudbooster.USER_TABLE'),

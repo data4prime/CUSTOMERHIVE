@@ -15,6 +15,7 @@ return [
     'no'                         => 'Нет.',
 
     'text_enter_the_password'     => 'Введите пароль, чтобы восстановить сессию',
+'text_enter_the_license' => 'Enter your activation code to activate your Customer Hive',
     'text_or_sign_in'             => 'Или авторизируйтесь под другим пользователем',
     'text_default_add_new_module' => 'Добавить Новый :модуль',
     'text_default_list_module'    => 'Список :модулей',

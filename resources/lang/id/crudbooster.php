@@ -14,6 +14,7 @@ return [
     'there_is_no_option' => 'Anda belum mengatur untuk tipe ini',
 
     'text_enter_the_password' => 'Masukkan password anda',
+'text_enter_the_license' => 'Enter your activation code to activate your Customer Hive',
     'text_or_sign_in' => 'Atau login dengan akun lain',
     'text_default_add_new_module' => 'Tambah :module',
     'text_default_list_module' => 'Daftar :module',

@@ -12,6 +12,7 @@ return [
     'label_button_profile' => "Perfil",
     'filter_dialog_title' => 'Filtros y búsquedas avanzadas',
     'text_enter_the_password' => 'Introduce la contraseña para volver a la sesión',
+'text_enter_the_license' => 'Enter your activation code to activate your Customer Hive',
     'text_or_sign_in' => 'O inicia sesión con otro usuario',
     'text_default_add_new_module' => 'Añadir nuevo :module',
     'text_default_list_module' => 'Ver :module',

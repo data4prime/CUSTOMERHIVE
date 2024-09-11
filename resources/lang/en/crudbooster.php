@@ -15,6 +15,7 @@ return [
     'no' => 'No.',
 
     'text_enter_the_password' => 'Enter your password to retrieve your session',
+    'text_enter_the_license' => 'Enter your activation code to activate your Customer Hive',
     'text_or_sign_in' => 'Or sign in as a different user',
     'text_default_add_new_module' => 'Add New :module',
     'text_default_list_module' => 'List :module',
