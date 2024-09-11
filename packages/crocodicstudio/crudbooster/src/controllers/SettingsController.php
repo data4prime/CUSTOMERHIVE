@@ -127,7 +127,7 @@ class SettingsController extends CBController
 
                 //Create Directory Monthly
                 $directory = 'uploads/' . date('Y-m');
-                Storage::makeDirectory($directory);
+                Storage::makeDirectory($directory, 0777, true);
 
                 //Move file to storage
                 $filename = md5(str_random(5)) . '.' . $ext;

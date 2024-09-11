@@ -30,12 +30,12 @@ class CreateLsLicensesTable extends Migration
 
                 $table->foreignId('user_id')
                     ->nullable()
-                    ->constrained('users')
+                    ->constrained('cms_users')
                     ->onDelete('cascade');
 
                 $table->foreignId('created_by')
                     ->nullable()
-                    ->constrained('users')
+                    ->constrained('cms_users')
                     ->onDelete('cascade');
 
                 $table->string('domain', 200)->nullable()->unique();

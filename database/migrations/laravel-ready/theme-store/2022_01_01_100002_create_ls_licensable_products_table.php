@@ -41,7 +41,7 @@ class CreateLsLicensableProductsTable extends Migration
 
                 $table->foreignId('user_id')
                     ->nullable()
-                    ->constrained("users")
+                    ->constrained("cms_users")
                     ->onDelete('cascade');
 
                 $table->timestamps();

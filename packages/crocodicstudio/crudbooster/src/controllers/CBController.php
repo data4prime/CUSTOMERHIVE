@@ -1871,7 +1871,7 @@ class CBController extends Controller
 
             //Create Directory Monthly
             $filePath = 'uploads/' . CB::myId() . '/' . date('Y-m');
-            Storage::makeDirectory($filePath);
+            Storage::makeDirectory($filePath, 0777, true);
 
             //Move file to storage
             $filename = md5(str_random(5)) . '.' . $ext;
