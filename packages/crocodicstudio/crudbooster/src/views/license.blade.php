@@ -74,8 +74,8 @@
 
                 <div style="margin-bottom:10px" class='row'>
                     <div class='col-xs-12'>
-                        <button type="submit" class="btn btn-primary btn-block btn-flat"><i class='fa fa-lock'></i>
-                            {{trans("crudbooster.text_activate")}}</button>
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">
+                            {{trans('crudbooster.text_activate')}}</button>
                     </div>
                 </div>
 
