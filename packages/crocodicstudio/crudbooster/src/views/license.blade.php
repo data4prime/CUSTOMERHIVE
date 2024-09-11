@@ -47,7 +47,7 @@
         <div class="lockscreen-logo">
             <a href="{{url('/')}}">
                 <img title=" {!! isset($appname) ? ($appname == 'CustomerHive' ? 'CustomerHive':$appname) : ''  !!}  "
-                    src='{{ CRUDBooster::getSetting("logo")?asset(CRUDBooster::getSetting("logo")):asset("/images/customerhive-trasparente.png") }}'
+                    src='{{ CRUDBooster::getSetting("logo")?asset(CRUDBooster::getSetting("logo")):asset("/images/customerhive_trasparente.png") }}'
                     style='max-width: 100%;max-height:170px' />
             </a>
         </div>
@@ -69,7 +69,6 @@
                 <div class="form-group has-feedback">
                     <input autocomplete='off' type="text" class="form-control" name='license' required
                         placeholder="License" />
-                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>
 
                 <div style="margin-bottom:10px" class='row'>
