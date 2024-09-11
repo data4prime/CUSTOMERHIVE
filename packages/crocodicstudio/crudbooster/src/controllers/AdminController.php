@@ -102,22 +102,15 @@ class AdminController extends CBController
   public function postLogin()
   {
 
-    try {
 
       $licenseKey = '46fad906-bc51-435f-9929-db46cb4baf13';
       $connectorService = new ConnectorService($licenseKey);
 
       $isLicenseValid = $connectorService->validateLicense();
 
-      if ($isLicenseValid) {
-          echo 'License is valid';
-          print_r($connectorService->license);
-      } else {
-          echo 'License is not valid';
-      }
-    } catch (\Exception $e) {
-        $this->getLicensescreen();
-    }
+      if (!$isLicenseValid)  {
+          $this->getLicensescreen();
+      }  
 
 
     $validator = Validator::make(Request::all(), [
