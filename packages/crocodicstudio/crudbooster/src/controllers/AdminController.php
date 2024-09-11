@@ -108,7 +108,7 @@ class AdminController extends CBController
       $licenseKey = ChiveLicenseService::getLicenseByDomain($_SERVER['HTTP_HOST']);//->license_key;
 
       if (!$licenseKey)  {
-        $this->getLicensescreen();
+        return redirect()->route('getLicenseScreen');
       }  
 
 
