@@ -63,7 +63,7 @@
             <form class="lockscreen-credentials" method='post'
                 action="{{url(config('crudbooster.ADMIN_PATH').'/unlock-screen')}}">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                <div class="input-group"><textarea name="license" class="form-control" required placeholder="License Key"></textarea></div>
+                <div class="input-group"><input class="form-input" type="text" name="license"> </div>
                 <div class="input-group">
                     
                     <div class="input-group-btn">
