@@ -105,6 +105,7 @@ return [
     'button_submit' => 'Kirim Data',
     'button_logout' => 'Keluar',
     'button_sign_in' => 'Masuk',
+    'text_activate' => 'Activate',
     'button_selected_action' => 'Aksi Massal',
     'button_download_file' => 'Unduh file',
     'button_reset' => 'Ulangi',

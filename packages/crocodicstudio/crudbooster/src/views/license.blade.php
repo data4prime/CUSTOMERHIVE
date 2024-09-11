@@ -63,13 +63,22 @@
             <form class="lockscreen-credentials" method='post'
                 action="{{url(config('crudbooster.ADMIN_PATH').'/unlock-screen')}}">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                <div class="input-group"><input class="form-input" type="text" name="license"> </div>
-                <div class="input-group">
-                    
-                    <div class="input-group-btn">
-                        <button class="btn"><i class="fa fa-arrow-right text-muted"></i></button>
+
+
+
+                <div class="form-group has-feedback">
+                    <input autocomplete='off' type="text" class="form-control" name='license' required
+                        placeholder="License" />
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+
+                <div style="margin-bottom:10px" class='row'>
+                    <div class='col-xs-12'>
+                        <button type="submit" class="btn btn-primary btn-block btn-flat"><i class='fa fa-lock'></i>
+                            {{trans("crudbooster.button_sign_in")}}</button>
                     </div>
                 </div>
+
             </form><!-- /.lockscreen credentials -->
 
         </div><!-- /.lockscreen-item -->

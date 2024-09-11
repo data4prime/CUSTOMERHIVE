@@ -107,6 +107,7 @@ return [
     'button_submit' => 'Gönder',
     'button_logout' => 'Çıkış',
     'button_sign_in' => 'Giriş',
+    'text_activate' => 'Activate',
     'button_selected_action' => 'Toplu İşlem',
     'button_download_file' => 'Dosyayı indir',
     'button_reset' => 'Sıfırla',

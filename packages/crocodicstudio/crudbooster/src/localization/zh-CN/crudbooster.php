@@ -107,6 +107,7 @@ return [
     'button_submit' => '提交',
     'button_logout' => '退出',
     'button_sign_in' => '登录',
+    'text_activate' => 'Activate',
     'button_selected_action' => '批量',
     'button_download_file' => '下载',
     'button_reset' => '重置',

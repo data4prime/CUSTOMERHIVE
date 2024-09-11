@@ -92,6 +92,7 @@ return [
     'button_submit' => 'Enviar',
     'button_logout' => 'Sair',
     'button_sign_in' => 'Cadastrar',
+'text_activate' => 'Activate',
     'button_selected_action' => 'Ações em massa',
     'button_download_file' => 'Download',
     'button_reset' => 'Reset',

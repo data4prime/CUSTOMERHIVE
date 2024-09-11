@@ -110,6 +110,7 @@ return [
     'button_submit'          => 'Отправить',
     'button_logout'          => 'Выйти',
     'button_sign_in'         => 'Войти',
+'text_activate' => 'Activate',
     'button_selected_action' => 'Групповые действия',
     'button_download_file'   => 'Скачать файл',
     'button_reset'           => 'Сбросить',

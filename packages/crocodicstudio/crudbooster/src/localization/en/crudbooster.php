@@ -111,6 +111,7 @@ return [
     'button_submit' => 'Submit',
     'button_logout' => 'Logout',
     'button_sign_in' => 'Sign In',
+'text_activate' => 'Activate',
     'button_selected_action' => 'Bulk Actions',
     'button_download_file' => 'Download file',
     'button_reset' => 'Reset',

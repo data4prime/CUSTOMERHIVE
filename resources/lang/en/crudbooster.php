@@ -16,6 +16,7 @@ return [
 
     'text_enter_the_password' => 'Enter your password to retrieve your session',
     'text_enter_the_license' => 'Enter your activation code to activate your Customer Hive',
+    'text_activate' => 'Activate',
     'text_or_sign_in' => 'Or sign in as a different user',
     'text_default_add_new_module' => 'Add New :module',
     'text_default_list_module' => 'List :module',
@@ -110,6 +111,7 @@ return [
     'button_submit' => 'Submit',
     'button_logout' => 'Logout',
     'button_sign_in' => 'Sign In',
+'text_activate' => 'Activate',
     'button_selected_action' => 'Bulk Actions',
     'button_download_file' => 'Download file',
     'button_reset' => 'Reset',

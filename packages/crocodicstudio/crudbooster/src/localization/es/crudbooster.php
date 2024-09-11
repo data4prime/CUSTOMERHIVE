@@ -104,6 +104,7 @@ return [
     'button_submit' => 'Enviar',
     'button_logout' => 'Salir',
     'button_sign_in' => 'Iniciar',
+    'text_activate' => 'Activate',
     'button_selected_action' => 'Acciones Masivas',
     'button_download_file' => 'Descargar Fichero',
     'button_reset' => 'Resetear',
