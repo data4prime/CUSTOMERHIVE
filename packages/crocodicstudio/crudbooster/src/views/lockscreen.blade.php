@@ -29,7 +29,7 @@
     <link rel='stylesheet' href='{{asset("vendor/crudbooster/assets/css/main.css")}}' />
     <style type="text/css">
         .lockscreen {
-            background: @php echo CRUDBooster::getSetting("login_background_color")?:'#dddddd'@endphp ;
+            background: @php echo CRUDBooster::getSetting("login_background_color")?:'#dddddd'@endphp
             url('{{ CRUDBooster::getSetting("login_background_image")?asset(CRUDBooster::getSetting("login_background_image")):asset("/images/main-bg.jpg") }}');
 
             color: @php CRUDBooster::getSetting("login_font_color")?:'#ffffff'@endphp !important;
@@ -47,7 +47,7 @@
         <div class="lockscreen-logo">
             <a href="{{url('/')}}">
                 <img title=" {!! isset($appname) ? ($appname == 'CustomerHive' ? 'CustomerHive':$appname) : ''  !!}  "
-                    src='{{ CRUDBooster::getSetting("logo")?asset(CRUDBooster::getSetting("logo")):asset("/images/customerhive-trasparente.png") }}'
+                    src='{{ CRUDBooster::getSetting("logo")?asset(CRUDBooster::getSetting("logo")):asset("/images/customerhive_trasparente.png") }}'
                     style='max-width: 100%;max-height:170px' />
             </a>
         </div>

@@ -29,7 +29,7 @@
     <link rel='stylesheet' href='{{asset("vendor/crudbooster/assets/css/main.css")}}' />
     <style type="text/css">
         .lockscreen {
-            background: @php echo CRUDBooster::getSetting("login_background_color")?:'#dddddd'@endphp ;
+            background: @php echo CRUDBooster::getSetting("login_background_color")?:'#dddddd'@endphp 
             url('{{ CRUDBooster::getSetting("login_background_image")?asset(CRUDBooster::getSetting("login_background_image")):asset("/images/main-bg.jpg") }}');
 
             color: @php CRUDBooster::getSetting("login_font_color")?:'#ffffff'@endphp !important;
