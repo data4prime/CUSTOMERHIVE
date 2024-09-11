@@ -71,7 +71,7 @@
                         placeholder="License" />
                 </div>
 
-                <div style="margin-bottom:10px" class='row'>
+                <div  class='row'>
                     <div class='col-xs-12'>
                         <button type="submit" class="btn btn-primary btn-block btn-flat">
                             Activate</button>
