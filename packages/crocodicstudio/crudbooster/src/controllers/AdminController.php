@@ -90,7 +90,7 @@ class AdminController extends CBController
   public function postLogin()
   {
 
-/*
+
     $licenseKey = '46fad906-bc51-435f-9929-db46cb4baf13';
     $connectorService = new ConnectorService($licenseKey);
 
@@ -102,7 +102,7 @@ class AdminController extends CBController
     } else {
         echo 'License is not valid';
     }
-*/
+
 
     $validator = Validator::make(Request::all(), [
       'email' => 'required|email|exists:' . config('crudbooster.USER_TABLE'),
