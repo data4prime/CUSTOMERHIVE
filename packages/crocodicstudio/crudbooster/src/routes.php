@@ -31,6 +31,7 @@ Route::group(['middleware' => ['web'], 'prefix' => config('crudbooster.ADMIN_PAT
 
     Route::post('unlock-screen', ['uses' => 'AdminController@postUnlockScreen', 'as' => 'postUnlockScreen']);
     Route::get('lock-screen', ['uses' => 'AdminController@getLockscreen', 'as' => 'getLockScreen']);
+    Route::get('register-license', ['uses' => 'AdminController@getLicensescreen', 'as' => 'getLicenseScreen']);
     Route::post('forgot', ['uses' => 'AdminController@postForgot', 'as' => 'postForgot']);
     Route::get('forgot', ['uses' => 'AdminController@getForgot', 'as' => 'getForgot']);
     Route::post('register', ['uses' => 'AdminController@postRegister', 'as' => 'postRegister']);
