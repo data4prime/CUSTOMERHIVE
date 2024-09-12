@@ -179,7 +179,16 @@ class StatisticBuilderController extends CBController
             $config->mashups = 0;
             $config->object = 0;
         }
-        $mashup = QlikAppController::getMashupFromCompID($componentID);
+
+        //$mashup = 
+
+        if (isset($config->mashups)) {
+            $mashup = QlikAppController::getMashupFromCompID($componentID);
+        } else {
+            $mashup = null;
+        }
+
+
         if ($conf && isset($conf->id) && $conf->type == 'SAAS') {
         $token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
             } else {
