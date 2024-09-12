@@ -84,18 +84,13 @@
                 </div>
                 <div class="form-group has-feedback">
                     <input autocomplete='off' type="number" class="form-control" name='clients_number' required
-                        placeholder="clients Number" />
+                        placeholder="Clients Number" />
                 </div>
                 <div class="form-group has-feedback">
                     <input autocomplete='off' type="number" class="form-control" name='tenants_number' required
                         placeholder="Tenants Number" />
                 </div>
 
-
-                <div class="form-group has-feedback">
-                    <input autocomplete='off' type="text" class="form-control" name='license' required
-                        placeholder="License" />
-                </div>
 
                 <div  class='row'>
                     <div class='col-xs-12'>

@@ -66,6 +66,12 @@ class AdminController extends CBController
 
   //get mac address
   $mac_address = exec('getmac');
+
+  dd($mac_address);
+
+
+
+
   $mac_address = substr($mac_address, 0, 17);
 
 
