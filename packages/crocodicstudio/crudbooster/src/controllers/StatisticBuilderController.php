@@ -159,7 +159,15 @@ class StatisticBuilderController extends CBController
         $command = 'layout';
         $config = json_decode($component->config);
         if ($config) {
-            $mashup = DB::table('qlik_apps')->where('id', $config->mashups)->first();
+
+            if (isset($config->mashups)) {
+                $mashup = DB::table('qlik_apps')->where('id', $config->mashups)->first();
+            }  else {
+                $mashup = null;
+            }
+
+
+            
             if ($mashup) {
                 $conf = QlikAppController::getConf($mashup->conf);
             } else {
