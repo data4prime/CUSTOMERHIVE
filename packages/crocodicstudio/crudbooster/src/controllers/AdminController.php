@@ -16,7 +16,7 @@ use crocodicstudio\crudbooster\helpers\UserHelper;
 
 use LaravelReady\LicenseConnector\Services\ConnectorService;
 
-use App\Classes\Custom\ChiveLicenseService;
+//use App\Classes\Custom\ChiveLicenseService;
 
 class AdminController extends CBController
 {
@@ -77,6 +77,21 @@ class AdminController extends CBController
     }
   }
 
+  public function postActivateLicense()
+  {
+    $id = CRUDBooster::myId();
+    $password = Request::input('password');
+    $users = DB::table(config('crudbooster.USER_TABLE'))->where('id', $id)->first();
+
+    if (\Hash::check($password, $users->password)) {
+      Session::put('admin_lock', 0);
+
+      return redirect(CRUDBooster::adminPath());
+    } else {
+      echo "<script>alert('" . trans('crudbooster.alert_password_wrong') . "');history.go(-1);</script>";
+    }
+  }
+
   public function getLogin()
   {
     if (CRUDBooster::myId()) {
@@ -105,7 +120,7 @@ class AdminController extends CBController
   {
 
 
-      $licenseKey = ChiveLicenseService::getLicenseByDomain($_SERVER['HTTP_HOST']);//->license_key;
+      /*$licenseKey = ChiveLicenseService::getLicenseByDomain($_SERVER['HTTP_HOST']);//->license_key;
 
       if (!$licenseKey)  {
         return redirect()->route('getLicenseScreen');
@@ -114,7 +129,7 @@ class AdminController extends CBController
 
       $connectorService = new ConnectorService($licenseKey->license_key);
 
-      $isLicenseValid = $connectorService->validateLicense();
+      $isLicenseValid = $connectorService->validateLicense();*/
 
 
 
