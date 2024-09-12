@@ -55,7 +55,12 @@
         $(function () {
             $('#content-{{$componentID}}').html("<i class='fa fa-spin fa-spinner'></i> Please wait loading...");
             $.get('{{$url}}', function (response) {
-                $('#content-{{$componentID}}').html(response);
+
+                //from respose, we need to get the content_section id
+                var content_section = $(response).find('#content_section').html();
+
+
+                $('#content-{{$componentID}}').html(content_section);
             });
         })
     </script>
