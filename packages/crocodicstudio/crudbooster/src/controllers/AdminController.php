@@ -55,10 +55,24 @@ class AdminController extends CBController
   {
 
 
+  //current domain
+  $array = isset($_SERVER) && isset($_SERVER['HTTP_HOST']) ? explode('.', $_SERVER['HTTP_HOST']) : [];
+
+  //get path from env
+  $path = env('APP_PATH');
+
+  //get tenant domain name
+  $tenant_domain_name = isset($array[0]) ? $array[0] : '';
+
+  //get mac address
+  $mac_address = exec('getmac');
+  $mac_address = substr($mac_address, 0, 17);
 
 
 
-    return view('crudbooster::license');
+
+
+    return view('crudbooster::license', compact('path', 'tenant_domain_name', 'mac_address'));
   }
 
 
