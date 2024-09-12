@@ -280,6 +280,9 @@ class StatisticBuilderController extends CBController
         if (isset($config->mashups)) {
             $mashups = QlikAppController::getMashups();
             $mashup = QlikAppController::getMashupFromCompID($componentID);
+        } else {
+            $mashups = null;
+            $mashup = null;
         }
 
 
