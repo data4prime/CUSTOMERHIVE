@@ -63,30 +63,30 @@
                 action="{{url(config('crudbooster.ADMIN_PATH').'/activate-license')}}">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
-                <div class="form-group has-feedback"></div>
+                <div class="form-group has-feedback">
                     <input autocomplete='off' type="text" class="form-control" name='email' required
                         placeholder="Email" />
                 </div>
 
 
 
-                <div class="form-group has-feedback"></div>
+                <div class="form-group has-feedback">
                     <input autocomplete='off' type="text" class="form-control" name='domain' required value="{{$tenant_domain_name}}"
                         placeholder="Domain" />
                 </div>
-                <div class="form-group has-feedback"></div>
+                <div class="form-group has-feedback">
                     <input autocomplete='off' type="text" class="form-control" name='mac_address' required value="{{$mac_address}}"
                         placeholder="MAC Address" />
                 </div>
-                <div class="form-group has-feedback"></div>
+                <div class="form-group has-feedback">
                     <input autocomplete='off' type="text" class="form-control" name='path' value="{{$path}}" required
                         placeholder="Path" />
                 </div>
-                <div class="form-group has-feedback"></div>
+                <div class="form-group has-feedback">
                     <input autocomplete='off' type="number" class="form-control" name='clients_number' required
                         placeholder="clients Number" />
                 </div>
-                <div class="form-group has-feedback"></div>
+                <div class="form-group has-feedback">
                     <input autocomplete='off' type="number" class="form-control" name='tenants_number' required
                         placeholder="Tenants Number" />
                 </div>
