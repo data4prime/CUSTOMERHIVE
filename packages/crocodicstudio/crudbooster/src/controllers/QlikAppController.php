@@ -288,9 +288,9 @@ class QlikAppController extends CBController
 		$mashup = DB::table('cms_statistic_components')->where('componentID', $compID)->first();
 		if (isset($mashup)){
 			$mashup = json_decode($mashup->config);
-			if (isset($mashup)) {
+			if (isset($mashup->mashups)) {
 				$mashup = $mashup->mashups;
-			$mashup = DB::table('qlik_apps')->where('id', $mashup)->first();
+				$mashup = DB::table('qlik_apps')->where('id', $mashup)->first();
 			} else {
 				$mashup = null;
 			}

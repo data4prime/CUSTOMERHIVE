@@ -277,10 +277,14 @@ class StatisticBuilderController extends CBController
 
         $command = 'configuration';
 
-        $mashups = QlikAppController::getMashups();
-        $mashup = QlikAppController::getMashupFromCompID($componentID);
+        if (isset($config->mashups)) {
+            $mashups = QlikAppController::getMashups();
+            $mashup = QlikAppController::getMashupFromCompID($componentID);
+        }
 
-        if (!$mashup) {
+
+
+        if (!$mashup && isset($config->mashups)) {
             $errors[] = 'Mashup is not selected. Please, select mashup for this widget.';
         }
 
