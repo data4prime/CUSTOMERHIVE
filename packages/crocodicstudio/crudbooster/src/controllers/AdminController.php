@@ -94,6 +94,8 @@ class AdminController extends CBController
       'domain' => Request::input('domain'),
       'email_user' => Request::input('email'),
 
+      'domain' => Request::input('domain'),
+
       'clients_number' => Request::input('clients_number'),
       'tenants_number' => Request::input('tenants_number'),
       'mac_address' => Request::input('mac_address'),
@@ -127,7 +129,7 @@ class AdminController extends CBController
     //dd($curl);
 
     $response = curl_exec($curl);
-    dd($response);
+    //dd($response);
     curl_close($curl);
 
     $response = json_decode($response);
