@@ -88,7 +88,7 @@ class AdminController extends CBController
   public function postActivateLicense()
   {
 
-    dd(Request::all());
+    //dd(Request::all());
 
     //get license_server_url
     $license_server_url = config('license-connector.license_server_url');
@@ -116,7 +116,6 @@ class AdminController extends CBController
 
 
 
-    file_put_contents(__DIR__ . '/log.txt', json_encode($fields)."\n\n");
 
     $response = curl_exec($curl);
     dd($response);
