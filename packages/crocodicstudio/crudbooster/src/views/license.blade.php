@@ -52,6 +52,9 @@
             </a>
         </div>
 
+        <div class="text-center"></div>
+            {{ $message ?? '' }}
+        </div>
 
         <!-- START LOCK SCREEN ITEM -->
         <div class="login-box-body">
