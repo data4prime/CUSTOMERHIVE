@@ -88,7 +88,6 @@ class ConnectorService
         ]);
 
         $data = $response->json();
-        dd($data);
 
         if ($response->ok()) {
             if ($data['status'] === true) {
