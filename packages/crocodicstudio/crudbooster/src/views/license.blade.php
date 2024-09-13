@@ -52,9 +52,13 @@
             </a>
         </div>
 
-        <div class="text-center">
-            {{ $message ?? '' }}
-        </div>
+        @if (\Session::has('message'))
+            <div class="alert alert-warning">
+                <ul>
+                    <li>{!! \Session::get('message') !!}</li>
+                </ul>
+            </div>
+        @endif
 
         <!-- START LOCK SCREEN ITEM -->
         <div class="login-box-body">

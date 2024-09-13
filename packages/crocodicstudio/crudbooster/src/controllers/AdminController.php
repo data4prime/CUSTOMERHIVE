@@ -128,7 +128,11 @@ class AdminController extends CBController
 
     $response = json_decode($response);
 
-    if ($response->success == true) {
+    if ($response->success == true) { 
+
+      DB::table('license')->insert(['license_key' => $response->result->license_key]);
+
+
       return redirect()->route('getLogin')->with('message', 'License activated successfully');
     } else {
       return redirect()->route('getLicenseScreen')->with('message', $response->result);
