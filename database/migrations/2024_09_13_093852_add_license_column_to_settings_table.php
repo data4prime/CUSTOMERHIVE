@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('cms_settings', function (Blueprint $table) {
-            //
+        Schema::create('license', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('license_key')->nullable();
+
+
         });
     }
 

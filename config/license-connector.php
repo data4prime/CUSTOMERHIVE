@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'license_server_url' => env('APP_URL', 'http://localhost'),
+    'license_server_url' => 'http://license.thecustomerhive.com',
 ];

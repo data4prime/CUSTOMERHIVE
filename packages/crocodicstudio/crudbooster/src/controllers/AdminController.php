@@ -64,21 +64,59 @@ class AdminController extends CBController
   //get tenant domain name
   $tenant_domain_name = isset($array[0]) ? $array[0] : '';
 
-  //get mac address
-  $mac_address = exec('getmac');
 
-  dd($mac_address);
+  ob_start();
 
+  system("ip addr"); // if windows system(“ipconfig -all”);
 
+  $mycom = ob_get_contents();
 
+  ob_clean();
 
-  $mac_address = substr($mac_address, 0, 17);
+  $findme = "ether";
 
+  $pmac = strops($mycom , $findme);
 
-
+  $mac_address= substr($mycom , ($pmac+36) , 17);
 
 
     return view('crudbooster::license', compact('path', 'tenant_domain_name', 'mac_address'));
+  }
+
+  public function postActivateLicense()
+  {
+
+    //get license_server_url
+    $license_server_url = config('license-connector.license_server_url');
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => $license_server_url.'/api/api-license/license-server/licenses',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_CUSTOMREQUEST => 'POST',
+      CURLOPT_POSTFIELDS =>'{
+      "domain": "'.Request::input('domain').'",
+      "clients_number": '.Request::input('clients_number').',
+      "tenants_number": '.Request::input('tenants_number').',
+      "mac_address": "'.Request::input('mac_address').'",
+      "path": "'.Request::input('path').'"
+    }',
+    ));
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+
+    $response = json_decode($response);
+
+    if ($response->success == true) {
+      return redirect()->route('getLogin')->with('message', 'License activated successfully');
+    } else {
+      return redirect()->route('getLicenseScreen')->with('message', $response->result);
+    }
+
   }
 
 
@@ -140,7 +178,7 @@ class AdminController extends CBController
   {
 
 
-      /*$licenseKey = ChiveLicenseService::getLicenseByDomain($_SERVER['HTTP_HOST']);//->license_key;
+      $licenseKey = DB::table('license')->first();
 
       if (!$licenseKey)  {
         return redirect()->route('getLicenseScreen');
@@ -149,7 +187,11 @@ class AdminController extends CBController
 
       $connectorService = new ConnectorService($licenseKey->license_key);
 
-      $isLicenseValid = $connectorService->validateLicense();*/
+      $isLicenseValid = $connectorService->validateLicense();
+
+      if (!$isLicenseValid) {
+        return redirect()->route('getLicenseScreen')->with('message', 'License is not valid');
+      }
 
 
 
