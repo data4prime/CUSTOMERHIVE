@@ -90,6 +90,17 @@ class AdminController extends CBController
 
     //dd(Request::all());
 
+    $fields = [
+      'domain' => Request::input('domain'),
+      'email_user' => Request::input('email'),
+
+      'clients_number' => Request::input('clients_number'),
+      'tenants_number' => Request::input('tenants_number'),
+      'mac_address' => Request::input('mac_address'),
+      'path' => Request::input('path'),
+
+    ];
+
     //get license_server_url
     $license_server_url = config('license-connector.license_server_url');
     $curl = curl_init();
@@ -103,14 +114,7 @@ class AdminController extends CBController
       CURLOPT_CUSTOMREQUEST => 'POST',
       CURLOPT_SSL_VERIFYHOST => 0,
       CURLOPT_SSL_VERIFYPEER => 0,
-      CURLOPT_POSTFIELDS =>'{
-      "domain": "'.Request::input('domain').'",
-      "email_user" : "marius.donici@data4prime.com",
-      "clients_number": '.Request::input('clients_number').',
-      "tenants_number": '.Request::input('tenants_number').',
-      "mac_address": "'.Request::input('mac_address').'",
-      "path": "'.Request::input('path').'"
-    }',
+      CURLOPT_POSTFIELDS => json_encode($fields),
     ));
 
     //dd($curl);
