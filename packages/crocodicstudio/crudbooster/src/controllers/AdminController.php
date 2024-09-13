@@ -135,20 +135,7 @@ class AdminController extends CBController
     }
   }
 
-  public function postActivateLicense()
-  {
-    $id = CRUDBooster::myId();
-    $password = Request::input('password');
-    $users = DB::table(config('crudbooster.USER_TABLE'))->where('id', $id)->first();
 
-    if (\Hash::check($password, $users->password)) {
-      Session::put('admin_lock', 0);
-
-      return redirect(CRUDBooster::adminPath());
-    } else {
-      echo "<script>alert('" . trans('crudbooster.alert_password_wrong') . "');history.go(-1);</script>";
-    }
-  }
 
   public function getLogin()
   {
