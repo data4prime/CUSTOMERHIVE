@@ -99,6 +99,8 @@ class AdminController extends CBController
       CURLOPT_TIMEOUT => 0,
       CURLOPT_FOLLOWLOCATION => true,
       CURLOPT_CUSTOMREQUEST => 'POST',
+      CURLOPT_SSL_VERIFYHOST => 0,
+      CURLOPT_SSL_VERIFYPEER => 0,
       CURLOPT_POSTFIELDS =>'{
       "domain": "'.Request::input('domain').'",
       "clients_number": '.Request::input('clients_number').',
