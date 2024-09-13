@@ -130,7 +130,7 @@ class AdminController extends CBController
     //dd($response);
     curl_close($curl);
 
-    $response = json_decode($response);
+    //$response = json_decode($response);
 
     if ($response->success == true) { 
 
