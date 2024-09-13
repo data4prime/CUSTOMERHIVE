@@ -102,6 +102,7 @@ class AdminController extends CBController
       CURLOPT_SSL_VERIFYHOST => 0,
       CURLOPT_SSL_VERIFYPEER => 0,
       CURLOPT_POSTFIELDS =>'{
+      "email": "'.Request::input('email').'",
       "domain": "'.Request::input('domain').'",
       "clients_number": '.Request::input('clients_number').',
       "tenants_number": '.Request::input('tenants_number').',
@@ -110,14 +111,7 @@ class AdminController extends CBController
     }',
     ));
 
-    $fields = [
-      'url' => $license_server_url.'/api/api-license/license-server/licenses',
-      'domain' => Request::input('domain'),
-      'clients_number' => Request::input('clients_number'),
-      'tenants_number' => Request::input('tenants_number'),
-      'mac_address' => Request::input('mac_address'),
-      'path' => Request::input('path')
-    ];
+
 
 
     //file_put_contents(__DIR__ . '/log.txt', json_encode($fields)."\n\n");
