@@ -111,7 +111,7 @@ class AdminController extends CBController
         'Content-Type: application/json',
       ),
 
-      
+
 
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
@@ -127,7 +127,7 @@ class AdminController extends CBController
     //dd($curl);
 
     $response = curl_exec($curl);
-    dd($response);
+    //dd($response);
     curl_close($curl);
 
     $response = json_decode($response);
