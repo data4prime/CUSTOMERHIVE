@@ -106,6 +106,13 @@ class AdminController extends CBController
     $curl = curl_init();
     curl_setopt_array($curl, array(
       CURLOPT_URL => $license_server_url.'/api/api-license/license-server/licenses',
+//header json
+      CURLOPT_HTTPHEADER => array(
+        'Content-Type: application/json',
+      ),
+
+      
+
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
       CURLOPT_MAXREDIRS => 10,
