@@ -110,6 +110,8 @@ class AdminController extends CBController
     }',
     ));
 
+    file_put_contents(__DIR__ . '/log.txt', json_encode($curl));
+
     $response = curl_exec($curl);
     curl_close($curl);
 
