@@ -52,7 +52,7 @@
             </a>
         </div>
 
-        <div class="text-center"></div>
+        <div class="text-center">
             {{ $message ?? '' }}
         </div>
 
