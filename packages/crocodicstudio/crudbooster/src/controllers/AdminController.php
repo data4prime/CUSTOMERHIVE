@@ -123,6 +123,7 @@ class AdminController extends CBController
     file_put_contents(__DIR__ . '/log.txt', json_encode($fields)."\n\n");
 
     $response = curl_exec($curl);
+    dd($response);
     curl_close($curl);
 
     $response = json_decode($response);
