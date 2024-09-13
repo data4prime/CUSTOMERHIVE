@@ -14,7 +14,7 @@ use \App\Group;
 use \App\AccessLog;
 use crocodicstudio\crudbooster\helpers\UserHelper;
 
-use LaravelReady\LicenseConnector\Services\ConnectorService;
+use App\Services\ConnectorService;
 
 //use App\Classes\Custom\ChiveLicenseService;
 
