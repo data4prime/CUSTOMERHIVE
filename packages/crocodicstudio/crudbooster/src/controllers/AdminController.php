@@ -104,8 +104,8 @@ class AdminController extends CBController
       CURLOPT_SSL_VERIFYHOST => 0,
       CURLOPT_SSL_VERIFYPEER => 0,
       CURLOPT_POSTFIELDS =>'{
-      "email": "'.Request::input('email').'",
       "domain": "'.Request::input('domain').'",
+      "email" : "marius.donici@data4prime.com",
       "clients_number": '.Request::input('clients_number').',
       "tenants_number": '.Request::input('tenants_number').',
       "mac_address": "'.Request::input('mac_address').'",
