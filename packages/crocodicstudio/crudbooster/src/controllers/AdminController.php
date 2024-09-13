@@ -113,10 +113,7 @@ class AdminController extends CBController
     }',
     ));
 
-    dd($curl);
-
-
-
+    //dd($curl);
 
     $response = curl_exec($curl);
     dd($response);
