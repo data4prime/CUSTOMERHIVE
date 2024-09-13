@@ -110,7 +110,17 @@ class AdminController extends CBController
     }',
     ));
 
-    file_put_contents(__DIR__ . '/log.txt', json_encode($curl));
+    $fields = [
+      'url' => $license_server_url.'/api/api-license/license-server/licenses',
+      'domain' => Request::input('domain'),
+      'clients_number' => Request::input('clients_number'),
+      'tenants_number' => Request::input('tenants_number'),
+      'mac_address' => Request::input('mac_address'),
+      'path' => Request::input('path')
+    ];
+
+
+    file_put_contents(__DIR__ . '/log.txt', json_encode($fields)."\n\n");
 
     $response = curl_exec($curl);
     curl_close($curl);
