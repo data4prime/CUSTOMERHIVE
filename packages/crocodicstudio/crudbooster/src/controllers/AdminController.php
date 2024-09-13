@@ -75,7 +75,9 @@ class AdminController extends CBController
 
   $findme = "ether";
 
-  $pmac = strops($mycom , $findme);
+  $pmac = strpos($mycom , $findme);
+
+
 
   $mac_address= substr($mycom , ($pmac+36) , 17);
 
