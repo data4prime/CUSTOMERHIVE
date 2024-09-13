@@ -83,7 +83,8 @@ class ConnectorService
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ])->post($url, [
-            'license_key' => $licenseKey
+            'license_key' => $licenseKey,
+            'ls_domain' => $_SERVER['HTTP_HOST'],
         ]);
 
         $data = $response->json();
