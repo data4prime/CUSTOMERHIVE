@@ -14,6 +14,8 @@ use \App\Group;
 use \App\AccessLog;
 use crocodicstudio\crudbooster\helpers\UserHelper;
 
+use crocodicstudio\crudbooster\helpers\LicenseHelper;
+
 use App\Services\ConnectorService;
 
 //use App\Classes\Custom\ChiveLicenseService;
@@ -192,16 +194,8 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
   {
 
 
-      $licenseKey = DB::table('license')->first();
 
-      if (!$licenseKey)  {
-        return redirect()->route('getLicenseScreen');
-      }  
-
-
-      $connectorService = new ConnectorService($licenseKey->license_key);
-
-      $isLicenseValid = $connectorService->validateLicense();
+      $isLicenseValid = LicenseHelper::canLicenseLogin();
 
       if (!$isLicenseValid) {
         return redirect()->route('getLicenseScreen')->with('message', 'License is not valid');

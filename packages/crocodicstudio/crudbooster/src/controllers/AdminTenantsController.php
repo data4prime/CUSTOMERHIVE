@@ -281,6 +281,10 @@ class AdminTenantsController extends CBController
 	    */
 	public function hook_before_add(&$postdata)
 	{
+
+		
+
+
 		//Your code here
 		$domain_name = TenantHelper::domain_name_encode($postdata['name']);
 		$postdata['domain_name'] = $domain_name;
