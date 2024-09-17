@@ -59,6 +59,29 @@ class ConnectorService
         return false;
     }
 
+    public function checkLicense(array $data = []): object
+    {
+        if ($this->accessToken) {
+            $url = Config::get('license-connector.license_server_url') . '/api/license-server/license';
+
+            $response = Http::withHeaders([
+                'x-host' => Config::get('app.url'),
+                'x-host-name' => Config::get('app.name'),
+                'Authorization' => "Bearer {$this->accessToken}",
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ])->post($url, $data);
+            //dd($response);
+
+            if ($response->ok()) {
+
+                return $license->tenants_number >= $data['tenants_number'];
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Get access token for the given domain
      *
