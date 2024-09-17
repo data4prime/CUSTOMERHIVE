@@ -50,13 +50,13 @@ class ConnectorService
             if ($response->ok()) {
                 $license = $response->json();
 
-                dd($license);
+                //dd($license);
 
                 $this->license = $license;
 
-                /*if (isset($data['tenants_number'])) {
+                if (isset($data['tenants_number'])) {
                     return $license && $license['status'] == 'active' && $license['tenants_number'] >= $data['tenants_number'];
-                }*/
+                }
 
                 return $license && $license['status'] == 'active';
             }
