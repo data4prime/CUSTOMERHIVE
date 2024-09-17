@@ -74,12 +74,14 @@ class ConnectorService
             //dd($response);
 
             if ($response->ok()) {
+                $license = $response->json();
+                dd($license);   
 
                 return $license->tenants_number >= $data['tenants_number'];
             }
         }
 
-        return null;
+        return false;
     }
 
     /**
