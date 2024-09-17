@@ -62,7 +62,7 @@ class ConnectorService
     public function checkLicense(array $data = []): object
     {
         if ($this->accessToken) {
-            $url = Config::get('license-connector.license_server_url') . '/api/license-server/license';
+            $url = Config::get('license-connector.license_server_url') . '/api/api-license/license-server/license';
 
             $response = Http::withHeaders([
                 'x-host' => Config::get('app.url'),
