@@ -1,0 +1,2 @@
+{"url":"http:\/\/license.thecustomerhive.com\/api\/api-license\/license-server\/licenses","domain":"staging","clients_number":"100","tenants_number":"10","mac_address":"06:e9:76:1a:ef:1b","path":"\/var\/www\/staging.thecustomerhive.com"}
+

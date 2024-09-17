@@ -15,6 +15,7 @@
         "guzzlehttp/guzzle": "7.7.0",
         "imanghafoori/laravel-widgetize": "1.8.*",
         "intervention/imagecache": "2.6.0",
+        "laravel-ready/license-connector": "^2.0",
         "laravel/framework": "^9.0",
         "laravel/helpers": "^1.6",
         "maatwebsite/excel": "3.1.48",
