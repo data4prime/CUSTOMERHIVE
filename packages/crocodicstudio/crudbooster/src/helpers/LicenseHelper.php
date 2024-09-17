@@ -41,7 +41,7 @@ class LicenseHelper  {
 
         $customData = ['tenants_number' => 6];
 
-            dd($connectorService->validateLicense($customData));
+        return $connectorService->validateLicense($customData);
 
         
     }
