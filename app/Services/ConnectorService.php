@@ -50,7 +50,7 @@ class ConnectorService
             if ($response->ok()) {
                 $license = $response->json();
 
-                //dd($license);
+                dd($license);
 
                 $this->license = $license;
 
