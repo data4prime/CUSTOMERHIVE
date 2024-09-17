@@ -36,7 +36,7 @@ class LicenseHelper  {
     public static function canAddTenant() {
         $licenseKey = self::getLicense();
 
-        $tenants = TenantHelper::countsTenants();
+        $tenants = TenantHelper::countTenants();
   
 
         
