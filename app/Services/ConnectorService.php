@@ -59,7 +59,7 @@ class ConnectorService
         return false;
     }
 
-    public function checkLicense(array $data = []): object
+    public function checkLicense(array $data = []): bool
     {
         if ($this->accessToken) {
             $url = Config::get('license-connector.license_server_url') . '/api/api-license/license-server/license';
