@@ -35,13 +35,15 @@ class LicenseHelper  {
 
     public static function canAddTenant() {
         $licenseKey = self::getLicense();
+
+        $tenants = TenantHelper::countsTenants();
   
 
         
 
         $connectorService = new ConnectorService($licenseKey->license_key);
 
-        $customData = ['tenants_number' => 6, 'license_key' => $licenseKey->license_key];
+        $customData = ['tenants_number' => $tenants + 1, 'license_key' => $licenseKey->license_key];
 
         return $connectorService->validateLicense($customData);
 
