@@ -28,9 +28,9 @@ class LicenseHelper  {
 
         $customData = ['license_key' => $licenseKey->license_key];
 
-        $connectorService = new ConnectorService($licenseKey->license_key, $customData);
+        $connectorService = new ConnectorService($licenseKey->license_key);
 
-        return  $connectorService->validateLicense();
+        return  $connectorService->validateLicense($customData);
     }
 
     public static function canAddTenant() {
