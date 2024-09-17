@@ -12,7 +12,7 @@ use \App\GroupTenants;
 use Illuminate\Support\Facades\Route;
 use TenantHelper;
 use MyHelper;
-use LicenseHelper;
+use crocodicstudio\crudbooster\helpers\LicenseHelper;
 
 class AdminTenantsController extends CBController
 {
