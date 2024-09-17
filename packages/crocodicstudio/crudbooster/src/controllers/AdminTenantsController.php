@@ -12,6 +12,7 @@ use \App\GroupTenants;
 use Illuminate\Support\Facades\Route;
 use TenantHelper;
 use MyHelper;
+use LicenseHelper;
 
 class AdminTenantsController extends CBController
 {
@@ -283,7 +284,7 @@ class AdminTenantsController extends CBController
 	{
 
 		
-
+		LicenseHelper::canAddTenant();
 
 		//Your code here
 		$domain_name = TenantHelper::domain_name_encode($postdata['name']);
