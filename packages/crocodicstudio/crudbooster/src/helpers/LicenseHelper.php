@@ -35,9 +35,11 @@ class LicenseHelper  {
         $licenseKey = self::getLicense();
   
 
+        
+
         $connectorService = new ConnectorService($licenseKey->license_key);
 
-        dd($connectorService);
+        $customData = ['tenants_number' => 6];
 
         dd($connectorService->validateLicense());
     }
