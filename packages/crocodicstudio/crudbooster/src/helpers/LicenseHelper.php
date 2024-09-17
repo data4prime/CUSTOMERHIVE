@@ -37,6 +37,8 @@ class LicenseHelper  {
 
         $connectorService = new ConnectorService($licenseKey->license_key);
 
+        dd($connectorService);
+
         dd($connectorService->validateLicense());
     }
 
