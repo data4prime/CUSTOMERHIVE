@@ -81,7 +81,7 @@ class ConnectorService
 
             if ($response->ok()) {
                 $license = $response->json();
-                dd($license);   
+                //dd($license);   
 
                 return $license->tenants_number >= $data['tenants_number'];
             }
