@@ -4,6 +4,7 @@ namespace crocodicstudio\crudbooster\helpers;
 use \App\Tenant;
 use \App\Modules;
 use \App\ModuleTenants;
+use DB;
 
 class TenantHelper  {
 
