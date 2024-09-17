@@ -26,7 +26,9 @@ class LicenseHelper  {
     public static function canLicenseLogin() {
         $licenseKey = self::getLicense();
 
-        $connectorService = new ConnectorService($licenseKey->license_key);
+        $customData = ['license_key' => $licenseKey->license_key];
+
+        $connectorService = new ConnectorService($licenseKey->license_key, $customData);
 
         return  $connectorService->validateLicense();
     }
