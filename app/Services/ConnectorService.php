@@ -45,7 +45,7 @@ class ConnectorService
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ])->post($url, $data);
-            dd($response);
+            //dd($response);
 
             if ($response->ok()) {
                 $license = $response->json();
@@ -54,9 +54,9 @@ class ConnectorService
 
                 $this->license = $license;
 
-                if (isset($data['tenants_number'])) {
+                /*if (isset($data['tenants_number'])) {
                     return $license && $license['status'] == 'active' && $license['tenants_number'] >= $data['tenants_number'];
-                }
+                }*/
 
                 return $license && $license['status'] == 'active';
             }

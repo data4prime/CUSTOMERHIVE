@@ -41,7 +41,7 @@ class LicenseHelper  {
 
         $connectorService = new ConnectorService($licenseKey->license_key);
 
-        $customData = ['tenants_number' => 4];
+        $customData = ['tenants_number' => 4, 'license_key' => $licenseKey->license_key];
 
         return $connectorService->validateLicense($customData);
 
