@@ -91,4 +91,10 @@ class TenantHelper  {
     return false;
   }
 
+  public static function countTenants()
+  {
+    $tenants = DB::table('tenants')->where('deleted_at', null)->count();
+    return $tenants;
+  }
+
 }
