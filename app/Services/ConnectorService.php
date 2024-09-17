@@ -45,7 +45,7 @@ class ConnectorService
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ])->post($url, $data);
-            dd($response);
+            //dd($response);
 
             if ($response->ok()) {
                 $license = $response->json();
