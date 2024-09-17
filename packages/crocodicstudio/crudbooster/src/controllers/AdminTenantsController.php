@@ -284,11 +284,14 @@ class AdminTenantsController extends CBController
 	{
 
 		
-		LicenseHelper::canAddTenant();
+		if (LicenseHelper::canAddTenant()) {
 
-		//Your code here
-		$domain_name = TenantHelper::domain_name_encode($postdata['name']);
-		$postdata['domain_name'] = $domain_name;
+			//Your code here
+			$domain_name = TenantHelper::domain_name_encode($postdata['name']);
+			$postdata['domain_name'] = $domain_name;
+		} else {
+			dd("License not valid");
+		}
 	}
 
 	/*
