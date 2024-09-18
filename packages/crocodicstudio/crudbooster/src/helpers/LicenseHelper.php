@@ -16,17 +16,18 @@ class LicenseHelper  {
 
     public static function getLicense() {
         $licenseKey =  DB::table('license')->first();
-        
-        if (!$licenseKey)  {
-            dd($licenseKey);
-            return redirect()->route('getLicenseScreen');
-        }
+
 
         return $licenseKey;
     }
 
     public static function canLicenseLogin() {
         $licenseKey = self::getLicense();
+
+                
+        if (!$licenseKey)  {
+            return false;
+        }
 
         $customData = ['license_key' => $licenseKey->license_key];
 
