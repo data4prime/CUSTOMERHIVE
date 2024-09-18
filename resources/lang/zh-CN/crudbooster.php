@@ -183,6 +183,7 @@ return [
     'all_rights_reserved' => 'All Rights Reserved',
     'copyright' => 'Copyright',
     'powered_by' => 'Powered by',
+    'license' => 'License',
 
     'notification_you_have' => '你收到',
     'notification_notification' => '通知',
