@@ -80,7 +80,8 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
   $pmac = strpos($mycom , $findme);
 
-  dd($pmac);
+
+  dd($mycom);
 
 
 
