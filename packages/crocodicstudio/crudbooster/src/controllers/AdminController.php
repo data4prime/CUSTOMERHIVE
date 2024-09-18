@@ -76,16 +76,16 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
   ob_clean();
 
-  $findme = "ether";
+  $findme = "link/ether";
 
   $pmac = strpos($mycom , $findme);
 
 
-  dd($mycom);
-
 
 
   $mac_address= substr($mycom , ($pmac+36) , 17);
+
+  $mac_address = "";
 
 
     return view('crudbooster::license', compact('path', 'tenant_domain_name', 'mac_address'));
