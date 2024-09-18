@@ -73,10 +73,7 @@
             <th>Expires In</th>
             <td>{{ $license['expires_in'] }}</td>
           </tr>
-            <tr>
-                <th>Is Expired</th>
-                <td>{{ $license['is_expired'] }}</td>
-            </tr>
+
         </table>
 
 
