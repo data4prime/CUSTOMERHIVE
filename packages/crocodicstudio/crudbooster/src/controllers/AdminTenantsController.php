@@ -293,7 +293,7 @@ class AdminTenantsController extends CBController
 			$message = "The number of tenants has exceeded the limit allowed by the current license.";
 			//$message .= '<br><br>' . "Please contact the administrator to increase the number of tenants allowed.";
 			$message_type = 'warning';
-			CRUDBooster::redirect( redirect()->back() , $message, $message_type);
+			CRUDBooster::redirect( g('return_url') ?: CRUDBooster::referer() , $message, $message_type);
 			//dd("License not valid");
 		}
 	}
