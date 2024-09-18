@@ -18,24 +18,7 @@
       </div>
       <div class="modal-body">
 
-        <!--
-array:14 [▼ // packages/crocodicstudio/crudbooster/src/views/license_modal.blade.php
-  "domain" => "staging"
-  "license_key" => "3c311714-9023-4dd8-8859-7de26fa29733"
-  "status" => "active"
-  "expiration_date" => "2025-09-13T12:57:02.000000Z"
-  "is_trial" => false
-  "is_lifetime" => false
-  "deleted_at" => null
-  "created_at" => "2024-09-13T12:57:02.000000Z"
-  "updated_at" => "2024-09-13T12:57:02.000000Z"
-  "clients_number" => 100
-  "tenants_number" => 4
-  "mac_address" => ":ff:ff:ff    ine"
-  "path" => "/var/www/staging.thecustomerhive.com"
-  "expires_in" => 360
-] 
-        -->
+
 
         <table class="table table-bordered">
           <tr>
