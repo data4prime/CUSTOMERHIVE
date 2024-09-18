@@ -1,14 +1,15 @@
 <footer class="main-footer">
     <!-- To the right -->
     <div class="pull-{{ trans('crudbooster.right') }} hidden-xs">
-        {{ trans('crudbooster.powered_by') }} Data4Prime
-    </div>
-    <div class="pull-{{ trans('crudbooster.right') }} hidden-xs">
 
-        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#exampleModal">
+        <button type="button" class="btn-link" data-toggle="modal" data-target="#exampleModal">
             {{ trans('crudbooster.license') }}
         </button>
     </div>
+    <div class="pull-{{ trans('crudbooster.right') }} hidden-xs">
+        {{ trans('crudbooster.powered_by') }} Data4Prime
+    </div>
+
     <div style="margin-right:15px;" class="pull-{{ trans('crudbooster.right') }} hidden-xs">
         {{Session::get('appname')}} {{ config('app.version') }}
     </div>
