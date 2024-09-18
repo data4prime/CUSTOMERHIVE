@@ -185,7 +185,7 @@
             <!-- Default to the left -->
             <strong>Copyright &copy;
                 <?php echo date('Y') ?>. All rights reserved.
-            </strong>
+            </strong>| 
         </footer>
 
     </div><!-- ./wrapper -->

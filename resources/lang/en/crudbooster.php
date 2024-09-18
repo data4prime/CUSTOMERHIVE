@@ -217,6 +217,7 @@ return [
     'all_rights_reserved' => 'All Rights Reserved',
     'copyright' => 'Copyright',
     'powered_by' => 'Powered by',
+    'license' => 'License',
 
     'notification_you_have' => 'You Have',
     'notification_notification' => 'Notifications',

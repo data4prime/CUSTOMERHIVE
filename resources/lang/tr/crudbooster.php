@@ -184,6 +184,7 @@ return [
     'all_rights_reserved' => 'Tüm Hakları Saklıdır',
     'copyright' => 'Copyright',
     'powered_by' => 'Powered by',
+    'license' => 'License',
 
     'notification_you_have' => '',
     'notification_notification' => 'bildirimin var',
