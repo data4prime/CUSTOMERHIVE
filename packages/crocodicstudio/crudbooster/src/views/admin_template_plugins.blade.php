@@ -115,6 +115,12 @@ $("#chatWindow").toggle();
 
 });
 
+document.querySelector('#modal-license').addEventListener('click', function () {
+
+
+  $('#modal-license').modal('show');
+});
+
 
 
 </script>
