@@ -290,7 +290,11 @@ class AdminTenantsController extends CBController
 			$domain_name = TenantHelper::domain_name_encode($postdata['name']);
 			$postdata['domain_name'] = $domain_name;
 		} else {
-			dd("License not valid");
+			$message = "The number of tenants has exceeded the limit allowed by the current license.";
+			//$message .= '<br><br>' . "Please contact the administrator to increase the number of tenants allowed.";
+			$message_type = 'warning';
+			CRUDBooster::redirect( redirect()->bacl() , $message, $message_type);
+			//dd("License not valid");
 		}
 	}
 
