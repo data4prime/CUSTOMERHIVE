@@ -35,7 +35,7 @@
           </tr>
           <tr>
             <th>Expiration Date</th>
-            <td>{{ $license['expiration_date'] }}</td>
+            <td>{{ date('d-m-Y h:i:s', strtotime($license['expiration_date'])) }}</td>
           </tr>
           <tr>
             <th>Is Trial</th>
@@ -44,14 +44,6 @@
           <tr>
             <th>Is Lifetime</th>
             <td>{{ $license['is_lifetime'] }}</td>
-          </tr>
-          <tr>
-            <th>Created At</th>
-            <td>{{ $license['created_at'] }}</td>
-          </tr>
-          <tr>
-            <th>Updated At</th>
-            <td>{{ $license['updated_at'] }}</td>
           </tr>
           <tr>
             <th>Clients Number</th>
@@ -71,7 +63,7 @@
           </tr>
           <tr>
             <th>Expires In</th>
-            <td>{{ $license['expires_in'] }}</td>
+            <td>{{ $license['expires_in'] }} days</td>
           </tr>
 
         </table>
