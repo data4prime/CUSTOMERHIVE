@@ -110,7 +110,7 @@
 
         </div><!-- /.lockscreen-item -->
         <div class="text-center">
-            {{trans("crudbooster.text_enter_the_license")}}
+
         </div>
 
         <div class='lockscreen-footer text-center'>
