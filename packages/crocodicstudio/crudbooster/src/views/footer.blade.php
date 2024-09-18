@@ -2,7 +2,7 @@
     <!-- To the right -->
     <div class="pull-{{ trans('crudbooster.right') }} hidden-xs">
         {{ trans('crudbooster.powered_by') }} Data4Prime  | 
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#exampleModal">
             {{ trans('crudbooster.license') }}
         </button>
     </div>
