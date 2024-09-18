@@ -2,10 +2,9 @@
     <!-- To the right -->
     <div class="pull-{{ trans('crudbooster.right') }} hidden-xs">
 
-        <a data-toggle="modal" data-target="#exampleModal">{{ trans('crudbooster.license') }}</a>
+        &nbsp;|&nbsp;<a data-toggle="modal" data-target="#exampleModal">{{ trans('crudbooster.license') }}</a>
     </div>
-    <!-- add blank space-->
-    &nbsp;
+
 
     <div class="pull-{{ trans('crudbooster.right') }} hidden-xs">
         {{ trans('crudbooster.powered_by') }} Data4Prime
