@@ -53,10 +53,7 @@ class LicenseHelper  {
     public static function getLicenseInfo() {
         $licenseKey = self::getLicense();
 
-        $tenants = TenantHelper::countTenants();
-  
-
-        
+          
 
         $connectorService = new ConnectorService($licenseKey->license_key);
 
