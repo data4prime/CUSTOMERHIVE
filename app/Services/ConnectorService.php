@@ -82,7 +82,7 @@ public function getLicense(array $data = []): array | bool
             if ($response->ok()) {
                 $license = $response->json();
 
-                return $license['status'];
+                return $license;
             }
         }
 

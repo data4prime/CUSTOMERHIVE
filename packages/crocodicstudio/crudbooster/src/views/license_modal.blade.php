@@ -1,7 +1,7 @@
 @php 
  use crocodicstudio\crudbooster\helpers\LicenseHelper;
 
-    $license = LicenseHelper::getLicense();
+    $license = LicenseHelper::Info();
 
     dd($license);
 
