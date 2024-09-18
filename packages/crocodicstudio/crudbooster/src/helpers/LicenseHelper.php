@@ -16,6 +16,7 @@ class LicenseHelper  {
 
     public static function getLicense() {
         $licenseKey =  DB::table('license')->first();
+        dd($licenseKey);
         if (!$licenseKey)  {
             return redirect()->route('getLicenseScreen');
         }
