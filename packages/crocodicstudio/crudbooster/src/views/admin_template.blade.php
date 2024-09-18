@@ -106,8 +106,11 @@
         <!-- Header -->
         @include('crudbooster::header')
 
-<!-- AI Chat -->
+        <!-- AI Chat -->
         @include('crudbooster::chat3')
+
+        <!-- License -->
+        @include('crudbooster::license_modal')
 
         <!-- Sidebar -->
         @include('crudbooster::sidebar')
