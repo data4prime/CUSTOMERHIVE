@@ -37,14 +37,14 @@
             <th>Expiration Date</th>
             <td>{{ date('d-m-Y h:i:s', strtotime($license['expiration_date'])) }}</td>
           </tr>
-          <tr>
+          <!--<tr>
             <th>Is Trial</th>
             <td>{{ $license['is_trial'] }}</td>
           </tr>
           <tr>
             <th>Is Lifetime</th>
             <td>{{ $license['is_lifetime'] }}</td>
-          </tr>
+          </tr>-->
           <tr>
             <th>Clients Number</th>
             <td>{{ $license['clients_number'] }}</td>

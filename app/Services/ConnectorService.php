@@ -54,11 +54,21 @@ class ConnectorService
 
                 $this->license = $license;
 
+                $ret = $license && $license['status'] == 'active';
+
                 if (isset($data['tenants_number'])) {
-                    return $license && $license['status'] == 'active' && $license['tenants_number'] >= $data['tenants_number'];
+                    $ret = $ret && $license['tenants_number'] >= $data['tenants_number'];
                 }
 
-                return $license && $license['status'] == 'active';
+                if (isset($data['path'])) {
+                    $ret = $ret && $license['path'] == $data['path'];
+                }
+
+                if (isset($data['domain'])) {
+                    $ret = $ret && $license['domain'] == $data['domain'];
+                }
+
+                return $ret;
             }
         }
 
