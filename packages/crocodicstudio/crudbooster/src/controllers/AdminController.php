@@ -94,7 +94,15 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
   public function postActivateLicense()
   {
 
-    //dd(Request::all());
+    $licenseKey = LicenseHelper::getLicense();
+
+    $license_key = null;
+
+    if ($licenseKey) {
+      $license_key = $licenseKey->license_key;
+    }
+
+
 
     $fields = [
       'domain' => Request::input('domain'),
@@ -105,20 +113,17 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
       'tenants_number' => Request::input('tenants_number'),
       'mac_address' => Request::input('mac_address'),
       'path' => Request::input('path'),
+      'license_key' => $license_key,
 
     ];
 
-    //get license_server_url
     $license_server_url = config('license-connector.license_server_url');
     $curl = curl_init();
     curl_setopt_array($curl, array(
       CURLOPT_URL => $license_server_url.'/api/api-license/license-server/licenses',
-//header json
       CURLOPT_HTTPHEADER => array(
         'Content-Type: application/json',
       ),
-
-
 
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
@@ -131,10 +136,7 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
       CURLOPT_POSTFIELDS => json_encode($fields),
     ));
 
-    //dd($curl);
-
     $response = curl_exec($curl);
-    //dd($response);
     curl_close($curl);
 
     $response = json_decode($response);
