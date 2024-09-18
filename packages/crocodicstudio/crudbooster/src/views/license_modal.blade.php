@@ -3,7 +3,6 @@
 
     $license = LicenseHelper::getLicenseInfo();
 
-    dd($license);
 
 @endphp
 
