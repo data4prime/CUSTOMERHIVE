@@ -199,12 +199,14 @@ class QlikHelper
     );
     //DEBUG Qlik Ticket
 
+/*
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $url . '/'.$endpoint."\n", FILE_APPEND);
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', json_encode($headers)."\n", FILE_APPEND);
 
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertfile."\n", FILE_APPEND);
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertkeyfile."\n", FILE_APPEND);
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertkeyfilePassword."\n", FILE_APPEND);
+*/
 
 
     $ch = curl_init($url . '/'.$endpoint);
@@ -229,7 +231,7 @@ class QlikHelper
     //Execute and get response
     $raw_response = curl_exec($ch);
     //DEBUG Qlik Ticket
-    file_put_contents(__DIR__ . '/qlik_ticket2.txt', $raw_response."\n", FILE_APPEND);
+    //file_put_contents(__DIR__ . '/qlik_ticket2.txt', $raw_response."\n", FILE_APPEND);
 
     if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
@@ -325,7 +327,7 @@ class QlikHelper
 
     if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
-      file_put_contents(__DIR__ . '/qlik_ticket.txt', $error_msg."\n", FILE_APPEND);
+      //file_put_contents(__DIR__ . '/qlik_ticket.txt', $error_msg."\n", FILE_APPEND);
     }
 
     $response = json_decode($raw_response);
@@ -473,7 +475,7 @@ class QlikHelper
 
     //$expire = $issuedA2->addMinutes(60)->timestamp;
 
-    file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($qlik_conf)."\n", FILE_APPEND);
+    //file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($qlik_conf)."\n", FILE_APPEND);
 
     $privateKey = $qlik_conf->private_key;
 
@@ -484,7 +486,7 @@ class QlikHelper
       $privateKey = "";
     }
 
-    file_put_contents(__DIR__ . '/qlik_token.txt', $privateKey."\n", FILE_APPEND);
+    //file_put_contents(__DIR__ . '/qlik_token.txt', $privateKey."\n", FILE_APPEND);
 
 
     $qlik_user = DB::table('qlik_users')->where('user_id', $id)->where('qlik_conf_id', $conf_id)->first();
@@ -513,7 +515,7 @@ class QlikHelper
       'userDirectory' => $user_directory,
     ]);
 
-    file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($payload)."\n", FILE_APPEND);
+    //file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($payload)."\n", FILE_APPEND);
 
 
     $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
@@ -529,7 +531,7 @@ class QlikHelper
     // Your JWT signed with the supplied private key
     $myToken = $data . "." . $base64UrlSignature;
 
-    file_put_contents(__DIR__ . '/qlik_token.txt', $myToken."\n", FILE_APPEND);
+    //file_put_contents(__DIR__ . '/qlik_token.txt', $myToken."\n", FILE_APPEND);
 
 
     return $myToken;

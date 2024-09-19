@@ -62,7 +62,7 @@ $(document).ready(function () {
     type.change(function () {
         // Code to be executed when the value of the select changes
         var selectedValue = $(this).val();
-        console.log("Selected value: " + selectedValue);
+        //console.log("Selected value: " + selectedValue);
         var on_premise = ['qrsurl', 'endpoint', 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
 
         var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];

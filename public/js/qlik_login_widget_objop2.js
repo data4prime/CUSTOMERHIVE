@@ -11,12 +11,12 @@
         port: 443, 
         isSecure: true, 
     };
-    console.log('config: ');
-    console.log(config);
+    //console.log('config: ');
+    //console.log(config);
 
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
-    console.log('baseUrl: '+baseUrl);
+    //console.log('baseUrl: '+baseUrl);
 
     require.config({
 		baseUrl: baseUrl + 'resources',
@@ -43,8 +43,8 @@
         //document.cookie;
 
         var app = qlik.openApp(app, config);
-        console.log('app: ');
-        console.log(app);
+        //console.log('app: ');
+        //console.log(app);
 
         objectsOptions(app);
 
@@ -80,11 +80,11 @@ if (hidden_object && (hidden_object.value == "CurrentSelections"  && hidden_app.
 
 
 parent.document.getElementById('mashup_object').appendChild(option_cs);
-    console.log('objectsOptions');
-    console.log(app.getAppObjectList('masterobject'));
+    //console.log('objectsOptions');
+    //console.log(app.getAppObjectList('masterobject'));
     app.getAppObjectList('masterobject', function (reply) {
-        console.log('reply: ');
-        console.log(reply);
+        //console.log('reply: ');
+        //console.log(reply);
 
 
         $.each(reply.qAppObjectList.qItems, function () {
@@ -130,7 +130,7 @@ $(document).ready(function () {
     console.log("document ready -------------------");
 */
     //main();
-console.log("qlik_login_widget_objop2");
+//console.log("qlik_login_widget_objop2");
 /*
 });
 */

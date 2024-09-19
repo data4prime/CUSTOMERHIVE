@@ -12,7 +12,7 @@ async function loadScript(url) {
 
 async function main() {
 
-    console.log('main');
+    //console.log('main');
 
     //check if webIntegrationId variable exists 
 
@@ -23,10 +23,10 @@ async function main() {
 
 
 
-    console.log(webIntegrationId);
+    //console.log(webIntegrationId);
 
     if (webIntegrationId && webIntegrationId !== '') {
-        console.log('yes web int');
+        //console.log('yes web int');
         const check = await checkLoggedIn();
 
         if (check.status === 401) {
@@ -35,7 +35,7 @@ async function main() {
         }
     } else {
 
-        console.log('no web int');
+        //console.log('no web int');
 
         const authHeader = `Bearer ${qlik_token}`;
 
@@ -100,8 +100,8 @@ async function main() {
         configuration.webIntegrationId = webIntegrationId;
     }
 
-    console.log('configuration');
-    console.log(configuration);
+    //console.log('configuration');
+    //console.log(configuration);
 
     require.config(configuration);
 
@@ -179,7 +179,7 @@ function objectsOptions(app) {
 
 async function jwtLogin() {
     const authHeader = 'Bearer ' + qlik_token;
-    console.log(authHeader);
+    //console.log(authHeader);
 
     const response = await fetch(`${host}/login/jwt-session`, {
         credentials: 'include',

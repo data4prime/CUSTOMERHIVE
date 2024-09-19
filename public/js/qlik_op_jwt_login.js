@@ -39,7 +39,7 @@ async function getJWTToken() {
 
 async function jwtLogin(token) {
     const authHeader = `Bearer ${JWTTOKEN}`;
-    console.log(authHeader);
+    //console.log(authHeader);
     return await fetch(`${TENANT}/${PREFIX}/qrs/about?xrfkey=0123456789abcdef`, {
         credentials: 'include',
         mode: 'cors',
@@ -74,7 +74,7 @@ async function getQCSHeaders() {
 function renderSingleIframe() {
 
     var iframe_ = document.querySelector('.qi_iframe');
-    console.log(iframe_);
+    //console.log(iframe_);
 
     iframe_.src = iframe_.getAttribute('data-src');
 
