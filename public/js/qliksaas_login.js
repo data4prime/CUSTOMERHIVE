@@ -6,7 +6,7 @@
 
     const check = await checkLoggedIn();
 
-    console.log(check.text());
+    //console.log(check.text());
 
     renderSingleIframe();
 })();
@@ -14,7 +14,7 @@
 async function qlikLogin() {
     const tokenRes = await (await getJWTToken());
     const loginRes = await jwtLogin(tokenRes);
-    console.log(loginRes.text());
+    //console.log(loginRes.text());
 
     return true;
 }
@@ -39,8 +39,8 @@ async function getJWTToken() {
 
 async function jwtLogin(token) {
     const authHeader = `Bearer ${JWTTOKEN}`;
-    console.log(authHeader);
-    console.log(WEBINTEGRATIONID);
+    //console.log(authHeader);
+    //console.log(WEBINTEGRATIONID);
     return await fetch(`${TENANT}/login/jwt-session`, {
         credentials: 'include',
         mode: 'cors',
@@ -74,6 +74,9 @@ async function getQCSHeaders() {
 
 
 function renderSingleIframe() {
+
+    var iframe_ = document.querySelector('.qi_iframe');
+    iframe_.src = iframe_.getAttribute('data-src');
 
 /*
     var iframe_ = document.querySelector('.qi_iframe');

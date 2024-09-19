@@ -8,7 +8,7 @@ $debug_url = $item_url;
 @endphp
 
 <a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a>
-<iframe class="qi_iframe" src="{{ $item_url }}"  style="border:none;"></iframe>
+<iframe class="qi_iframe" data-src="{{$item_url}}" src=""  style="border:none;"></iframe>
 
 <style>
   /*set iframe size*/

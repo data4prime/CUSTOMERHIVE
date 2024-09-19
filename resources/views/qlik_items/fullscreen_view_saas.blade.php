@@ -9,7 +9,7 @@ $debug_url = $item_url;
 
 
 <a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a><iframe id="qlik_frame" class="qi_iframe"
-  src="{{ $item_url }}"  style="border:none;"></iframe>
+  data-src="{{$item_url}}" src=""  style="border:none;"></iframe>
 
 <style>
   /*set iframe size*/
