@@ -72,10 +72,7 @@ class ConnectorService
             }
 
             //delete record from licenses table
-            $license = License::where('license_key', $this->licenseKey)->first();
-            if ($license) {
-                $license->delete();
-            }
+            DB::table('licenses')->where('license_key', $this->licenseKey)->delete();
 
 
         }
