@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Config;
 use LaravelReady\LicenseConnector\Traits\CacheKeys;
 use LaravelReady\LicenseConnector\Exceptions\AuthException;
 
+use Illuminate\Support\Facades\DB;
+
 class ConnectorService
 {
     use CacheKeys;
