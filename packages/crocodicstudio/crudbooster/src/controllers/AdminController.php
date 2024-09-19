@@ -96,7 +96,7 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
     $licenseKey = LicenseHelper::getLicense();
 
-    $license_key = null;
+    $license_key = "";
 
     if ($licenseKey) {
       $license_key = $licenseKey->license_key;
