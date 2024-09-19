@@ -49,7 +49,7 @@ class QlikConfController extends CBController
 		$this->form[] = ['label' => 'Configuration Name', 'name' => 'confname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Configuration Name'];
         $this->form[] = ['label' => 'Type', 'name' => 'type', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'On-Premise;SAAS'];
         $this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'JWT'];
-        $this->form[] = ['label' => 'QRS Url', 'name' => 'qrsurl', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRS Url'];
+        //$this->form[] = ['label' => 'QRS Url', 'name' => 'url', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRS Url'];
         $this->form[] = ['label' => 'URL', 'name' => 'url', 'type' => 'text',  'width' => 'col-sm-10', 'placeholder' => 'Enter URL'];
 
         $this->form[] = ['label' => 'Port', 'name' => 'port', 'type' => 'text',  'width' => 'col-sm-10', 'placeholder' => 'Port'];
@@ -245,7 +245,7 @@ class QlikConfController extends CBController
             console.log(document.getElementsByName('auth'));
 
             const fields = {
-                'On-Premise_JWT': ['confname', 'type', 'auth', 'qrsurl', 'port', 'endpoint', 'private_key'],
+                'On-Premise_JWT': ['confname', 'type', 'auth', 'url', 'port', 'endpoint', 'private_key'],
                 'SAAS_JWT': ['confname', 'type', 'auth', 'url', 'port', 'endpoint', 'keyid', 'issuer', 'web_int_id', 'private_key']
             };
 

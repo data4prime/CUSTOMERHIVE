@@ -49,7 +49,7 @@ class QlikConfController extends CBController
 		$this->form[] = ['label' => 'Configuration Name', 'name' => 'confname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Configuration Name'];
         $this->form[] = ['label' => 'Type', 'name' => 'type', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'On-Premise;SAAS'];
         $this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'JWT'];
-        $this->form[] = ['label' => 'QRS Url', 'name' => 'qrsurl', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRS Url'];
+        $this->form[] = ['label' => 'QRS Url', 'name' => 'url', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRS Url'];
         $this->form[] = ['label' => 'URL', 'name' => 'url', 'type' => 'text',  'width' => 'col-sm-10', 'placeholder' => 'Enter URL'];
 
         $this->form[] = ['label' => 'Port', 'name' => 'port', 'type' => 'text',  'width' => 'col-sm-10', 'placeholder' => 'Port'];
@@ -242,7 +242,7 @@ class QlikConfController extends CBController
 
                 var type = $('[name=\"type\"]').first();
                 var type_val = type.val();
-                var on_premise = ['qrsurl', /*'endpoint',*/ 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
+                var on_premise = ['url', /*'endpoint',*/ 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
 
                 var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
 
@@ -308,7 +308,7 @@ class QlikConfController extends CBController
                 type.change(function () {
                     // Code to be executed when the value of the select changes
                     var selectedValue = $(this).val();
-                    var on_premise = ['qrsurl', /*'endpoint',*/ 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
+                    var on_premise = ['url', /*'endpoint',*/ 'QRSCertfile', 'QRSCertkeyfile', 'QRSCertkeyfilePassword'];
 
                     var saas = ['url', 'keyid', 'issuer', 'web_int_id', 'private_key'];
 
