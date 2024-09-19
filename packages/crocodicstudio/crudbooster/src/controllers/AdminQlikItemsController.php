@@ -806,7 +806,7 @@ class AdminQlikItemsController extends CBController
 			$view = 'qlik_items.view_saas';
 
 		} else {
-			$url = $conf->qrsurl;
+			$url = $conf->url;
 			$url .= '/hub/';
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';
@@ -889,7 +889,7 @@ class AdminQlikItemsController extends CBController
 			$view = 'qlik_items.view_saas';
 
 		} else {
-			$url = $conf->qrsurl;
+			$url = $conf->url;
 			$url .= '/qmc/';
 			$qlik_ticket = QlikHelper::getTicket($qlik_item);
 			$url .= '?';

@@ -170,7 +170,7 @@ class QlikHelper
     }
 
 
-    $QRSurl = $qlik_conf->qrsurl .':'.$qlik_conf->port;
+    $url = $qlik_conf->url .':'.$qlik_conf->port;
 
     $xrfkey = '0123456789abcdef';
     $endpoint =   "qps/".$qlik_conf->endpoint."/ticket?xrfkey=" . $xrfkey;
@@ -199,7 +199,7 @@ class QlikHelper
     );
     //DEBUG Qlik Ticket
 
-    file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSurl . '/'.$endpoint."\n", FILE_APPEND);
+    file_put_contents(__DIR__ . '/qlik_ticket2.txt', $url . '/'.$endpoint."\n", FILE_APPEND);
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', json_encode($headers)."\n", FILE_APPEND);
 
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertfile."\n", FILE_APPEND);
@@ -207,7 +207,7 @@ class QlikHelper
     file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertkeyfilePassword."\n", FILE_APPEND);
 
 
-    $ch = curl_init($QRSurl . '/'.$endpoint);
+    $ch = curl_init($url . '/'.$endpoint);
 
     curl_setopt($ch, CURLOPT_VERBOSE, true);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -275,7 +275,7 @@ class QlikHelper
       exit;
     }
 
-    $QRSurl = $qlik_conf->qrsurl .':'.$qlik_conf->port;
+    $url = $qlik_conf->url .':'.$qlik_conf->port;
 
     $xrfkey = '0123456789abcdef';
     //$endpoint = $qlik_conf->endpoint ."/qps". "/ticket?xrfkey=" . $xrfkey;
@@ -300,8 +300,8 @@ class QlikHelper
       'x-qlik-xrfkey: ' . $xrfkey,
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
-    //file_put_contents(__DIR__ . '/qlik_ticket.txt', $QRSurl . '/'.$endpoint."\n", FILE_APPEND);
-    $ch = curl_init($QRSurl . '/'.$endpoint);
+    //file_put_contents(__DIR__ . '/qlik_ticket.txt', $url . '/'.$endpoint."\n", FILE_APPEND);
+    $ch = curl_init($url . '/'.$endpoint);
 
     curl_setopt($ch, CURLOPT_VERBOSE, true);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -356,7 +356,7 @@ class QlikHelper
       exit;
     }
 
-    $QRSurl = $qlik_conf->qrsurl .':'.$qlik_conf->port;
+    $url = $qlik_conf->url .':'.$qlik_conf->port;
 
     $xrfkey = '0123456789abcdef';
     $endpoint = $qlik_conf->endpoint . "/ticket?xrfkey=" . $xrfkey;
@@ -382,10 +382,10 @@ class QlikHelper
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
     $ret = json_encode([
-      'QRSurl' => $QRSurl,
+      'url' => $url,
       'endpoint' => $endpoint,
       'headers' => $headers,
-      'url' => $QRSurl . '/'.$endpoint,
+      'url' => $url . '/'.$endpoint,
       'QRSCertfile' => $QRSCertfile,
       'QRSCertkeyfile' => $QRSCertkeyfile,
       'QRSCertkeyfilePassword' => $QRSCertkeyfilePassword,
@@ -505,7 +505,7 @@ class QlikHelper
     $payload = json_encode([
       'iss'   => '12345678-1234-1234-1234-123456123456',
       'sub'   => '12345678-1234-1234-1234-123456123456',
-      'aud'   => $qlik_conf->qrsurl,
+      'aud'   => $qlik_conf->url,
       'iat'   => 1663792210,
       'exp'   => 1979411410,
       'scope' => 'everything',
