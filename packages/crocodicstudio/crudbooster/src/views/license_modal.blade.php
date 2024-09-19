@@ -3,6 +3,13 @@
 
     $license = LicenseHelper::getLicenseInfo();
 
+    if (!$license) {
+
+      //rediurect to license page
+      redirect()->route('getLicenseScreen');
+
+    }
+
 
 @endphp
 
