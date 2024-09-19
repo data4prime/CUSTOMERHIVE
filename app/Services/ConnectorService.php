@@ -70,6 +70,14 @@ class ConnectorService
 
                 return $ret;
             }
+
+            //delete record from licenses table
+            $license = License::where('license_key', $this->licenseKey)->first();
+            if ($license) {
+                $license->delete();
+            }
+
+
         }
 
         return false;
