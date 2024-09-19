@@ -62,7 +62,14 @@ class LicenseHelper  {
 
         $customData = [ 'license_key' => $licenseKey->license_key];
 
-        return $connectorService->getLicense($customData);
+        $license = $connectorService->getLicense($customData);
+
+        if ($license) {
+            return $license;
+        } else {
+            return false;
+        }
+
 
         
     }

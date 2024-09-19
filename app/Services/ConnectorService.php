@@ -64,10 +64,25 @@ class ConnectorService
 
                 if (isset($data['path'])) {
                     $ret = $ret && $license['path'] == $data['path'];
+                } else {
+                    $ret = $ret && $license['path'] == env('APP_PATH'); //default path
                 }
 
                 if (isset($data['domain'])) {
                     $ret = $ret && $license['domain'] == $data['domain'];
+                } else {
+
+                    //get domain from $_SERVER['HTTP_HOST']
+                    $domain = $_SERVER['HTTP_HOST'];
+
+                    //if domain has a subdomain, get the subdomain
+                    if (strpos($domain, '.') !== false) {
+                        $domain = explode('.', $domain);
+                        $domain = $domain[0];
+                    }
+
+
+                    $ret = $ret && $license['domain'] == $domain;
                 }
 
                 return $ret;
