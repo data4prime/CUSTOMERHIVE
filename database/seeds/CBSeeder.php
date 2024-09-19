@@ -513,10 +513,11 @@ class Cms_usersSeeder extends Seeder
             $tenant = DB::table('tenants')->first();
             $group = DB::table('groups')->first();
             $password = \Hash::make('123456');
+            $email = $this->command->ask('Please enter your email');
             $cms_users = DB::table('cms_users')->insert([
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'Super Admin',
-                'email' => 'admin@chive.com',
+                'email' => $email,
                 'password' => $password,
                 'id_cms_privileges' => 1,
                 'status' => 'Active',
