@@ -5,9 +5,19 @@
 
     if (!$license) {
 
-      //rediurect to license page
-      redirect()->route('getLicenseScreen');
-
+        $license = [
+            'domain' => 'N/A',
+            'license_key' => 'N/A',
+            'status' => 'N/A',
+            'expiration_date' => 'N/A',
+            'is_trial' => 'N/A',
+            'is_lifetime' => 'N/A',
+            'clients_number' => 'N/A',
+            'tenants_number' => 'N/A',
+            'mac_address' => 'N/A',
+            'path' => 'N/A',
+            'expires_in' => 'N/A',
+        ];
     }
 
 

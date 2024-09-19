@@ -24,6 +24,10 @@ class AdminController extends CBController
 {
   function getIndex()
   {
+
+  
+
+
     $data = [];
     $data['page_title'] = '<strong>Dashboard</strong>';
     //dashboard data
