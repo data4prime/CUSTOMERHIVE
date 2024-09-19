@@ -19,10 +19,10 @@ if (hidden_object && (hidden_object.value == "CurrentSelections"  && hidden_app.
 
 
 parent.document.getElementById('mashup_object').appendChild(option_cs);
-    console.log('objectsOptions');
+    //console.log('objectsOptions');
     app.getAppObjectList('masterobject', function (reply) {
-        console.log('reply: ');
-        console.log(reply);
+        //console.log('reply: ');
+        //console.log(reply);
 
 	var str = "";
 
@@ -130,20 +130,20 @@ async function mainOP() {
 		list.forEach(function(value) {
 			str +=  value.qDocName + "("+ value.qDocId +") ";
 		});
-		console.log(str);
+		//console.log(str);
 	}, config);
 
 
-        console.log('appId');
-        console.log(appId);
+        //console.log('appId');
+        //console.log(appId);
 
-        console.log('config');
-        console.log(config);
+        //console.log('config');
+        //console.log(config);
 
 
         var app = qlik.openApp(appId, config);
-        console.log('app');
-        console.log(app);
+        //console.log('app');
+        //console.log(app);
 
 
         objectsOptions(app);

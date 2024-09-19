@@ -24,11 +24,11 @@ function objectsOptionsOBJ(app) {
 
 
 
-    console.log('objectsOptions');
-    console.log(app.getAppObjectList('masterobject'));
+    //console.log('objectsOptions');
+    //console.log(app.getAppObjectList('masterobject'));
     app.getAppObjectList('masterobject', function (reply) {
-        console.log('reply: ');
-        console.log(reply);
+        //console.log('reply: ');
+        //console.log(reply);
 
 	var str = "";
 
@@ -88,8 +88,8 @@ async function loadScript(url) {
 async function main() {
     const authHeader = `Bearer ${qlik_token}`;
     const check = await checkLoggedIn();
-    console.log('check: ');
-    console.log(check);
+    //console.log('check: ');
+    //console.log(check);
 
     if (check.status === 401) {
 
@@ -120,12 +120,12 @@ async function main() {
         isSecure: true, 
         webIntegrationId: webIntegrationId
     };
-    console.log('config: ');
-    console.log(config);
+    //console.log('config: ');
+    //console.log(config);
 
     const baseUrl = (config.isSecure ? 'https://' : 'http://' ) + config.host + (config.port ? ':' + config.port : '') + config.prefix;
 
-    console.log('baseUrl: '+baseUrl);
+    //console.log('baseUrl: '+baseUrl);
 
     require.config({
 		baseUrl: baseUrl + 'resources',

@@ -19,8 +19,8 @@ function objectsOptions(app) {
 
 
 parent.document.getElementById('mashup_object').appendChild(option_cs);
-    console.log('objectsOptions');
-    console.log(app.getAppObjectList('masterobject'));
+    //console.log('objectsOptions');
+    //console.log(app.getAppObjectList('masterobject'));
     app.getAppObjectList('masterobject', function (reply) {
 
         $.each(reply.qAppObjectList.qItems, function () {
