@@ -3,7 +3,7 @@
 
     $license = LicenseHelper::getLicenseInfo();
 
-    dd($license);
+    //dd($license);
 
     if (!$license) {
 
