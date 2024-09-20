@@ -79,15 +79,10 @@ class LicenseHelper  {
         $licenseKey = self::getLicense();
 
         $users = UserHelper::countUsers();
-  
-
-        
 
         $connectorService = new ConnectorService($licenseKey->license_key);
 
         $customData = ['clients_number' => $users + 1, 'license_key' => $licenseKey->license_key];
-
-        dd($connectorService->validateLicense($customData));
 
         return $connectorService->validateLicense($customData);
 
