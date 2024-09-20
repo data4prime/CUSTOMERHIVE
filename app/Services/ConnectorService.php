@@ -62,6 +62,10 @@ class ConnectorService
                     $ret = $ret && $license['tenants_number'] >= $data['tenants_number'];
                 }
 
+                if (isset($data['clients_number'])) {
+                    $ret = $ret && $license['clients_number'] >= $data['clients_number'];
+                }
+
                 if (isset($data['path'])) {
                     $ret = $ret && $license['path'] == $data['path'];
                 } else {
