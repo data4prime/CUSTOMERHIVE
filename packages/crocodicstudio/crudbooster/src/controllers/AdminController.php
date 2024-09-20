@@ -115,7 +115,7 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
       'clients_number' => Request::input('clients_number'),
       'tenants_number' => Request::input('tenants_number'),
-      'mac_address' => Request::input('mac_address'),
+      //'mac_address' => Request::input('mac_address'),
       'path' => env('APP_PATH'),
       'license_key' => $license_key,
       'is_trial' => 1,

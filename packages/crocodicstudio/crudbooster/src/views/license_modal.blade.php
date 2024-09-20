@@ -72,10 +72,10 @@
             <th>Tenants Number</th>
             <td>{{ $license['tenants_number'] }}</td>
           </tr>
-          <tr>
+          <!--<tr>
             <th>Mac Address</th>
             <td>{{ $license['mac_address'] }}</td>
-          </tr>
+          </tr>-->
           <tr>
             <th>Path</th>
             <td>{{ $license['path'] }}</td>
