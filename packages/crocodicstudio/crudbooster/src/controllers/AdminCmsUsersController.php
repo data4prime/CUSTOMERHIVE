@@ -17,6 +17,7 @@ use \crocodicstudio\crudbooster\helpers\UserHelper;
 use \crocodicstudio\crudbooster\helpers\MyHelper;
 use \crocodicstudio\crudbooster\helpers\ModuleHelper;
 use crocodicstudio\crudbooster\helpers\QlikHelper;
+use crocodicstudio\crudbooster\helpers\LicenseHelper;
 
 class AdminCmsUsersController extends CBController
 {
