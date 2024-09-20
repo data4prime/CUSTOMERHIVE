@@ -58,7 +58,7 @@
           </tr>
           <tr>
             <th>Is Trial</th>
-            <td>{{ $license['is_trial'] }}</td>
+            <td>{{ ($license['is_trial'] == 1) ? 'YES' : NO }}</td>
           </tr>
 <!--
           <tr>
