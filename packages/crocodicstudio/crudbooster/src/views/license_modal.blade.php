@@ -17,6 +17,7 @@
             'mac_address' => 'N/A',
             'path' => 'N/A',
             'expires_in' => 'N/A',
+            'is_trial' => 'N/A',
         ];
     }
 
@@ -54,10 +55,11 @@
             <th>Expiration Date</th>
             <td>{{ date('d-m-Y h:i:s', strtotime($license['expiration_date'])) }}</td>
           </tr>
-          <!--<tr>
+          <tr>
             <th>Is Trial</th>
             <td>{{ $license['is_trial'] }}</td>
           </tr>
+<!--
           <tr>
             <th>Is Lifetime</th>
             <td>{{ $license['is_lifetime'] }}</td>
