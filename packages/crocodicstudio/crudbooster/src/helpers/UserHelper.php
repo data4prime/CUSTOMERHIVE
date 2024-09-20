@@ -350,4 +350,10 @@ class UserHelper
 
     return $result;
   }
+
+  public static function countUsers()
+  {
+    $users = DB::table('cms_users')->where('deleted_at', null)->count();
+    return $users;
+  }
 }

@@ -75,4 +75,22 @@ class LicenseHelper  {
     }
 
 
+    public static function canAddUser() {
+        $licenseKey = self::getLicense();
+
+        $users = UserHelper::countUsers();
+  
+
+        
+
+        $connectorService = new ConnectorService($licenseKey->license_key);
+
+        $customData = ['clients_number' => $tenants + 1, 'license_key' => $licenseKey->license_key];
+
+        return $connectorService->validateLicense($customData);
+
+        
+    }
+
+
 }
