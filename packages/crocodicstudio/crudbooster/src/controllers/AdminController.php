@@ -150,8 +150,10 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
       DB::table('license')->insert(['license_key' => $response->result->license_key]);
 
+      return redirect(CRUDBooster::adminPath())->with('message', 'License activated successfully');
 
-      return redirect()->route('getLogin')->with('message', 'License activated successfully');
+
+      //return redirect()->route('getLogin')->with('message', 'License activated successfully');
     } else {
       return redirect()->route('getLicenseScreen')->with('message', $response->result);
     }
@@ -205,11 +207,11 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
 
 
-      $isLicenseValid = LicenseHelper::canLicenseLogin();
+      /*$isLicenseValid = LicenseHelper::canLicenseLogin();
 
       if (!$isLicenseValid) {
         return redirect()->route('getLicenseScreen')->with('message', 'License is missing or not valid');
-      }
+      }*/
 
 
 
@@ -271,6 +273,12 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
       $cb_hook_session = new \App\Http\Controllers\CBHook;
       $cb_hook_session->afterLogin();
+
+      $isLicenseValid = LicenseHelper::canLicenseLogin();
+
+      if (!$isLicenseValid) {
+        return redirect()->route('getLicenseScreen')->with('message', 'License is missing or not valid');
+      }
 
       //dd(Session::all());
 
