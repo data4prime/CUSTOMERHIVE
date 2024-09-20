@@ -311,18 +311,14 @@ class AdminCmsUsersController extends CBController
 	public function hook_before_add(&$postdata)
 	{
 
-		if (LicenseHelper::canAddUser()) {
+		if (!LicenseHelper::canAddUser()) {
 
-			//Your code here
-			$domain_name = TenantHelper::domain_name_encode($postdata['name']);
-			$postdata['domain_name'] = $domain_name;
-		} else {
-			$message = "The number of tenants has exceeded the limit allowed by the current license.";
+			$message = "The number of users has exceeded the limit allowed by the current license.";
 			//$message .= '<br><br>' . "Please contact the administrator to increase the number of tenants allowed.";
 			$message_type = 'warning';
 			CRUDBooster::redirect( g('return_url') ?: CRUDBooster::referer() , $message, $message_type);
 			//dd("License not valid");
-		}
+		} 
 
 
 		unset($postdata['password_confirmation']);
