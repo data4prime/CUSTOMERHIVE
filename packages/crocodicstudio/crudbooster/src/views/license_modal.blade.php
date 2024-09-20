@@ -14,7 +14,6 @@
             'is_lifetime' => 'N/A',
             'clients_number' => 'N/A',
             'tenants_number' => 'N/A',
-            'mac_address' => 'N/A',
             'path' => 'N/A',
             'expires_in' => 'N/A',
             'is_trial' => 'N/A',
@@ -72,10 +71,7 @@
             <th>Tenants Number</th>
             <td>{{ $license['tenants_number'] }}</td>
           </tr>
-          <!--<tr>
-            <th>Mac Address</th>
-            <td>{{ $license['mac_address'] }}</td>
-          </tr>-->
+
           <tr>
             <th>Path</th>
             <td>{{ $license['path'] }}</td>
