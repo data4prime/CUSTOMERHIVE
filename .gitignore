@@ -10,6 +10,5 @@ Homestead.json
 Homestead.yaml
 .env
 .ftpconfig
-/version
 /public/cookie-name
 
