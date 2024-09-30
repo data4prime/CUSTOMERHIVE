@@ -60,6 +60,10 @@
             <th>Is Trial</th>
             <td>{{ ($license['is_trial'] == 1) ? 'YES' : 'NO' }}</td>
           </tr>
+          <tr></tr>
+            <th>Is Lifetime</th>
+            <td>{{ ($license['is_lifetime'] == 1) ? 'YES' : 'NO' }}</td>
+          </tr>
 <!--
           <tr>
             <th>Is Lifetime</th>
