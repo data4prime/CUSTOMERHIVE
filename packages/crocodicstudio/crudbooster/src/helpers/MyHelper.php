@@ -17,9 +17,9 @@ class MyHelper  {
       //no dirty part
       return $verbose_version;
     }
-    //list($version, $garbage) = explode('-',$verbose_version);
+    list($version, $garbage) = explode('-',$verbose_version);
     
-    return "";
+    return $version;
   }
 
   public static function is_int($var)
