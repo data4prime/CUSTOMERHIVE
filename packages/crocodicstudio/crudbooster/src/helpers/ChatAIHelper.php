@@ -208,5 +208,42 @@ class ChatAIHelper
 
   }
 
+  public static function getToken($conf_id) {
+
+    $conf = ChatAIConf::find($conf_id);
+
+    if (!$conf) {
+      return false;
+    }
+
+
+    $url = $conf->url;
+    $url_parts = parse_url($url);
+    $url_base = $url_parts['scheme'] . '://' . $url_parts['host'];
+
+
+
+    // Dati del payload per il token
+    $payload = [
+        'iss' => $url_base,  // Issuer
+        'aud' => $url_base,  // Audience
+        'iat' => time(),                 // Tempo di emissione (Issued At)
+        'exp' => time() + 3600,          // Tempo di scadenza (1 ora da ora)
+        //'user_id' => 123
+    ];
+
+    // Passphrase segreta per firmare il token
+    $secretKey = 'la-tua-passphrase-segreta';
+
+    // Generazione del token
+    $jwt = JWT::encode($payload, $secretKey, 'HS256');
+
+    // Output del token JWT
+    echo "Il tuo token JWT: " . $jwt;
+
+
+
+  }
+
 
 }
