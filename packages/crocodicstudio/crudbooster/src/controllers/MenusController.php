@@ -85,6 +85,7 @@ class MenusController extends CBController
   					$('#form-group-statistic_slug,#form-group-path').hide();
   					$('#form-group-qlik_slug,#form-group-path').hide();
   					$('#form-group-frame_width,#form-group-frame_height').hide();
+            $('#form-group-statistic_slug,#form-group-chat_ai').hide();
   					$('#module_slug').prop('required',true);
   					$('#form-group-module_slug label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
   				}
@@ -96,6 +97,7 @@ class MenusController extends CBController
   					$('#form-group-module_slug,#form-group-path').hide();
   					$('#form-group-qlik_slug,#form-group-path').hide();
   					$('#form-group-frame_width,#form-group-frame_height').hide();
+            $('#form-group-statistic_slug,#form-group-chat_ai').hide();
   					$('#statistic_slug').prop('required',true);
   					$('#form-group-statistic_slug label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
   				}
@@ -107,6 +109,7 @@ class MenusController extends CBController
   					$('#statistic_slug').prop('required',false);
   					$('#form-group-module_slug,#form-group-path').hide();
   					$('#form-group-statistic_slug,#form-group-path').hide();
+            $('#form-group-statistic_slug,#form-group-chat_ai').hide();
   					$('#qlik_slug').prop('required',true);
   					$('#form-group-qlik_slug label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
   				}else  if(type_menu == 'Agent AI')
@@ -190,6 +193,7 @@ class MenusController extends CBController
   						$('#form-group-path').hide();
   						$('#form-group-module_slug').hide();
   						$('#form-group-qlik_slug').hide();
+              $('#form-group-statistic_slug,#form-group-chat_ai').hide();
     					$('#form-group-frame_width,#form-group-frame_height').hide();
   						$('#module_slug,#path').prop('required',false);
   						$('#qlik_slug,#path').prop('required',false);
@@ -204,6 +208,7 @@ class MenusController extends CBController
   						$('#form-group-path').hide();
   						$('#form-group-module_slug').hide();
   						$('#form-group-statistic_slug').hide();
+              $('#form-group-statistic_slug,#form-group-chat_ai').hide();
   						$('#module_slug,#path').prop('required',false);
   						$('#statistic_slug,#path').prop('required',false);
 
@@ -225,6 +230,7 @@ class MenusController extends CBController
   						$('#form-group-path').show();
   						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
     					$('#form-group-frame_width,#form-group-frame_height').hide();
+              $('#form-group-statistic_slug,#form-group-chat_ai').hide();
   					}
             else if (n == 'Route')
             {
@@ -237,6 +243,7 @@ class MenusController extends CBController
   						$('#form-group-path').show();
   						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
     					$('#form-group-frame_width,#form-group-frame_height').hide();
+              $('#form-group-statistic_slug,#form-group-chat_ai').hide();
   					}
             else if (n == 'Agent AI')
             {
@@ -305,6 +312,7 @@ class MenusController extends CBController
   						$('#form-group-path').show();
   						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
     					$('#form-group-frame_width,#form-group-frame_height').hide();
+              $('#form-group-statistic_slug,#form-group-chat_ai').hide();
   					}
   				})
   			})
