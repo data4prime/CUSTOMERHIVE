@@ -809,7 +809,7 @@ class AdminChatAIController extends CBController
 
 		$response = curl_exec($ch);
 
-		dd($response);
+		//dd($response);
 
 		if ($response === false) {
 			//echo json_encode(['message' => 'Errore nella richiesta. Verifica la configurazione attiva!']);
