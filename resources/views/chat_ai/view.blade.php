@@ -133,7 +133,7 @@ function sendMessage{{$row->id}}(event) {
         }
 
         if (!data.text && !data.message) {
-            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body">'+data+'</div></div>';
+            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body">Errore.<br>Assicuratiche che:<br><ul><li>Il workflow N8N è attivo</li><li>L\'url è corretto</li><li>La passphrase è corretta</li></ul></div></div>';
             document.querySelector('.chat-body-{{$row->id}}').insertAdjacentHTML('beforeend', html);
         }
 
