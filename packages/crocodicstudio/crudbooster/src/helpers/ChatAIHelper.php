@@ -233,7 +233,7 @@ class ChatAIHelper
     ];
 
     // Passphrase segreta per firmare il token
-    $secretKey = 'la-tua-passphrase-segreta';
+    $secretKey = $conf->token;
 
     // Generazione del token
     $jwt = JWT::encode($payload, $secretKey, 'HS256');
