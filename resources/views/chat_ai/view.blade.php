@@ -132,6 +132,11 @@ function sendMessage{{$row->id}}(event) {
             document.querySelector('.chat-body-{{$row->id}}').insertAdjacentHTML('beforeend', html);
         }
 
+        if (!data.text && !data.message) {
+            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body">'+data+'</div></div>';
+            document.querySelector('.chat-body-{{$row->id}}').insertAdjacentHTML('beforeend', html);
+        }
+
         var objDiv = document.querySelector('.chat-body-{{$row->id}}');
         objDiv.scrollTop = objDiv.scrollHeight;
     })
