@@ -829,7 +829,7 @@ class AdminChatAIController extends CBController
 			} else if (isset($response_message["message"])) {
 				$response_message = $response_message["message"];
 			} else {
-				$response_message = json_encode($response_message);
+				$response = json_encode(["message" => $response_message]);
 			}
 		}
 
