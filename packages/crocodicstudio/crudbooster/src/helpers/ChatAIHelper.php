@@ -238,8 +238,7 @@ class ChatAIHelper
     // Generazione del token
     $jwt = JWT::encode($payload, $secretKey, 'HS256');
 
-    // Output del token JWT
-    echo "Il tuo token JWT: " . $jwt;
+    return $jwt;
 
 
 
