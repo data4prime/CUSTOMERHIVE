@@ -783,7 +783,8 @@ class AdminChatAIController extends CBController
 
 
 		$url = $chatai_conf->url;
-		$token = $chatai_conf->token;
+		//$token = $chatai_conf->token;
+		$token = ChatAIHelper::getToken($chatai_conf->id);
 
 		// Imposta i dati da inviare nel corpo della richiesta
 		$data = [
