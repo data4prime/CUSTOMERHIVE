@@ -826,8 +826,10 @@ class AdminChatAIController extends CBController
 			$response_message = json_decode($response, true);
 			if (isset($response_message["text"])) {
 				$response_message = $response_message["text"];
-			} else {
+			} else if (isset($response_message["message"])) {
 				$response_message = $response_message["message"];
+			} else {
+				$response_message = json_encode($response_message);
 			}
 		}
 
