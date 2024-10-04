@@ -57,7 +57,7 @@ class AdminModuleHelperController extends CBController
 		$this->form[] = 
 			[
 				'label' => 'Module', 
-				'name' => 'title', 
+				'name' => 'module', 
 				'type' => 'select2', 
 				'validation' => 'required', 
 				'width' => 'col-sm-5', 

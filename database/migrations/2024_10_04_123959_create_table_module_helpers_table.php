@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('table_module_helpers', function (Blueprint $table) {
+        Schema::create('module_helpers', function (Blueprint $table) {
             $table->id();
 
             $table->string('name');
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_module_helpers');
+        Schema::dropIfExists('module_helpers');
     }
 };
