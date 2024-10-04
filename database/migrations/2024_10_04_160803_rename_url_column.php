@@ -14,7 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('qlik_items', function (Blueprint $table) {
-            //
+            //rename column url to url_help
+            $table->renameColumn('description', 'url_help');
         });
     }
 
