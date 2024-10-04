@@ -14,7 +14,7 @@ use Validator;
 class ModuleHelperHelper
 {
 
-  public static function gerUrl($mod) {
+  public static function getUrl($mod) {
 
     if (isset($mod->id)) {
         $helper = DB::table('module_helpers')->where('module', $mod->id)->first();
