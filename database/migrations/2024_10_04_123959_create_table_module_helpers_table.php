@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('table_module_helpers', function (Blueprint $table) {
             $table->id();
+
+            $table->string('name');
+            $table->string('url');
+
+
             $table->timestamps();
         });
     }
