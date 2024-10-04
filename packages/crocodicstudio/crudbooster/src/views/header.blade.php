@@ -45,7 +45,7 @@ $url = ModuleHelperHelper::getUrl($mod);
                         </a>
 
                     </li>
-                @endphp
+                @endif
 
 
 
