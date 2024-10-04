@@ -38,7 +38,7 @@ $url = ModuleHelperHelper::getUrl($mod);
 
                 @if (!empty($url))
                     <li class="assistance-menu">
-                        <a href="" target="_blank" title='Helper' >
+                        <a href="{{$url}}" target="_blank" title='Helper' >
                             <i id='icon_assistance' class="fa fa-question-circle">
                             </i>
                             <span id='assistance_count' class="label label-danger" style="display:none">0</span>
