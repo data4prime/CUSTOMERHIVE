@@ -1,10 +1,13 @@
 @php 
 
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
+use crocodicstudio\crudbooster\helpers\ModuleHelperHelper;
 
 $mod = CRUDBooster::getCurrentModule();
 
-dd($mod);
+$url = ModuleHelperHelper::getUrl($mod);
+
+
 
 @endphp 
 
@@ -33,14 +36,18 @@ dd($mod);
 
                 </li>
 
-                <li class="assistance-menu"></li>
-                    <a href="" target="_blank" title='Helper' >
-                        <i id='icon_assistance' class="fa fa-question-circle">
-                        </i>
-                        <span id='assistance_count' class="label label-danger" style="display:none">0</span>
-                    </a>
+                @if (!empty($url))
+                    <li class="assistance-menu">
+                        <a href="" target="_blank" title='Helper' >
+                            <i id='icon_assistance' class="fa fa-question-circle">
+                            </i>
+                            <span id='assistance_count' class="label label-danger" style="display:none">0</span>
+                        </a>
 
-                </li>
+                    </li>
+                @endphp
+
+
 
                 <li class="dropdown notifications-menu">
 
