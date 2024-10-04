@@ -110,6 +110,24 @@ class DatabaseSeeder extends Seeder
             DB::table('cms_moduls')->insert($mod);
         }
 
+        $mod = DB::table('cms_moduls')->where('name', 'Chat AI')->first();
+
+        if (!$mod) {
+
+
+        $mod =  [
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'name' => 'Module Helpers',
+                        'icon' => '',
+                        'path' => 'module_helpers',
+                        'table_name' => 'module_helpers',
+                        'controller' => 'AdminModuleHelperController',
+                        'is_protected' => 0,
+                        'is_active' => 1,
+                ];
+            DB::table('cms_moduls')->insert($mod);
+        }
+
 
 
     }
