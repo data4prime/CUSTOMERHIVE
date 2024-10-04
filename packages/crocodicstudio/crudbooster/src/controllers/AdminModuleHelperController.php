@@ -36,17 +36,17 @@ class AdminModuleHelperController extends CBController
 		$this->button_edit = true;
 		$this->button_delete = true;
 		$this->button_detail = true;
-		$this->button_show = true;
+		$this->button_show = false;
 		$this->button_filter = true;
-		$this->button_import = false;
-		$this->button_export = false;
+		$this->button_import = true;
+		$this->button_export = true;
 		$this->table = "module_helpers";
 		# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = [];
 
-		$this->col[] = ["label" => "Module", "name" => "module"];
+		$this->col[] = ["label" => "Module", "name" => "module",  "join" => "cms_privileges,name"];
 		$this->col[] = ["label" => "Url", "name" => "url"];
 
 

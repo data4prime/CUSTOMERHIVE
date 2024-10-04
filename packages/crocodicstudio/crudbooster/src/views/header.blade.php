@@ -1,3 +1,13 @@
+@php 
+
+use crocodicstudio\crudbooster\helpers\CRUDBooster;
+
+$mod = CRUDBooster::getCurrentModule();
+
+dd($mod);
+
+@endphp 
+
 <!-- Main Header -->
 <header class="main-header">
 
@@ -17,6 +27,15 @@
                 <li class="assistance-menu">
                     <a href="#" class="toggle-sidebar-btn" id="toggle-chat" title='AI Assistance' aria-expanded="false">
                         <i id='icon_assistance' class="fa fa-comments-o">
+                        </i>
+                        <span id='assistance_count' class="label label-danger" style="display:none">0</span>
+                    </a>
+
+                </li>
+
+                <li class="assistance-menu"></li>
+                    <a href="" target="_blank" title='Helper' >
+                        <i id='icon_assistance' class="fa fa-question-circle">
                         </i>
                         <span id='assistance_count' class="label label-danger" style="display:none">0</span>
                     </a>
