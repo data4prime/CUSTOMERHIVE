@@ -153,9 +153,9 @@
         </li>
 
         <li data-collapse="3" class='treeview'>
-          <a href='{{url("admin/chat_ai")}}'>
-            <i class="fa fa-comments-o"></i>
-            <span>Chat AI</span> 
+          <a href='{{url("admin/module_helpers")}}'>
+            <!--<i class="fa fa-comments-o"></i>-->
+            <span>Module Helpers</span> 
           </a>
 
         </li>
