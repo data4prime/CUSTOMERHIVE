@@ -56,7 +56,7 @@ class AdminQlikItemsController extends CBController
 		$this->form[] = ['label' => 'Title', 'name' => 'title', 'type' => 'text', 'validation' => 'required|string|min:1|max:70', 'width' => 'col-sm-10', 'placeholder' => 'Item title'];
 		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'placeholder' => 'Path to embed item'];
 		$this->form[] = ['label' => 'Subtitle', 'name' => 'subtitle', 'type' => 'text', 'validation' => 'string|min:1|max:70', 'width' => 'col-sm-10', 'placeholder' => 'Item subtitle'];
-		$this->form[] = ['label' => 'URL Help', 'name' => 'url_help', 'type' => 'textarea', 'validation' => 'string|min:1|max:200', 'width' => 'col-sm-10', 'placeholder' => 'Item helper'];
+		$this->form[] = ['label' => 'URL Help', 'name' => 'url_help', 'type' => 'text', 'validation' => 'string|min:1|max:200', 'width' => 'col-sm-10', 'placeholder' => 'Item helper'];
 		$this->form[] = ['label' => 'Enable public access', 'name' => 'public_access', 'type' => 'checkbox', 'width' => 'col-sm-1'];
 		$this->form[] = ['label' => 'Qlik Configuration', 'name' => 'qlik_conf', "type" => "select", "datatable" => "qlik_confs,confname", 'width' => 'col-sm-10'];
 		# END FORM DO NOT REMOVE THIS LINE
@@ -384,8 +384,8 @@ class AdminQlikItemsController extends CBController
 	public function hook_before_edit(&$postdata, $id)
 	{
 		//allow deleting help text
-		if (empty($postdata['description'])) {
-			$postdata['description'] = '';
+		if (empty($postdata['url_help'])) {
+			$postdata['url_help'] = '';
 		}
 
 		QlikHelper::toggle_public_access($postdata['public_access'], $id);
@@ -470,7 +470,7 @@ class AdminQlikItemsController extends CBController
 
 		$data['page_icon'] = '';
 		$data['page_title'] = $data['row']->title;
-		$data['help'] = $data['row']->description;
+		$data['help'] = $data['row']->url_help;
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['debug'] = $conf->debug;
 
@@ -822,12 +822,12 @@ class AdminQlikItemsController extends CBController
 		$row->url = $url;
 		$row->title = 'Qlik Sense';
 		$row->subtitle = 'Hub';
-		$row->description = '';
+		//$row->description = '';
 
 		$data['row'] = $row;
 		$data['page_icon'] = 'qlik_icon';
 		$data['page_title'] = $data['row']->title;
-		$data['help'] = $data['row']->description;
+		$data['help'] = $data['row']->url_help;
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] =  htmlspecialchars_decode($data['row']->url);
 		$data['debug'] = $conf->debug;
@@ -908,12 +908,12 @@ class AdminQlikItemsController extends CBController
 		$row->url = $url;
 		$row->title = 'Qlik Sense';
 		$row->subtitle = 'qmc';
-		$row->description = '';
+		//$row->description = '';
 
 		$data['row'] = $row;
 		$data['page_icon'] = 'qlik_icon';
 		$data['page_title'] = $data['row']->title;
-		$data['help'] = $data['row']->description;
+		$data['help'] = $data['row']->url_help;
 		$data['subtitle'] = $data['row']->subtitle;
 		$data['item_url'] =  htmlspecialchars_decode($data['row']->url);
 		$data['debug'] = $conf->debug;
