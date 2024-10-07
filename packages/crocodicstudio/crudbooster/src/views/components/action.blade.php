@@ -31,7 +31,7 @@
     }
 
     $label = $a['label'];
-    $title = isset($a['title']) ? $a['label'] : '' ;
+    $title = isset($a['title']) ? $a['title'] : $a['label'] ;
     $icon = $a['icon'];
     $color = isset($a['color']) ? 'primary' : '';
     $confirmation = isset($a['confirmation']) ? $a['confirmation'] : '';
