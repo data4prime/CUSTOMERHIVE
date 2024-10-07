@@ -37,7 +37,7 @@ class CBSeeder extends Seeder
         $this->call('CmsEmailTemplates');
         $this->call('Cms_menusPrivileges');
 
-        $this->call('Cms_menusPrivileges');
+        $this->call('ModuleHelpersSeeder');
 
 
 
@@ -776,7 +776,7 @@ class Cms_usersGroups extends Seeder
     }
 }
 
-class ModuleHelpers extends Seeder
+class ModuleHelpersSeeder extends Seeder
 {
     public function run()
     {
