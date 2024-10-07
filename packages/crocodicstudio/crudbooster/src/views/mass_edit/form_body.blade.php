@@ -16,7 +16,7 @@
         }
     }
 
-$fields_to_eliminate = ['multitext', 'password'];
+$fields_to_eliminate = ['multitext', 'password', 'child'];
 
     foreach($forms as $key => $form) {
         if (isset($form['type'])) {
