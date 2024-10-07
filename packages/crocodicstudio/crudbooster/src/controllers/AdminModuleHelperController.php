@@ -46,7 +46,7 @@ class AdminModuleHelperController extends CBController
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = [];
 
-		$this->col[] = ["label" => "Module", "name" => "module",  "join" => "cms_privileges,name"];
+		$this->col[] = ["label" => "Module", "name" => "module",  "join" => "cms_moduls,name"];
 		$this->col[] = ["label" => "Url", "name" => "url"];
 
 

@@ -9,8 +9,9 @@ use crocodicstudio\crudbooster\helpers\ModuleHelperHelper;
 $content_view_mode = ['AdminQlikItemsController', 'AdminChatAIController'];
 
 $mod = CRUDBooster::getCurrentModule();
+$method = CRUDBooster::getCurrentMethod();
 
-if (!in_array($mod->controller, $content_view_mode)) {
+if (!in_array($mod->controller, $content_view_mode) && $method != 'content') {
     $url = ModuleHelperHelper::getUrl($mod);
 
 } else {
