@@ -29,10 +29,10 @@ class ModuleHelperHelper
   }
 
 
-  public static function getUrlCV($mod) {
+  public static function getUrlCV($mod, $id) {
 
     if (isset($mod->id)) {
-        $helper = DB::table($mod->table_name)->first();
+        $helper = DB::table($mod->table_name)->where('id', $id)->first();
     }
 
     if (isset($helper->url_help)) {
