@@ -28,4 +28,19 @@ class ModuleHelperHelper
 
   }
 
+
+  public static function getUrlCV($mod) {
+
+    if (isset($mod->id)) {
+        $helper = DB::table($mod->table_name)->first();
+    }
+
+    if (isset($helper->url_help)) {
+        return $helper->url_help;
+    }
+
+    return "";
+
+  }
+
 }

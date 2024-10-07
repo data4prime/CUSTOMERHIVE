@@ -3,11 +3,20 @@
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 use crocodicstudio\crudbooster\helpers\ModuleHelperHelper;
 
+//AdminQlikItemsController
+//AdminChatAIController
+
+$content_view_mode = ['AdminQlikItemsController', 'AdminChatAIController'];
+
 $mod = CRUDBooster::getCurrentModule();
 
-dd($mod);
+if (!in_array($mod->controller, $content_view_mode)) {
+    $url = ModuleHelperHelper::getUrl($mod);
 
-$url = ModuleHelperHelper::getUrl($mod);
+} else {
+
+    $url = ModuleHelperHelper::getUrlCV($mod);
+}
 
 
 
