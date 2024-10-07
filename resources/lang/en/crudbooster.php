@@ -174,6 +174,7 @@ return [
     'Statistic_Builder' => 'Statistic Builder',
     'Qlik_Items' => 'Qlik Items',
     'Chat_Ai_Conf' => 'Chat AI Configuration',
+    'Log_User_Access' => 'Log User Access',
     
     'Add_New_Qlikitem' => 'Add New Qlik Item',
     'List_Qlikitem' => 'List Qlik Items',

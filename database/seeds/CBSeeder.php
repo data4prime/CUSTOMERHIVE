@@ -37,6 +37,8 @@ class CBSeeder extends Seeder
         $this->call('CmsEmailTemplates');
         $this->call('Cms_menusPrivileges');
 
+        $this->call('Cms_menusPrivileges');
+
 
 
         //$this->call('QlikSett');
@@ -770,6 +772,29 @@ class Cms_usersGroups extends Seeder
 
 
             }
+        }
+    }
+}
+
+class ModuleHelpers extends Seeder
+{
+    public function run()
+    {
+
+        $url = "https://help.thecustomerhive.com/books/manuale-amministratore/chapter/";
+
+        $modules = DB::table('cms_moduls')->get();
+        foreach ($module as $mod) {
+
+
+            if ($check == 0) {
+                DB::table('module_helpers')->insert([
+                    'module' => $mod->id,
+                    'url' => $url.strtolower(str_replace(" ", "- ",$mod->name)),
+                ]);
+            } 
+
+
         }
     }
 }
