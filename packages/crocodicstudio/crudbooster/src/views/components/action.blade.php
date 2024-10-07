@@ -31,7 +31,7 @@
     }
 
     $label = $a['label'];
-    $title = isset($a['title']) ?$a['label']: '' ;
+    $title = isset($a['title']) ? $a['label'] : '' ;
     $icon = $a['icon'];
     $color = isset($a['color']) ? 'primary' : '';
     $confirmation = isset($a['confirmation']) ? $a['confirmation'] : '';
@@ -51,10 +51,14 @@
       }
 
       @eval("if($query) {
-        echo \"<a class='btn btn-xs btn-\$color' title='\$title' onclick='\$confirm_box' href='\$url' target='\$target'><i class='\$icon'></i> $label</a>&nbsp;\";
+        echo \"<a class='btn btn-xs btn-\$color' title='\$title' onclick='\$confirm_box' href='\$url' target='\$target'><i class='\$icon'></i>$label</a>&nbsp;\";
       }");
     } else {
-      echo "<a class='btn btn-xs btn-$color' title='$title' onclick='$confirm_box' href='$url' target='$target'><i class='$icon'></i> $label</a>&nbsp;";
+      /*echo "<a class='btn btn-xs btn-$color' title='$title' onclick='$confirm_box' href='$url' target='$target'><i class='$icon'></i>$label</a>&nbsp;";*/
+      echo "<a class='btn btn-xs btn-" . e($color) . "' title='" . e($title) . "' onclick='" . e($confirm_box) . "' href='" . e($url) . "' target='" . e($target) . "'>
+              <i class='" . e($icon) . "'></i>" . e($label) . "
+            </a>&nbsp;";
+
     }
     ?>
 @endforeach

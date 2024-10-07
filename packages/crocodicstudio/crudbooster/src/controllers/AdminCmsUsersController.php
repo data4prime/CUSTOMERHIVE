@@ -217,7 +217,7 @@ class AdminCmsUsersController extends CBController
 
 		$this->addaction = array();
 		//TODO tenantadmin can't update users with superadmin or tenantadmin privilege
-		$this->addaction[] = ['label' => 'View groups', 'url' => CRUDBooster::mainpath('groups/[id]'), 'icon' => 'fa fa-users', 'color' => 'info', 'title' => 'View groups'];
+		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('groups/[id]'), 'icon' => 'fa fa-users', 'color' => 'info', 'title' => 'View groups'];
 	}
 
 	public function create_qlik_user($id)
