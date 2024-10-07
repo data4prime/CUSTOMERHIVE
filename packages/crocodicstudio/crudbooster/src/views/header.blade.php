@@ -19,20 +19,10 @@ if ($method != 'content_view') {
 
 } else {
 
-    $url = ModuleHelperHelper::getUrlCV($mod);
-}
-
-/*
-
-if (!in_array($mod->controller, $content_view_mode) && $method != 'content_view') {
-    $url = ModuleHelperHelper::getUrl($mod);
-
-} else {
-
     $url = ModuleHelperHelper::getUrlCV($mod, $id);
 }
 
-*/
+
 
 
 
