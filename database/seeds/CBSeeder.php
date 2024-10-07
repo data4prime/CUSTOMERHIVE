@@ -788,6 +788,8 @@ class ModuleHelpersSeeder extends Seeder
         $modules = DB::table('cms_moduls')->get();
         foreach ($modules as $mod) {
 
+            $check = DB::table('module_helpers')->where('module', $mod->id)->count();
+
 
             if ($check == 0) {
                 DB::table('module_helpers')->insert([
