@@ -786,7 +786,7 @@ class ModuleHelpersSeeder extends Seeder
         $url = "https://help.thecustomerhive.com/books/manuale-amministratore/chapter/";
 
         $modules = DB::table('cms_moduls')->get();
-        foreach ($module as $mod) {
+        foreach ($modules as $mod) {
 
 
             if ($check == 0) {
