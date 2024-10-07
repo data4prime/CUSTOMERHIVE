@@ -7,6 +7,10 @@
             $forms[$key]['validation'] = str_replace('required', '', $forms[$key]['validation']);
         }
 
+        if (isset($forms[$key]['required'])) {
+            $forms[$key]['required'] = false;
+        }
+
         if (isset($forms[$key]['width'])) {
             $forms[$key]['width'] = 'col-sm-8';
         }
