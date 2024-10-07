@@ -822,6 +822,7 @@ class AdminQlikItemsController extends CBController
 		$row->url = $url;
 		$row->title = 'Qlik Sense';
 		$row->subtitle = 'Hub';
+		$row->url_help = ModuleHelperHelper::getHelpUrl('AdminQlikItemsController');
 		//$row->description = '';
 
 		$data['row'] = $row;
@@ -908,6 +909,7 @@ class AdminQlikItemsController extends CBController
 		$row->url = $url;
 		$row->title = 'Qlik Sense';
 		$row->subtitle = 'qmc';
+		$row->url_help = ModuleHelperHelper::getHelpUrl('AdminQlikItemsController');
 		//$row->description = '';
 
 		$data['row'] = $row;
