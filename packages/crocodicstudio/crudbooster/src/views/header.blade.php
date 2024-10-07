@@ -11,7 +11,7 @@ $content_view_mode = ['AdminQlikItemsController', 'AdminChatAIController'];
 $mod = CRUDBooster::getCurrentModule();
 $method = CRUDBooster::getCurrentMethod();
 
-
+dd($method);
 
 if ($method != 'content') {
     $url = ModuleHelperHelper::getUrl($mod);
