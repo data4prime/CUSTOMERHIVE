@@ -5,6 +5,8 @@ use crocodicstudio\crudbooster\helpers\ModuleHelperHelper;
 
 $mod = CRUDBooster::getCurrentModule();
 
+dd($mod);
+
 $url = ModuleHelperHelper::getUrl($mod);
 
 
