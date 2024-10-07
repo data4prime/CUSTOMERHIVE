@@ -134,7 +134,7 @@ $fields_to_eliminate = ['multitext', 'password'];
             $header_group_class = ($header_group_class) ?: "header-group-$index";
         }
 
-dd($forms);
+//dd($forms);
 @endphp
 
     @if($name == 'tenant')
