@@ -15,7 +15,7 @@ class CBSeeder extends Seeder
     {
         $this->command->info('Please wait updating the data...');
 
-/*
+
                 
         $this->call('GroupSeeder');
         $this->call('TenantSeeder');
@@ -37,7 +37,7 @@ class CBSeeder extends Seeder
         $this->call('Cms_settingsSeeder');
         $this->call('CmsEmailTemplates');
         $this->call('Cms_menusPrivileges');
-*/
+
 
         $this->call('ModuleHelpersSeeder');
 

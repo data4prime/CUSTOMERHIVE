@@ -2,7 +2,7 @@
     style="{{isset($form['style']) ? $form['style'] : ''}}">
     <label class='control-label col-sm-2'>{{$form['label']}}
         @if(isset($required))
-        <span class='text-danger' title='{!! trans(' crudbooster.this_field_is_required') !!}'>*</span>
+        <span class='text-danger' title='{!! trans('crudbooster.this_field_is_required') !!}'>*</span>
         @endif
     </label>
 
