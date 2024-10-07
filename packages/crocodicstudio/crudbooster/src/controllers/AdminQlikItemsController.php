@@ -16,6 +16,8 @@ use App\Menu;
 use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 use MyHelper;
 
+use crocodicstudio\crudbooster\helpers\ModuleHelperHelper;
+
 class AdminQlikItemsController extends CBController
 {
 
