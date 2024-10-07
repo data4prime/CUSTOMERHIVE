@@ -13,7 +13,7 @@ $method = CRUDBooster::getCurrentMethod();
 
 //dd($method);
 
-if ($method != 'content') {
+if ($method != 'content_view') {
     $url = ModuleHelperHelper::getUrl($mod);
 
 } else {
