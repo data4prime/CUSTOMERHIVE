@@ -4,7 +4,7 @@
 
     foreach($forms as $key => $form) {
         if (isset($forms[$key]['validation'])) {
-            $forms[$key]['validation'] = str_replace('required', '', $form['validation']);
+            $forms[$key]['validation'] = str_replace('required', '', $forms[$key]['validation']);
         }
 
         if (isset($forms[$key]['width'])) {
