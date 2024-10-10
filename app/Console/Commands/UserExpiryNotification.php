@@ -67,7 +67,16 @@ class UserExpiryNotification extends Command
 
                 $template = CRUDBooster::first('cms_email_templates', ['slug' => 'notifica_scadenza_utente_tenantadmin']);
 
-                $utenti_html = self::build_utenti_scadenza_tenantadmin($users_tenants[$tenant]);
+                $users_to_pass = $users_tenants[$tenant];
+
+                //eliminate from users_to_pass the users that is_cms_privileges == 1
+                foreach ($users_to_pass as $key => $user) {
+                    if ($user->id_cms_privileges == 1) {
+                        unset($users_to_pass[$key]);
+                    }
+                }
+
+                $utenti_html = self::build_utenti_scadenza_tenantadmin($users_to_pass);
 
                 //replace |CUSTOMFUNCTION|TenantHelper::build_utenti_scadenza_tenantadmin|CUSTOMFUNCTIONEND| 
                 $template->content = str_replace(
