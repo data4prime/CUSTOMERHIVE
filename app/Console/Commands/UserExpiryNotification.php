@@ -102,6 +102,51 @@ class UserExpiryNotification extends Command
             //CRUDBooster::sendEmail(['to' => $tenant->email, 'data' => $users, 'template' => 'notifica_scadenza_utente_tenantadmin']);
         }
 
+
+        $template = CRUDBooster::first('cms_email_templates', ['slug' => 'notifica_scadenza_utente_tenantadmin']);
+
+        $utenti_html = self::build_utenti_scadenza_tenantadmin($users);
+
+        $template->content = str_replace(
+                    '|CUSTOMFUNCTION|TenantHelper::build_utenti_scadenza_tenantadmin|CUSTOMFUNCTIONEND|',
+                    $utenti_html,
+                    $template->content
+        );
+
+        //save the template with DB::update function
+        DB::table('cms_email_templates')
+                ->where('id', $template->id)
+                ->update(['content' => $template->content]);
+
+        $superadmins = DB::table('cms_users')
+            ->where('id_cms_privileges', 1)
+            ->where('status', 'Active')
+            ->get();
+
+        foreach ($superadmins as $superadmin) {
+            CRUDBooster::sendEmail(['to' => $superadmin->email, 'data' => $superadmin, 'template' => 'notifica_scadenza_utente_tenantadmin']);
+        }
+
+        //restore template
+
+        $template = CRUDBooster::first('cms_email_templates', ['slug' => 'notifica_scadenza_utente_tenantadmin']);
+        //restore the template
+        $template->content = str_replace(
+            $utenti_html,
+            '|CUSTOMFUNCTION|TenantHelper::build_utenti_scadenza_tenantadmin|CUSTOMFUNCTIONEND|',
+            $template->content
+        );
+
+
+        DB::table('cms_email_templates')
+            ->where('id', $template->id)
+            ->update(['content' => $template->content]);
+
+
+
+
+
+
         return Command::SUCCESS;
     }
 
