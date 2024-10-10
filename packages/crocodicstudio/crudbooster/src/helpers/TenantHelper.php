@@ -4,6 +4,7 @@ namespace crocodicstudio\crudbooster\helpers;
 use \App\Tenant;
 use \App\Modules;
 use \App\ModuleTenants;
+use \App\Role;
 use DB;
 
 class TenantHelper  {
@@ -116,6 +117,6 @@ class TenantHelper  {
     return $ret;
   }
 
-  
+
 
 }
