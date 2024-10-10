@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::table('cms_menus', function (Blueprint $table) {
             //
             $table->boolean('is_custom')->default(0);
-            $table->text('private_key')->nullable();
+            $table->text('icon_upload')->nullable();
         });
     }
 
