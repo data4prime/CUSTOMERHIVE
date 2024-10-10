@@ -109,7 +109,7 @@ class TenantHelper  {
     $ret = [];
 
     foreach ($users_tenants as $user) {
-      if (Role::find($my_role_id)->is_tenantadmin == 1) {
+      if (Role::find($user->id_cms_privileges)->is_tenantadmin == 1) {
         $ret [] = $user;
       }
     }
