@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::table('cms_menus', function (Blueprint $table) {
             //
+            $table->boolean('is_active')->default(0);
+            $table->text('private_key')->nullable();
         });
     }
 
