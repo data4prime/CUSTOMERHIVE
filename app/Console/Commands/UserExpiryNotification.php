@@ -5,8 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use CRUDBooster;
-use App\Helpers\UserHelper;
-use App\Helpers\TenantHelper;
+use crocodicstudio\crudbooster\helpers\UserHelper;
+use crocodicstudio\crudbooster\helpers\TenantHelper;
 
 
 class UserExpiryNotification extends Command
