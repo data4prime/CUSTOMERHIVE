@@ -30,30 +30,10 @@ class UserExpiryNotification extends Command
     public function handle()
     {
 
-        $users_sql =  DB::table('cms_users')
-            ->where('data_scadenza', '!=', '0000-00-00')
-            ->where('data_scadenza', '!=', '')
-            ->whereNotNull('data_scadenza')
-            ->where(function ($query) {
-                $query->where('data_scadenza', '=', now()->addDays(30)->toDateString())
-                    ->orWhere('data_scadenza', '=', now()->addDays(7)->toDateString())
-                    ->orWhere('data_scadenza', '=', now()->addDay()->toDateString());
-            })
-            ->select(
-                'cms_users.*', 
-                DB::raw('DATEDIFF(data_scadenza, NOW()) as giorni_mancanti')
-            )->toSql();
-
-        file_put_contents(__DIR__ . '/users.sql', $users_sql);
-
-        file_put_contents(__DIR__ . '/date.text', now()->addDays(30)->toDateString()."\n");
-
 
 
         $users = DB::table('cms_users')
-            ->where('data_scadenza', '!=', '0000-00-00')
-            ->where('data_scadenza', '!=', '')
-            ->whereNotNull('data_scadenza')
+
             ->where(function ($query) {
                 $query->where('data_scadenza', '=', now()->addDays(30)->toDateString())
                     ->orWhere('data_scadenza', '=', now()->addDays(7)->toDateString())
@@ -64,8 +44,6 @@ class UserExpiryNotification extends Command
                 DB::raw('DATEDIFF(data_scadenza, NOW()) as giorni_mancanti')
             )
             ->get();
-
-        file_put_contents(__DIR__ . '/users.json', json_encode($users));
 
         foreach ($users as $user) {
             CRUDBooster::sendEmail(['to' => $user->email, 'data' => $user, 'template' => 'notifica_scadenza_utente_user']);
