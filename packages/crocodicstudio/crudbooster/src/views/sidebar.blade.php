@@ -129,8 +129,10 @@
         <li data-collapse="3"
           class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/menu_management*')) ? 'active' : '' }}"><a
             href='{{Route("MenusControllerGetIndex")}}'><i class='fa fa-bars'></i>
-            <span>{{ trans('crudbooster.Menu_Management') }}</span></a></li>
-                <li data-collapse="3" class='treeview'>
+            <span>{{ trans('crudbooster.Menu_Management') }}</span></a>
+        </li>
+
+        <li data-collapse="3" class='treeview'>
           <a href='#'><i class='fa fa-signal'></i> <span>{{ trans('crudbooster.Qlik_Items') }}</span> <i
               class="fa fa-angle-{{ trans(" crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
           <ul class='treeview-menu'>
@@ -144,11 +146,29 @@
         </li>
 
         <li data-collapse="3" class='treeview'>
-          <a href='{{url("admin/qlik_confs")}}'>
+          <a href='#'>
             <img class="menu qlik_logo" src=/images/qlik_logo.png />
+            <span>Qlik Settings</span> <i class="fa fa-angle-{{ trans("
+              crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
+          </a>
+
+          <ul class='treeview-menu'>
+            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items/add')) ? 'active' : '' }}">
+              <a href='{{url("admin/qlik_confs")}}'>
             <span>{{ trans('crudbooster.Qlik_Configuration') }}</span> <i class="fa fa-angle-{{ trans("
               crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
           </a>
+            </li>
+            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items')) ? 'active' : '' }}">
+
+              <a href='{{url("admin/qlik_apps")}}'>
+                <span>{{ trans('crudbooster.Qlik_Apps') }}</span> <i class="fa fa-angle-{{ trans("
+                  crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
+              </a>
+
+            </li>
+          </ul>
+
 
         </li>
 
@@ -225,14 +245,14 @@
 
 
 
-        <li data-collapse="3" class='treeview'>
+        <!--<li data-collapse="3" class='treeview'>
           <a href='{{url("admin/qlik_apps")}}'>
             <img class="menu qlik_logo" src=/images/qlik_logo.png />
             <span>{{ trans('crudbooster.Qlik_Apps') }}</span> <i class="fa fa-angle-{{ trans("
               crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
           </a>
 
-        </li>
+        </li>-->
         <li data-collapse="3" class='treeview'>
           <a href='#'><i class='fa fa-dashboard'></i> <span>{{ trans('crudbooster.Statistic_Builder') }}</span> <i
               class="fa fa-angle-{{ trans(" crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
