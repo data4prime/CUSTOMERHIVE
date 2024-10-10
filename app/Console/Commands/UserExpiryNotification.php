@@ -74,6 +74,9 @@ class UserExpiryNotification extends Command
                     if ($user->id_cms_privileges == 1) {
                         unset($users_to_pass[$key]);
                     }
+                    if ($user->id_cms_privileges == 2) {
+                        unset($users_to_pass[$key]);
+                    }
                 }
 
                 $utenti_html = self::build_utenti_scadenza_tenantadmin($users_to_pass);
