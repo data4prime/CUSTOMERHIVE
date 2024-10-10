@@ -36,7 +36,7 @@ class UserExpiryNotification extends Command
 
 
         $users = DB::table('cms_users')
-
+            ->where('status', 'Active')
             ->where(function ($query) {
                 $query->where('data_scadenza', '=', now()->addDays(30)->toDateString())
                     ->orWhere('data_scadenza', '=', now()->addDays(7)->toDateString())
