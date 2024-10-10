@@ -271,17 +271,17 @@ return [
     //https://dasy-qse-01.dasy.local:443/win/hub/
     //https://wbi-sdas1.amm.dom.uniroma1.it
     //
-    'qlik_sense_app_base_path' => env('QLIK_SENSE_BASE_PATH', 'https://dasy-qse-01.dasy.local'),
-    'qlik_sense_main_port' => env('QLIK_SENSE_MAIN_PORT', '443'),
-    'qlik_sense_virtual_proxy' => env('QLIK_SENSE_VIRTUAL_PROXY', '/chive'), //set without trailing slash
+    //'qlik_sense_app_base_path' => env('QLIK_SENSE_BASE_PATH', 'https://dasy-qse-01.dasy.local'),
+    //'qlik_sense_main_port' => env('QLIK_SENSE_MAIN_PORT', '443'),
+    //'qlik_sense_virtual_proxy' => env('QLIK_SENSE_VIRTUAL_PROXY', '/chive'), //set without trailing slash
     //'qlik_sense_virtual_proxy' => env('QLIK_SENSE_VIRTUAL_PROXY', 'win'), //set without trailing slash
-    'xrfkey' => env('XRFKEY', '0123456789abcdef'),
-    'qrs_port' => env('QRS_PORT', '4243'),
+    //'xrfkey' => env('XRFKEY', '0123456789abcdef'),
+    //'qrs_port' => env('QRS_PORT', '4243'),
     //'qrs_certificate_base_path' => env('QRS_CERTIFICATE_BASE_PATH', 'C:\\wamp64\\www\\customerhive_poc\\customerhive_poc\\storage\\app\\'),
-    'qrs_certificate_base_path' => env('QRS_CERTIFICATE_BASE_PATH', '/var/www/chive_poc2/customerhive_poc/storage/app/'),
+    //'qrs_certificate_base_path' => env('QRS_CERTIFICATE_BASE_PATH', '/var/www/chive_poc2/customerhive_poc/storage/app/'),
 
-    'qrs_certificate_file_relative_path' => env('QRS_CERTIFICATE_FILE_RELATIVE_PATH', 'certificates/client.pem'),
-    'qrs_certificate_key_relative_path' => env('QRS_CERTIFICATE_KEY_RELATIVE_PATH', 'certificates/client_key.pem'),
+    //'qrs_certificate_file_relative_path' => env('QRS_CERTIFICATE_FILE_RELATIVE_PATH', 'certificates/client.pem'),
+    //'qrs_certificate_key_relative_path' => env('QRS_CERTIFICATE_KEY_RELATIVE_PATH', 'certificates/client_key.pem'),
 
 
     //'qrs_certificate_file_relative_path' => env('QRS_CERTIFICATE_FILE_RELATIVE_PATH', 'certificates\\client.pem'),
