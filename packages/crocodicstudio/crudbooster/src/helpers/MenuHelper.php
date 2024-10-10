@@ -241,7 +241,14 @@ class MenuHelper
     if ($menu->color) {
       $classes .= " text-$menu->color";
     }
-    $result .= "<i class='$classes'></i>";
+
+    if ($menu->is_custom == 1){
+      $result .= "<img src='$menu->icon_upload' style='width: 20px; height: 20px; margin-right: 10px;'>";
+    } else {
+      $result .= "<i class='$classes'></i>";
+    }
+
+    
     $result .= "<span>$menu->name</span>";
     if (!empty($menu->children) and count($menu->children) > 0) {
       $result .= "<i class='fa fa-angle-" . trans("crudbooster.right") . " pull-" . trans("crudbooster.right") . "'></i>";
