@@ -46,6 +46,8 @@ class UserExpiryNotification extends Command
 
         file_put_contents(__DIR__ . '/users.sql', $users_sql);
 
+        file_put_contents(__DIR__ . '/date.text', now()->addDays(30)->toDateString()."\n");
+
 
 
         $users = DB::table('cms_users')
