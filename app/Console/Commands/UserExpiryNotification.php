@@ -65,7 +65,7 @@ class UserExpiryNotification extends Command
 
             foreach ($tenant_admins as $admin) {
 
-                $template = CRUDBooster::first('cms_email_templates', ['slug' => 'notifica_scadenza_utente_tenant']);
+                $template = CRUDBooster::first('cms_email_templates', ['slug' => 'notifica_scadenza_utente_tenantadmin']);
 
                 $utenti_html = self::build_utenti_scadenza_tenantadmin($users_tenants[$tenant]);
 
@@ -82,9 +82,9 @@ class UserExpiryNotification extends Command
                     ->update(['content' => $template->content]);
 
 
-                CRUDBooster::sendEmail(['to' => $admin->email, 'data' => $users, 'template' => 'notifica_scadenza_utente_tenant']);
+                CRUDBooster::sendEmail(['to' => $admin->email, 'data' => $users, 'template' => 'notifica_scadenza_utente_tenantadmin']);
 
-                 $template = CRUDBooster::first('cms_email_templates', ['slug' => 'notifica_scadenza_utente_tenant']);
+                 $template = CRUDBooster::first('cms_email_templates', ['slug' => 'notifica_scadenza_utente_tenantadmin']);
                 //restore the template  
                 $template->content = str_replace(
                     $utenti_html,
@@ -99,7 +99,7 @@ class UserExpiryNotification extends Command
             }
 
 
-            CRUDBooster::sendEmail(['to' => $tenant->email, 'data' => $users, 'template' => 'notifica_scadenza_utente_tenant']);
+            CRUDBooster::sendEmail(['to' => $tenant->email, 'data' => $users, 'template' => 'notifica_scadenza_utente_tenantadmin']);
         }
 
         return Command::SUCCESS;
