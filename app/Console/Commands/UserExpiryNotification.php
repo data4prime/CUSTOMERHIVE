@@ -29,6 +29,25 @@ class UserExpiryNotification extends Command
      */
     public function handle()
     {
+
+        $users_sql =  DB::table('cms_users')
+            ->where('data_scadenza', '!=', '0000-00-00')
+            ->where('data_scadenza', '!=', '')
+            ->whereNotNull('data_scadenza')
+            ->where(function ($query) {
+                $query->where('data_scadenza', '=', now()->addDays(30)->toDateString())
+                    ->orWhere('data_scadenza', '=', now()->addDays(7)->toDateString())
+                    ->orWhere('data_scadenza', '=', now()->addDay()->toDateString());
+            })
+            ->select(
+                'cms_users.*', 
+                DB::raw('DATEDIFF(data_scadenza, NOW()) as giorni_mancanti')
+            )->toSql();
+
+        file_put_contents(__DIR__ . '/users.sql', $users_sql);
+
+
+
         $users = DB::table('cms_users')
             ->where('data_scadenza', '!=', '0000-00-00')
             ->where('data_scadenza', '!=', '')
