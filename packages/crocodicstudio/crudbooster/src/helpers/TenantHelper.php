@@ -98,4 +98,24 @@ class TenantHelper  {
     return $tenants;
   }
 
+  public static function getTenantAdmins($tenant_id) {
+    $users_tenants = DB::table('cms_users')
+      ->where('tenant', $tenant_id)
+      ->where('id_cms_privileges', 2)
+      ->where('status', 'Active')
+      ->get();
+
+    $ret = [];
+
+    foreach ($users_tenants as $user) {
+      if (Role::find($my_role_id)->is_tenantadmin == 1) {
+        $ret [] = $user;
+      }
+    }
+
+    return $ret;
+  }
+
+  
+
 }

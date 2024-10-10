@@ -952,6 +952,10 @@ return Request::segment($segment);
             $html = str_replace('[' . $key . ']', $val, $html);
             $template->subject = str_replace('[' . $key . ']', $val, $template->subject);
         }
+
+
+
+
         $subject = $template->subject;
         $attachments = isset($config['attachments']) ? $config['attachments'] : [];
 

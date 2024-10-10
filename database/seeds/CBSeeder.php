@@ -327,6 +327,25 @@ class Cms_privilegesSeeder extends Seeder
                 'theme_color' => 'skin-red',
             ]);
         }
+
+        if (DB::table('cms_privileges')->where('name', 'Tenant Administrator')->count() == 0) {
+            DB::table('cms_privileges')->insert([
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'Tenant Administrator',
+                'is_tenantadmin' => 1,
+                'theme_color' => 'skin-blue',
+            ]);
+        }
+
+        if (DB::table('cms_privileges')->where('name', 'Basic')->count() == 0) {
+            DB::table('cms_privileges')->insert([
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'Basic',
+                'theme_color' => 'skin-grey',
+            ]);
+        }
+
+
     }
 }
 
