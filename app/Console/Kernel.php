@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->command('user:check-expiry')->dailyAt('00:00');
+        $schedule->command('user:expiry-notification')->dailyAt('00:10');
     }
 
     /**
