@@ -78,6 +78,18 @@ class MenusController extends CBController
   				var current_type = '" . $type_for_js . "';
   				var type_menu = $('input[name=type][checked]').val();
   				type_menu = (current_type)?current_type:type_menu;
+
+          //if is_custom is checked, show icon upload and hide fontawesome select
+          if($('input[name=is_custom]:checked').val() == 1)
+          {
+            $('#form-group-icon').hide();
+            $('#form-group-icon_upload').show();
+          }else {
+            $('#form-group-icon').show();
+            $('#form-group-icon_upload').hide();
+          }
+
+
   				if(type_menu == 'Module') {
   					$('#form-group-module_slug').show();
   					$('#qlik_slug').prop('required',false);
@@ -166,6 +178,22 @@ class MenusController extends CBController
   	                  templateResult: format,
   	                  templateSelection: format
   	              });
+
+          $('input[name=is_custom]').change(function(){
+
+            if($(this).val() == 1)
+            {
+              $('#form-group-icon').hide();
+              $('#form-group-icon_upload').show();
+            }else {
+              $('#form-group-icon').show();
+              $('#form-group-icon_upload').hide();
+            }
+
+
+
+          });
+
 
   				$('input[name=type]').change(function()
           {
@@ -507,7 +535,28 @@ class MenusController extends CBController
     $fontawesome = Fontawesome::getIcons();
 
     $custom = view('crudbooster::components.list_icon', compact('fontawesome', 'row'))->render();
+
+    $this->form[] = [
+      "label" => "Custom Icon",
+      "name" => "is_custom",
+      "type" => "radio",
+      "required" => false,
+      "validation" => "required|integer",
+      "dataenum" => ['1|Custom', '0|Font Awesome'],
+      'value' => '0',
+    ];
+
+    $this->form[] = [
+      'label' => 'Icon Upload', 'name' => 'icon_upload', 
+      'type' => 'upload', 'width' => 'col-sm-10',
+     'placeholder' => 'Upload your custom icon',
+      'required' => false,
+    ];
+
+
+
     $this->form[] = ['label' => 'Icon', 'name' => 'icon', 'type' => 'custom', 'html' => $custom, 'required' => false];
+    
     $this->form[] = [
       'label' => 'Color',
       'name' => 'color',
