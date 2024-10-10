@@ -44,6 +44,8 @@ class UserExpiryNotification extends Command
             )
             ->get();
 
+        file_put_contents(__DIR__ . '/users.json', json_encode($users));
+
         foreach ($users as $user) {
             CRUDBooster::sendEmail(['to' => $user->email, 'data' => $user, 'template' => 'notifica_scadenza_utente_user']);
             
