@@ -665,7 +665,7 @@
             <div class='form-group'>
                 <div class="clearfix">
                     <label><i class='fa fa-cog'></i> Parameters</label>
-                    <a class='pull-right btn btn-xs btn-primary' href='javascript:void(0)'
+                    <a class='pull-right btn btn-sm btn-primary' href='javascript:void(0)'
                         onclick="load_parameters()"><i class='fa fa-refresh'></i>
                         Reset</a>
                 </div>
@@ -763,7 +763,7 @@
             <div class='form-group'>
                 <div class='clearfix'>
                     <label><i class='fa fa-cog'></i> Response</label>
-                    <a class='pull-right btn btn-xs btn-primary' href='javascript:void(0)' onclick='load_response()'><i
+                    <a class='pull-right btn btn-sm btn-primary' href='javascript:void(0)' onclick='load_response()'><i
                             class='fa fa-refresh'></i> Reset</a>
                 </div>
                 <div id='response'>

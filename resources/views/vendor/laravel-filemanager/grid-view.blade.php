@@ -18,10 +18,10 @@
 
     <div class="caption text-center">
       <div class="btn-group">
-        <button type="button" data-id="{{ $item_path }}" class="item_name btn btn-default btn-xs {{ $item->is_file ? 'file' : 'folder'}}-item">
+        <button type="button" data-id="{{ $item_path }}" class="item_name btn btn-default btn-sm {{ $item->is_file ? 'file' : 'folder'}}-item">
           {{ $item_name }}
         </button>
-        <button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">
+        <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
           <span class="caret"></span>
           <span class="visually-hidden">Toggle Dropdown</span>
         </button>

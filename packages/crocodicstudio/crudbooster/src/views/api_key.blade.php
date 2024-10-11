@@ -36,12 +36,12 @@
                         <td>{!! ($row->status=='active')?"<span class='label label-success'>Active</span>":"<span class='label label-default'>Non Active</span>" !!}</td>
                         <td>
                             @if($row->status == 'active')
-                                <a class='btn btn-xs btn-default' href='{{ CRUDBooster::mainpath("status-apikey?id=$row->id&status=0") }}'>Non Active</a>
+                                <a class='btn btn-sm btn-default' href='{{ CRUDBooster::mainpath("status-apikey?id=$row->id&status=0") }}'>Non Active</a>
                             @else
-                                <a class='btn btn-xs btn-default' href='{{ CRUDBooster::mainpath("status-apikey?id=$row->id&status=1") }}'>Active</a>
+                                <a class='btn btn-sm btn-default' href='{{ CRUDBooster::mainpath("status-apikey?id=$row->id&status=1") }}'>Active</a>
                             @endif
 
-                            <a class='btn btn-xs btn-danger' href='javascript:void(0)' onclick='deleteApi({{$row->id}})'>Delete</a>
+                            <a class='btn btn-sm btn-danger' href='javascript:void(0)' onclick='deleteApi({{$row->id}})'>Delete</a>
                         </td>
                     </tr>
                 @endforeach
@@ -62,7 +62,7 @@
                         $.get("<?php echo route('ApiCustomControllerGetGenerateScreetKey')?>", function (resp) {
                             lastno += 1;
                             $('#table-apikey').append("<tr><td>" + lastno + "</td><td>" + resp.key + "</td><td>0</td><td><span class='label label-success'>Active</span></td><td>" +
-                                "<a class='btn btn-xs btn-default' href='{{CRUDBooster::mainpath("status-apikey")}}?id=" + resp.id + "&status=0'>Non Active</a> <a class='btn btn-xs btn-danger' href='javascript:void(0)' onclick='deleteApi(" + resp.id + ")'>Delete</a> </td></tr>"
+                                "<a class='btn btn-sm btn-default' href='{{CRUDBooster::mainpath("status-apikey")}}?id=" + resp.id + "&status=0'>Non Active</a> <a class='btn btn-sm btn-danger' href='javascript:void(0)' onclick='deleteApi(" + resp.id + ")'>Delete</a> </td></tr>"
                             );
                             $('.no-screetkey').remove();
                             swal("Success!", "Your new screet key has been generated successfully", "success");

@@ -64,12 +64,12 @@ h4.card-title {
     color: #fff;
 }
 
-.btn-xs {
+.btn-sm {
     font-size: 11px;
     padding: 2px 8px;
     line-height: 18px;
 }
-.btn-xs:hover{
+.btn-sm:hover{
     color:#fff !important;
 }
 
@@ -316,7 +316,7 @@ button, input, optgroup, select, textarea {
             <div class="card card-bordered">
               <div class="card-header">
                 <h4 class="card-title"><strong>AI Assistance</strong></h4>
-                <!--<a class="btn btn-xs btn-secondary" href="#" data-abc="true">Let's Chat App</a>-->
+                <!--<a class="btn btn-sm btn-secondary" href="#" data-abc="true">Let's Chat App</a>-->
               </div>
 
 

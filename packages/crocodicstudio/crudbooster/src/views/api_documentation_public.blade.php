@@ -67,7 +67,7 @@
                     <th width='2%'>No</th>
                     <th>API Name
                         <span class='pull-right'>
-                      <a class='btn btn-xs btn-warning' target="_blank" href='{{url("download-documentation-postman")}}'>Export For POSTMAN <sup>Beta</sup></a>
+                      <a class='btn btn-sm btn-warning' target="_blank" href='{{url("download-documentation-postman")}}'>Export For POSTMAN <sup>Beta</sup></a>
                     </span>
                     </th>
                 </tr>

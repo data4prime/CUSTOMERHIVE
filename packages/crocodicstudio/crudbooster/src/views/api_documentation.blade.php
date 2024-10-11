@@ -80,7 +80,7 @@
                     <th width='2%'>No</th>
                     <th>API Name
                         <span class='pull-right'>
-                            <a class='btn btn-xs btn-warning' target="_blank"
+                            <a class='btn btn-sm btn-warning' target="_blank"
                                 href='{{CRUDBooster::mainpath("download-postman")}}'>Export For POSTMAN
                                 <sup>Beta</sup></a>
                         </span>
