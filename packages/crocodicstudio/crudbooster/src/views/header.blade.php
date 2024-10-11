@@ -148,12 +148,18 @@ if ($method != 'content_view') {
         </li>
 
         <!-- Helper Link -->
-        <li class="nav-item assistance-menu">
-            <a href="https://help.thecustomerhive.com/books/manuale-amministratore/chapter/privileges" target="_blank" class="nav-link" title="Helper">
-                <i id="icon_assistance" class="fa fa-question-circle"></i>
-                <span id="assistance_count" class="badge bg-danger" style="display:none">0</span>
-            </a>
-        </li>
+
+
+                @if (!empty($url))
+                    <li class="nav-item assistance-menu">
+                        <a href="{{$url}}" target="_blank" title='Helper' >
+                            <i id='icon_assistance' class="fa fa-question-circle">
+                            </i>
+                            <span id='assistance_count' class="label label-danger" style="display:none">0</span>
+                        </a>
+
+                    </li>
+                @endif
 
         <!-- Notifications Menu -->
         <li class="nav-item dropdown notifications-menu">
@@ -169,7 +175,7 @@ if ($method != 'content_view') {
                         <ul class="menu list-unstyled" style="height: 200px;"></ul>
                     </div>
                 </li>
-                <li class="dropdown-footer"><a href="https://staging.thecustomerhive.com/admin/notifications">View All</a></li>
+                <li class="dropdown-footer"><a href="{{route('NotificationsControllerGetIndex')}}">{{trans("crudbooster.text_view_all_notification")}}</a></li>
             </ul>
         </li>
 
