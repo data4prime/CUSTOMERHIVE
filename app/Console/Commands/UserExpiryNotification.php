@@ -166,7 +166,7 @@ class UserExpiryNotification extends Command
 
         //build table with following columns: name, email, data_scadenza 
         $table = "<table style='width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;'>";
-        $table .= "<tr style='background-color: #f2f2f2; text-align: center;'>";
+        $table .= "<tr style='background-color: #f2f2f2;'>";
         $table .= "<th style='width: 35%; padding: 12px; border-bottom: 2px solid #ddd;'>Nome</th>";
         $table .= "<th style='width: 35%; padding: 12px; border-bottom: 2px solid #ddd;'>Email</th>";
         $table .= "<th style='width: 30%; padding: 12px; border-bottom: 2px solid #ddd;'>Data scadenza</th>";
