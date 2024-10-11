@@ -162,14 +162,14 @@ if ($method != 'content_view') {
                 <span id="notification_count" class="badge bg-danger" style="display:none">0</span>
             </a>
             <ul id="list_notifications" class="dropdown-menu">
-                <li class="dropdown-header">You Have 0 Notifications</li>
+                <li class="dropdown-header">{{trans("crudbooster.text_no_notification")}}</li>
                 <li>
                     <!-- inner menu: contains the actual data -->
                     <div class="overflow-auto" style="height: 200px;">
                         <ul class="menu list-unstyled" style="height: 200px;"></ul>
                     </div>
                 </li>
-                <li class="footer"><a href="https://staging.thecustomerhive.com/admin/notifications">View All</a></li>
+                <li class="dropdown-footer"><a href="https://staging.thecustomerhive.com/admin/notifications">View All</a></li>
             </ul>
         </li>
 
