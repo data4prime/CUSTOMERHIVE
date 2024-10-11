@@ -1,0 +1,1 @@
+select `cms_users`.*, DATEDIFF(data_scadenza, NOW()) as giorni_mancanti from `cms_users` where `data_scadenza` != ? and `data_scadenza` != ? and `data_scadenza` is not null and (`data_scadenza` = ? or `data_scadenza` = ? or `data_scadenza` = ?)
