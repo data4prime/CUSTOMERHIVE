@@ -193,22 +193,22 @@ if ($method != 'content_view') {
                 </li>
 
                 <!-- Menu Footer-->
-                <li class="dropdown-footer">
-                    <div class="d-flex justify-content-between">
-                        <a href="https://staging.thecustomerhive.com/admin/users/profile" class="btn btn-default btn-flat"><i class="fa fa-user"></i> Profile</a>
-                        <a title="Lock Screen" href="https://staging.thecustomerhive.com/admin/lock-screen" class="btn btn-default btn-flat"><i class="fa fa-key"></i></a>
+                <li class="user-footer">
+                    <div class="pull-{{ trans('crudbooster.left') }}">
+                        <a href="{{ route('AdminCmsUsersControllerGetProfile') }}" class="btn btn-default btn-flat"><i class="fa fa-user"></i> Profile</a>
+                        <a title="Lock Screen" href="{{ route('getLockScreen') }}" class="btn btn-default btn-flat"><i class="fa fa-key"></i></a>
                         <a href="javascript:void(0)" onclick="swal({
-                                title: 'Do you want to logout ?',
+                                title:'{{trans('crudbooster.alert_want_to_logout')}}',
                                 type: 'info',
                                 showCancelButton: true,
                                 allowOutsideClick: true,
                                 confirmButtonColor: '#DD6B55',
-                                confirmButtonText: 'Logout',
-                                cancelButtonText: 'Cancel',
+                                confirmButtonText: '{{trans('crudbooster.button_logout')}}',
+                                cancelButtonText: '{{trans('crudbooster.button_cancel')}}',
                                 closeOnConfirm: false
                             }, function(){
-                                location.href = 'https://staging.thecustomerhive.com/admin/logout';
-                            });" title="Logout" class="btn btn-danger btn-flat">
+                                location.href = '{{ route("getLogout") }}';
+                            });" title="{{trans('crudbooster.button_logout')}}" class="btn btn-danger btn-flat">
                             <i class="fa fa-power-off"></i></a>
                     </div>
                 </li>
