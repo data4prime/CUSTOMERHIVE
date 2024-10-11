@@ -266,7 +266,7 @@
     @include('crudbooster::admin_template_plugins')
 
     <!-- load js -->
-    @isset($load_js):
+    @isset($load_js)
     @foreach($load_js as $js)
     <script src="{{$js}}"></script>
     @endforeach
