@@ -1,9 +1,9 @@
 <footer class="main-footer">
     <!-- To the right -->
-    <div class="pull-{{ trans('crudbooster.right') }} hidden-xs">
+    <!--<div class="pull-{{ trans('crudbooster.right') }} hidden-xs">
 
         &nbsp;|&nbsp;<a  data-toggle="modal" data-target="#licenseModal">{{ trans('crudbooster.license') }}</a>
-    </div>
+    </div>-->
 
     <div class="pull-{{ trans('crudbooster.right') }} hidden-xs">
 
