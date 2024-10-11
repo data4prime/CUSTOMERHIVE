@@ -71,7 +71,7 @@
 /*
 $("#draggable").draggable();
 $("#draggable").resizable();
-*/ 
+*/
 
         $("#chatWindow").draggable({
             handle: ".chat-header"
@@ -121,4 +121,3 @@ $("#chatWindow").toggle();
 </script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="{{asset('vendor/crudbooster/assets/js/main.js').'?r='.time()}}"></script>
-
