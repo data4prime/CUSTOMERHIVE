@@ -169,7 +169,7 @@ if ($method != 'content_view') {
                         <ul class="menu list-unstyled" style="height: 200px;"></ul>
                     </div>
                 </li>
-                <li class="dropdown-footer"><a href="https://staging.thecustomerhive.com/admin/notifications">View All</a></li>
+                <li class="footer"><a href="https://staging.thecustomerhive.com/admin/notifications">View All</a></li>
             </ul>
         </li>
 
