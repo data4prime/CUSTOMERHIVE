@@ -166,18 +166,18 @@ class UserExpiryNotification extends Command
 
         //build table with following columns: name, email, data_scadenza 
         $table = "<table style='width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;'>";
-        $table .= "<tr style='background-color: #f2f2f2;'>";
-        $table .= "<th style='width: 35%; padding: 12px; border-bottom: 2px solid #ddd;'>Nome</th>";
-        $table .= "<th style='width: 35%; padding: 12px; border-bottom: 2px solid #ddd;'>Email</th>";
-        $table .= "<th style='width: 30%; padding: 12px; border-bottom: 2px solid #ddd;'>Data scadenza</th>";
+        $table .= "<tr style='background-color: #f2f2f2; '>";
+        $table .= "<th style='width: 35%; padding: 12px; border-bottom: 2px solid #ddd;text-align: center;'>Nome</th>";
+        $table .= "<th style='width: 35%; padding: 12px; border-bottom: 2px solid #ddd;text-align: center;'>Email</th>";
+        $table .= "<th style='width: 30%; padding: 12px; border-bottom: 2px solid #ddd;text-align: center;'>Data scadenza</th>";
         $table .= "</tr>";
 
         foreach ($users as $index => $user) {
             $backgroundColor = ($index % 2 == 0) ? "#f9f9f9" : "#ffffff"; // Colore alternato per le righe
             $table .= "<tr style='background-color: $backgroundColor;'>";
-            $table .= "<td style='padding: 12px; border-bottom: 1px solid #ddd;'>".$user->name."</td>";
-            $table .= "<td style='padding: 12px; border-bottom: 1px solid #ddd;'>".$user->email."</td>";
-            $table .= "<td style='padding: 12px; border-bottom: 1px solid #ddd;'>".$user->data_scadenza."</td>";
+            $table .= "<td style='padding: 12px; border-bottom: 1px solid #ddd;text-align: center;'>".$user->name."</td>";
+            $table .= "<td style='padding: 12px; border-bottom: 1px solid #ddd;text-align: center;'>".$user->email."</td>";
+            $table .= "<td style='padding: 12px; border-bottom: 1px solid #ddd;text-align: center;'>".$user->data_scadenza."</td>";
             $table .= "</tr>";
         }
 
