@@ -35,7 +35,7 @@ if ($method != 'content_view') {
     <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}' class="logo">{{CRUDBooster::getSetting('appname')}}</a>
 <!--navbar navbar-expand-lg navbar-light justify-content-between-->
     <!-- Header Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light justify-content-between" role="navigation">
+    <nav style="padding: 0;" class="navbar navbar-expand-lg navbar-light justify-content-between" role="navigation">
         <!-- Sidebar toggle button-->
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="visually-hidden">Toggle navigation</span>
