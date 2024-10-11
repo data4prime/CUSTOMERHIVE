@@ -165,15 +165,22 @@ class UserExpiryNotification extends Command
     public static function build_utenti_scadenza_tenantadmin($users) {
 
         //build table with following columns: name, email, data_scadenza 
-        $table = "<table>";
-        $table .= "<tr><th>Nome</th><th>Email</th><th>Data scadenza</th></tr>";
-        foreach ($users as $user) {
-            $table .= "<tr>";
-            $table .= "<td>".$user->name."</td>";
-            $table .= "<td>".$user->email."</td>";
-            $table .= "<td>".$user->data_scadenza."</td>";
+        $table = "<table style='width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;'>";
+        $table .= "<tr style='background-color: #f2f2f2; text-align: center;'>";
+        $table .= "<th style='width: 35%; padding: 12px; border-bottom: 2px solid #ddd;'>Nome</th>";
+        $table .= "<th style='width: 35%; padding: 12px; border-bottom: 2px solid #ddd;'>Email</th>";
+        $table .= "<th style='width: 30%; padding: 12px; border-bottom: 2px solid #ddd;'>Data scadenza</th>";
+        $table .= "</tr>";
+
+        foreach ($users as $index => $user) {
+            $backgroundColor = ($index % 2 == 0) ? "#f9f9f9" : "#ffffff"; // Colore alternato per le righe
+            $table .= "<tr style='background-color: $backgroundColor;'>";
+            $table .= "<td style='padding: 12px; border-bottom: 1px solid #ddd;'>".$user->name."</td>";
+            $table .= "<td style='padding: 12px; border-bottom: 1px solid #ddd;'>".$user->email."</td>";
+            $table .= "<td style='padding: 12px; border-bottom: 1px solid #ddd;'>".$user->data_scadenza."</td>";
             $table .= "</tr>";
         }
+
         $table .= "</table>";
 
         return $table;

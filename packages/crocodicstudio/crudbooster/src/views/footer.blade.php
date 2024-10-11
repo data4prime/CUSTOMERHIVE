@@ -9,7 +9,7 @@
 
     <div class="pull-{{ trans('crudbooster.right') }} hidden-xs">
 
-        &nbsp;|&nbsp;<a data-toggle="modal"   data-target="#licenseModal">{{ trans('crudbooster.license') }} BS</a>
+        &nbsp;|&nbsp;<a data-toggle="modal"   data-target="#licenseModal">{{ trans('crudbooster.license') }}</a>
     </div>
 
 
