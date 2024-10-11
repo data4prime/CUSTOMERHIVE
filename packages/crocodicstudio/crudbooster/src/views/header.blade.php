@@ -183,7 +183,7 @@ if ($method != 'content_view') {
             </a>
             <ul class="dropdown-menu">
                 <!-- The user image in the menu -->
-                <li class="dropdown-header text-center">
+                <li class="user-header">
                     <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="img-circle" alt="User Image" width="80" height="80">
                             <p>
                                 {{ CRUDBooster::myName() }}
