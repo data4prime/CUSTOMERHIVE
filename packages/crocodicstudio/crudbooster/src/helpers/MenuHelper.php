@@ -236,7 +236,7 @@ class MenuHelper
     if ($menu->color) {
       $class = "text-" . $menu->color;
     }
-    $result .= "<a $target href='$href' class='$class'>";
+    $result .= "<a style='text-decoration:none;' $target href='$href' class='$class'>";
     $classes = "$menu->icon ";
     if ($menu->color) {
       $classes .= " text-$menu->color";

@@ -152,10 +152,10 @@ if ($method != 'content_view') {
 
                 @if (!empty($url))
                     <li class="nav-item assistance-menu">
-                        <a href="{{$url}}" target="_blank" title='Helper' >
+                        <a class="nav-link toggle-sidebar-btn" href="{{$url}}" target="_blank" title='Helper' >
                             <i id='icon_assistance' class="fa fa-question-circle">
                             </i>
-                            <span id='assistance_count' class="label label-danger" style="display:none">0</span>
+                            <span id='assistance_count' class="badge bg-danger" style="display:none">0</span>
                         </a>
 
                     </li>
