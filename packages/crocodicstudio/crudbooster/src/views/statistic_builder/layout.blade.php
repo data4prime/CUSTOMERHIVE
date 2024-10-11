@@ -54,7 +54,7 @@
     <div id='app' class="wrapper">
 
         <header class="main-header">
-            <nav class="navbar navbar-static-top">
+            <nav class="navbar navbar-expand-lg navbar-light justify-content-between">
                 <div class="container">
                     <div class="navbar-header">
                         <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}'

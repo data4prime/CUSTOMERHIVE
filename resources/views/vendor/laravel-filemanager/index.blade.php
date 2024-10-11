@@ -39,7 +39,7 @@
         <nav class="navbar navbar-default" id="nav">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-buttons">
-              <span class="sr-only">Toggle navigation</span>
+              <span class="visually-hidden">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
