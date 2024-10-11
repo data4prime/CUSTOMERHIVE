@@ -1,3 +1,11 @@
+<style>
+
+a {
+  text-decoration: none;
+}
+  
+
+</style>
 <!-- Left side column. contains the sidebar -->
 <aside class="main-sidebar">
 
