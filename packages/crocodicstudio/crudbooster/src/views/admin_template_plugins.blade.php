@@ -5,7 +5,7 @@
 
 <!-- REQUIRED JS SCRIPTS -->
 
-<!-- jQuery 2.2.3 -->
+<!-- jQuery 3.7.1 -->
 <script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-3.7.1.min.js') }}"></script>
 
 <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js"></script>
