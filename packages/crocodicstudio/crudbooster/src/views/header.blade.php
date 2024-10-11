@@ -196,6 +196,8 @@ if ($method != 'content_view') {
                 <li class="user-footer">
                     <div class="pull-{{ trans('crudbooster.left') }}">
                         <a href="{{ route('AdminCmsUsersControllerGetProfile') }}" class="btn btn-default btn-flat"><i class="fa fa-user"></i> Profile</a>
+                    </div>
+                    <div class="pull-{{ trans('crudbooster.right') }}">
                         <a title="Lock Screen" href="{{ route('getLockScreen') }}" class="btn btn-default btn-flat"><i class="fa fa-key"></i></a>
                         <a href="javascript:void(0)" onclick="swal({
                                 title:'{{trans('crudbooster.alert_want_to_logout')}}',
@@ -211,6 +213,7 @@ if ($method != 'content_view') {
                             });" title="{{trans('crudbooster.button_logout')}}" class="btn btn-danger btn-flat">
                             <i class="fa fa-power-off"></i></a>
                     </div>
+                    
                 </li>
             </ul>
         </li>
