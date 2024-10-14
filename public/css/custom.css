@@ -182,3 +182,7 @@ th > a {
 .sidebar-menu .treeview-menu > li > a {
   text-decoration: none;
 }
+
+.dropdown-menu>li>a {
+    text-decoration: none;
+}
