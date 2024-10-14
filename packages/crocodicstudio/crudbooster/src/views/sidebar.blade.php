@@ -1,6 +1,6 @@
 <style>
 
-a {
+.sidebar > a {
   text-decoration: none;
 }
   
