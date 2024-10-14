@@ -56,7 +56,7 @@
             <?php
               $loginURI = TenantHelper::loginPath($row->id);
             ?>
-            <div class="mb-3 row header-group-0 " id="mb-3 row-domain_name" style="">
+            <div class="mb-3 row header-group-0 " id="form-group-domain_name" style="">
               <label class="col-form-label col-sm-2">
                 Login URI
               </label>
