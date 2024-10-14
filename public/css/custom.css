@@ -174,3 +174,7 @@ h1 .qlik_logo{
 .logo {
   text-decoration: none;
 }
+
+th > a {
+  text-decoration: none;
+}
