@@ -310,10 +310,11 @@ $total = $result->total();
 <div class="modal fade" tabindex="-1" role="dialog" id='advanced_filter_modal'>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <button class="close" aria-label="Close" type="button" data-bs-dismiss="modal">
-                    <span aria-hidden="true">×</span></button>
+            <div class="modal-header" style="justify-content: space-between;">
+                
                 <h4 class="modal-title"><i class='fa fa-filter'></i> {{trans("crudbooster.filter_dialog_title")}}</h4>
+<button class="close" aria-label="Close" type="button" data-bs-dismiss="modal">
+                    <span aria-hidden="true">×</span></button>
             </div>
             <form method='get' action=''>
                 <div class="modal-body">
@@ -491,10 +492,12 @@ $total = $result->total();
 <div class="modal fade" tabindex="-1" role="dialog" id='export-data'>
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" style="justify-content: space-between;">
                 <button class="close" aria-label="Close" type="button" data-bs-dismiss="modal">
                     <span aria-hidden="true">×</span></button>
                 <h4 class="modal-title"><i class='fa fa-download'></i> {{trans("crudbooster.export_dialog_title")}}</h4>
+<button class="close" aria-label="Close" type="button" data-bs-dismiss="modal">
+                    <span aria-hidden="true">×</span></button>
             </div>
 
             <form method='post' target="_blank" action='{{ CRUDBooster::mainpath("export-data?t=".time()) }}'>
