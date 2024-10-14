@@ -44,7 +44,7 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
 ?>
                                 <div class='mb-3 row'>
                                     @if($col['type']!='hidden')
-                                    <label class="col-form-labell col-sm-2">{{$col['label']}}
+                                    <label class="col-form-label col-sm-2">{{$col['label']}}
                                         @if(!empty($col['required'])) <span class="text-danger"
                                             title="{{trans('crudbooster.this_field_is_required')}}">*</span> @endif
                                     </label>

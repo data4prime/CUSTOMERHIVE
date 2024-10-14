@@ -40,7 +40,7 @@
           <div class="box-footer" style="background: #F5F5F5">
 
             <div class="form-tenant">
-              <label class="col-form-labell col-sm-2"></label>
+              <label class="col-form-label col-sm-2"></label>
               <div class="col-sm-10">
                 @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                 @if(g('return_url'))

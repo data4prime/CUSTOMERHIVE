@@ -61,7 +61,7 @@
             <div class="box-footer" style="background: #F5F5F5">
 
               <div class="mb-3 row">
-                <label class="col-form-labell col-sm-2"></label>
+                <label class="col-form-label col-sm-2"></label>
                 <div class="col-sm-10">
                   @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                   @if(g('return_url'))
@@ -137,7 +137,7 @@
             <div class="box-footer" style="background: #F5F5F5">
 
               <div class="mb-3 row">
-                <label class="col-form-labell col-sm-2"></label>
+                <label class="col-form-label col-sm-2"></label>
                 <div class="col-sm-10">
                   @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                   @if(g('return_url'))
@@ -213,7 +213,7 @@
             <div class="box-footer" style="background: #F5F5F5">
 
               <div class="mb-3 row">
-                <label class="col-form-labell col-sm-2"></label>
+                <label class="col-form-label col-sm-2"></label>
                 <div class="col-sm-10">
                   @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                   @if(g('return_url'))

@@ -1,5 +1,5 @@
 <div class='mb-3 row {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='mb-3 row-{{$name}}' style="{{@$form['style']}}">
-    <label class='col-sm-2 col-form-labell'>{{$form['label']}}
+    <label class='col-sm-2 col-form-label'>{{$form['label']}}
         @if($required)
             <span class='text-danger' title='{!! trans('crudbooster.this_field_is_required') !!}'>*</span>
         @endif

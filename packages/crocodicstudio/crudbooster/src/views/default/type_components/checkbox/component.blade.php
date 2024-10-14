@@ -1,7 +1,7 @@
 
 <div class='mb-3 row {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' 
 id='mb-3 row-{{$name}}' style="{!! @$form['style'] !!}">
-  <label class='col-form-labell col-sm-2'>{{$form['label']}}
+  <label class='col-form-label col-sm-2'>{{$form['label']}}
     @if(isset($required))
     <span class='text-danger' title="{!! trans('crudbooster.this_field_is_required') !!}" >*</span>
     @endif
@@ -138,7 +138,7 @@ id='mb-3 row-{{$name}}' style="{!! @$form['style'] !!}">
 </div>
 @if(isset($is_public) && $name == 'public_access')
 <div class="mb-3 row {{$header_group_class}} {{ ($errors->first($name))?'has-error':'' }}">
-  <div class="col-sm-2 col-form-labell" style="padding-top: 7px">
+  <div class="col-sm-2 col-form-label" style="padding-top: 7px">
     <label class="">Public URL</label>
   </div>
   <div class="col-sm-10">

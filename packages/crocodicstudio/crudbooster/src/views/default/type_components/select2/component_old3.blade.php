@@ -113,7 +113,7 @@ $column1 = $raw[1];
 
 <div class='mb-3 row {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='mb-3 row-{{$name}}'
     style='{{isset($form["style"]) ? $form["style"] : "" }}'>
-    <label class='col-form-labell col-sm-2'>{{$form['label']}}
+    <label class='col-form-label col-sm-2'>{{$form['label']}}
         @if($required)
         <span class='text-danger' title="{!! trans('crudbooster.this_field_is_required') !!}">*</span>
         @endif
