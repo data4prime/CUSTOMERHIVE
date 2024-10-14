@@ -47,12 +47,12 @@
                 })
             </script>
 
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <label>API BASE URL</label>
                 <input type='text' readonly class='form-control' title='Hanya klik dan otomatis copy to clipboard (kecuali Safari)'
                        onClick="this.setSelectionRange(0, this.value.length); document.execCommand('copy');" value='{{url('api')}}'/>
             </div>
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <label>How To Use</label><br/>
                 SCREETKEY : ABCDEF123456 <br/>
                 TIME : UNIX CURRENT TIME <br/>

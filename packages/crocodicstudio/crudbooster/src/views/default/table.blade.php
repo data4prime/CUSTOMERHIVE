@@ -320,7 +320,7 @@ $total = $result->total();
                     <?php foreach($columns as $key => $col):?>
                     <?php if (isset($col['image']) || isset($col['download']) || (isset($col['visible']) && $col['visible'] === FALSE)) continue;?>
 
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
 
                         <div class='row-filter-combo row'>
 
@@ -501,7 +501,7 @@ $total = $result->total();
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 {!! CRUDBooster::getUrlParameters() !!}
                 <div class="modal-body">
-                    <div class="form-group">
+                    <div class="mb-3 row">
                         <label>{{trans("crudbooster.export_dialog_filename")}}</label>
                         <input type='text' name='filename' class='form-control' required
                             value='Report {{ isset($module_name) ? $module_name : '' }} - {{date("d M Y")}}' />
@@ -510,14 +510,14 @@ $total = $result->total();
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3 row">
                         <label>{{trans("crudbooster.export_dialog_maxdata")}}</label>
                         <input type='number' name='limit' class='form-control' required value='100' max="100000"
                             min="1" />
                         <div class='help-block'>{{trans("crudbooster.export_dialog_help_maxdata")}}</div>
                     </div>
 
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>{{trans("crudbooster.export_dialog_columns")}}</label><br />
                         @foreach($columns as $col)
                         <div class='checkbox inline'><label><input type='checkbox' checked name='columns[]'
@@ -525,7 +525,7 @@ $total = $result->total();
                         @endforeach
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3 row">
                         <label>{{trans("crudbooster.export_dialog_format_export")}}</label>
                         <select name='fileformat' class='form-control'>
                             <option value='pdf'>PDF</option>
@@ -540,7 +540,7 @@ $total = $result->total();
                     <div id='advanced_export' style='display: none'>
 
 
-                        <div class="form-group">
+                        <div class="mb-3 row">
                             <label>{{trans("crudbooster.export_dialog_page_size")}}</label>
                             <select class='form-control' name='page_size'>
                                 <option <?php (isset($setting->default_paper_size) && $setting->default_paper_size ==
@@ -568,7 +568,7 @@ $total = $result->total();
                                 {{trans("crudbooster.export_dialog_set_default")}}</div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="mb-3 row">
                             <label>{{trans("crudbooster.export_dialog_page_orientation")}}</label>
                             <select class='form-control' name='page_orientation'>
                                 <option value='potrait'>Potrait</option>

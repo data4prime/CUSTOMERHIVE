@@ -108,7 +108,7 @@
                 }
                 ?>
 
-        <div id='privileges_configuration' class='form-group'>
+        <div id='privileges_configuration' class='mb-3 row'>
           <label>Enable/Disable Modules</label>
           @push('bottom')
           <script>

@@ -26,12 +26,12 @@
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
     <input type='hidden' name='componentid' value='{{$componentID}}' />
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>Name</label>
         <input class="form-control" required name='config[name]' type='text' value='{{@$config->name}}' />
     </div>
 
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>SQL Query</label>
         <textarea name='config[sql]' rows="5" placeholder="E.g : select column_id,column_name from view_table_name"
             class='form-control'>{{@$config->sql}}</textarea>

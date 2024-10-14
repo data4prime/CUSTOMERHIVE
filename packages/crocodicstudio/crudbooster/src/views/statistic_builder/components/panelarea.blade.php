@@ -22,12 +22,12 @@
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
     <input type='hidden' name='componentid' value='{{$componentID}}' />
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>Name</label>
         <input class="form-control" required name='config[name]' type='text' value='{{@$config->name}}' />
     </div>
 
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>Content</label>
         <textarea name='config[content]' required rows="10" class='form-control'>{{@$config->content}}</textarea>
     </div>

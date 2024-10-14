@@ -86,7 +86,7 @@
             padding: 0 0 0 0;
         }
 
-        .form-group>label:first-child {
+        .mb-3 row>label:first-child {
             display: block
         }
     </style>

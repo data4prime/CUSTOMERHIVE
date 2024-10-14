@@ -56,12 +56,12 @@ dd($menu_active);
     <form method='post'>
         <input type='hidden' name='_token' value='{{csrf_token()}}'/>
         <input type='hidden' name='componentid' value='{{$componentID}}'/>
-        <div class="form-group">
+        <div class="mb-3 row">
             <label>Name</label>
             <input class="form-control" required name='config[name]' type='text' value='{{@$config->name}}'/>
         </div>
 
-        <div class="form-group">
+        <div class="mb-3 row">
             <label>Type</label>
             <select name='config[type]' class='form-control'>
                 <option {{(@$config->type == 'controller')?"selected":""}} value='controller'>Controller & Method</option>
@@ -69,7 +69,7 @@ dd($menu_active);
             </select>
         </div>
 
-        <!--<div class="form-group">
+        <!--<div class="mb-3 row">
             <label>Value</label>
             <input name='config[value]' type='text' class='form-control' value='{{@$config->value}}'/>
             <div class='help-block'>You must enter the valid value related with current TYPE unless, widget will not work</div>

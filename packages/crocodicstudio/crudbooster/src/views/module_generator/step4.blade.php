@@ -166,7 +166,7 @@ $(function () {
           $.each(data.attribute.required, function (key, val) {
             var form_group_html = '';
             if (val instanceof Object) {
-              form_group_html += "<div class='form-group'><label>" + key + "</label>";
+              form_group_html += "<div class='mb-3 row'><label>" + key + "</label>";
               if (val.type) {
                 if (val.type == 'radio') {
                   $.each(val.enum, function (i, o) {
@@ -186,7 +186,7 @@ $(function () {
               form_group_html += "</div>";
             } else {
               form_group_html +=
-              "<div class='form-group'>" +
+              "<div class='mb-3 row'>" +
               "<label>" + key + "</label>" +
               "<input class='form-control required' name='option[" + tr_index + "][" + key + "]' placeholder='" + val + "' type='text'/>" +
               "</div>"
@@ -198,7 +198,7 @@ $(function () {
         if (data.attribute.requiredOne) {
           $.each(data.attribute.requiredOne, function (key, val) {
             t.parent('tr').find('.option_area').append(
-              "<div class='form-group'>" +
+              "<div class='mb-3 row'>" +
               "<label>" + key + "</label>" +
               "<input class='form-control required-one'  name='option[" + tr_index + "][" + key + "]' placeholder='" + val + "' type='text'/>" +
               "</div>"
@@ -210,7 +210,7 @@ $(function () {
             if (typeof(val) == "object") {
               if (val.type == 'textarea') {
                 t.parent('tr').find('.option_area').append(
-                  "<div class='form-group'>" +
+                  "<div class='mb-3 row'>" +
                   "<label>" + key + "</label>" +
                   "<textarea class='form-control' name='option[" + tr_index + "][" + key + "]' placeholder='" + val.placeholder + "' ></textarea>" +
                   "</div>"
@@ -218,7 +218,7 @@ $(function () {
               }
             } else {
               t.parent('tr').find('.option_area').append(
-                "<div class='form-group'>" +
+                "<div class='mb-3 row'>" +
                 "<label>" + key + "</label>" +
                 "<input class='form-control' name='option[" + tr_index + "][" + key + "]' placeholder='" + val + "' type='text'/>" +
                 "</div>"
@@ -391,7 +391,7 @@ $(function () {
                       if(is_object($val)):
                         if($val->type && $val->type == 'radio'):
                           ?>
-                          <div class="form-group">
+                          <div class="mb-3 row">
                             <label>{{$key}}</label>
                             @foreach($val->enum as $enum)
                             <input type="radio" name="option[{{$index}}][{{$key}}]"
@@ -402,7 +402,7 @@ $(function () {
 
                         <?php else:?>
 
-                          <div class="form-group">
+                          <div class="mb-3 row">
                             <label>{{$key}}</label>
                             <input type="text" name="option[{{$index}}][{{$key}}]" placeholder="{{$val->placeholder}}" value="{{$value}}"
                             class="form-control">
@@ -410,7 +410,7 @@ $(function () {
                         <?php endif;?>
                       <?php else:?>
 
-                        <div class="form-group">
+                        <div class="mb-3 row">
                           <label>{{$key}}</label>
                           <input type="text" name="option[{{$index}}][{{$key}}]" placeholder="{{$val}}" value="{{$value}}" class="form-control">
                         </div>
@@ -425,7 +425,7 @@ $(function () {
                       foreach($types->attribute->requiredOne as $key=>$val):
                         @$value = $form[$key];
                         ?>
-                        <div class="form-group">
+                        <div class="mb-3 row">
                           <label>{{$key}}</label>
                           <input type="text" name="option[{{$index}}][{{$key}}]" placeholder="{{$val}}" value="{{$value}}" class="form-control">
                         </div>
@@ -436,7 +436,7 @@ $(function () {
                         foreach($types->attribute->optional as $key=>$val):
                           @$value = $form[$key];
                           ?>
-                          <div class="form-group">
+                          <div class="mb-3 row">
                             <label>{{$key}}</label>
                             @if(is_object($val) && property_exists($val, 'type') && $val->type == 'textarea')
                             <textarea type="text" name="option[{{$index}}][{{$key}}]" placeholder="{{$val->placeholder}}"

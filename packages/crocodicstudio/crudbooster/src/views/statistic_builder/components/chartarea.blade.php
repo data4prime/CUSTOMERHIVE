@@ -22,12 +22,12 @@
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
     <input type='hidden' name='componentid' value='{{$componentID}}' />
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>Name</label>
         <input class="form-control" required name='config[name]' type='text' value='{{@$config->name}}' />
     </div>
 
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>SQL Query Line</label>
         <textarea name='config[sql]' required rows="4" class='form-control'>{{@$config->sql}}</textarea>
         <div class="block-help">
@@ -37,13 +37,13 @@
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>Line Area Name</label>
         <input class="form-control" required name='config[area_name]' type='text' value='{{@$config->area_name}}' />
         <div class="block-help">You can naming each line area. Write name sparate with ;</div>
     </div>
 
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>Goals Value</label>
         <input class="form-control" name='config[goals]' type='number' value='{{@$config->goals}}' />
     </div>

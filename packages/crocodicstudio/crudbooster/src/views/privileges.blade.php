@@ -27,12 +27,12 @@
         <!-- <div class="alert alert-info">
                         <strong>Note:</strong> To show the menu you have to create a menu at Menu Management
                     </div> -->
-        <div class='form-group'>
+        <div class='mb-3 row'>
           <label>{{trans('crudbooster.privileges_name')}}</label>
           <input type='text' class='form-control' name='name' required value='{{ @$row->name }}' />
           <div class="text-danger">{{ $errors->first('name') }}</div>
         </div>
-        <div class='form-group'>
+        <div class='mb-3 row'>
           <label>{{trans('crudbooster.set_privilege')}}</label>
           <div id='set_as_superadmin' class='radio'>
             <label>
@@ -51,7 +51,7 @@
           <div class="text-danger">{{ $errors->first('is_superadmin') }}</div>
         </div>
 
-        <div class='form-group'>
+        <div class='mb-3 row'>
           <label>{{trans('crudbooster.chose_theme_color')}}</label>
 
           <select name='theme_color' class='form-control' required>
@@ -101,7 +101,7 @@
           @endpush
         </div>
 
-        <div id='privileges_configuration' class='form-group'>
+        <div id='privileges_configuration' class='mb-3 row'>
           <label>{{trans('crudbooster.privileges_configuration')}}</label>
           @push('bottom')
           <script>

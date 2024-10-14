@@ -588,7 +588,7 @@
             <input type="hidden" name="id" value="{{isset($row->id) ? $row->id : '' }}">
             <div class='row'>
                 <div class='col-sm-8'>
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>API Name</label>
                         <input type='text' class='form-control' value='{{isset($row->nama) ? $row->nama : '' }}'
                             required name='nama' id='input-nama' />
@@ -596,7 +596,7 @@
                 </div>
 
                 <div class='col-sm-4'>
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>Table</label>
                         <select id='combo_tabel' name='tabel' required class='form-control'>
                             <option value=''>** Choose a Table</option>
@@ -611,7 +611,7 @@
 
             <div class='row'>
                 <div class='col-sm-8'>
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>API Slug</label>
                         <div class='input-group'>
                             <span class="input-group-addon" id="basic-addon1"
@@ -623,7 +623,7 @@
                     </div>
                 </div>
                 <div class='col-sm-2'>
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>Action Type</label>
                         <select id='tipe_action' name='aksi' required class='form-control'>
                             <option value=''>** Select Action</option>
@@ -642,7 +642,7 @@
                     </div>
                 </div>
                 <div class='col-sm-2'>
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>Method Type</label>
                         <br />
                         <label class='radio-inline'>
@@ -662,7 +662,7 @@
             </div>
 
 
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <div class="clearfix">
                     <label><i class='fa fa-cog'></i> Parameters</label>
                     <a class='pull-right btn btn-sm btn-primary' href='javascript:void(0)'
@@ -750,7 +750,7 @@
                 </div>
             </div>
 
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <label>SQL Where Query (Optional)</label>
                 <textarea name='sql_where' rows='3' class='form-control'
                     placeholder="status = [paramStatus]">{{isset($row->sql_where) ? $row->sql_where : ''}}</textarea>
@@ -760,7 +760,7 @@
                 </div>
             </div>
 
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <div class='clearfix'>
                     <label><i class='fa fa-cog'></i> Response</label>
                     <a class='pull-right btn btn-sm btn-primary' href='javascript:void(0)' onclick='load_response()'><i
@@ -819,13 +819,13 @@
                 </div>
             </div>
 
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <label>API Description</label>
                 <textarea name='keterangan' rows='3' class='form-control wysiwyg'
                     placeholder='Optional'>{{isset($row->keterangan) ? $row->keterangan : ''}}</textarea>
             </div>
 
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <input type='submit' class='btn btn-success' value='SAVE & GENERATE API' />
             </div>
 

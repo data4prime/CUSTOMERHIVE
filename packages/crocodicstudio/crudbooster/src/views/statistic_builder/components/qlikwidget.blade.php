@@ -76,11 +76,11 @@ function update_objects(select){
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
     <input type='hidden' name='componentid' value='{{$componentID}}' />
-    <div class="form-group">
+    <div class="mb-3 row">
      
 
 
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>Qlik App</label>
 <select id="mashup_app" onchange="update_objects(this)" class='form-control' required name='config[mashups]'>
             <option value='0'>Choose App</option>
@@ -95,7 +95,7 @@ function update_objects(select){
 <input type="hidden" id="mashup_app_hidden" value="{{ isset($config->mashups) ?  $config->mashups : '' }}">
     </div>
 
-<div class="form-group">
+<div class="mb-3 row">
         <label>App Object</label>
         <select id="mashup_object" disabled  class='form-control' required name='config[object]'>
             <option value='0'>Choose Object</option>

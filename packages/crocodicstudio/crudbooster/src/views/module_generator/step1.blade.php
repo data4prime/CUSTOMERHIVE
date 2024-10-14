@@ -28,7 +28,7 @@
         <form method="post" action="{{Route('ModulsControllerPostStep1')}}">
             <input type="hidden" name="_token" value="{{csrf_token()}}">
             <input type="hidden" name="id" value="{{isset($row->id) ? $row->id : ''}}">
-            <div class="form-group">
+            <div class="mb-3 row">
                 <label for="">Table</label>
                 <select name="table" id="table" required class="select2 form-control"
                     value="{{ isset($row->table_name) ? $row->table_name : ''}}">
@@ -44,7 +44,7 @@
                     Create a new table or use an existing one
                 </div>
             </div>
-            <div class="form-group">
+            <div class="mb-3 row">
                 <label for="">Module Name</label>
                 <input type="text" class="form-control" required name="name"
                     value="{{ isset($row->name) ? $row->name : ''}}">
@@ -54,7 +54,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 row">
                 <label for="">Icon</label>
                 <select name="icon" id="icon" required class="select2 form-control">
                     @foreach($fontawesome as $f)
@@ -64,7 +64,7 @@
                 </select>
             </div>
 
-            <!-- <div class="form-group">
+            <!-- <div class="mb-3 row">
                     <label for="">Module Slug</label>
                     <input type="text" class="form-control" required name="path" value="{{isset($row->path) ? $row->path : '' }}">
                     <div class="help-block">Alphanumeric and underscore characters only</div>

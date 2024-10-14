@@ -311,7 +311,7 @@
             var required_input = [];
             $('#modal-statistic form').find('input[required],textarea[required],select[required]').each(function () {
                 var $input = $(this);
-                var $form_group = $input.parent('.form-group');
+                var $form_group = $input.parent('.mb-3 row');
                 var value = $input.val();
 
                 if (value == '') {
@@ -322,7 +322,7 @@
             if (required_input.length) {
                 setTimeout(function () {
                     $.each(required_input, function (i, name) {
-                        $('#modal-statistic form').find('input[name="' + name + '"],textarea[name="' + name + '"],select[name="' + name + '"]').parent('.form-group').addClass('has-error');
+                        $('#modal-statistic form').find('input[name="' + name + '"],textarea[name="' + name + '"],select[name="' + name + '"]').parent('.mb-3 row').addClass('has-error');
                     })
                 }, 200);
 

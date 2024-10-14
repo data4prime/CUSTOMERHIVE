@@ -85,7 +85,7 @@
                         }
 
                         ?>
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label class='label-setting' title="{{$s->name}}">{{$s->label}}
                             <a style="visibility:hidden" href='{{CRUDBooster::mainpath("edit/$s->id")}}'
                                 title='Edit This Meta Setting' class='btn btn-box-tool'><i class='fa fa-pencil'></i></a>

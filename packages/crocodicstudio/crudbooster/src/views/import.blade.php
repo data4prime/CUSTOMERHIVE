@@ -252,7 +252,7 @@
                         * Table structure : Line 1 is heading column , and next is the data. (For example, you can export any module you wish to XLS format)
                     </div>
 
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>File XLS / CSV</label>
                         <input type='file' name='userfile' class='form-control' required/>
                         <div class='help-block'>File type supported only : XLS, XLSX, CSV</div>

@@ -4,11 +4,11 @@ $name = str_slug($form['label'], '');
 @push('bottom')
 <script type="text/javascript">
     $(function () {
-        $('#form-group-{{$name}} .select2').select2();
+        $('#mb-3 row-{{$name}} .select2').select2();
     })
 </script>
 @endpush
-<div class='form-group {{$header_group_class}}' id='form-group-{{$name}}'>
+<div class='mb-3 row {{$header_group_class}}' id='mb-3 row-{{$name}}'>
 
     @if($form['columns'])
     <div class="col-sm-12">
@@ -27,9 +27,9 @@ $name = str_slug($form['label'], '');
                             <div class="card-body child-form-area">
                                 @foreach($form['columns'] as $col)
                                 @php $name_column = $name.$col['name'];@phpend
-                                <div class='form-group'>
+                                <div class='mb-3 row'>
                                     @if($col['type']!='hidden')
-                                    <label class="control-label col-sm-2">{{$col['label']}}
+                                    <label class="col-form-labell col-sm-2">{{$col['label']}}
                                         @if(isset($col['required']) && !empty($col['required'])) <span
                                             class="text-danger"
                                             title="{{trans('crudbooster.this_field_is_required')}}">*</span> @endif

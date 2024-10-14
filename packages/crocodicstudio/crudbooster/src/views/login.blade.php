@@ -98,12 +98,12 @@
                 </div>
                 @endif
 
-                <div class="form-group has-feedback">
+                <div class="mb-3 row has-feedback">
                     <input autocomplete='off' type="text" class="form-control" name='email' required
                         placeholder="Email" />
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>
-                <div class="form-group has-feedback">
+                <div class="mb-3 row has-feedback">
                     <input autocomplete='off' type="password" class="form-control" name='password' required
                         placeholder="Password" />
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
