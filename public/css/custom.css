@@ -166,3 +166,7 @@ h1 .qlik_logo{
 
   width: 20px;
 }
+
+.sidebar-menu>li>a {
+  text-decoration: none;
+}
