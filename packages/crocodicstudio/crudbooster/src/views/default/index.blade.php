@@ -67,10 +67,10 @@
         @if($button_bulk_action && ( ($button_delete && CRUDBooster::isDelete()) || $button_selected) )
         <div class="pull-{{ trans('crudbooster.left') }}">
             <div class="selected-action" style="display:inline-block;position:relative;">
-                <button type="button" class="btn btn-default  dropdown-toggle" data-toggle="dropdown"
+                <button type="button" class="btn btn-default  dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class='fa fa-check-square-o'></i>
                     {{trans("crudbooster.button_selected_action")}}
-                    <span class="fa fa-caret-down"></span></button>
+                    </button>
                 <ul class="dropdown-menu">
 <?php
                                 $parameters = Request::all();
