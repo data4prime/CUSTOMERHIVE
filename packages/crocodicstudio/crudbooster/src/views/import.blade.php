@@ -23,7 +23,7 @@
 
         <!-- Box -->
         <div id='box_main' class="box box-primary">
-            <div class="box-header with-border">
+            <div class="box-header mb-3 with-border">
                 <h3 class="box-title">Importing</h3>
                 <div class="box-tools">
                 </div>
@@ -100,7 +100,7 @@
 
         <!-- Box -->
         <div id='box_main' class="box box-primary">
-            <div class="box-header with-border">
+            <div class="box-header mb-3 with-border">
                 <h3 class="box-title">Adjustment</h3>
                 <div class="box-tools">
 
@@ -221,7 +221,7 @@
 
         <!-- Box -->
         <div id='box_main' class="box box-primary">
-            <div class="box-header with-border">
+            <div class="box-header mb-3 with-border">
                 <h3 class="box-title">Upload a File</h3>
                 <div class="box-tools">
 

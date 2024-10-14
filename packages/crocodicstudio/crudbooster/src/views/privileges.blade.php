@@ -14,7 +14,7 @@
 
   <!-- Box -->
   <div class="box box-primary">
-    <div class="box-header with-border">
+    <div class="box-header mb-3 with-border">
       <h3 class="box-title">{{ $page_title }}</h3>
       <div class="box-tools">
 

@@ -63,7 +63,7 @@
 @endisset
 
 <div class="box">
-    <div class="box-header">
+    <div class="box-header mb-3">
         @if($button_bulk_action && ( ($button_delete && CRUDBooster::isDelete()) || $button_selected) )
         <div class="pull-{{ trans('crudbooster.left') }}">
             <div class="selected-action" style="display:inline-block;position:relative;">

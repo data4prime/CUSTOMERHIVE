@@ -21,7 +21,7 @@
 @endpush
 
 <div class="box box-default">
-    <div class="box-header with-border">
+    <div class="box-header mb-3 with-border">
         <h3 class="box-title">Module Information</h3>
     </div>
     <div class="box-body">

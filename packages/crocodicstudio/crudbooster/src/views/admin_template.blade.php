@@ -57,7 +57,7 @@
             cursor: default
         }
 
-        #box-header-module {
+        #box-header mb-3-module {
             box-shadow: 10px 10px 10px #dddddd;
         }
 

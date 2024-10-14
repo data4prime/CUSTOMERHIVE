@@ -324,7 +324,7 @@ $(function () {
 </div><!-- /.modal -->
 
 <div class="box box-default">
-  <div class="box-header with-border">
+  <div class="box-header mb-3 with-border">
     <h3 class="box-title">Form Settings</h3>
   </div>
   <div class="box-body">

@@ -77,7 +77,7 @@
   </div><!--END AUTO MARGIN-->
   <!-- List tenants -->
   <div class="box">
-    <div class="box-header mb-3">
+    <div class="box-header mb-3 mb-3">
       <h4>Group Tenants</h4>
     </div>
     <div class="box-body table-responsive no-padding">

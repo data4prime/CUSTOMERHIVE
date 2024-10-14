@@ -140,7 +140,7 @@ $(function () {
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <div class="box box-default">
-  <div class="box-header with-border">
+  <div class="box-header mb-3 with-border">
     <h3 class="box-title">{{ $box_title }}</h3>
   </div>
   <div class="box-body">

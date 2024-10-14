@@ -93,7 +93,7 @@ foreach($forms as $index=>$form) {
     if($name=='favicon') {
       ?>
 </div>
-<div class="box-header mb-3 with-border">
+<div class="box-header mb-3 mb-3 with-border">
   <h3 class="box-title">
     Login layout settings
   </h3>

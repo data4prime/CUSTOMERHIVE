@@ -2,7 +2,7 @@
 @section("inner_content")
 
     <div class="box box-default">
-        <div class="box-header">
+        <div class="box-header mb-3">
             <h1 class="box-title">Configuration</h1>
         </div>
         <form method='post' action="{{Route('ModulsControllerPostStep5')}}">

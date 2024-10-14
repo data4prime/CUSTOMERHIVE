@@ -23,7 +23,7 @@
   <div class="row">
     <div class="col-sm-12 col-md-12">
       <div class="box box-info collapsed-box">
-        <div class="box-header with-border">
+        <div class="box-header mb-3 with-border">
           <h3 class="box-title">
             <strong>
               <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Testata
@@ -99,7 +99,7 @@
   <div class="row">
     <div class="col-sm-12 col-md-12">
       <div class="box box-success collapsed-box">
-        <div class="box-header with-border">
+        <div class="box-header mb-3 with-border">
           <h3 class="box-title">
             <strong>
               <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Aggiungi riga
@@ -175,7 +175,7 @@
   <div class="row">
     <div class="col-sm-12 col-md-12">
       <div class="box box-warning">
-        <div class="box-header with-border">
+        <div class="box-header mb-3 with-border">
           <h3 class="box-title">
             <strong>
               <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Righe

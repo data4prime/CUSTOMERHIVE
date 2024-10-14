@@ -26,7 +26,7 @@
     </div>
     <div class="col-xs-8">
       <div class="box box-primary">
-        <div class="box-header mb-3 with-border">
+        <div class="box-header mb-3 mb-3 with-border">
           <h3 class="box-title">
             <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! $page_title !!}
           </h3>
