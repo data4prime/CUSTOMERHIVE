@@ -156,7 +156,7 @@
         margin-bottom: 0px;
     }
 
-    .card-heading,
+    .card-header,
     .inner-box,
     .box-header,
     .btn-add-widget {
@@ -204,7 +204,7 @@
         $(".connectedSortable").sortable({
             placeholder: "sort-highlight",
             connectWith: ".connectedSortable",
-            handle: ".card-heading, .inner-box, .box-header, .btn-add-widget",
+            handle: ".card-header, .inner-box, .box-header, .btn-add-widget",
             forcePlaceholderSize: true,
             zIndex: 999999,
             stop: function (event, ui) {

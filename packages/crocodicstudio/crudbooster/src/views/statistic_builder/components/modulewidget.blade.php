@@ -38,7 +38,7 @@ dd($menu_active);
     <div id='{{$componentID}}' class='border-box'>
 
         <div class="card card-default">
-            <div class="card-heading">
+            <div class="card-header">
                 [name]
             </div>
             <div class="card-body">

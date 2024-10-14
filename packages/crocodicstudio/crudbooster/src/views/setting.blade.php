@@ -59,7 +59,7 @@
             Field Setting</a></p>
 
     <div class="card card-default">
-        <div class="card-heading">
+        <div class="card-header">
             <i class='fa fa-cog'></i> {{$page_title}}
         </div>
         <div class="card-body">

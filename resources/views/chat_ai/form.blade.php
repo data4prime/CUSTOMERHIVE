@@ -14,7 +14,7 @@
     @endif
 
     <div class="card card-default">
-        <div class="card-heading">
+        <div class="card-header">
             <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! $page_title !!}</strong>
         </div>
         <div class="card-body" style="padding:20px 0px 0px 0px">

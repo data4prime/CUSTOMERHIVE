@@ -26,7 +26,7 @@
 <body>
   <div class="container-fluid" id="wrapper">
     <div class="card card-primary hidden-xs">
-      <div class="card-heading">
+      <div class="card-header">
         <h1 class="card-title">{{ trans('laravel-filemanager::lfm.title-panel') }}</h1>
       </div>
     </div>

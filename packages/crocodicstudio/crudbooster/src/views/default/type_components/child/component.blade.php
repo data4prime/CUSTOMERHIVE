@@ -14,7 +14,7 @@ $name = str_slug($form['label'], '');
     <div class="col-sm-12">
 
         <div id='card-form-{{$name}}' class="card card-default">
-            <div class="card-heading">
+            <div class="card-header">
                 <i class='fa fa-bars'></i> {{$form['label']}}
             </div>
             <div class="card-body">
@@ -22,7 +22,7 @@ $name = str_slug($form['label'], '');
                 <div class='row'>
                     <div class='col-sm-10'>
                         <div class="card card-default">
-                            <div class="card-heading"><i class="fa fa-pencil-square-o"></i>
+                            <div class="card-header"><i class="fa fa-pencil-square-o"></i>
                                 {{trans("crudbooster.text_form")}}</div>
                             <div class="card-body child-form-area">
                                 @foreach($form['columns'] as $col)
@@ -553,7 +553,7 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                 </div>
 
                 <div class="card card-default">
-                    <div class="card-heading">
+                    <div class="card-header">
                         <i class='fa fa-table'></i> {{trans('crudbooster.table_detail')}}
                     </div>
                     <div class="card-body no-padding table-responsive" style="max-height: 400px;overflow: auto;">

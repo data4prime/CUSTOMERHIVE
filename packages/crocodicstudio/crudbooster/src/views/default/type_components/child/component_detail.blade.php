@@ -2,7 +2,7 @@
     <td colspan='2'>
 
         <div class="card card-default">
-            <div class="card-heading">
+            <div class="card-header">
                 <i class='fa fa-bars'></i> {{$form['label']}}
             </div>
             <div class="card-body">
