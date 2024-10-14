@@ -1,8 +1,6 @@
 <style>
 
-.main-sidebar > .sidebar > a {
-  text-decoration: none;
-}
+
   
 
 </style>
