@@ -60,7 +60,7 @@ $chatai_conf = AdminChatAIController::getConf();
 }
 
 /* Sidebar inner components */
-.main-sidebar-right .user-card {
+.main-sidebar-right .user-panel {
   padding: 10px;
   color: #fff;
 }

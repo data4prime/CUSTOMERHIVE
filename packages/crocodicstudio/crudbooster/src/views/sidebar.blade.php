@@ -13,7 +13,7 @@ a {
   <section class="sidebar">
 
     <!-- Sidebar user card (optional) -->
-    <div class="user-card">
+    <div class="user-panel">
       <div class="pull-{{ trans('crudbooster.left') }} image">
         <img src="{{ CRUDBooster::myPhoto() }}" class="img-circle" alt="{{ trans('crudbooster.user_image') }}" />
       </div>
