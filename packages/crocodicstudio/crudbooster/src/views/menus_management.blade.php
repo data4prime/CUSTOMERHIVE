@@ -187,14 +187,14 @@ $(function () {
 <div class='row'>
     <div class="col-sm-5">
 
-        <div class="panel panel-success">
-            <div class="panel-heading">
+        <div class="card card-success">
+            <div class="card-heading">
                 <strong>Menu Order (Active)</strong>
                 <span id='menu-saved-info' style="display:none" class='pull-right text-success'>
                     <i class='fa fa-check'></i> Menu Saved !
                 </span>
             </div>
-            <div class="panel-body clearfix">
+            <div class="card-body clearfix">
                 <ul class='draggable-menu draggable-menu-active'>
                     @php echo $menu_active_html @endphp
                 </ul>
@@ -204,11 +204,11 @@ $(function () {
             </div>
         </div>
 
-        <div class="panel panel-danger">
-            <div class="panel-heading">
+        <div class="card card-danger">
+            <div class="card-heading">
                 <strong>Menu Order (Inactive)</strong>
             </div>
-            <div class="panel-body clearfix">
+            <div class="card-body clearfix">
 
                 <ul class='draggable-menu draggable-menu-inactive'>
                     @php echo $menu_inactive_html @endphp
@@ -241,11 +241,11 @@ $(function () {
     ?>
 
     <div class="col-sm-7">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
+        <div class="card card-primary">
+            <div class="card-heading">
                 Add Menu
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <form class='form-horizontal' method='post' id="form" enctype="multipart/form-data"
                     action='{{CRUDBooster::mainpath("add-save")}}'>
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">

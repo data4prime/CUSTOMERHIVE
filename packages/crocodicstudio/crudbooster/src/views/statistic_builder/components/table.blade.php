@@ -5,11 +5,11 @@
 
 <div id='{{$componentID}}' class='border-box'>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             [name]
         </div>
-        <div class="panel-body table-responsive no-padding">
+        <div class="card-body table-responsive no-padding">
             [sql]
         </div>
     </div>

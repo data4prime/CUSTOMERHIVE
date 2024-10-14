@@ -25,9 +25,9 @@
 </head>
 <body>
   <div class="container-fluid" id="wrapper">
-    <div class="panel panel-primary hidden-xs">
-      <div class="panel-heading">
-        <h1 class="panel-title">{{ trans('laravel-filemanager::lfm.title-panel') }}</h1>
+    <div class="card card-primary hidden-xs">
+      <div class="card-heading">
+        <h1 class="card-title">{{ trans('laravel-filemanager::lfm.title-card') }}</h1>
       </div>
     </div>
     <div class="row">
@@ -48,7 +48,7 @@
               <i class="fa fa-arrow-left"></i>
               <span class="hidden-xs">{{ trans('laravel-filemanager::lfm.nav-back') }}</span>
             </a>
-            <a class="navbar-brand visible-xs" href="#">{{ trans('laravel-filemanager::lfm.title-panel') }}</a>
+            <a class="navbar-brand visible-xs" href="#">{{ trans('laravel-filemanager::lfm.title-card') }}</a>
           </div>
           <div class="collapse navbar-collapse" id="nav-buttons">
             <ul class="nav navbar-nav navbar-right">

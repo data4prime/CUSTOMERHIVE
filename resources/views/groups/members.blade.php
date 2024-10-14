@@ -14,12 +14,12 @@
     @endif
     @endif
 
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="card card-default">
+      <div class="card-heading">
         <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Add member</strong>
       </div>
 
-      <div class="panel-body" style="padding:20px 0px 0px 0px">
+      <div class="card-body" style="padding:20px 0px 0px 0px">
         <form class='form-horizontal' method='post' id="form" enctype="multipart/form-data" action='{{$action}}'>
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
           <input type='hidden' name='return_url' value='{{ @$return_url }}' />

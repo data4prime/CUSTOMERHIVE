@@ -128,19 +128,19 @@
                     </div>
                 </li>
                 <li class='connectedSortable' title='Drag To Main Area'>
-                    <div id='btn-panelarea' class='button-widget-area'>
-                        <a href="#" data-component='panelarea' class='btn-add-widget add-panel-area'>
-                            <img src='{{asset("vendor/crudbooster/assets/statistic_builder/panel.png")}}' />
-                            <div class='title'>Panel Area</div>
+                    <div id='btn-cardarea' class='button-widget-area'>
+                        <a href="#" data-component='cardarea' class='btn-add-widget add-card-area'>
+                            <img src='{{asset("vendor/crudbooster/assets/statistic_builder/card.png")}}' />
+                            <div class='title'>card Area</div>
                         </a>
                     </div>
                 </li>
 
                 <li class='connectedSortable' title='Drag To Main Area'>
-                    <div id='btn-panelcustom' class='button-widget-area'>
-                        <a href="#" data-component='panelcustom' class='btn-add-widget add-panel-custom'>
-                            <img src='{{asset("vendor/crudbooster/assets/statistic_builder/panel.png")}}' />
-                            <div class='title'>Panel Custom</div>
+                    <div id='btn-cardcustom' class='button-widget-area'>
+                        <a href="#" data-component='cardcustom' class='btn-add-widget add-card-custom'>
+                            <img src='{{asset("vendor/crudbooster/assets/statistic_builder/card.png")}}' />
+                            <div class='title'>card Custom</div>
                         </a>
                     </div>
                 </li>

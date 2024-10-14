@@ -1,17 +1,17 @@
 @if($command=='layout')
 <div id='{{$componentID}}' class='border-box'>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             [name]
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <p>[content]</p>
         </div>
     </div>
 
     <div class='action pull-right'>
-        <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Panel Area'
+        <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='card Area'
             class='btn-edit-component'><i class='fa fa-pencil'></i></a>
         &nbsp;
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i

@@ -58,11 +58,11 @@
             href='{{route("SettingsControllerGetAdd")."?group_setting=".$page_title}}'><i class='fa fa-plus'></i> Add
             Field Setting</a></p>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-heading">
             <i class='fa fa-cog'></i> {{$page_title}}
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <form method='post' id="form" enctype="multipart/form-data"
                 action='{{CRUDBooster::mainpath("save-setting?group_setting=$page_title")}}'>
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
