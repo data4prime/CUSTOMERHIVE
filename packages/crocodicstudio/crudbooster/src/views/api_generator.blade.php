@@ -614,7 +614,7 @@
                     <div class='mb-3 row'>
                         <label>API Slug</label>
                         <div class='input-group'>
-                            <span class="input-group-addon" id="basic-addon1"
+                            <span class="input-group-text" id="basic-addon1"
                                 style="background:#eeeeee">{{url("api")}}/</span>
                             <input type='text' class='form-control'
                                 value='{{isset($row->permalink) ? $row->permalink : ''}}' required name='permalink'

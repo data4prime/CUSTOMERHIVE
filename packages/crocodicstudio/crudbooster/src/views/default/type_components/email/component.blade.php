@@ -8,7 +8,7 @@
 
     <div class="{{$col_width?:'col-sm-10'}}">
         <div class="input-group">
-            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
             <input type="email" name="{{$name}}" style="display: none">
             <input type='email' title="{{$form['label']}}" {{$required}} {{$readonly}} {!!$placeholder!!} {{$disabled}}
                 {{isset($validation['max'])?"maxlength=".$validation['max']:""}} class='form-control'

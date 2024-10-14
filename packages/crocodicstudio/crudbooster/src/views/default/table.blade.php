@@ -385,7 +385,7 @@ $total = $result->total();
                                     <div class='col-sm-6'>
                                         <div
                                             class='input-group {{ ($col["type_data"] == "time")?"bootstrap-timepicker":"" }}'>
-                                            <span class="input-group-addon">{{trans("crudbooster.filter_from")}}:</span>
+                                            <span class="input-group-text">{{trans("crudbooster.filter_from")}}:</span>
                                             @php
                                             if(in_array($col["type_data"], ["date","datetime","timestamp"])){
                                             $class_td = "datepicker";
@@ -410,7 +410,7 @@ $total = $result->total();
                                     <div class='col-sm-6'>
                                         <div
                                             class='input-group {{ ($col["type_data"] == "time")?"bootstrap-timepicker":"" }}'>
-                                            <span class="input-group-addon">{{trans("crudbooster.filter_to")}}:</span>
+                                            <span class="input-group-text">{{trans("crudbooster.filter_to")}}:</span>
                                             <input {{ (CRUDBooster::getTypeFilter($col["field_with"]) !='between'
                                                 )?"disabled":"" }} type='text'
                                                 class='filter-value-between form-control {{ $class_td}}' {{

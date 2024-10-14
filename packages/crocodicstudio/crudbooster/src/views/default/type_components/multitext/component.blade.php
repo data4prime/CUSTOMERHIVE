@@ -11,7 +11,7 @@
         <div class="input-group">
             <input type='text' title="{{$form['label']}}" {{$required}} {{$readonly}} {!!$placeholder!!} {{$disabled}}
                 {{isset($validation['max'])?"maxlength=".$validation['max']:""}} class='form-control {{$name}} first_value'
-                   name=" {{$name}}[]" id="{{$name}}" value='{{$value}}' /> <span class="input-group-addon"
+                   name=" {{$name}}[]" id="{{$name}}" value='{{$value}}' /> <span class="input-group-text"
                 style="padding: 1px;"><button type="button" class="add_field_button {{$name}}  btn btn-danger  btn-sm"><i
                         class='fa fa-plus'></i></button></span>
         </div>

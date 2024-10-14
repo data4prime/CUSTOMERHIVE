@@ -14,7 +14,7 @@
                  {{isset($validation['max'])?" max=".$validation['max']:""}}
                  class='form-control'
                  name=" {{$name}}" id="{{$name}}" value='{{$value}}' />
-            <span class="input-group-addon"><b>%</b></span>
+            <span class="input-group-text"><b>%</b></span>
         </div>
         <div class="text-danger">{!! $errors->first($name)?"<i class='fa fa-info-circle'></i> ".$errors->first($name):""
             !!}</div>
