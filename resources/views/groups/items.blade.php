@@ -77,7 +77,7 @@
   </div><!--END AUTO MARGIN-->
   <!-- List members -->
   <div class="box">
-    <div class="box-header">
+    <div class="box-header mb-3">
       <h4>{{ $group->name }} Allowed Items</h4>
     </div>
     <div class="box-body table-responsive no-padding">

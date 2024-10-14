@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="box">
-  <div class="box-header">
+  <div class="box-header mb-3">
   </div>
   <div class="box-body table-responsive no-padding">
     <table class='table table-striped table-bordered'>
