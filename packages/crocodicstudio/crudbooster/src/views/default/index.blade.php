@@ -82,7 +82,7 @@
 
 //if $module->path contians 'mg_'
 if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users') { ?>
-                    <li>
+                    <li class="dropdown-item">
 
                     <a style="border-bottom: 1px solid;" href="javascript:void(0)" id='mass_editing_button'
                                     data-url-parameter='{{$build_query}}' title='Mass Edit' >
@@ -98,7 +98,7 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
 
                     
                     @if($button_delete && CRUDBooster::isDelete())
-                    <li>
+                    <li  class="dropdown-item" >
                         <a href="javascript:void(0)" data-name='delete' title="{{trans('crudbooster.action_delete_selected')}}">
                             <i class="fa fa-trash"></i> {{trans('crudbooster.action_delete_selected')}}
                         </a>
@@ -107,7 +107,7 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
 
                     @if($button_selected)
                     @foreach($button_selected as $button)
-                    <li>
+                    <li  class="dropdown-item">
                         <a href="javascript:void(0)" data-name='{{$button["name"]}}' title='{{$button["label"]}}'>
                             <i class="fa fa-{{$button['icon']}}"></i> {{$button['label']}}
                         </a>
