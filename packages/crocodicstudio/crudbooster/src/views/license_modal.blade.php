@@ -31,6 +31,7 @@
     <div class="modal-content">
       <div class="modal-header" style="justify-content: space-between;">
         <h5 class="modal-title" id="licenseModalLabel">{{ trans('crudbooster.license') }}</h5>
+
         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
