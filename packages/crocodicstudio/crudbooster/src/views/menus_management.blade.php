@@ -187,8 +187,8 @@ $(function () {
 <div class='row'>
     <div class="col-sm-5">
 
-        <div class="card card-success">
-            <div class="card-header">
+        <div class="card border-succes">
+            <div class="card-header bg-succes text-white">
                 <strong>Menu Order (Active)</strong>
                 <span id='menu-saved-info' style="display:none" class='pull-right text-success'>
                     <i class='fa fa-check'></i> Menu Saved !
@@ -204,8 +204,8 @@ $(function () {
             </div>
         </div>
 
-        <div class="card card-danger">
-            <div class="card-header">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
                 <strong>Menu Order (Inactive)</strong>
             </div>
             <div class="card-body clearfix">
@@ -241,8 +241,8 @@ $(function () {
     ?>
 
     <div class="col-sm-7">
-        <div class="card card-primary">
-            <div class="card-header">
+        <div class="card border-primary">
+            <div class="card-header bg-primary text-white">
                 Add Menu
             </div>
             <div class="card-body">
