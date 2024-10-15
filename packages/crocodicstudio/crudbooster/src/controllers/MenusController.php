@@ -187,7 +187,6 @@ class MenusController extends CBController
 
             $('#form-group-icon').toggle();
 
-            /*console.log($(this).val());
 
             if($(this).val() == 1)
             {
@@ -196,7 +195,7 @@ class MenusController extends CBController
             }else {
               $('#form-group-icon').show();
               $('#form-group-icon_upload').hide();
-            }*/
+            }
 
 
 
