@@ -1,4 +1,5 @@
 @if ($paginator->hasPages())
+simple bootstrap 5
     <nav role="navigation" aria-label="Pagination Navigation">
         <ul class="pagination">
             {{-- Previous Page Link --}}

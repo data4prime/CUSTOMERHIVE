@@ -1,4 +1,5 @@
 @if ($paginator->hasPages())
+simple tailwind
     <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between">
         {{-- Previous Page Link --}}
         @if ($paginator->onFirstPage())
