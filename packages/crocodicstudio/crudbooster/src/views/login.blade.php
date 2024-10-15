@@ -98,24 +98,24 @@
                 </div>
                 @endif
 
-                <div class="mb-3 row has-feedback">
+                <div class="form-group has-feedback">
                     <input autocomplete='off' type="text" class="form-control" name='email' required
                         placeholder="Email" />
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>
-                <div class="mb-3 row has-feedback">
+                <div class="form-group has-feedback">
                     <input autocomplete='off' type="password" class="form-control" name='password' required
                         placeholder="Password" />
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
-                <div style="margin-bottom:10px" class='row'>
+                <div style="margin-bottom:10px" class='form-group'>
                     <div class='col-xs-12'>
                         <button type="submit" class="btn btn-primary btn-block btn-flat"><i class='fa fa-lock'></i>
                             {{trans("crudbooster.button_sign_in")}}</button>
                     </div>
                 </div>
 
-                <div class='row'>
+                <div class='form-group'>
                     <div class='col-xs-12' align="center">
                         <p style="padding:10px 0px 10px 0px">{{trans("crudbooster.text_forgot_password")}} <a
                                 href='{{route("getForgot")}}'>{{trans("crudbooster.click_here")}}</a></p>
