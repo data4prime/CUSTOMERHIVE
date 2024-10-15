@@ -37,7 +37,7 @@ if ($method != 'content_view') {
     <!-- Header Navbar -->
     <nav style="padding: 0;" class="navbar navbar-expand-lg navbar-light justify-content-between" role="navigation">
         <!-- Sidebar toggle button-->
-        <a href="#" class="sidebar-toggle" data-bs-toggle="offcanvas" role="button">
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="visually-hidden">Toggle navigation</span>
         </a>
         <!-- Navbar Right Menu -->

@@ -294,7 +294,7 @@
             $('.sidebar-toggle').click();
             //expand container
             $('#content_section').css('padding', '0px');
-            $('#content_section').css('height', 'calc(100vh - 42px');
+            $('#content_section').css('height', 'calc(100vh - 42px'));
             $('.qi_iframe_container').css('height', '100%');
             $('.qi_iframe').css('padding-bottom', '0px');
             $('.content-wrapper').css('min-height', '0px !important');
