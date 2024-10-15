@@ -187,7 +187,7 @@ $(function () {
 <div class='row'>
     <div class="col-sm-5">
 
-        <div class="card border-success">
+        <div class="card border-success mb-3">
             <div class="card-header bg-success text-white">
                 <strong>Menu Order (Active)</strong>
                 <span id='menu-saved-info' style="display:none" class='pull-right text-success'>
