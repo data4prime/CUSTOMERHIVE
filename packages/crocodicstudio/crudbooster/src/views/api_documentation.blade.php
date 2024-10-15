@@ -2,11 +2,31 @@
 
 @section('content')
 
+<ul class="nav flex-row">
+    <li class="nav-item">
+        <a class="nav-link active" href="https://staging.thecustomerhive.com/admin/api_generator">
+            <i class="fa fa-file"></i> API Documentation
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="https://staging.thecustomerhive.com/admin/api_generator/screet-key">
+            <i class="fa fa-key"></i> API Secret Key
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="https://staging.thecustomerhive.com/admin/api_generator/generator">
+            <i class="fa fa-cog"></i> API Generator
+        </a>
+    </li>
+</ul>
+
+<!--
 <ul class="nav nav-tabs">
     <li class="active"><a href="{{ CRUDBooster::mainpath() }}"><i class='fa fa-file'></i> API Documentation</a></li>
     <li><a href="{{ CRUDBooster::mainpath('screet-key') }}"><i class='fa fa-key'></i> API Secret Key</a></li>
     <li><a href="{{ CRUDBooster::mainpath('generator') }}"><i class='fa fa-cog'></i> API Generator</a></li>
 </ul>
+-->
 
 <div class='box'>
 
@@ -58,13 +78,46 @@
         </script>
         @endpush
 
-        <div class='mb-3 row'>
+        <div class="mb-4">
+            <label for="apiBaseUrl" class="form-label">API BASE URL</label>
+            <input type="text" id="apiBaseUrl" readonly class="form-control" 
+                title="Hanya klik dan otomatis copy to clipboard (kecuali Safari)" 
+                onClick="this.select(); document.execCommand('copy');" 
+                value="{{url('api')}}" />
+            <div class="form-text">Clicca sul campo sopra per copiare l'URL negli appunti.</div>
+        </div>
+
+
+        <!--<div class='mb-3 row'>
             <label>API BASE URL</label>
             <input type='text' readonly class='form-control'
                 title='Hanya klik dan otomatis copy to clipboard (kecuali Safari)'
-                onClick="this.setSelectionRange(0, this.value.length); document.execCommand('copy');" value='{{url('
-                api')}}' />
+                onClick="this.setSelectionRange(0, this.value.length); document.execCommand('copy');" 
+                value='{{url('api')}}' />
+        </div>-->
+        <div class="mb-4">
+            <h5>How To Use</h5>
+            <div class="mb-2">
+                <strong>SCREETKEY:</strong> ABCDEF123456
+            </div>
+            <div class="mb-2">
+                <strong>TIME:</strong> UNIX CURRENT TIME
+            </div>
+            <div class="mb-2">
+                <strong>Header:</strong>
+            </div>
+            <div class="mb-2">
+                <code>X-Authorization-Token:</code> <span class="text-muted">md5(SCREETKEY + TIME + USER_AGENT)</span>
+            </div>
+            <div class="mb-2">
+                <code>X-Authorization-Time:</code> TIME
+            </div>
+            <div class="mb-2">
+                <code>X-user:</code> User Email
+            </div>
         </div>
+
+<!--
         <div class='mb-3 row'>
             <label>How To Use</label><br />
             SCREETKEY : ABCDEF123456 <br />
@@ -74,6 +127,7 @@
             X-Authorization-Time : TIME<br>
             X-user : User Email
         </div>
+-->
         <table class='table table-striped table-api table-bordered'>
             <thead>
                 <tr class='info'>

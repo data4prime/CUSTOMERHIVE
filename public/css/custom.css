@@ -191,3 +191,7 @@ th > a {
   text-decoration: none;
 }
 
+.nav-tabs > li > a {
+  text-decoration: none;
+}
+
