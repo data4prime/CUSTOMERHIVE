@@ -636,7 +636,9 @@ class AdminChatAIController extends CBController
 
 
 		$url = $chatai_conf->url;
-		$token = $chatai_conf->token;
+		//$token = $chatai_conf->token;
+
+		$token = ChatAIHelper::getToken($chatai_conf->id);
 
 		// Imposta i dati da inviare nel corpo della richiesta
 		$data = [
@@ -661,7 +663,6 @@ class AdminChatAIController extends CBController
 
 		$response = curl_exec($ch);
 
-		dd($response);
 
 		if ($response === false) {
 			//echo json_encode(['message' => 'Errore nella richiesta. Verifica la configurazione attiva!']);
@@ -677,7 +678,6 @@ class AdminChatAIController extends CBController
 
 		} else {
 			$response_message = json_decode($response, true);
-			dd($response_message);
 			if (isset($response_message["text"])) {
 				$response_message = $response_message["text"];
 			} else {
