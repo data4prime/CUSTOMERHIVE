@@ -28,205 +28,132 @@ if ($method != 'content_view') {
 
 @endphp 
 
+
 <!-- Main Header -->
 <header class="main-header">
 
     <!-- Logo -->
     <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}' class="logo">{{CRUDBooster::getSetting('appname')}}</a>
-<!--navbar navbar-expand-lg navbar-light justify-content-between-->
+
     <!-- Header Navbar -->
-    <nav style="padding: 0;" class="navbar navbar-expand-lg navbar-light justify-content-between" role="navigation">
-        <!-- Sidebar toggle button-->
-        <a href="#" class="sidebar-toggle" data-bs-toggle="offcanvas" role="button">
-            <span class="visually-hidden">Toggle navigation</span>
-        </a>
-        <!-- Navbar Right Menu -->
-        <!--
-        <div class="navbar-custom-menu">
-            <ul class="nav navbar-nav">
+    <nav class="navbar navbar-expand-lg navbar-light justify-content-between" role="navigation">
+        <!-- Sidebar toggle button for mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-                <li class="assistance-menu">
-                    <a href="#" class="toggle-sidebar-btn" id="toggle-chat" title='AI Assistance' aria-expanded="false">
-                        <i id='icon_assistance' class="fa fa-comments-o">
-                        </i>
-                        <span id='assistance_count' class="label label-danger" style="display:none">0</span>
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-bs-toggle="offcanvas" role="button">
+                <span class="visually-hidden">Toggle navigation</span>
+            </a>
+
+            <!-- Navbar Right Menu -->
+            <ul class="navbar-nav ms-auto">
+                <!-- Assistance Menu Item -->
+                <li class="nav-item assistance-menu">
+                    <a href="#" class="nav-link" id="toggle-chat" title="AI Assistance" aria-expanded="false">
+                        <i id="icon_assistance" class="fa fa-comments-o"></i>
+                        <span id="assistance_count" class="badge bg-danger" style="display:none">0</span>
                     </a>
-
                 </li>
 
+                <!-- Helper Link -->
                 @if (!empty($url))
-                    <li class="assistance-menu">
-                        <a href="{{$url}}" target="_blank" title='Helper' >
-                            <i id='icon_assistance' class="fa fa-question-circle">
-                            </i>
-                            <span id='assistance_count' class="label label-danger" style="display:none">0</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{$url}}" target="_blank" title='Helper'>
+                            <i id='icon_assistance' class="fa fa-question-circle"></i>
                         </a>
-
                     </li>
                 @endif
 
-
-
-                <li class="dropdown notifications-menu">
-
-                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" title='Notifications' aria-expanded="false">
-                        <i id='icon_notification' class="fa fa-bell-o"></i>
-                        <span id='notification_count' class="label label-danger" style="display:none">0</span>
-                    </a>
-                    <ul id='list_notifications' class="dropdown-menu">
-                        <li class="header">{{trans("crudbooster.text_no_notification")}}</li>
-                        <li>
-                            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;">
-                                <ul class="menu" style="overflow: hidden; width: 100%; height: 200px;">
-                                    <li>
-                                        <a href="#">
-                                            <em>{{trans("crudbooster.text_no_notification")}}</em>
-                                        </a>
-                                    </li>
-
-                                </ul>
-                                <div class="slimScrollBar"
-                                     style="width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 195.122px; background: rgb(0, 0, 0);"></div>
-                                <div class="slimScrollRail"
-                                     style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; opacity: 0.2; z-index: 90; right: 1px; background: rgb(51, 51, 51);"></div>
-                            </div>
-                        </li>
-                        <li class="footer"><a href="{{route('NotificationsControllerGetIndex')}}">{{trans("crudbooster.text_view_all_notification")}}</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown user user-menu">
-                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                        <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="user-image" alt="User Image"/>
-                        <span class="hidden-xs">{{ CRUDBooster::myName() }}</span>
+                <!-- Notifications Menu -->
+                <li class="nav-item dropdown notifications-menu">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" title="Notifications" aria-expanded="false">
+                        <i id="icon_notification" class="fa fa-bell-o"></i>
+                        <span id="notification_count" class="badge bg-danger" style="display:none">0</span>
                     </a>
                     <ul class="dropdown-menu">
+                        <li class="dropdown-header">{{trans("crudbooster.text_no_notification")}}</li>
+                        <li>
+                            <div class="overflow-auto" style="height: 200px;">
+                                <ul class="menu list-unstyled" style="height: 200px;"></ul>
+                            </div>
+                        </li>
+                        <li class="dropdown-footer"><a href="{{route('NotificationsControllerGetIndex')}}">{{trans("crudbooster.text_view_all_notification")}}</a></li>
+                    </ul>
+                </li>
+
+                <!-- User Account Menu -->
+                <li class="nav-item dropdown user-menu">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                        <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="img-circle" alt="User Image" width="30" height="30">
+                        <span class="d-none d-lg-inline">Super Admin</span> <!-- Only visible on larger screens -->
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!-- User image and info in the menu -->
                         <li class="user-header">
-                            <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="img-circle" alt="User Image"/>
+                            <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="img-circle" alt="User Image" width="80" height="80">
                             <p>
                                 {{ CRUDBooster::myName() }}
                                 <small>{{ CRUDBooster::myPrivilegeName() }}</small>
                                 <small><em><?php echo date('d F Y')?></em></small>
                             </p>
                         </li>
-
-                        <li class="user-footer">
-                            <div class="pull-{{ trans('crudbooster.left') }}">
-                                <a href="{{ route('AdminCmsUsersControllerGetProfile') }}" class="btn btn-default btn-flat"><i
-                                            class='fa fa-user'></i> {{trans("crudbooster.label_button_profile")}}</a>
-                            </div>
-                            <div class="pull-{{ trans('crudbooster.right') }}">
-                                <a title='Lock Screen' href="{{ route('getLockScreen') }}" class='btn btn-default btn-flat'><i class='fa fa-key'></i></a>
-                                <a href="javascript:void(0)" onclick="swal({
-                                        title: '{{trans('crudbooster.alert_want_to_logout')}}',
-                                        type:'info',
-                                        showCancelButton:true,
-                                        allowOutsideClick:true,
-                                        confirmButtonColor: '#DD6B55',
-                                        confirmButtonText: '{{trans('crudbooster.button_logout')}}',
-                                        cancelButtonText: '{{trans('crudbooster.button_cancel')}}',
-                                        closeOnConfirm: false
-                                        }, function(){
-                                        location.href = '{{ route("getLogout") }}';
-
-                                        });" title="{{trans('crudbooster.button_logout')}}" class="btn btn-danger btn-flat"><i class='fa fa-power-off'></i></a>
-                            </div>
+                        
+                        <!-- Menu Footer -->
+                        <li class="user-footer d-flex justify-content-between">
+                            <a href="{{ route('AdminCmsUsersControllerGetProfile') }}" class="btn btn-default btn-flat"><i class="fa fa-user"></i> Profile</a>
+                            <a href="{{ route('getLockScreen') }}" class="btn btn-default btn-flat" title="Lock Screen"><i class="fa fa-key"></i></a>
+                            <a href="javascript:void(0)" onclick="swal({
+                                    title:'{{trans('crudbooster.alert_want_to_logout')}}',
+                                    type: 'info',
+                                    showCancelButton: true,
+                                    allowOutsideClick: true,
+                                    confirmButtonColor: '#DD6B55',
+                                    confirmButtonText: '{{trans('crudbooster.button_logout')}}',
+                                    cancelButtonText: '{{trans('crudbooster.button_cancel')}}',
+                                    closeOnConfirm: false
+                                }, function(){
+                                    location.href = '{{ route("getLogout") }}';
+                                });" title="{{trans('crudbooster.button_logout')}}" class="btn btn-danger btn-flat">
+                                <i class="fa fa-power-off"></i></a>
                         </li>
                     </ul>
                 </li>
             </ul>
-        </div>-->
-<div class="navbar-custom-menu">
-    <ul class="nav navbar-nav">
-
-        <!-- Assistance Menu Item -->
-        <li class="nav-item assistance-menu">
-            <a href="#" class="nav-link toggle-sidebar-btn" id="toggle-chat" title="AI Assistance" aria-expanded="false">
-                <i id="icon_assistance" class="fa fa-comments-o"></i>
-                <span id="assistance_count" class="badge bg-danger" style="display:none">0</span>
-            </a>
-        </li>
-
-        <!-- Helper Link -->
-
-
-                @if (!empty($url))
-                    <li class="nav-item assistance-menu">
-                        <a class="nav-link toggle-sidebar-btn" href="{{$url}}" target="_blank" title='Helper' >
-                            <i id='icon_assistance' class="fa fa-question-circle">
-                            </i>
-                            <span id='assistance_count' class="badge bg-danger" style="display:none">0</span>
-                        </a>
-
-                    </li>
-                @endif
-
-        <!-- Notifications Menu -->
-        <li class="nav-item dropdown notifications-menu">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" title="Notifications" aria-expanded="false">
-                <i id="icon_notification" class="fa fa-bell-o"></i>
-                <span id="notification_count" class="badge bg-danger" style="display:none">0</span>
-            </a>
-            <ul id="list_notifications" class="dropdown-menu">
-                <li class="dropdown-header">{{trans("crudbooster.text_no_notification")}}</li>
-                <li>
-                    <!-- inner menu: contains the actual data -->
-                    <div class="overflow-auto" style="height: 200px;">
-                        <ul class="menu list-unstyled" style="height: 200px;"></ul>
-                    </div>
-                </li>
-                <li class="dropdown-footer"><a href="{{route('NotificationsControllerGetIndex')}}">{{trans("crudbooster.text_view_all_notification")}}</a></li>
-            </ul>
-        </li>
-
-        <!-- User Account Menu -->
-        <li class="nav-item dropdown user-menu">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <!-- The user image in the navbar-->
-                <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="img-circle" alt="User Image" width="30" height="30">
-                <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                <span class="d-none d-sm-inline">Super Admin</span>
-            </a>
-            <ul class="dropdown-menu">
-                <!-- The user image in the menu -->
-                <li class="user-header">
-                    <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="img-circle" alt="User Image" width="80" height="80">
-                            <p>
-                                {{ CRUDBooster::myName() }}
-                                <small>{{ CRUDBooster::myPrivilegeName() }}</small>
-                                <small><em><?php echo date('d F Y')?></em></small>
-                            </p>
-                </li>
-
-                <!-- Menu Footer-->
-                <li class="user-footer">
-                    <div class="pull-{{ trans('crudbooster.left') }}">
-                        <a href="{{ route('AdminCmsUsersControllerGetProfile') }}" class="btn btn-default btn-flat"><i class="fa fa-user"></i> Profile</a>
-                    </div>
-                    <div class="pull-{{ trans('crudbooster.right') }}">
-                        <a title="Lock Screen" href="{{ route('getLockScreen') }}" class="btn btn-default btn-flat"><i class="fa fa-key"></i></a>
-                        <a href="javascript:void(0)" onclick="swal({
-                                title:'{{trans('crudbooster.alert_want_to_logout')}}',
-                                type: 'info',
-                                showCancelButton: true,
-                                allowOutsideClick: true,
-                                confirmButtonColor: '#DD6B55',
-                                confirmButtonText: '{{trans('crudbooster.button_logout')}}',
-                                cancelButtonText: '{{trans('crudbooster.button_cancel')}}',
-                                closeOnConfirm: false
-                            }, function(){
-                                location.href = '{{ route("getLogout") }}';
-                            });" title="{{trans('crudbooster.button_logout')}}" class="btn btn-danger btn-flat">
-                            <i class="fa fa-power-off"></i></a>
-                    </div>
-                    
-                </li>
-            </ul>
-        </li>
-    </ul>
-</div>
-
+        </div>
     </nav>
 </header>
+
+<!-- Custom Styles for Mobile Responsiveness -->
+<style>
+    /* Adjust the navbar toggler button for better mobile experience */
+    .navbar-toggler {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Ensure sidebar toggle icon aligns well on mobile */
+    .sidebar-toggle {
+        padding: 0.5rem 1rem;
+    }
+
+    /* Add some padding to make notifications and user dropdown more responsive */
+    .notifications-menu .dropdown-menu, .user-menu .dropdown-menu {
+        padding: 0.5rem;
+        width: 200px; /* Adjust the dropdown width if needed */
+    }
+
+    /* Center-align items on mobile */
+    @media (max-width: 576px) {
+        .navbar-nav {
+            text-align: center;
+        }
+        .user-menu img {
+            margin: 0 auto;
+        }
+    }
+</style>
 
 
