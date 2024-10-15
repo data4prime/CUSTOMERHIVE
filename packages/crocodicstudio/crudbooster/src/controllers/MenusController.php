@@ -79,6 +79,8 @@ class MenusController extends CBController
   				var type_menu = $('input[name=type][checked]').val();
   				type_menu = (current_type)?current_type:type_menu;
 
+          console.log(type_menu);
+
           //if is_custom is checked, show icon upload and hide fontawesome select
           if($('input[name=is_custom]:checked').val() == 1)
           {
