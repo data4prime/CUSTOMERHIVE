@@ -111,7 +111,7 @@ $column1 = $raw[1];
 @endpush
 @endif
 
-<div class='mb-3 row {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='mb-3 row-{{$name}}'
+<div class='mb-3 row {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='mb-3 form-group-{{$name}}'
     style='{{isset($form["style"]) ? $form["style"] : "" }}'>
     <label class='col-form-label col-sm-2'>{{$form['label']}}
         @if($required)

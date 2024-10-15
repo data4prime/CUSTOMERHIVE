@@ -8,7 +8,7 @@ $name = str_slug($form['label'], '');
     })
 </script>
 @endpush
-<div class='mb-3 row {{$header_group_class}}' id='mb-3 row-{{$name}}'>
+<div class='mb-3 row {{$header_group_class}}' id='mb-3 form-group-{{$name}}'>
 
     @if($form['columns'])
     <div class="col-sm-12">

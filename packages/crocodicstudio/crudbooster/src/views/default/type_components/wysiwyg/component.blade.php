@@ -32,7 +32,7 @@
         })
     </script>
 @endpush
-<div class='mb-3 row' id='mb-3 row-{{$name}}' style="{{@$form['style']}}">
+<div class='mb-3 row' id='mb-3 form-group-{{$name}}' style="{{@$form['style']}}">
     <label class='col-form-label col-sm-2'>{{$form['label']}}</label>
 
     <div class="{{$col_width?:'col-sm-10'}}">
