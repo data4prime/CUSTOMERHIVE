@@ -102,7 +102,7 @@ $add_field = is_array($parent_select) ? $parent_select[1] : '';
 @endif
 
 
-<div class='mb-3 row {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='mb-3 form-group-{{$name}}'
+<div class='mb-3 row {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='form-group-{{$name}}'
     style="{{ isset($form['style']) ? $form['style'] : '' }}">
     <label class='col-form-label col-sm-2'>{{$form['label']}}
         @if($required)
