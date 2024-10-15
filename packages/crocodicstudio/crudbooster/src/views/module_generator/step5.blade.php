@@ -82,7 +82,7 @@
 
 
                 <div class="row">
-                    <!--<div class="col-sm-4">
+                    <div class="col-sm-4">
                         <div class="row">
 
                             <div class="col-sm-12">
@@ -145,58 +145,7 @@
 
 
                         </div>
-                    </div>-->
-
-<div class="col-md-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="mb-3">
-                <label class="form-label">Global Privilege</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="global_privilege" id="globalPrivilegeTrue" value="true" {{($cb_global_privilege)?"checked":""}}>
-                    <label class="form-check-label" for="globalPrivilegeTrue">TRUE</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="global_privilege" id="globalPrivilegeFalse" value="false" {{(!$cb_global_privilege)?"checked":""}}>
-                    <label class="form-check-label" for="globalPrivilegeFalse">FALSE</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12">
-            <div class="mb-3">
-                <label class="form-label">Show Button Table Action</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="button_table_action" id="buttonTableActionTrue" value="true" {{($cb_button_table_action)?"checked":""}}>
-                    <label class="form-check-label" for="buttonTableActionTrue">TRUE</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="button_table_action" id="buttonTableActionFalse" value="false" {{(!$cb_button_table_action)?"checked":""}}>
-                    <label class="form-check-label" for="buttonTableActionFalse">FALSE</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12">
-            <div class="mb-3">
-                <label class="form-label">Show Bulk Action Button</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="button_bulk_action" id="buttonBulkActionTrue" value="true" {{($cb_button_bulk_action)?"checked":""}}>
-                    <label class="form-check-label" for="buttonBulkActionTrue">TRUE</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="button_bulk_action" id="buttonBulkActionFalse" value="false" {{(!$cb_button_bulk_action)?"checked":""}}>
-                    <label class="form-check-label" for="buttonBulkActionFalse">FALSE</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12">
-            <div class="mb-3">
-                <label class="form-label">Button Action Style</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="button_action_style" id="butto
-
+                    </div>
 
                     <div class="col-sm-3">
                         <div class="row">
