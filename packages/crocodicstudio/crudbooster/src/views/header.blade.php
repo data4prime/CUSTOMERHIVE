@@ -42,7 +42,7 @@ if ($method != 'content_view') {
         </a>
         <!-- Navbar Right Menu -->
 
-<!--<div class="navbar-custom-menu">-->
+<div class="navbar-custom-menu">
     <ul class="nav">
 
         <!-- Assistance Menu Item -->
@@ -130,7 +130,7 @@ if ($method != 'content_view') {
             </ul>
         </li>
     </ul>
-<!--</div>-->
+</div>
 
     </nav>
 </header>
