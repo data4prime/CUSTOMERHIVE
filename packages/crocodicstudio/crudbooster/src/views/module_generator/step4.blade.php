@@ -369,7 +369,7 @@ $(function () {
               </select>
             </td>
             <td>
-              <a class='btn btn-primary btn-options' href='javascript:;'><i class='fa fa-cog'></i> Options</a>
+              <a class='btn btn-sm btn-primary btn-options' href='javascript:;'><i class='fa fa-cog'></i> Options</a>
               <div class='option_area' style="display: none">
                 <?php
                 $type = $form["type"] ?: "text";
@@ -454,10 +454,10 @@ $(function () {
                       </div>
                     </td>
                     <td>
-                      <a href="javascript:void(0)" class="btn btn-info btn-plus"><i class='fa fa-plus'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-danger btn-delete"><i class='fa fa-trash'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='fa fa-plus'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='fa fa-trash'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
                     </td>
                   </tr>
                   <?php $index++;?>
@@ -484,7 +484,7 @@ $(function () {
                       </select>
                     </td>
                     <td>
-                      <a class='btn btn-primary btn-options' href='#'><i class='fa fa-cog'></i> Options</a>
+                      <a class='btn btn-sm btn-primary btn-options' href='#'><i class='fa fa-cog'></i> Options</a>
                       <div class='option_area' style="display: none">
 
                       </div>
