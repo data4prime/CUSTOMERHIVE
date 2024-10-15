@@ -69,7 +69,7 @@
                     <div class="navbar-header">
                         <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title="{{Session::get('appname')}}"
                             class="navbar-brand">{{CRUDBooster::getSetting('appname')}}</a>
-                        <button style="background-color: trasparent;" type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse"
+                        <button style="background-color: transparent;" type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse"
                             data-target="#navbar-collapse">
                             <i class="fa fa-bars"></i>
                         </button>
