@@ -51,7 +51,7 @@ $chat_messages = Session::get('chat_messages');
         }
 
         .chat-input input {
-            padding: 10px;
+           /* padding: 10px; */
             border: 1px solid #ccc;
             border-radius: 5px;
         }
@@ -219,13 +219,13 @@ h4.chat-title {
 
 
 
-<div class="chat-window" id="chatWindow">
-    <div class="chat-header">
+<div class="card chat-window" id="chatWindow">
+    <div class="card-header chat-header">
         Chat AI
     <div id="x-close-chatai" ><button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
 
     </div>
-    <div class="chat-body">
+    <div class="card-body chat-body">
 
 
 
@@ -263,9 +263,9 @@ h4.chat-title {
             
     @endif
     </div>
-    <div class="chat-footer">
+    <div class="card-footer chat-footer">
         <div class="chat-input">
-            <input type="text" id="publisher-input" style="margin-right: 5px ;" class="form-control" placeholder="Chiedi qualcosa...">
+            <input type="text" id="publisher-input"  class="form-control" placeholder="Chiedi qualcosa...">
             <div class="input-group-append">
                 <button id="send-btn" class="btn btn-primary" type="button">Invia</button>
             </div>
