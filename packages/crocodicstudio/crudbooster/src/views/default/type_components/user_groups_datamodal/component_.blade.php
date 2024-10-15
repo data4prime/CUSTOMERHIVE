@@ -74,7 +74,7 @@
                 
                 <h4 class="modal-title"><i class='fa fa-search'></i> {{trans('crudbooster.datamodal_browse_data')}} |
                     {{$form['label']}}</h4>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
