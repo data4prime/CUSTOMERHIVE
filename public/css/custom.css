@@ -186,3 +186,8 @@ th > a {
 .dropdown-menu>li>a {
     text-decoration: none;
 }
+
+.main-header .sidebar-toggle { 
+  text-decoration: none;
+}
+
