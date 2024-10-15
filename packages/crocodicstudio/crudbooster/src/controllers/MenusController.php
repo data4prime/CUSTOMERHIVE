@@ -185,6 +185,8 @@ class MenusController extends CBController
 
           $('input[name=is_custom]').change(function(){
 
+            console.log($(this).val());
+
             if($(this).val() == 1)
             {
               $('#form-group-icon').hide();
