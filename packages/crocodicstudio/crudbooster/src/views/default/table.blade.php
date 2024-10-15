@@ -192,11 +192,14 @@ $from = $result->count() ? ($result->perPage() * $result->currentPage() - $resul
 $to = $result->perPage() * $result->currentPage() - $result->perPage() + $result->count();
 $total = $result->total();
 ?>
+
+<!--
 <div class="col-md-4" style="margin:30px 0;">
     <span class="pull-right">{{ trans("crudbooster.filter_rows_total") }}
         : {{ $from }} {{ trans("crudbooster.filter_rows_to") }} {{ $to }} {{ trans("crudbooster.filter_rows_of") }} {{
         $total }}</span>
 </div>
+-->
 
 @if($columns)
 @push('bottom')
