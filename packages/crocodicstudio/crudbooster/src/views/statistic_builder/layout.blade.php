@@ -56,6 +56,9 @@
         .skin-red .main-header .navbar .nav>li>a {
             text-decoration: none;
         }
+        .card-header, .inner-box, .box-header mb-3, .btn-add-widget {
+            text-decoration: none;
+        }
 
     </style>
 </head>
