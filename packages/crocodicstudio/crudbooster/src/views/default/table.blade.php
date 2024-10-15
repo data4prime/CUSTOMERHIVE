@@ -184,13 +184,7 @@
 
 </form><!--END FORM TABLE-->
 
-<!--
 <div class="col-md-8">{!! urldecode(str_replace("/?","?",$result->appends(Request::all())->appends('vendor.pagination.custom') )) !!}</div>
--->
-
-<div class="col-md-8">
-    {!! urldecode(str_replace("/?", "?", $result->appends(Request::all())->appends(['vendor_pagination' => 'custom']) )) !!}
-</div>
 
 
 <?php
