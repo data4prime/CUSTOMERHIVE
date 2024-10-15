@@ -50,6 +50,14 @@
     <link rel="stylesheet" type="text/css" href="{{asset('vendor/crudbooster/assets/sweetalert/dist/sweetalert.css')}}">
 
     @stack('head')
+
+    <style>
+
+        .skin-red .main-header .navbar .nav>li>a {
+            text-decoration: none;
+        }
+
+    </style>
 </head>
 
 <body class="<?php echo (Session::get('theme_color')) ?: 'skin-blue'?> old-transition layout-top-nav fixed">
