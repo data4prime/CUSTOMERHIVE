@@ -223,7 +223,7 @@ h4.chat-title {
     <div class="card-header chat-header d-flex justify-content-between align-items-center">
         Chat AI
         <div id="x-close-chatai">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
         </div>
     </div>
 

@@ -38,7 +38,7 @@
       <div class="col-sm-10 col-xs-12" id="main">
         <nav class="navbar navbar-default" id="nav">
           <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse" data-target="#nav-buttons">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-buttons">
               <span class="visually-hidden">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
@@ -65,7 +65,7 @@
                 </a>
               </li>
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   {{ trans('laravel-filemanager::lfm.nav-sort') }} <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
@@ -117,7 +117,7 @@
         <div class="modal-header" style="justify-content: space-between;">
           
           <h4 class="modal-title" id="myModalLabel">{{ trans('laravel-filemanager::lfm.title-upload') }}</h4>
-<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aia-hidden="true">&times;</span></button>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aia-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
           <form action="{{ route('unisharp.lfm.upload') }}" role='form' id='uploadForm' name='uploadForm' method='post' enctype='multipart/form-data'>
@@ -135,7 +135,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-bs-dismiss="modal">{{ trans('laravel-filemanager::lfm.btn-close') }}</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{ trans('laravel-filemanager::lfm.btn-close') }}</button>
           <button type="button" class="btn btn-primary" id="upload-btn">{{ trans('laravel-filemanager::lfm.btn-upload') }}</button>
         </div>
       </div>

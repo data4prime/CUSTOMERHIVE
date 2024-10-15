@@ -113,7 +113,7 @@
 
 <div class='btn-group btn-group-action'>
   <button type='button' class='btn btn-sm btn-primary btn-action'>{{trans("crudbooster.action_label")}}</button>
-  <button type='button' class='btn btn-sm btn-primary dropdown-toggle' data-bs-toggle='dropdown'>
+  <button type='button' class='btn btn-sm btn-primary dropdown-toggle' data-toggle='dropdown'>
     <span class='caret'></span>
     <span class='sr-only'>Toggle Dropdown</span>
   </button>

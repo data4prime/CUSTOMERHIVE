@@ -157,7 +157,7 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                                             {{trans('crudbooster.datamodal_browse_data')}}
                                                             {{$col['label']}}
                                                         </h4>
-<button type="button" class="close" data-bs-dismiss="modal"
+<button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close"><span
                                                                 aria-hidden="true">&times;</span></button>
                                                     </div>

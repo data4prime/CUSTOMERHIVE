@@ -358,14 +358,14 @@
             <div class="modal-header" style="justify-content: space-between;">
                 
                 <h4 class="modal-title">Modal title</h4>
-<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
+<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <p>One fine body&hellip;</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn-submit btn btn-primary" data-loading-text="Saving..."
                     autocomplete="off">Save changes</button>
             </div>
