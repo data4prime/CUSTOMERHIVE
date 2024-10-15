@@ -10,7 +10,7 @@
             <input type="hidden" name="id" value='{{ $id }}'>
             <div class="box-body">
 
-                <div class="row">
+                <!--<div class="row">
                     <div class="col-sm-12">
                         <div class="mb-3 row">
                             <label>Title Field Candidate</label>
@@ -43,7 +43,43 @@
                             <div class="help-block">E.g : column_name,desc</div>
                         </div>
                     </div>
-                </div>
+                </div>-->
+
+<div class="row">
+    <div class="col-12">
+        <div class="mb-3">
+            <label for="titleField" class="form-label">Title Field Candidate</label>
+            <input type="text" id="titleField" name="title_field" value="{{$cb_title_field}}" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="mb-3">
+            <label for="limitData" class="form-label">Limit Data</label>
+            <input type="number" id="limitData" name="limit" value="{{$cb_limit}}" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="mb-3">
+            <label for="orderBy" class="form-label">Order By</label>
+            <?php
+            if (is_array($cb_orderby)) {
+                $orderby = [];
+                foreach ($cb_orderby as $k => $v) {
+                    $orderby[] = $k.','.$v;
+                }
+                $orderby = implode(";", $orderby);
+            } else {
+                $orderby = $cb_orderby;
+            }
+            ?>
+            <input type="text" id="orderBy" name="orderby" value="{{$orderby}}" class="form-control">
+            <div class="form-text">E.g: column_name,desc</div>
+        </div>
+    </div>
+</div>
+
 
                 <div class="row">
                     <div class="col-sm-4">
