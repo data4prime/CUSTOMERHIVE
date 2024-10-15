@@ -800,7 +800,7 @@ class CBController extends Controller
 
         $result->orderby($tablePK, 'desc');
 
-        $result->useBootstrapFive();
+        //$result->useBootstrapFive();
 
         $data['result'] = $result->paginate(6);
         $data['where'] = $where;
