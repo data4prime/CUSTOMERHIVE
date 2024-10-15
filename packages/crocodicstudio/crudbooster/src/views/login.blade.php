@@ -109,7 +109,7 @@
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div style="margin-bottom:10px" class='form-group'>
-                    <div class='col-xs-12'>
+                    <div>
                         <button type="submit" class="btn btn-primary btn-block btn-flat"><i class='fa fa-lock'></i>
                             {{trans("crudbooster.button_sign_in")}}</button>
                     </div>
