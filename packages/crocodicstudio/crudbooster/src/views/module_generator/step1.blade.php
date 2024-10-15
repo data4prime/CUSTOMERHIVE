@@ -46,7 +46,7 @@
             </div>
             <div class="mb-3 row">
                 <label for="">Module Name</label>
-                <input type="text" class="form-control" required name="name"
+                <input style="margin-left: 12px;" type="text" class="form-control" required name="name"
                     value="{{ isset($row->name) ? $row->name : ''}}">
                 <div class="help-block">
                     Symbols, special characters and accents are forbidden. Use only alphanumeric lower case characters

@@ -5,7 +5,7 @@
       Step 1 - Module Information</a>
     </li>
     <li role=" presentation" class="nav-item @if($active_tab == 2)active @endif">
-      <a class="nav-link" href="@if(isset($id)){{Route('ModulsControllerGetStep2').'/'.$id}} @else#@endif"><i class='fa fa-table'></i> Step 2 - Data structure</a>>
+      <a class="nav-link" href="@if(isset($id)){{Route('ModulsControllerGetStep2').'/'.$id}} @else#@endif"><i class='fa fa-table'></i> Step 2 - Data structure</a>
     </li>
     <li role=" presentation" class="nav-item @if($active_tab == 3)active @endif">
       <a class="nav-link" href="@if(isset($id)){{Route('ModulsControllerGetStep3').'/'.$id}} @else#@endif"><i class='fa fa-table'></i> Step 3 - List Settings</a>
