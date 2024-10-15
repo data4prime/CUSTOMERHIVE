@@ -257,7 +257,7 @@ h4.chat-title {
     </div>
 
     <div class="card-footer chat-footer">
-        <div class="input-group">
+        <div class="input-group" style="margin-right: 15px;">
             <input type="text" id="publisher-input" class="form-control" placeholder="Chiedi qualcosa...">
             <button id="send-btn" class="btn btn-primary" type="button">Invia</button>
         </div>
