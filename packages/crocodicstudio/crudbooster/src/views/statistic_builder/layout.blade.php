@@ -67,9 +67,9 @@
             <nav class="navbar navbar-expand-lg navbar-light justify-content-between">
                 <div class="container">
                     <div class="navbar-header">
-                        <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}'
+                        <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title="{{Session::get('appname')}}"
                             class="navbar-brand">{{CRUDBooster::getSetting('appname')}}</a>
-                        <button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse"
+                        <button style="background-color: trasparent;" type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse"
                             data-target="#navbar-collapse">
                             <i class="fa fa-bars"></i>
                         </button>
@@ -86,10 +86,10 @@
                     <!-- Navbar Right Menu -->
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
-                            <li><a href="#" class='btn-show-sidebar' data-bs-toggle="control-sidebar"><i
+                            <li class="nav-item"><a href="#" class='btn-show-sidebar nav-link' data-bs-toggle="control-sidebar"><i
                                         class='fa fa-bars'></i> Add Widget</a></li>
 
-                            <li><a href="{{CRUDBooster::mainpath()}}"><i class='fa fa-sign-out'></i> Exit</a></li>
+                            <li  class="nav-item"><a class='nav-link' href="{{CRUDBooster::mainpath()}}"><i class='fa fa-sign-out'></i> Exit</a></li>
                         </ul>
                     </div>
                     <!-- /.navbar-custom-menu -->
