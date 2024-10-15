@@ -37,7 +37,7 @@ if ($method != 'content_view') {
     <!-- Header Navbar -->
     <nav style="padding: 0;" class="navbar navbar-expand-lg navbar-light justify-content-between" role="navigation">
         <!-- Sidebar toggle button-->
-        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <a href="#" class="sidebar-toggle" data-bs-toggle="offcanvas" role="button">
             <span class="visually-hidden">Toggle navigation</span>
         </a>
         <!-- Navbar Right Menu -->
@@ -69,7 +69,7 @@ if ($method != 'content_view') {
 
                 <li class="dropdown notifications-menu">
 
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" title='Notifications' aria-expanded="false">
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" title='Notifications' aria-expanded="false">
                         <i id='icon_notification' class="fa fa-bell-o"></i>
                         <span id='notification_count' class="label label-danger" style="display:none">0</span>
                     </a>
@@ -96,7 +96,7 @@ if ($method != 'content_view') {
                 </li>
 
                 <li class="dropdown user user-menu">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                         <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="user-image" alt="User Image"/>
                         <span class="hidden-xs">{{ CRUDBooster::myName() }}</span>
                     </a>
@@ -163,7 +163,7 @@ if ($method != 'content_view') {
 
         <!-- Notifications Menu -->
         <li class="nav-item dropdown notifications-menu">
-            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" title="Notifications" aria-expanded="false">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" title="Notifications" aria-expanded="false">
                 <i id="icon_notification" class="fa fa-bell-o"></i>
                 <span id="notification_count" class="badge bg-danger" style="display:none">0</span>
             </a>
@@ -181,7 +181,7 @@ if ($method != 'content_view') {
 
         <!-- User Account Menu -->
         <li class="nav-item dropdown user-menu">
-            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <!-- The user image in the navbar-->
                 <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="img-circle" alt="User Image" width="30" height="30">
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
