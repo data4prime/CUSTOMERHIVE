@@ -532,6 +532,8 @@ class CBController extends Controller
             }
         }
 
+
+
         $data['columns'] = $columns_table;
 
         if ($this->index_return) {
@@ -797,6 +799,8 @@ class CBController extends Controller
         }
 
         $result->orderby($tablePK, 'desc');
+
+        $result->useBootstrapFive();
 
         $data['result'] = $result->paginate(6);
         $data['where'] = $where;
