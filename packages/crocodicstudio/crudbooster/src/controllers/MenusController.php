@@ -91,6 +91,8 @@ class MenusController extends CBController
             $('#form-group-icon_upload').hide();
           }
 
+        console.log($('#form-group-chat_ai').val());
+
 
   				if(type_menu == 'Module') {
   					$('#form-group-module_slug').show();
