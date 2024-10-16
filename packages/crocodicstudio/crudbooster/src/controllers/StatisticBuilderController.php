@@ -29,7 +29,7 @@ class StatisticBuilderController extends CBController
         $this->button_delete = true;
         $this->button_edit = true;
         $this->button_detail = false;
-        $this->button_show = true;
+        $this->button_show = false;
         $this->button_filter = false;
         $this->button_export = false;
         $this->button_import = false;

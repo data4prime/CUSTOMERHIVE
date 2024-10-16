@@ -27,7 +27,7 @@ class QlikConfController extends CBController
 		$this->button_edit = true;
 		$this->button_delete = true;
 		$this->button_detail = true;
-		$this->button_show = true;
+		$this->button_show = false;
 		$this->button_filter = true;
 		$this->button_import = true;
 		$this->button_export = true;
