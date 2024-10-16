@@ -93,7 +93,7 @@
               <th>Title</th>
               <th>Subtitle</th>
               <th>Url</th>
-              <th>Description</th>
+              @php echo isset($item->description) ? <th>Description</th> : ''; @endphp
               <th></th>
             </tr>
           </thead>
@@ -103,7 +103,7 @@
               <td>{{$item->title}}</td>
               <td>{{$item->subtitle}}</td>
               <td>{{$item->url}}</td>
-              <td>{{ isset($item->description) ? $item->description : $item->subtitle }}</td>
+              @php echo isset($item->description) ? <td>$item->description</td> : ''; @endphp
               <td>
                 @if(CRUDBooster::isDelete() && $button_edit)
                 <a title='Remove' class='btn btn-danger btn-sm'
