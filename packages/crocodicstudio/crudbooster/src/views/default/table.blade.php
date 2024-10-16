@@ -321,7 +321,7 @@ $total = $result->total();
                 
                 <h4 class="modal-title"><i class='fa fa-filter'></i> {{trans("crudbooster.filter_dialog_title")}}</h4>
 <button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
-                    <span aria-hidden="true">×</span></button>
+                    </button>
             </div>
             <form method='get' action=''>
                 <div class="modal-body">
@@ -501,10 +501,10 @@ $total = $result->total();
         <div class="modal-content">
             <div class="modal-header" style="justify-content: space-between;">
                 <button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
-                    <span aria-hidden="true">×</span></button>
+                    </button>
                 <h4 class="modal-title"><i class='fa fa-download'></i> {{trans("crudbooster.export_dialog_title")}}</h4>
 <button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
-                    <span aria-hidden="true">×</span></button>
+                    </button>
             </div>
 
             <form method='post' target="_blank" action='{{ CRUDBooster::mainpath("export-data?t=".time()) }}'>
@@ -638,7 +638,7 @@ $('#mass_editing_button').click(function () {
 <form  method='post' action='{{ CRUDBooster::mainpath("mass-edit") }}' id='form-mass-editing'>
             <div class="modal-header">
                 <button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
-                    <span aria-hidden="true">×</span></button>
+                    </button>
                 <h4 class="modal-title"><i class='fa fa-pencil'></i> Mass Edit</h4>
             </div>
         <div class="modal-body">
