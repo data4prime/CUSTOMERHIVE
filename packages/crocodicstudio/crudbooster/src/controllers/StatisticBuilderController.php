@@ -299,6 +299,8 @@ class StatisticBuilderController extends CBController
             $token = null;
         }
 
+        dd($mashups);
+
         return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf', 'mashup', 'token', 'errors'));
     }
 
