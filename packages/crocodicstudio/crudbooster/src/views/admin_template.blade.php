@@ -237,7 +237,7 @@
                 @if(@$alerts)
                 @foreach(@$alerts as $alert)
                 <div class='alert alert-{{$alert["type"]}} alert-dismissable'>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true"></button>
                     {!! $alert['message'] !!}
                 </div>
                 @endforeach
@@ -246,7 +246,7 @@
 
                 @if (Session::get('message')!='')
                 <div class='alert alert-{{ Session::get("message_type") }}'>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true"></button>
                     <h4><i class="icon fa fa-info"></i> {{ trans("crudbooster.alert_".Session::get("message_type")) }}
                     </h4>
                     {!!Session::get('message')!!}
