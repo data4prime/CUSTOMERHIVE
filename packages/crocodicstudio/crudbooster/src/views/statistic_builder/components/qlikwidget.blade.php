@@ -41,10 +41,6 @@
 @php 
 
 
-if(!is_array($mashups)){
-    $mashups = [];
-}
-
 
 @endphp 
 
