@@ -13,7 +13,7 @@
     <!-- Sidebar user card (optional) -->
     <div class="user-panel">
       <div class="pull-{{ trans('crudbooster.left') }} image">
-        <img src="{{ CRUDBooster::myPhoto() }}" class="img-circle" alt="{{ trans('crudbooster.user_image') }}" />
+        <img src="{{ CRUDBooster::myPhoto() }}" class="rounded-circle" alt="{{ trans('crudbooster.user_image') }}" />
       </div>
       <div class="pull-{{ trans('crudbooster.left') }} info">
         <p>{{ CRUDBooster::myName() }}</p>

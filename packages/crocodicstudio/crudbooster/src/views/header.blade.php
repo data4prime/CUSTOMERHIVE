@@ -89,14 +89,14 @@ if ($method != 'content_view') {
         <li class="nav-item dropdown user-menu">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <!-- The user image in the navbar-->
-                <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="img-circle" alt="User Image" width="30" height="30">
+                <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="rounded-circle" alt="User Image" width="30" height="30">
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
                 <span class="d-none d-sm-inline">Super Admin</span>
             </a>
             <ul class="dropdown-menu">
                 <!-- The user image in the menu -->
                 <li class="user-header">
-                    <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="img-circle" alt="User Image" width="80" height="80">
+                    <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="rounded-circle" alt="User Image" width="80" height="80">
                             <p>
                                 {{ CRUDBooster::myName() }}
                                 <small>{{ CRUDBooster::myPrivilegeName() }}</small>
