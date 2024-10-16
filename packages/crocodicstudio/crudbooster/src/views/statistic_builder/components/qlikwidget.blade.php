@@ -37,6 +37,18 @@
  @elseif($command=='configuration')
 
 
+
+@php 
+
+
+if(!is_array($mashups)){
+    $mashups = [];
+}
+
+
+@endphp 
+
+
 <script defer>
 
 
