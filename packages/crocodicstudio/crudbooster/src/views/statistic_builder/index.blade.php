@@ -358,8 +358,7 @@
             <div class="modal-header" style="justify-content: space-between;">
                 
                 <h4 class="modal-title">Modal title</h4>
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 30px;">
                 <p>One fine body&hellip;</p>

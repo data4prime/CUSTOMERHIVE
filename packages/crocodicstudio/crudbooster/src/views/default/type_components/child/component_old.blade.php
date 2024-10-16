@@ -122,8 +122,7 @@ $name = str_slug($form['label'], '');
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"><span
-                                                                aria-hidden="true">&times;</span></button>
+                                                            aria-label="Close"></button>
                                                         <h4 class="modal-title"><i class='fa fa-search'></i>
                                                             {{trans('crudbooster.datamodal_browse_data')}}
                                                             {{$col['label']}}

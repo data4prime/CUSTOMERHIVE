@@ -158,8 +158,7 @@ $col['readonly'] = isset($col['readonly']) ? $col['readonly'] : '';
                                                             {{$col['label']}}
                                                         </h4>
 <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"><span
-                                                                aria-hidden="true">&times;</span></button>
+                                                            aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <iframe id='iframe-modal-{{$name_column}}'

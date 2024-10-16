@@ -76,8 +76,7 @@
                 
                 <h4 class="modal-title" style="justify-content: space-between;"><i class='fa fa-search'></i> {{trans('crudbooster.datamodal_browse_data')}} |
                     {{$form['label']}}</h4>
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <iframe id='iframe-modal-{{$name}}' style="border:0;height: 430px;width: 100%" src=""></iframe>
