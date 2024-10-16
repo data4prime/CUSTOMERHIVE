@@ -43,7 +43,7 @@ if ($method != 'content_view') {
         <!-- Navbar Right Menu -->
 
 <div class="navbar-custom-menu">
-    <ul class="nav">
+    <ul class="nav navbar-nav">
 
         <!-- Assistance Menu Item -->
         <li class="nav-item assistance-menu">
