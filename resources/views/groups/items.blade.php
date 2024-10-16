@@ -1,10 +1,5 @@
 @extends('crudbooster::admin_template')
 
-@php 
-
-dd($items);
-
-@endphp 
 
 
 
