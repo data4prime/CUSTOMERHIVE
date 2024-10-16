@@ -632,14 +632,16 @@ $('#mass_editing_button').click(function () {
 
 
 <!-- MODAL FOR MASS EDITING DATA-->
+<!--
 <div class="modal fade" tabindex="-1" role="dialog" id='mass_editing_modal'>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 <form  method='post' action='{{ CRUDBooster::mainpath("mass-edit") }}' id='form-mass-editing'>
             <div class="modal-header">
+<h4 class="modal-title"><i class='fa fa-pencil'></i> Mass Edit</h4>
                 <button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
                     </button>
-                <h4 class="modal-title"><i class='fa fa-pencil'></i> Mass Edit</h4>
+                
             </div>
         <div class="modal-body">
             
@@ -661,9 +663,33 @@ $('#mass_editing_button').click(function () {
 
 </form>
         </div>
-        <!-- /.modal-content -->
+
     </div>
 </div>
+-->
+
+<div class="modal fade" tabindex="-1" id="mass_editing_modal" aria-labelledby="mass_editing_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post" action="{{ CRUDBooster::mainpath('mass-edit') }}" id="form-mass-editing">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="mass_editing_modalLabel"><i class="fa fa-pencil"></i> Mass Edit</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="table" value="{{ $table }}">
+                    @include("crudbooster::mass_edit.form_body")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ trans("crudbooster.button_close") }}</button>
+                    <button type="submit" class="btn btn-primary btn-submit">{{ trans('crudbooster.button_submit') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script defer>
 
 //prendi tutti gli input nel form mass_editing_modal col nome che inizia con 'mass_edit_'
