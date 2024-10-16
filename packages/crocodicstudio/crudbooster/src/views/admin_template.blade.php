@@ -141,10 +141,11 @@
 
                     @if(CRUDBooster::getCurrentMethod() == 'getIndex')
                     @if($button_show)
-                    <a href="{{ CRUDBooster::mainpath().'?'.http_build_query(Request::all()) }}" id='btn_show_data'
+                    <!--<a href="{{ CRUDBooster::mainpath().'?'.http_build_query(Request::all()) }}" id='btn_show_data'
                         class="btn btn-sm btn-primary" title="{{trans('crudbooster.action_show_data')}}">
                         <i class="fa fa-table"></i> {{trans('crudbooster.action_show_data')}}
                     </a>
+                    -->
                     @endif
 
                     @if($button_add && CRUDBooster::isCreate())

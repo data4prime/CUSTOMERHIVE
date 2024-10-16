@@ -208,7 +208,7 @@
                     <div class="col-sm-4">
                         <div class="row">
 
-                            <div class="col-sm-12">
+                            <!--<div class="col-sm-12">
                                 <div class="mb-3 row">
                                     <label>Show Button Show Data</label>
                                     <label class='radio-inline'>
@@ -218,7 +218,7 @@
                                         <input {{(!$cb_button_show)?"checked":""}} type='radio' name='button_show' value='false'/> FALSE
                                     </label>
                                 </div>
-                            </div>
+                            </div>-->
 
                             <div class="col-sm-12">
                                 <div class="mb-3 row">
