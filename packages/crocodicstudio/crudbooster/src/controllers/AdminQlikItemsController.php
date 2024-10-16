@@ -47,8 +47,9 @@ class AdminQlikItemsController extends CBController
 		$this->col[] = ["label" => "Title", "name" => "title"];
 		$this->col[] = ["label" => "Subtitle", "name" => "subtitle"];
 		//$this->col[] = ["label" => "Help", "name" => "description"];
-		$this->col[] = ["label" => "Public", "name" => "proxy_token"];
 $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "qlik_confs,confname");
+		$this->col[] = ["label" => "Public", "name" => "proxy_token"];
+
 		//$this->col[] = ["label" => "Qlik Conf", "name" => "qlik_conf"];
 		
 		// $this->col[] = ["label"=>"Url","name"=>"url"];
