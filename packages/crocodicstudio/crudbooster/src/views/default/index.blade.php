@@ -132,7 +132,7 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
             @if($button_filter)
             <a  href="javascript:void(0)" id='btn_advanced_filter'
                 data-url-parameter='{{$build_query}}' title='{{trans('crudbooster.filter_dialog_title')}}'
-                class="btn  btn-default {{(Request::get('filter_column'))?'active':''}}">
+                class="btn btn-sm btn-default {{(Request::get('filter_column'))?'active':''}}">
                 <i class="fa fa-filter"></i> {{trans("crudbooster.button_filter")}}
             </a>
             @endif
