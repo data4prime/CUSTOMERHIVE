@@ -206,6 +206,7 @@ class ModulsController extends CBController
       'icon' => 'fa fa-wrench',
       'url' => CRUDBooster::mainpath('step1') . '/[id]',
       "showIf" => "[is_protected] == 0",
+      'color' => 'primary',
     ];
 
     $this->index_button[] = ['label' => 'Generate New Module', 'icon' => 'fa fa-plus', 'url' => CRUDBooster::mainpath('step1'), 'color' => 'success'];
