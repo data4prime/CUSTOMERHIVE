@@ -237,7 +237,7 @@
             <section id='content_section' class="content">
                 @if(@$alerts)
                 @foreach(@$alerts as $alert)
-                <div class='alert alert-{{$alert["type"]}} alert-dismissable'>
+                <div style="font-size: 12px;" class='alert alert-{{$alert["type"]}} alert-dismissable'>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true"></button>
                     {!! $alert['message'] !!}
                 </div>
