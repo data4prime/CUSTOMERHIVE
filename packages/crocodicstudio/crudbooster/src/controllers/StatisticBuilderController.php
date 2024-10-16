@@ -277,13 +277,12 @@ class StatisticBuilderController extends CBController
 
         $command = 'configuration';
 
-        dd(QlikAppController::getMashups());
-
+        //dd(QlikAppController::getMashups());
+        $mashups = QlikAppController::getMashups();
         if (isset($config->mashups)) {
-            $mashups = QlikAppController::getMashups();
+            
             $mashup = QlikAppController::getMashupFromCompID($componentID);
         } else {
-            $mashups = null;
             $mashup = null;
         }
 
@@ -301,7 +300,7 @@ class StatisticBuilderController extends CBController
             $token = null;
         }
 
-        dd($mashups);
+        //dd($mashups);
 
         return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf', 'mashup', 'token', 'errors'));
     }
