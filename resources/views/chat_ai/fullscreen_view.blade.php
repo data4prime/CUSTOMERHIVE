@@ -183,7 +183,7 @@ h4.chat-title {
 <div class="chat-window" id="chatWindow">
     <div class="chat-header">
         Chat AI
-    <div id="x-close-chatai" ><button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+    <div id="x-close-chatai" ><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
 
     </div>
     <div class="chat-body">
