@@ -89,6 +89,7 @@
         .mb-3 row>label:first-child {
             display: block
         }
+
     </style>
 
 
@@ -101,7 +102,7 @@
 @yield('content')
 @else
 
-<body
+<body style="font-size: 14px;"
     class="@php echo (Session::get('theme_color'))?:'skin-blue'; echo ' '; echo config('crudbooster.ADMIN_LAYOUT'); @endphp {{isset($sidebar_mode) ?: ''}}">
     <div id='app' class="wrapper">
 
