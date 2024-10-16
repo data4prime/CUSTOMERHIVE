@@ -1,5 +1,13 @@
 @extends('crudbooster::admin_template')
 
+@php 
+
+dd($items);
+
+@endphp 
+
+
+
 @section('content')
 <!-- Add item -->
 <div class="box-body table-responsive">
