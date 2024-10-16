@@ -180,6 +180,7 @@ $fields_to_eliminate = ['multitext', 'password', 'child'];
 
     
 </div>
+<hr>
     @if($name == 'group')
                     </div>
                 </div>
