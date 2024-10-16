@@ -108,7 +108,7 @@ dd($items);
               <td>{{$item->title}}</td>
               <td>{{$item->subtitle}}</td>
               <td>{{$item->url}}</td>
-              <td>{{$item->description}}</td>
+              <td>{{ isset($item->description) ? $item->description : $item->subtitle }}</td>
               <td>
                 @if(CRUDBooster::isDelete() && $button_edit)
                 <a title='Remove' class='btn btn-danger btn-sm'
