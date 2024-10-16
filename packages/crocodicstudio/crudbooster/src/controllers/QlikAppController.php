@@ -356,6 +356,8 @@ class QlikAppController extends CBController
 				->get();
 		}
 
+		dd($mashups);
+
 		return $mashups;
 
 	}
