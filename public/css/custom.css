@@ -64,6 +64,9 @@ h1 .qlik_logo{
   font-size: 2em;
 }
 
+.assistance-menu {
+  margin-right: 5px;
+}
 
 .navbar-nav > .notifications-menu > .dropdown-menu,
 .navbar-nav > .assistance-menu > .dropdown-menu,
