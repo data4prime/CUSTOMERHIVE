@@ -166,9 +166,14 @@ $fields_to_eliminate = ['multitext', 'password', 'child'];
     @endif
 
     @if($type == 'checkbox')
-        <input type="checkbox" class="col-sm-2" name="mass_edit_{{ $name }}[]">
+
+        <div class="col-sm-2">
+            <input type="checkbox" class="form-check-input" name="mass_edit_{{ $name }}[]">
+        </div>
     @else
-        <input type="checkbox" class="col-sm-2" name="mass_edit_{{ $name }}">
+        <div class="col-sm-2">
+            <input type="checkbox" class="form-check-input" name="mass_edit_{{ $name }}">
+        </div>
     @endif
 
 
