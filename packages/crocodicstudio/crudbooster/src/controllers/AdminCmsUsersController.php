@@ -39,7 +39,7 @@ class AdminCmsUsersController extends CBController
 		$this->col[] = array("label" => "Name", "name" => "name");
 		$this->col[] = array("label" => "Email", "name" => "email");
 		$this->col[] = array("label" => "Privilege", "name" => "id_cms_privileges", "join" => "cms_privileges,name");
-		$this->col[] = array("label" => "User directory", "name" => "user_directory");
+		/*$this->col[] = array("label" => "User directory", "name" => "user_directory");*/
 
 
 		$this->col[] = array("label" => "Expiry date", "name" => "data_scadenza");
