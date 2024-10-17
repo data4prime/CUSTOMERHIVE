@@ -221,8 +221,8 @@ return [
     'license' => 'License',
 
     'notification_you_have' => 'You Have',
-    'notification_notification' => 'Notifications',
-    'notification_new' => 'You have a new notification !',
+    'notification_notification' => 'Notifiche',
+    'notification_new' => 'Hai nuove notifiche!',
 
     'login_register_style' => 'Login Register Style',
     'email_setting' => 'Email Setting',
@@ -249,11 +249,11 @@ return [
     'filter_eg' => 'e.g',
     'filter_lorem_ipsum' => 'Lorem ipsum',
     'filter_lorem_ipsum_dolor_sit' => ' Lorem,Ipsum,Dolor Sit',
-    'filter_search' => 'Search',
+    'filter_search' => 'Cerca',
     'filter_from' => 'from',
     'filter_to' => 'to',
-    'filter_sorting' => 'Sorting',
-    'filter_rows_total' => 'Total rows',
+    'filter_sorting' => 'Ordinamento',
+    'filter_rows_total' => 'Righe totali',
     'filter_rows_to' => 'to',
     'filter_rows_of' => 'of',
 
@@ -263,8 +263,8 @@ return [
     'none' => 'None',
 
     //filemanager
-    'chose_an_image' => 'Choose an image ',
-    'chose_an_file' => 'Choose an file ',
+    'chose_an_image' => 'Scegli un\'immagine',
+    'chose_an_file' => 'Scegli un file ',
 
     //action confirmation
     'confirmation_title' => 'Confirmation',
@@ -283,11 +283,11 @@ return [
     'privileges_configuration' => 'Privileges Configuration',
     'privileges_module_list_no' => 'No.',
     'privileges_module_list_mod_names' => 'Module\'s Name',
-    'privileges_module_list_view' => 'View',
-    'privileges_module_list_create' => 'Create',
-    'privileges_module_list_read' => 'Read',
-    'privileges_module_list_update' => 'Update',
-    'privileges_module_list_delete' => 'Delete',
+    'privileges_module_list_view' => 'Visualizza',
+    'privileges_module_list_create' => 'Crea',
+    'privileges_module_list_read' => 'Leggi',
+    'privileges_module_list_update' => 'Modifica',
+    'privileges_module_list_delete' => 'Elimina',
 
     //datamodal
     'datamodal_select' => 'Select',
@@ -297,11 +297,11 @@ return [
     'datamodal_browse_file' => 'Browse File',
 
     //child
-    'table_detail' => 'Table Detail',
-    'your_file_size_is_too_big' => 'Your file size is too big',
-    'save_changes' => 'Save Changes',
-    'please_complete_the_form' => 'Please complete the form !',
-    'this_field_is_required' => 'This field is required',
+    'table_detail' => 'Dettagli tabella',
+    'your_file_size_is_too_big' => 'La dimensione del file è troppo grande',
+    'save_changes' => 'Salva modifiche',
+    'please_complete_the_form' => 'Per favore completa il modulo',
+    'this_field_is_required' => 'Questo campo è obbligatorio',
     'text_form' => 'Form',
-    "your_file_extension_is_not_allowed " => "Your file extension is not allowed !",
+    "your_file_extension_is_not_allowed " => "L'estensione del file non è consentita",
 ];
