@@ -78,7 +78,7 @@ return [
     'alert_validation_error' => 'Please fill out the form correctly : :error',
     'alert_select_a_data' => 'Please select at least one data!',
 
-    'add_data_page_title' => 'Add :module',
+    'add_data_page_title' => 'Nuovo :module',
     'edit_data_page_title' => 'Edit :module',
     'detail_data_page_title' => 'Detail :module',
     'edit_tenants' => 'Edit tenant',
