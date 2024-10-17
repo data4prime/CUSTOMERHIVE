@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('cms_users', function (Blueprint $table) {
             //
+            $table->string('lang')->default('en');
         });
     }
 

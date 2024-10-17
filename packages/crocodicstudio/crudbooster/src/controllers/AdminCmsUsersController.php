@@ -45,6 +45,10 @@ class AdminCmsUsersController extends CBController
 		$this->col[] = array("label" => "Data scadenza", "name" => "data_scadenza");
 		$this->col[] = array("label" => "Status", "name" => "status");
 		$this->col[] = array("label" => "Photo", "name" => "photo", "image" => 1);
+
+
+
+
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
 		# START FORM DO NOT REMOVE THIS LINE
@@ -172,6 +176,10 @@ class AdminCmsUsersController extends CBController
 			'disabled' => UserHelper::isTenantAdmin() || CRUDBooster::isSuperadmin() ? false : true,
 		];
 		$this->form[] = array("label" => "Photo", "name" => "photo", "type" => "upload", "help" => "Recommended resolution is 200x200px", 'required' => false, 'validation' => 'image|max:1000', 'resize_width' => 90, 'resize_height' => 90);
+		$this->form[] = array("label" => "Language", "name" => "lang", "type" => "select", "dataenum" => "it:Italiano|en:English", "value" => "en");
+
+
+
 		$this->form[] = array("label" => "Password", "name" => "password", "type" => "password", "help" => "Leave empty if no change is needed");
 		$this->form[] = array("label" => "Password Confirmation", "name" => "password_confirmation", "type" => "password", "help" => "Leave empty if no change is needed");
 
