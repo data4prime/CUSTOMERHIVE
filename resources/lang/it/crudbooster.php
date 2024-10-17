@@ -10,7 +10,7 @@ return [
     'text_no_notification' => "You have 0 notifications",
     'text_view_all_notification' => 'View All',
     'label_button_profile' => "Profile",
-    'filter_dialog_title' => 'Advanced Sort & Filter',
+    'filter_dialog_title' => 'Filtri e ordinamento',
     'there_is_no_option' => 'There is no any options setting for this inputType',
     'no' => 'No.',
 
@@ -89,7 +89,7 @@ return [
     'delete_title_confirm' => "Are you sure ?",
 
     'action_show_data' => 'Show Data',
-    'action_add_data' => 'Add Data',
+    'action_add_data' => 'Nuovo',
     'action_delete_selected' => 'Delete Selected',
 
     'action_label' => 'Action',
@@ -111,8 +111,8 @@ return [
     'button_logout' => 'Logout',
     'button_sign_in' => 'Sign In',
 'text_activate' => 'Activate',
-    'button_selected_action' => 'Bulk Actions',
-    'button_download_file' => 'Download file',
+    'button_selected_action' => 'Azioni',
+    'button_download_file' => 'Scarica file',
     'button_reset' => 'Reset',
     'button_add_to_table' => 'Add To Table',
     'button_add_member' => 'Add',
@@ -180,7 +180,7 @@ return [
     'List_Qlikitem' => 'List Qlik Items',
     'Module_Generator' => 'Module Generator',
     'settings' => 'Impostazioni',
-    'Users_Management' => 'Users Management',
+    'Users_Management' => 'Gestione utenti',
     'list_API' => 'List API (Documentation)',
     'Generate_Screet_Key' => 'Generate Secret Key',
     'Add_New_Email' => 'Add New Email',
