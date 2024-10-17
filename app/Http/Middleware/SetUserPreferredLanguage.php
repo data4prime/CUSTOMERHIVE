@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
+use crocodicstudio\crudbooster\helpers\CRUDBooster;
+
 class SetUserPreferredLanguage
 {
     /**
@@ -20,13 +22,8 @@ class SetUserPreferredLanguage
     public function handle(Request $request, Closure $next)
     {
 
-
-        dd(Auth::check());
-        
-
-        if (Auth::check() && Auth::user()->lang) {
-            dd(Auth::user()->lang);
-            App::setLocale(Auth::user()->lang);
+        if (CRUDBooster::myId() && CRUDBooster::getLang()) {
+            App::setLocale( CRUDBooster::getLang());
         }
         return $next($request);
     }
