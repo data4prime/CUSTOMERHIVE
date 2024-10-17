@@ -551,6 +551,7 @@ class AdminGroupsController extends CBController
 		$data['group'] = Group::find($group_id);
 		$data['tenants'] = GroupTenants::where('group_id', $group_id)
 			->join('tenants', 'tenants.id', '=', 'group_tenants.tenant_id')
+			->where('tenants.deleted_at', null)
 			->get();
 		$data['page_title'] = 'Group Tenants';
 
