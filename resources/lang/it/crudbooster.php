@@ -105,7 +105,7 @@ return [
     'button_save_more' => 'Save & Add More',
     'button_import' => 'Import Data',
     'button_export' => 'Export Data',
-    'button_filter' => 'Sort & Filter',
+    'button_filter' => 'Ordina e Filtra',
     'button_close' => 'Close',
     'button_submit' => 'Submit',
     'button_logout' => 'Logout',
