@@ -176,7 +176,7 @@ class AdminCmsUsersController extends CBController
 			'disabled' => UserHelper::isTenantAdmin() || CRUDBooster::isSuperadmin() ? false : true,
 		];
 		$this->form[] = array("label" => "Photo", "name" => "photo", "type" => "upload", "help" => "Recommended resolution is 200x200px", 'required' => false, 'validation' => 'image|max:1000', 'resize_width' => 90, 'resize_height' => 90);
-		$this->form[] = array("label" => "Language", "name" => "lang", "type" => "select", "dataenum" => "it:Italiano|en:English", "value" => "en");
+		$this->form[] = array("label" => "Language", "name" => "lang", "type" => "select", "dataenum" => ['en|English', 'it|Italiano'], "value" => "en");
 
 
 
