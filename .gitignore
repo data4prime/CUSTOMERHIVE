@@ -12,3 +12,4 @@ Homestead.yaml
 .ftpconfig
 /public/cookie-name
 
+app/Http/Controllers/
