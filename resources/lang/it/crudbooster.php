@@ -179,7 +179,7 @@ return [
     'Add_New_Qlikitem' => 'Add New Qlik Item',
     'List_Qlikitem' => 'List Qlik Items',
     'Module_Generator' => 'Module Generator',
-    'settings' => 'Settings',
+    'settings' => 'Impostazioni',
     'Users_Management' => 'Users Management',
     'list_API' => 'List API (Documentation)',
     'Generate_Screet_Key' => 'Generate Secret Key',
