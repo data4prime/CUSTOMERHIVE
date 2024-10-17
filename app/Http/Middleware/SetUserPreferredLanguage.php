@@ -20,6 +20,8 @@ class SetUserPreferredLanguage
     public function handle(Request $request, Closure $next)
     {
 
+
+        dd(Auth::check());
         
 
         if (Auth::check() && Auth::user()->lang) {
