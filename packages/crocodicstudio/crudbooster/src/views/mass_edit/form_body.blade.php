@@ -144,7 +144,7 @@ $fields_to_eliminate = ['multitext', 'password', 'child'];
                     <div class="box-header mb-3 with-border">
                         <h3 class="box-title">
                             <strong>
-                                <i class='{{ CRUDBooster::getCurrentModule()->icon }}'></i> Informazioni di sistema
+                                <i class='{{ CRUDBooster::getCurrentModule()->icon }}'></i> {{ trans('crudbooster.system_information') }}
                             </strong>
                         </h3>
                         <div class="box-tools pull-right">
