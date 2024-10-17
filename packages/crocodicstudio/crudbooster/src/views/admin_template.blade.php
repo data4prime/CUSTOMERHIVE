@@ -140,7 +140,7 @@
                     @endphp 
 
                     <i id='title_icon' class='{!! isset($page_icon) ? $page_icon : $module->icon !!}'></i> 
-                    {!! isset($page_title) ? trans($page_title) : '' !!} 
+                    {!! isset($page_title) ? trans('crudbooster.'.$page_title) : '' !!} 
                     @if(isset($help)) 
                         <i id="help_icon" class="fa fa-question-circle" title="{{ $help }}"></i> 
                     @endif &nbsp;&nbsp;
