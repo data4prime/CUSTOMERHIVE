@@ -275,7 +275,7 @@ class ModulsController extends CBController
     $query->where('path', '!=', 'groups');
     $query->where('path', '!=', 'qlik_items');
     $query->where('path', '!=', 'tenants');
-    $query->whereNotIn('cms_moduls.controller', ['AdminCmsUsersController']);
+    $query->whereNotIn('cms_moduls.controller', ['AdminCmsUsersController', 'AdminChatAIController', 'AdminModuleHelperController']);
   }
 
   public function getDelete($id)
