@@ -803,7 +803,7 @@ class CBController extends Controller
 
         //$result->useBootstrapFive();
 
-        dd($result->toSql());
+        //dd($result->toSql());
 
         $data['result'] = $result->paginate(6);
         $data['where'] = $where;
