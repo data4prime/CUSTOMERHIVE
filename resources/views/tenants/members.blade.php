@@ -41,7 +41,7 @@
           <tr>
             <td>{{$member->name}}</td>
             <td>{{$member->email}}</td>
-            <td><img width="40" src="/{{$member->photo}}" class="user-image" alt="User Image"></td>
+            <td><img width="40" src="{{UserHelper::icon($member->id)}}" class="user-image" alt="User Image"></td>
             <td>
               <a title='Move' class='btn btn-success btn-sm' href='{{CRUDBooster::adminpath("users/edit/$member->id")}}'><i class="fa fa-pencil"></i></a>
             </td>
