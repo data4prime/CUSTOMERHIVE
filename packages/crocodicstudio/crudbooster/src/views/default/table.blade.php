@@ -630,44 +630,6 @@ $('#mass_editing_button').click(function () {
 
 
 
-
-<!-- MODAL FOR MASS EDITING DATA-->
-<!--
-<div class="modal fade" tabindex="-1" role="dialog" id='mass_editing_modal'>
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-<form  method='post' action='{{ CRUDBooster::mainpath("mass-edit") }}' id='form-mass-editing'>
-            <div class="modal-header">
-<h4 class="modal-title"><i class='fa fa-pencil'></i> Mass Edit</h4>
-                <button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
-                    </button>
-                
-            </div>
-        <div class="modal-body">
-            
-                
-            <input type='hidden' name='_token' value='{{csrf_token()}}' />
-            <input type='hidden' name='table' value='{{$table}}' />
-            @include("crudbooster::mass_edit.form_body")
-
-            
-
-</div>
-
-<div class="modal-footer" align="right">
-                    <button class="btn btn-default" type="button"
-                        data-bs-dismiss="modal">{{trans("crudbooster.button_close")}}</button>
-                    <button class="btn btn-primary btn-submit"
-                        type="submit">{{trans('crudbooster.button_submit')}}</button>
-                </div>
-
-</form>
-        </div>
-
-    </div>
-</div>
--->
-
 <div class="modal fade" tabindex="-1" id="mass_editing_modal" aria-labelledby="mass_editing_modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
