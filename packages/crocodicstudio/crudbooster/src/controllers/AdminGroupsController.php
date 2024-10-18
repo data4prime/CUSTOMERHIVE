@@ -566,7 +566,7 @@ class AdminGroupsController extends CBController
 
 		//add tenant form
 		$data['forms'] = [];
-		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'group_tenant_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'tenants', 'datamodal_where' => 'deleted_at = null', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $group_id, 'required' => true];
+		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'group_tenant_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'tenants', 'datamodal_where' => 'name = \'esearch & Development (R&D)\'', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $group_id, 'required' => true];
 		$data['forms'][] = ['label' => 'Description', 'name' => 'description', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-6', 'placeholder' => 'Tenant description', 'readonly' => true];
 		$data['action'] = CRUDBooster::mainpath($group_id . "/add_tenant");
 		$data['return_url'] = CRUDBooster::mainpath('tenant/' . $group_id);
