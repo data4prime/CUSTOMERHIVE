@@ -794,7 +794,6 @@ class CBController extends Controller
             });
         }
 
-        dd($where);
 
         if ($where) {
             $result->whereraw($where);
@@ -803,6 +802,8 @@ class CBController extends Controller
         $result->orderby($tablePK, 'desc');
 
         //$result->useBootstrapFive();
+
+        dd($result->toSql());
 
         $data['result'] = $result->paginate(6);
         $data['where'] = $where;
