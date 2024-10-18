@@ -553,6 +553,7 @@ class AdminGroupsController extends CBController
 			->join('tenants', 'tenants.id', '=', 'group_tenants.tenant_id')
 			->where('tenants.deleted_at', null)
 			->get();
+		dd($data);
 		$data['page_title'] = 'Group Tenants';
 
 		//prendo $_GET &alert=
