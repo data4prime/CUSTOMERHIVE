@@ -794,6 +794,8 @@ class CBController extends Controller
             });
         }
 
+        dd($where);
+
         if ($where) {
             $result->whereraw($where);
         }
