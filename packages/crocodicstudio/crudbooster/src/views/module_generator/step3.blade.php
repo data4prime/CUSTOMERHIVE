@@ -201,7 +201,7 @@
 
     <div class="card  card-default">
         <div class="card-header mb-3 with-border">
-            <h3 class="card-title">List settings</h3>
+            <h5 class="card-title">List settings</h5>
         </div>
         <div class="card-body">
             @if($messages)

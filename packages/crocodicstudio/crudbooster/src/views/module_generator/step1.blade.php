@@ -22,7 +22,7 @@
 
 <div class="card box-default">
     <div class="card-header mb-3 with-border">
-        <h3 class="box-title">Module Information</h3>
+        <h5 class="box-title">Module Information</h5>
     </div>
     <div class="card-body">
         <form method="post" action="{{Route('ModulsControllerPostStep1')}}">

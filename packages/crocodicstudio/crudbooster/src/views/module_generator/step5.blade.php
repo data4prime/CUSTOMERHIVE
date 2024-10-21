@@ -3,7 +3,7 @@
 
     <div class="card card-default">
         <div class="card-header mb-3">
-            <h1 class="card-title">Configuration</h1>
+            <h5 class="card-title">Configuration</h5>
         </div>
         <form method='post' action="{{Route('ModulsControllerPostStep5')}}">
             {{csrf_field()}}

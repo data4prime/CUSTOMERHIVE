@@ -14,7 +14,7 @@
   <!-- Box -->
   <div class="card card-primary">
     <div class="card-header mb-3 with-border">
-      <h3 class="card-title">{{ $page_title }}</h3>
+      <h5 class="card-title">{{ $page_title }}</h5>
       <div class="card-tools">
 
       </div>

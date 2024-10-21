@@ -326,7 +326,7 @@ $(function () {
 
 <div class="card card-default">
   <div class="card-header mb-3 with-border">
-    <h3 class="card-title">Form Settings</h3>
+    <h5 class="card-title">Form Settings</h5>
   </div>
   <div class="card-body">
     <form method="post" autocomplete="off" action="{{Route('ModulsControllerPostStep4')}}">

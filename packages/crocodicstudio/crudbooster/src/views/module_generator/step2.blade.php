@@ -142,7 +142,7 @@ $(function () {
 </div><!-- /.modal -->
 <div class="card card-default">
   <div class="card-header mb-3 with-border">
-    <h3 class="card-title">{{ $box_title }}</h3>
+    <h5 class="card-title">{{ $box_title }}</h5>
   </div>
   <div class="card-body">
     @if($table_exists)
