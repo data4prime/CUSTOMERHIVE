@@ -12,10 +12,10 @@
   @endif
 
   <!-- Box -->
-  <div class="box box-primary">
-    <div class="box-header mb-3 with-border">
-      <h3 class="box-title">{{ $page_title }}</h3>
-      <div class="box-tools">
+  <div class="card card-primary">
+    <div class="card-header mb-3 with-border">
+      <h3 class="card-title">{{ $page_title }}</h3>
+      <div class="card-tools">
 
       </div>
     </div>
@@ -156,7 +156,7 @@
         </div>
 
       </div><!-- /.box-body -->
-      <div class="box-footer" align="right">
+      <div class="card-footer" align="right">
         <button type='button' onclick="location.href='{{CRUDBooster::mainpath()}}'"
           class='btn btn-default'>{{trans("crudbooster.button_cancel")}}</button>
         <button type='submit' class='btn btn-primary'><i class='fa fa-save'></i>
