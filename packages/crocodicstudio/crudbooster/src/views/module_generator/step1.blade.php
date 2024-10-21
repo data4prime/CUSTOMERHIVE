@@ -84,7 +84,7 @@
             <div class="row mb-3">
                 <label for="name" class="col-sm-2 col-form-label">Module Name</label>
                 <div class="col-sm-10">
-                    <input style="margin-left: 12px;" type="text" class="form-control" required name="name"
+                    <input  type="text" class="form-control" required name="name"
                     value="{{ isset($row->name) ? $row->name : ''}}">
                 </div>
             </div>
