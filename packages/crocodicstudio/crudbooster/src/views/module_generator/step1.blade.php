@@ -66,7 +66,7 @@
 
 
             <div class="row mb-3">
-                <label for="table" class="col-sm-2 col-form-label col-form-label-sm">Table</label>
+                <label for="table" class="col-sm-2 col-form-label">Table</label>
                 <div class="col-sm-10">
                     <select name="table" id="table" required class="select2 form-control"
                         value="{{ isset($row->table_name) ? $row->table_name : ''}}">
@@ -90,7 +90,7 @@
             </div>
 
             <div class="row">
-                <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Icon</label>
+                <label for="colFormLabelLg" class="col-sm-2 col-form-label">Icon</label>
                 <div class="col-sm-10">
                 <select name="icon" id="icon" required class="select2 form-control">
                     @foreach($fontawesome as $f)
