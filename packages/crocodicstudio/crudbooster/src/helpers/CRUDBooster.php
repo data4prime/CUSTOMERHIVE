@@ -32,6 +32,12 @@ use crocodicstudio\crudbooster\helpers\UserHelper;
 class CRUDBooster
 {
 
+    public static function getLang() {
+
+        return $lang = DB::table('cms_users')->where('id', self::myId())->first()->lang;
+
+    }
+
     public static function getFavicon($tenant) {
 
         if (isset($tenant->favicon)) {

@@ -44,7 +44,7 @@ $.AdminLTE.options = {
   //'fast', 'normal', or 'slow'
   animationSpeed: 100,
   //Sidebar push menu toggle button selector
-  sidebarToggleSelector: "[data-toggle='offcanvas']",
+  sidebarToggleSelector: "[data-bs-toggle='offcanvas']",
   //Activate sidebar push menu
   sidebarPushMenu: true,
   //Activate sidebar slimscroll if the fixed layout is set (requires SlimScroll Plugin)
@@ -57,7 +57,7 @@ $.AdminLTE.options = {
   enableBoxRefresh: true,
   //Bootstrap.js tooltip
   enableBSToppltip: true,
-  BSTooltipSelector: "[data-toggle='tooltip']",
+  BSTooltipSelector: "[data-bs-toggle='tooltip']",
   //Enable Fast Click. Fastclick.js creates a more
   //native touch experience with touch devices. If you
   //choose to enable the plugin, make sure you load the script
@@ -69,7 +69,7 @@ $.AdminLTE.options = {
   enableControlSidebar: true,
   controlSidebarOptions: {
     //Which button should trigger the open/close event
-    toggleBtnSelector: "[data-toggle='control-sidebar']",
+    toggleBtnSelector: "[data-bs-toggle='control-sidebar']",
     //The sidebar selector
     selector: ".control-sidebar",
     //Enable slide over content
@@ -215,7 +215,7 @@ $(function () {
    * INITIALIZE BUTTON TOGGLE
    * ------------------------
    */
-  $('.btn-group[data-toggle="btn-toggle"]').each(function () {
+  $('.btn-group[data-bs-toggle="btn-toggle"]').each(function () {
     var group = $(this);
     $(this).find(".btn").on('click', function (e) {
       group.find(".btn.active").removeClass("active");
@@ -315,7 +315,7 @@ function _init() {
    * Adds the push menu functionality to the sidebar.
    *
    * @type Function
-   * @usage: $.AdminLTE.pushMenu("[data-toggle='offcanvas']")
+   * @usage: $.AdminLTE.pushMenu("[data-bs-toggle='offcanvas']")
    */
   $.AdminLTE.pushMenu = {
     activate: function (toggleBtn) {

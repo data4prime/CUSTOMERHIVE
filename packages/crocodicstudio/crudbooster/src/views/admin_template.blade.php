@@ -11,8 +11,10 @@
         href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('images/favicon.png') }}">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Bootstrap 3.4.1 -->
-    <link href="{{ asset('/vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"
-        type="text/css" />
+    <!--<link href="{{ asset('/vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"
+        type="text/css" />-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
     <!-- Font Awesome Icons -->
     <link href="{{asset('vendor/crudbooster/assets/adminlte/font-awesome/css')}}/font-awesome.min.css" rel="stylesheet"
         type="text/css" />
@@ -55,7 +57,7 @@
             cursor: default
         }
 
-        #box-header-module {
+        #box-header mb-3-module {
             box-shadow: 10px 10px 10px #dddddd;
         }
 
@@ -84,9 +86,10 @@
             padding: 0 0 0 0;
         }
 
-        .form-group>label:first-child {
+        .mb-3 row>label:first-child {
             display: block
         }
+
     </style>
 
 
@@ -99,7 +102,7 @@
 @yield('content')
 @else
 
-<body
+<body style="font-size: 14px;"
     class="@php echo (Session::get('theme_color'))?:'skin-blue'; echo ' '; echo config('crudbooster.ADMIN_LAYOUT'); @endphp {{isset($sidebar_mode) ?: ''}}">
     <div id='app' class="wrapper">
 
@@ -129,6 +132,8 @@
 
                 <h1>
 
+
+
                     <i id='title_icon' class='{!! isset($page_icon) ? $page_icon : $module->icon !!}'></i> 
                     {!! isset($page_title) ? $page_title : '' !!} 
                     @if(isset($help)) 
@@ -139,10 +144,11 @@
 
                     @if(CRUDBooster::getCurrentMethod() == 'getIndex')
                     @if($button_show)
-                    <a href="{{ CRUDBooster::mainpath().'?'.http_build_query(Request::all()) }}" id='btn_show_data'
+                    <!--<a href="{{ CRUDBooster::mainpath().'?'.http_build_query(Request::all()) }}" id='btn_show_data'
                         class="btn btn-sm btn-primary" title="{{trans('crudbooster.action_show_data')}}">
                         <i class="fa fa-table"></i> {{trans('crudbooster.action_show_data')}}
                     </a>
+                    -->
                     @endif
 
                     @if($button_add && CRUDBooster::isCreate())
@@ -233,8 +239,8 @@
             <section id='content_section' class="content">
                 @if(@$alerts)
                 @foreach(@$alerts as $alert)
-                <div class='alert alert-{{$alert["type"]}} alert-dismissable'>
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <div style="font-size: 12px;" class='alert alert-{{$alert["type"]}} alert-dismissable'>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true"></button>
                     {!! $alert['message'] !!}
                 </div>
                 @endforeach
@@ -243,7 +249,7 @@
 
                 @if (Session::get('message')!='')
                 <div class='alert alert-{{ Session::get("message_type") }}'>
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true"></button>
                     <h4><i class="icon fa fa-info"></i> {{ trans("crudbooster.alert_".Session::get("message_type")) }}
                     </h4>
                     {!!Session::get('message')!!}
@@ -292,7 +298,7 @@
             $('.sidebar-toggle').click();
             //expand container
             $('#content_section').css('padding', '0px');
-            $('#content_section').css('height', 'calc(100vh - 42px');
+            $('#content_section').css('height', 'calc(100vh - 42px'));
             $('.qi_iframe_container').css('height', '100%');
             $('.qi_iframe').css('padding-bottom', '0px');
             $('.content-wrapper').css('min-height', '0px !important');

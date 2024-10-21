@@ -102,9 +102,9 @@ $add_field = is_array($parent_select) ? $parent_select[1] : '';
 @endif
 
 
-<div class='form-group {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='form-group-{{$name}}'
+<div class='mb-3 row {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='form-group-{{$name}}'
     style="{{ isset($form['style']) ? $form['style'] : '' }}">
-    <label class='control-label col-sm-2'>{{$form['label']}}
+    <label class='col-form-label col-sm-2'>{{$form['label']}}
         @if($required)
         <span class='text-danger' title="{!! trans('crudbooster.this_field_is_required') !!}">*</span>
         @endif

@@ -23,7 +23,7 @@
 
         <!-- Box -->
         <div id='box_main' class="box box-primary">
-            <div class="box-header with-border">
+            <div class="box-header mb-3 with-border">
                 <h3 class="box-title">Importing</h3>
                 <div class="box-tools">
                 </div>
@@ -35,7 +35,7 @@
                 <div class="progress">
                     <div id='progress-import' class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" aria-valuenow="40"
                          aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                        <span class="sr-only">40% Complete (success)</span>
+                        <span class="visually-hidden">40% Complete (success)</span>
                     </div>
                 </div>
 
@@ -100,7 +100,7 @@
 
         <!-- Box -->
         <div id='box_main' class="box box-primary">
-            <div class="box-header with-border">
+            <div class="box-header mb-3 with-border">
                 <h3 class="box-title">Adjustment</h3>
                 <div class="box-tools">
 
@@ -221,7 +221,7 @@
 
         <!-- Box -->
         <div id='box_main' class="box box-primary">
-            <div class="box-header with-border">
+            <div class="box-header mb-3 with-border">
                 <h3 class="box-title">Upload a File</h3>
                 <div class="box-tools">
 
@@ -252,7 +252,7 @@
                         * Table structure : Line 1 is heading column , and next is the data. (For example, you can export any module you wish to XLS format)
                     </div>
 
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>File XLS / CSV</label>
                         <input type='file' name='userfile' class='form-control' required/>
                         <div class='help-block'>File type supported only : XLS, XLSX, CSV</div>

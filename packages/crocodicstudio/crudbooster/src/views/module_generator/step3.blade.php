@@ -200,7 +200,7 @@
     @endpush
 
     <div class="box box-default">
-        <div class="box-header with-border">
+        <div class="box-header mb-3 with-border">
             <h3 class="box-title">List settings</h3>
         </div>
         <div class="box-body">
@@ -264,10 +264,10 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <a href="javascript:void(0)" class="btn btn-info btn-plus"><i class='fa fa-plus'></i></a>
-                                    <a href="javascript:void(0)" class="btn btn-danger btn-delete"><i class='fa fa-trash'></i></a>
-                                    <a href="javascript:void(0)" class="btn btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
-                                    <a href="javascript:void(0)" class="btn btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='fa fa-plus'></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='fa fa-trash'></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -305,10 +305,10 @@
                             </select>
                         </td>
                         <td>
-                            <a href="javascript:void(0)" class="btn btn-info btn-plus"><i class='fa fa-plus'></i></a>
-                            <a href="javascript:void(0)" class="btn btn-danger btn-delete"><i class='fa fa-trash'></i></a>
-                            <a href="javascript:void(0)" class="btn btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
-                            <a href="javascript:void(0)" class="btn btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='fa fa-plus'></i></a>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='fa fa-trash'></i></a>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
                         </td>
                     </tr>
 

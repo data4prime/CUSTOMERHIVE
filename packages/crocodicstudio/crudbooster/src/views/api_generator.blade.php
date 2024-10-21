@@ -14,12 +14,24 @@
 </script>
 @endpush
 
-<ul class="nav nav-tabs">
-    <li><a href="{{ CRUDBooster::mainpath() }}"><i class='fa fa-file'></i> API Documentation</a></li>
-    <li><a href="{{ CRUDBooster::mainpath('screet-key') }}"><i class='fa fa-key'></i> API Secret Key</a></li>
-    <li class='active'><a href="{{ CRUDBooster::mainpath('generator') }}"><i class='fa fa-cog'></i> API Generator</a>
+<ul class="nav flex-row">
+    <li class="nav-item">
+        <a class="nav-link active" href="https://staging.thecustomerhive.com/admin/api_generator">
+            <i class="fa fa-file"></i> API Documentation
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="https://staging.thecustomerhive.com/admin/api_generator/screet-key">
+            <i class="fa fa-key"></i> API Secret Key
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="https://staging.thecustomerhive.com/admin/api_generator/generator">
+            <i class="fa fa-cog"></i> API Generator
+        </a>
     </li>
 </ul>
+
 
 <div class='box'>
 
@@ -588,7 +600,7 @@
             <input type="hidden" name="id" value="{{isset($row->id) ? $row->id : '' }}">
             <div class='row'>
                 <div class='col-sm-8'>
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>API Name</label>
                         <input type='text' class='form-control' value='{{isset($row->nama) ? $row->nama : '' }}'
                             required name='nama' id='input-nama' />
@@ -596,7 +608,7 @@
                 </div>
 
                 <div class='col-sm-4'>
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>Table</label>
                         <select id='combo_tabel' name='tabel' required class='form-control'>
                             <option value=''>** Choose a Table</option>
@@ -611,10 +623,10 @@
 
             <div class='row'>
                 <div class='col-sm-8'>
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>API Slug</label>
                         <div class='input-group'>
-                            <span class="input-group-addon" id="basic-addon1"
+                            <span class="input-group-text" id="basic-addon1"
                                 style="background:#eeeeee">{{url("api")}}/</span>
                             <input type='text' class='form-control'
                                 value='{{isset($row->permalink) ? $row->permalink : ''}}' required name='permalink'
@@ -623,7 +635,7 @@
                     </div>
                 </div>
                 <div class='col-sm-2'>
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>Action Type</label>
                         <select id='tipe_action' name='aksi' required class='form-control'>
                             <option value=''>** Select Action</option>
@@ -642,7 +654,7 @@
                     </div>
                 </div>
                 <div class='col-sm-2'>
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>Method Type</label>
                         <br />
                         <label class='radio-inline'>
@@ -662,10 +674,10 @@
             </div>
 
 
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <div class="clearfix">
                     <label><i class='fa fa-cog'></i> Parameters</label>
-                    <a class='pull-right btn btn-xs btn-primary' href='javascript:void(0)'
+                    <a class='pull-right btn btn-sm btn-primary' href='javascript:void(0)'
                         onclick="load_parameters()"><i class='fa fa-refresh'></i>
                         Reset</a>
                 </div>
@@ -750,7 +762,7 @@
                 </div>
             </div>
 
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <label>SQL Where Query (Optional)</label>
                 <textarea name='sql_where' rows='3' class='form-control'
                     placeholder="status = [paramStatus]">{{isset($row->sql_where) ? $row->sql_where : ''}}</textarea>
@@ -760,10 +772,10 @@
                 </div>
             </div>
 
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <div class='clearfix'>
                     <label><i class='fa fa-cog'></i> Response</label>
-                    <a class='pull-right btn btn-xs btn-primary' href='javascript:void(0)' onclick='load_response()'><i
+                    <a class='pull-right btn btn-sm btn-primary' href='javascript:void(0)' onclick='load_response()'><i
                             class='fa fa-refresh'></i> Reset</a>
                 </div>
                 <div id='response'>
@@ -819,13 +831,13 @@
                 </div>
             </div>
 
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <label>API Description</label>
                 <textarea name='keterangan' rows='3' class='form-control wysiwyg'
                     placeholder='Optional'>{{isset($row->keterangan) ? $row->keterangan : ''}}</textarea>
             </div>
 
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <input type='submit' class='btn btn-success' value='SAVE & GENERATE API' />
             </div>
 

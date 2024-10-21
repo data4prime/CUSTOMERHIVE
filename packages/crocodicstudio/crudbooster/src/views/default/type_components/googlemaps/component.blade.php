@@ -1,5 +1,5 @@
-<div class='form-group peta {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}'>
-    <label class='control-label col-sm-2'>{{$form['label']}}
+<div class='mb-3 row peta {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}'>
+    <label class='col-form-label col-sm-2'>{{$form['label']}}
         @if($required)
             <span class='text-danger' title='{!! trans('crudbooster.this_field_is_required') !!}'>*</span>
         @endif
@@ -23,9 +23,10 @@
         <div id='googlemaps-modal-{{$name}}' class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="modal-header" style="justify-content: space-between;">
+                        
                         <h4 class="modal-title"><i class='fa fa-search'></i> Browse Map</h4>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
 
@@ -53,7 +54,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="setIt{{$name}}()" data-dismiss="modal">Set It</button>
+                        <button type="button" class="btn btn-primary" onclick="setIt{{$name}}()" data-bs-dismiss="modal">Set It</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->

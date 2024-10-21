@@ -58,11 +58,11 @@
             href='{{route("SettingsControllerGetAdd")."?group_setting=".$page_title}}'><i class='fa fa-plus'></i> Add
             Field Setting</a></p>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-header">
             <i class='fa fa-cog'></i> {{$page_title}}
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <form method='post' id="form" enctype="multipart/form-data"
                 action='{{CRUDBooster::mainpath("save-setting?group_setting=$page_title")}}'>
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -85,7 +85,7 @@
                         }
 
                         ?>
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label class='label-setting' title="{{$s->name}}">{{$s->label}}
                             <a style="visibility:hidden" href='{{CRUDBooster::mainpath("edit/$s->id")}}'
                                 title='Edit This Meta Setting' class='btn btn-box-tool'><i class='fa fa-pencil'></i></a>
@@ -116,7 +116,7 @@
                                     if ($value) {
                                         echo "<p><a href='".asset($value)."' target='_blank' title='Download the file of $s->label'><i class='fa fa-download'></i> Download the File  of $s->label</a></p>";
                                         echo "<input type='hidden' name='$s->name' value='$value'/>";
-                                        echo "<div class='pull-right'><a class='btn btn-danger btn-xs' onclick='if(confirm(\"Are you sure want to delete ?\")) location.href=\"".CRUDBooster::mainpath("delete-file-setting?id=$s->id")."\"' title='Click here to delete'><i class='fa fa-trash'></i></a></div>";
+                                        echo "<div class='pull-right'><a class='btn btn-danger btn-sm' onclick='if(confirm(\"Are you sure want to delete ?\")) location.href=\"".CRUDBooster::mainpath("delete-file-setting?id=$s->id")."\"' title='Click here to delete'><i class='fa fa-trash'></i></a></div>";
                                     } else {
                                         echo "<input type='file' name='$s->name' class='form-control'/>";
                                     }
@@ -126,7 +126,7 @@
                                     if ($value) {
                                         echo "<p><a href='".asset($value)."' target='_blank' title='Download the file of $s->label'><i class='fa fa-download'></i> Download the File  of $s->label</a></p>";
                                         echo "<input type='hidden' name='$s->name' value='$value'/>";
-                                        echo "<div class='pull-right'><a class='btn btn-danger btn-xs' onclick='if(confirm(\"Are you sure want to delete ?\")) location.href=\"".CRUDBooster::mainpath("delete-file-setting?id=$s->id")."\"' title='Click here to delete'><i class='fa fa-trash'></i></a></div>";
+                                        echo "<div class='pull-right'><a class='btn btn-danger btn-sm' onclick='if(confirm(\"Are you sure want to delete ?\")) location.href=\"".CRUDBooster::mainpath("delete-file-setting?id=$s->id")."\"' title='Click here to delete'><i class='fa fa-trash'></i></a></div>";
                                     } else {
                                         echo "<input type='file' name='$s->name' class='form-control'/>";
                                     }

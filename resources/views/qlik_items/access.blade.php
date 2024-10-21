@@ -13,12 +13,12 @@
     @endif
     @endif
 
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="card card-default">
+      <div class="card-header">
         <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! $page_title !!}</strong>
       </div>
 
-      <div class="panel-body" style="padding:20px 0px 0px 0px">
+      <div class="card-body" style="padding:20px 0px 0px 0px">
         <form class='form-horizontal' method='post' id="form" enctype="multipart/form-data" action='{{$action}}'>
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
           <input type='hidden' name='return_url' value='{{ @$return_url }}' />
@@ -38,8 +38,8 @@
 
           <div class="box-footer" style="background: #F5F5F5">
 
-            <div class="form-group">
-              <label class="control-label col-sm-2"></label>
+            <div class="mb-3 row">
+              <label class="col-form-label col-sm-2"></label>
               <div class="col-sm-10">
                 @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                 @if(g('return_url'))
@@ -76,7 +76,7 @@
   </div><!--END AUTO MARGIN-->
   <!-- List members -->
   <div class="box">
-    <div class="box-header">
+    <div class="box-header mb-3 mb-3">
       <h4>Authorized</h4>
     </div>
     <div class="box-body table-responsive no-padding">

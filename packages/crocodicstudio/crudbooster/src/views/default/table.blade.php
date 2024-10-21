@@ -184,15 +184,22 @@
 
 </form><!--END FORM TABLE-->
 
-<div class="col-md-8">{!! urldecode(str_replace("/?","?",$result->appends(Request::all())->render())) !!}</div>
+<div>{!! urldecode(str_replace("/?","?",$result->appends(Request::all())->appends('vendor.pagination.custom') )) !!}</div>
+
+
 <?php
 $from = $result->count() ? ($result->perPage() * $result->currentPage() - $result->perPage() + 1) : 0;
 $to = $result->perPage() * $result->currentPage() - $result->perPage() + $result->count();
 $total = $result->total();
 ?>
-<div class="col-md-4" style="margin:30px 0;"><span class="pull-right">{{ trans("crudbooster.filter_rows_total") }}
+
+<!--
+<div class="col-md-4" style="margin:30px 0;">
+    <span class="pull-right">{{ trans("crudbooster.filter_rows_total") }}
         : {{ $from }} {{ trans("crudbooster.filter_rows_to") }} {{ $to }} {{ trans("crudbooster.filter_rows_of") }} {{
-        $total }}</span></div>
+        $total }}</span>
+</div>
+-->
 
 @if($columns)
 @push('bottom')
@@ -310,17 +317,18 @@ $total = $result->total();
 <div class="modal fade" tabindex="-1" role="dialog" id='advanced_filter_modal'>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <button class="close" aria-label="Close" type="button" data-dismiss="modal">
-                    <span aria-hidden="true">×</span></button>
+            <div class="modal-header" style="justify-content: space-between;">
+                
                 <h4 class="modal-title"><i class='fa fa-filter'></i> {{trans("crudbooster.filter_dialog_title")}}</h4>
+<button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
+                    </button>
             </div>
             <form method='get' action=''>
                 <div class="modal-body">
                     <?php foreach($columns as $key => $col):?>
                     <?php if (isset($col['image']) || isset($col['download']) || (isset($col['visible']) && $col['visible'] === FALSE)) continue;?>
 
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
 
                         <div class='row-filter-combo row'>
 
@@ -385,7 +393,7 @@ $total = $result->total();
                                     <div class='col-sm-6'>
                                         <div
                                             class='input-group {{ ($col["type_data"] == "time")?"bootstrap-timepicker":"" }}'>
-                                            <span class="input-group-addon">{{trans("crudbooster.filter_from")}}:</span>
+                                            <span class="input-group-text">{{trans("crudbooster.filter_from")}}:</span>
                                             @php
                                             if(in_array($col["type_data"], ["date","datetime","timestamp"])){
                                             $class_td = "datepicker";
@@ -410,7 +418,7 @@ $total = $result->total();
                                     <div class='col-sm-6'>
                                         <div
                                             class='input-group {{ ($col["type_data"] == "time")?"bootstrap-timepicker":"" }}'>
-                                            <span class="input-group-addon">{{trans("crudbooster.filter_to")}}:</span>
+                                            <span class="input-group-text">{{trans("crudbooster.filter_to")}}:</span>
                                             <input {{ (CRUDBooster::getTypeFilter($col["field_with"]) !='between'
                                                 )?"disabled":"" }} type='text'
                                                 class='filter-value-between form-control {{ $class_td}}' {{
@@ -445,7 +453,7 @@ $total = $result->total();
                 </div>
                 <div class="modal-footer" align="right">
                     <button class="btn btn-default" type="button"
-                        data-dismiss="modal">{{trans("crudbooster.button_close")}}</button>
+                        data-bs-dismiss="modal">{{trans("crudbooster.button_close")}}</button>
                     <button class="btn btn-default btn-reset" type="reset"
                         onclick='location.href="{{Request::get("lasturl")}}"'>{{trans("crudbooster.button_reset")}}</button>
                     <button class="btn btn-primary btn-submit"
@@ -491,17 +499,19 @@ $total = $result->total();
 <div class="modal fade" tabindex="-1" role="dialog" id='export-data'>
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button class="close" aria-label="Close" type="button" data-dismiss="modal">
-                    <span aria-hidden="true">×</span></button>
+            <div class="modal-header" style="justify-content: space-between;">
+                <button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
+                    </button>
                 <h4 class="modal-title"><i class='fa fa-download'></i> {{trans("crudbooster.export_dialog_title")}}</h4>
+<button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
+                    </button>
             </div>
 
             <form method='post' target="_blank" action='{{ CRUDBooster::mainpath("export-data?t=".time()) }}'>
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 {!! CRUDBooster::getUrlParameters() !!}
                 <div class="modal-body">
-                    <div class="form-group">
+                    <div class="mb-3 row">
                         <label>{{trans("crudbooster.export_dialog_filename")}}</label>
                         <input type='text' name='filename' class='form-control' required
                             value='Report {{ isset($module_name) ? $module_name : '' }} - {{date("d M Y")}}' />
@@ -510,14 +520,14 @@ $total = $result->total();
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3 row">
                         <label>{{trans("crudbooster.export_dialog_maxdata")}}</label>
                         <input type='number' name='limit' class='form-control' required value='100' max="100000"
                             min="1" />
                         <div class='help-block'>{{trans("crudbooster.export_dialog_help_maxdata")}}</div>
                     </div>
 
-                    <div class='form-group'>
+                    <div class='mb-3 row'>
                         <label>{{trans("crudbooster.export_dialog_columns")}}</label><br />
                         @foreach($columns as $col)
                         <div class='checkbox inline'><label><input type='checkbox' checked name='columns[]'
@@ -525,7 +535,7 @@ $total = $result->total();
                         @endforeach
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3 row">
                         <label>{{trans("crudbooster.export_dialog_format_export")}}</label>
                         <select name='fileformat' class='form-control'>
                             <option value='pdf'>PDF</option>
@@ -540,7 +550,7 @@ $total = $result->total();
                     <div id='advanced_export' style='display: none'>
 
 
-                        <div class="form-group">
+                        <div class="mb-3 row">
                             <label>{{trans("crudbooster.export_dialog_page_size")}}</label>
                             <select class='form-control' name='page_size'>
                                 <option <?php (isset($setting->default_paper_size) && $setting->default_paper_size ==
@@ -568,7 +578,7 @@ $total = $result->total();
                                 {{trans("crudbooster.export_dialog_set_default")}}</div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="mb-3 row">
                             <label>{{trans("crudbooster.export_dialog_page_orientation")}}</label>
                             <select class='form-control' name='page_orientation'>
                                 <option value='potrait'>Potrait</option>
@@ -580,7 +590,7 @@ $total = $result->total();
                 </div>
                 <div class="modal-footer" align="right">
                     <button class="btn btn-default" type="button"
-                        data-dismiss="modal">{{trans("crudbooster.button_close")}}</button>
+                        data-bs-dismiss="modal">{{trans("crudbooster.button_close")}}</button>
                     <button class="btn btn-primary btn-submit"
                         type="submit">{{trans('crudbooster.button_submit')}}</button>
                 </div>
@@ -620,40 +630,28 @@ $('#mass_editing_button').click(function () {
 
 
 
-
-<!-- MODAL FOR MASS EDITING DATA-->
-<div class="modal fade" tabindex="-1" role="dialog" id='mass_editing_modal'>
+<div class="modal fade" tabindex="-1" id="mass_editing_modal" aria-labelledby="mass_editing_modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-<form  method='post' action='{{ CRUDBooster::mainpath("mass-edit") }}' id='form-mass-editing'>
-            <div class="modal-header">
-                <button class="close" aria-label="Close" type="button" data-dismiss="modal">
-                    <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title"><i class='fa fa-pencil'></i> Mass Edit</h4>
-            </div>
-        <div class="modal-body">
-            
-                
-            <input type='hidden' name='_token' value='{{csrf_token()}}' />
-            <input type='hidden' name='table' value='{{$table}}' />
-            @include("crudbooster::mass_edit.form_body")
-
-            
-
-</div>
-
-<div class="modal-footer" align="right">
-                    <button class="btn btn-default" type="button"
-                        data-dismiss="modal">{{trans("crudbooster.button_close")}}</button>
-                    <button class="btn btn-primary btn-submit"
-                        type="submit">{{trans('crudbooster.button_submit')}}</button>
+            <form method="post" action="{{ CRUDBooster::mainpath('mass-edit') }}" id="form-mass-editing">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="mass_editing_modalLabel"><i class="fa fa-pencil"></i> Mass Edit</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-
-</form>
+                <div class="modal-body">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="table" value="{{ $table }}">
+                    @include("crudbooster::mass_edit.form_body")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ trans("crudbooster.button_close") }}</button>
+                    <button type="submit" class="btn btn-primary btn-submit">{{ trans('crudbooster.button_submit') }}</button>
+                </div>
+            </form>
         </div>
-        <!-- /.modal-content -->
     </div>
 </div>
+
 <script defer>
 
 //prendi tutti gli input nel form mass_editing_modal col nome che inizia con 'mass_edit_'

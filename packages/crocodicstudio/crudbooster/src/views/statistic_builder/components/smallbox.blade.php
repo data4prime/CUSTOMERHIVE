@@ -24,19 +24,19 @@
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
     <input type='hidden' name='componentid' value='{{$componentID}}' />
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>Name</label>
         <input class="form-control" required name='config[name]' type='text' value='{{@$config->name}}' />
     </div>
 
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>Icon By Ionicons</label>
         <input class="form-control" required name='config[icon]' type='text' value='{{@$config->icon}}' />
         E.g : ion-bag . You can find more icon, checkout at <a target='_blank'
             href='http://ionicons.com/'>ionicons.com</a>
     </div>
 
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>Color</label>
         <select class='form-control' required name='config[color]'>
             <option {{(@$config->color == 'bg-green')?"selected":""}} value='bg-green'>Green</option>
@@ -46,12 +46,12 @@
         </select>
     </div>
 
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>Link</label>
         <input class="form-control" required name='config[link]' type='text' value='{{@$config->link}}' />
     </div>
 
-    <div class="form-group">
+    <div class="mb-3 row">
         <label>Count (SQL QUERY)</label>
         <textarea name='config[sql]' rows="5" class='form-control'>{{@$config->sql}}</textarea>
         <div class="help-block">Make sure the sql query are correct unless the widget will be broken. Mak sure give the

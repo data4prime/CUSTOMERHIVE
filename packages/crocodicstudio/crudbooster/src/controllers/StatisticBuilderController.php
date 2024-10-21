@@ -29,7 +29,7 @@ class StatisticBuilderController extends CBController
         $this->button_delete = true;
         $this->button_edit = true;
         $this->button_detail = false;
-        $this->button_show = true;
+        $this->button_show = false;
         $this->button_filter = false;
         $this->button_export = false;
         $this->button_import = false;
@@ -277,11 +277,12 @@ class StatisticBuilderController extends CBController
 
         $command = 'configuration';
 
+        //dd(QlikAppController::getMashups());
+        $mashups = QlikAppController::getMashups();
         if (isset($config->mashups)) {
-            $mashups = QlikAppController::getMashups();
+            
             $mashup = QlikAppController::getMashupFromCompID($componentID);
         } else {
-            $mashups = null;
             $mashup = null;
         }
 
@@ -298,6 +299,8 @@ class StatisticBuilderController extends CBController
             $conf = null;
             $token = null;
         }
+
+        //dd($mashups);
 
         return view('crudbooster::statistic_builder.components.' . $component_row->component_name, compact('command', 'componentID', 'config', 'mashups', 'conf', 'mashup', 'token', 'errors'));
     }

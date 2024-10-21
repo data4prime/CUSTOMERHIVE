@@ -150,12 +150,12 @@ h4.card-title {
     color: #fff;
 }
 
-.btn-xs {
+.btn-sm {
     font-size: 11px;
     padding: 2px 8px;
     line-height: 18px;
 }
-.btn-xs:hover{
+.btn-sm:hover{
     color:#fff !important;
 }
 

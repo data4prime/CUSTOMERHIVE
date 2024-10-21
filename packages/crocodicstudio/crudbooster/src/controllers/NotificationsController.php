@@ -17,7 +17,7 @@ class NotificationsController extends CBController
         $this->title_field = "content";
         $this->limit = 20;
         $this->index_orderby = ["id" => "desc"];
-        $this->button_show = true;
+        $this->button_show = false;
         $this->button_add = false;
         $this->button_delete = true;
         $this->button_export = false;

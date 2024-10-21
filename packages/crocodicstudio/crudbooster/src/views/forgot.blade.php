@@ -65,7 +65,7 @@
             <p class="login-box-msg">{{trans("crudbooster.forgot_message")}}</p>
             <form action="{{ route('postForgot') }}" method="post">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                <div class="form-group has-feedback">
+                <div class="mb-3 row has-feedback">
                     <input type="email" class="form-control" name='email' required placeholder="Email Address" />
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>

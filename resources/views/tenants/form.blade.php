@@ -26,7 +26,7 @@
     </div>
     <div class="col-xs-8">
       <div class="box box-primary">
-        <div class="box-header with-border">
+        <div class="box-header mb-3 mb-3 with-border">
           <h3 class="box-title">
             <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! $page_title !!}
           </h3>
@@ -56,8 +56,8 @@
             <?php
               $loginURI = TenantHelper::loginPath($row->id);
             ?>
-            <div class="form-group header-group-0 " id="form-group-domain_name" style="">
-              <label class="control-label col-sm-2">
+            <div class="mb-3 row header-group-0 " id="form-group-domain_name" style="">
+              <label class="col-form-label col-sm-2">
                 Login URI
               </label>
 
@@ -69,8 +69,8 @@
 
           <div class="box-footer" style="background: #F5F5F5">
 
-            <div class="form-group">
-              <label class="control-label col-sm-2"></label>
+            <div class="mb-3 row">
+              <label class="col-form-label col-sm-2"></label>
               <div class="col-sm-10">
                 @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                 @if(g('return_url'))

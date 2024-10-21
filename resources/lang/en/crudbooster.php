@@ -14,6 +14,8 @@ return [
     'there_is_no_option' => 'There is no any options setting for this inputType',
     'no' => 'No.',
 
+    'system_information' => 'System Information',
+
     'text_enter_the_password' => 'Enter your password to retrieve your session',
     'text_enter_the_license' => 'Enter your activation code to activate your Customer Hive',
     'text_or_sign_in' => 'Or sign in as a different user',

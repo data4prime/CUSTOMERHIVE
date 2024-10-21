@@ -64,6 +64,9 @@ h1 .qlik_logo{
   font-size: 2em;
 }
 
+.assistance-menu {
+  margin-right: 5px;
+}
 
 .navbar-nav > .notifications-menu > .dropdown-menu,
 .navbar-nav > .assistance-menu > .dropdown-menu,
@@ -166,3 +169,32 @@ h1 .qlik_logo{
 
   width: 20px;
 }
+
+.sidebar-menu>li>a {
+  text-decoration: none;
+}
+
+.logo {
+  text-decoration: none;
+}
+
+th > a {
+  text-decoration: none;
+}
+
+.sidebar-menu .treeview-menu > li > a {
+  text-decoration: none;
+}
+
+.dropdown-menu>li>a {
+    text-decoration: none;
+}
+
+.main-header .sidebar-toggle { 
+  text-decoration: none;
+}
+
+.nav-tabs > li > a {
+  text-decoration: none;
+}
+

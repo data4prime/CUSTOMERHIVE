@@ -125,22 +125,23 @@ $(function () {
 <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-header" style="justify-content: space-between;">
+        
         <h4 class="modal-title"><i class='fa fa-cog'></i> Options</h4>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p>One fine body&hellip;</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn-save-option btn btn-primary">Save changes</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <div class="box box-default">
-  <div class="box-header with-border">
+  <div class="box-header mb-3 with-border">
     <h3 class="box-title">{{ $box_title }}</h3>
   </div>
   <div class="box-body">
@@ -183,8 +184,8 @@ $(function () {
               <input data-index="{{ $index }}" {{ ($form['type']=='boolean') ? 'disabled' : '' }} type='text' value='{{$form["size"]}}' placeholder="Number of characters for text or number of digits for numbers" class='form-control size' name='size[]' autocomplete="off"/>
             </td>
             <td>
-              <a href="javascript:void(0)" class="btn btn-info btn-plus"><i class='fa fa-plus'></i></a>
-              <a href="javascript:void(0)" class="btn btn-danger btn-delete"><i class='fa fa-trash'></i></a>
+              <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='fa fa-plus'></i></a>
+              <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='fa fa-trash'></i></a>
               <!-- <a href="javascript:void(0)" class="btn btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
               <a href="javascript:void(0)" class="btn btn-success btn-down"><i class='fa fa-arrow-down'></i></a> -->
             </td>
@@ -212,8 +213,8 @@ $(function () {
               <input data-index="{{ $index }}" type='text' placeholder="Number of characters for text or number of digits for numbers" class='form-control size' name='size[]' autocomplete="off"/>
             </td>
             <td>
-              <a href="javascript:void(0)" class="btn btn-info btn-plus"><i class='fa fa-plus'></i></a>
-              <a href="javascript:void(0)" class="btn btn-danger btn-delete"><i class='fa fa-trash'></i></a>
+              <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='fa fa-plus'></i></a>
+              <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='fa fa-trash'></i></a>
               <!-- <a href="javascript:void(0)" class="btn btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
               <a href="javascript:void(0)" class="btn btn-success btn-down"><i class='fa fa-arrow-down'></i></a> -->
             </td>
