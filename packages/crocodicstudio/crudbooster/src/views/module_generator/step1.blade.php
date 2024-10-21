@@ -28,7 +28,7 @@
         <form method="post" action="{{Route('ModulsControllerPostStep1')}}">
             <input type="hidden" name="_token" value="{{csrf_token()}}">
             <input type="hidden" name="id" value="{{isset($row->id) ? $row->id : ''}}">
-            <div class="mb-3 row">
+            <!--<div class="mb-3 row">
                 <label for="">Table</label>
                 <select name="table" id="table" required class="select2 form-control"
                     value="{{ isset($row->table_name) ? $row->table_name : ''}}">
@@ -62,7 +62,7 @@
                         fa-{{$f}}">{{$f}}</option>
                     @endforeach
                 </select>
-            </div>
+            </div>-->
 
 
             <div class="row mb-3">
