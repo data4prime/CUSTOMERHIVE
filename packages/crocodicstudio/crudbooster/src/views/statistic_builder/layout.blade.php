@@ -12,8 +12,9 @@
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
     <!-- Bootstrap 3.3.2 -->
-    <link href="{{ asset('vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"
-        type="text/css" />
+    <!--<link href="{{ asset('vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"
+        type="text/css" />-->
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Font Awesome Icons -->
     <link href="{{asset('vendor/crudbooster/assets/adminlte/font-awesome/css')}}/font-awesome.min.css" rel="stylesheet"
         type="text/css" />
@@ -31,8 +32,9 @@
     <script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
 
     <!-- Bootstrap 3.4.1 JS -->
-    <script src="{{ asset ('vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min.js') }}"
-        type="text/javascript"></script>
+    <!--<script src="{{ asset ('vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min.js') }}"
+        type="text/javascript"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset ('vendor/crudbooster/assets/adminlte/dist/js/app.js') }}" type="text/javascript"></script>
 
@@ -48,21 +50,32 @@
     <link rel="stylesheet" type="text/css" href="{{asset('vendor/crudbooster/assets/sweetalert/dist/sweetalert.css')}}">
 
     @stack('head')
+
+    <style>
+
+        .skin-red .main-header .navbar .nav>li>a {
+            text-decoration: none;
+        }
+        .card-header, .inner-box, .box-header mb-3, .btn-add-widget {
+            text-decoration: none;
+        }
+
+    </style>
 </head>
 
 <body class="<?php echo (Session::get('theme_color')) ?: 'skin-blue'?> old-transition layout-top-nav fixed">
     <div id='app' class="wrapper">
 
         <header class="main-header">
-            <nav class="navbar navbar-static-top">
+            <nav class="navbar navbar-expand-lg navbar-light justify-content-between">
                 <div class="container">
                     <div class="navbar-header">
-                        <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}'
+                        <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title="{{Session::get('appname')}}"
                             class="navbar-brand">{{CRUDBooster::getSetting('appname')}}</a>
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                            data-target="#navbar-collapse">
+                        <!--<button style="background-color: transparent;" type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#navbar-collapse">
                             <i class="fa fa-bars"></i>
-                        </button>
+                        </button>-->
                     </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -76,10 +89,10 @@
                     <!-- Navbar Right Menu -->
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
-                            <li><a href="#" class='btn-show-sidebar' data-toggle="control-sidebar"><i
+                            <li class="nav-item"><a href="#" class='btn-show-sidebar nav-link' data-bs-toggle="control-sidebar"><i
                                         class='fa fa-bars'></i> Add Widget</a></li>
 
-                            <li><a href="{{CRUDBooster::mainpath()}}"><i class='fa fa-sign-out'></i> Exit</a></li>
+                            <li  class="nav-item"><a class='nav-link' href="{{CRUDBooster::mainpath()}}"><i class='fa fa-sign-out'></i> Exit</a></li>
                         </ul>
                     </div>
                     <!-- /.navbar-custom-menu -->
@@ -129,18 +142,18 @@
                 </li>
                 <li class='connectedSortable' title='Drag To Main Area'>
                     <div id='btn-panelarea' class='button-widget-area'>
-                        <a href="#" data-component='panelarea' class='btn-add-widget add-panel-area'>
-                            <img src='{{asset("vendor/crudbooster/assets/statistic_builder/panel.png")}}' />
-                            <div class='title'>Panel Area</div>
+                        <a href="#" data-component='cardarea' class='btn-add-widget add-panel-area'>
+                            <img src='{{asset("vendor/crudbooster/assets/statistic_builder/card.png")}}' />
+                            <div class='title'>card Area</div>
                         </a>
                     </div>
                 </li>
 
                 <li class='connectedSortable' title='Drag To Main Area'>
                     <div id='btn-panelcustom' class='button-widget-area'>
-                        <a href="#" data-component='panelcustom' class='btn-add-widget add-panel-custom'>
-                            <img src='{{asset("vendor/crudbooster/assets/statistic_builder/panel.png")}}' />
-                            <div class='title'>Panel Custom</div>
+                        <a href="#" data-component='cardcustom' class='btn-add-widget add-panel-custom'>
+                            <img src='{{asset("vendor/crudbooster/assets/statistic_builder/card.png")}}' />
+                            <div class='title'>card Custom</div>
                         </a>
                     </div>
                 </li>

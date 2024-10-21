@@ -47,12 +47,12 @@
                 })
             </script>
 
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <label>API BASE URL</label>
                 <input type='text' readonly class='form-control' title='Hanya klik dan otomatis copy to clipboard (kecuali Safari)'
                        onClick="this.setSelectionRange(0, this.value.length); document.execCommand('copy');" value='{{url('api')}}'/>
             </div>
-            <div class='form-group'>
+            <div class='mb-3 row'>
                 <label>How To Use</label><br/>
                 SCREETKEY : ABCDEF123456 <br/>
                 TIME : UNIX CURRENT TIME <br/>
@@ -67,7 +67,7 @@
                     <th width='2%'>No</th>
                     <th>API Name
                         <span class='pull-right'>
-                      <a class='btn btn-xs btn-warning' target="_blank" href='{{url("download-documentation-postman")}}'>Export For POSTMAN <sup>Beta</sup></a>
+                      <a class='btn btn-sm btn-warning' target="_blank" href='{{url("download-documentation-postman")}}'>Export For POSTMAN <sup>Beta</sup></a>
                     </span>
                     </th>
                 </tr>

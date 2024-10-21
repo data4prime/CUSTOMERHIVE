@@ -39,12 +39,16 @@ class AdminCmsUsersController extends CBController
 		$this->col[] = array("label" => "Name", "name" => "name");
 		$this->col[] = array("label" => "Email", "name" => "email");
 		$this->col[] = array("label" => "Privilege", "name" => "id_cms_privileges", "join" => "cms_privileges,name");
-		$this->col[] = array("label" => "User directory", "name" => "user_directory");
+		/*$this->col[] = array("label" => "User directory", "name" => "user_directory");*/
 
 
-		$this->col[] = array("label" => "Data scadenza", "name" => "data_scadenza");
+		$this->col[] = array("label" => "Expiry date", "name" => "data_scadenza", "callback_php" => "date('d/m/Y',strtotime(\$row->data_scadenza))");
 		$this->col[] = array("label" => "Status", "name" => "status");
 		$this->col[] = array("label" => "Photo", "name" => "photo", "image" => 1);
+
+
+
+
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
 		# START FORM DO NOT REMOVE THIS LINE
@@ -152,7 +156,7 @@ class AdminCmsUsersController extends CBController
 		}
 
 		$this->form[] = array(
-			"label" => "Data scadenza", 
+			"label" => "Expiry date", 
 			"type" => "date", 
 			"name" => "data_scadenza", 
 			'required' => false, 
@@ -172,6 +176,10 @@ class AdminCmsUsersController extends CBController
 			'disabled' => UserHelper::isTenantAdmin() || CRUDBooster::isSuperadmin() ? false : true,
 		];
 		$this->form[] = array("label" => "Photo", "name" => "photo", "type" => "upload", "help" => "Recommended resolution is 200x200px", 'required' => false, 'validation' => 'image|max:1000', 'resize_width' => 90, 'resize_height' => 90);
+		$this->form[] = array("label" => "Language", "name" => "lang", "type" => "select", "dataenum" => ['en|English', 'it|Italiano'], "value" => "en");
+
+
+
 		$this->form[] = array("label" => "Password", "name" => "password", "type" => "password", "help" => "Leave empty if no change is needed");
 		$this->form[] = array("label" => "Password Confirmation", "name" => "password_confirmation", "type" => "password", "help" => "Leave empty if no change is needed");
 

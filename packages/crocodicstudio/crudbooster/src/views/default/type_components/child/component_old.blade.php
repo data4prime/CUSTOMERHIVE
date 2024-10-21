@@ -4,32 +4,32 @@ $name = str_slug($form['label'], '');
 @push('bottom')
 <script type="text/javascript">
     $(function () {
-        $('#form-group-{{$name}} .select2').select2();
+        $('#mb-3 row-{{$name}} .select2').select2();
     })
 </script>
 @endpush
-<div class='form-group {{$header_group_class}}' id='form-group-{{$name}}'>
+<div class='mb-3 row {{$header_group_class}}' id='form-group-{{$name}}'>
 
     @if($form['columns'])
     <div class="col-sm-12">
 
-        <div id='panel-form-{{$name}}' class="panel panel-default">
-            <div class="panel-heading">
+        <div id='card-form-{{$name}}' class="card card-default">
+            <div class="card-header">
                 <i class='fa fa-bars'></i> {{$form['label']}}
             </div>
-            <div class="panel-body">
+            <div class="card-body">
 
                 <div class='row'>
                     <div class='col-sm-10'>
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><i class="fa fa-pencil-square-o"></i>
+                        <div class="card card-default">
+                            <div class="card-header"><i class="fa fa-pencil-square-o"></i>
                                 {{trans("crudbooster.text_form")}}</div>
-                            <div class="panel-body child-form-area">
+                            <div class="card-body child-form-area">
                                 @foreach($form['columns'] as $col)
                                 @php $name_column = $name.$col['name'];@phpend
-                                <div class='form-group'>
+                                <div class='mb-3 row'>
                                     @if($col['type']!='hidden')
-                                    <label class="control-label col-sm-2">{{$col['label']}}
+                                    <label class="col-form-label col-sm-2">{{$col['label']}}
                                         @if(isset($col['required']) && !empty($col['required'])) <span
                                             class="text-danger"
                                             title="{{trans('crudbooster.this_field_is_required')}}">*</span> @endif
@@ -121,9 +121,8 @@ $name = str_slug($form['label'], '');
                                                 role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close"><span
-                                                                aria-hidden="true">&times;</span></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
                                                         <h4 class="modal-title"><i class='fa fa-search'></i>
                                                             {{trans('crudbooster.datamodal_browse_data')}}
                                                             {{$col['label']}}
@@ -400,8 +399,8 @@ $name = str_slug($form['label'], '');
                                     var currentRow = null;
 
                                     function resetForm{ { $name } } () {
-                                        $('#panel-form-{{$name}}').find("input[type=text],input[type=number],select,textarea").val('');
-                                        $('#panel-form-{{$name}}').find(".select2").val('').trigger('change');
+                                        $('#card-form-{{$name}}').find("input[type=text],input[type=number],select,textarea").val('');
+                                        $('#card-form-{{$name}}').find(".select2").val('').trigger('change');
                                     }
 
                                     function deleteRow{ { $name } } (t) {
@@ -444,7 +443,7 @@ $name = str_slug($form['label'], '');
 
                                     function validateForm{ { $name } } () {
                                         var is_false = 0;
-                                        $('#panel-form-{{$name}} .required').each(function () {
+                                        $('#card-form-{{$name}} .required').each(function () {
                                             var v = $(this).val();
                                             if (v == '') {
                                                 sweetAlert("{{trans('crudbooster.alert_warning')}}", "{{trans('crudbooster.please_complete_the_form')}}", "warning");
@@ -497,8 +496,8 @@ $name = str_slug($form['label'], '');
                                         @endif
                                         @endforeach
                                         trRow += "<td>" +
-                                            "<a href='#panel-form-{{$name}}' onclick='editRow{{$name}}(this)' class='btn btn-warning btn-xs'><i class='fa fa-pencil'></i></a> " +
-                                            "<a href='javascript:void(0)' onclick='deleteRow{{$name}}(this)' class='btn btn-danger btn-xs'><i class='fa fa-trash'></i></a></td>";
+                                            "<a href='#card-form-{{$name}}' onclick='editRow{{$name}}(this)' class='btn btn-warning btn-sm'><i class='fa fa-pencil'></i></a> " +
+                                            "<a href='javascript:void(0)' onclick='deleteRow{{$name}}(this)' class='btn btn-danger btn-sm'><i class='fa fa-trash'></i></a></td>";
                                         trRow += '</tr>';
                                         $('#table-{{$name}} tbody .trNull').remove();
                                         if (currentRow == null) {
@@ -514,7 +513,7 @@ $name = str_slug($form['label'], '');
                                 </script>
                                 @endpush
                             </div>
-                            <div class="panel-footer" align="right">
+                            <div class="card-footer" align="right">
                                 <input type='button' class='btn btn-default' id="btn-reset-form-{{$name}}"
                                     onclick="resetForm{{$name}}()" value='{{trans("crudbooster.button_reset")}}' />
                                 <input type='button' id='btn-add-table-{{$name}}' class='btn btn-primary'
@@ -525,11 +524,11 @@ $name = str_slug($form['label'], '');
                     </div>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card card-default">
+                    <div class="card-header">
                         <i class='fa fa-table'></i> {{trans('crudbooster.table_detail')}}
                     </div>
-                    <div class="panel-body no-padding table-responsive" style="max-height: 400px;overflow: auto;">
+                    <div class="card-body no-padding table-responsive" style="max-height: 400px;overflow: auto;">
                         <table id='table-{{$name}}' class='table table-striped table-bordered'>
                             <thead>
                                 <tr>
@@ -620,10 +619,10 @@ $name = str_slug($form['label'], '');
                                     </td>
                                     @endforeach
                                     <td>
-                                        <a href='#panel-form-{{$name}}' onclick='editRow{{$name}}(this)'
-                                            class='btn btn-warning btn-xs'><i class='fa fa-pencil'></i></a>
+                                        <a href='#card-form-{{$name}}' onclick='editRow{{$name}}(this)'
+                                            class='btn btn-warning btn-sm'><i class='fa fa-pencil'></i></a>
                                         <a href='javascript:void(0)' onclick='deleteRow{{$name}}(this)'
-                                            class='btn btn-danger btn-xs'><i class='fa fa-trash'></i></a>
+                                            class='btn btn-danger btn-sm'><i class='fa fa-trash'></i></a>
                                     </td>
                                 </tr>
 

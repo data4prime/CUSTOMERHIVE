@@ -141,10 +141,10 @@ $fields_to_eliminate = ['multitext', 'password', 'child'];
         <div class="row">
             <div class="col-sm-12 col-md-12">
                 <div class="box box-info collapsed-box">
-                    <div class="box-header with-border">
+                    <div class="box-header mb-3 with-border">
                         <h3 class="box-title">
                             <strong>
-                                <i class='{{ CRUDBooster::getCurrentModule()->icon }}'></i> Informazioni di sistema
+                                <i class='{{ CRUDBooster::getCurrentModule()->icon }}'></i> {{ trans('crudbooster.system_information') }}
                             </strong>
                         </h3>
                         <div class="box-tools pull-right">
@@ -166,15 +166,21 @@ $fields_to_eliminate = ['multitext', 'password', 'child'];
     @endif
 
     @if($type == 'checkbox')
-        <input type="checkbox" class="col-sm-2" name="mass_edit_{{ $name }}[]">
+
+        <div class="col-sm-2">
+            <input type="checkbox" class="form-check-input" name="mass_edit_{{ $name }}[]">
+        </div>
     @else
-        <input type="checkbox" class="col-sm-2" name="mass_edit_{{ $name }}">
+        <div class="col-sm-2">
+            <input type="checkbox" class="form-check-input" name="mass_edit_{{ $name }}">
+        </div>
     @endif
 
 
 
     
 </div>
+<hr>
     @if($name == 'group')
                     </div>
                 </div>

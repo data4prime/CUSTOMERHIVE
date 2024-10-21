@@ -29,7 +29,7 @@ class PrivilegesController extends CBController
         $this->col[] = ["label" => "ID", "name" => "id"];
         $this->col[] = ["label" => "Name", "name" => "name"];
         //serve solo per far caricare il valore e usarlo nella colonna superadmin
-        $this->col[] = ["label" => "is_tenantadmin", "name" => "is_tenantadmin", "style" => "hidden"];
+        $this->col[] = ["label" => "is_tenantadmin", "name" => "is_tenantadmin", /*"style" => "hidden",*/ "visible" => false];
         $this->col[] = [
             "label" => "Privilege",
             "name" => "is_superadmin",

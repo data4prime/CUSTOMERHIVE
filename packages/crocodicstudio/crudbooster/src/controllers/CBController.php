@@ -532,6 +532,8 @@ class CBController extends Controller
             }
         }
 
+
+
         $data['columns'] = $columns_table;
 
         if ($this->index_return) {
@@ -600,7 +602,7 @@ class CBController extends Controller
                 if (@$col['download']) {
                     $url = '/storage'. (strpos($value, 'http://') !== false) ? $value : asset($value) . '?download=1';
                     if ($value) {
-                        $value = "<a class='btn btn-xs btn-primary' href='$url' target='_blank' title='Download File'><i class='fa fa-download'></i> Download</a>";
+                        $value = "<a class='btn btn-sm btn-primary' href='$url' target='_blank' title='Download File'><i class='fa fa-download'></i> Download</a>";
                     } else {
                         $value = " - ";
                     }
@@ -792,11 +794,16 @@ class CBController extends Controller
             });
         }
 
+
         if ($where) {
             $result->whereraw($where);
         }
 
         $result->orderby($tablePK, 'desc');
+
+        //$result->useBootstrapFive();
+
+        //dd($result->toSql());
 
         $data['result'] = $result->paginate(6);
         $data['where'] = $where;

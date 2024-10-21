@@ -166,7 +166,7 @@ $(function () {
           $.each(data.attribute.required, function (key, val) {
             var form_group_html = '';
             if (val instanceof Object) {
-              form_group_html += "<div class='form-group'><label>" + key + "</label>";
+              form_group_html += "<div class='mb-3 row'><label>" + key + "</label>";
               if (val.type) {
                 if (val.type == 'radio') {
                   $.each(val.enum, function (i, o) {
@@ -186,7 +186,7 @@ $(function () {
               form_group_html += "</div>";
             } else {
               form_group_html +=
-              "<div class='form-group'>" +
+              "<div class='mb-3 row'>" +
               "<label>" + key + "</label>" +
               "<input class='form-control required' name='option[" + tr_index + "][" + key + "]' placeholder='" + val + "' type='text'/>" +
               "</div>"
@@ -198,7 +198,7 @@ $(function () {
         if (data.attribute.requiredOne) {
           $.each(data.attribute.requiredOne, function (key, val) {
             t.parent('tr').find('.option_area').append(
-              "<div class='form-group'>" +
+              "<div class='mb-3 row'>" +
               "<label>" + key + "</label>" +
               "<input class='form-control required-one'  name='option[" + tr_index + "][" + key + "]' placeholder='" + val + "' type='text'/>" +
               "</div>"
@@ -210,7 +210,7 @@ $(function () {
             if (typeof(val) == "object") {
               if (val.type == 'textarea') {
                 t.parent('tr').find('.option_area').append(
-                  "<div class='form-group'>" +
+                  "<div class='mb-3 row'>" +
                   "<label>" + key + "</label>" +
                   "<textarea class='form-control' name='option[" + tr_index + "][" + key + "]' placeholder='" + val.placeholder + "' ></textarea>" +
                   "</div>"
@@ -218,7 +218,7 @@ $(function () {
               }
             } else {
               t.parent('tr').find('.option_area').append(
-                "<div class='form-group'>" +
+                "<div class='mb-3 row'>" +
                 "<label>" + key + "</label>" +
                 "<input class='form-control' name='option[" + tr_index + "][" + key + "]' placeholder='" + val + "' type='text'/>" +
                 "</div>"
@@ -308,15 +308,16 @@ $(function () {
 <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-header" style="justify-content: space-between;">
+        
         <h4 class="modal-title"><i class='fa fa-cog'></i> Options</h4>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p>One fine body&hellip;</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn-save-option btn btn-primary">Save changes</button>
       </div>
     </div><!-- /.modal-content -->
@@ -324,7 +325,7 @@ $(function () {
 </div><!-- /.modal -->
 
 <div class="box box-default">
-  <div class="box-header with-border">
+  <div class="box-header mb-3 with-border">
     <h3 class="box-title">Form Settings</h3>
   </div>
   <div class="box-body">
@@ -368,7 +369,7 @@ $(function () {
               </select>
             </td>
             <td>
-              <a class='btn btn-primary btn-options' href='javascript:;'><i class='fa fa-cog'></i> Options</a>
+              <a class='btn btn-sm btn-primary btn-options' href='javascript:;'><i class='fa fa-cog'></i> Options</a>
               <div class='option_area' style="display: none">
                 <?php
                 $type = $form["type"] ?: "text";
@@ -391,7 +392,7 @@ $(function () {
                       if(is_object($val)):
                         if($val->type && $val->type == 'radio'):
                           ?>
-                          <div class="form-group">
+                          <div class="mb-3 row">
                             <label>{{$key}}</label>
                             @foreach($val->enum as $enum)
                             <input type="radio" name="option[{{$index}}][{{$key}}]"
@@ -402,7 +403,7 @@ $(function () {
 
                         <?php else:?>
 
-                          <div class="form-group">
+                          <div class="mb-3 row">
                             <label>{{$key}}</label>
                             <input type="text" name="option[{{$index}}][{{$key}}]" placeholder="{{$val->placeholder}}" value="{{$value}}"
                             class="form-control">
@@ -410,7 +411,7 @@ $(function () {
                         <?php endif;?>
                       <?php else:?>
 
-                        <div class="form-group">
+                        <div class="mb-3 row">
                           <label>{{$key}}</label>
                           <input type="text" name="option[{{$index}}][{{$key}}]" placeholder="{{$val}}" value="{{$value}}" class="form-control">
                         </div>
@@ -425,7 +426,7 @@ $(function () {
                       foreach($types->attribute->requiredOne as $key=>$val):
                         @$value = $form[$key];
                         ?>
-                        <div class="form-group">
+                        <div class="mb-3 row">
                           <label>{{$key}}</label>
                           <input type="text" name="option[{{$index}}][{{$key}}]" placeholder="{{$val}}" value="{{$value}}" class="form-control">
                         </div>
@@ -436,7 +437,7 @@ $(function () {
                         foreach($types->attribute->optional as $key=>$val):
                           @$value = $form[$key];
                           ?>
-                          <div class="form-group">
+                          <div class="mb-3 row">
                             <label>{{$key}}</label>
                             @if(is_object($val) && property_exists($val, 'type') && $val->type == 'textarea')
                             <textarea type="text" name="option[{{$index}}][{{$key}}]" placeholder="{{$val->placeholder}}"
@@ -453,10 +454,10 @@ $(function () {
                       </div>
                     </td>
                     <td>
-                      <a href="javascript:void(0)" class="btn btn-info btn-plus"><i class='fa fa-plus'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-danger btn-delete"><i class='fa fa-trash'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='fa fa-plus'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='fa fa-trash'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
                     </td>
                   </tr>
                   <?php $index++;?>
@@ -483,16 +484,16 @@ $(function () {
                       </select>
                     </td>
                     <td>
-                      <a class='btn btn-primary btn-options' href='#'><i class='fa fa-cog'></i> Options</a>
+                      <a class='btn btn-sm btn-primary btn-options' href='#'><i class='fa fa-cog'></i> Options</a>
                       <div class='option_area' style="display: none">
 
                       </div>
                     </td>
                     <td>
-                      <a href="javascript:void(0)" class="btn btn-info btn-plus"><i class='fa fa-plus'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-danger btn-delete"><i class='fa fa-trash'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='fa fa-plus'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='fa fa-trash'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
                     </td>
                   </tr>
                 </tbody>

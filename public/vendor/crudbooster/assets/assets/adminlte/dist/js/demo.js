@@ -36,7 +36,7 @@
 
   //Create the tab button
   var tab_button = $("<li />", {"class": "active"})
-      .html("<a href='#control-sidebar-theme-demo-options-tab' data-toggle='tab'>"
+      .html("<a href='#control-sidebar-theme-demo-options-tab' data-bs-toggle='tab'>"
       + "<i class='fa fa-wrench'></i>"
       + "</a>");
 

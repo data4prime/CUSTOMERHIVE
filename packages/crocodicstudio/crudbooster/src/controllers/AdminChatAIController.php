@@ -36,7 +36,7 @@ class AdminChatAIController extends CBController
 		$this->button_edit = true;
 		$this->button_delete = true;
 		$this->button_detail = true;
-		$this->button_show = true;
+		$this->button_show = false;
 		$this->button_filter = true;
 		$this->button_import = false;
 		$this->button_export = false;
@@ -636,7 +636,9 @@ class AdminChatAIController extends CBController
 
 
 		$url = $chatai_conf->url;
-		$token = $chatai_conf->token;
+		//$token = $chatai_conf->token;
+
+		$token = ChatAIHelper::getToken($chatai_conf->id);
 
 		// Imposta i dati da inviare nel corpo della richiesta
 		$data = [
@@ -661,7 +663,6 @@ class AdminChatAIController extends CBController
 
 		$response = curl_exec($ch);
 
-		//dd($response);
 
 		if ($response === false) {
 			//echo json_encode(['message' => 'Errore nella richiesta. Verifica la configurazione attiva!']);

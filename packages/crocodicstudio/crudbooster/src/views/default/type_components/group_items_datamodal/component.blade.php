@@ -1,6 +1,6 @@
-<div class='form-group form-datepicker {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}'
+<div class='mb-3 row form-datepicker {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}'
     id='form-group-{{$name}}' style="{{@$form['style']}}">
-    <label class='control-label col-sm-2'>{{$form['label']}}
+    <label class='col-form-label col-sm-2'>{{$form['label']}}
         @if($required)
         <span class='text-danger' title='{!! trans('crudbooster.this_field_is_required') !!}'>*</span>
         @endif
@@ -78,11 +78,11 @@
     <div class="modal-dialog {{ isset($form['datamodal_size']) && isset($form['datamodal_size']) && $form['datamodal_size']=='large'?'modal-lg':'' }} "
         role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
+            <div class="modal-header" style="justify-content: space-between;">
+                
                 <h4 class="modal-title"><i class='fa fa-search'></i> {{trans('crudbooster.datamodal_browse_data')}} |
                     {{$form['label']}}</h4>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <iframe id='iframe-modal-{{$name}}' style="border:0;height: 430px;width: 100%" src=""></iframe>

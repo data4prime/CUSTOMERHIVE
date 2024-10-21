@@ -51,7 +51,7 @@ $chat_messages = Session::get('chat_messages');
         }
 
         .chat-input input {
-            padding: 10px;
+           /* padding: 10px; */
             border: 1px solid #ccc;
             border-radius: 5px;
         }
@@ -62,7 +62,7 @@ $chat_messages = Session::get('chat_messages');
 }
 
 .media {
-    padding: 16px 12px;
+    /*padding: 16px 12px;*/
     -webkit-transition: background-color .2s linear;
     transition: background-color .2s linear;
 }
@@ -219,59 +219,51 @@ h4.chat-title {
 
 
 
-<div class="chat-window" id="chatWindow">
-    <div class="chat-header">
+<div class="card chat-window" id="chatWindow">
+    <div class="card-header chat-header d-flex justify-content-between align-items-center">
         Chat AI
-    <div id="x-close-chatai" ><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-
+        <div id="x-close-chatai">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
     </div>
-    <div class="chat-body">
 
-
-
-
-        <div class="media media-chat">
-                  <img class="avatar" src="/images/user/chatai.jpg" alt="...">
-                    <div class="media-body">
-                    Ciao
-
-                  </div>
-                    <div class="media-body">
-                    Sono il tuo assistente AI
-                  </div>
-                    <div class="media-body">
-                    Come posso aiutarti?
-                  </div>
-                </div>
-    @if ($chat_messages)
-        @foreach ($chat_messages as $chat_message)
-            <div class="media media-chat media-chat-reverse">
-                <img class="avatar" src="/images/user/admin.jpeg" alt="...">
-                <div class="media-body">
-                    @php echo  $chat_message['message'] @endphp
-                </div>
+    <div class="card-body chat-body">
+        <div class="d-flex mb-3 media-chat">
+            <img class="avatar me-2" src="/images/user/chatai.jpg" alt="Avatar AI">
+            <div>
+                <div class="media-body">Ciao</div>
+                <div class="media-body">Sono il tuo assistente AI</div>
+                <div class="media-body">Come posso aiutarti?</div>
             </div>
+        </div>
 
-            <div class="media media-chat">
-                <img class="avatar" src="/images/user/chatai.jpg" alt="...">
-                <div class="media-body">
-                    @php echo $chat_message['response'] @endphp
-
+        @if ($chat_messages)
+            @foreach ($chat_messages as $chat_message)
+                <!-- Messaggio dell'utente -->
+                <div class="d-flex mb-3 justify-content-end media-chat media-chat-reverse">
+                    <div>
+                        <div class="media-body">{!! $chat_message['message'] !!}</div>
+                    </div>
+                    <img class="avatar ms-2" src="/images/user/admin.jpeg" alt="Avatar utente">
                 </div>
-            </div>
-        @endforeach
-            
-    @endif
+
+                <!-- Risposta AI -->
+                <div class="d-flex mb-3 media-chat">
+                    <img class="avatar me-2" src="/images/user/chatai.jpg" alt="Avatar AI">
+                    <div class="media-body">{!! $chat_message['response'] !!}</div>
+                </div>
+            @endforeach
+        @endif
     </div>
-    <div class="chat-footer">
-        <div class="chat-input">
-            <input type="text" id="publisher-input" style="margin-right: 5px ;" class="form-control" placeholder="Chiedi qualcosa...">
-            <div class="input-group-append">
-                <button id="send-btn" class="btn btn-primary" type="button">Invia</button>
-            </div>
+
+    <div class="card-footer chat-footer" style="margin-right: 20px;">
+        <div class="input-group">
+            <input type="text" id="publisher-input" class="form-control" placeholder="Chiedi qualcosa...">
+            <button id="send-btn" class="btn btn-primary" type="button">Invia</button>
         </div>
     </div>
 </div>
+
 
 
 

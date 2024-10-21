@@ -25,9 +25,9 @@
 </head>
 <body>
   <div class="container-fluid" id="wrapper">
-    <div class="panel panel-primary hidden-xs">
-      <div class="panel-heading">
-        <h1 class="panel-title">{{ trans('laravel-filemanager::lfm.title-panel') }}</h1>
+    <div class="card card-primary hidden-xs">
+      <div class="card-header">
+        <h1 class="card-title">{{ trans('laravel-filemanager::lfm.title-panel') }}</h1>
       </div>
     </div>
     <div class="row">
@@ -38,8 +38,8 @@
       <div class="col-sm-10 col-xs-12" id="main">
         <nav class="navbar navbar-default" id="nav">
           <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-buttons">
-              <span class="sr-only">Toggle navigation</span>
+            <button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse" data-target="#nav-buttons">
+              <span class="visually-hidden">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
@@ -65,7 +65,7 @@
                 </a>
               </li>
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   {{ trans('laravel-filemanager::lfm.nav-sort') }} <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
@@ -114,14 +114,15 @@
   <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aia-hidden="true">&times;</span></button>
+        <div class="modal-header" style="justify-content: space-between;">
+          
           <h4 class="modal-title" id="myModalLabel">{{ trans('laravel-filemanager::lfm.title-upload') }}</h4>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aia-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
           <form action="{{ route('unisharp.lfm.upload') }}" role='form' id='uploadForm' name='uploadForm' method='post' enctype='multipart/form-data'>
-            <div class="form-group" id="attachment">
-              <label for='upload' class='control-label'>{{ trans('laravel-filemanager::lfm.message-choose') }}</label>
+            <div class="mb-3 row" id="attachment">
+              <label for='upload' class='col-form-label'>{{ trans('laravel-filemanager::lfm.message-choose') }}</label>
               <div class="controls">
                 <div class="input-group" style="width: 100%">
                   <input type="file" id="upload" name="upload[]" multiple="multiple">
@@ -134,7 +135,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">{{ trans('laravel-filemanager::lfm.btn-close') }}</button>
+          <button type="button" class="btn btn-default" data-bs-dismiss="modal">{{ trans('laravel-filemanager::lfm.btn-close') }}</button>
           <button type="button" class="btn btn-primary" id="upload-btn">{{ trans('laravel-filemanager::lfm.btn-upload') }}</button>
         </div>
       </div>

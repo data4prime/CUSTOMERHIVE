@@ -18,12 +18,12 @@
 
     <div class="caption text-center">
       <div class="btn-group">
-        <button type="button" data-id="{{ $item_path }}" class="item_name btn btn-default btn-xs {{ $item->is_file ? 'file' : 'folder'}}-item">
+        <button type="button" data-id="{{ $item_path }}" class="item_name btn btn-default btn-sm {{ $item->is_file ? 'file' : 'folder'}}-item">
           {{ $item_name }}
         </button>
-        <button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">
+        <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="caret"></span>
-          <span class="sr-only">Toggle Dropdown</span>
+          <span class="visually-hidden">Toggle Dropdown</span>
         </button>
         <ul class="dropdown-menu" role="menu">
           <li><a href="javascript:rename('{{ $item_name }}')"><i class="fa fa-edit fa-fw"></i> {{ Lang::get('laravel-filemanager::lfm.menu-rename') }}</a></li>

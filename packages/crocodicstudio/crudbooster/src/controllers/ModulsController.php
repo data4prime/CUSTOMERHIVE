@@ -206,6 +206,7 @@ class ModulsController extends CBController
       'icon' => 'fa fa-wrench',
       'url' => CRUDBooster::mainpath('step1') . '/[id]',
       "showIf" => "[is_protected] == 0",
+      'color' => 'primary',
     ];
 
     $this->index_button[] = ['label' => 'Generate New Module', 'icon' => 'fa fa-plus', 'url' => CRUDBooster::mainpath('step1'), 'color' => 'success'];
@@ -274,7 +275,7 @@ class ModulsController extends CBController
     $query->where('path', '!=', 'groups');
     $query->where('path', '!=', 'qlik_items');
     $query->where('path', '!=', 'tenants');
-    $query->whereNotIn('cms_moduls.controller', ['AdminCmsUsersController']);
+    $query->whereNotIn('cms_moduls.controller', ['AdminCmsUsersController', 'AdminChatAIController', 'AdminModuleHelperController']);
   }
 
   public function getDelete($id)

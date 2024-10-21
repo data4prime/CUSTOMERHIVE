@@ -13,7 +13,7 @@
 
   <!-- Box -->
   <div class="box box-primary">
-    <div class="box-header with-border">
+    <div class="box-header mb-3 with-border">
       <h3 class="box-title">{{ $page_title }}</h3>
       <div class="box-tools">
 
@@ -108,7 +108,7 @@
                 }
                 ?>
 
-        <div id='privileges_configuration' class='form-group'>
+        <div id='privileges_configuration' class='mb-3 row'>
           <label>Enable/Disable Modules</label>
           @push('bottom')
           <script>

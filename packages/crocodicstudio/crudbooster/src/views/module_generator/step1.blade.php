@@ -20,8 +20,13 @@
 </script>
 @endpush
 
+<<<<<<< HEAD
 <div class="card box-default">
     <div class="card-header mb-3 with-border">
+=======
+<div class="box box-default">
+    <div class="box-header mb-3 with-border">
+>>>>>>> 2418eabb84c43d7f909d1f29d16b285eb29061ae
         <h3 class="box-title">Module Information</h3>
     </div>
     <div class="card-body">

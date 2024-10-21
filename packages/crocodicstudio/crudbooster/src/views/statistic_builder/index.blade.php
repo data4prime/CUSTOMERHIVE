@@ -152,13 +152,13 @@
         display: block;
     }
 
-    .panel {
+    .card {
         margin-bottom: 0px;
     }
 
-    .panel-heading,
+    .card-header,
     .inner-box,
-    .box-header,
+    .box-header mb-3,
     .btn-add-widget {
         cursor: move;
     }
@@ -204,7 +204,7 @@
         $(".connectedSortable").sortable({
             placeholder: "sort-highlight",
             connectWith: ".connectedSortable",
-            handle: ".panel-heading, .inner-box, .box-header, .btn-add-widget",
+            handle: ".card-header, .inner-box, .box-header mb-3, .btn-add-widget",
             forcePlaceholderSize: true,
             zIndex: 999999,
             stop: function (event, ui) {
@@ -311,7 +311,7 @@
             var required_input = [];
             $('#modal-statistic form').find('input[required],textarea[required],select[required]').each(function () {
                 var $input = $(this);
-                var $form_group = $input.parent('.form-group');
+                var $form_group = $input.parent('.mb-3 row');
                 var value = $input.val();
 
                 if (value == '') {
@@ -322,7 +322,7 @@
             if (required_input.length) {
                 setTimeout(function () {
                     $.each(required_input, function (i, name) {
-                        $('#modal-statistic form').find('input[name="' + name + '"],textarea[name="' + name + '"],select[name="' + name + '"]').parent('.form-group').addClass('has-error');
+                        $('#modal-statistic form').find('input[name="' + name + '"],textarea[name="' + name + '"],select[name="' + name + '"]').parent('.mb-3 row').addClass('has-error');
                     })
                 }, 200);
 
@@ -355,16 +355,16 @@
 <div id='modal-statistic' class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
+            <div class="modal-header" style="justify-content: space-between;">
+                
                 <h4 class="modal-title">Modal title</h4>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding: 30px;">
                 <p>One fine body&hellip;</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn-submit btn btn-primary" data-loading-text="Saving..."
                     autocomplete="off">Save changes</button>
             </div>

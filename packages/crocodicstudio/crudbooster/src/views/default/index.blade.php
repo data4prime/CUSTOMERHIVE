@@ -63,14 +63,14 @@
 @endisset
 
 <div class="box">
-    <div class="box-header">
+    <div class="box-header mb-3">
         @if($button_bulk_action && ( ($button_delete && CRUDBooster::isDelete()) || $button_selected) )
         <div class="pull-{{ trans('crudbooster.left') }}">
             <div class="selected-action" style="display:inline-block;position:relative;">
-                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                <button type="button" class="btn btn-sm btn-default  dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class='fa fa-check-square-o'></i>
                     {{trans("crudbooster.button_selected_action")}}
-                    <span class="fa fa-caret-down"></span></button>
+                    </button>
                 <ul class="dropdown-menu">
 <?php
                                 $parameters = Request::all();
@@ -82,9 +82,9 @@
 
 //if $module->path contians 'mg_'
 if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users') { ?>
-                    <li>
+                    <li class="dropdown-item">
 
-                    <a style="border-bottom: 1px solid;" href="javascript:void(0)" id='mass_editing_button'
+                    <a  href="javascript:void(0)" id='mass_editing_button'
                                     data-url-parameter='{{$build_query}}' title='Mass Edit' >
                                     <i class="fa fa-pencil"></i> Mass Edit
                                 </a>
@@ -98,7 +98,7 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
 
                     
                     @if($button_delete && CRUDBooster::isDelete())
-                    <li>
+                    <li  class="dropdown-item" >
                         <a href="javascript:void(0)" data-name='delete' title="{{trans('crudbooster.action_delete_selected')}}">
                             <i class="fa fa-trash"></i> {{trans('crudbooster.action_delete_selected')}}
                         </a>
@@ -107,7 +107,7 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
 
                     @if($button_selected)
                     @foreach($button_selected as $button)
-                    <li>
+                    <li  class="dropdown-item">
                         <a href="javascript:void(0)" data-name='{{$button["name"]}}' title='{{$button["label"]}}'>
                             <i class="fa fa-{{$button['icon']}}"></i> {{$button['label']}}
                         </a>
@@ -130,8 +130,8 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
                                 ?>
 
             @if($button_filter)
-            <a style="margin-top:-23px" href="javascript:void(0)" id='btn_advanced_filter'
-                data-url-parameter='{{$build_query}}' title='{{trans(' crudbooster.filter_dialog_title')}}'
+            <a  href="javascript:void(0)" id='btn_advanced_filter'
+                data-url-parameter='{{$build_query}}' title='{{trans('crudbooster.filter_dialog_title')}}'
                 class="btn btn-sm btn-default {{(Request::get('filter_column'))?'active':''}}">
                 <i class="fa fa-filter"></i> {{trans("crudbooster.button_filter")}}
             </a>
@@ -147,10 +147,10 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
                         @if(Request::get('q'))
 
                         <button type='button' onclick='location.href="{{ CRUDBooster::mainpath().$build_query}}"'
-                            title="{{trans('crudbooster.button_reset')}}" class='btn btn-sm btn-warning'><i
+                            title="{{trans('crudbooster.button_reset')}}" class='btn  btn-warning'><i
                                 class='fa fa-ban'></i></button>
                         @endif
-                        <button type='submit' class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+                        <button type='submit' class="btn  btn-default"><i class="fa fa-search"></i></button>
                     </div>
                 </div>
             </form>

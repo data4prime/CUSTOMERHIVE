@@ -23,7 +23,7 @@
   <div class="row">
     <div class="col-sm-12 col-md-12">
       <div class="box box-info collapsed-box">
-        <div class="box-header with-border">
+        <div class="box-header mb-3 with-border">
           <h3 class="box-title">
             <strong>
               <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Testata
@@ -60,8 +60,8 @@
 
             <div class="box-footer" style="background: #F5F5F5">
 
-              <div class="form-group">
-                <label class="control-label col-sm-2"></label>
+              <div class="mb-3 row">
+                <label class="col-form-label col-sm-2"></label>
                 <div class="col-sm-10">
                   @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                   @if(g('return_url'))
@@ -99,7 +99,7 @@
   <div class="row">
     <div class="col-sm-12 col-md-12">
       <div class="box box-success collapsed-box">
-        <div class="box-header with-border">
+        <div class="box-header mb-3 with-border">
           <h3 class="box-title">
             <strong>
               <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Aggiungi riga
@@ -136,8 +136,8 @@
 
             <div class="box-footer" style="background: #F5F5F5">
 
-              <div class="form-group">
-                <label class="control-label col-sm-2"></label>
+              <div class="mb-3 row">
+                <label class="col-form-label col-sm-2"></label>
                 <div class="col-sm-10">
                   @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                   @if(g('return_url'))
@@ -175,7 +175,7 @@
   <div class="row">
     <div class="col-sm-12 col-md-12">
       <div class="box box-warning">
-        <div class="box-header with-border">
+        <div class="box-header mb-3 with-border">
           <h3 class="box-title">
             <strong>
               <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Righe
@@ -212,8 +212,8 @@
 
             <div class="box-footer" style="background: #F5F5F5">
 
-              <div class="form-group">
-                <label class="control-label col-sm-2"></label>
+              <div class="mb-3 row">
+                <label class="col-form-label col-sm-2"></label>
                 <div class="col-sm-10">
                   @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                   @if(g('return_url'))

@@ -1,5 +1,5 @@
-<div class='form-group {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='form-group-{{$name}}' style='{{@$form["style"]}}'>
-    <label class='control-label col-sm-2'>{{$form['label']}}
+<div class='mb-3 row {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}' id='form-group-{{$name}}' style='{{@$form["style"]}}'>
+    <label class='col-form-label col-sm-2'>{{$form['label']}}
         @if($required)
             <span class='text-danger' title='{!! trans('crudbooster.this_field_is_required') !!}'>*</span>
         @endif
@@ -30,7 +30,7 @@
                     <div style='margin-top:15px'><a id='holder-{{$name}}' href='{{asset($value)}}' target='_blank'
                                                     title=' {{trans("crudbooster.button_download_file")}} {{ basename($value)}}'><i
                                     class='fa fa-download'></i> {{trans("crudbooster.button_download_file")}}  {{ basename($value)}}</a>
-                        &nbsp;<a class='btn btn-danger btn-delete btn-xs'
+                        &nbsp;<a class='btn btn-danger btn-delete btn-sm'
                                  onclick='swal({   title: "{{trans("crudbooster.delete_title_confirm")}}",   text: "{{trans("crudbooster.delete_description_confirm")}}",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "{{trans("crudbooster.confirmation_yes")}}",cancelButtonText: "{{trans('crudbooster.button_cancel')}}",   closeOnConfirm: false }, function(){  location.href="{{url($mainpath."/delete-filemanager?file=".$row->{$name}."&id=".$row->id."&column=".$name)}}" });'
                                  href='javascript:void(0)' title='{{trans('crudbooster.text_delete')}}'><i class='fa fa-ban'></i></a>
                     </div>@endif

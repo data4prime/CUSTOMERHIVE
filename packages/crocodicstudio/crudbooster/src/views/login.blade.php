@@ -108,15 +108,15 @@
                         placeholder="Password" />
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
-                <div style="margin-bottom:10px" class='row'>
-                    <div class='col-xs-12'>
+                <div style="margin-bottom:10px" class='form-group'>
+                    <div>
                         <button type="submit" class="btn btn-primary btn-block btn-flat"><i class='fa fa-lock'></i>
                             {{trans("crudbooster.button_sign_in")}}</button>
                     </div>
                 </div>
 
-                <div class='row'>
-                    <div class='col-xs-12' align="center">
+                <div class='form-group'>
+                    <div  align="center">
                         <p style="padding:10px 0px 10px 0px">{{trans("crudbooster.text_forgot_password")}} <a
                                 href='{{route("getForgot")}}'>{{trans("crudbooster.click_here")}}</a></p>
                     </div>
