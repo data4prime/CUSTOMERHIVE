@@ -199,11 +199,11 @@
         </script>
     @endpush
 
-    <div class="box box-default">
-        <div class="box-header mb-3 with-border">
-            <h3 class="box-title">List settings</h3>
+    <div class="card  card-default">
+        <div class="card-header mb-3 with-border">
+            <h3 class="card-title">List settings</h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
             @if($messages)
               @foreach($messages as $message)
                 <div class="alert alert-{{ $message['type'] }}">
@@ -316,7 +316,7 @@
                 </table>
 
         </div>
-        <div class="box-footer">
+        <div class="card-footer">
             <div align="right">
                 <button type="button" onclick="location.href='{{CRUDBooster::mainpath('step2').'/'.$id}}'" class="btn btn-default">&laquo; Back</button>
                 <input type="submit" class="btn btn-primary" value="Step 4 &raquo;">

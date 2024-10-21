@@ -1,14 +1,14 @@
 @extends("crudbooster::module_generator.template")
 @section("inner_content")
 
-    <div class="box box-default">
-        <div class="box-header mb-3">
-            <h1 class="box-title">Configuration</h1>
+    <div class="card card-default">
+        <div class="card-header mb-3">
+            <h1 class="card-title">Configuration</h1>
         </div>
         <form method='post' action="{{Route('ModulsControllerPostStep5')}}">
             {{csrf_field()}}
             <input type="hidden" name="id" value='{{ $id }}'>
-            <div class="box-body">
+            <div class="card-body">
 
                 <!--<div class="row">
                     <div class="col-sm-12">
@@ -261,7 +261,7 @@
                 </div>
 
             </div>
-            <div class="box-footer">
+            <div class="card-footer">
                 <div align="right">
                     <button type="button" onclick="location.href='{{CRUDBooster::mainpath('step4').'/'.$id}}'" class="btn btn-default">&laquo; Back</button>
                     <input type="submit" name="submit" class='btn btn-primary' value='Save Module'>

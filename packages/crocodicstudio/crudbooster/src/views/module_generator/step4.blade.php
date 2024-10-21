@@ -324,11 +324,11 @@ $(function () {
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div class="box box-default">
-  <div class="box-header mb-3 with-border">
-    <h3 class="box-title">Form Settings</h3>
+<div class="card card-default">
+  <div class="card-header mb-3 with-border">
+    <h3 class="card-title">Form Settings</h3>
   </div>
-  <div class="box-body">
+  <div class="card-body">
     <form method="post" autocomplete="off" action="{{Route('ModulsControllerPostStep4')}}">
       <input type="hidden" name="_token" value="{{csrf_token()}}">
       <input type="hidden" name="id" value="{{$id}}">
@@ -499,7 +499,7 @@ $(function () {
                 </tbody>
               </table>
             </div>
-            <div class="box-footer">
+            <div class="card-footer">
               <div align="right">
                 <button type="button" onclick="location.href='{{CRUDBooster::mainpath('step3').'/'.$id}}'" class="btn btn-default">&laquo; Back</button>
                 <input type="submit" class="btn btn-primary" value="Step 5 &raquo;">

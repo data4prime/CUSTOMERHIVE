@@ -140,11 +140,11 @@ $(function () {
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<div class="box box-default">
-  <div class="box-header mb-3 with-border">
-    <h3 class="box-title">{{ $box_title }}</h3>
+<div class="card card-default">
+  <div class="card-header mb-3 with-border">
+    <h3 class="card-title">{{ $box_title }}</h3>
   </div>
-  <div class="box-body">
+  <div class="card-body">
     @if($table_exists)
     <div class="alert alert-warning">
       <strong style="text-transform: capitalize">Warning!</strong> this is the data structure, editing may damage data.
@@ -223,7 +223,7 @@ $(function () {
         </tbody>
       </table>
     </div>
-    <div class="box-footer">
+    <div class="card-footer">
 
       <div class='pull-right'>
         <button type="button" onclick="location.href='{{CRUDBooster::mainpath('step1').'/'.$id}}'" class="btn btn-default">&laquo; Back</button>
