@@ -440,9 +440,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	//look at qlik item's content
 	public function content_view($qlik_item_id)
 	{
-
-		dd(Request::all());
-
+		dd($_GET);
 
 		$allowed = QlikHelper::can_see_item($qlik_item_id);
 		//check if at least one of item allowed groups is in user groups
