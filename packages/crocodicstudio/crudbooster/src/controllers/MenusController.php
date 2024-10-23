@@ -288,6 +288,8 @@ class MenusController extends CBController
             else if (n == 'Agent AI')
             {
 
+              $('#form-group-frame_width,#form-group-frame_height').hide();
+
   						$('#form-group-path').hide();
   						$('#form-group-module_slug').hide();
   						$('#form-group-statistic_slug').hide();
