@@ -24,7 +24,8 @@ $debug_url = $item_url;
     <a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a>
   </div>
 
-  <div class="qi_iframe_container">
+<!--qi_iframe_container-->
+  <div class="card-body">
     
     <iframe class="qi_iframe" data-src="{{$item_url}}" src=""  style="border:none;"></iframe>
   </div>
