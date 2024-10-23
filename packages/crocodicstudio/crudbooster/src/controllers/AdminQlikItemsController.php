@@ -440,7 +440,6 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	//look at qlik item's content
 	public function content_view($qlik_item_id)
 	{
-		dd($_REQUEST);
 
 		$allowed = QlikHelper::can_see_item($qlik_item_id);
 		//check if at least one of item allowed groups is in user groups
@@ -459,11 +458,15 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		$auth = $conf->auth;
 		//$type = CRUDBooster::getSetting('type');
 		//add menu settings
-		if (isset($_GET['m'])) {
+
+		$menu = Menu::where('path', 'qlik_items/content/' . $qlik_item_id)->first();
+
+
+		/*if (isset($_GET['m'])) {
 			$menu = Menu::find($_GET['m']);
 		} else {
 			$menu = Menu::where('name', 'Dashboard')->where('is_active', 1)->where('is_dashboard', 1)->first();
-		}
+		}*/
 		//$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '89');
 		if (empty($menu)) {
 			$data['row']->frame_width = '100%';
