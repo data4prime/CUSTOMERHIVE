@@ -247,6 +247,7 @@ class MenusController extends CBController
             {
   						$('#form-group-path').hide();
   						$('#form-group-module_slug').hide();
+              $('#form-group-target_layout').show();
   						$('#form-group-statistic_slug').hide();
               $('#form-group-statistic_slug,#form-group-chat_ai').hide();
   						$('#module_slug,#path').prop('required',false);
