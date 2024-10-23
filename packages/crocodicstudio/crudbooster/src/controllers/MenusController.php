@@ -288,7 +288,7 @@ class MenusController extends CBController
             else if (n == 'Agent AI')
             {
 
-              $('#form-group-frame_width,#form-group-frame_height').hide();
+
 
   						$('#form-group-path').hide();
   						$('#form-group-module_slug').hide();
@@ -305,8 +305,6 @@ class MenusController extends CBController
             $('#form-group-target_layout').hide();
             $('#target_layout,#path').prop('required',false);
 
-            $('#form-group-target_layout').hide();
-            $('#target_layout,#path').prop('required',false);
 
             $('#form-group-frame_width').hide();
             $('#frame_width,#path').prop('required',false);
@@ -315,7 +313,7 @@ class MenusController extends CBController
             $('#frame_height,#path').prop('required',false);
 
   						$('#form-group-chat_ai').show();
-    					$('#form-group-frame_width,#form-group-frame_height').show();
+
   						$('#chat_ai').prop('required',true);
   						$('#form-group-chat_ai label .text-danger').remove();
   						$('#form-group-chat_ai label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
