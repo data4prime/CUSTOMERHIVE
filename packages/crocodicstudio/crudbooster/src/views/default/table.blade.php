@@ -500,10 +500,8 @@ $total = $result->total();
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" style="justify-content: space-between;">
-                <button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
-                    </button>
                 <h4 class="modal-title"><i class='fa fa-download'></i> {{trans("crudbooster.export_dialog_title")}}</h4>
-<button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
+                <button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
                     </button>
             </div>
 
@@ -527,8 +525,8 @@ $total = $result->total();
                         <div class='help-block'>{{trans("crudbooster.export_dialog_help_maxdata")}}</div>
                     </div>
 
-                    <div class='mb-3 row'>
-                        <label>{{trans("crudbooster.export_dialog_columns")}}</label><br />
+                    <div class='mb-3 form-group'>
+                        <label class="mb-3">{{trans("crudbooster.export_dialog_columns")}}</label><br />
                         @foreach($columns as $col)
                         <div class='checkbox inline'><label><input type='checkbox' checked name='columns[]'
                                     value='{{$col["name"]}}'>{{$col["label"]}}</label></div>

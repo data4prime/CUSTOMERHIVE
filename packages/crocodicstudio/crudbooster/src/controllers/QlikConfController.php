@@ -241,9 +241,9 @@ class QlikConfController extends CBController
         document.addEventListener('DOMContentLoaded', function() {
 
             const typeSelect = document.getElementsByName('type')[0];
-            console.log(document.getElementsByName('type'));
+            //console.log(document.getElementsByName('type'));
             const authSelect = document.getElementsByName('auth')[0];
-            console.log(document.getElementsByName('auth'));
+            //console.log(document.getElementsByName('auth'));
 
             const fields = {
                 'On-Premise_JWT': ['confname', 'type', 'auth', 'url', 'port', 'endpoint', 'private_key'],
@@ -267,8 +267,8 @@ class QlikConfController extends CBController
                 const selectedType = typeSelect.value;
                 const selectedAuth = authSelect.value;
 
-                console.log(selectedType);
-                console.log(selectedAuth);
+                //console.log(selectedType);
+                //console.log(selectedAuth);
 
 
                 // Construct the key for the fields object
@@ -277,7 +277,7 @@ class QlikConfController extends CBController
                 // If the key exists in the fields object, show the corresponding fields
                 if (fields[fieldKey]) {
                     fields[fieldKey].forEach(fieldId => {
-                        console.log('fieldID '+fieldId);
+                        //console.log('fieldID '+fieldId);
 
                         if (document.getElementsByName(fieldId)[0]) {
                             document.getElementsByName(fieldId)[0].parentNode.parentNode.classList.remove('hidden');
@@ -288,7 +288,7 @@ class QlikConfController extends CBController
                 }
             }
 
-            console.log(typeSelect);
+            //console.log(typeSelect);
             updateVisibility();
 
             // Add event listeners to update visibility on change
