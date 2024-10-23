@@ -86,10 +86,10 @@
             </div><!-- /.card-body -->
 
             <div class="card-footer" id='upload-footer' style="display:none">
-                <div class='pull-right'>
+                <!--<div class='pull-right'>-->
                     <a href='{{ CRUDBooster::mainpath("import-data") }}' class='btn btn-default'><i class='fa fa-upload'></i> Upload Other File</a>
                     <a href='{{CRUDBooster::mainpath()}}' class='btn btn-success'>Finish</a>
-                </div>
+                <!--</div>-->
             </div><!-- /.card-footer-->
 
         </div><!-- /.box -->
@@ -205,11 +205,11 @@
                 @endpush
 
                 <div class="card-footer">
-                    <div class='pull-right'>
+                    <!--<div class='pull-right'>-->
                         <a onclick="if(confirm('Are you sure want to leave ?')) location.href='{{ CRUDBooster::mainpath("import-data") }}'" href='javascript:;'
                            class='btn btn-default'>Cancel</a>
                         <input type='submit' class='btn btn-primary' name='submit' onclick='return check_selected_column()' value='Import Data'/>
-                    </div>
+                    <!--</div>-->
                 </div><!-- /.card-footer-->
             </form>
         </div><!-- /.box -->
@@ -268,10 +268,10 @@
                 </div><!-- /.card-body -->
 
                 <div class="card-footer">
-                    <div class='pull-right'>
+                    <!--<div class='pull-right'>-->
                         <a href='{{ CRUDBooster::mainpath() }}' class='btn btn-default'>Cancel</a>
                         <input type='submit' class='btn btn-primary' name='submit' value='Upload'/>
-                    </div>
+                    <!--</div>-->
                 </div><!-- /.card-footer-->
             </form>
         </div><!-- /.box -->
