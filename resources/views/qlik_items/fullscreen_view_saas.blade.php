@@ -25,19 +25,9 @@ $debug_url = $item_url;
 <style>
   /*set iframe size*/
   .qi_iframe {
-    width: {
-        {
-        $row->frame_width
-      }
-    }
+    width: @php echo $row->frame_width @endphp !important;
 
-    !important;
-
-    height: {
-        {
-        $row->frame_height
-      }
-    }
+    height: @php echo $row->frame_height @endphp !important;
 
     !important;
     border: none;
