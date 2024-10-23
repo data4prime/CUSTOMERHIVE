@@ -3,11 +3,11 @@
 
 
     @if(isset($button_show_data) || isset($button_reload_data) || isset($button_new_data) || isset($button_delete_data) || isset($index_button) || isset($columns))
-        <div id='card-actionmenu' class='box'>
+        <!--<div id='card-actionmenu' class='box'>
             <div class='card-body'>
                 
             </div>
-        </div>
+        </div>-->
     @endif
 
 
