@@ -10,9 +10,15 @@ $debug_url = $item_url;
 @if(isset($row->target_layout) && $row->target_layout == 2)
 <!-- fill content settings -->
 @section('content')
-<div class="qi_iframe_container">
-  <a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a>
-  <iframe class="qi_iframe" data-src="{{$item_url}}" src=""  style="border:none;"></iframe>
+<div class="card qi_iframe_container">
+  <div class="card-header">
+    <a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a>
+  </div>
+  <div class="card-body">
+    <iframe class="qi_iframe" data-src="{{$item_url}}" src=""  style="border:none;"></iframe>
+  </div>
+  
+  
 </div>
 @endsection
 @else
