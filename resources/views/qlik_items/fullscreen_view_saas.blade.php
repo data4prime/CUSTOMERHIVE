@@ -16,10 +16,10 @@ $debug_url = $item_url;
     <h6 class="qi_subtitle">{{ $subtitle }}</h6>
     <a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a>
   </div>
-  <div class="card-body">
-    <iframe id="qlik_frame" class="qi_iframe" data-src="{{$item_url}}" src=""  style="border:none;"></iframe>
-  </div>
+
 </div>
+
+<iframe id="qlik_frame" class="qi_iframe" data-src="{{$item_url}}" src=""  style="border:none;"></iframe>
 
 
 
