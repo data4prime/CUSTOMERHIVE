@@ -100,6 +100,7 @@ class MenusController extends CBController
   					$('#statistic_slug').prop('required',false);
   					$('#form-group-statistic_slug,#form-group-path').hide();
   					$('#form-group-qlik_slug,#form-group-path').hide();
+            $('#form-group-target_layout').hide();
   					$('#form-group-frame_width,#form-group-frame_height').hide();
             $('#form-group-statistic_slug,#form-group-chat_ai').hide();
   					$('#module_slug').prop('required',true);
@@ -112,6 +113,7 @@ class MenusController extends CBController
   					$('#qlik_slug').prop('required',false);
   					$('#form-group-module_slug,#form-group-path').hide();
   					$('#form-group-qlik_slug,#form-group-path').hide();
+            $('#form-group-target_layout').hide();
   					$('#form-group-frame_width,#form-group-frame_height').hide();
             $('#form-group-statistic_slug,#form-group-chat_ai').hide();
   					$('#statistic_slug').prop('required',true);
@@ -162,6 +164,7 @@ class MenusController extends CBController
   					$('#module_slug').prop('required',false);
   					$('#statistic_slug').prop('required',false);
   					$('#qlik_slug').prop('required',false);
+            $('#form-group-target_layout').hide();
   					$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
   					$('#form-group-frame_width,#form-group-frame_height').hide();
   					$('#form-group-path').show();
@@ -215,6 +218,7 @@ class MenusController extends CBController
   						$('#form-group-path').hide();
   						$('#form-group-statistic_slug').hide();
   						$('#form-group-qlik_slug').hide();
+              $('#form-group-target_layout').hide();
     					$('#form-group-frame_width,#form-group-frame_height').hide();
   						$('#statistic_slug,#path').prop('required',false);
   						$('#qlik_slug,#path').prop('required',false);
@@ -228,6 +232,7 @@ class MenusController extends CBController
   						$('#form-group-path').hide();
   						$('#form-group-module_slug').hide();
   						$('#form-group-qlik_slug').hide();
+              $('#form-group-target_layout').hide();
               $('#form-group-statistic_slug,#form-group-chat_ai').hide();
     					$('#form-group-frame_width,#form-group-frame_height').hide();
   						$('#module_slug,#path').prop('required',false);
@@ -261,7 +266,7 @@ class MenusController extends CBController
   						$('#path').prop('required',true);
   						$('#form-group-path label .text-danger').remove();
   						$('#form-group-path label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
-
+              $('#form-group-target_layout').hide();
   						$('#form-group-path').show();
   						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
     					$('#form-group-frame_width,#form-group-frame_height').hide();
@@ -274,7 +279,7 @@ class MenusController extends CBController
   						$('#path').prop('required',true);
   						$('#form-group-path label .text-danger').remove();
   						$('#form-group-path label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
-
+              $('#form-group-target_layout').hide();
   						$('#form-group-path').show();
   						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
     					$('#form-group-frame_width,#form-group-frame_height').hide();
@@ -285,7 +290,6 @@ class MenusController extends CBController
 
   						$('#form-group-path').hide();
   						$('#form-group-module_slug').hide();
-              
   						$('#form-group-statistic_slug').hide();
   						$('#module_slug,#path').prop('required',false);
   						$('#statistic_slug,#path').prop('required',false);
@@ -343,7 +347,7 @@ class MenusController extends CBController
   						$('#path').prop('required',true);
   						$('#form-group-path label .text-danger').remove();
   						$('#form-group-path label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
-
+              $('#form-group-target_layout').hide();
   						$('#form-group-path').show();
   						$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
     					$('#form-group-frame_width,#form-group-frame_height').hide();
