@@ -236,7 +236,8 @@ class QlikConfController extends CBController
         | $this->script_js = "function() { ... }";
         |
         */
-		$this->script_js = "
+		/*
+        $this->script_js = "
         document.addEventListener('DOMContentLoaded', function() {
 
             const typeSelect = document.getElementsByName('type')[0];
@@ -296,7 +297,54 @@ class QlikConfController extends CBController
         });
             
             ";
+*/
+$this->script_js = "
+        $(document).ready(function() {
+    const typeSelect = $('select[name="type"]');
+    const authSelect = $('select[name="auth"]');
 
+    const fields = {
+        'On-Premise_JWT': ['confname', 'type', 'auth', 'url', 'port', 'endpoint', 'private_key'],
+        'SAAS_JWT': ['confname', 'type', 'auth', 'url', 'port', 'endpoint', 'keyid', 'issuer', 'web_int_id', 'private_key']
+    };
+
+    function updateVisibility() {
+        // Nascondi tutti i campi inizialmente
+        $.each(fields, function(key, fieldIds) {
+            $.each(fieldIds, function(index, fieldId) {
+                if ($('[name="' + fieldId + '"]').length) {
+                    if (fieldId !== 'confname' && fieldId !== 'type' && fieldId !== 'auth') {
+                        $('[name="' + fieldId + '"]').closest('div').hide();
+                    }
+                }
+            });
+        });
+
+        // Determina le opzioni selezionate
+        const selectedType = typeSelect.val();
+        const selectedAuth = authSelect.val();
+
+        // Costruisci la chiave per l'oggetto fields
+        const fieldKey = selectedType + '_' + selectedAuth;
+
+        // Se la chiave esiste, mostra i campi corrispondenti
+        if (fields[fieldKey]) {
+            $.each(fields[fieldKey], function(index, fieldId) {
+                if ($('[name="' + fieldId + '"]').length) {
+                    $('[name="' + fieldId + '"]').closest('div').show();
+                }
+            });
+        }
+    }
+
+    updateVisibility();
+
+    // Aggiungi event listener per aggiornare la visibilità al cambiamento
+    typeSelect.on('change', updateVisibility);
+    authSelect.on('change', updateVisibility);
+});
+
+            ";
 
 		/*
         | ----------------------------------------------------------------------

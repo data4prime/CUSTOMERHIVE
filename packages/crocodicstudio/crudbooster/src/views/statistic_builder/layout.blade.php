@@ -143,7 +143,7 @@
                 <li class='connectedSortable' title='Drag To Main Area'>
                     <div id='btn-panelarea' class='button-widget-area'>
                         <a href="#" data-component='cardarea' class='btn-add-widget add-panel-area'>
-                            <img src='{{asset("vendor/crudbooster/assets/statistic_builder/card.png")}}' />
+                            <img src='{{asset("vendor/crudbooster/assets/statistic_builder/panel.png")}}' />
                             <div class='title'>card Area</div>
                         </a>
                     </div>
@@ -152,7 +152,7 @@
                 <li class='connectedSortable' title='Drag To Main Area'>
                     <div id='btn-panelcustom' class='button-widget-area'>
                         <a href="#" data-component='cardcustom' class='btn-add-widget add-panel-custom'>
-                            <img src='{{asset("vendor/crudbooster/assets/statistic_builder/card.png")}}' />
+                            <img src='{{asset("vendor/crudbooster/assets/statistic_builder/panel.png")}}' />
                             <div class='title'>card Custom</div>
                         </a>
                     </div>
