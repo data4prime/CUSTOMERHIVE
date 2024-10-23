@@ -7,9 +7,17 @@ $debug_url = $item_url;
 
 @endphp
 
+<div class="card">
+  <div class="card-header">
+    <a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a>
+  </div>
+  <div class="card-body">
+    <iframe id="qlik_frame" class="qi_iframe" data-src="{{$item_url}}" src=""  style="border:none;"></iframe>
+  </div>
+</div>
 
-<a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a><iframe id="qlik_frame" class="qi_iframe"
-  data-src="{{$item_url}}" src=""  style="border:none;"></iframe>
+
+
 
 <style>
   /*set iframe size*/
@@ -40,4 +48,17 @@ $debug_url = $item_url;
     margin: 0px;
   }
 </style>
-<script defer src="{{asset('js/qliksaas_login.js')}}"></script>
+
+<script>
+  //const TENANT = '{{ $tenant }}/{{$prefix}}';
+
+  const TENANT = '{{ $tenant }}';
+
+  const PREFIX = '{{ $prefix }}';
+
+  const WEBINTEGRATIONID = '{{ $web_int_id }}';
+  const APPID = '##APP##';
+  const JWTTOKEN = "{{ $token}}";
+</script>
+<script src="@php echo asset($js_login) @endphp"></script>
+
