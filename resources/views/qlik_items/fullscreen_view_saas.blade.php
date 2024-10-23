@@ -12,6 +12,8 @@ $debug_url = $item_url;
 
 <div class="card">
   <div class="card-header">
+    <h4 class="qi_subtitle">{{ title }}</h4>
+    <h6 class="qi_subtitle">{{ $subtitle }}</h6>
     <a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a>
   </div>
   <div class="card-body">
