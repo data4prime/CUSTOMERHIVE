@@ -18,11 +18,14 @@ $debug_url = $item_url;
 @else
 <!-- default -->
 @section('content')
-<div class="box qi_box">
-  <h4 class="qi_subtitle">{{ $subtitle }}</h4>
+<div class="card qi_box">
+  <div class="card-header">
+    <h4 class="qi_subtitle">{{ $subtitle }}</h4>
+    <a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a>
+  </div>
 
   <div class="qi_iframe_container">
-    <a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a>
+    
     <iframe class="qi_iframe" data-src="{{$item_url}}" src=""  style="border:none;"></iframe>
   </div>
 </div>
