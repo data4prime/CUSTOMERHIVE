@@ -143,12 +143,12 @@
         </tr>
     </thead>
     <tbody>
-        <?php $no = 0; ?>
+        @php $no = 0; @endphp
         @foreach($apis as $api)
-            <?php
+            @php
                 $parameters = ($api->parameters) ? unserialize($api->parameters) : array();
                 $responses = ($api->responses) ? unserialize($api->responses) : array();
-            ?>
+            @endphp
             <tr>
                 <td><?= ++$no; ?></td>
                 <td>
