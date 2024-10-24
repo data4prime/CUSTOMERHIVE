@@ -214,9 +214,9 @@
                                                             <td>
                                                             {!! $param['config'] !!}
                                                                 @if(substr($param['config'], 0, 1) == '*')
-                                                                    <span class="text-info">{{ substr($param['config'], 1) }}</span>
+                                                                    <span class="text-info">@php echo  substr($param['config'], 1) @endphp</span>
                                                                 @else
-                                                                    {!! $param['config'] !!}
+                                                                    @php echo $param['config']  @endphp
                                                                 @endif
                                                             </td>
                                                             <td>
