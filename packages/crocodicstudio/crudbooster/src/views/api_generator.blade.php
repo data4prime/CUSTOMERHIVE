@@ -14,26 +14,32 @@
 </script>
 @endpush
 
-<ul class="nav flex-row">
-    <li class="nav-item">
-        <a class="nav-link active" href="https://staging.thecustomerhive.com/admin/api_generator">
-            <i class="fa fa-file"></i> API Documentation
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="https://staging.thecustomerhive.com/admin/api_generator/screet-key">
-            <i class="fa fa-key"></i> API Secret Key
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="https://staging.thecustomerhive.com/admin/api_generator/generator">
-            <i class="fa fa-cog"></i> API Generator
-        </a>
-    </li>
-</ul>
+
 
 
 <div class='card'>
+
+    <div class="card-header">
+
+        <ul class="nav flex-row">
+            <li class="nav-item">
+                <a class="nav-link active" href="https://staging.thecustomerhive.com/admin/api_generator">
+                    <i class="fa fa-file"></i> API Documentation
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://staging.thecustomerhive.com/admin/api_generator/screet-key">
+                    <i class="fa fa-key"></i> API Secret Key
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://staging.thecustomerhive.com/admin/api_generator/generator">
+                    <i class="fa fa-cog"></i> API Generator
+                </a>
+            </li>
+        </ul>
+
+    </div>
 
     <div class='card-body'>
         @push('bottom')
