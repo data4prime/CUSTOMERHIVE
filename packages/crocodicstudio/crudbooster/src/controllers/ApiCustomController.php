@@ -38,6 +38,7 @@ class ApiCustomController extends CBController
         $data['apis'] = DB::table('cms_apicustom')->orderby('nama', 'asc')->get();
 
         foreach ($data['apis'] as $api) {
+            dd($api->parameters);
             $api->parameters = unserialize($api->parameters);
             //$api->responses = unserialize($api->responses);
         }
