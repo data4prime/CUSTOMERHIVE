@@ -195,6 +195,7 @@
 
                                                 @php $i = 0; @endphp
                                                 @foreach($parameters as $param)
+                                                    {!! $param['config'] !!}
                                                     @if($param['used'])
                                                         @php
                                                             $param_exception = ['in', 'not_in', 'digits_between'];

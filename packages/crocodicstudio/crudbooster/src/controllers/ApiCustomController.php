@@ -39,7 +39,7 @@ class ApiCustomController extends CBController
 
         foreach ($data['apis'] as $api) {
             //dd(unserialize($api->parameters));
-            $api->parameters = unserialize($api->parameters);
+            //$api->parameters = unserialize($api->parameters);
             //$api->responses = unserialize($api->responses);
         }
 
