@@ -37,6 +37,11 @@ class ApiCustomController extends CBController
         $data['page_menu'] = Route::getCurrentRoute()->getActionName();
         $data['apis'] = DB::table('cms_apicustom')->orderby('nama', 'asc')->get();
 
+        foreach ($data['apis'] as $api) {
+            $api->parameters = unserialize($api->parameters);
+            //$api->responses = unserialize($api->responses);
+        }
+
         dd($data['apis'][2]->parameters);
 
         return view('crudbooster::api_documentation', $data);
