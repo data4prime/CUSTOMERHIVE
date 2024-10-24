@@ -1029,9 +1029,11 @@ return Request::segment($segment);
         }
 
         $file = Request::file($key);
-        $ext = $file->getClientOriginalExtension();
-        if ($ext == 'pem') {
-            return;
+        if ($file) {
+            $ext = $file->getClientOriginalExtension();
+            if ($ext == 'pem') {
+                return;
+            }
         }
 
 
