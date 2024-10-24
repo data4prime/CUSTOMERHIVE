@@ -195,7 +195,7 @@
 
                                                 @php $i = 0; @endphp
                                                 @foreach($parameters as $param)
-                                                    
+                                                    {!! dd($param) !!}
                                                     
                                                     @if($param['used'])
                                                         @php
@@ -203,7 +203,7 @@
                                                             if ($param['config'] && substr($param['config'], 0, 1) != '*' && !in_array($param['type'], $param_exception)) continue;
                                                         @endphp
                                                         <tr>
-                                                            <td>{{ ++$i }} {{ $param['config'] }}</td>
+                                                            <td>{{ ++$i }}</td>
                                                             <td width="5%"><em>{{ $param['type'] }}</em></td>
                                                             <td>{{ $param['name'] }}</td>
                                                             <td>
