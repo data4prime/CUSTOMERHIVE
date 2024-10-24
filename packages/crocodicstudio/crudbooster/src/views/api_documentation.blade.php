@@ -147,6 +147,7 @@
         @foreach($apis as $api)
             @php
                 $parameters = ($api->parameters) ? json_decode(json_encode(unserialize($api->parameters))) : array();
+                $parameters = ($api->parameters) ? unserialize($api->parameters) : array();
                 $responses = ($api->responses) ? unserialize($api->responses) : array();
             @endphp
             <tr>
