@@ -147,7 +147,6 @@
         @foreach($apis as $api)
             @php
                 $parameters = ($api->parameters) ? json_decode(json_encode(unserialize($api->parameters))) : array();
-                dd($parameters);
                 $responses = ($api->responses) ? json_decode(json_encode(unserialize($api->responses))) : array();
             @endphp
             <tr>
@@ -196,6 +195,9 @@
 
                                                 @php $i = 0; @endphp
                                                 @foreach($parameters as $param)
+                                                    @if($no == 2)
+                                                        @php dd($param) @endphp
+                                                    @endif
 
                                                     
                                                     @if($param['used'])
