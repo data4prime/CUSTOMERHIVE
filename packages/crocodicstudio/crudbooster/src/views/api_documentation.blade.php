@@ -206,6 +206,7 @@
                                                             <td width="5%"><em>{{ $param['type'] }}</em></td>
                                                             <td>{{ $param['name'] }}</td>
                                                             <td>
+                                                            {{ $param['config'] }}
                                                                 @if(substr($param['config'], 0, 1) == '*')
                                                                     <span class="text-info">{{ substr($param['config'], 1) }}</span>
                                                                 @else
