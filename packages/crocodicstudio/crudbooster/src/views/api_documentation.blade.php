@@ -195,7 +195,7 @@
 
                                                 @php $i = 0; @endphp
                                                 @foreach($parameters as $param)
-                                                    {!! dd($param['config']) !!}
+                                                    {!! dd($param) !!}
                                                     
                                                     @if($param['used'])
                                                         @php
