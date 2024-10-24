@@ -203,15 +203,11 @@
                                                     @endif
 
                                                     @if($param['used'])
-                                                        @php
-                                                            $param_exception = ['in', 'not_in', 'digits_between'];
-                                                            if ($param['config'] && substr($param['config'], 0, 1) != '*' && !in_array($param['type'], $param_exception)) continue;
-                                                        @endphp
                                                         <tr>
                                                             <td>{{ ++$i }}</td>
                                                             <td width="5%"><em>{{ $param['type'] }}</em></td>
                                                             <td>{{ $param['name'] }}</td>
-                                                            <td>AAA @php echo $param['config'] @endphp </td>
+                                                            <td>{{ $param['config'] }}</td>
                                                             <td>
                                                                 {!! $param['required'] ? "<span class='badge bg-primary'>REQUIRED</span>" : "<span class='badge bg-secondary'>OPTIONAL</span>" !!}
                                                             </td>
