@@ -211,7 +211,7 @@
                                                             <td>{{ ++$i }}</td>
                                                             <td width="5%"><em>{{ $param['type'] }}</em></td>
                                                             <td>{{ $param['name'] }}</td>
-                                                            <td> @php echo $param['config'] @endphp </td>
+                                                            <td>AAA @php echo $param['config'] @endphp </td>
                                                             <td>
                                                                 {!! $param['required'] ? "<span class='badge bg-primary'>REQUIRED</span>" : "<span class='badge bg-secondary'>OPTIONAL</span>" !!}
                                                             </td>
