@@ -195,6 +195,7 @@
 
                                                 @php $i = 0; @endphp
                                                 @foreach($parameters as $param)
+                                                    {{ $no }}
                                                     @if($no == 2)
                                                         @php dd($param) @endphp
                                                     @endif
