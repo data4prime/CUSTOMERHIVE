@@ -195,6 +195,9 @@
 
                                                 @php $i = 0; @endphp
                                                 @foreach($parameters as $param)
+                                                    @if 
+                                                        {!! dd($param) !!}
+                                                    @endif
                                                     @if($param['used'])
                                                         @php
                                                             $param_exception = ['in', 'not_in', 'digits_between'];
