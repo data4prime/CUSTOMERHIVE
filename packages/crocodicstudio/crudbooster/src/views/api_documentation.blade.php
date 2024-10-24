@@ -197,10 +197,7 @@
 
                                                 @php $i = 0; @endphp
                                                 @foreach($parameters as $param)
-                                                    {{ $no }}
-                                                    @if($no == 3)
-                                                        @php echo $param['config'] . '<br>' @endphp
-                                                    @endif
+
 
                                                     @if($param['used'])
                                                         <tr>
