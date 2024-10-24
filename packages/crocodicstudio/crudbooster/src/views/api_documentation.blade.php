@@ -198,7 +198,7 @@
                                                 @foreach($parameters as $param)
                                                     {{ $no }}
                                                     @if($no == 3)
-                                                        @php dd($param) @endphp
+                                                        @php dd($parameters) @endphp
                                                     @endif
 
 
