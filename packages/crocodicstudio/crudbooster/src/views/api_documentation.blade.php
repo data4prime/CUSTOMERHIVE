@@ -192,6 +192,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+{!! dd($parameters) !!}
                                             <?php $i = 0; ?>
                                             @foreach($parameters as $param)
                                                 @if($param['used'])
