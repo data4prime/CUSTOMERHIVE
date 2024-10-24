@@ -211,14 +211,7 @@
                                                             <td>{{ ++$i }}</td>
                                                             <td width="5%"><em>{{ $param['type'] }}</em></td>
                                                             <td>{{ $param['name'] }}</td>
-                                                            <td>
-                                                            {!! $param['config'] !!}
-                                                                @if(substr($param['config'], 0, 1) == '*')
-                                                                    <span class="text-info">@php echo  substr($param['config'], 1) @endphp</span>
-                                                                @else
-                                                                    @php echo $param['config']  @endphp
-                                                                @endif
-                                                            </td>
+                                                            <td> @php echo $param['config'] @endphp </td>
                                                             <td>
                                                                 {!! $param['required'] ? "<span class='badge bg-primary'>REQUIRED</span>" : "<span class='badge bg-secondary'>OPTIONAL</span>" !!}
                                                             </td>
