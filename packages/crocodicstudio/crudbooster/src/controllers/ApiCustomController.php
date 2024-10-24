@@ -42,7 +42,7 @@ class ApiCustomController extends CBController
             //$api->responses = unserialize($api->responses);
         }
 
-        dd($data['apis'][2]->parameters);
+        //dd($data['apis'][2]->parameters);
 
         return view('crudbooster::api_documentation', $data);
     }
