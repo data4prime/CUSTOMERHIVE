@@ -200,7 +200,7 @@
                                                         @php dd($param) @endphp
                                                     @endif
 
-                                                    
+                                                    <!--
                                                     @if($param['used'])
                                                         @php
                                                             $param_exception = ['in', 'not_in', 'digits_between'];
@@ -223,6 +223,7 @@
                                                             </td>
                                                         </tr>
                                                     @endif
+-->
                                                 @endforeach
                                                 @if($i == 0)
                                                     <tr>
