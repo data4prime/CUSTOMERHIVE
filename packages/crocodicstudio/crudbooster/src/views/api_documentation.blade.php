@@ -164,7 +164,8 @@
                             <i class="fa fa-pencil text-warning"></i>
                         </a>
                     </span>
-                    <div class="detail_api" style="display:none">
+<!--style="display:none"-->
+                    <div class="detail_api"  >
                         <table class="table table-bordered mt-3">
                             <tr>
                                 <td width="12%"><strong>URL</strong></td>
