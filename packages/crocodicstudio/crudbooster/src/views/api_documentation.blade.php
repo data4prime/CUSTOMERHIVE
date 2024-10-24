@@ -166,7 +166,7 @@
                         </a>
                     </span>
 <!--style="display:none"-->
-                    <div class="detail_api"  >
+                    <div class="detail_api"  style="display:none" >
                         <table class="table table-bordered mt-3">
                             <tr>
                                 <td width="12%"><strong>URL</strong></td>
