@@ -146,7 +146,7 @@
         @php $no = 0; @endphp
         @foreach($apis as $api)
             @php
-                $parameters = ($api->parameters) ? json_decode(json_encode(unserialize($api->parameters))) : array();
+                //$parameters = ($api->parameters) ? json_decode(json_encode(unserialize($api->parameters))) : array();
                 $parameters = ($api->parameters) ? unserialize($api->parameters) : array();
                 $responses = ($api->responses) ? unserialize($api->responses) : array();
             @endphp
@@ -199,7 +199,7 @@
                                                 @foreach($parameters as $param)
                                                     {{ $no }}
                                                     @if($no == 3)
-                                                        @php dd($parameters) @endphp
+                                                        @php echo $param['config'] . '<br>' @endphp
                                                     @endif
 
 
