@@ -33,9 +33,9 @@
 </ul>
 
 
-<div class='box'>
+<div class='card'>
 
-    <div class='box-body'>
+    <div class='card-body'>
         @push('bottom')
         <script>
             $(function () {
@@ -837,12 +837,15 @@
                     placeholder='Optional'>{{isset($row->keterangan) ? $row->keterangan : ''}}</textarea>
             </div>
 
-            <div class='mb-3 row'>
-                <input type='submit' class='btn btn-success' value='SAVE & GENERATE API' />
-            </div>
+            
 
 
     </div><!--END BODY-->
+    <div class="card-footer">
+        <div class='mb-3 row'>
+                <input type='submit' class='btn btn-success' value='SAVE & GENERATE API' />
+            </div>
+    </div>
 </div><!--END BOX-->
 
 @endsection
