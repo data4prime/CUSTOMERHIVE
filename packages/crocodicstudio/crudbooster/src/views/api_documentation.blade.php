@@ -146,8 +146,8 @@
         @php $no = 0; @endphp
         @foreach($apis as $api)
             @php
-                $parameters = ($api->parameters) ? unserialize($api->parameters) : array();
-                $responses = ($api->responses) ? unserialize($api->responses) : array();
+                $parameters = ($api->parameters) ? json_encode(unserialize($api->parameters)) : array();
+                $responses = ($api->responses) ? json_encode(unserialize($api->responses)) : array();
             @endphp
             <tr>
                 <td><?= ++$no; ?></td>
