@@ -195,11 +195,12 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
     $logo = CRUDBooster::getLogo($tenant);
 
     $background_color = CRUDBooster::getBackgroundColor($tenant);
+    $front_color = CRUDBooster::frontColor($tenant);
 
     $background_image_src = CRUDBooster::getBackgroundImage($tenant);
     $background = $background_color . " url(" . $background_image_src . ")";
 
-    return view('crudbooster::login', compact('tenant', 'favicon', 'logo', 'background'));
+    return view('crudbooster::login', compact('tenant', 'favicon', 'logo', 'background', 'front_color'));
   }
 
   public function postLogin()

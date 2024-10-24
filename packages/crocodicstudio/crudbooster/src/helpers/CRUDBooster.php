@@ -65,6 +65,16 @@ class CRUDBooster
 
     }
 
+    public static function frontColor($tenant) {
+        if (isset($tenant->login_font_color)) {
+            return $tenant->login_font_color;
+        } elseif (CRUDBooster::getSetting('login_font_color')) {
+            return asset(CRUDBooster::getSetting('login_font_color'));
+        } else {
+            return '#666666';
+        }
+    }
+
     public static function getBackgroundColor($tenant) {
         if (isset($tenant->login_background_color)) {
             return $tenant->login_background_color;
