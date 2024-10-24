@@ -195,7 +195,7 @@
 
                                                 @php $i = 0; @endphp
                                                 @foreach($parameters as $param)
-                                                    {!! $param['config'] !!}
+                                                    
                                                     @if($param['used'])
                                                         @php
                                                             $param_exception = ['in', 'not_in', 'digits_between'];
@@ -209,7 +209,7 @@
                                                                 @if(substr($param['config'], 0, 1) == '*')
                                                                     <span class="text-info">{{ substr($param['config'], 1) }}</span>
                                                                 @else
-                                                                    {{ $param['config'] }}
+                                                                    {!! $param['config'] !!}
                                                                 @endif
                                                             </td>
                                                             <td>
