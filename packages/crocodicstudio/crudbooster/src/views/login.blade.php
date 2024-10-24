@@ -38,7 +38,7 @@
         .register-page {
             background: {{ $background }};
 
-            color: {{ $font_color}} !important;
+            color: {{ $front_color}} !important;
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
@@ -53,7 +53,7 @@
             box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.8);
             background: rgba(255, 255, 255, 0.9);
 
-            color: {{ $font_color}} !important;
+            color: {{ $front_color}} !important;
         }
 
         html,
