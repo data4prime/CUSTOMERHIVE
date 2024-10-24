@@ -193,33 +193,36 @@
                                         </thead>
                                         <tbody>
 
-                                            <?php $i = 0; ?>
-                                            @foreach($parameters as $param)
-                                                @if($param['used'])
-                                                    <?php
-                                                        $param_exception = ['in', 'not_in', 'digits_between'];
-                                                        if ($param['config'] && substr($param['config'], 0, 1) != '*' && !in_array($param['type'], $param_exception)) continue;
-                                                    ?>
+                                                @php $i = 0; @endphp
+                                                @foreach($parameters as $param)
+                                                    @if($param['used'])
+                                                        @php
+                                                            $param_exception = ['in', 'not_in', 'digits_between'];
+                                                            if ($param['config'] && substr($param['config'], 0, 1) != '*' && !in_array($param['type'], $param_exception)) continue;
+                                                        @endphp
+                                                        <tr>
+                                                            <td>{{ ++$i }}</td>
+                                                            <td width="5%"><em>{{ $param['type'] }}</em></td>
+                                                            <td>{{ $param['name'] }}</td>
+                                                            <td>
+                                                                @if(substr($param['config'], 0, 1) == '*')
+                                                                    <span class="text-info">{{ substr($param['config'], 1) }}</span>
+                                                                @else
+                                                                    {{ $param['config'] }}
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                {!! $param['required'] ? "<span class='badge bg-primary'>REQUIRED</span>" : "<span class='badge bg-secondary'>OPTIONAL</span>" !!}
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                                @if($i == 0)
                                                     <tr>
-                                                        <td>{{ ++$i }}</td>
-                                                        <td width="5%"><em>{{ $param['type'] }}</em></td>
-                                                        <td>{{ $param['name'] }}</td>
-                                                        <td>
-                                                            @if(substr($param['config'], 0, 1) == '*')
-                                                                <span class="text-info">{{ substr($param['config'], 1) }}</span>
-                                                            @else
-                                                                {{ $param['config'] }}
-                                                            @endif
-                                                        </td>
-                                                        <td>{!! ($param['required']) ? "<span class='badge bg-primary'>REQUIRED</span>" : "<span class='badge bg-secondary'>OPTIONAL</span>" !!}</td>
+                                                        <td colspan="5" class="text-center"><i class="fa fa-search"></i> There are no parameters</td>
                                                     </tr>
                                                 @endif
-                                            @endforeach
-                                            @if($i == 0)
-                                                <tr>
-                                                    <td colspan="5" class="text-center"><i class="fa fa-search"></i> There are no parameters</td>
-                                                </tr>
-                                            @endif
+
                                         </tbody>
                                     </table>
                                 </td>
