@@ -479,7 +479,7 @@ class ApiController extends Controller
                 $rows = $data->orderby($orderby_col, $orderby_val)->get();
 
                 $debug[] = 'Data Fetch is OK';
-                return response()->json($debug, 200);
+                //return response()->json($debug, 200);
                 
 
                 if ($rows) {
