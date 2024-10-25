@@ -476,6 +476,8 @@ class ApiController extends Controller
                     $orderby_val = 'desc';
                 }
 
+                $debug[] = $data->orderby($orderby_col, $orderby_val)->toSql();
+                return response()->json($debug, 200);
                 $rows = $data->orderby($orderby_col, $orderby_val)->get();
 
                 $debug[] = 'Data Fetch is OK';
