@@ -12,8 +12,13 @@
 */
 
 use crocodicstudio\crudbooster\helpers\QlikHelper;
+use App\Http\Controllers\ApiListTenantsController;
 
 $controllers_base_path = '\crocodicstudio\crudbooster\controllers\\';
+
+Route::get('/testapi' , function(){
+    $test = new ApiListTenantsController();
+});
 
 Route::get('/', function () {
     //esiste ancora la view('welcome')
