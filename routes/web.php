@@ -18,6 +18,7 @@ $controllers_base_path = '\crocodicstudio\crudbooster\controllers\\';
 
 Route::get('/testapi' , function(){
     $test = new ApiListTenantsController();
+    dd($test);
 });
 
 Route::get('/', function () {
