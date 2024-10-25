@@ -790,7 +790,7 @@ class ApiController extends Controller
         $this->hook_after($posts, $result);
 
         $debug[] = 'Hook After is OK';
-         return response()->json($debug, 200);
+         //return response()->json($debug, 200);
         if ($this->output) return response()->json($this->output);
 
         if ($output == 'JSON') {
