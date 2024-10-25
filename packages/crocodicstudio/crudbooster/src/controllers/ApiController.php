@@ -479,6 +479,7 @@ class ApiController extends Controller
                 $rows = $data->orderby($orderby_col, $orderby_val)->get();
 
                 $debug[] = 'Data Fetch is OK';
+                return response()->json($debug, 200);
                 
 
                 if ($rows) {
@@ -516,6 +517,7 @@ class ApiController extends Controller
                     $result['data'] = [];
                 }
                 $debug[] = 'Data Fetch is OK';
+                return response()->json($debug, 200);
             } elseif ($action_type == 'detail') {
 
                 $rows = $data->first();
@@ -773,6 +775,7 @@ class ApiController extends Controller
         }
 
         $debug[] = 'Hook before After is OK';
+        return response()->json($debug, 200);
 
         $this->hook_after($posts, $result);
 
