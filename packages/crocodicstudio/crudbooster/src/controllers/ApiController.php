@@ -69,6 +69,8 @@ class ApiController extends Controller
 
         // DB::enableQueryLog();
 
+        $debug = [];
+
         $posts = Request::all();
         $posts_keys = array_keys($posts);
         $posts_values = array_values($posts);
@@ -99,6 +101,8 @@ class ApiController extends Controller
             }
         }
 
+        $debug[] = 'Method Type is OK';
+
         /*
         | ----------------------------------------------
         | User validation
@@ -115,6 +119,8 @@ class ApiController extends Controller
             goto show;
         }
 
+        $debug[] = 'User is OK';
+
 
         /*
         | ----------------------------------------------
@@ -128,6 +134,8 @@ class ApiController extends Controller
 
             goto show;
         }
+
+        $debug[] = 'Row API is OK';
 
         @$parameters = unserialize($row_api->parameters);
         @$responses = unserialize($row_api->responses);
@@ -245,6 +253,8 @@ class ApiController extends Controller
             }
         }
 
+        $debug[] = 'User Data Validation is OK';
+
         $responses_fields = [];
         foreach ($responses as $r) {
             if ($r['used']) {
@@ -252,10 +262,18 @@ class ApiController extends Controller
             }
         }
 
+        $debug[] = 'Responses Fields is OK';
+        return response()->json($debug, 200);
+
         $this->hook_before($posts);
         if ($this->output) {
             return response()->json($this->output);
         }
+
+
+        $debug[] = 'Hook Before is OK';
+        return response()->json($debug, 200);
+
         //dd($this);
         $limit = ($this->limit) ?: $posts['limit'];
         $offset = isset($posts['offset']) ?: 0;
@@ -445,6 +463,10 @@ class ApiController extends Controller
             }
 
             $this->hook_query($data);
+
+            $debug[] = 'Data Query is OK';
+
+            return response()->json($debug, 200);
 
             if ($action_type == 'list') {
                 if ($orderby) {
