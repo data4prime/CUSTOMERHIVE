@@ -271,7 +271,6 @@ class ApiController extends Controller
 
 
         $debug[] = 'Hook Before is OK';
-        return response()->json($debug, 200);
 
         //dd($this);
         $limit = ($this->limit) ?: $posts['limit'];
