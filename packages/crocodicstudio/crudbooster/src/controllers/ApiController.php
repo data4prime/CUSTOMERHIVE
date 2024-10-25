@@ -490,7 +490,7 @@ class ApiController extends Controller
 
                         $debug[] = 'Before init';
                        // return response()->json($this, 200);
-                        $this->controller->cbInit();
+                        //$this->controller->cbInit();
 
                         $debug[] = 'After init';
                         //return response()->json($debug, 200);
