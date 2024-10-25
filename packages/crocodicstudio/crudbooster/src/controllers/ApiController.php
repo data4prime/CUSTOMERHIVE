@@ -246,7 +246,7 @@ class ApiController extends Controller
 
             $debug[] = 'Input Validator '. json_encode($input_validator);
             $debug[] = 'Data Validation '. json_encode($data_validation);
-            return response()->json($debug, 200);
+            //return response()->json($debug, 200);
 
 
             $validator = Validator::make($input_validator, $data_validation);
