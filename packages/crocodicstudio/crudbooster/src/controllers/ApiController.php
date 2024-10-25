@@ -489,7 +489,7 @@ class ApiController extends Controller
                     foreach ($rows as $index => &$row) { 
 
                         $debug[] = 'Before init';
-                        return response()->json($this, 200);
+                       // return response()->json($this, 200);
                         $this->controller->cbInit();
 
                         $debug[] = 'After init';
