@@ -263,7 +263,6 @@ class ApiController extends Controller
         }
 
         $debug[] = 'Responses Fields is OK';
-        return response()->json($debug, 200);
 
         $this->hook_before($posts);
         if ($this->output) {
