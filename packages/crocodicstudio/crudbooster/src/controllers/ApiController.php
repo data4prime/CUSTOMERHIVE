@@ -242,6 +242,8 @@ class ApiController extends Controller
                 }
             }
 
+            $debug[] = 'Input Validator '. $input_validator;
+            $debug[] = 'Data Validation '. $data_validation;
             $validator = Validator::make($input_validator, $data_validation);
             if ($validator->fails()) {
                 $message = $validator->errors()->all();
