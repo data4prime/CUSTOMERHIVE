@@ -464,7 +464,7 @@ class ApiController extends Controller
 
             $debug[] = 'Data Query is OK';
 
-            return response()->json($debug, 200);
+            //return response()->json($debug, 200);
 
             if ($action_type == 'list') {
                 if ($orderby) {
@@ -477,6 +477,8 @@ class ApiController extends Controller
                 }
 
                 $rows = $data->orderby($orderby_col, $orderby_val)->get();
+
+                $debug[] = 'Data Fetch is OK';
                 
 
                 if ($rows) {
@@ -513,6 +515,7 @@ class ApiController extends Controller
                     }
                     $result['data'] = [];
                 }
+                $debug[] = 'Data Fetch is OK';
             } elseif ($action_type == 'detail') {
 
                 $rows = $data->first();
@@ -769,7 +772,12 @@ class ApiController extends Controller
             $result['api_authorization'] = $debug_mode_message;
         }
 
+        $debug[] = 'Hook before After is OK';
+
         $this->hook_after($posts, $result);
+
+        $debug[] = 'Hook After is OK';
+         return response()->json($debug, 200);
         if ($this->output) return response()->json($this->output);
 
         if ($output == 'JSON') {
