@@ -138,6 +138,7 @@ class ApiController extends Controller
         $debug[] = 'Row API is OK';
 
         @$parameters = unserialize($row_api->parameters);
+        $debug[] = json_encode($parameters);
         @$responses = unserialize($row_api->responses);
 
 
