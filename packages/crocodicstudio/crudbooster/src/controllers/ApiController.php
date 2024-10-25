@@ -485,7 +485,15 @@ class ApiController extends Controller
                 if ($rows) {
 
                     foreach ($rows as $index => &$row) { 
+
+                        $debug[] = 'Before init';
+
                         $this->controller->cbInit();
+
+                        $debug[] = 'After init';
+                        return response()->json($debug, 200);
+
+
                         if (!ModuleHelper::can_list($this->controller, $row)) {
                             unset($rows[$index]);
                             continue;
