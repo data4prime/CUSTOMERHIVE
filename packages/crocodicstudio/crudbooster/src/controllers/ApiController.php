@@ -228,8 +228,8 @@ class ApiController extends Controller
                     $input_validator[$name] = Request::file($name);
                 } else {
                     if (!in_array($type, $type_except)) {
-                        $debug[] = 'Type ' . $type ;
-                        $format_validation[] = $type;
+                        $debug[] = 'Type ' . $config;
+                        $format_validation[] = $config;
                     }
                 }
 
