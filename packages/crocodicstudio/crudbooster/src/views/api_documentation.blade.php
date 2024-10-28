@@ -180,7 +180,7 @@
             <tr>
                 <td>@php echo  ++$no; @endphp</td>
                 <td>
-                        <a href="#" class="toggleLink" data-bs-target="#detail_api_{{ $api->id }}" data-bs-toggle="collapse">{{ $api->nama }}</a>
+                        <a href="#" class="toggleLink link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" data-bs-target="#detail_api_{{ $api->id }}" data-bs-toggle="collapse">{{ $api->nama }}</a>
                         <!--<a id="toggleLink" href="javascript:void(0)" title="API {{ isset($api->nama) ? $api->nama : '' }}" class="link_name_api text-primary">
                             @php echo  $api->nama; @endphp
                         </a>-->
