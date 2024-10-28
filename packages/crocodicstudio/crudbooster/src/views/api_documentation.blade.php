@@ -151,9 +151,23 @@
                 $responses = ($api->responses) ? unserialize($api->responses) : array();
             @endphp
             <tr>
-                <td><?= ++$no; ?></td>
+                <td>@php echo  ++$no; @endphp</td>
                 <td>
-                    <a href="javascript:void(0)" title="API {{isset($api->nama) ? $api->nama : ''}}" class="link_name_api text-primary">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="javascript:void(0)" title="API {{ isset($api->nama) ? $api->nama : '' }}" class="link_name_api text-primary">
+                            @php echo  $api->nama; @endphp
+                        </a>
+                        <div class="d-flex">
+                            <a title="Delete this API" onclick="deleteApi({{ $api->id }})" href="javascript:void(0)" class="text-danger me-2">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                            <a title="Edit This API" href="{{ url(config('crudbooster.ADMIN_PATH').'/api_generator/edit-api/'.$api->id) }}" class="text-warning">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!--<a href="javascript:void(0)" title="API {{isset($api->nama) ? $api->nama : ''}}" class="link_name_api text-primary">
                         <?= $api->nama; ?>
                     </a>
                     <div class="d-flex justify-content-end">
@@ -163,7 +177,7 @@
                         <a title="Edit This API" href="{{ url(config('crudbooster.ADMIN_PATH').'/api_generator/edit-api/'.$api->id) }}" class="text-warning">
                             <i class="fa fa-pencil"></i>
                         </a>
-                    </div>
+                    </div>-->
 
                     <!--<span class="float-end">
                         <a title="Delete this API" onclick="deleteApi({{$api->id}})" href="javascript:void(0)">
