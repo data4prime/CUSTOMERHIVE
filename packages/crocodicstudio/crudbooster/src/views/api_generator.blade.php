@@ -820,10 +820,15 @@
                                         <option value='custom'>Custom (Not in Table)</option>
                                     </select>
                                 </td>
-                                <td><input
+                                <td>
+
+                                    <textarea placeholder="E.g : select sum(total) from order_detail where id_order = order.id"
+                                        name='responses_subquery[]' class='form-control' type='text'></textarea>
+
+                                    <!--<input
                                         placeholder="E.g : select sum(total) from order_detail where id_order = order.id"
                                         name='responses_subquery[]' class='form-control' type='text'>
-                                    <small>Enter sub query without alias name</small>
+                                    <small>Enter sub query without alias name</small>-->
                                 </td>
                                 <td><select class='form-control responses_used' name='responses_used[]'>
                                         <option value='1'>YES</option>
