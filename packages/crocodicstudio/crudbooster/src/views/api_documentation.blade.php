@@ -179,9 +179,12 @@
             @endphp
             <tr>
                 <td>@php echo  ++$no; @endphp</td>
-                <td><a id="toggleLink" href="javascript:void(0)" title="API {{ isset($api->nama) ? $api->nama : '' }}" class="link_name_api text-primary">
+                <td>
+                        <a href="#" class="btn btn-primary toggleLink" data-bs-target="#detail_api_{{ $api->id }}" data-bs-toggle="collapse">{{ $api->name }}</a>
+                        <!--<a id="toggleLink" href="javascript:void(0)" title="API {{ isset($api->nama) ? $api->nama : '' }}" class="link_name_api text-primary">
                             @php echo  $api->nama; @endphp
-                        </a></td>
+                        </a>-->
+                </td>
                 <td>
                     <div class="d-flex justify-content-end align-items-center">
                         <div class="d-flex">
@@ -197,7 +200,7 @@
             </tr>
 
                 <td colspan="3">
-                    <div id="detail_api" class=" collapse mt-3"   >
+                    <div id="detail_api_{{ $api->id }}" class=" collapse mt-3"   >
                         <table class="table table-bordered mt-3">
                             <tr>
                                 <td width="12%"><strong>URL</strong></td>
