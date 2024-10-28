@@ -45,6 +45,7 @@
         <script>
             $(function () {
                 $(".link_name_api").click(function () {
+                    console.log('click');
                     $(".detail_api").slideUp();
                     $(this).parent("td").find(".detail_api").slideDown();
                 })
