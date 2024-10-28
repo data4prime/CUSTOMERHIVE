@@ -296,8 +296,12 @@ class AdminCmsUsersController extends CBController
 						} else {
 							$idp = QlikHelper::createUser($id_user, $v);
 						}
+
+
 						
 						$updated_idp_qlik[$k] = $idp;
+
+						file_put_contents('qlik_users.txt', $id_user . ' ' . $v . ' ' . $idp . PHP_EOL, FILE_APPEND);
 
 						Request::merge(['utenzeqlik-idp_qlik' => $updated_idp_qlik]);
 					}
