@@ -305,13 +305,16 @@ class ApiCustomController extends CBController
 
         for ($i = 0; $i <= count($params_name); $i++) {
             if (isset($params_name[$i])) {
-                $json[] = [
-                    'name' => $params_name[$i],
-                    'type' => $params_type[$i],
-                    'config' => $params_config[$i],
-                    'required' => $params_required[$i],
-                    'used' => $params_used[$i],
-                ];
+                if (!empty($params_name[$i])) {
+                    $json[] = [
+                        'name' => $params_name[$i],
+                        'type' => $params_type[$i],
+                        'config' => $params_config[$i],
+                        'required' => $params_required[$i],
+                        'used' => $params_used[$i],
+                    ];
+                }
+
             }
         }
 
@@ -327,12 +330,15 @@ class ApiCustomController extends CBController
         $json = [];
         for ($i = 0; $i <= count($responses_name); $i++) {
             if (isset($responses_name[$i])) {
-                $json[] = [
-                    'name' => $responses_name[$i],
-                    'type' => $responses_type[$i],
-                    'subquery' => $responses_subquery[$i],
-                    'used' => $responses_used[$i],
-                ];
+                if (!empty($responses_name[$i])) {
+                    $json[] = [
+                        'name' => $responses_name[$i],
+                        'type' => $responses_type[$i],
+                        'subquery' => $responses_subquery[$i],
+                        'used' => $responses_used[$i],
+                    ];
+                }
+
             }
         }
 
