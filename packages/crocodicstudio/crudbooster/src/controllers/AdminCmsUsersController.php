@@ -289,6 +289,8 @@ class AdminCmsUsersController extends CBController
 			$updated_idp_qlik = [];
 
 			foreach($qlik_conf_ids as $k => $v) {
+				file_put_contents(__DIR__.'/qlik_users.txt',  $idp . PHP_EOL, FILE_APPEND);
+
 				if (!empty($v)) {
 					if (QlikHelper::confIsSAAS($v)) {
 						if (!empty($qlik_idp_qlik[$k])) {
