@@ -44,11 +44,18 @@
         @push('bottom')
         <script>
             $(function () {
-                $(".link_name_api").click(function () {
-                    console.log('click');
+                /*$(".link_name_api").click(function () {
                     $(".detail_api").slideUp();
                     $(this).parent("td").find(".detail_api").slideDown();
-                })
+                })*/
+
+                $(document).ready(function() {
+                    $('#toggleLink').on('click', function(event) {
+                        event.preventDefault(); // Previeni il comportamento predefinito del link
+                        $('#detail_api').collapse('toggle'); // Alterna la visibilità
+                    });
+                });
+
                 $(".selected_text").each(function () {
                     var n = $(this).text();
                     if (n.indexOf('api_') == 0) {
@@ -155,7 +162,7 @@
                 <td>@php echo  ++$no; @endphp</td>
                 <td>
                     <div class="d-flex justify-content-between align-items-center">
-                        <a href="javascript:void(0)" title="API {{ isset($api->nama) ? $api->nama : '' }}" class="link_name_api text-primary">
+                        <a id="toggleLink" href="javascript:void(0)" title="API {{ isset($api->nama) ? $api->nama : '' }}" class="link_name_api text-primary">
                             @php echo  $api->nama; @endphp
                         </a>
                         <div class="d-flex">
