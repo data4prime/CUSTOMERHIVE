@@ -174,11 +174,11 @@
             @endphp
             <tr>
                 <td>@php echo  ++$no; @endphp</td>
-                <td><a id="toggleLink" href="javascript:void(0)" title="API {{ isset($api->nama) ? $api->nama : '' }}" class="link_name_api text-primary">
-                            @php echo  $api->nama; @endphp
-                        </a></td>
                 <td>
-                    <div class="d-flex justify-content-end align-items-center">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a id="toggleLink" href="javascript:void(0)" title="API {{ isset($api->nama) ? $api->nama : '' }}" class="link_name_api text-primary">
+                            @php echo  $api->nama; @endphp
+                        </a>
                         <div class="d-flex">
                             <a title="Delete this API" onclick="deleteApi({{ $api->id }})" href="javascript:void(0)" class="text-danger me-2">
                                 <i class="fa fa-trash"></i>
@@ -188,10 +188,29 @@
                             </a>
                         </div>
                     </div>
-                </td>
-            </tr>
 
-                <td colspan="3">
+                    <!--<a href="javascript:void(0)" title="API {{isset($api->nama) ? $api->nama : ''}}" class="link_name_api text-primary">
+                        <?= $api->nama; ?>
+                    </a>
+                    <div class="d-flex justify-content-end">
+                        <a title="Delete this API" onclick="deleteApi({{$api->id}})" href="javascript:void(0)" class="text-danger me-2">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                        <a title="Edit This API" href="{{ url(config('crudbooster.ADMIN_PATH').'/api_generator/edit-api/'.$api->id) }}" class="text-warning">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </div>-->
+
+                    <!--<span class="float-end">
+                        <a title="Delete this API" onclick="deleteApi({{$api->id}})" href="javascript:void(0)">
+                            <i class="fa fa-trash text-danger"></i>
+                        </a>
+                        &nbsp;
+                        <a title="Edit This API" href="{{url(config('crudbooster.ADMIN_PATH').'/api_generator/edit-api').'/'.$api->id}}">
+                            <i class="fa fa-pencil text-warning"></i>
+                        </a>
+                    </span>-->
+<!--style="display:none"-->
                     <div id="detail_api" class=" collapse mt-3"   >
                         <table class="table table-bordered mt-3">
                             <tr>
@@ -310,13 +329,6 @@
                             </tr>
                         </table>
                     </div>
-                </td>
-
-            <tr>
-
-            </tr>
-
-                    
                 </td>
             </tr>
         @endforeach
