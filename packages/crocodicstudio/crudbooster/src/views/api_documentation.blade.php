@@ -44,12 +44,17 @@
         @push('bottom')
         <script>
             $(function () {
+                $(document).on('click', '.toggleLink', function(event) {
+                    event.preventDefault(); // Previeni l'azione predefinita del link
+                    const target = $(this).data('bs-target'); // Ottieni il target dal data attribute
+                    $(target).collapse('toggle'); // Alterna la visibilità del div
+                });
                 /*$(".link_name_api").click(function () {
                     $(".detail_api").slideUp();
                     $(this).parent("td").find(".detail_api").slideDown();
                 })*/
 
-                $(document).ready(function() {
+                /*$(document).ready(function() {
                     $('#toggleLink').on('click', function(event) {
                         event.preventDefault();
 
@@ -68,7 +73,7 @@
 
 
                     });
-                });
+                });*/
 
                 $(".selected_text").each(function () {
                     var n = $(this).text();
@@ -154,8 +159,8 @@
     <thead>
         <tr class="table-primary">
             <th width="2%">No</th>
-            <th>
-                API Name
+            <th>API Name</th>
+            <th style="width: 20%;">
                 <span class="float-end">
                     <a class="btn btn-sm btn-warning" target="_blank" href="{{CRUDBooster::mainpath('download-postman')}}">
                         Export For POSTMAN <sup>Beta</sup>
