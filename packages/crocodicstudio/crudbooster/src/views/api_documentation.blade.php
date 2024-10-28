@@ -51,8 +51,20 @@
 
                 $(document).ready(function() {
                     $('#toggleLink').on('click', function(event) {
-                        event.preventDefault(); // Previeni il comportamento predefinito del link
-                        $('#detail_api').collapse('toggle'); // Alterna la visibilità
+                        event.preventDefault();
+
+                        //get the td parent of the a element
+                        var td = $(this).parent().parent();
+
+                        //get the detail_api div from td
+                        var detail_api = td.find('#detail_api');
+
+                        //toggle the detail_api div
+                        detail_api.collapse('toggle');
+
+
+
+
                     });
                 });
 
