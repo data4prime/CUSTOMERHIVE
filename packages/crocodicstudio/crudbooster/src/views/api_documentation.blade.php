@@ -156,7 +156,16 @@
                     <a href="javascript:void(0)" title="API {{isset($api->nama) ? $api->nama : ''}}" class="link_name_api text-primary">
                         <?= $api->nama; ?>
                     </a>
-                    <span class="float-end">
+                    <div class="d-flex justify-content-end">
+                        <a title="Delete this API" onclick="deleteApi({{$api->id}})" href="javascript:void(0)" class="text-danger me-2">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                        <a title="Edit This API" href="{{ url(config('crudbooster.ADMIN_PATH').'/api_generator/edit-api/'.$api->id) }}" class="text-warning">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </div>
+
+                    <!--<span class="float-end">
                         <a title="Delete this API" onclick="deleteApi({{$api->id}})" href="javascript:void(0)">
                             <i class="fa fa-trash text-danger"></i>
                         </a>
@@ -164,7 +173,7 @@
                         <a title="Edit This API" href="{{url(config('crudbooster.ADMIN_PATH').'/api_generator/edit-api').'/'.$api->id}}">
                             <i class="fa fa-pencil text-warning"></i>
                         </a>
-                    </span>
+                    </span>-->
 <!--style="display:none"-->
                     <div class="detail_api"  style="display:none" >
                         <table class="table table-bordered mt-3">
