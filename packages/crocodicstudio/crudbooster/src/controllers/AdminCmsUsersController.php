@@ -185,7 +185,7 @@ class AdminCmsUsersController extends CBController
 
 		if (!CRUDBooster::isAddPage() && !CRUDBooster::isProfilePage() ) {
 		//QLIK USERS START
-				$columns[] = ['label'=>'Qlik Conf','name'=>'qlik_conf_id','type'=>'datamodal','datamodal_table'=>'qlik_confs','datamodal_columns'=>'confname,type','datamodal_select_to'=>'confname:confname,type:type','datamodal_where'=>'','datamodal_size'=>'large'];
+				$columns[] = ['label'=>'Qlik Conf','name'=>'utenzeqlik-qlik_conf_id','type'=>'datamodal','datamodal_table'=>'qlik_confs','datamodal_columns'=>'confname,type','datamodal_select_to'=>'confname:confname,type:type','datamodal_where'=>'','datamodal_size'=>'large'];
 				$columns[] = array("label" => "Qlik login", "name" => "qlik_login", 'type'=>'text', 'help' => 'Fill in manually if the selected configuration is of type On-Premise.');
 				$columns[] = array("label" => "User directory", "name" => "user_directory", 'type'=>'text', 'help' => 'Fill in manually if the selected configuration is of type On-Premise.');
 				$columns[] = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik", 'type'=>'text', 'help' => 'If the selected configuration is of type SaaS, the field will be populated after saving the user if left empty. If you want to obtain a different IDP, delete the current value and save the user; the system will automatically create a new IDP.');
