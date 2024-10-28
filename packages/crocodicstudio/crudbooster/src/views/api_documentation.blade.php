@@ -55,6 +55,7 @@
 
                         //get the td parent of the a element
                         var td = $(this).parent().parent();
+                        console.log(td);
 
                         //get the detail_api div from td
                         var detail_api = td.find('#detail_api');
