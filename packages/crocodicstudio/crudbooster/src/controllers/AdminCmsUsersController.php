@@ -191,7 +191,7 @@ class AdminCmsUsersController extends CBController
 				$columns[] = array("label" => "Qlik Cloud IDP Subject", "name" => "idp_qlik", 'type'=>'text', 'help' => 'Se la configurazione scelta è di tipo SAAS, il campo verrà valorizzato dopo aver salvato l\'utenza se lasciato vuoto. Se si vuole ottenere un IDP diverso, cancellare il valore attuale e salvare l\'utenza, il sistema creerà un nuovo IDP in automatico.');
 
 				
-					$this->form[] = ['label'=>'Utenze Qlik','name'=>'qlik_users','type'=>'child','columns'=>$columns, 'required' => true,'table'=>'qlik_users','foreign_key'=>'user_id'];
+					$this->form[] = ['label'=>'Qlik Users','name'=>'qlik_users','type'=>'child','columns'=>$columns, 'required' => true,'table'=>'qlik_users','foreign_key'=>'user_id'];
 
 		//QLIK USERS END
 		}
