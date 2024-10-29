@@ -117,20 +117,33 @@
         // Delete Component
         $(document).on('click', '.btn-delete-component', function () {
             const componentID = $(this).data('componentid');
-            const $this = $(this);
+            const $button = $(this);
+
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to recover this widget!",
                 icon: "warning",
-                buttons: true,
-            }).then(willDelete => {
+                buttons: {
+                    cancel: "Cancel",
+                    confirm: {
+                        text: "Yes, delete it!",
+                        value: true,
+                        visible: true,
+                        className: "btn-danger",
+                        closeModal: true
+                    }
+                }
+            }).then((willDelete) => {
                 if (willDelete) {
-                    $.get("{{ CRUDBooster::mainpath('delete-component') }}/" + componentID, () => {
-                        $this.parents('.border-box').remove();
+                    $.get(`{{ CRUDBooster::mainpath('delete-component') }}/${componentID}`, () => {
+                        $button.closest('.border-box').remove();
+                    }).fail(() => {
+                        swal("Error!", "There was a problem deleting the component.", "error");
                     });
                 }
             });
         });
+
 
         // Edit Component
         $(document).on('click', '.btn-edit-component', function () {
