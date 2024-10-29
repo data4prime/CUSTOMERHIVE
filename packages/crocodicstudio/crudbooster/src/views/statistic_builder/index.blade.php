@@ -376,7 +376,7 @@
                 <h4 class="modal-title">Modal title</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="card-body" style="padding: 30px;">
+            <div class="card-body modal-body" style="padding: 30px;">
                 <p>One fine body&hellip;</p>
             </div>
             <div class="card-footer">
