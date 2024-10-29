@@ -72,10 +72,10 @@
 
             try {
                 $raw = DB::raw($sql)->getValue(DB::getQueryGrammar());
-                echo $raw;
+                //echo $raw;
                 //replace ' with " to avoid error
-                $raw = str_replace("'", "", $raw);
-                $raw = str_replace('"', '', $raw);
+                //$raw = str_replace("'", "", $raw);
+                //$raw = str_replace('"', '', $raw);
                 $query = DB::select($raw);
                 foreach ($query as $r) {
                     $datax[] = isset($r->label) ? $r->label : '';
