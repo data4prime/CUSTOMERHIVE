@@ -100,7 +100,7 @@
 
 @push('head')
 <!-- jQuery UI 1.11.4 -->
-<style>
+<style type="text/css">
     .sort-highlight {
         border: 3px dashed #cccccc;
     }
@@ -110,7 +110,7 @@
         min-height: 150px;
     }
 
-    .layout-grid + .layout-grid {
+    .layout-grid+.layout-grid {
         border-left: 1px dashed transparent;
     }
 
@@ -122,11 +122,17 @@
         font-size: 20px;
         display: none;
         text-align: center;
-        padding: 3px 5px;
+        display: none;
+        padding: 3px 5px 3px 5px;
         background: #DD4B39;
         color: #ffffff;
         width: 70px;
-        border-radius: 5px 5px 0 0;
+        -webkit-border-bottom-right-radius: 5px;
+        -webkit-border-bottom-left-radius: 5px;
+        -moz-border-radius-bottomright: 5px;
+        -moz-border-radius-bottomleft: 5px;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
         position: absolute;
         margin-top: -20px;
         right: 0;
@@ -138,24 +144,27 @@
         color: #ffffff;
     }
 
-    @if (CRUDBooster::getCurrentMethod() == 'getBuilder')
+    .border-box:hover {
+        /*border:2px dotted #BC3F30;*/
+    }
+
+    @if(CRUDBooster::getCurrentMethod()=='getBuilder') 
         .border-box:hover .action {
-            display: block;
-        }
-    @endif
+        display: block;
+    }
 
     .card {
-        margin-bottom: 0;
+        margin-bottom: 0px;
     }
 
     .card-header,
     .inner-box,
-    .box-header.mb-3,
+    .box-header mb-3,
     .btn-add-widget {
         cursor: move;
     }
 
-    .connectedSortable {
+    @endif .connectedSortable {
         position: relative;
     }
 
@@ -172,7 +181,7 @@
 
     .area-loading i {
         position: absolute;
-        left: 50%;
+        left: 45%;
         top: 30%;
         transform: translate(-50%, -50%);
     }
@@ -184,66 +193,82 @@
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <script type="text/javascript">
     $(function () {
+
         var cloneSidebar = $('.control-sidebar').clone();
 
         @if (CRUDBooster::getCurrentMethod() == 'getBuilder')
-            createSortable();
-        @endif
+    createSortable();
 
-        function createSortable() {
-            $(".connectedSortable").sortable({
-                placeholder: "sort-highlight",
-                connectWith: ".connectedSortable",
-                handle: ".card-header, .inner-box, .box-header.mb-3, .btn-add-widget",
-                forcePlaceholderSize: true,
-                zIndex: 999999,
-                stop: function (event, ui) {
-                    var className = ui.item.attr('class');
-                    var idName = ui.item.attr('id');
+    @endif
 
-                    if (className === 'button-widget-area') {
-                        var areaName = $('#' + idName).parent('.connectedSortable').attr('id');
-                        var component = $('#' + idName + ' > a').data('component');
-                        $('#' + idName).remove();
-                        addWidget(id_cms_statistics, areaName, component);
-                        $('.control-sidebar').html(cloneSidebar);
-                        cloneSidebar = $('.control-sidebar').clone();
-                        createSortable();
-                    }
-                },
-                update: function (event, ui) {
-                    if (ui.sender) {
-                        var componentID = ui.item.attr('id');
-                        var areaName = $('#' + componentID).parent('.connectedSortable').attr("id");
-                        var index = $('#' + componentID).index();
+    function createSortable() {
+        $(".connectedSortable").sortable({
+            placeholder: "sort-highlight",
+            connectWith: ".connectedSortable",
+            handle: ".card-header, .inner-box, .box-header mb-3, .btn-add-widget",
+            forcePlaceholderSize: true,
+            zIndex: 999999,
+            stop: function (event, ui) {
+                console.log(ui.item.attr('class'));
+                var className = ui.item.attr('class');
+                var idName = ui.item.attr('id');
+                if (className == 'button-widget-area') {
+                    var areaname = $('#' + idName).parent('.connectedSortable').attr('id');
+                    var component = $('#' + idName + ' > a').data('component');
+                    console.log(areaname);
+                    $('#' + idName).remove();
+                    addWidget(id_cms_statistics, areaname, component);
+                    $('.control-sidebar').html(cloneSidebar);
+                    cloneSidebar = $('.control-sidebar').clone();
 
-                        $.post("{{ CRUDBooster::mainpath('update-area-component') }}", {
-                            componentid: componentID,
-                            sorting: index,
-                            areaname: areaName
-                        });
-                    }
+                    createSortable();
                 }
-            });
-        }
+            },
+            update: function (event, ui) {
+                if (ui.sender) {
+                    var componentID = ui.item.attr('id');
+                    var areaname = $('#' + componentID).parent('.connectedSortable').attr("id");
+                    var index = $('#' + componentID).index();
+
+
+                    $.post("{{CRUDBooster::mainpath('update-area-component')}}", {
+                        componentid: componentID,
+                        sorting: index,
+                        areaname: areaname
+                    }, function (response) {
+
+                    })
+                }
+            }
+        });
+    }
+
+        })
+
+</script>
+
+<script type="text/javascript">
+    $(function () {
 
         $('.connectedSortable').each(function () {
-            var areaName = $(this).attr('id');
+            var areaname = $(this).attr('id');
 
-            $.get("{{ CRUDBooster::adminpath('statistic_builder/list-component') }}/" + id_cms_statistics + "/" + areaName, function (response) {
+            $.get("{{CRUDBooster::adminpath('statistic_builder/list-component')}}/" + id_cms_statistics + "/" + areaname, function (response) {
                 if (response.components) {
+
                     $.each(response.components, function (i, obj) {
-                        var loadingDiv = $("<div id='area-loading-" + obj.componentID + "' class='area-loading'><i class='fa fa-spin fa-spinner'></i></div>");
-                        $('#' + areaName).append(loadingDiv);
-                        
-                        $.get("{{ CRUDBooster::adminpath('statistic_builder/view-component') }}/" + obj.componentID, function (view) {
-                            loadingDiv.remove();
-                            $('#' + areaName).append(view.layout);
-                        });
-                    });
+                        $('#' + areaname).append("<div id='area-loading-" + obj.componentID + "' class='area-loading'><i class='fa fa-spin fa-spinner'></i></div>");
+                        $.get("{{CRUDBooster::adminpath('statistic_builder/view-component')}}/" + obj.componentID, function (view) {
+                            console.log('View For CID ' + view.componentID);
+                            $('#area-loading-' + obj.componentID).remove();
+                            $('#' + areaname).append(view.layout);
+
+                        })
+                    })
                 }
-            });
-        });
+            })
+        })
+
 
         $(document).on('click', '.btn-delete-component', function () {
             var componentID = $(this).data('componentid');
@@ -251,19 +276,22 @@
 
             swal({
                 title: "Are you sure?",
-                text: "You will not be able to recover this widget!",
+                text: "You will not be able to recover this widget !",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
                 confirmButtonText: "Yes",
                 closeOnConfirm: true
-            }, function () {
-                $.get("{{ CRUDBooster::mainpath('delete-component') }}/" + componentID, function () {
-                    $this.parents('.border-box').remove();
-                });
-            });
-        });
+            },
+                function () {
 
+                    $.get("{{CRUDBooster::mainpath('delete-component')}}/" + componentID, function () {
+                        $this.parents('.border-box').remove();
+
+                    });
+                });
+
+        })
         $(document).on('click', '.btn-edit-component', function () {
             var componentID = $(this).data('componentid');
             var name = $(this).data('name');
@@ -272,28 +300,33 @@
             $('#modal-statistic .modal-body').html("<i class='fa fa-spin fa-spinner'></i> Please wait loading...");
             $('#modal-statistic').modal('show');
 
-            $.get("{{ CRUDBooster::mainpath('edit-component') }}/" + componentID, function (response) {
+            $.get("{{CRUDBooster::mainpath('edit-component')}}/" + componentID, function (response) {
                 $('#modal-statistic .modal-body').html(response);
-            });
-        });
+            })
+        })
 
         $('#modal-statistic .btn-submit').click(function () {
+
             $('#modal-statistic form .has-error').removeClass('has-error');
 
-            var requiredInputs = [];
-            $('#modal-statistic form').find('input[required], textarea[required], select[required]').each(function () {
+            var required_input = [];
+            $('#modal-statistic form').find('input[required],textarea[required],select[required]').each(function () {
                 var $input = $(this);
-                if (!$input.val()) {
-                    requiredInputs.push($input.attr('name'));
-                }
-            });
+                var $form_group = $input.parent('.mb-3 row');
+                var value = $input.val();
 
-            if (requiredInputs.length) {
+                if (value == '') {
+                    required_input.push($input.attr('name'));
+                }
+            })
+
+            if (required_input.length) {
                 setTimeout(function () {
-                    $.each(requiredInputs, function (i, name) {
-                        $('#modal-statistic form').find('[name="' + name + '"]').parent('.mb-3.row').addClass('has-error');
-                    });
+                    $.each(required_input, function (i, name) {
+                        $('#modal-statistic form').find('input[name="' + name + '"],textarea[name="' + name + '"],select[name="' + name + '"]').parent('.mb-3 row').addClass('has-error');
+                    })
                 }, 200);
+
                 return false;
             }
 
@@ -302,42 +335,45 @@
             $.ajax({
                 data: $('#modal-statistic form').serialize(),
                 type: 'POST',
-                url: "{{ CRUDBooster::mainpath('save-component') }}",
+                url: "{{CRUDBooster::mainpath('save-component')}}",
                 success: function () {
+
                     $button.removeClass('disabled').text('Save Changes');
                     $('#modal-statistic').modal('hide');
-                    window.location.href = "{{ Request::fullUrl() }}";
+                    window.location.href = "{{Request::fullUrl()}}";
                 },
                 error: function () {
-                    alert('Sorry, something went wrong!');
+                    alert('Sorry something went wrong !');
                     $button.removeClass('disabled').text('Save Changes');
                 }
-            });
-        });
-    });
+            })
+        })
+    })
 </script>
 @endpush
 
-<div id="modal-statistic" class="modal fade" tabindex="-1" role="dialog">
+
+<div id='modal-statistic' class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header justify-content-between">
-                <h4 class="modal-title">Modal Title</h4>
+            <div class="modal-header" style="justify-content: space-between;">
+                
+                <h4 class="modal-title">Modal title</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-4">
+            <div class="modal-body" style="padding: 30px;">
                 <p>One fine body&hellip;</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-submit" data-bs-loading-text="Saving..." autocomplete="off">
-                    Save Changes
-                </button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn-submit btn btn-primary" data-bs-loading-text="Saving..."
+                    autocomplete="off">Save changes</button>
             </div>
         </div>
-    </div>
-</div>
 
+<!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <div id='statistic-area'>
 
