@@ -115,7 +115,7 @@
         });
 
         // Delete Component
-        $(document).on('click', '.btn-delete-component', function () {
+        /*$(document).on('click', '.btn-delete-component', function () {
             const componentID = $(this).data('componentid');
             const $button = $(this);
 
@@ -142,7 +142,30 @@
                     });
                 }
             });
-        });
+        });*/
+
+        $(document).on('click', '.btn-delete-component', function () {
+            var componentID = $(this).data('componentid');
+            var $this = $(this);
+
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this widget !",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes",
+                closeOnConfirm: true
+            },
+                function () {
+
+                    $.get("{{CRUDBooster::mainpath('delete-component')}}/" + componentID, function () {
+                        $this.parents('.border-box').remove();
+
+                    });
+                });
+
+        })
 
 
         // Edit Component
