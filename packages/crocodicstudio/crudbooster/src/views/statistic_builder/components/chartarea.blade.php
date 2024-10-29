@@ -72,7 +72,7 @@
 
             try {
                 echo (DB::raw($sql));
-                $query = DB::select("Select name AS 'label', sales AS 'value' from mg_clienti");
+                $query = DB::select(DB::raw($sql));
                 foreach ($query as $r) {
                     $datax[] = isset($r->label) ? $r->label : '';
                     $datamerger[] = isset($r->value) ? $r->value : '';
