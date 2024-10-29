@@ -153,13 +153,13 @@
             $form.find('.has-error').removeClass('has-error');
             const requiredInputs = $form.find('input[required], textarea[required], select[required]').filter((_, input) => !$(input).val()).map((_, input) => $(input).attr('name')).toArray();
 
-            if (requiredInputs.length) {
-                setTimeout(() => requiredInputs.forEach(name => $form.find(`[name="${name}"]`).parent('.mb-3.row').addClass('has-error')), 200);
+            /*if (requiredInputs.length) {
+                setTimeout(
+                    () => requiredInputs.forEach(name => $form.find(`[name="${name}"]`).parent('.mb-3.row').addClass('has-error')), 200);
                 return false;
-            }
+            }*/
 
             const $button = $(this).text('Saving...').addClass('disabled');
-            console.log($form.serialize());
             $.ajax({
                 data: $form.serialize(),
                 type: 'POST',
