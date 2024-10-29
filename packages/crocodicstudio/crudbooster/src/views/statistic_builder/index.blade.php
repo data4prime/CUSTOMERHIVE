@@ -27,7 +27,8 @@
 <script src="{{ asset('vendor/crudbooster/assets/adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('vendor/crudbooster/assets/adminlte/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script type="text/javascript">
     $(function () {
         // AJAX Setup
