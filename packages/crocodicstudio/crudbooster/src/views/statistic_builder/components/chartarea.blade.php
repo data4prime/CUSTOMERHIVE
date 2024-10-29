@@ -71,7 +71,7 @@
             }
 
             try {
-                $raw = DB::raw($sql);
+                $raw = DB::raw($sql)->getValue(DB::getQueryGrammar());
                 //replace ' with " to avoid error
                 //$raw = str_replace("'", '"', $raw);
                 $query = DB::select($raw);
