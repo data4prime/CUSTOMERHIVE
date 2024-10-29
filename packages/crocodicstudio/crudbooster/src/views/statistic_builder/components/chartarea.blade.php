@@ -74,8 +74,8 @@
                 $raw = DB::raw($sql)->getValue(DB::getQueryGrammar());
                 echo $raw;
                 //replace ' with " to avoid error
-                //$raw = str_replace("'", '"', $raw);
-                //$query = DB::select($raw);
+                $raw = str_replace("'", '', $raw);
+                $query = DB::select($raw);
                 foreach ($query as $r) {
                     $datax[] = isset($r->label) ? $r->label : '';
                     $datamerger[] = isset($r->value) ? $r->value : '';
