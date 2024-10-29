@@ -7,7 +7,8 @@
             <p>[name]</p>
         </div>
         <div class="icon">
-            <i class="ion [icon]"></i>
+            <ion-icon name="[icon]"></ion-icon>
+            <!--<i class="ion [icon]"></i>-->
         </div>
         <a href="[link]" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
     </div>
