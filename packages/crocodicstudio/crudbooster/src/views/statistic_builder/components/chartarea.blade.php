@@ -73,8 +73,8 @@
             try {
                 $raw = DB::raw($sql);
                 //replace ' with " to avoid error
-                $raw = str_replace("'", '"', $raw);
-                $query = DB::statement($raw);
+                //$raw = str_replace("'", '"', $raw);
+                //$query = DB::statement($raw);
                 foreach ($query as $r) {
                     $datax[] = isset($r->label) ? $r->label : '';
                     $datamerger[] = isset($r->value) ? $r->value : '';
