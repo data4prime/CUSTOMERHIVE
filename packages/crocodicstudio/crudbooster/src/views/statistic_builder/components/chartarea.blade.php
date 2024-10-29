@@ -142,3 +142,16 @@
 {!! $value !!}
 @endif
 @endif
+
+<script defer>
+if (!window.location.href.includes('statistic_builder/builder')) {
+    //jquery get div with action class
+    var action = $('#{{$componentID}}').find('.action');
+    //make it disappear
+    action.hide();
+
+
+    
+
+}
+</script>
