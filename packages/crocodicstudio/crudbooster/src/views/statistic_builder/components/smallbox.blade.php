@@ -12,14 +12,25 @@
         <a href="[link]" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 
-    <!--<div class='action pull-right'>
+    <div class='action pull-right collapse'>
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Small Box'
             class='btn-edit-component'><i class='fa fa-pencil'></i></a>
         &nbsp;
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i
                 class='fa fa-trash'></i></a>
-    </div>-->
+    </div>
 </div>
+
+<script defer>
+if (window.location.href.includes('statistic_builder/builder')) {
+    //jquery get div with action class
+    var action = $('#{{$componentID}}').find('.action');
+
+    
+
+}
+</script>
+
 @elseif($command=='configuration')
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
