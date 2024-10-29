@@ -11,7 +11,7 @@
     </div>
 
     <div class='action pull-right'>
-        <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='card Area'
+        <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='ChartArea'
             class='btn-edit-component'><i class='fa fa-pencil'></i></a>
         &nbsp;
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i
@@ -71,6 +71,7 @@
             }
 
             try {
+                dd($sql);
                 $query = DB::select(DB::raw($sql));
                 foreach ($query as $r) {
                     $datax[] = isset($r->label) ? $r->label : '';
