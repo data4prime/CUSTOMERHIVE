@@ -74,7 +74,7 @@
                 $raw = DB::raw($sql);
                 //replace ' with " to avoid error
                 //$raw = str_replace("'", '"', $raw);
-                $query = DB::statement("Select name AS 'label', sales AS 'value' from mg_clienti");
+                $query = DB::select("Select name AS 'label', sales AS 'value' from mg_clienti");
                 foreach ($query as $r) {
                     $datax[] = isset($r->label) ? $r->label : '';
                     $datamerger[] = isset($r->value) ? $r->value : '';
