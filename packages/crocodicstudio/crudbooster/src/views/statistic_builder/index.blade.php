@@ -365,7 +365,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn-submit btn btn-primary" data-loading-text="Saving..."
+                <button type="button" class="btn-submit btn btn-primary" data-bs-loading-text="Saving..."
                     autocomplete="off">Save changes</button>
             </div>
         </div>
