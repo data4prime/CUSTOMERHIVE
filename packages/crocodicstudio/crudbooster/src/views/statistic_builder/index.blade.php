@@ -149,6 +149,7 @@
         $('#modal-statistic .btn-submit').click(function () {
             console.log('submit');
             const $form = $('#modal-statistic form');
+            console.log($form);
             $form.find('.has-error').removeClass('has-error');
             const requiredInputs = $form.find('input[required], textarea[required], select[required]').filter((_, input) => !$(input).val()).map((_, input) => $(input).attr('name')).toArray();
 
@@ -158,6 +159,7 @@
             }
 
             const $button = $(this).text('Saving...').addClass('disabled');
+            console.log($form.serialize());
             $.ajax({
                 data: $form.serialize(),
                 type: 'POST',
