@@ -354,11 +354,11 @@
 
 <div id='modal-statistic' class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <!--<div class="modal-content">
             <div class="modal-header" style="justify-content: space-between;">
                 
                 <h4 class="modal-title">Modal title</h4>
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 30px;">
                 <p>One fine body&hellip;</p>
@@ -368,7 +368,25 @@
                 <button type="button" class="btn-submit btn btn-primary" data-loading-text="Saving..."
                     autocomplete="off">Save changes</button>
             </div>
-        </div><!-- /.modal-content -->
+        </div>-->
+
+        <div class="card">
+            <div class="card-header" style="justify-content: space-between;">
+                
+                <h4 class="modal-title">Modal title</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="card-body" style="padding: 30px;">
+                <p>One fine body&hellip;</p>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn-submit btn btn-primary" data-loading-text="Saving..."
+                    autocomplete="off">Save changes</button>
+            </div>
+        </div>
+
+<!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
