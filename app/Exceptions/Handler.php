@@ -83,7 +83,7 @@ class Handler extends ExceptionHandler
 
 //Illuminate\\View\\ViewException
         if ($exception instanceof ViewException) {
-            return response()->view('errors.500', [], 500);
+            return response()->view('errors.503', [], 503);
         }
 
 
