@@ -102,12 +102,24 @@ $url = route($value);
                 // Aggiorna il contenuto
                 $content.html(updatedContent);
             })
-            .fail(function () {
+            .fail(function (jqXHR) {
                 // Gestione degli errori
-                $content.html("<p>Error loading content. Please check routes!</p>");
+                let errorMessage;
+
+                if (jqXHR.status === 404) {
+                    errorMessage = "<p>404 Not Found: The requested resource could not be found.</p>";
+                } else if (jqXHR.status === 500) {
+                    errorMessage = "<p>500 Internal Server Error: Something went wrong on the server.</p>";
+                } else {
+                    errorMessage = "<p>Error loading content. Please check routes!</p>";
+                }
+
+                // Mostra il messaggio di errore
+                $content.html(errorMessage);
             });
     });
 </script>
+
 
 
     <?php
