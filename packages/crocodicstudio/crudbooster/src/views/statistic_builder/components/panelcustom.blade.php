@@ -56,7 +56,7 @@ foreach($routeCollection as $key => $value) {
             strpos($controller, 'post') === false && 
             strpos($controller, 'Detail') === false && 
             strpos($controller, 'Edit') === false && 
-            strpos($controller, 'Delete') === false &&
+            strpos($controller, 'Delete') === false 
         ) {
             if (strpos($controller, 'Admin') !== false && strpos($controller, 'Controller') !== false) {
                                 <option {{(@$config->route == $value->getName()) ? "selected" : ""}} 

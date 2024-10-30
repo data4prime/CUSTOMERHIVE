@@ -1,5 +1,5 @@
 @php 
-
+/*
 $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
 
 
@@ -29,7 +29,7 @@ foreach($routeCollection as $key => $value) {
 
 }
 
-
+*/
 
 
 
