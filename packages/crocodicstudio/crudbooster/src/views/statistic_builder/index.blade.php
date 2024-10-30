@@ -16,7 +16,7 @@ foreach($routeCollection as $key => $value) {
             strpos($controller, 'Detail') === false && 
             strpos($controller, 'Edit') === false && 
             strpos($controller, 'Amin') === true &&
-            strpos($controller, 'Controller') === true &&
+            strpos($controller, 'Controller') === true
         ) {
         echo $controller.'<br>';
     }
