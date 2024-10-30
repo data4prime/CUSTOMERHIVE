@@ -54,7 +54,7 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
         } else {
             $method = '';
         }
-echo '#'$method.'#<br>';
+echo '#'.$method.'#<br>';
     @endphp
 
 
