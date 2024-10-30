@@ -11,7 +11,7 @@
     </div>
 
     <div class='action pull-right'>
-        <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='ChartArea'
+        <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Chart Area'
             class='btn-edit-component'><i class='fa fa-pencil'></i></a>
         &nbsp;
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i
@@ -72,11 +72,11 @@
 
             try {
                 $raw = DB::raw($sql)->getValue(DB::getQueryGrammar());
-                echo $raw;
+                //echo $raw;
                 //replace ' with " to avoid error
                 //$raw = str_replace("'", "", $raw);
                 //$raw = str_replace('"', '', $raw);
-                //$query = DB::select($raw);
+                $query = DB::select($raw);
                 foreach ($query as $r) {
                     $datax[] = isset($r->label) ? $r->label : '';
                     $datamerger[] = isset($r->value) ? $r->value : '';
