@@ -98,7 +98,7 @@
                 </div>
                 @endif
 
-                <div class="form-group has-feedback">
+                <div class="form-group has-feedback ">
                     <input autocomplete='off' type="text" class="form-control" name='email' required
                         placeholder="Email" />
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>

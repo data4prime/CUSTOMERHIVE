@@ -17,7 +17,24 @@ class MyHelper  {
       //no dirty part
       return $verbose_version;
     }
-    list($version, $garbage) = explode('-',$verbose_version);
+    //list($version, $garbage) = explode('-',$verbose_version);
+
+    $exploded = explode('.',$verbose_version);
+
+    if (isset($exploded[0])) {
+      $version = $exploded[0];
+    }  else {
+      $version = '';
+    }
+
+
+
+
+    if (isset($exploded[1])) {
+      $garbage = $exploded[1];
+    } else {
+      $garbage = '';
+    }
     
     return $version;
   }

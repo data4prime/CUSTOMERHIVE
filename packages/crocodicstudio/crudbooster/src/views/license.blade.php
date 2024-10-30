@@ -70,14 +70,14 @@
                 action="{{url(config('crudbooster.ADMIN_PATH').'/activate-license')}}">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
-                <div class="mb-3 row has-feedback">
+                <div class="mb-3 row has-feedback form-group">
                     <input autocomplete='off' type="text" class="form-control" name='email' required
                         placeholder="Email" />
                 </div>
 
 
 
-                <div class="mb-3 row has-feedback">
+                <div class="mb-3 row has-feedback form-group">
                     <input autocomplete='off' type="text" class="form-control" name='domain' required value="{{$tenant_domain_name}}"
                         placeholder="Domain" />
                 </div>
@@ -98,11 +98,11 @@
 -->
 
 
-                <div class="mb-3 row has-feedback">
+                <div class="mb-3 row has-feedback form-group">
                     <input autocomplete='off' type="number" class="form-control" name='clients_number' required
                         placeholder="Users Number" />
-                </div>
-                <div class="mb-3 row has-feedback">
+                </div> 
+                <div class="mb-3 row has-feedback form-group">
                     <input autocomplete='off' type="number" class="form-control" name='tenants_number' required
                         placeholder="Tenants Number" />
                 </div>
