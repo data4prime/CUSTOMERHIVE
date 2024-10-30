@@ -9,7 +9,8 @@ foreach($routeCollection as $key => $value) {
     $action = $value->getAction('controller');
     $controller = class_basename($action); 
 
-    if (!empty($controller)) {
+
+    if (!empty($controller) && strpos($controller, 'post') === false) {
         echo $controller.'<br>';
     }
 
