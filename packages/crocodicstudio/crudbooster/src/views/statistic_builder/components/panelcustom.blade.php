@@ -20,7 +20,7 @@
 @php 
 
 $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
-dd($routeCollection);
+
 
 @endphp
     <form method='post'>
@@ -36,6 +36,15 @@ dd($routeCollection);
             <select name='config[type]' class='form-control'>
                 <option {{(@$config->type == 'controller')?"selected":""}} value='controller'>Controller & Method</option>
                 <option {{(@$config->type == 'route')?"selected":""}} value='route'>Route Name</option>
+            </select>
+        </div>
+
+        <div class="mb-3 row">
+            <label>Type</label>
+            <select name='config[route]' class='form-control'>
+                @foreach($routeCollection as $value)
+                    <option {{(@$config->route == $value->getName())?"selected":""}} value='{{$value->getName()}}'>{{$value->getName()}}</option>
+                @endforeach
             </select>
         </div>
 
