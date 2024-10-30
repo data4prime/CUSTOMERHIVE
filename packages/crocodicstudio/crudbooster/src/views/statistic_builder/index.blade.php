@@ -2,12 +2,20 @@
 
 $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
 
-dd($routeCollection);
+//dd($routeCollection);
 
-//remove post routes
-foreach($routeCollection as $key => $value) {
-    //dd($value);
+foreach($routeCollection as $value) {
+
+    $action = $value->getAction('controller');
+    $controller = class_basename($action); 
+    $method = $value->getAction('method'); 
+    echo $method .'<br>';
+
+    $method = str_replace('@', '', $method);
 }
+
+
+
 
 @endphp
 
