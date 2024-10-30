@@ -21,6 +21,13 @@
 
 $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
 
+//remove post routes
+foreach($routeCollection as $key => $value) {
+    if($value->getMethods()[0] != 'GET') {
+        unset($routeCollection[$key]);
+    }
+}
+
 
 @endphp
     <form method='post'>
@@ -73,14 +80,16 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
 
 
     if($key == 'value') {
-/*
-    if ($config->type == 'controller') {
-        $url = action($value);
-    } elseif ($config->type == 'route') {
-        $url = route($value);
-    }
-*/
+
+
+
+
+
 $url = route($value);
+
+
+
+
     echo "<div id='content-$componentID'></div>";
     ?>
 
