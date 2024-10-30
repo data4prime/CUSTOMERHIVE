@@ -44,34 +44,27 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
         <div class="mb-3 row">
             <label>Route</label>
             <select name='config[value]' class='form-control'>
-@php
-foreach($routeCollection as $key => $value) {
+@foreach($routeCollection as $key => $value)
+    @php
+        $action = $value->getAction('controller');
+        $controller = class_basename($action);
+    @endphp
 
-    $action = $value->getAction('controller');
-    $controller = class_basename($action); 
+    @if (!empty($controller) && 
+        strpos($controller, 'post') === false && 
+        strpos($controller, 'Detail') === false && 
+        strpos($controller, 'Edit') === false && 
+        strpos($controller, 'Delete') === false)
+        
+        @if (strpos($controller, 'Admin') !== false && strpos($controller, 'Controller') !== false)
+            <option value="{{ $value->getName() }}" {{ @$config->route == $value->getName() ? 'selected' : '' }}>
+                {{ $controller }}
+            </option>
+        @endif
+        
+    @endif
+@endforeach
 
-
-    if (
-            !empty($controller) && 
-            strpos($controller, 'post') === false && 
-            strpos($controller, 'Detail') === false && 
-            strpos($controller, 'Edit') === false && 
-            strpos($controller, 'Delete') === false 
-        ) {
-            if (strpos($controller, 'Admin') !== false && strpos($controller, 'Controller') !== false) {
-                                <option {{(@$config->route == $value->getName()) ? "selected" : ""}} 
-                        value='{{$value->getName()}}'>
-                    {{ $controller  }} <!-- Mostra controller@method -->
-                </option>
-            }
-    }
-
-    
-
-
-
-}
-@endphp
 
             </select>
         </div>
