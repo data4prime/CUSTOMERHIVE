@@ -84,24 +84,31 @@ $url = route($value);
     echo "<div id='content-$componentID'></div>";
     ?>
 
-    <script>
-        $(function () {
-            $('#content-{{$componentID}}').html("<i class='fa fa-spin fa-spinner'></i> Please wait loading...");
-            $.get('{{$url}}', function (response) {
+<script>
+    $(function () {
+        const $content = $('#content-{{$componentID}}');
+        const loadingMessage = "<i class='fa fa-spin fa-spinner'></i> Please wait, loading...";
 
-                //from respose, we need to get the content_section id
-                var content_section = $(response).find('#content_section').html();
+        // Mostra il messaggio di caricamento
+        $content.html(loadingMessage);
 
-                //replace Back To List Data to Go to in content_section
-                content_section = content_section.replace('Back To List Data', 'Go to');
+        $.get('{{$url}}')
+            .done(function (response) {
+                const contentSection = $(response).find('#content_section').html();
 
+                // Sostituisci il testo specificato
+                const updatedContent = contentSection.replace('Back To List Data', 'Go to');
 
-                $('#content-{{$componentID}}').html(content_section);
-
-
+                // Aggiorna il contenuto
+                $content.html(updatedContent);
+            })
+            .fail(function () {
+                // Gestione degli errori
+                $content.html("<p>Error loading content. Please check routes!</p>");
             });
-        })
-    </script>
+    });
+</script>
+
 
     <?php
     }else {
