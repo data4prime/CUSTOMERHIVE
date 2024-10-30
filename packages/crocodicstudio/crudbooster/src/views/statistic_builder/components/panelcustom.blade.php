@@ -50,23 +50,13 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
         $controller = class_basename($action);
     @endphp
 
-    @if (!empty($controller) && 
-        strpos($controller, 'post') === false && 
-        strpos($controller, 'Detail') === false && 
-        strpos($controller, 'Edit') === false && 
-        strpos($controller, 'Delete') === false) &&
-        strpos($controller, 'Export') === false &&
-        strpos($controller, 'Import') === false && 
-        strpos($controller, '@tenant') === false &&
-        strpos($controller, '@group') === false 
-        
+
         @if (strpos($controller, 'getIndex') !== false && strpos($controller, 'getAdd') !== false)
             <option value="{{ $value->getName() }}" {{ @$config->route == $value->getName() ? 'selected' : '' }}>
                 {{ $controller }}
             </option>
         @endif
-        
-    @endif
+
 @endforeach
 
 
