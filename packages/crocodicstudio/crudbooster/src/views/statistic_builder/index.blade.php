@@ -4,15 +4,30 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
 
 //dd($routeCollection);
 
-foreach($routeCollection as $value) {
+foreach($routeCollection as $key => $value) {
 
     $action = $value->getAction('controller');
     $controller = class_basename($action); 
     $method = $value->getAction('method'); 
-    echo $controller.'<br>';
+
+
+    if (empty($controller)) {
+        unset($routeCollection[$key]);
+    }
 
     $method = str_replace('@', '', $method);
 }
+
+foreach($routeCollection as $key => $value) {
+
+    $action = $value->getAction('controller');
+    $controller = class_basename($action); 
+
+    echo $controller.'<br>';
+
+
+}
+
 
 
 

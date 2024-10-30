@@ -60,7 +60,7 @@ foreach($routeCollection as $key => $value) {
 
                 <option {{(@$config->route == $value->getName()) ? "selected" : ""}} 
                         value='{{$value->getName()}}'>
-                    {{ $controller . '@' . $method }} <!-- Mostra controller@method -->
+                    {{ $controller  }} <!-- Mostra controller@method -->
                 </option>
                 @endforeach
             </select>
