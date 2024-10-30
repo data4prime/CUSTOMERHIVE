@@ -43,7 +43,7 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
             <label>Type</label>
             <select name='config[route]' class='form-control'>
                 @foreach($routeCollection as $value)
-                    <option {{(@$config->route == $value->getName())?"selected":""}} value='{{$value->getName()}}'>{{$value->getName()}}</option>
+                    <option {{(@$config->route == $value->getName())?"selected":""}} value='{{$value->getName()}}'>{{$value->getAction('controller')}}</option>
                 @endforeach
             </select>
         </div>
