@@ -54,7 +54,9 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
         strpos($controller, 'post') === false && 
         strpos($controller, 'Detail') === false && 
         strpos($controller, 'Edit') === false && 
-        strpos($controller, 'Delete') === false)
+        strpos($controller, 'Delete') === false) &&
+        strpos($controller, 'Export') === false &&
+        strpos($controller, 'Import') === false 
         
         @if (strpos($controller, 'Admin') !== false && strpos($controller, 'Controller') !== false)
             <option value="{{ $value->getName() }}" {{ @$config->route == $value->getName() ? 'selected' : '' }}>
