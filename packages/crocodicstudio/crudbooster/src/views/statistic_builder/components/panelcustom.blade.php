@@ -48,7 +48,12 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
     @php
         $action = $value->getAction('controller');
         $controller = class_basename($action);
-        $method = explode('@', $controller)[1];
+        $method = explode('@', $controller);
+        if (isset($method[1])) {
+            $method = $method[1];
+        } else {
+            $method = '';
+        }
 echo $method.'<br>';
     @endphp
 
