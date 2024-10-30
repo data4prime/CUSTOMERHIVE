@@ -66,34 +66,47 @@
 
         // Sorting
         @if (CRUDBooster::getCurrentMethod() == 'getBuilder')
-        function createSortable() {
-            $(".connectedSortable").sortable({
-                placeholder: "sort-highlight",
-                connectWith: ".connectedSortable",
-                handle: ".card-header, .inner-box, .box-header.mb-3, .btn-add-widget",
-                forcePlaceholderSize: true,
-                zIndex: 999999,
-                stop: function (event, ui) {
-                    const idName = ui.item.attr('id');
-                    const areaName = $('#' + idName).parent('.connectedSortable').attr('id');
-                    const component = $('#' + idName + ' > a').data('component');
+    function createSortable() {
+        $(".connectedSortable").sortable({
+            placeholder: "sort-highlight",
+            connectWith: ".connectedSortable",
+            handle: ".card-header, .inner-box, .box-header mb-3, .btn-add-widget",
+            forcePlaceholderSize: true,
+            zIndex: 999999,
+            stop: function (event, ui) {
+                console.log(ui.item.attr('class'));
+                var className = ui.item.attr('class');
+                var idName = ui.item.attr('id');
+                if (className == 'button-widget-area') {
+                    var areaname = $('#' + idName).parent('.connectedSortable').attr('id');
+                    var component = $('#' + idName + ' > a').data('component');
+                    console.log(areaname);
                     $('#' + idName).remove();
-                    addWidget(areaName, component);
-                },
-                update: function (event, ui) {
-                    if (ui.sender) {
-                        const componentID = ui.item.attr('id');
-                        const areaName = $('#' + componentID).parent('.connectedSortable').attr("id");
-                        const index = $('#' + componentID).index();
-                        $.post("{{ CRUDBooster::mainpath('update-area-component') }}", {
-                            componentid: componentID,
-                            sorting: index,
-                            areaname: areaName
-                        });
-                    }
+                    addWidget(id_cms_statistics, areaname, component);
+                    $('.control-sidebar').html(cloneSidebar);
+                    cloneSidebar = $('.control-sidebar').clone();
+
+                    createSortable();
                 }
-            });
-        }
+            },
+            update: function (event, ui) {
+                if (ui.sender) {
+                    var componentID = ui.item.attr('id');
+                    var areaname = $('#' + componentID).parent('.connectedSortable').attr("id");
+                    var index = $('#' + componentID).index();
+
+
+                    $.post("{{CRUDBooster::mainpath('update-area-component')}}", {
+                        componentid: componentID,
+                        sorting: index,
+                        areaname: areaname
+                    }, function (response) {
+
+                    })
+                }
+            }
+        });
+    }
         createSortable();
         @endif
 
