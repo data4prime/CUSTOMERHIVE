@@ -81,6 +81,11 @@ class Handler extends ExceptionHandler
             return response()->view('errors.404', [], 404);
         }
 
+//Illuminate\\View\\ViewException
+        if ($exception instanceof ViewException) {
+            return response()->view('errors.500', [], 500);
+        }
+
 
         return parent::render($request, $exception);
     }
