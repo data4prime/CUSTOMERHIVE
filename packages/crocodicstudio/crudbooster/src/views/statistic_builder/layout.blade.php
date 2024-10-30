@@ -157,7 +157,7 @@
                     <div id='btn-panelcustom' class='button-widget-area'>
                         <a href="#" data-component='panelcustom' class='btn-add-widget add-panel-custom'>
                             <img src='{{asset("vendor/crudbooster/assets/statistic_builder/panel.png")}}' />
-                            <div class='title'>Panel Custom</div>
+                            <div class='title'>Module Panel</div>
                         </a>
                     </div>
                 </li>

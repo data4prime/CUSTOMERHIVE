@@ -11,7 +11,7 @@
         </div>
 
         <div class='action pull-right'>
-            <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Panel Custom' class='btn-edit-component'><i
+            <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Module Panel' class='btn-edit-component'><i
                         class='fa fa-pencil'></i></a> &nbsp;
             <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i class='fa fa-trash'></i></a>
         </div>
