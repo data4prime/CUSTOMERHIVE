@@ -31,22 +31,24 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
             <input class="form-control" required name='config[name]' type='text' value='{{@$config->name}}'/>
         </div>
 
-        <div class="mb-3 row">
+        <!--<div class="mb-3 row">
             <label>Type</label>
             <select name='config[type]' class='form-control'>
                 <option {{(@$config->type == 'controller')?"selected":""}} value='controller'>Controller & Method</option>
                 <option {{(@$config->type == 'route')?"selected":""}} value='route'>Route Name</option>
             </select>
-        </div>
+        </div>-->
 
         <div class="mb-3 row">
-            <label>Type</label>
+            <label>Route</label>
             <select name='config[route]' class='form-control'>
                 @foreach($routeCollection as $value)
                     @php
-                    $action = $value->getAction('controller'); // Ottieni l'azione completa
-                    $controller = class_basename($action); // Ottieni solo il nome del controller
-                    $method = $value->getAction('method'); // Ottieni il metodo
+                    $action = $value->getAction('controller');
+                    $controller = class_basename($action); 
+                    $method = $value->getAction('method'); 
+                    echo $method;
+
                     //remove @ char from method 
                     $method = str_replace('@', '', $method);
                 @endphp
