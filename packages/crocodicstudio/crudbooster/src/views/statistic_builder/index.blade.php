@@ -2,19 +2,6 @@
 
 $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
 
-$filtered = $routeCollection->filter(function 
-                                ($value, $key) {
-        $action = $value->getAction('controller');
-    $controller = class_basename($action); 
-    $method = $value->getAction('method'); 
-
-    if (empty($controller)) {
-        return false;
-    }
-
-
-});
-
 
 
 foreach($routeCollection as $key => $value) {
@@ -22,7 +9,10 @@ foreach($routeCollection as $key => $value) {
     $action = $value->getAction('controller');
     $controller = class_basename($action); 
 
-    echo $controller.'<br>';
+    if (!empty($controller)) {
+        echo $controller.'<br>';
+    }
+
 
 
 }
