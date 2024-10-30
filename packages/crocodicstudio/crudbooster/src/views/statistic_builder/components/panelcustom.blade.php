@@ -17,6 +17,12 @@
         </div>
     </div>
 @elseif($command=='configuration')
+@php 
+
+$routeCollection = Illuminate\Support\Facades\Route::getRoutes();
+dd($routeCollection);
+
+@endphp
     <form method='post'>
         <input type='hidden' name='_token' value='{{csrf_token()}}'/>
         <input type='hidden' name='componentid' value='{{$componentID}}'/>
@@ -59,8 +65,13 @@
                 //from respose, we need to get the content_section id
                 var content_section = $(response).find('#content_section').html();
 
+                //replace Back To List Data to Go to in content_section
+                content_section = content_section.replace('Back To List Data', 'Go to');
+
 
                 $('#content-{{$componentID}}').html(content_section);
+
+
             });
         })
     </script>
