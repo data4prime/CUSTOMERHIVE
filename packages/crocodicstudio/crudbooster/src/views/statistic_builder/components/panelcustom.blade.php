@@ -71,8 +71,9 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
 @elseif($command=='showFunction')
     <?php
 
-/*
+
     if($key == 'value') {
+/*
     if ($config->type == 'controller') {
         $url = action($value);
     } elseif ($config->type == 'route') {
