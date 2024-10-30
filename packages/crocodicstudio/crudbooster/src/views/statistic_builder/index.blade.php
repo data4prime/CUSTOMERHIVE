@@ -16,8 +16,13 @@ foreach($routeCollection as $key => $value) {
             strpos($controller, 'Detail') === false && 
             strpos($controller, 'Edit') === false 
         ) {
-        echo $controller.'<br>';
+        //if controller contains admin and controller 
+            if (strpos($controller, 'Admin') !== false && strpos($controller, 'Controller') !== false) {
+                echo $controller.'<br>';
+            }
     }
+
+    
 
 
 
