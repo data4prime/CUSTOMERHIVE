@@ -4,6 +4,7 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
 
 
 
+
 foreach($routeCollection as $key => $value) {
 
     $action = $value->getAction('controller');
@@ -14,9 +15,9 @@ foreach($routeCollection as $key => $value) {
             !empty($controller) && 
             strpos($controller, 'post') === false && 
             strpos($controller, 'Detail') === false && 
-            strpos($controller, 'Edit') === false 
+            strpos($controller, 'Edit') === false && 
+            strpos($controller, 'Delete') === false &&
         ) {
-        //if controller contains admin and controller 
             if (strpos($controller, 'Admin') !== false && strpos($controller, 'Controller') !== false) {
                 echo $controller.'<br>';
             }

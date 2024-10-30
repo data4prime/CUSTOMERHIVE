@@ -21,10 +21,7 @@
 
 $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
 
-//remove post routes
-foreach($routeCollection as $key => $value) {
-    //dd($value);
-}
+
 
 
 @endphp
@@ -47,22 +44,35 @@ foreach($routeCollection as $key => $value) {
         <div class="mb-3 row">
             <label>Route</label>
             <select name='config[value]' class='form-control'>
-                @foreach($routeCollection as $value)
-                    @php
-                    $action = $value->getAction('controller');
-                    $controller = class_basename($action); 
-                    $method = $value->getAction('method'); 
-                    echo $method;
+@php
+foreach($routeCollection as $key => $value) {
 
-                    //remove @ char from method 
-                    $method = str_replace('@', '', $method);
-                @endphp
+    $action = $value->getAction('controller');
+    $controller = class_basename($action); 
 
-                <option {{(@$config->route == $value->getName()) ? "selected" : ""}} 
+
+    if (
+            !empty($controller) && 
+            strpos($controller, 'post') === false && 
+            strpos($controller, 'Detail') === false && 
+            strpos($controller, 'Edit') === false && 
+            strpos($controller, 'Delete') === false &&
+        ) {
+            if (strpos($controller, 'Admin') !== false && strpos($controller, 'Controller') !== false) {
+                                <option {{(@$config->route == $value->getName()) ? "selected" : ""}} 
                         value='{{$value->getName()}}'>
                     {{ $controller  }} <!-- Mostra controller@method -->
                 </option>
-                @endforeach
+            }
+    }
+
+    
+
+
+
+}
+@endphp
+
             </select>
         </div>
 
