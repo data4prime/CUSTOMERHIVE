@@ -51,7 +51,7 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
     @endphp
 
 
-        @if (strpos($controller, 'getIndex') !== false && strpos($controller, 'getAdd') !== false)
+        @if (strpos($controller, 'Index') !== false && strpos($controller, 'Add') !== false)
             <option value="{{ $value->getName() }}" {{ @$config->route == $value->getName() ? 'selected' : '' }}>
                 {{ $controller }}
             </option>
