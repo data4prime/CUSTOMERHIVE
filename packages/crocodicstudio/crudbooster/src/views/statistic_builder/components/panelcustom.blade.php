@@ -61,11 +61,11 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
             </select>
         </div>
 
-        <div class="mb-3 row">
+        <!--<div class="mb-3 row">
             <label>Value</label>
             <input name='config[value]' type='text' class='form-control' value='{{@$config->value}}'/>
             <div class='help-block'>You must enter the valid value related with current TYPE unless, widget will not work</div>
-        </div>
+        </div>-->
 
     </form>
 @elseif($command=='showFunction')
@@ -82,7 +82,7 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
     <script>
         $(function () {
             $('#content-{{$componentID}}').html("<i class='fa fa-spin fa-spinner'></i> Please wait loading...");
-            $.get('{{$url}}', function (response) {
+            $.get('{!! route($url) !!}', function (response) {
 
                 //from respose, we need to get the content_section id
                 var content_section = $(response).find('#content_section').html();
