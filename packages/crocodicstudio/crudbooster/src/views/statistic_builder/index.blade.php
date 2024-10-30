@@ -1,6 +1,7 @@
 @php 
 
 $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
+$routeCollection = $routeCollection->toArray();
 
 //dd($routeCollection);
 
