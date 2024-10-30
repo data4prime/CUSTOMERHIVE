@@ -47,6 +47,8 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
                     $action = $value->getAction('controller'); // Ottieni l'azione completa
                     $controller = class_basename($action); // Ottieni solo il nome del controller
                     $method = $value->getAction('method'); // Ottieni il metodo
+                    //remove @ char from method 
+                    $method = str_replace('@', '', $method);
                 @endphp
 
                 <option {{(@$config->route == $value->getName()) ? "selected" : ""}} 
