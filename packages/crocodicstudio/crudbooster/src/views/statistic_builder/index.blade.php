@@ -9,7 +9,7 @@ foreach($routeCollection as $value) {
     $action = $value->getAction('controller');
     $controller = class_basename($action); 
     $method = $value->getAction('method'); 
-    echo $method .'<br>';
+    echo $controller.'<br>';
 
     $method = str_replace('@', '', $method);
 }
