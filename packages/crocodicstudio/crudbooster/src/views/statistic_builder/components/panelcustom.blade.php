@@ -23,7 +23,7 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
 
 //remove post routes
 foreach($routeCollection as $key => $value) {
-    if($value->getAction('method') != 'GET') {
+    if($value->methods()[0] != 'GET') {
         unset($routeCollection[$key]);
     }
 }
