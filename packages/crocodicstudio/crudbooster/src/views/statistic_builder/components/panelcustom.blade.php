@@ -41,7 +41,7 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
 
         <div class="mb-3 row">
             <label>Route</label>
-            <select name='config[route]' class='form-control'>
+            <select name='config[value]' class='form-control'>
                 @foreach($routeCollection as $value)
                     @php
                     $action = $value->getAction('controller');
@@ -70,19 +70,23 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
     </form>
 @elseif($command=='showFunction')
     <?php
+
+/*
     if($key == 'value') {
     if ($config->type == 'controller') {
         $url = action($value);
     } elseif ($config->type == 'route') {
         $url = route($value);
     }
+*/
+$url = route($value);
     echo "<div id='content-$componentID'></div>";
     ?>
 
     <script>
         $(function () {
             $('#content-{{$componentID}}').html("<i class='fa fa-spin fa-spinner'></i> Please wait loading...");
-            $.get('{!! route($url) !!}', function (response) {
+            $.get('{{$url}}', function (response) {
 
                 //from respose, we need to get the content_section id
                 var content_section = $(response).find('#content_section').html();
