@@ -54,11 +54,11 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
         } else {
             $method = '';
         }
-echo '#'.$method.'#<br>';
+
     @endphp
 
 
-        @if ($method == 'getIndex' && $method == 'getAdd')
+        @if ($method == 'getIndex' || $method == 'getAdd')
             <option value="{{ $value->getName() }}" {{ @$config->route == $value->getName() ? 'selected' : '' }}>
                 {{ $controller }}
             </option>
