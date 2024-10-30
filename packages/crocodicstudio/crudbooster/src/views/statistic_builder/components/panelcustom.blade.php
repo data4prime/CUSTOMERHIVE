@@ -58,7 +58,7 @@ echo $method.'<br>';
     @endphp
 
 
-        @if (strpos($controller, 'Index') !== false && strpos($controller, 'Add') !== false)
+        @if ($method == 'getIndex' && $method == 'getAdd')
             <option value="{{ $value->getName() }}" {{ @$config->route == $value->getName() ? 'selected' : '' }}>
                 {{ $controller }}
             </option>
