@@ -11,7 +11,7 @@
     </div>
 
     <div class='action pull-right'>
-        <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='card Area'
+        <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Chart Line'
             class='btn-edit-component'><i class='fa fa-pencil'></i></a>
         &nbsp;
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i
@@ -130,3 +130,16 @@
 {!! $value !!}
 @endif
 @endif
+
+<script defer>
+if (!window.location.href.includes('statistic_builder/builder')) {
+    //jquery get div with action class
+    var action = $('#{{$componentID}}').find('.action');
+    //make it disappear
+    action.hide();
+
+
+    
+
+}
+</script>
