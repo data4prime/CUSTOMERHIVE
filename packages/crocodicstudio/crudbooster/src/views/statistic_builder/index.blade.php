@@ -1,23 +1,21 @@
 @php 
 
 $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
-$routeCollection = $routeCollection->toArray();
 
-//dd($routeCollection);
-
-foreach($routeCollection as $key => $value) {
-
-    $action = $value->getAction('controller');
+$filtered = $routeCollection->filter(function 
+                                ($value, $key) {
+        $action = $value->getAction('controller');
     $controller = class_basename($action); 
     $method = $value->getAction('method'); 
 
-
     if (empty($controller)) {
-        unset($routeCollection[$key]);
+        return false;
     }
 
-    $method = str_replace('@', '', $method);
-}
+
+});
+
+
 
 foreach($routeCollection as $key => $value) {
 
