@@ -101,7 +101,7 @@ foreach($forms as $index=>$form) {
 @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/component.blade.php')))
 @include('vendor.crudbooster.type_components.'.$type.'.component')
 @else
-<p class='text-danger'>{{$type}} is not found in type component system</p><br />
+<p class='text-danger'>{{$type}} {!! __('crudbooster.not_found_type_component') !!}</p><br />
 @endif
 <?php
 }

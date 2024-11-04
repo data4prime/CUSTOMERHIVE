@@ -30,9 +30,9 @@
       <table class='table table-striped table-bordered'>
         <thead>
           <tr>
-            <th>Name</th>
+            <th>{!! __('crudbooster.name') !!}</th>
             <th>Email</th>
-            <th>Photo</th>
+            <th>{!! __('crudbooster.photo') !!}</th>
             <th></th>
           </tr>
         </thead>

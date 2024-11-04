@@ -16,7 +16,7 @@
 
     <div class="card card-default">
       <div class="card-header">
-        <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Add member</strong>
+        <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! __('crudbooster.add_member') !!}</strong>
       </div>
 
       <div class="card-body" style="padding:20px 0px 0px 0px">
@@ -78,7 +78,7 @@
   <!-- List members -->
   <div class="box">
     <div class="box-header mb-3 mb-3">
-      <h4>{{ $group->name }} Members</h4>
+      <h4>{{ $group->name }} {!! __('crudbooster.members') !!}</h4>
     </div>
     <div class="box-body table-responsive no-padding">
       <form id='form-table' method='post' action='{{CRUDBooster::mainpath("action-selected")}}'>
@@ -88,10 +88,10 @@
           <thead>
             <tr>
               <th style="width:25px;"><!-- primary --></th>
-              <th>Name</th>
+              <th>{!! __('crudbooster.name') !!}</th>
               <th>Email</th>
-              <th>Photo</th>
-              <th>Privilege</th>
+              <th>{!! __('crudbooster.photo') !!}</th>
+              <th>{!! __('crudbooster.privilege') !!}</th>
               <th></th>
             </tr>
           </thead>

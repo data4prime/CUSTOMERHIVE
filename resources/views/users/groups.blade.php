@@ -25,7 +25,7 @@
     <div class="card card-default">
       <div class="card-header">
         <strong>
-          <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Add group
+          <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! __('crudbooster.button_add_group') !!} 
         </strong>
       </div>
 

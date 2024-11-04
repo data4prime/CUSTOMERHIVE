@@ -87,8 +87,8 @@
         <table class='table table-striped table-bordered'>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Description</th>
+              <th>{!! __('crudbooster.name') !!}</th>
+              <th>{!! __('crudbooster.description) !!}</th>
               <th></th>
             </tr>
           </thead>

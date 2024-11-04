@@ -141,7 +141,7 @@ var hidden_app = parent.document.getElementById('mashup_app_hidden');
   <div id="{{$mashup->appid}}" >
 
 
-  <div id="title">Loading Qlik App. Please wait.</div>
+  <div id="title">{!! __('crudbooster.qlik_app_loading') !!}</div>
 
 <input type="hidden" id="state_page" name="state_page">
 

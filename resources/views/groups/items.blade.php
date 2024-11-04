@@ -19,7 +19,7 @@
 
     <div class="card card-default">
       <div class="card-header">
-        <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Allow Item</strong>
+        <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i>{!! __('crudbooster.allow_item') !!}</strong>
       </div>
 
       <div class="card-body" style="padding:20px 0px 0px 0px">
@@ -81,7 +81,7 @@
   <!-- List members -->
   <div class="box">
     <div class="box-header mb-3 mb-3">
-      <h4>{{ $group->name }} Allowed Items</h4>
+      <h4>{{ $group->name }} {!! __('crudbooster.allowed_items') !!}</h4>
     </div>
     <div class="box-body table-responsive no-padding">
       <form id='form-table' method='post' action='{{CRUDBooster::mainpath("action-selected")}}'>
@@ -90,10 +90,10 @@
         <table class='table table-striped table-bordered'>
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Subtitle</th>
+              <th>{!! __('crudbooster.title') !!}</th>
+              <th>{!! __('crudbooster.subtitle') !!}</th>
               <th>Url</th>
-              @php echo isset($item->description) ? "<th>Description</th>" : ""; @endphp
+              @php echo isset($item->description) ? "<th>{!! __('crudbooster.description') !!}</th>" : ""; @endphp
               <th></th>
             </tr>
           </thead>

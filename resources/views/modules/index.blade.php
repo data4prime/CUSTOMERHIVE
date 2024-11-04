@@ -9,10 +9,10 @@
     <table class='table table-striped table-bordered'>
       <thead>
           <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Action</th>
+            <th>{!! __('crudbooster.name') !!}</th>
+            <th>{!! __('crudbooster.description) !!}</th>
+            <th>{!! __('crudbooster.price') !!}</th>
+            <th>{!! __('crudbooster.action') !!}</th>
            </tr>
       </thead>
       <tbody>

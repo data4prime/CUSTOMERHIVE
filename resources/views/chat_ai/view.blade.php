@@ -36,14 +36,14 @@ crocodicstudio\crudbooster\helpers\ChatAIHelper::getToken($row->id);
         <div class="media media-chat">
                   <img class="avatar" src="/images/user/chatai.jpg" alt="...">
                     <div class="media-body">
-                    <p>Ciao</p>
+                    <p>{!! __('crudbooster.hello') !!}</p>
 
                   </div>
                     <div class="media-body">
-                    <p>Sono il tuo assistente AI</p>
+                    <p>{!! __('crudbooster.i_am_your_chatai') !!}</p>
                   </div>
                     <div class="media-body">
-                    <p>Come posso aiutarti?</p>
+                    <p>{!! __('crudbooster.not_found_type_component') !!}</p>
                   </div>
                   <!--<div class="media-body">
                     <p>Ciao</p>
@@ -75,7 +75,7 @@ crocodicstudio\crudbooster\helpers\ChatAIHelper::getToken($row->id);
         <div class="chat-input">
             <input type="text" id="publisher-input-{{$row->id}}" style="margin-right: 5px ;" class="form-control" placeholder="Chiedi qualcosa...">
             <div class="input-group-append">
-                <button id="send-btn-{{$row->id}}" class="btn btn-primary" type="button">Invia</button>
+                <button id="send-btn-{{$row->id}}" class="btn btn-primary" type="button">{!! __('crudbooster.send') !!}</button>
             </div>
         </div>
     </div>

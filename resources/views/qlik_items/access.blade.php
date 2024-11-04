@@ -77,7 +77,7 @@
   <!-- List members -->
   <div class="box">
     <div class="box-header mb-3 mb-3">
-      <h4>Authorized</h4>
+      <h4>{!! __('crudbooster.authorized') !!}</h4>
     </div>
     <div class="box-body table-responsive no-padding">
       <form id='form-table' method='post' action='{{CRUDBooster::mainpath("action-selected")}}'>
@@ -86,8 +86,8 @@
         <table class='table table-striped table-bordered'>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Description</th>
+              <th>{!! __('crudbooster.name') !!}</th>
+              <th>{!! __('crudbooster.description') !!}</th>
               <th></th>
             </tr>
           </thead>

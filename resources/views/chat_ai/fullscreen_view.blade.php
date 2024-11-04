@@ -194,9 +194,9 @@ h4.chat-title {
         <div class="media media-chat">
                   <img class="avatar" src="/images/user/chatai.jpg" alt="...">
                   <div class="media-body">
-                    <p>Ciao</p>
-                    <p>Sono il tuo assistente AI</p>
-                    <p>Come posso aiutarti?</p>
+                    <p>{!! __('crudbooster.hello') !!}</p>
+                    <p>{!! __('crudbooster.i_am_your_chatai') !!}</p>
+                    <p>{!! __('crudbooster.not_found_type_component') !!}</p>
                   </div>
                 </div>
     @if ($chat_messages)
@@ -223,7 +223,7 @@ h4.chat-title {
         <div class="chat-input">
             <input type="text" id="publisher-input" style="margin-right: 5px ;" class="form-control" placeholder="Chiedi qualcosa...">
             <div class="input-group-append">
-                <button id="send-btn" class="btn btn-primary" type="button">Invia</button>
+                <button id="send-btn" class="btn btn-primary" type="button">{!! __('crudbooster.send') !!}</button>
             </div>
         </div>
     </div>
