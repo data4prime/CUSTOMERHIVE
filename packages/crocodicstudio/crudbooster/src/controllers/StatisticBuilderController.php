@@ -332,6 +332,11 @@ class StatisticBuilderController extends CBController
         $arr['slug'] = str_slug($arr['name']);
     }
 
+    public function hook_before_edit(&$postdata, $id)
+    {
+        $postdata['slug'] = str_slug($postdata['name']);
+    }
+
     public function mashup($componentID) {
 
             $mashups = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();

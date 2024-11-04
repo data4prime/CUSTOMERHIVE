@@ -115,7 +115,7 @@ class MenusController extends CBController
   					$('#form-group-qlik_slug,#form-group-path').hide();
             $('#form-group-target_layout').hide();
   					$('#form-group-frame_width,#form-group-frame_height').hide();
-            $('#form-group-statistic_slug,#form-group-chat_ai').hide();
+            $('#form-group-chat_ai').hide();
   					$('#statistic_slug').prop('required',true);
   					$('#form-group-statistic_slug label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
   				}
@@ -754,6 +754,7 @@ class MenusController extends CBController
 
     if ($postdata['type'] == 'Statistic') {
       $stat = CRUDBooster::first('cms_statistics', ['id' => $postdata['statistic_slug']]);
+
       $stat = isset($stat) ? $stat : null;
       $postdata['path'] = 'statistic_builder/show/' . (isset($stat) && $stat != null) ? $stat->slug : '';
     } elseif ($postdata['type'] == 'Module') {
