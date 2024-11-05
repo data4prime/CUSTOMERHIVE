@@ -101,7 +101,8 @@
                 })
 
                 $(document).on('click', '.tr-response', function () {
-                    console.log('tr response clicked');
+                    //console.log('tr response clicked');
+/*
                     var is_check = $(this).find('select').val();
                     if (is_check == '1') {
                         $(this).find('select').val(0);
@@ -110,6 +111,7 @@
                         $(this).find('select').val(1);
                         $(this).addClass('success');
                     }
+*/
                 })
             })
 

@@ -627,12 +627,18 @@ class ModulsController extends CBController
 
     $module = CRUDBooster::getCurrentModule();
 
+
+
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
       CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
     $module = Modules::find($id);
+    //if $modules['table_name'] is not set, go back
+    if (!isset($module['table_name'])) {
+      return redirect()->back();
+    }
 
     if ($module['table_name'] == 'new') {
       // creating new table
@@ -700,7 +706,18 @@ class ModulsController extends CBController
 
     $row = DB::table('cms_moduls')->where('id', $id)->first();
 
+    if (!$row) {
+
+      return redirect()->back();
+
+    }
+
     $columns = CRUDBooster::getTableColumns($row->table_name);
+
+    //if $columns is empty, go back
+    if (empty($columns)) {
+      return redirect()->back();
+    }
 
     $columns_human_readable = array();
     foreach ($columns as $column) {
@@ -832,6 +849,18 @@ class ModulsController extends CBController
 
     $row = DB::table('cms_moduls')->where('id', $id)->first();
 
+    if (!$row) {
+
+      return redirect()->back();
+
+    }
+
+    if (!$row) {
+
+      return redirect()->back();
+
+    }
+
     $columns = CRUDBooster::getTableColumns($row->table_name);
 
     if (file_exists(app_path('Http/Controllers/' . $row->controller . '.php'))) {
@@ -959,6 +988,12 @@ class ModulsController extends CBController
     }
 
     $row = DB::table('cms_moduls')->where('id', $id)->first();
+
+    if (!$row) {
+
+      return redirect()->back();
+
+    }
 
     $data = [];
     $data['id'] = $id;

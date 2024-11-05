@@ -25,7 +25,7 @@
     <div class='main-menu'>
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu">
-        <li class="header">{{__("crudbooster.Menu_Navigation")}}
+        <li class="header">{{__("crudbooster.menu_navigation")}}
           <div class="my-collapse-sidebar pull-right" data-collapse-btn="1">
             <i class="fa fa-minus"></i>
           </div>

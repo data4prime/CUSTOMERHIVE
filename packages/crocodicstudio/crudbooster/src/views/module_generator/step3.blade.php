@@ -221,7 +221,8 @@
                     <tr>
                         <th>List Column Name</th>
                         <th>Database Column Name</th>
-                        <th colspan='2'>Join (Optional)</th>
+                        <th>Join Table (Optional)</th>
+                        <th>Join Column (Optional)</th>
                         <th>CallbackPHP</th>
                         <th width="90px">Width (px)</th>
                         <th width='80px'>Image</th>

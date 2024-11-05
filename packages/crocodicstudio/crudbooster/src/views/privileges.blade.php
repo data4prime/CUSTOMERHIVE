@@ -151,47 +151,53 @@
                 <th>{{trans('crudbooster.privileges_module_list_delete')}}</th>
               </tr>
               <?php
-                              /**
-                              * Check all vertically initially checked if enabled on all modules
-                              */
-                              //list of privilege modes
-                              $modes = ['is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete'];
-                              //set all as initially checked
-                              foreach ($modes as $mode) {
-                                if(isset($roles) && isset($roles->{$mode})) {
-                                  if ($roles->{$mode} != 1) {
-                                    $vertical_checked[$mode] = 'checked';
-                                  }
-                                  
-                                }
-                              }
-                              //loop through modules
-                              foreach ($moduls as $module) {
-
-                                $roles = DB::table('cms_privileges_roles')
-                                              ->where('id_cms_moduls', $module->id)
-                                              ->where('id_cms_privileges', isset($row->id) ? $row->id : 0)
-                                              ->toSql();
 
 
-                                //check if each mode is disabled
-                                foreach ($modes as $mode) {
-                                  //if disabled..
-                                  if( isset($roles) && isset($roles->{$mode}) && $roles->{$mode} != 1) {
-                                    //..then uncheck the Check all vertical checkbox
-                                    $vertical_checked[$mode] = '';
-                                  }
-                                }
-                              }
+/**
+ * Check all vertically initially checked if enabled on all modules
+ */
 
-                              if(!isset($vertical_checked)) {
-                                $vertical_checked = [];
-                                foreach ($modes as $mode) {
-                                  $vertical_checked[$mode] = '';
-                                }
-                                
-                                
-                              }
+// List of privilege modes
+$modes = ['is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete'];
+
+// Initialize vertical checked array to track checkbox states
+$vertical_checked = [];
+
+// Set all as initially unchecked
+foreach ($modes as $mode) {
+    $vertical_checked[$mode] = ''; // Initially, all checkboxes are unchecked
+}
+
+// Loop through modules
+foreach ($moduls as $module) {
+    // Get the role settings for the current module and privilege
+    $roles = DB::table('cms_privileges_roles')
+                ->where('id_cms_moduls', $module->id)
+                ->where('id_cms_privileges', isset($row->id) ? $row->id : 0)
+                ->first(); // Use first() to get the actual record, not the SQL string
+
+    // Check if roles are returned and loop through modes to check if they are enabled
+    if ($roles) {
+        foreach ($modes as $mode) {
+            // If the current mode is not enabled (not equal to 1)
+            if (isset($roles->{$mode}) && $roles->{$mode} != 1) {
+                // Uncheck the Check All Vertical checkbox for this mode
+                $vertical_checked[$mode] = ''; 
+            } else {
+                // If it's enabled, make sure it's checked
+                $vertical_checked[$mode] = 'checked'; 
+            }
+        }
+    }
+}
+
+// If no vertical checked values were set, initialize them as unchecked
+if (empty($vertical_checked)) {
+    foreach ($modes as $mode) {
+        $vertical_checked[$mode] = ''; // All initially unchecked
+    }
+}
+//dd($vertical_checked);
                             ?>
               <tr>
                 <th>&nbsp;</th>
@@ -243,13 +249,21 @@
                   <?php echo $no++;?>
                 </td>
                 <td>{{$modul->name}}</td>
-                <td class='info' align="center">
+                <!--<td class='info' align="center">
                   <input type='checkbox' title='Check All Horizontal' <?php ( (isset($roles->is_visible) &&
                   isset($roles->is_create) && isset($roles->is_read) && isset($roles->is_edit) &&
                   isset($roles->is_delet)) && ($roles->is_visible && $roles->is_create &&
                   $roles->is_read && $roles->is_edit && $roles->is_delete)) ? "checked" : ""?>
                   class='select_horizontal'/>
+                </td>-->
+
+                <td class='info' align="center">
+                    <input type='checkbox' title='Check All Horizontal' 
+                          <?php echo (isset($roles->is_visible) && isset($roles->is_create) && isset($roles->is_read) && isset($roles->is_edit) && isset($roles->is_delete) && 
+                                      $roles->is_visible && $roles->is_create && $roles->is_read && $roles->is_edit && $roles->is_delete) ? "checked" : ""; ?>
+                          class='select_horizontal'/>
                 </td>
+
                 <td class='active' align="center">
                   <input type='checkbox' class='is_visible' name='privileges[<?php echo $modul->id ?>][is_visible]'
                     <?php echo @$roles->is_visible ? "checked" : ""?> value='1'/>

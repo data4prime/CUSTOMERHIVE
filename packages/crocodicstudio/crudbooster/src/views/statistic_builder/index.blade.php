@@ -385,6 +385,13 @@ foreach($routeCollection as $key => $value) {
                 }
             })
         })
+
+        // in Enter is pressed
+        $('#modal-statistic').on('keypress', 'input', function (e) {
+            if (e.which == 13) {
+                $('#modal-statistic .btn-submit').click();
+            }
+        })
     })
 </script>
 @endpush
