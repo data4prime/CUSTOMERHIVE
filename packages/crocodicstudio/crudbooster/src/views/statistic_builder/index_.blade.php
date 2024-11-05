@@ -149,12 +149,12 @@
             var $this = $(this);
 
             swal({
-                title: "Are you sure?",
-                text: "You will not be able to recover this widget !",
+                title: "{{ __('crudbooster.delete_title_confirm') }}",
+                text: "{{ __('crudbooster.you_will_not_be_able_to_recover_this_widget') }} !",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Yes",
+                confirmButtonText: "{{ __('crudbooster.confirmButtonText') }}",
                 closeOnConfirm: true
             },
                 function () {
@@ -227,8 +227,8 @@
                 <p>One fine body&hellip;</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-submit" data-bs-loading-text="Saving..." autocomplete="off">Save Changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('crudbooster.button_close') }}</button>
+                <button type="button" class="btn btn-primary btn-submit" data-bs-loading-text="Saving..." autocomplete="off">{{ __('crudbooster.save_changes') }}</button>
             </div>
         </div>
     </div>

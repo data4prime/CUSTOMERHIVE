@@ -243,7 +243,7 @@
             <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/module_generator')) ? 'active' : '' }}">
               <a href="/{{ config('crudbooster.ADMIN_PATH')}}/module_generator/enable">
                 <i class='fa fa-wrench'></i>
-                <span>Enable/Disable Modules</span>
+                <span>{{ trans('crudbooster.enable_disable') }} {{ trans('crudbooster.modules') }}</span>
               </a>
             </li>
           </ul>

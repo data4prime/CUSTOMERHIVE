@@ -312,12 +312,12 @@ foreach($routeCollection as $key => $value) {
             var $this = $(this);
 
             swal({
-                title: "Are you sure?",
-                text: "You will not be able to recover this widget !",
+                title: "{{ __('crudbooster.delete_title_confirm') }}",
+                text: "{{ __('crudbooster.you_will_not_be_able_to_recover_this_widget') }} !",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Yes",
+                confirmButtonText: "{{ __('crudbooster.confirmation_yes') }}",
                 closeOnConfirm: true
             },
                 function () {

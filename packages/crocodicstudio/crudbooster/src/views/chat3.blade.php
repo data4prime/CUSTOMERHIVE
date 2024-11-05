@@ -231,9 +231,9 @@ h4.chat-title {
         <div class="d-flex mb-3 media-chat">
             <img class="avatar me-2" src="/images/user/chatai.jpg" alt="Avatar AI">
             <div>
-                <div class="media-body">Ciao</div>
-                <div class="media-body">Sono il tuo assistente AI</div>
-                <div class="media-body">Come posso aiutarti?</div>
+                <div class="media-body">{!! __('crudbooster.hello') !!}</div>
+                <div class="media-body">{!! __('crudbooster.i_am_your_chatai') !!}</div>
+                <div class="media-body">{!! __('crudbooster.not_found_type_component') !!}</div>
             </div>
         </div>
 

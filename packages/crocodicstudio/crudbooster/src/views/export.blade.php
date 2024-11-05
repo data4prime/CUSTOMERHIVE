@@ -21,7 +21,7 @@
     <tbody>
         @if(count($response['result'])==0)
         <tr class='warning'>
-            <td colspan='{{count($columns)+1}}' align="center">No Data Avaliable</td>
+            <td colspan='{{count($columns)+1}}' align="center">{{ trans('crudbooster.table_data_not_found') }}</td>
         </tr>
         @else
         @foreach($response['result'] as $row)

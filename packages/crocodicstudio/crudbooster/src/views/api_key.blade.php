@@ -4,18 +4,18 @@
 
 <ul class="nav flex-row">
     <li class="nav-item">
-        <a class="nav-link active" href="https://staging.thecustomerhive.com/admin/api_generator">
-            <i class="fa fa-file"></i> API Documentation
+        <a class="nav-link active" href="/admin/api_generator">
+            <i class="fa fa-file"></i> {{ trans('crudbooster.api_documentation') }}
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="https://staging.thecustomerhive.com/admin/api_generator/screet-key">
-            <i class="fa fa-key"></i> API Secret Key
+        <a class="nav-link" href="/admin/api_generator/screet-key">
+            <i class="fa fa-key"></i> {{ trans('crudbooster.api_secret_key') }}
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="https://staging.thecustomerhive.com/admin/api_generator/generator">
-            <i class="fa fa-cog"></i> API Generator
+        <a class="nav-link" href="/admin/api_generator/generator">
+            <i class="fa fa-cog"></i> {{ trans('crudbooster.api_generator') }}
         </a>
     </li>
 </ul>
@@ -26,8 +26,8 @@
         <div class='box-body'>
 
 
-            <p><a title='Generate API Key' class='btn btn-primary' href='javascript:void(0)' onclick='generate_screet_key()'><i class='fa fa-key'></i> Generate
-                    Secret Key</a></p>
+            <p><a title='Generate API Key' class='btn btn-primary' href='javascript:void(0)' onclick='generate_screet_key()'>
+                <i class='fa fa-key'></i>{{ trans('crudbooster.Generate_Screet_Key') }}</a></p>
 
             <table id='table-apikey' class='table table-striped table-bordered'>
                 <thead>
@@ -54,14 +54,16 @@
                                 <a class='btn btn-sm btn-default' href='{{ CRUDBooster::mainpath("status-apikey?id=$row->id&status=1") }}'>Active</a>
                             @endif
 
-                            <a class='btn btn-sm btn-danger' href='javascript:void(0)' onclick='deleteApi({{$row->id}})'>Delete</a>
+                            <a class='btn btn-sm btn-danger' href='javascript:void(0)' onclick='deleteApi({{$row->id}})'>
+                                {{ trans('crudbooster.delete_button') }}
+                            </a>
                         </td>
                     </tr>
                 @endforeach
                 @if(count($apikeys)==0)
                     <tr class='no-screetkey'>
-                        <td colspan='5' align="center">There is no secret key found, <a href='javascript:void(0)' onclick='generate_screet_key()'>Click here to
-                                generate one</a></td>
+                        <td colspan='5' align="center">{{ trans('crudbooster.no_secret_key_found') }}, <a href='javascript:void(0)' onclick='generate_screet_key()'>
+                                {{ trans('crudbooster.click_here_to_generate_one') }}</a></td>
                     </tr>
                 @endif
                 </tbody>

@@ -23,18 +23,18 @@
 
         <ul class="nav flex-row">
             <li class="nav-item">
-                <a class="nav-link active" href="https://staging.thecustomerhive.com/admin/api_generator">
-                    <i class="fa fa-file"></i> API Documentation
+                <a class="nav-link active" href="/admin/api_generator">
+                    <i class="fa fa-file"></i> {{ trans('crudbooster.api_documentation') }}
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="https://staging.thecustomerhive.com/admin/api_generator/screet-key">
-                    <i class="fa fa-key"></i> API Secret Key
+                <a class="nav-link" href="/admin/api_generator/screet-key">
+                    <i class="fa fa-key"></i> {{ trans('crudbooster.api_secret_key') }}
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="https://staging.thecustomerhive.com/admin/api_generator/generator">
-                    <i class="fa fa-cog"></i> API Generator
+                <a class="nav-link" href="/admin/api_generator/generator">
+                    <i class="fa fa-cog"></i> {{ trans('crudbooster.api_generator') }}
                 </a>
             </li>
         </ul>

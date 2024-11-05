@@ -189,9 +189,9 @@ $(function () {
 
         <div class="card border-success mb-3">
             <div class="card-header bg-success text-white">
-                <strong>Menu Order (Active)</strong>
+                <strong>{{ trans('crudbooster.menu_order_active') }}</strong>
                 <span id='menu-saved-info' style="display:none" class='pull-right text-success'>
-                    <i class='fa fa-check'></i> Menu Saved !
+                    <i class='fa fa-check'></i> {{ trans('crudbooster.menu_saved') }}
                 </span>
             </div>
             <div class="card-body clearfix">
@@ -199,14 +199,14 @@ $(function () {
                     @php echo $menu_active_html @endphp
                 </ul>
                 @if(count($menu_active)==0)
-                <div align="center">Active menu is empty, please add new menu</div>
+                <div align="center">{{ trans('crudbooster.active_menu_is_empty_please_add_new_menu') }}</div>
                 @endif
             </div>
         </div>
 
         <div class="card border-danger">
             <div class="card-header bg-danger text-white">
-                <strong>Menu Order (Inactive)</strong>
+                <strong>{{ trans('crudbooster.menu_order_inactive') }}</strong>
             </div>
             <div class="card-body clearfix">
 
@@ -215,7 +215,7 @@ $(function () {
                 </ul>
 
                 @if(count($menu_inactive)==0)
-                <div align="center" id='inactive_text' class='text-muted'>Inactive menu is empty</div>
+                <div align="center" id='inactive_text' class='text-muted'>{{ trans('crudbooster.inactive_menu_is_empty') }}</div>
                 @endif
             </div>
         </div>
@@ -243,7 +243,7 @@ $(function () {
     <div class="col-sm-7">
         <div class="card border-primary">
             <div class="card-header bg-primary text-white">
-                Add Menu
+                {{ trans('crudbooster.add_menu') }}
             </div>
             <div class="card-body">
                 <form class='form-horizontal' method='post' id="form" enctype="multipart/form-data"
@@ -251,7 +251,7 @@ $(function () {
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type='hidden' name='return_url' value='{{Request::fullUrl()}}' />
                     @include("crudbooster::default.form_body")
-                    <p align="right"><input type='submit' class='btn btn-primary' value='Add Menu' /></p>
+                    <p align="right"><input type='submit' class='btn btn-primary' value='{{ trans("crudbooster.add_menu") }}' /></p>
                 </form>
             </div>
         </div>

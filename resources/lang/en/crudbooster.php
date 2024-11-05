@@ -327,4 +327,65 @@ return [
     "how_can_i_help_you" => "How can I help you?",
     "send" => "Send",
     "warning" => "Warning",
+    "enable_disable" => "Enable/Disable",
+    "modules" => "Modules",
+    "Add_Field_Setting" => "Add Field Setting",
+
+//and may be can cause some errors on your system
+    "and_may_be_can_cause_some_errors_on_your_system" => "may be can cause some errors on your system",
+//Yes, delete it
+    "yes_delete_it" => "Yes, delete it",
+//File support only
+    "file_support_only" => "File support only",
+//Menu Order (Active)
+    "menu_order_active" => "Menu Order (Active)",
+    "menu_order_inactive" => "Menu Order (Inactive)",
+    "menu_saved" => "Menu saved",
+//Active menu is empty, please add new menu
+    "active_menu_is_empty_please_add_new_menu" => "Active menu is empty, please add new menu",
+//Inactive menu is empty
+    "inactive_menu_is_empty" => "Inactive menu is empty",   
+    "add_menu" => "Add Menu",
+    "upload_a_file" => "Upload a file",
+    "adjustment" => "Adjustment",
+    "importing" => "Importing",
+//Please wait importing...
+    "please_wait_importing" => "Please wait importing...",
+//40% Complete (success)
+    "40_complete_success" => "40% Complete (success)",
+//Upload Other File
+    "upload_other_file" => "Upload Other File",
+//finisci
+    "finish" => "Finish",
+//Just ignoring the column where you are not sure the data is suit with the column or not.
+    "just_ignoring_the_column_where_you_are_not_sure_the_data_is_suit_with_the_column_or_not" => "Just ignoring the column where you are not sure the data is suit with the column or not.",
+//Warning !, Unfortunately at this time, the system can't import column that contains image or photo url.
+    "warning_cant_import" => "Warning !, Unfortunately at this time, the system can't import column that contains image or photo url.",
+
+    "upload" => "Upload",
+//Welcome to Data Importer Tool
+    "welcome_to_data_importer_tool" => "Welcome to Data Importer Tool",
+//Before doing upload a file, its better to read this below instructions
+    "before_doing_upload_a_file_its_better_to_read_this_below_instructions" => "Before doing upload a file, its better to read this below instructions",
+//File format should be : xls or xlsx or csv
+    "file_format_should_be" => "File format should be : xls or xlsx or csv",
+//If you have a big file data, we can't guarantee. So, please split those files into some parts of file (at least max 5 MB).
+    "if_you_have_a_big_file_data" => "If you have a big file data, we can't guarantee. So, please split those files into some parts of file (at least max 5 MB).",
+//This tool is generate data automatically so, be carefull about your table xls structure. Please make sure correctly the table
+    "this_tool_is_generate_data" => "This tool is generate data automatically so, be carefull about your table xls structure. Please make sure correctly the table",
+//Table structure : Line 1 is heading column , and next is the data. (For example, you can export any module you wish to XLS format)
+    "table_structure" => "Table structure : Line 1 is heading column , and next is the data. (For example, you can export any module you wish to XLS format)",
+//API Documentation
+    "api_documentation" => "API Documentation",
+//API Key
+    "api_secret_key" => "API Secret Key",
+    "api_generator" => "API Generator",
+//There is no secret key found
+    "no_secret_key_found" => "There is no secret key found",
+//Click here to generate one
+    "click_here_to_generate_one" => "Click here to generate one",
+    "delete_button" => "Delete",
+//You will not be able to recover this widget
+    "you_will_not_be_able_to_recover_this_widget" => "You will not be able to recover this widget",
+
 ];
