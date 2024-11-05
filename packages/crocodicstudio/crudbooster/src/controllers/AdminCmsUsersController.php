@@ -279,9 +279,9 @@ class AdminCmsUsersController extends CBController
 	}
 
 	public static function prepare_qlik_users() {
-		file_put_contents(__DIR__.'/qlik_users.txt',  "PREPARE QLIK USERS" . PHP_EOL, FILE_APPEND);
+		//file_put_contents(__DIR__.'/qlik_users.txt',  "PREPARE QLIK USERS" . PHP_EOL, FILE_APPEND);
 		if (isset(Request::all()['qlikusers-qlik_conf_id'])) {
-			file_put_contents(__DIR__.'/qlik_users.txt',  json_encode(Request::all()['qlikusers-qlik_conf_id']) . PHP_EOL, FILE_APPEND);
+			//file_put_contents(__DIR__.'/qlik_users.txt',  json_encode(Request::all()['qlikusers-qlik_conf_id']) . PHP_EOL, FILE_APPEND);
 			$qlik_conf_ids = Request::all()['qlikusers-qlik_conf_id'];
 			$qlik_logins = Request::all()['qlikusers-qlik_login'];
 			$qlik_user_directory = Request::all()['qlikusers-user_directory'];
@@ -305,7 +305,7 @@ class AdminCmsUsersController extends CBController
 						
 						$updated_idp_qlik[$k] = $idp;
 
-						file_put_contents(__DIR__.'/qlik_users.txt', $id_user . ' ' . $v . ' ' . $idp . PHP_EOL, FILE_APPEND);
+						//file_put_contents(__DIR__.'/qlik_users.txt', $id_user . ' ' . $v . ' ' . $idp . PHP_EOL, FILE_APPEND);
 
 						Request::merge(['qlikusers-idp_qlik' => $updated_idp_qlik]);
 					}

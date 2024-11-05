@@ -62,7 +62,7 @@ class QlikConfController extends CBController
         $this->form[] = ['label' => 'Key ID', 'name' => 'keyid', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Key ID'];
         $this->form[] = ['label' => 'Issuer', 'name' => 'issuer', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Issuer'];
         $this->form[] = ['label' => 'Web Int ID', 'name' => 'web_int_id', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Web Int ID'];
-        $this->form[] = ['label' => 'Private Key', 'name' => 'private_key', 'type' => 'upload', 'width' => 'col-sm-10', 'placeholder' => 'Enter Private Key'];
+        $this->form[] = ['label' => 'Private Key', 'name' => 'private_key', 'type' => 'upload', 'validation' => 'mimes:pem', 'width' => 'col-sm-10', 'placeholder' => 'Enter Private Key'];
 
         $this->form[] = ['label' => 'Debug', 'name' => 'debug', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'Inactive;Active'];
 	$this->form[] = ['label' => 'Tenant Path', 'name' => 'tenant_path', 'type' => 'hidden', 'width' => 'col-sm-10', 'value' => env('APP_URL')];
