@@ -489,6 +489,14 @@ class CBController extends Controller
 
                 if ($type == 'between') {
                     if ($key && $value) {
+
+                        //dates in $value are in mm/dd/yyyy format, convert to yyyy-mm-dd
+                        $value = array_map(function ($v) {
+                            return date('Y-m-d', strtotime($v));
+                        }, $value);
+
+                        //dd($value);
+                        
                         $result->whereBetween($key, $value);
                     }
                 } else {
@@ -497,6 +505,8 @@ class CBController extends Controller
             }
         }
 
+       // dd($result->toSql());
+//http://127.0.0.1:8000/admin/logs?filter_column%5Bcms_logs.created_at%5D%5Btype%5D=between&filter_column%5Bcms_logs.created_at%5D%5Bvalue%5D%5B%5D=01%2F30%2F2024&filter_column%5Bcms_logs.created_at%5D%5Bvalue%5D%5B%5D=11%2F06%2F2024&filter_column%5Bcms_logs.created_at%5D%5Bsorting%5D=&filter_column%5Bcms_logs.ipaddress%5D%5Btype%5D=&filter_column%5Bcms_logs.ipaddress%5D%5Bsorting%5D=&filter_column%5Bcms_users.name%5D%5Btype%5D=&filter_column%5Bcms_users.name%5D%5Bsorting%5D=&filter_column%5Bcms_logs.description%5D%5Btype%5D=&filter_column%5Bcms_logs.description%5D%5Bsorting%5D=&lasturl=https%3A%2F%2Fstaging.thecustomerhive.com%2Fadmin%2Flogs
 
         if ($filter_is_orderby == true) {
             $data['result'] = $result->paginate($limit);
