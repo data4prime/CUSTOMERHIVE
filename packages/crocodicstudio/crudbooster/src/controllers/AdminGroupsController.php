@@ -573,6 +573,7 @@ class AdminGroupsController extends CBController
 
 		$data['command'] = 'add';
 		$data['button_addmore'] = false;
+		//dd($data);
 		$this->cbView('groups.tenant', $data);
 	}
 

@@ -17,7 +17,7 @@ class ModuleHelperHelper
   public static function getUrl($mod) {
 
     if (isset($mod->id)) {
-        $helper = DB::table('module_helpers')->where('module', $mod->id)->first();
+        $helper = DB::table('module_helpers')->where('id_cms_moduls', $mod->id)->first();
     }
 
     if (isset($helper->url)) {

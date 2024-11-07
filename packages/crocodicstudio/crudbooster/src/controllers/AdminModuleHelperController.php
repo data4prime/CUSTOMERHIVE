@@ -25,7 +25,7 @@ class AdminModuleHelperController extends CBController
 	public function cbInit()
 	{
 		# START CONFIGURATION DO NOT REMOVE THIS LINE
-		$this->title_field = "module";
+		$this->title_field = "id_cms_moduls";
 		$this->limit = "20";
 		$this->orderby = "id,desc";
 		$this->global_privilege = true;
@@ -46,7 +46,7 @@ class AdminModuleHelperController extends CBController
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = [];
 
-		$this->col[] = ["label" => "Module", "name" => "module",  "join" => "cms_moduls,name"];
+		$this->col[] = ["label" => "Module", "name" => "id_cms_moduls",  "join" => "cms_moduls,name"];
 		$this->col[] = ["label" => "Url", "name" => "url"];
 
 
@@ -57,7 +57,7 @@ class AdminModuleHelperController extends CBController
 		$this->form[] = 
 			[
 				'label' => 'Module', 
-				'name' => 'module', 
+				'name' => 'id_cms_moduls', 
 				'type' => 'select2', 
 				'validation' => 'required', 
 				'width' => 'col-sm-5', 

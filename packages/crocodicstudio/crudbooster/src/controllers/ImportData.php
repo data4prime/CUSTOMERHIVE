@@ -9,6 +9,6 @@ class ImportData implements ToCollection
 {
     public function collection(Collection $rows)
     {
-        dd($rows);
+        
     }
 }
