@@ -88,7 +88,7 @@
           <thead>
             <tr>
               <th>{!! __('crudbooster.name') !!}</th>
-              <th>{!! __('crudbooster.description) !!}</th>
+              <th>{!! __('crudbooster.description') !!}</th>
               <th></th>
             </tr>
           </thead>
@@ -100,9 +100,10 @@
               <td>
                 @if(CRUDBooster::isDelete() && $button_edit)
                 <a title='Remove' class='btn btn-danger btn-sm'
-                  href='{{CRUDBooster::mainpath("$group_id/remove_tenant/$tenant->id")}}'><i
-                    class="fa fa-trash"></i></a>
+                  href='{{CRUDBooster::mainpath("$group_id/remove_tenant/$tenant->id")}}'><i class="fa fa-trash"></i></a>
                 @endif
+
+
               </td>
             </tr>
             @endforeach
