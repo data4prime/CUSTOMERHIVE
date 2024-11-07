@@ -1732,7 +1732,7 @@ class CBController extends Controller
 
             //dd(Excel::import(new ImportData,$file));
 
-            $rows = Excel::toCollection(new ImportData, $file); // Utilizza una classe di importazione personalizzata
+            $rows = Excel::toCollection(new ImportData, $file)[0]; // Utilizza una classe di importazione personalizzata
             //dd($rows);
 
             $countRows = ($rows->count() > 0) ? $rows->first()->count() : 0;
@@ -1740,11 +1740,15 @@ class CBController extends Controller
             Session::put('total_data_import', $countRows);
 
             $data_import_column = ($countRows > 0) ? $rows->first()->keys()->all() : [];
-            file_put_contents(__DIR__.'/data_import_column.txt',json_encode($data_import_column));
+
+            //file_put_contents(__DIR__.'/data_import_column.txt',json_encode($rows->first()));
+
+
+            //file_put_contents(__DIR__.'/data_import_column.txt',json_encode($data_import_column));
 
             $table_columns = DB::getSchemaBuilder()->getColumnListing($this->table);
 
-            file_put_contents(__DIR__.'/table_columns.txt',json_encode($table_columns));
+            //file_put_contents(__DIR__.'/table_columns.txt',json_encode($table_columns));
 
             //file_put_contents(__DIR__.'/data_import_column.txt',json_encode($data_import_column));
 
