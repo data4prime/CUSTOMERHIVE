@@ -168,8 +168,8 @@
                                 <td data-no-column='{{$k}}'>
                                     <select style='width:120px' class='form-control select_column' name='select_column[{{$k}}]'>
                                         <option value=''>** Set Column for {{$column}}</option>
-                                        @foreach($data_import_column as $import_column)
-                                            <option value='{{$import_column}}'>{{$import_column}}</option>
+                                        @foreach($data_import_column as $k => $import_column)
+                                            <option value='{{$k}}'>{{$import_column}}</option>
                                         @endforeach
                                     </select>
                                 </td>

@@ -1739,7 +1739,8 @@ class CBController extends Controller
 
             Session::put('total_data_import', $countRows);
 
-            $data_import_column = ($countRows > 0) ? $rows->first()->keys()->all() : [];
+            //$data_import_column = ($countRows > 0) ? $rows->first()->keys()->all() : [];
+            $data_import_column = ($countRows > 0) ? $rows->first() : [];
 
             //file_put_contents(__DIR__.'/data_import_column.txt',json_encode($rows->first()));
 
