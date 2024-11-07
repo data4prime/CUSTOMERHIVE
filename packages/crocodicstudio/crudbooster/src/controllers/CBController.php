@@ -1749,6 +1749,8 @@ class CBController extends Controller
 
             $table_columns = DB::getSchemaBuilder()->getColumnListing($this->table);
 
+
+
             //file_put_contents(__DIR__.'/table_columns.txt',json_encode($table_columns));
 
             //file_put_contents(__DIR__.'/data_import_column.txt',json_encode($data_import_column));

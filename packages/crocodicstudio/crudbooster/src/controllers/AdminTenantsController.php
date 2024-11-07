@@ -105,7 +105,7 @@ class AdminTenantsController extends CBController
 	        */
 		$this->addaction = array();
 		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'fa fa-user', 'color' => 'info', 'title' => 'Members'];
-		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('group/[id]'), 'icon' => 'fa fa-users', 'color' => 'warning', 'title' => 'Groups'];
+		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('group/[id]'), 'icon' => 'fa fa-users', 'color' => 'info', 'title' => 'Groups'];
 
 		/*
 	        | ----------------------------------------------------------------------

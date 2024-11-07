@@ -153,7 +153,7 @@ class QlikAppController extends CBController
         */
 		$this->addaction = array();
 		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'fa fa-user', 'color' => 'info', 'title' => 'Members'];
-		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'fa fa-shield', 'color' => 'warning', 'title' => 'Items'];
+		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'fa fa-shield', 'color' => 'info', 'title' => 'Items'];
 
 		/*
         | ----------------------------------------------------------------------

@@ -89,10 +89,10 @@ class AdminGroupsController extends CBController
         */
 		$this->addaction = array();
 		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'fa fa-user', 'color' => 'info', 'title' => 'Members'];
-		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'fa fa-shield', 'color' => 'warning', 'title' => 'Items'];
+		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'fa fa-shield', 'color' => 'info', 'title' => 'Items'];
 		//solo superadmin gestisce i tenant
 		if (CRUDBooster::isSuperadmin()) {
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Tenants'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'info', 'title' => 'Tenants'];
 		}
 		/*
         | ----------------------------------------------------------------------
