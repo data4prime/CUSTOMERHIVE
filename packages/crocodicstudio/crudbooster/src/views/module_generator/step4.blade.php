@@ -356,7 +356,7 @@ $(function () {
               <input type='text' value='{{$form["name"]}}' placeholder="Input field name" onclick='showNameSuggest(this)' onkeyup="showNameSuggestLike(this)" class='form-control name' name='name[]'/>
             </td>
             <td>
-              <input type='text' value='{{$form["type"]?:"text"}}' placeholder="Input field type" onclick='showTypeSuggest(this)' onkeyup="showTypeSuggestLike(this)" class='form-control type' name='type[]'/>
+              <input type='text' value='{{ isset($form["type"]) ? $form["type"] :"text"}}' placeholder="Input field type" onclick='showTypeSuggest(this)' onkeyup="showTypeSuggestLike(this)" class='form-control type' name='type[]'/>
             </td>
             <td>
               <input type='text' value='{{isset($form["validation"]) ? $form["validation"] : "" }}' class='form-control validation' onclick="showValidationSuggest(this)" onkeyup="showValidationSuggestLike(this)" name='validation[]' value='required' placeholder='Enter Laravel Validation'/>
@@ -372,7 +372,7 @@ $(function () {
               <a class='btn btn-sm btn-primary btn-options' href='javascript:;'><i class='fa fa-cog'></i> Options</a>
               <div class='option_area' style="display: none">
                 <?php
-                $type = $form["type"] ?: "text";
+                $type = isset($form["type"]) ? $form["type"] : "text";
                 $types = base_path('packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/info.json');
                 $types = file_get_contents($types);
                 $types = json_decode($types);

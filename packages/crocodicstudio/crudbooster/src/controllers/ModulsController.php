@@ -1342,12 +1342,13 @@ class ModulsController extends CBController
         //dd($table);
         foreach ($dynamic_columns as $key => $dynamic_column) {
           $type = $dynamic_column->type;
+          $columnname = ModuleHelper::sql_name_encode($dynamic_column->name);
           // $table->call_dynamic_method($dynamic_column->type);
           if ($type == 'integer') {
             //integer defaults to autoincrement without second parameter set to false if length is set as third attribute of the integer method
-            $table->integer("{$dynamic_column->name}")->length($dynamic_column->size)->nullable();
+            $table->integer("{$columnname}")->length($dynamic_column->size)->nullable();
           } else {
-            $table->$type("{$dynamic_column->name}", "{$dynamic_column->size}")->nullable();
+            $table->$type("{$columnname}", "{$dynamic_column->size}")->nullable();
           }
         }
         //$table->defaults();
@@ -1461,14 +1462,15 @@ class ModulsController extends CBController
           //add new column to existing table
           $result = Schema::table($table_name, function (Blueprint $table) use ($column, $after) {
             $type = $column->type;
+            $columnname = ModuleHelper::sql_name_encode($column->name);
             if ($type == 'integer') {
               //integer defaults to autoincrement without second parameter set to false if length is set as third attribute of the integer method
-              $table->integer("{$column->name}")->length($column->size)->nullable()->after($after);
+              $table->integer("{$columnname}")->length($column->size)->nullable()->after($after);
             } else {
-              $table->$type("{$column->name}", $column->size)->nullable()->after($after);
+              $table->$type("{$columnname}", $column->size)->nullable()->after($after);
             }
           });
-          $description = 'add column ' . $column->name . ' after ' . $existing_table[$col_index]['name'];
+          $description = 'add column ' . $column . ' after ' . $existing_table[$col_index]['name'];
           add_log_ch('mg edit table add column', $description);
 
           // reload table to detect multiple new columns and insert them in proper order
@@ -1517,22 +1519,24 @@ class ModulsController extends CBController
         if ($request['type'][$loop_index] != $existing_table[$index]['type']) {
           $result = Schema::table($table_name, function (Blueprint $table) use ($column) {
             $type = $column->type;
-            $table->$type("{$column->name}")->change();
+            $columnname = ModuleHelper::sql_name_encode($column->name);
+            $table->$type("{$columnname}")->change();
           });
-          add_log_ch('mg edit table change column data type', 'Column ' . $column->name . ' from ' . $existing_table[$index]['type'] . ' to ' . $column->type);
+          add_log_ch('mg edit table change column data type', 'Column ' . $columnname . ' from ' . $existing_table[$index]['type'] . ' to ' . $column->type);
         }
 
         if ($request['size'][$loop_index] != $existing_table[$index]['size']) {
           $result = Schema::table($table_name, function (Blueprint $table) use ($column) {
             $type = $column->type;
+            $columnname = ModuleHelper::sql_name_encode($column->name);
             if ($type == 'integer') {
               //integer defaults to autoincrement without second parameter set to false if length is set as third attribute of the integer method
-              $table->integer("{$column->name}")->length($column->size)->change();
+              $table->integer("{$columnname}")->length($column->size)->change();
             } else {
-              $table->$type("{$column->name}", $column->size)->change();
+              $table->$type("{$columnname}", $column->size)->change();
             }
           });
-          add_log_ch('mg edit table change column data size', 'Column ' . $column->name . ' from ' . $existing_table[$index]['type'] . ' to ' . $column->type);
+          add_log_ch('mg edit table change column data size', 'Column ' . $column->name. ' from ' . $existing_table[$index]['type'] . ' to ' . $column->type);
         }
       } //end loop through request columns
 
