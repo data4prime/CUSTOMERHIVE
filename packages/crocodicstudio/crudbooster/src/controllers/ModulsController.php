@@ -1277,6 +1277,7 @@ class ModulsController extends CBController
         }
         //column name transformation
         $dynamic_column = ModuleHelper::sql_name_encode($dynamic_column_name);
+        //dd($dynamic_column);
 
         $column->name = $dynamic_column_name;
         if (Schema::hasColumn($table_name, $column->name)) {
@@ -1430,6 +1431,7 @@ class ModulsController extends CBController
 
         $index = $request['index'][$loop_index];
 
+
         // if $index doesn't exist in the table..
         if (!array_key_exists($index, $existing_table)) {
           // ..add new column
@@ -1450,7 +1452,12 @@ class ModulsController extends CBController
             $messages = $message['type'] . ',' . $message['content'] . ',';
             return $messages;
           }
-          $after = $existing_table[$index - 1]['name'];
+          if ($index == 0) {
+            $col_index = 0;
+          } else {
+            $col_index = $index - 1;
+          }
+          $after = isset($existing_table[$col_index]['name']) ? $existing_table[$col_index]['name'] : 'id';
           //add new column to existing table
           $result = Schema::table($table_name, function (Blueprint $table) use ($column, $after) {
             $type = $column->type;
@@ -1461,7 +1468,7 @@ class ModulsController extends CBController
               $table->$type("{$column->name}", $column->size)->nullable()->after($after);
             }
           });
-          $description = 'add column ' . $column->name . ' after ' . $existing_table[$index - 1]['name'];
+          $description = 'add column ' . $column->name . ' after ' . $existing_table[$col_index]['name'];
           add_log_ch('mg edit table add column', $description);
 
           // reload table to detect multiple new columns and insert them in proper order
@@ -1499,6 +1506,7 @@ class ModulsController extends CBController
             return $messages;
           }
           $result = Schema::table($table_name, function (Blueprint $table) use ($source, $target) {
+            $target = ModuleHelper::sql_name_encode($target);
             $table->renameColumn($source, $target);
           });
           add_log_ch('mg edit table rename column', 'Rename ' . $source . ' into ' . $target);
@@ -1544,6 +1552,7 @@ class ModulsController extends CBController
             return $messages;
           } else {
             $result = Schema::table($table_name, function (Blueprint $table) use ($value) {
+
               $table->dropColumn("{$value['name']}");
             });
             add_log_ch('mg edit table drop column', 'delete column ' . $value['name']);
