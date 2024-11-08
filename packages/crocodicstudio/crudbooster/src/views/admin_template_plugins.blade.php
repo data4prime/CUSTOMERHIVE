@@ -76,7 +76,8 @@ $("#draggable").resizable();
 */
 
         $("#chatWindow").draggable({
-            handle: ".chat-header"
+            handle: ".chat-header",
+            containment: ".content-wrapper" 
         }).resizable();
 
         $("#openChat").click(function() {

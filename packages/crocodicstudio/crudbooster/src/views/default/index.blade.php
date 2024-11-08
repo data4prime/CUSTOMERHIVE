@@ -82,9 +82,9 @@
 
 //if $module->path contians 'mg_'
 if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users') { ?>
-                    <li class="dropdown-item">
+                    <li class="dropdown-item" style="padding: 0px">
 
-                    <a  href="javascript:void(0)" id='mass_editing_button'
+                    <a  style="display: block; width: 100%; padding: 8px 16px;" href="javascript:void(0)" id='mass_editing_button'
                                     data-url-parameter='{{$build_query}}' title='Mass Edit' >
                                     <i class="fa fa-pencil"></i> Mass Edit
                                 </a>
@@ -98,8 +98,8 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
 
                     
                     @if($button_delete && CRUDBooster::isDelete())
-                    <li  class="dropdown-item" >
-                        <a href="javascript:void(0)" data-name='delete' title="{{trans('crudbooster.action_delete_selected')}}">
+                    <li  class="dropdown-item" style="padding: 0px" >
+                        <a style="display: block; width: 100%; padding: 8px 16px;" href="javascript:void(0)" data-name='delete' title="{{trans('crudbooster.action_delete_selected')}}">
                             <i class="fa fa-trash"></i> {{trans('crudbooster.action_delete_selected')}}
                         </a>
                     </li>
