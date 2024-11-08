@@ -266,7 +266,7 @@ class AdminCmsUsersController extends CBController
 		}
 		//se il primary group è cambiato
 		$old_primary_group_id = UserHelper::primary_group($user_id);
-		if ($old_primary_group_id !== $postdata['primary_group']) {
+		if (isset($postdata['primary_group']) && $old_primary_group_id !== $postdata['primary_group']) {
 			//aggiungi nuovo primary group ai gruppi di appartenenza
 			GroupHelper::add($postdata['primary_group'], $user_id);
 			//rimuovi vecchio primary group dai gruppi di appartenenza
