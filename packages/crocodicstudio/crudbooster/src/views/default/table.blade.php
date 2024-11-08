@@ -213,6 +213,31 @@ $total = $result->total();
             $('#export-data').modal('show');
         })
 
+
+
+        if ($('#export-data select[name="fileformat"]').val() == 'pdf') {
+            $(".toggle_advanced_report").show();
+
+        } else {
+            $(".toggle_advanced_report").hide();
+        }
+
+
+        //on change of input with name fileformat
+
+        $('#export-data select[name="fileformat"]').change(function () {
+            var fileformat = $(this).val();
+            //show advanced export if fileformat is pdf (class toggle_advanced_report)
+            if (fileformat == 'pdf') {
+                $(".toggle_advanced_report").show();
+                //$("#advanced_export").slideDown();
+            } else {
+                $(".toggle_advanced_report").hide();
+                $("#advanced_export").slideUp();
+            }
+            
+        })
+
         var toggle_advanced_report_boolean = 1;
         $(".toggle_advanced_report").click(function () {
 

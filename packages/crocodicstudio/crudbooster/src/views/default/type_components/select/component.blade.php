@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 
 $default = isset($form['default']) ? $form['default'] : trans('crudbooster.text_prefix_option') . " " . $form['label'];
+$default_helper = trans('crudbooster.text_prefix_option') . " " . $form['label'];
 
 ?>
 
@@ -37,7 +38,7 @@ $add_field = is_array($parent_select) ? $parent_select[1] : '';
             }
             @endphp
             var datatableWhere = "{{$form['datatable_where']}}";
-            console.log(datatableWhere);
+            //console.log(datatableWhere);
             @if (!empty($add_field))
             if (datatableWhere) {
                 if (add_field) {
@@ -61,7 +62,7 @@ $add_field = is_array($parent_select) ? $parent_select[1] : '';
 
             if (fk_value != '') {
                 $current.html("<option value=''>{{trans('crudbooster.text_prefix_option')}} {{$form['label']}}");
-                console.log(datatableWhere);
+                //console.log(datatableWhere);
                 $.get("{{CRUDBooster::mainpath('data-table')}}?table=" + table + "&label=" + label + "&fk_name=" + fk_name + "&fk_value=" + fk_value + "&datatable_where=" + encodeURI(datatableWhere), function (response) {
                     if (response) {
                         //check if default is already between the options
@@ -82,6 +83,7 @@ $add_field = is_array($parent_select) ? $parent_select[1] : '';
                         //add the other options
                         $.each(response, function (i, obj) {
                             var selected = (value && value == obj.select_value) ? "selected" : "";
+                            //console.log(obj.select_value);
                             $("<option " + selected + " value='" + obj.select_value + "'>" + obj.select_label + "</option>").appendTo("#{{$form['name']}}");
                         })
                         $current.trigger('change');
@@ -113,7 +115,7 @@ $add_field = is_array($parent_select) ? $parent_select[1] : '';
     <div class="{{$col_width?:'col-sm-10'}}">
         <select class='form-control' id="{{$name}}" data-value='{{$value}}' {{$required}} {!! $placeholder !!}
             {{$readonly}} {{$disabled}} name="{{$name}}">
-            <option value='{{$default}}'>{{$default}}</option>
+            <option value="@php echo $default == $default_helper ?  '' : $default @endphp">{{$default}}</option>
             @php
             if (! isset($form['parent_select']))
             {

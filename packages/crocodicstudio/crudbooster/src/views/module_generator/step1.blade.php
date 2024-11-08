@@ -92,6 +92,7 @@
             <div class="row">
                 <label for="colFormLabelLg" class="col-sm-2 col-form-label">Icon</label>
                 <div class="col-sm-10">
+                    
                 <select name="icon" id="icon" required class="select2 form-control">
                     @foreach($fontawesome as $f)
                     <option {{(isset($row->icon) && $row->icon == 'fa fa-'.$f)?"selected":""}} value="fa
@@ -101,6 +102,20 @@
                 </div>
             </div>
 
+            <div class="row mb-3">
+                <label for="colFormLabelLg" class="col-sm-2 col-form-label">
+                    Also create menu for this module <a href='#'
+            title='If you check this, we will create the menu for this module'>(?)</a>
+                </label>
+                <div class="col-sm-10">
+<input style="margin-top: 20px;" checked type='checkbox' name='create_menu' value='1' />
+                </div>
+
+
+            </div>
+
+
+
             <!-- <div class="mb-3 row">
                     <label for="">Module Slug</label>
                     <input type="text" class="form-control" required name="path" value="{{isset($row->path) ? $row->path : '' }}">
@@ -109,8 +124,6 @@
     </div>
     <div class="card-footer">
 
-        <input checked type='checkbox' name='create_menu' value='1' /> Also create menu for this module <a href='#'
-            title='If you check this, we will create the menu for this module'>(?)</a>
 
         <div class='pull-right'>
             <a class='btn btn-default' href='{{Route("ModulsControllerGetIndex")}}'>

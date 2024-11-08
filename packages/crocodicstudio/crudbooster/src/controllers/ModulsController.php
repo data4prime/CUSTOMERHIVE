@@ -81,8 +81,25 @@ class ModulsController extends CBController
     $custom = view('crudbooster::components.list_icon', compact('fontawesome', 'row'))->render();
     $this->form[] = ['label' => 'Icon', 'name' => 'icon', 'type' => 'custom', 'html' => $custom, 'required' => true];
 
+
+
+
     $this->script_js = "
      			$(function() {
+  				function format(icon)
+          {
+  	                  var originalOption = icon.element;
+  	                  var label = $(originalOption).text();
+  	                  var val = $(originalOption).val();
+  	                  if(!val) return label;
+  	                  var \$resp = $('<span><i style=\"margin-top:5px\" class=\"pull-right ' + $(originalOption).val() + '\"></i> ' + $(originalOption).data('label') + '</span>');
+  	                  return \$resp;
+  	              }
+            $('#list-icon').select2({
+                        width: '100%',
+                        templateResult: format,
+                        templateSelection: format
+                    });
      				$('#table_name').change(function() {
     					var v = $(this).val();
     					$('#path').val(v);
@@ -483,10 +500,14 @@ class ModulsController extends CBController
 
     $fontawesome = Fontawesome::getIcons();
 
+
     $row = CRUDBooster::first($this->table, ['id' => $id]);
+
+    $custom = view('crudbooster::components.list_icon', compact('fontawesome', 'row'))->render();
+    //dd($custom);
     $active_tab = 1;
 
-    return view("crudbooster::module_generator.step1", compact("tables_list", "fontawesome", "row", "id", 'active_tab'));
+    return view("crudbooster::module_generator.step1", compact("tables_list", "fontawesome", "row", "id", 'active_tab', 'custom'));
   }
 
   // triggered when on step1 click go to step2

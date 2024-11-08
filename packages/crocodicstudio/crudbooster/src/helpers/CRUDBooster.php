@@ -1154,8 +1154,9 @@ return Request::segment($segment);
         if (!$table) {
             return 'id';
         }
-
+        //dd($pk = DB::getDoctrineSchemaManager()->listTableDetails($table));
         $pk = DB::getDoctrineSchemaManager()->listTableDetails($table)->getPrimaryKey();
+        //dd($pk);
         if (!$pk) {
             //return null;
             //#RAMA if module generator is creating a new table the table has not be created yet and the above methods can't find anything

@@ -1939,6 +1939,10 @@ class CBController extends Controller
         /*$rows = Excel::load($file, function ($reader) {
         })->get();*/
         $rows = Excel::toCollection(new ImportData, $file)[0];
+        
+
+        //remove first item from rows
+        $rows->shift();
         //file_put_contents(__DIR__.'/rows.txt',json_encode($rows));
 
         //dd($rows);

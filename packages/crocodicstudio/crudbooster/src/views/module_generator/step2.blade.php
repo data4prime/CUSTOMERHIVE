@@ -43,8 +43,17 @@ $(function () {
     $('#tr-sample td input.data_index').val(new_index+1);
     // console.log(tr_parent);
     // tr_parent.after(clone);
-    $('tbody').append(clone);
+   // $('tbody').append(clone);
+
+    //append after row where the button is clicked
+     $(this).parent().parent().after(clone);
+
+
     $('.table-form tr').not('#tr-sample').show();
+
+    
+
+
   })
   //init row
   $('.btn-plus').last().click();

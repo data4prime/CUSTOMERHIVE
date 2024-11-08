@@ -548,6 +548,7 @@ class MenusController extends CBController
 
     $custom = view('crudbooster::components.list_icon', compact('fontawesome', 'row'))->render();
 
+
     $this->form[] = [
       "label" => "Custom Icon",
       "name" => "is_custom",
