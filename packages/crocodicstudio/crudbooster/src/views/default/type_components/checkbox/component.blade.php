@@ -20,7 +20,7 @@ id='form-group-{{$name}}' style="{!! @$form['style'] !!}">
           ?>
     <div class="checkbox {{$disabled}}">
       <label>
-        <input type="checkbox" {{$disabled}} {{$checked}} name="{{$name}}[]" value="{{$name}}">
+        <input type="checkbox" {{$disabled}} {{$checked}} name="{{$name}}[]" value="1">
       </label>
     </div>
     <?php
@@ -42,7 +42,7 @@ id='form-group-{{$name}}' style="{!! @$form['style'] !!}">
             ?>
     <div class="checkbox {{$disabled}}">
       <label>
-        <input type="checkbox" {{$disabled}} {{$checked}} name="{{$name}}[]" value="{{$val}}"> {{$label}}
+        <input type="checkbox" {{$disabled}} {{$checked}} name="{{$name}}[]" value="1"> {{$label}}
       </label>
     </div>
     <?php

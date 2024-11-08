@@ -1470,7 +1470,7 @@ class ModulsController extends CBController
               $table->$type("{$columnname}", $column->size)->nullable()->after($after);
             }
           });
-          $description = 'add column ' . $column . ' after ' . $existing_table[$col_index]['name'];
+          $description = 'add column ' . $column->name . ' after ' . $existing_table[$col_index]['name'];
           add_log_ch('mg edit table add column', $description);
 
           // reload table to detect multiple new columns and insert them in proper order
