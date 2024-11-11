@@ -69,6 +69,10 @@ $debug_url = $item_url;
     /*var iframe_ = document.querySelector('.qi_iframe');
     iframe_.src = iframe_.getAttribute('data-src');*/
 
+  iframe_.onerror = function(event) {
+        displayError('Impossibile caricare l\'iframe: ' + event.message);
+    };
+
   })
 </script>
 
@@ -85,7 +89,7 @@ $debug_url = $item_url;
         window.onerror = function(message, source, lineno, colno, error) {
             const errorMessage = `Errore: ${message} (Linea ${lineno}, Colonna ${colno})`;
             displayError(errorMessage);
-            return true;  // Prevenire la visualizzazione dell'errore nella console
+            return true;  
         };
 
         // Simulazione di un errore per test
