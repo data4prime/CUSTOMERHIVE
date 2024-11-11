@@ -90,7 +90,7 @@ $debug_url = $item_url;
 
         // Simulazione di un errore per test
         // Questa riga genererà un errore JavaScript
-        nonEsiste();
+        //nonEsiste();
     </script>
 
 @endpush
