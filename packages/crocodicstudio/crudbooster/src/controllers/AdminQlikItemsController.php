@@ -541,10 +541,14 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 
 				$data['js_login'] = $js_login;
 
+				
+
 				if (isset($menu->target_layout) && $menu->target_layout == 1) {
 					//<script defer src="{{asset('js/qliksaas_login.js')}}"></script>
+					Log::debug('Rendering fullscreen view');
 					$this->cbView('qlik_items.fullscreen_view_saas', $data);
 				} else {
+					Log::debug('Rendering normal view');
 					$this->cbView('qlik_items.view_saas', $data);
 				}
 		}
