@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>{{ ($page_title)?Session::get('appname').': '.strip_tags($page_title):"Public Area" }}</title>
+  <title>{{ isset($page_title)?Session::get('appname').': '.strip_tags($page_title):"Public Area" }}</title>
   <meta name="csrf-token" content="{{ csrf_token() }}" />
   <meta name='generator' content='CustomerHive' />
   <meta name='robots' content='noindex,nofollow' />
@@ -36,7 +36,8 @@
     @stack(' head') </head>
 
 <body
-  class="@php echo (Session::get('theme_color'))?:'skin-blue'; echo ' '; echo config('crudbooster.ADMIN_LAYOUT'); @endphp {{($sidebar_mode)?:''}}">
+ class="{{ Session::get('theme_color', 'skin-blue') }} {{ config('crudbooster.ADMIN_LAYOUT') }} {{ isset($sidebar_mode) ? $sidebar_mode : '' }}"
+>
   <div id='app' class="wrapper">
 
     <!-- Header -->
