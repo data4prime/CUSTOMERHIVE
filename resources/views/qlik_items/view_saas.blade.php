@@ -72,6 +72,27 @@ $debug_url = $item_url;
   })
 </script>
 
+    <script>
+        // Funzione per mostrare gli errori nell'HTML
+        function displayError(message) {
+            console.error(message);
+            /*const errorContainer = document.getElementById('error-container');
+            errorContainer.textContent = message;
+            errorContainer.style.display = 'block';*/
+        }
+
+        // Gestione globale degli errori JavaScript
+        window.onerror = function(message, source, lineno, colno, error) {
+            const errorMessage = `Errore: ${message} (Linea ${lineno}, Colonna ${colno})`;
+            displayError(errorMessage);
+            return true;  // Prevenire la visualizzazione dell'errore nella console
+        };
+
+        // Simulazione di un errore per test
+        // Questa riga genererà un errore JavaScript
+        nonEsiste();
+    </script>
+
 @endpush
 <script>
   //const TENANT = '{{ $tenant }}/{{$prefix}}';
