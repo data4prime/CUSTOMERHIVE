@@ -66,19 +66,6 @@ $debug_url = $item_url;
       $(qlik_logo).insertBefore($('#title_icon'));
     }
 
-    var iframe_ = document.querySelector('.qi_iframe');
-
-    //when iframe is loaded
-    iframe_.addEventListener('load', function () {
-          //find in iframe_c a class with name neterror
-      var neterror = iframe_.contentWindow.document.querySelector('.neterror');
-
-      if (neterror) {
-        //if neterror is found, display error
-        displayError('Impossibile caricare l\'iframe: ' + neterror.textContent);
-      }
-
-    });
 
 
 
@@ -86,17 +73,7 @@ $debug_url = $item_url;
   })
 </script>
 
-    <script>
-        // Funzione per mostrare gli errori nell'HTML
-        function displayError(message) {
-            console.log(message);
-            /*const errorContainer = document.getElementById('error-container');
-            errorContainer.textContent = message;
-            errorContainer.style.display = 'block';*/
-        }
 
-
-    </script>
 
 @endpush
 <script>
