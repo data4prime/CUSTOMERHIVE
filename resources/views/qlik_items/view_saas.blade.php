@@ -66,12 +66,7 @@ $debug_url = $item_url;
       $(qlik_logo).insertBefore($('#title_icon'));
     }
 
-    var iframe_ = document.querySelector('.qi_iframe');
-    /*iframe_.src = iframe_.getAttribute('data-src');*/
 
-  iframe_.onerror = function(event) {
-        displayError('Impossibile caricare l\'iframe: ' + event.message);
-    };
 
   })
 </script>
@@ -85,12 +80,12 @@ $debug_url = $item_url;
             errorContainer.style.display = 'block';*/
         }
 
-        // Gestione globale degli errori JavaScript
-        window.onerror = function(message, source, lineno, colno, error) {
-            const errorMessage = `Errore: ${message} (Linea ${lineno}, Colonna ${colno})`;
-            displayError(errorMessage);
-            return true;  
-        };
+            var iframe_ = document.querySelector('.qi_iframe');
+    /*iframe_.src = iframe_.getAttribute('data-src');*/
+
+  iframe_.onerror = function(event) {
+        displayError('Impossibile caricare l\'iframe: ' + event.message);
+    };
 
         // Simulazione di un errore per test
         // Questa riga genererà un errore JavaScript
