@@ -477,7 +477,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 			$menu = Menu::where('name', 'Dashboard')->where('is_active', 1)->where('is_dashboard', 1)->first();
 		}*/
 		//$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '89');
-		if (empty($menu)) {
+		if (empty($menu) || !isset($menu)) {
 			$data['row']->frame_width = '100%';
 			$data['row']->frame_height = '100%';
 		} else {
