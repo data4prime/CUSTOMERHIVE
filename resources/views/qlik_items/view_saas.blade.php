@@ -75,7 +75,7 @@ $debug_url = $item_url;
     <script>
         // Funzione per mostrare gli errori nell'HTML
         function displayError(message) {
-            console.error(message);
+            console.log(message);
             /*const errorContainer = document.getElementById('error-container');
             errorContainer.textContent = message;
             errorContainer.style.display = 'block';*/
