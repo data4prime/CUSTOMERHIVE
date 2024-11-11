@@ -522,13 +522,16 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		} else*/ 
 			if ($auth == 'JWT') {
 				if ($type == 'SAAS') {
+					Log::debug('Getting token for SaaS');
 					$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 					$js_login = "js/qliksaas_login.js";
 				} else {
+					Log::debug('Getting token for on-premises');
 					$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
 					$js_login = "js/qlik_op_jwt_login.js";
 				}
 				if (empty($token)) {
+					Log::debug('Token generation failed');
 					$data['error'] = 'JWT Token generation failed!';
 					CRUDBooster::redirectBack($data['error'], 'error');
 				}
