@@ -444,14 +444,16 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		$allowed = QlikHelper::can_see_item($qlik_item_id);
 		//check if at least one of item allowed groups is in user groups
 		if (!$allowed) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			//CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			CRUDBooster::redirectBack( trans("crudbooster.denied_access"), 'error');
 		}
 		$data = [];
 		$data['row'] = QlikItem::find($qlik_item_id);
 		if (empty($data['row'])) {
 			//item missing or soft deleted
 			//can't access soft deleted qlik item
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.missing_item"));
+			//CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.missing_item"));
+			CRUDBooster::redirectBack(trans("crudbooster.missing_item"), 'error');
 		}
 		$conf = QlikHelper::getConfFromItem($qlik_item_id);
 		$type = $conf->type;
@@ -486,7 +488,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		$data['row']->url = htmlspecialchars_decode($data['row']->url);
 
 		$js_login = '';
-		if ($auth == 'Ticket') {
+		/*if ($auth == 'Ticket') {
 
 			$js_login = "js/qlik_login,js";
 
@@ -508,33 +510,34 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 			} else {
 				$this->cbView('qlik_items.view', $data);
 			}
-		} else if ($auth == 'JWT') {
-			if ($type == 'SAAS') {
-				$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
-				$js_login = "js/qliksaas_login.js";
-			} else {
-				$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
-				$js_login = "js/qlik_op_jwt_login.js";
-			}
-			if (empty($token)) {
-				$data['error'] = 'JWT Token generation failed!';
-				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
-			}
-			$data['token'] = $token;
-			$data['item_url'] = $data['row']->url;
+		} else*/ 
+			if ($auth == 'JWT') {
+				if ($type == 'SAAS') {
+					$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+					$js_login = "js/qliksaas_login.js";
+				} else {
+					$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
+					$js_login = "js/qlik_op_jwt_login.js";
+				}
+				if (empty($token)) {
+					$data['error'] = 'JWT Token generation failed!';
+					CRUDBooster::redirectBack($data['error'], 'error');
+				}
+				$data['token'] = $token;
+				$data['item_url'] = $data['row']->url;
 
-			$data['tenant'] = $conf->url;
-			$data['web_int_id'] = $conf->web_int_id;
-			$data['prefix'] = $conf->endpoint;
+				$data['tenant'] = $conf->url;
+				$data['web_int_id'] = $conf->web_int_id;
+				$data['prefix'] = $conf->endpoint;
 
-			$data['js_login'] = $js_login;
+				$data['js_login'] = $js_login;
 
-			if (isset($menu->target_layout) && $menu->target_layout == 1) {
-				//<script defer src="{{asset('js/qliksaas_login.js')}}"></script>
-				$this->cbView('qlik_items.fullscreen_view_saas', $data);
-			} else {
-				$this->cbView('qlik_items.view_saas', $data);
-			}
+				if (isset($menu->target_layout) && $menu->target_layout == 1) {
+					//<script defer src="{{asset('js/qliksaas_login.js')}}"></script>
+					$this->cbView('qlik_items.fullscreen_view_saas', $data);
+				} else {
+					$this->cbView('qlik_items.view_saas', $data);
+				}
 		}
 	}
 
