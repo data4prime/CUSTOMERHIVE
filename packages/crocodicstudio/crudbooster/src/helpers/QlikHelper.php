@@ -136,7 +136,7 @@ class QlikHelper
   {
     $qlik_item = QlikItem::find($qlik_item_id);
     //get current status
-    if ($input_field_value === 'public_access') {
+    if ($input_field_value === '1') {
       //enable public access
       $qlik_item->enablePublicAccess();
     } else {
