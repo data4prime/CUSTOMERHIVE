@@ -494,6 +494,8 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 
 		$data['row']->url = htmlspecialchars_decode($data['row']->url);
 
+		Log::debug('Data Row: ' . $data['row']);
+
 		$js_login = '';
 		/*if ($auth == 'Ticket') {
 
