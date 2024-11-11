@@ -66,6 +66,15 @@ $debug_url = $item_url;
       $(qlik_logo).insertBefore($('#title_icon'));
     }
 
+    var iframe_ = document.querySelector('.qi_iframe');
+    //find in iframe_c a class with name neterror
+    var neterror = iframe_.contentWindow.document.querySelector('.neterror');
+
+    if (neterror) {
+      //if neterror is found, display error
+      displayError('Impossibile caricare l\'iframe: ' + neterror.textContent);
+    }
+
 
 
   })
@@ -80,16 +89,7 @@ $debug_url = $item_url;
             errorContainer.style.display = 'block';*/
         }
 
-            var iframe_ = document.querySelector('.qi_iframe');
-    /*iframe_.src = iframe_.getAttribute('data-src');*/
 
-  iframe_.onerror = function(event) {
-        displayError('Impossibile caricare l\'iframe: ' + event.message);
-    };
-
-        // Simulazione di un errore per test
-        // Questa riga genererà un errore JavaScript
-        //nonEsiste();
     </script>
 
 @endpush
