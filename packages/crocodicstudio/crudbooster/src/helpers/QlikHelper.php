@@ -492,7 +492,7 @@ class QlikHelper
     $qlik_user = DB::table('qlik_users')->where('user_id', $id)->where('qlik_conf_id', $conf_id)->first();
     if (!$qlik_user) {
       $data['error'] = 'User not found!';
-      CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+      CRUDBooster::redirectBack($data['error'], 'error');
       exit;
     }
 

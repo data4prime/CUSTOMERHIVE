@@ -445,7 +445,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	{
 
 		$allowed = QlikHelper::can_see_item($qlik_item_id);
-		Log::debug('Allowed to see item with id ' . $qlik_item_id . ': ' . $allowed);
+		//Log::debug('Allowed to see item with id ' . $qlik_item_id . ': ' . $allowed);
 		//check if at least one of item allowed groups is in user groups
 		if (!$allowed) {
 			//CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
@@ -453,7 +453,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		}
 		$data = [];
 		$data['row'] = QlikItem::find($qlik_item_id);
-		Log::debug('Qlik item found: ' . $data['row']);
+		//Log::debug('Qlik item found: ' . $data['row']);
 		if (empty($data['row'])) {
 			//item missing or soft deleted
 			//can't access soft deleted qlik item
@@ -468,7 +468,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 
 		$menu = Menu::where('path', 'qlik_items/content/' . $qlik_item_id)->first();
 
-		Log::debug('Menu found: ' . $menu);
+		//Log::debug('Menu found: ' . $menu);
 
 
 		/*if (isset($_GET['m'])) {
@@ -494,7 +494,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 
 		$data['row']->url = htmlspecialchars_decode($data['row']->url);
 
-		Log::debug('Data Row: ' . $data['row']);
+		//Log::debug('Data Row: ' . $data['row']);
 
 		$js_login = '';
 		/*if ($auth == 'Ticket') {
@@ -522,17 +522,17 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		} else*/ 
 			if ($auth == 'JWT') {
 				if ($type == 'SAAS') {
-					Log::debug('Getting token for SaaS');
+					//Log::debug('Getting token for SaaS');
 					$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 					$js_login = "js/qliksaas_login.js";
 				} else {
-					Log::debug('Getting token for on-premises');
+					//Log::debug('Getting token for on-premises');
 					$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
 					$js_login = "js/qlik_op_jwt_login.js";
 				}
-				Log::debug('Token: ' . $token);
+				//Log::debug('Token: ' . $token);
 				if (empty($token)) {
-					Log::debug('Token generation failed');
+					//Log::debug('Token generation failed');
 					$data['error'] = 'JWT Token generation failed!';
 					CRUDBooster::redirectBack($data['error'], 'error');
 				}
@@ -549,10 +549,10 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 
 				if (isset($menu->target_layout) && $menu->target_layout == 1) {
 					//<script defer src="{{asset('js/qliksaas_login.js')}}"></script>
-					Log::debug('Rendering fullscreen view');
+					//Log::debug('Rendering fullscreen view');
 					$this->cbView('qlik_items.fullscreen_view_saas', $data);
 				} else {
-					Log::debug('Rendering normal view');
+					//Log::debug('Rendering normal view');
 					$this->cbView('qlik_items.view_saas', $data);
 				}
 		}
@@ -889,7 +889,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 
 				$url = $conf->url;
 				$url .= '/'.$conf->endpoint;
-				$url .= '/qmc/';
+				$url .= '/console/';
 				$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
 
 				$js_login = "js/qliksaas_login.js";

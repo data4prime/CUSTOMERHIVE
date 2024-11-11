@@ -388,4 +388,6 @@ return [
 //You will not be able to recover this widget
     "you_will_not_be_able_to_recover_this_widget" => "You will not be able to recover this widget",
 
+    "alert_error" => "Error",
+
 ];

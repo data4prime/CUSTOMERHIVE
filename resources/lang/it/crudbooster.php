@@ -380,7 +380,7 @@ return [
     'Generate_Screet_Key' => 'Genera Chiave Segreta',
     "you_will_not_be_able_to_recover_this_widget" => "Non sarai in grado di recuperare questo widget!",
 
-
+    "alert_error" => "Errore",
 
 
 ];
