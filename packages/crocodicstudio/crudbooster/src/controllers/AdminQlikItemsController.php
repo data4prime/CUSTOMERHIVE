@@ -530,6 +530,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 					$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
 					$js_login = "js/qlik_op_jwt_login.js";
 				}
+				Log::debug('Token: ' . $token);
 				if (empty($token)) {
 					Log::debug('Token generation failed');
 					$data['error'] = 'JWT Token generation failed!';
