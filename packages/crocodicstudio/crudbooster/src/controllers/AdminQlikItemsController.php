@@ -16,6 +16,9 @@ use App\Menu;
 use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 use MyHelper;
 
+//Log
+use Illuminate\Support\Facades\Log;
+
 use crocodicstudio\crudbooster\helpers\ModuleHelperHelper;
 
 class AdminQlikItemsController extends CBController
@@ -442,6 +445,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	{
 
 		$allowed = QlikHelper::can_see_item($qlik_item_id);
+		Log::debug('Allowed to see item with id ' . $qlik_item_id . ': ' . $allowed);
 		//check if at least one of item allowed groups is in user groups
 		if (!$allowed) {
 			//CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
@@ -449,6 +453,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		}
 		$data = [];
 		$data['row'] = QlikItem::find($qlik_item_id);
+		Log::debug('Qlik item found: ' . $data['row']);
 		if (empty($data['row'])) {
 			//item missing or soft deleted
 			//can't access soft deleted qlik item
@@ -462,6 +467,8 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		//add menu settings
 
 		$menu = Menu::where('path', 'qlik_items/content/' . $qlik_item_id)->first();
+
+		Log::debug('Menu found: ' . $menu);
 
 
 		/*if (isset($_GET['m'])) {
