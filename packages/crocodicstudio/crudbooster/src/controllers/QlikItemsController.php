@@ -14,9 +14,10 @@ class QlikItemsController extends Controller
     else{
       //show public item
       $url = $qlik_item->url;
+      $page_title = $qlik_item->title;
       // $url = 'https://www.google.com';
       // echo(file_get_contents($url));
-      return view('qlik_items.public', compact('url'));
+      return view('qlik_items.public', compact('url', 'page_title'));
 
       // echo "
       // <script type='text/javascript'>
