@@ -137,13 +137,21 @@ id='form-group-{{$name}}' style="{!! @$form['style'] !!}">
   </div>
 </div>
 @if(isset($is_public) && $name == 'public_access')
+   @if (isset($link))
 <div class="mb-3 row {{$header_group_class}} {{ ($errors->first($name))?'has-error':'' }}">
   <div class="col-sm-2 col-form-label" style="padding-top: 7px">
     <label class="">Public URL</label>
   </div>
   <div class="col-sm-10">
     <a id="copyLink" href="{{ isset($link) ? $link : '' }}" target="_blank">{{ isset($link) ? $link : '' }}</a>
-    &nbsp<button id="copyButton" class="btn btn-info">Copy</button>
+    &nbsp
+
+ 
+
+
+    <button id="copyButton" class="btn btn-info">Copy</button>
+
   </div>
 </div>
+    @endif
 @endif
