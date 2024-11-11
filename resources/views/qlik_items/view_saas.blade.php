@@ -66,8 +66,8 @@ $debug_url = $item_url;
       $(qlik_logo).insertBefore($('#title_icon'));
     }
 
-    /*var iframe_ = document.querySelector('.qi_iframe');
-    iframe_.src = iframe_.getAttribute('data-src');*/
+    var iframe_ = document.querySelector('.qi_iframe');
+    /*iframe_.src = iframe_.getAttribute('data-src');*/
 
   iframe_.onerror = function(event) {
         displayError('Impossibile caricare l\'iframe: ' + event.message);
