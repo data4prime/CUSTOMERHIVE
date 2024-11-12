@@ -83,6 +83,7 @@ class AdminCmsUsersController extends CBController
 				'name' => 'tenant',
 				"type" => "select2",
 				"datatable" => "tenants,name",
+				
 				'required' => true,
 				'validation' => 'required|int|min:1',
 				'value' => UserHelper::current_user_tenant() //default value if new user
