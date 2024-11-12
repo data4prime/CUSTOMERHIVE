@@ -49,13 +49,13 @@ class Menu extends Model
       $tenants = $this->tenants();
       //dd($tenants);
       foreach ($tenants as $key => $tenant_id) {
-        if ($tenant_id) {
-        (Tenant::find($tenant_id));
-        $names .= Tenant::find($tenant_id)->name;
-        //don't add the comma after the last tenant name
-        if($key < count($tenants)-1){
-          $names .= ', ';
-        }
+        $t = Tenant::find($tenant_id);
+        if ($t) {
+          $names .= $t->name;
+          //don't add the comma after the last tenant name
+          if($key < count($tenants)-1){
+            $names .= ', ';
+          }
         }
 
       }
