@@ -114,7 +114,7 @@ $debug_url = $item_url;
 </script>
 <script src="@php echo asset($js_login) @endphp"></script>
 
-@push('head')
+
 <style>
   /*set iframe size*/
   .qi_iframe {
@@ -123,4 +123,3 @@ $debug_url = $item_url;
     height: @php echo $frame_height @endphp !important;
   }
 </style>
-@endpush
