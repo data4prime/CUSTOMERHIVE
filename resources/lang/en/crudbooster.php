@@ -390,4 +390,6 @@ return [
 
     "alert_error" => "Error",
 
+    "qlik_user_conf_exists" => "A Qlik user is already associated with this configuration.",
+
 ];

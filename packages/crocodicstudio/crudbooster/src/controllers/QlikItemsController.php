@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use App\QlikItem;
+use App\Menu;
 
 class QlikItemsController extends Controller
 {
@@ -13,11 +14,24 @@ class QlikItemsController extends Controller
     }
     else{
       //show public item
+      $item_url = $qlik_item->url;
       $url = $qlik_item->url;
       $page_title = $qlik_item->title;
+      $subtitle = $qlik_item->subtitle;
+      $debug = $qlik_item->debug_url;
+      $menu = Menu::where('path', 'qlik_items/content/' . $qlik_item->id)->first();
+      if (empty($menu) || !isset($menu)) {
+        $frame_width = '100%';
+        $frame_height = '100%';
+      } else {
+        $frame_width = $menu->frame_width;
+        $frame_height = $menu->frame_height;
+      }
+		  $target_layout = isset($menu) ? $menu->target_layout : '';
+
       // $url = 'https://www.google.com';
       // echo(file_get_contents($url));
-      return view('qlik_items.public', compact('url', 'page_title'));
+      return view('qlik_items.public', compact('item_url','url', 'page_title', 'frame_width', 'frame_height', 'target_layout', 'subtitle', 'debug'));
 
       // echo "
       // <script type='text/javascript'>

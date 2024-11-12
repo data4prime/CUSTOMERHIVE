@@ -10,9 +10,8 @@
   <link rel="shortcut icon"
     href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
   <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-  <!-- Bootstrap 3.4.1 -->
-  <link href="{{ asset('vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"
-    type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
   <!-- Font Awesome Icons -->
   <link href="{{asset('vendor/crudbooster/assets/adminlte/font-awesome/css')}}/font-awesome.min.css" rel="stylesheet"
     type="text/css" />
@@ -38,20 +37,59 @@
 <body
  class="{{ Session::get('theme_color', 'skin-blue') }} {{ config('crudbooster.ADMIN_LAYOUT') }} {{ isset($sidebar_mode) ? $sidebar_mode : '' }}"
 >
-  <div id='app' class="wrapper">
+  <div id='app' class="">
 
     <!-- Header -->
 
     <!-- Sidebar -->
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="public-wrapper">
+    <!--<div class="public-wrapper">
       <section class="content-header">
         <div class="qi_iframe_container">
           <iframe class="qi_iframe" src="{{ $url }}"  ></iframe>
         </div>
-      </section><!-- /.content -->
-    </div><!-- /.content-wrapper -->
+      </section>
+    </div>-->
+
+@php
+$debug_url = '';
+if ($debug == 'Active') {
+$debug_url = $item_url;
+}
+@endphp
+@if(isset($target_layout) && $target_layout == 2)
+<!-- fill content settings -->
+
+<div class="card qi_iframe_container">
+  <div class="card-header">
+    <h4 class="qi_subtitle">{{ $subtitle }}</h4>
+    <a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a>
+  </div>
+  <div class="card-body">
+    <iframe class="qi_iframe" data-src="{{$item_url}}" src=""  style="border:none;"></iframe>
+  </div>
+  
+  
+</div>
+
+@else
+<!-- default -->
+
+<div class="card qi_box">
+  <div class="card-header">
+    <h4 class="qi_subtitle">{{ $subtitle }}</h4>
+    <a href="{{$debug_url}}" target="_blank">{{$debug_url}}</a>
+  </div>
+
+<!--qi_iframe_container-->
+  <div class="card-body">
+    
+    <iframe class="qi_iframe" data-src="{{$item_url}}" src=""  style="border:none;"></iframe>
+  </div>
+</div>
+
+@endif
 
     <!-- Footer -->
 
@@ -60,3 +98,14 @@
 </body>
 
 </html>
+
+@push('head')
+<style>
+  /*set iframe size*/
+  .qi_iframe {
+    width: @php echo $frame_width @endphp !important;
+
+    height: @php echo $frame_height @endphp !important;
+  }
+</style>
+@endpush

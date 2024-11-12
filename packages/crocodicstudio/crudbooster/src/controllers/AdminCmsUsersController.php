@@ -294,6 +294,14 @@ class AdminCmsUsersController extends CBController
 				//file_put_contents(__DIR__.'/qlik_users.txt',  $idp . PHP_EOL, FILE_APPEND);
 
 				if (!empty($v)) {
+
+					$check_user = DB::table('qlik_users')->where('user_id', $id_user)->where('qlik_conf_id', $v)->first();
+
+					if ($check_user) {
+						CRUDBooster::redirectBack(trans('crudbooster.qlik_user_conf_exists'), 'error');
+					}
+
+
 					if (QlikHelper::confIsSAAS($v)) {
 						if (!empty($qlik_idp_qlik[$k])) {
 							$idp = $qlik_idp_qlik[$k];

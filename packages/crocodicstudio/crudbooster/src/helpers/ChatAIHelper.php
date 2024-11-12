@@ -105,34 +105,6 @@ class ChatAIHelper
     return false;
   }
 
-  /**
-   *	Check if a Chat AI is currently enabled for public access
-   *
-   * @return string Chat AI public URL
-   */
-  public static function buildPublicUrl($proxy_token)
-  {
-    return env('APP_URL') . '/qi/' . $proxy_token;
-  }
-  /**
-   *	Enable/Disable a public page which grant access to the Chat AI content anonymously
-   *
-   * @param string ' ' if public access is enabled,
-   *               '' if public access is disabled
-   *
-   */
-  public static function toggle_public_access($input_field_value, $chat_ai_id)
-  {
-    $chat_ai = ChatAIConf::find($chat_ai_id);
-    //get current status
-    if ($input_field_value === 'public_access') {
-      //enable public access
-      $chat_ai->enablePublicAccess();
-    } else {
-      //disable public_access
-      $chat_ai->disablePublicAccess();
-    }
-  }
 
   //function to save chat history
   public static function saveChatHistory($chat_ai_id, $messages)

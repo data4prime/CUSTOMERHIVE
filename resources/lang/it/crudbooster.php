@@ -382,5 +382,7 @@ return [
 
     "alert_error" => "Errore",
 
+    "qlik_user_conf_exists" => "Esiste già un utente Qlik associato a questa configurazione.",
+
 
 ];
