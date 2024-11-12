@@ -196,7 +196,7 @@ h4.chat-title {
                   <div class="media-body">
                     <p>{!! __('crudbooster.hello') !!}</p>
                     <p>{!! __('crudbooster.i_am_your_chatai') !!}</p>
-                    <p>{!! __('crudbooster.not_found_type_component') !!}</p>
+                    <p>{!! __('crudbooster.how_can_i_help_you') !!}</p>
                   </div>
                 </div>
     @if ($chat_messages)

@@ -43,7 +43,7 @@ crocodicstudio\crudbooster\helpers\ChatAIHelper::getToken($row->id);
                     <p>{!! __('crudbooster.i_am_your_chatai') !!}</p>
                   </div>
                     <div class="media-body">
-                    <p>{!! __('crudbooster.not_found_type_component') !!}</p>
+                    <p>{!! __('crudbooster.how_can_i_help_you') !!}</p>
                   </div>
                   <!--<div class="media-body">
                     <p>Ciao</p>
