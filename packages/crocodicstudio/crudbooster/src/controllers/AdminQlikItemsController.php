@@ -51,7 +51,9 @@ class AdminQlikItemsController extends CBController
 		$this->col[] = ["label" => "Subtitle", "name" => "subtitle"];
 		//$this->col[] = ["label" => "Help", "name" => "description"];
 $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "qlik_confs,confname");
-		$this->col[] = ["label" => "Public", "name" => "proxy_token"];
+
+		//STAND BY
+		//$this->col[] = ["label" => "Public", "name" => "proxy_token"];
 
 		//$this->col[] = ["label" => "Qlik Conf", "name" => "qlik_conf"];
 		
@@ -63,8 +65,10 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		$this->form[] = ['label' => 'Title', 'name' => 'title', 'type' => 'text', 'validation' => 'required|string|min:1|max:70', 'width' => 'col-sm-10', 'placeholder' => 'Item title'];
 		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'placeholder' => 'Path to embed item'];
 		$this->form[] = ['label' => 'Subtitle', 'name' => 'subtitle', 'type' => 'text', 'validation' => 'string|min:1|max:70', 'width' => 'col-sm-10', 'placeholder' => 'Item subtitle'];
+		
 		$this->form[] = ['label' => 'URL Help', 'name' => 'url_help', 'type' => 'text', 'validation' => 'string|min:1|max:200', 'width' => 'col-sm-10', 'placeholder' => 'Item helper'];
-		$this->form[] = ['label' => 'Enable public access', 'name' => 'public_access', 'type' => 'checkbox', 'width' => 'col-sm-1'];
+		//STAND BY
+		//$this->form[] = ['label' => 'Enable public access', 'name' => 'public_access', 'type' => 'checkbox', 'width' => 'col-sm-1'];
 		$this->form[] = ['label' => 'Qlik Configuration', 'name' => 'qlik_conf', "type" => "select", "datatable" => "qlik_confs,confname", 'width' => 'col-sm-10'];
 		# END FORM DO NOT REMOVE THIS LINE
 
@@ -334,14 +338,14 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	public function hook_row_index($column_index, &$column_value)
 	{
 		//replace proxy_token with public link to qlik item
-		if ($column_index == 4) {
+		/*if ($column_index == 4) {
 			if (empty($column_value)) {
 				$column_value = 'private';
 			} else {
 				$link = QlikHelper::buildPublicUrl($column_value);
 				$column_value = '<a href="' . $link . '" target="_blank">public</a>';
 			}
-		}
+		}*/
 		//Your code here
 	}
 
@@ -395,7 +399,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 			$postdata['url_help'] = '';
 		}
 
-		QlikHelper::toggle_public_access($postdata['public_access'], $id);
+		//QlikHelper::toggle_public_access($postdata['public_access'], $id);
 		//avoid sql error
 		unset($postdata['public_access']);
 	}
