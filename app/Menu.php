@@ -47,8 +47,9 @@ class Menu extends Model
     public function tenants_name() {
       $names = '';
       $tenants = $this->tenants();
-      dd($tenants);
+      //dd($tenants);
       foreach ($tenants as $key => $tenant_id) {
+        dd(Tenant::find($tenant_id));
         $names .= Tenant::find($tenant_id)->name;
         //don't add the comma after the last tenant name
         if($key < count($tenants)-1){
