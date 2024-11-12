@@ -39,7 +39,7 @@
 <body
  class="{{ Session::get('theme_color', 'skin-blue') }} {{ config('crudbooster.ADMIN_LAYOUT') }} {{ isset($sidebar_mode) ? $sidebar_mode : '' }}"
 >
-  <div id='app' class="">
+  <div id='content_section' class="">
 
     <!-- Header -->
 
