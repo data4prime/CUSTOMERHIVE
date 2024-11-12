@@ -51,11 +51,10 @@ class QlikItemsController extends Controller
 					$js_login = "js/qlik_op_jwt_login.js";
 				}
 				//Log::debug('Token: ' . $token);
-				if (empty($token)) {
-            //Log::debug('Token generation failed');
+				  /*if (empty($token)) {
             $error = 'JWT Token generation failed!';
             CRUDBooster::redirectBack($error, 'error');
-          }
+          }*/
           $token = $token;
           $item_url = $qlik_item->url;
 
