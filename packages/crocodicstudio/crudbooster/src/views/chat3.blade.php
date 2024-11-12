@@ -233,7 +233,7 @@ h4.chat-title {
             <div>
                 <div class="media-body">{!! __('crudbooster.hello') !!}</div>
                 <div class="media-body">{!! __('crudbooster.i_am_your_chatai') !!}</div>
-                <div class="media-body">{!! __('crudbooster.not_found_type_component') !!}</div>
+                <div class="media-body">{!! __('crudbooster.how_can_i_help_you') !!}</div>
             </div>
         </div>
 
