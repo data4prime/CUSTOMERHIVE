@@ -419,6 +419,7 @@ class MenusController extends CBController
         "select2_multiple" => true,
         "datatable" => "tenants,name",
         "relationship_table" => "menu_tenants",
+        "datatable_where" => "tenants.deleted_at IS NULL",
         'required' => true,
         'validation' => 'required',
         'value' => UserHelper::current_user_tenant() //default value per creazione nuovo record
