@@ -101,6 +101,19 @@ $debug_url = $item_url;
 
 </html>
 
+<script>
+  //const TENANT = '{{ $tenant }}/{{$prefix}}';
+
+  const TENANT = '{{ $tenant }}';
+
+  const PREFIX = '{{ $prefix }}';
+
+  const WEBINTEGRATIONID = '{{ $web_int_id }}';
+  const APPID = '##APP##';
+  const JWTTOKEN = "{{ $token}}";
+</script>
+<script src="@php echo asset($js_login) @endphp"></script>
+
 @push('head')
 <style>
   /*set iframe size*/
