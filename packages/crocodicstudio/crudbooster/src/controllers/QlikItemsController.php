@@ -41,11 +41,13 @@ class QlikItemsController extends Controller
       if ($auth == 'JWT') {
 				if ($type == 'SAAS') {
 					//Log::debug('Getting token for SaaS');
-					$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+					//$token = HelpersQlikHelper::getJWTToken(CRUDBooster::myId(), $conf->id);
+          $token = "";
 					$js_login = "js/qliksaas_login.js";
 				} else {
 					//Log::debug('Getting token for on-premises');
-					$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
+					//$token = HelpersQlikHelper::getJWTTokenOP(CRUDBooster::myId(), $conf->id);
+          $token = "";
 					$js_login = "js/qlik_op_jwt_login.js";
 				}
 				//Log::debug('Token: ' . $token);
