@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Excel;
 use Illuminate\Support\Facades\PDF;
 use Illuminate\Support\Facades\Request;
 
+use Illuminate\Support\Facades\Log;
+
 class StatisticBuilderController extends CBController
 {
     public function cbInit()
@@ -69,9 +71,12 @@ class StatisticBuilderController extends CBController
 
     public function getShowDashboard()
     {
+
         $this->cbLoader();
+
         $m = CRUDBooster::sidebarDashboard();
         $m->path = str_replace("statistic_builder/show/", "", $m->path);
+
         if ($m->type != 'Statistic') {
             redirect('/');
         }

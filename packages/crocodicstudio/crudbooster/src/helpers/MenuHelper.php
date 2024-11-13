@@ -201,7 +201,6 @@ class MenuHelper
   {
     $result = '';
     foreach (CRUDBooster::sidebarMenu() as $menu) {
-      // foreach(MenuHelper::get_menu(1) as $menu){
       $result .= self::menu_to_html_for_sidebar($menu);
     }
     return $result;

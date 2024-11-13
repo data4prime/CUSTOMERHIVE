@@ -31,7 +31,14 @@
           </div>
         </li>
 
-        <?php $dashboard = CRUDBooster::sidebarDashboard();?>
+        <?php 
+
+          $dashboard = CRUDBooster::sidebarDashboard();
+
+
+        ?>
+
+
         @if($dashboard)
         <li data-id='{{$dashboard->id}}' data-collapse="1"
           class="{{ (Request::is(config('crudbooster.ADMIN_PATH'))) ? 'active' : '' }}">

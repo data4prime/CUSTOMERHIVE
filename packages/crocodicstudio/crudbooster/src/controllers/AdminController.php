@@ -16,6 +16,8 @@ use crocodicstudio\crudbooster\helpers\UserHelper;
 
 use crocodicstudio\crudbooster\helpers\LicenseHelper;
 
+use Illuminate\Support\Facades\Log;
+
 use App\Services\ConnectorService;
 
 //use App\Classes\Custom\ChiveLicenseService;
@@ -246,7 +248,13 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
         ->where("id", $users->id_cms_privileges)
         ->first();
 
-    if (\Hash::check($password, $users->password) && $users->status == "Active" && ($tenant_domain_name == $tenant || $priv->is_superadmin == 1)) {
+
+
+
+    if (
+          \Hash::check($password, $users->password) && $users->status == "Active" && 
+            ( ($tenant_domain_name == $tenant || !$tenant_domain_name) || $priv->is_superadmin == 1)
+        ) {
       $priv = DB::table("cms_privileges")
         ->where("id", $users->id_cms_privileges)
         ->first();
@@ -273,15 +281,21 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
       CRUDBooster::insertLog(trans("crudbooster.log_login", ['email' => $users->email, 'ip' => Request::server('REMOTE_ADDR')]));
 
       $cb_hook_session = new \App\Http\Controllers\CBHook;
+  
+
       $cb_hook_session->afterLogin();
 
+
+
+
       $isLicenseValid = LicenseHelper::canLicenseLogin();
+
+
 
       if (!$isLicenseValid) {
         return redirect()->route('getLicenseScreen')->with('message', 'License is missing or not valid');
       }
 
-      //dd(Session::all());
 
       return redirect(CRUDBooster::adminPath());
     } else {

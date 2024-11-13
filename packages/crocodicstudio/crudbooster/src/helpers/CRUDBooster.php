@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 //use UserHelper;
 use crocodicstudio\crudbooster\helpers\UserHelper;
-
+use Illuminate\Support\Facades\Log;
 
 
 
@@ -568,6 +568,8 @@ public static function isProfilePage() {
         //dd(DB::table('cms_menus')->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '".self::myPrivilegeId()."')")->where('is_dashboard', 1)->where('is_active', 1)->toSql());
         $menu = DB::table('cms_menus')->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '" . self::myPrivilegeId() . "')")->where('is_dashboard', 1)->where('is_active', 1)->first();
 
+        //dd($menu);
+
         /*
         if ($menu == null) {
             $menu = DB::table('cms_menus')->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '" . self::myPrivilegeId() . "')")->where('id', 50)->first();
@@ -597,6 +599,7 @@ public static function isProfilePage() {
 
 
 
+        //Log::debug($url);
 
         @$menu->url = $url;
 
@@ -621,6 +624,7 @@ public static function isProfilePage() {
             ->join('menu_tenants', 'menu_tenants.menu_id', 'cms_menus.id')
             ->where('menu_tenants.tenant_id', UserHelper::current_user_tenant());
 
+
         // se l'utente corrente non è superadmin e non è Tenantadmin..
         if (!CRUDBooster::isSuperadmin() and !UserHelper::isTenantAdmin()) {
             //..allora filtra i menu visibili in base ai suoi gruppi
@@ -631,6 +635,8 @@ public static function isProfilePage() {
             ->select('cms_menus.*')
             ->distinct() // moltiplica le righe senza duplicate se item ha molti gruppi
             ->get();
+
+        
 
 
 
