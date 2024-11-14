@@ -47,6 +47,8 @@ class CBBackend
                     return redirect($menus->path);
                 } elseif ($menus->type == 'Qlik') {
                     return redirect('admin/'.$menus->path);
+                } else if ($menus->type == 'Agent AI') {
+                    return redirect($menus->path);
                 }
             }
         }
