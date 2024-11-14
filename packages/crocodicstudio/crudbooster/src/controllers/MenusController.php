@@ -105,6 +105,11 @@ class MenusController extends CBController
             $('#form-group-statistic_slug,#form-group-chat_ai').hide();
   					$('#module_slug').prop('required',true);
   					$('#form-group-module_slug label').append('<span class=\"text-danger\" title=\"" . trans('crudbooster.this_field_is_required') . "\">*</span>');
+
+
+            
+
+
   				}
           else if(type_menu == 'Statistic')
           {
@@ -141,8 +146,8 @@ class MenusController extends CBController
               $('#form-group-qlik_slug').hide();
               $('#qlik_slug,#path').prop('required',false);
 
-            $('#form-group-is_dashboard').hide();
-            $('#is_dashboard,#path').prop('required',false);
+            /*$('#form-group-is_dashboard').hide();
+            $('#is_dashboard,#path').prop('required',false);*/
 
             $('#form-group-target_layout').hide();
             $('#target_layout,#path').prop('required',false);
@@ -300,8 +305,8 @@ class MenusController extends CBController
               $('#qlik_slug,#path').prop('required',false);
 
 
-            $('#form-group-is_dashboard').hide();
-            $('#is_dashboard,#path').prop('required',false);
+            /*$('#form-group-is_dashboard').hide();
+            $('#is_dashboard,#path').prop('required',false);*/
 
             $('#form-group-target_layout').hide();
             $('#target_layout,#path').prop('required',false);
