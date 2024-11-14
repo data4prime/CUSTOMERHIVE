@@ -146,7 +146,7 @@ class MenuHelper
       if ($menu->is_dashboard) {
         $class = 'is-dashboard';
         $title = 'This is set as Dashboard';
-        $icon = 'icon-is-dashboard fa fa-dashboard';
+        $icon = 'icon-is-dashboard fa fa-home';
       } else {
         $class = '';
         $title = '';

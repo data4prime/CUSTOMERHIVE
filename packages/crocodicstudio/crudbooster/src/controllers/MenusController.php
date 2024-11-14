@@ -597,7 +597,7 @@ class MenusController extends CBController
       'value' => '1',
     ];
     $this->form[] = [
-      "label" => "Dashboard",
+      "label" => "Set as Home Page",
       "name" => "is_dashboard",
       "type" => "radio",
       "required" => true,
