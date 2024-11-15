@@ -33,7 +33,7 @@
                 <thead>
                 <tr>
                     <th width="3%">No</th>
-                    <th>Screet Key</th>
+                    <th>Secret Key</th>
                     <th width="10%">Hit</th>
                     <th width="10%">Status</th>
                     <th width="15%">-</th>
@@ -80,7 +80,7 @@
                                 "<a class='btn btn-sm btn-default' href='{{CRUDBooster::mainpath("status-apikey")}}?id=" + resp.id + "&status=0'>Non Active</a> <a class='btn btn-sm btn-danger' href='javascript:void(0)' onclick='deleteApi(" + resp.id + ")'>Delete</a> </td></tr>"
                             );
                             $('.no-screetkey').remove();
-                            swal("Success!", "Your new screet key has been generated successfully", "success");
+                            swal("Success!", "Your new Secret Key has been generated successfully", "success");
                         })
                     }
 
@@ -92,9 +92,9 @@
                         }, function () {
                             $.get("{{CRUDBooster::mainpath('delete-api-key')}}?id=" + id, function (resp) {
                                 if (resp.status == 1) {
-                                    swal("Success!", "The screet key has been deleted !", "success");
+                                    swal("Success!", "The Secret Key has been deleted !", "success");
                                 } else {
-                                    swal("Upps!", "The screet key can't delete !", "warning");
+                                    swal("Upps!", "The Secret Key can't delete !", "warning");
                                 }
                                 location.href = document.location.href;
                             })
