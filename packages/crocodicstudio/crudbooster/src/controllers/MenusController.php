@@ -841,5 +841,3 @@ class MenusController extends CBController
   }
 }
 
-
-//prova github workflows
