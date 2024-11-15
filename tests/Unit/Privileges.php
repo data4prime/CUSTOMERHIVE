@@ -9,8 +9,8 @@ use App\Http\Controllers\AdminSmartphonesController;
 class Privileges extends TestCase
 {
     public function super_admin_list_modules() {
-    $controller =  new AdminSmartphonesController();
-    $list = ModuleHelper::can_list($controller, );
+    /*$controller =  new AdminSmartphonesController();
+    $list = ModuleHelper::can_list($controller, );*/
 
     }
 

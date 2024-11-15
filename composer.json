@@ -19,7 +19,7 @@
         "laravel/framework": "^9.0",
         "laravel/helpers": "^1.6",
         "maatwebsite/excel": "3.1.48",
-        "nunomaduro/collision": "^7.10",
+        "nunomaduro/collision": "^6.0",
         "ramsey/uuid": "^4.7",
         "tremby/laravel-git-version": "^1.2.2",
         "unisharp/laravel-filemanager": "1.7.7"
@@ -27,7 +27,7 @@
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9",
-        "phpunit/phpunit": "10.0.0",
+        "phpunit/phpunit": "^9.0",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
         "filp/whoops": "~2.0"
