@@ -54,10 +54,10 @@
             </div>
             <div class='mb-3 row'>
                 <label>How To Use</label><br/>
-                SCREETKEY : ABCDEF123456 <br/>
+                SECRETKEY : ABCDEF123456 <br/>
                 TIME : UNIX CURRENT TIME <br/>
                 <label>Header :</label><br/>
-                X-Authorization-Token : md5( SCREETKEY + TIME + USER_AGENT )<br/>
+                X-Authorization-Token : md5( SECRETKEY + TIME + USER_AGENT )<br/>
                 X-Authorization-Time : TIME<br>
                 X-user : User Email
             </div>

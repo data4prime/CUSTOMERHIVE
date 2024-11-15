@@ -125,7 +125,7 @@
         <div class="mb-4">
             <h5>How To Use</h5>
             <div class="mb-2">
-                <strong>SCREETKEY:</strong> ABCDEF123456
+                <strong>SECRETKEY:</strong> ABCDEF123456
             </div>
             <div class="mb-2">
                 <strong>TIME:</strong> UNIX CURRENT TIME
@@ -134,7 +134,7 @@
                 <strong>Header:</strong>
             </div>
             <div class="mb-2">
-                <code>X-Authorization-Token:</code> <span class="text-muted">md5(SCREETKEY + TIME + USER_AGENT)</span>
+                <code>X-Authorization-Token:</code> <span class="text-muted">md5(SECRETKEY + TIME + USER_AGENT)</span>
             </div>
             <div class="mb-2">
                 <code>X-Authorization-Time:</code> TIME
@@ -147,10 +147,10 @@
 <!--
         <div class='mb-3 row'>
             <label>How To Use</label><br />
-            SCREETKEY : ABCDEF123456 <br />
+            SECRETKEY : ABCDEF123456 <br />
             TIME : UNIX CURRENT TIME <br />
             <label>Header :</label><br />
-            X-Authorization-Token : md5( SCREETKEY + TIME + USER_AGENT )<br />
+            X-Authorization-Token : md5( SECRETKEY + TIME + USER_AGENT )<br />
             X-Authorization-Time : TIME<br>
             X-user : User Email
         </div>
