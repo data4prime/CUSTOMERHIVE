@@ -527,7 +527,8 @@
 
                 var val = $('#table-response tfoot tr td:nth-child(2) input').val();
                 var validation = $('#table-response tfoot tr td:nth-child(3) select').val();
-                var subquery = $('#table-response tfoot tr td:nth-child(4) input').val();
+                var subquery = $('#table-response tfoot tr td:nth-child(4) textarea').val();
+                //console.log(subquery);
                 var is_check = $('#table-response tfoot tr td:nth-child(5) select').val();
 
                 var check_yes, check_no;

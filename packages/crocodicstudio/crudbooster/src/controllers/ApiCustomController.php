@@ -326,7 +326,6 @@ class ApiCustomController extends CBController
         $responses_name = g('responses_name');
         $responses_type = g('responses_type');
         $responses_subquery = g('responses_subquery');
-        dd($responses_subquery);
         $responses_used = g('responses_used');
         $json = [];
         for ($i = 0; $i <= count($responses_name); $i++) {
