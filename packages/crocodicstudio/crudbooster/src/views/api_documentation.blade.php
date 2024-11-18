@@ -28,6 +28,15 @@
 </ul>
 -->
 
+    <style>
+        tr.child-row td:first-child {
+            padding-left: 2rem;
+        }
+        tr.child-row td:last-child {
+            padding-left: 2rem;
+        }
+    </style>
+
 <div class='box'>
 
     <div class='box-body'>
@@ -229,7 +238,10 @@
                                         </thead>
                                         <tbody>
 
-                                                @php $i = 0; @endphp
+                                                @php 
+                                                    $i = 0; 
+                                                    $j = 1;
+                                                @endphp
                                                 @foreach($parameters as $param)
 
 
@@ -283,7 +295,7 @@
 
                                             @if($api->aksi == 'list')
                                                 <tr class="table-active">
-                                                    <td>#</td>
+                                                    <td>{{$i}}</td>
                                                     <td>Array</td>
                                                     <td><strong>data</strong></td>
                                                 </tr>
@@ -292,10 +304,10 @@
                                             @if($api->aksi == 'list' || $api->aksi == 'detail')
                                                 @foreach($responses as $resp)
                                                     @if($resp['used'])
-                                                        <tr>
-                                                            <td>{{ $i++ }}</td>
+                                                        <tr class="child-row">
+                                                            <td>{{ $i }}.{{$j++}}</td>
                                                             <td width="5%"><em>{{ $resp['type'] }}</em></td>
-                                                            <td>{{ ($api->aksi == 'list') ? '' : '' }} {{ $resp['name'] }}</td>
+                                                            <td>⤷ {{ ($api->aksi == 'list') ? '' : '' }} {{ $resp['name'] }}</td>
                                                         </tr>
                                                     @endif
                                                 @endforeach
