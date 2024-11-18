@@ -576,6 +576,7 @@ public static function isProfilePage() {
         }
 */
 
+
         switch ($menu->type) {
             case 'Route':
                 $url = route($menu->path);

@@ -385,4 +385,7 @@ return [
     "qlik_user_conf_exists" => "Esiste già un utente Qlik associato a questa configurazione.",
 
 
+    "cannot_disable_dashboard" =>  "Non ci sono altre dashboard abilitate. Devi avere almeno una dashboard abilitata.",
+
+
 ];

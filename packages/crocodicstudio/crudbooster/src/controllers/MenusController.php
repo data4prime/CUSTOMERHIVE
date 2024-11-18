@@ -762,6 +762,15 @@ class MenusController extends CBController
       Cache::forget('sidebarDashboard' . CRUDBooster::myPrivilegeId());
     }
 
+    if ($postdata['is_dashboard'] == 0) {
+      $menu = DB::table('cms_menus')->
+            whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '" . CRUDBooster::myPrivilegeId() . "')")->where('is_dashboard', 1)->where('is_active', 1)->first();
+      if ($menu && $menu->id == $id) {
+        //redirect back with error message
+        CRUDBooster::redirectBack(trans('crudbooster.cannot_disable_dashboard'), 'error');
+      } 
+    }
+
     if ($postdata['type'] == 'Statistic') {
       $stat = CRUDBooster::first('cms_statistics', ['id' => $postdata['statistic_slug']]);
 
