@@ -754,7 +754,7 @@ class AdminChatAIController extends CBController
 
 		$data['page_icon'] = '';
 		$data['page_title'] = $data['row']->title;
-		$data['help'] = $data['row']->description;
+		$data['help'] = $data['row']->url_help;
 		$data['subtitle'] = $data['row']->subtitle;
 
 

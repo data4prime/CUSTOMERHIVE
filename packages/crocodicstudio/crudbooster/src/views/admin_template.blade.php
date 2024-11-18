@@ -137,7 +137,8 @@
                     <i id='title_icon' class='{!! isset($page_icon) ? $page_icon : $module->icon !!}'></i> 
                     {!! isset($page_title) ? $page_title : '' !!} 
                     @if(isset($help)) 
-                        <i id="help_icon" class="fa fa-question-circle" title="{{ $help }}"></i> 
+                        <a href="{{ $help }}" target="_blank"><i id="help_icon" class="fa fa-question-circle" title="{{ $help }}"></i></a>
+                         
                     @endif &nbsp;&nbsp;
 
                     <!-- START BUTTON -->

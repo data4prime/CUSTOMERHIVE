@@ -26,6 +26,8 @@ if ($method != 'content_view') {
 
 
 
+
+
 @endphp 
 
 <!-- Main Header -->
