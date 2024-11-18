@@ -8,13 +8,37 @@ Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\C
 
     $dir = scandir(base_path("app/Http/Controllers"));
     foreach ($dir as $v) {
+        if ($v == '.' || $v == '..' || $v == 'Auth') {
+            continue;
+        }
         $v = str_replace('.php', '', $v);
+
+
+
+        $controller = "App\Http\Controllers\\".$v;
+
+
+        //get instance of controller
+        $controller = app($controller);
+        if (isset($controller->permalink)) {
+            $permalink = $controller->permalink;
+        }
+        //$permalink = $controller->permalink;
+        //dd($permalink);
+        
         $names = array_filter(preg_split('/(?=[A-Z])/', str_replace('Controller', '', $v)));
+
         $names = strtolower(implode('_', $names));
+
 
         if (substr($names, 0, 4) == 'api_') {
             $names = str_replace('api_', '', $names);
-            Route::any('api/'.$names, $v.'@execute_api');
+            if (isset($permalink)) {
+                Route::any('api/'.$permalink, $v.'@execute_api');
+            } else {
+                Route::any('api/'.$names, $v.'@execute_api');
+            }
+            
         }
     }
 });
