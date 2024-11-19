@@ -347,6 +347,7 @@ class ApiCustomController extends CBController
         $a['keterangan'] = g('keterangan');
 
         if (Request::get('id')) {
+            //dd($a);
             DB::table('cms_apicustom')->where('id', g('id'))->update($a);
         } else {
 
