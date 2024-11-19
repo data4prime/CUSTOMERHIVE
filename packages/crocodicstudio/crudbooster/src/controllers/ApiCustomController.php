@@ -353,6 +353,12 @@ class ApiCustomController extends CBController
 
             dd($controller);*/
 
+            $check_permalink = DB::table('cms_apicustom')->where('permalink', g('permalink'))->first();
+
+            if ($check_permalink) {
+                return CRUDBooster::redirectBack(trans('crudbooster.api_permalink_already_exists'), 'error');
+            }
+
             
 
             $controller = DB::table('cms_apicustom')->where('id', g('id'))->first();//->controller;
@@ -403,8 +409,24 @@ class ApiCustomController extends CBController
 
         } else {
 
+            
+
             $controllerName = ucwords(str_replace('_', ' ', $a['permalink']));
             $controllerName = str_replace(' ', '', $controllerName);
+
+            
+            //check if controller already exists
+            $controller = 'Api'.$controllerName.'Controller.php';
+            $controller_path = base_path("app/Http/Controllers/").$controller;
+            if (file_exists($controller_path)) {
+                $controller_db = DB::table('cms_apicustom')->where('controller', $controller)->first()->id;
+                $controller = 'Api'.$controllerName.$controller_db.'Controller.php';
+                $controllerName = $controllerName.$controller_db;
+
+
+            }
+
+
             CRUDBooster::generateAPI($controllerName, $a['tabel'], $a['permalink'], $a['method_type']);
 
             $a['controller'] = 'Api'.$controllerName.'Controller.php';

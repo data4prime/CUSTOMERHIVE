@@ -389,5 +389,7 @@ return [
 
     "api_controller_not_found" => "Controller API non trovato",
 
+    "api_permalink_already_exists" => "Lo slug API esiste già",
+
 
 ];
