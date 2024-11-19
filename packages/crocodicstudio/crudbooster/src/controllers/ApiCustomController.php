@@ -419,11 +419,18 @@ class ApiCustomController extends CBController
     {
         $this->cbLoader();
         $row = DB::table('cms_apicustom')->where('id', $id)->first();
+
+        $controller = $row->controller;
+
+        $controller = base_path("app/Http/Controllers/".$controller);
+
         DB::table('cms_apicustom')->where('id', $id)->delete();
 
-        $controllername = ucwords(str_replace('_', ' ', $row->permalink));
+        @unlink($controller);
+
+        /*$controllername = ucwords(str_replace('_', ' ', $row->permalink));
         $controllername = str_replace(' ', '', $controllername);
-        @unlink(base_path("app/Http/Controllers/Api".$controllername."Controller.php"));
+        @unlink(base_path("app/Http/Controllers/Api".$controllername."Controller.php"));*/
 
         return response()->json(['status' => 1]);
     }
