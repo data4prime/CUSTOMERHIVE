@@ -867,7 +867,7 @@ class ApiController extends Controller
 
             ->first();
         if (!$user) {
-            return "User not found!";
+            return "User not found! Make sure you insert the X-User header correctly and your email is active!";
         }
 
         $priv = DB::table("cms_privileges")
