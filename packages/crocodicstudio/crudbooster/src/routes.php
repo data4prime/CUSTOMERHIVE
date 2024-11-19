@@ -6,6 +6,19 @@ $namespace = '\crocodicstudio\crudbooster\controllers';
 Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\CBAuthAPI'], 'namespace' => 'App\Http\Controllers'], function () {
     //Router for custom api defeault
 
+    $apis = DB::table('cms_apicustom')->get();
+
+    /*foreach($apis as $k => $v) {
+        if (isset($v->permalink)) {
+            Route::any('api/'.$v->permalink, $v->controller.'@execute_api');
+        } 
+    }*/
+
+
+
+
+
+
     $dir = scandir(base_path("app/Http/Controllers"));
     foreach ($dir as $v) {
         if ($v == '.' || $v == '..' || $v == 'Auth') {
@@ -18,13 +31,12 @@ Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\C
         $controller = "App\Http\Controllers\\".$v;
 
 
-        //get instance of controller
+
         $controller = app($controller);
         if (isset($controller->permalink)) {
             $permalink = $controller->permalink;
         }
-        //$permalink = $controller->permalink;
-        //dd($permalink);
+
         
         $names = array_filter(preg_split('/(?=[A-Z])/', str_replace('Controller', '', $v)));
 
@@ -34,7 +46,14 @@ Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\C
         if (substr($names, 0, 4) == 'api_') {
             $names = str_replace('api_', '', $names);
             if (isset($permalink)) {
-                Route::any('api/'.$permalink, $v.'@execute_api');
+                //dd($permalink);
+                $api_endpoint = DB::table('cms_apicustom')->where('permalink', $permalink)->first();
+                //dd($api_endpoint);
+                if ($api_endpoint && isset($api_endpoint->permalink)) {
+                    Route::any('api/'.$api_endpoint->permalink, $v.'@execute_api');
+                } else {
+                    Route::any('api/'.$names, $v.'@execute_api');
+                }
             } else {
                 Route::any('api/'.$names, $v.'@execute_api');
             }
