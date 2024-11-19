@@ -49,12 +49,11 @@ Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\C
         if (substr($names, 0, 4) == 'api_') {
             $names = str_replace('api_', '', $names);
             if (isset($permalink)) {
-                //dd($permalink);
-                $api_endpoint = DB::table('cms_apicustom')->where('permalink', $permalink)->first();
-                //dd($api_endpoint);
+                Route::any('api/'.$permalink, $v.'@execute_api');
+                /*$api_endpoint = DB::table('cms_apicustom')->where('permalink', $permalink)->first();
                 if ($api_endpoint && isset($api_endpoint->permalink)) {
                     Route::any('api/'.$api_endpoint->permalink, $v.'@execute_api');
-                } /*else {
+                } else {
                     Route::any('api/'.$names, $v.'@execute_api');
                 }*/
             } /* else {

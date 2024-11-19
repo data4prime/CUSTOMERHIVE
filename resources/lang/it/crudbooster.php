@@ -387,5 +387,7 @@ return [
 
     "cannot_disable_dashboard" =>  "Non ci sono altre dashboard abilitate. Devi avere almeno una dashboard abilitata.",
 
+    "api_controller_not_found" => "Controller API non trovato",
+
 
 ];

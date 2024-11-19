@@ -394,4 +394,6 @@ return [
 
     "cannot_disable_dashboard" => "There are no other dashboards enabled. You must have at least one dashboard enabled.",
 
+    "api_controller_not_found" => "API Controller not found",
+
 ];

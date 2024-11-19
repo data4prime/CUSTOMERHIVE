@@ -347,13 +347,67 @@ class ApiCustomController extends CBController
         $a['keterangan'] = g('keterangan');
 
         if (Request::get('id')) {
-            //dd($a);
+            /*$controller = ucwords(str_replace('_', ' ', $a['permalink']));
+            $controller = str_replace(' ', '', $controller);
+            $controller = 'Api'.$controller.'Controller.php';
+
+            dd($controller);*/
+
+            
+
+            $controller = DB::table('cms_apicustom')->where('id', g('id'))->first();//->controller;
+
+            if (isset($controller->controller) && !empty($controller->controller) ) {
+                $controller = $controller->controller;
+            } else {
+                //return back
+                return CRUDBooster::redirectBack( trans('crudbooster.api_controller_not_found'), 'error');
+                
+            }
+
+
+
             DB::table('cms_apicustom')->where('id', g('id'))->update($a);
+            //get controller from App\Http\Controllers
+            //$controller = "App\Http\Controllers\\".$controller;
+            //$controller = app($controller);
+            //dd($a);
+            $controller_path = base_path("app/Http/Controllers/").$controller;
+            $contents = file_get_contents($controller_path);
+
+            // '/\$this->permalink\s*=\s*["\'].*?["\']\s*;/', 
+            $new_contents = preg_replace(
+                '/\$this->permalink\s*=\s*["\']((?:[^"\'\\\\]|\\\\.)*)["\']\\s*;/', 
+                '$this->permalink = "'.$a['permalink'].'";',
+                $contents
+            );
+
+            $new_contents = preg_replace(
+                '/\$this->table\s*=\s*["\']((?:[^"\'\\\\]|\\\\.)*)["\']\\s*;/', 
+                '$this->table = "'.$a['tabel'].'";',
+                $new_contents
+            );
+
+            $new_contents = preg_replace(
+                '/\$this->method_type\s*=\s*["\']((?:[^"\'\\\\]|\\\\.)*)["\']\\s*;/', 
+                '$this->method_type = "'.$a['method_type'].'";',
+                $new_contents
+            );
+
+            file_put_contents($controller_path, $new_contents);
+            
+
+            //
+
+
+
         } else {
 
             $controllerName = ucwords(str_replace('_', ' ', $a['permalink']));
             $controllerName = str_replace(' ', '', $controllerName);
             CRUDBooster::generateAPI($controllerName, $a['tabel'], $a['permalink'], $a['method_type']);
+
+            $a['controller'] = 'Api'.$controllerName.'Controller.php';
 
             DB::table('cms_apicustom')->insert($a);
         }
