@@ -54,12 +54,12 @@ Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\C
                 //dd($api_endpoint);
                 if ($api_endpoint && isset($api_endpoint->permalink)) {
                     Route::any('api/'.$api_endpoint->permalink, $v.'@execute_api');
-                } else {
+                } /*else {
                     Route::any('api/'.$names, $v.'@execute_api');
-                }
-            } else {
+                }*/
+            } /* else {
                 Route::any('api/'.$names, $v.'@execute_api');
-            }
+            }*/
             
         }
     }
