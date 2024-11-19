@@ -353,7 +353,7 @@ class ApiCustomController extends CBController
 
             dd($controller);*/
 
-            $check_permalink = DB::table('cms_apicustom')->where('permalink', g('permalink'))->first();
+            $check_permalink = DB::table('cms_apicustom')->where('permalink', g('permalink'))->where('id','!=', g('id') )->first();
 
             if ($check_permalink) {
                 return CRUDBooster::redirectBack(trans('crudbooster.api_permalink_already_exists'), 'error');
