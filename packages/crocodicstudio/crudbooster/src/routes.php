@@ -1,12 +1,15 @@
 <?php
 
+//DB 
+use Illuminate\Support\Facades\DB;
+
 /* ROUTER FOR API GENERATOR */
 $namespace = '\crocodicstudio\crudbooster\controllers';
 
 Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\CBAuthAPI'], 'namespace' => 'App\Http\Controllers'], function () {
     //Router for custom api defeault
 
-    $apis = DB::table('cms_apicustom')->get();
+    //$apis = DB::table('cms_apicustom')->get();
 
     /*foreach($apis as $k => $v) {
         if (isset($v->permalink)) {
