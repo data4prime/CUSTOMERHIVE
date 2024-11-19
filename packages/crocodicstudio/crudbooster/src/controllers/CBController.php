@@ -295,7 +295,6 @@ class CBController extends Controller
 
         //add group and tenant columns for admins
         $columns_table = ModuleHelper::add_default_column_headers($table, $columns_table);
-
         foreach ($columns_table as $index => $coltab) {
 
             $join = @$coltab['join'];
@@ -593,7 +592,14 @@ class CBController extends Controller
                 if (isset($col['visible']) && $col['visible'] === false) {
                     continue;
                 }
+               // dd($col);
                 $value = @$row->{$col['field']};
+
+                if ($col['type_data'] == 'tinyint' ) {
+                    $value = ($value == 1) ? trans('crudbooster.confirmButtonText') : trans('crudbooster.confirmation_no');
+                }
+
+
                 $title = @$row->{$this->title_field};
                 $label = $col['label'];
 
@@ -1155,6 +1161,7 @@ class CBController extends Controller
             }
 
             if (isset($ro['type']) && $ro['type']  == 'checkbox') {
+
 
                 if (is_array($inputdata)) {
                     if (isset($ro['datatable']) && $ro['datatable'] != '') {

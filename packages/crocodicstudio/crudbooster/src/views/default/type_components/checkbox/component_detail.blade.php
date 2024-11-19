@@ -24,7 +24,16 @@ if ((isset($form['datatable']) && isset($form['relationship_table'])) && $form['
     $value = explode(";", $value);
 }
 
-foreach ($value as $v) {
-    echo "<span class='badge'>$v</span> ";
+//dd($value);
+foreach ($value as $k => $v) {
+
+    if ($v == 1) {
+        echo trans('crudbooster.confirmButtonText');
+    } else {
+        echo trans('crudbooster.confirmation_no');
+    }
+
+   
+    //echo "<span class='badge'>". ($v == 1 ) ? trans('crudbooster.confirmButtonText') : trans('crudbooster.confirmation_no') ."</span> ";
 }
 ?>
