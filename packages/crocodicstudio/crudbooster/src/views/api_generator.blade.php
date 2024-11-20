@@ -206,11 +206,12 @@
                     var no_params = 0;
                     $('#table-parameters tbody').empty();
                     $.each(resp, function (i, obj) {
-                        console.log(obj);
-                        console.log(tipe_action);
+                        //console.log(obj);
+                        //console.log(tipe_action);
 
                         //if tipe_action is detail and field name is not id, then skip this object
                         if ( (tipe_action != 'detail' && tipe_action !='delete') || obj.name == 'id') {
+                            console.log(obj.name +" "+tipe_action);
                             var param_html = $('#table-parameters tfoot tr').clone();
                             $('#table-parameters tbody').append(param_html);
                         }
