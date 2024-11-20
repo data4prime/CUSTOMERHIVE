@@ -210,13 +210,13 @@
                         console.log(tipe_action);
 
                         //if tipe_action is detail and field name is not id, then skip this object
-                        if ( (tipe_action == 'detail' || tipe_action =='delete') && obj.name != 'id') {
-                            return true;
+                        if ( (tipe_action != 'detail' && tipe_action !='delete') || obj.name == 'id') {
+                            var param_html = $('#table-parameters tfoot tr').clone();
+                            $('#table-parameters tbody').append(param_html);
                         }
 
 
-                        var param_html = $('#table-parameters tfoot tr').clone();
-                        $('#table-parameters tbody').append(param_html);
+
                     })
 
                     var i = 0;
