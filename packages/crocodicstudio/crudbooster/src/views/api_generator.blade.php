@@ -187,6 +187,7 @@
             }
 
             function load_parameters() {
+                //console.log('load_parameters');
                 var t = $('#combo_tabel').val();
                 var type = 'save_add';
                 var tipe_action = $('#tipe_action').val();
@@ -201,9 +202,18 @@
                 }
 
                 $.get('{{url(config("crudbooster.ADMIN_PATH"))."/api_generator/column-table"}}/' + t + '/' + type, function (resp) {
+                    //console.log(resp);
                     var no_params = 0;
                     $('#table-parameters tbody').empty();
                     $.each(resp, function (i, obj) {
+                        console.log(obj);
+                        console.log(tipe_action);
+
+                        //if tipe_action is detail and field name is not id, then skip this object
+                        if ( (tipe_action == 'detail' || tipe_action =='delete') && obj.name != 'id') {
+                            return true;
+                        }
+
 
                         var param_html = $('#table-parameters tfoot tr').clone();
                         $('#table-parameters tbody').append(param_html);
@@ -280,11 +290,18 @@
                         i += 1;
                     })
                 })
+                    //console.log(tipe_action);
+                    if (tipe_action != 'detail' && tipe_action != 'delete') {
+                        $('#table-parameters tfoot').show();
+                    } else {
+                        $('#table-parameters tfoot').hide();
+                    }
+                    //$('#table-parameters tfoot').show();
 
-                $('#table-parameters tfoot').show();
             }
 
             function init_data_parameters() {
+                console.log('init_data_parameters');
                 @if (isset($parameters))
 
                     var resp = {!!$parameters!!};
