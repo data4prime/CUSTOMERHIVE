@@ -202,7 +202,7 @@
                 }
 
                 $.get('{{url(config("crudbooster.ADMIN_PATH"))."/api_generator/column-table"}}/' + t + '/' + type, function (resp) {
-                    console.log(resp);
+                    //console.log(resp);
                     if (tipe_action == 'detail' || tipe_action == 'delete') {
 
                         //remove all items from resp except the item with name id
