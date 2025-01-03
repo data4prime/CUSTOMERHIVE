@@ -188,7 +188,7 @@
 
         </li>
         @endif
-
+@if(crocodicstudio\crudbooster\helpers\LicenseHelper::isActiveChatAI())
         <li data-collapse="3" class='treeview'>
           <a href='{{url("admin/chat_ai")}}'>
             <i class="fa fa-comments-o"></i>
@@ -196,6 +196,7 @@
           </a>
 
         </li>
+@endif
 
         <li data-collapse="3" class='treeview'>
           <a href='{{url("admin/module_helpers")}}'>

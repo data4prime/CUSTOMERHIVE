@@ -46,7 +46,7 @@ if ($method != 'content_view') {
 
 <div class="navbar-custom-menu">
     <ul class="nav navbar-nav">
-
+@if(crocodicstudio\crudbooster\helpers\LicenseHelper::isActiveChatAI())
         <!-- Assistance Menu Item -->
         <li class="nav-item assistance-menu">
             <a href="#" class="nav-link toggle-sidebar-btn" id="toggle-chat" title="AI Assistance" aria-expanded="false">
@@ -54,6 +54,7 @@ if ($method != 'content_view') {
                 <span id="assistance_count" class="badge bg-danger" style="display:none">0</span>
             </a>
         </li>
+@endif
 
         <!-- Helper Link -->
 

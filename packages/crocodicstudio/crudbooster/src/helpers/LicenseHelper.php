@@ -105,6 +105,14 @@ class LicenseHelper  {
 
     }
 
+    public static function isActiveChatAI() {
+
+        $licenseKey = self::getLicenseInfo();
+
+        return self::searchModuleByName($licenseKey, "ChatAI");
+
+    }
+
     public static function searchModuleByName($array, $name) {
         if (isset($array['modules']) && is_array($array['modules'])) {
             foreach ($array['modules'] as $module) {
