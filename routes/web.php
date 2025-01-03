@@ -34,7 +34,7 @@ Route::get('/', function () {
 
 
 //qlik items
-/*
+
     Route::get('admin/qlik_items/content/{qlik_item_id}', $controllers_base_path . 'AdminQlikItemsController@content_view');
     Route::get('admin/qlik_items/access/{qlik_item_id}/alert/{alert_id}', $controllers_base_path . 'AdminQlikItemsController@access');
     Route::get('admin/qlik_items/access/{qlik_item_id}', $controllers_base_path . 'AdminQlikItemsController@access');
@@ -45,7 +45,7 @@ Route::get('/', function () {
     Route::post('admin/qlik_items/{qlik_item_id}/add_tenant', $controllers_base_path . 'AdminQlikItemsController@add_tenant');
     Route::get('admin/qlik_items/{qlik_item_id}/remove_tenant/{tenant_id}', $controllers_base_path . 'AdminQlikItemsController@remove_tenant');
     Route::get('qi/{proxy_token}', $controllers_base_path . 'QlikItemsController@show');
-*/
+
 
 //menù edit customization
 // Route::get('admin/menu_management', '\crocodicstudio\crudbooster\controllers\MenusController@getIndex');
@@ -107,7 +107,7 @@ Route::get('/mashup-objects/{mashup}/{componentID}/{objectid}',$controllers_base
 
 //chat ai
 
-/*
+
 
     Route::get('admin/chat_ai/content/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@content_view');
 
@@ -124,4 +124,3 @@ Route::get('/mashup-objects/{mashup}/{componentID}/{objectid}',$controllers_base
     Route::post('admin/chat_ai/send_message_agent', $controllers_base_path . 'AdminChatAIController@send_message_agent');
 
 
-*/
