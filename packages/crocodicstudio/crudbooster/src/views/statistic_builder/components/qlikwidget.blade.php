@@ -86,7 +86,7 @@ function update_objects(select){
 <iframe src='/mashup-objects/{{ isset($mashup->id) ? $mashup->id : 0}}/{{$componentID}}/{{isset($config->object) ? $config->object : "empty"}}'  id="configuration" frameborder="0" style="width: 100%;height:30px;"></iframe>
 
 
-
+@if(crocodicstudio\crudbooster\helpers\LicenseHelper::isActiveQlik())
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
     <input type='hidden' name='componentid' value='{{$componentID}}' />
@@ -122,6 +122,7 @@ function update_objects(select){
 
 
 </form>
+@endif
 </div>
 @elseif($command=='showFunction')
 <?php
