@@ -13,6 +13,7 @@ use \crocodicstudio\crudbooster\helpers\CRUDBooster;
 use crocodicstudio\crudbooster\fonts\Fontawesome;
 use \crocodicstudio\crudbooster\helpers\UserHelper;
 use \crocodicstudio\crudbooster\helpers\MenuHelper;
+use \crocodicstudio\crudbooster\helpers\LicenseHelper;
 use \App\Menu;
 use \App\MenuTenants;
 
@@ -411,10 +412,19 @@ class MenusController extends CBController
       "name" => "type",
       "type" => "radio",
       "required" => true,
-      'dataenum' => ['Module', 'Statistic','Controller & Method', 'Route', 'URL','Qlik',     'Agent AI'],
+      'dataenum' => ['Module', 'Statistic','Controller & Method', 'Route', 'URL'],
       'value' => 'Module'
     ];
 
+    //QUI LICENSE CHECK
+    if(LicenseHelper::isActiveQlik())
+    {
+      $this->form[2]['dataenum'][] = 'Qlik';
+    }
+    if(LicenseHelper::isActiveChatAI())
+    {
+      $this->form[2]['dataenum'][] = 'Agent AI';
+    }
     //only superadmin can edit tenant
     if (CRUDBooster::isSuperadmin()) {
       $this->form[] = [
