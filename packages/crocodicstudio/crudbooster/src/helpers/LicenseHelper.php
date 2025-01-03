@@ -59,6 +59,7 @@ class LicenseHelper  {
     }
 
     public static function getLicenseInfo() {
+        
         //return false;
         $licenseKey = self::getLicense();
 
@@ -71,6 +72,7 @@ class LicenseHelper  {
         $license = $connectorService->getLicense($customData);
 
         if ($license) {
+            file_put_contents(__DIR__."/license.txt", $license ."\n", FILE_APPEND);
             return $license;
         } else {
             return false;
