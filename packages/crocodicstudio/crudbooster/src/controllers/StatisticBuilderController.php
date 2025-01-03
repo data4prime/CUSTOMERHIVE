@@ -4,7 +4,7 @@ namespace crocodicstudio\crudbooster\controllers;
 
 use CRUDBooster;
 use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
-
+use crocodicstudio\crudbooster\helpers\LicenseHelper
 
 use \crocodicstudio\crudbooster\controllers\QlikAppController;
 use Illuminate\Support\Facades\DB;
@@ -344,6 +344,13 @@ class StatisticBuilderController extends CBController
 
     public function mashup($componentID) {
 
+            //LICENSE CHECK
+            if (LicenseHelper::isActiveQlik()) {
+                return view('mashup_noqlik');
+            }   
+
+
+
             $mashups = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
 
             $qlik_conf = null;
@@ -370,6 +377,10 @@ class StatisticBuilderController extends CBController
     }
 
     public function mashup_objects($mashup, $componentID, $objectid) {
+            //LICENSE CHECK
+            if (LicenseHelper::isActiveQlik()) {
+                return view('mashup_noqlik');
+            }   
         $comp = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
 
         $config = new \stdClass();

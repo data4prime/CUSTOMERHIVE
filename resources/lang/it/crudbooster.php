@@ -391,5 +391,7 @@ return [
 
     "api_permalink_already_exists" => "Lo slug API esiste già",
 
+    "qlikmodule_not_active" => "La tua licenza non comprende il modulo Qlik!"
+
 
 ];

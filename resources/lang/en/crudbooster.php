@@ -398,4 +398,6 @@ return [
 
     "api_permalink_already_exists" => "API Slug already exists",
 
+    "qlikmodule_not_active" => "Your license does not include the Qlik module."
+
 ];
