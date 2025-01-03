@@ -345,7 +345,7 @@ class StatisticBuilderController extends CBController
     public function mashup($componentID) {
 
             //LICENSE CHECK
-            if (LicenseHelper::isActiveQlik()) {
+            if (!LicenseHelper::isActiveQlik()) {
                 return view('mashup_noqlik');
             }   
 
@@ -378,7 +378,7 @@ class StatisticBuilderController extends CBController
 
     public function mashup_objects($mashup, $componentID, $objectid) {
             //LICENSE CHECK
-            if (LicenseHelper::isActiveQlik()) {
+            if (!LicenseHelper::isActiveQlik()) {
                 return view('mashup_noqlik');
             }   
         $comp = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
