@@ -158,6 +158,8 @@
           </ul>
         </li>
 
+      @if(LicenseHelper::isActiveQlik())
+
         <li data-collapse="3" class='treeview'>
           <a href='#'>
             <img class="menu qlik_logo" src=/images/qlik_logo.png />
@@ -184,6 +186,7 @@
 
 
         </li>
+        @endif
 
         <li data-collapse="3" class='treeview'>
           <a href='{{url("admin/chat_ai")}}'>

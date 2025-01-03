@@ -72,7 +72,7 @@ class LicenseHelper  {
         $license = $connectorService->getLicense($customData);
 
         if ($license) {
-            file_put_contents(__DIR__."/license.txt", json_encode($license) ."\n", FILE_APPEND);
+            
             return $license;
         } else {
             return false;
@@ -99,17 +99,21 @@ class LicenseHelper  {
 
     public static function isActiveQlik() {
 
-        //return true;
-        $licenseKey = self::getLicense();
+        $licenseKey = self::getLicenseInfo();
 
+        return self::searchModuleByName($licenseKey, "Qlik");
 
-        $connectorService = new ConnectorService($licenseKey->license_key);
+    }
 
-        $customData = ['is_module_active' => 'Qlik'];
-
-        return $connectorService->validateLicense($customData);
-
-        
+    public static function searchModuleByName($array, $name) {
+        if (isset($array['modules']) && is_array($array['modules'])) {
+            foreach ($array['modules'] as $module) {
+                if (isset($module['name']) && $module['name'] === $name) {
+                    return true; 
+                }
+            }
+        }
+        return false; 
     }
 
 
