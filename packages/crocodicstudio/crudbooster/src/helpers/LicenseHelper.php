@@ -72,7 +72,7 @@ class LicenseHelper  {
         $license = $connectorService->getLicense($customData);
 
         if ($license) {
-            file_put_contents(__DIR__."/license.txt", $license ."\n", FILE_APPEND);
+            file_put_contents(__DIR__."/license.txt", json_encode($license) ."\n", FILE_APPEND);
             return $license;
         } else {
             return false;
