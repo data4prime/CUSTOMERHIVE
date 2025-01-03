@@ -4,7 +4,7 @@ namespace crocodicstudio\crudbooster\controllers;
 
 use CRUDBooster;
 use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
-use crocodicstudio\crudbooster\helpers\LicenseHelper
+use crocodicstudio\crudbooster\helpers\LicenseHelper;
 
 use \crocodicstudio\crudbooster\controllers\QlikAppController;
 use Illuminate\Support\Facades\DB;
