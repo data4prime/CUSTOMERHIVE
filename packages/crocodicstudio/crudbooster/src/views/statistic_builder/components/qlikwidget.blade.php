@@ -17,9 +17,15 @@
 @php $h = 'width: 100%;height:80%;'; @endphp
 @else 
 @php $h = 'width: 100%;height:30px;'; @endphp
+
+@if(crocodicstudio\crudbooster\helpers\LicenseHelper::isActiveQlik())
+
 <p>Set up the widget<br>from Statistic Builder</p>
 
 <img style="width: 20%;" src='/images/qlik_logo.png' />
+@endif
+
+
 @endif 
 <iframe src="/mashup/{{$componentID}}" frameborder="0" style="{{ $h }}"></iframe>
 
