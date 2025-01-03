@@ -19,6 +19,7 @@
             'path' => 'N/A',
             'expires_in' => 'N/A',
             'is_trial' => 'N/A',
+            'modules' => []
         ];
     }
 
@@ -55,7 +56,12 @@
           </tr>
           <tr>
             <th>Expiration Date</th>
-            <td>{{ date('d-m-Y h:i:s', strtotime($license['expiration_date'])) }}</td>
+            <td>@if($license['expiration_date'])
+                  {{ date('d-m-Y h:i:s', strtotime($license['expiration_date'])) }}
+              @else
+                  <span>Data di scadenza non disponibile</span>
+              @endif
+            </td>
           </tr>
           <tr>
             <th>Is Trial</th>
@@ -86,6 +92,15 @@
           <tr>
             <th>Expires In</th>
             <td>{{ $license['expires_in'] }} days</td>
+          </tr>
+
+          <tr>
+            <th>Modules</th>
+            <td>
+                @foreach ($license['modules'] as $module)
+                  <span class="badge rounded-pill bg-light text-dark">{{$module['name']}}</span>
+                @endforeach
+            </td>
           </tr>
 
         </table>
