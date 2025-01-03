@@ -210,11 +210,11 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
 
 
-      /*$isLicenseValid = LicenseHelper::canLicenseLogin();
+      $isLicenseValid = LicenseHelper::canLicenseLogin();
 
       if (!$isLicenseValid) {
         return redirect()->route('getLicenseScreen')->with('message', 'License is missing or not valid');
-      }*/
+      }
 
 
 

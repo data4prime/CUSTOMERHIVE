@@ -22,6 +22,10 @@ class LicenseHelper  {
     }
 
     public static function canLicenseLogin() {
+
+        //return true;
+
+
         $licenseKey = self::getLicense();
 
                 
@@ -37,6 +41,7 @@ class LicenseHelper  {
     }
 
     public static function canAddTenant() {
+        //return true;
         $licenseKey = self::getLicense();
 
         $tenants = TenantHelper::countTenants();
@@ -54,6 +59,7 @@ class LicenseHelper  {
     }
 
     public static function getLicenseInfo() {
+        //return false;
         $licenseKey = self::getLicense();
 
           
@@ -69,13 +75,13 @@ class LicenseHelper  {
         } else {
             return false;
         }
-
-
         
     }
 
 
     public static function canAddUser() {
+
+        //return true;
         $licenseKey = self::getLicense();
 
         $users = UserHelper::countUsers();
@@ -83,6 +89,21 @@ class LicenseHelper  {
         $connectorService = new ConnectorService($licenseKey->license_key);
 
         $customData = ['clients_number' => $users + 1, 'license_key' => $licenseKey->license_key];
+
+        return $connectorService->validateLicense($customData);
+
+        
+    }
+
+    public static function isActiveQlik() {
+
+        //return true;
+        $licenseKey = self::getLicense();
+
+
+        $connectorService = new ConnectorService($licenseKey->license_key);
+
+        $customData = ['is_module_active' => 'Qlik'];
 
         return $connectorService->validateLicense($customData);
 
