@@ -179,6 +179,7 @@
                         </a>
                     </div>
                 </li>
+@if(crocodicstudio\crudbooster\helpers\LicenseHelper::isActiveQlik())
                 <li class='connectedSortable' title='Drag To Main Area'>
                     <div id='btn-qlikwidget' class='button-widget-area'>
                         <a href="#" data-component='qlikwidget' class='btn-add-widget add-qlikwidget'>
@@ -187,6 +188,7 @@
                         </a>
                     </div>
                 </li>
+@endif
             </ul>
         </aside>
         <!-- The sidebar's background -->
