@@ -158,7 +158,7 @@
           </ul>
         </li>
 
-      @if(LicenseHelper::isActiveQlik())
+      @if(crocodicstudio\crudbooster\helpers\LicenseHelper::isActiveQlik())
 
         <li data-collapse="3" class='treeview'>
           <a href='#'>
