@@ -28,22 +28,24 @@ Route::get('/', function () {
 });
 
 //create qlik user
-Route::get('admin/qlik/user/creare/{id}', $controllers_base_path . 'AdminCmsUsersController@create_qlik_user');
+
+    Route::get('admin/qlik/user/creare/{id}', $controllers_base_path . 'AdminCmsUsersController@create_qlik_user');
+
 
 
 //qlik items
-Route::get('admin/qlik_items/content/{qlik_item_id}', $controllers_base_path . 'AdminQlikItemsController@content_view');
-//items authorization
-Route::get('admin/qlik_items/access/{qlik_item_id}/alert/{alert_id}', $controllers_base_path . 'AdminQlikItemsController@access');
-Route::get('admin/qlik_items/access/{qlik_item_id}', $controllers_base_path . 'AdminQlikItemsController@access');
-Route::post('admin/qlik_items/{qlik_item_id}/auth', $controllers_base_path . 'AdminQlikItemsController@add_authorization');
-Route::get('admin/qlik_items/{qlik_item_id}/deauth/{group_id}', $controllers_base_path . 'AdminQlikItemsController@remove_authorization');
-Route::get('admin/qlik_items/tenant/{qlik_item_id}/alert/{alert_id}', $controllers_base_path . 'AdminQlikItemsController@tenant');
-Route::get('admin/qlik_items/tenant/{qlik_item_id}', $controllers_base_path . 'AdminQlikItemsController@tenant');
-Route::post('admin/qlik_items/{qlik_item_id}/add_tenant', $controllers_base_path . 'AdminQlikItemsController@add_tenant');
-Route::get('admin/qlik_items/{qlik_item_id}/remove_tenant/{tenant_id}', $controllers_base_path . 'AdminQlikItemsController@remove_tenant');
-//public url to access qlik public items
-Route::get('qi/{proxy_token}', $controllers_base_path . 'QlikItemsController@show');
+/*
+    Route::get('admin/qlik_items/content/{qlik_item_id}', $controllers_base_path . 'AdminQlikItemsController@content_view');
+    Route::get('admin/qlik_items/access/{qlik_item_id}/alert/{alert_id}', $controllers_base_path . 'AdminQlikItemsController@access');
+    Route::get('admin/qlik_items/access/{qlik_item_id}', $controllers_base_path . 'AdminQlikItemsController@access');
+    Route::post('admin/qlik_items/{qlik_item_id}/auth', $controllers_base_path . 'AdminQlikItemsController@add_authorization');
+    Route::get('admin/qlik_items/{qlik_item_id}/deauth/{group_id}', $controllers_base_path . 'AdminQlikItemsController@remove_authorization');
+    Route::get('admin/qlik_items/tenant/{qlik_item_id}/alert/{alert_id}', $controllers_base_path . 'AdminQlikItemsController@tenant');
+    Route::get('admin/qlik_items/tenant/{qlik_item_id}', $controllers_base_path . 'AdminQlikItemsController@tenant');
+    Route::post('admin/qlik_items/{qlik_item_id}/add_tenant', $controllers_base_path . 'AdminQlikItemsController@add_tenant');
+    Route::get('admin/qlik_items/{qlik_item_id}/remove_tenant/{tenant_id}', $controllers_base_path . 'AdminQlikItemsController@remove_tenant');
+    Route::get('qi/{proxy_token}', $controllers_base_path . 'QlikItemsController@show');
+*/
 
 //menù edit customization
 // Route::get('admin/menu_management', '\crocodicstudio\crudbooster\controllers\MenusController@getIndex');
@@ -85,8 +87,10 @@ Route::post('admin/users/{user_id}/add_group', $controllers_base_path . 'AdminCm
 Route::get('admin/users/{user_id}/remove_group/{group_id}', $controllers_base_path . 'AdminCmsUsersController@remove_group');
 
 //Qlik Server Routes
-Route::get('admin/qlik_confs/QlikServerSenseHub/{id}', $controllers_base_path . 'AdminQlikItemsController@GetRouteSenseHub')->name('QlikServerSenseHub');
-Route::get('admin/qlik_confs/QlikServerSenseQMC/{id}', $controllers_base_path . 'AdminQlikItemsController@GetRouteSenseQMC')->name('QlikServerSenseQMC');
+
+    Route::get('admin/qlik_confs/QlikServerSenseHub/{id}', $controllers_base_path . 'AdminQlikItemsController@GetRouteSenseHub')->name('QlikServerSenseHub');
+    Route::get('admin/qlik_confs/QlikServerSenseQMC/{id}', $controllers_base_path . 'AdminQlikItemsController@GetRouteSenseQMC')->name('QlikServerSenseQMC');
+
 
 //modules
 Route::get('admin/module_generator/enable', $controllers_base_path . 'ModulsController@enable');
@@ -102,16 +106,22 @@ Route::get('/mashup-objects/{mashup}/{componentID}/{objectid}',$controllers_base
 
 
 //chat ai
-Route::get('admin/chat_ai/content/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@content_view');
-//chat ai authorization
-Route::get('admin/chat_ai/access/{chat_ai_id}/alert/{alert_id}', $controllers_base_path . 'AdminChatAIController@access');
-Route::get('admin/chat_ai/access/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@access');
-Route::post('admin/chat_ai/{chat_ai_id}/auth', $controllers_base_path . 'AdminChatAIController@add_authorization');
-Route::get('admin/chat_ai/{chat_ai_id}/deauth/{group_id}', $controllers_base_path . 'AdminChatAIController@remove_authorization');
-Route::get('admin/chat_ai/tenant/{chat_ai_id}/alert/{alert_id}', $controllers_base_path . 'AdminChatAIController@tenant');
-Route::get('admin/chat_ai/tenant/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@tenant');
-Route::post('admin/chat_ai/{chat_ai_id}/add_tenant', $controllers_base_path . 'AdminChatAIController@add_tenant');
-Route::get('admin/chat_ai/{chat_ai_id}/remove_tenant/{tenant_id}', $controllers_base_path . 'AdminChatAIController@remove_tenant');
 
-Route::post('admin/chat_ai/send_message', $controllers_base_path . 'AdminChatAIController@send_message');
-Route::post('admin/chat_ai/send_message_agent', $controllers_base_path . 'AdminChatAIController@send_message_agent');
+/*
+
+    Route::get('admin/chat_ai/content/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@content_view');
+
+    Route::get('admin/chat_ai/access/{chat_ai_id}/alert/{alert_id}', $controllers_base_path . 'AdminChatAIController@access');
+    Route::get('admin/chat_ai/access/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@access');
+    Route::post('admin/chat_ai/{chat_ai_id}/auth', $controllers_base_path . 'AdminChatAIController@add_authorization');
+    Route::get('admin/chat_ai/{chat_ai_id}/deauth/{group_id}', $controllers_base_path . 'AdminChatAIController@remove_authorization');
+    Route::get('admin/chat_ai/tenant/{chat_ai_id}/alert/{alert_id}', $controllers_base_path . 'AdminChatAIController@tenant');
+    Route::get('admin/chat_ai/tenant/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@tenant');
+    Route::post('admin/chat_ai/{chat_ai_id}/add_tenant', $controllers_base_path . 'AdminChatAIController@add_tenant');
+    Route::get('admin/chat_ai/{chat_ai_id}/remove_tenant/{tenant_id}', $controllers_base_path . 'AdminChatAIController@remove_tenant');
+
+    Route::post('admin/chat_ai/send_message', $controllers_base_path . 'AdminChatAIController@send_message');
+    Route::post('admin/chat_ai/send_message_agent', $controllers_base_path . 'AdminChatAIController@send_message_agent');
+
+
+*/
