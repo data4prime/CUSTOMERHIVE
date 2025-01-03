@@ -59,7 +59,7 @@
             <td>@if($license['expiration_date'])
                   {{ date('d-m-Y h:i:s', strtotime($license['expiration_date'])) }}
               @else
-                  <span>Data di scadenza non disponibile</span>
+                  <span></span>
               @endif
             </td>
           </tr>
