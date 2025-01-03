@@ -144,7 +144,7 @@
             href='{{Route("MenusControllerGetIndex")}}'><i class='fa fa-bars'></i>
             <span>{{ trans('crudbooster.Menu_Management') }}</span></a>
         </li>
-
+@if(crocodicstudio\crudbooster\helpers\LicenseHelper::isActiveQlik())
         <li data-collapse="3" class='treeview'>
           <a href='#'><i class='fa fa-signal'></i> <span>{{ trans('crudbooster.Qlik_Items') }}</span> <i
               class="fa fa-angle-{{ trans(" crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i></a>
@@ -157,6 +157,7 @@
                 <span>{{ trans('crudbooster.List_Qlikitem') }}</span></a></li>
           </ul>
         </li>
+@endif
 
       @if(crocodicstudio\crudbooster\helpers\LicenseHelper::isActiveQlik())
 
