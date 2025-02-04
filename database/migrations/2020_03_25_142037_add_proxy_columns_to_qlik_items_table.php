@@ -28,9 +28,10 @@ class AddProxyColumnsToQlikItemsTable extends Migration
     public function down()
     {
         Schema::table('qlik_items', function (Blueprint $table) {
-            $table->dropColumn('proxy_enabled_at');
-            $table->dropColumn('proxy_token');
-            $table->renameColumn('qlik_data_last_update','last_update');
+            /*$table->dropColumn('proxy_enabled_at');
+            $table->dropColumn('proxy_token');*/
+            $table->dropColumn(['proxy_enabled_at','proxy_token']);
+            //$table->renameColumn('qlik_data_last_update','last_update');
         });
     }
 }

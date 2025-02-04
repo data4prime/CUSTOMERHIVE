@@ -459,6 +459,7 @@ foreach($routeCollection as $key => $value) {
         <div id='area9' class="col-sm-12 connectedSortable">
 
         </div>
+</div>
 @endif
     </div>
 

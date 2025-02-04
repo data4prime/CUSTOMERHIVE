@@ -17,7 +17,7 @@ class CreateTableMenuGroups extends Migration
         $table->increments('id');
         $table->unsignedInteger('menu_id');
         $table->unsignedInteger('group_id');
-        $table->unique(['menu_id', 'group_id'], 'unique');
+        $table->unique(['menu_id', 'group_id'], 'menu_group_unique');
         $table->foreign('menu_id','fk_menu_groups_1')->references('id')->on('cms_menus')->onDelete('cascade');
         $table->foreign('group_id','fk_menu_groups_2')->references('id')->on('groups')->onDelete('cascade');
       });

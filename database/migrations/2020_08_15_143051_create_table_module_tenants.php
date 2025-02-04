@@ -17,7 +17,7 @@ class CreateTableModuleTenants extends Migration
         $table->increments('id');
         $table->unsignedInteger('module_id');
         $table->unsignedInteger('tenant_id');
-        $table->unique(['module_id', 'tenant_id'], 'unique');
+        $table->unique(['module_id', 'tenant_id'], 'module_tenant_unique');
         $table->foreign('module_id','module_fk')->references('id')->on('cms_moduls');
         $table->foreign('tenant_id','tenant_fk')->references('id')->on('tenants');
       });

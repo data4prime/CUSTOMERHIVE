@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::table('qlik_users', function (Blueprint $table) {
             //
             // Drop the existing foreign key constraint
-            $table->dropForeign(['user_id']);
+            //$table->dropForeign(['user_id']);
 
             // Add the new foreign key constraint with ON DELETE CASCADE
             $table->foreign('user_id')

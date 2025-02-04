@@ -79,7 +79,7 @@ class CRUDBooster
         if (isset($tenant->login_background_color)) {
             return $tenant->login_background_color;
         } elseif (CRUDBooster::getSetting('login_background_color')) {
-            return asset(CRUDBooster::getSetting('login_background_color'));
+            return CRUDBooster::getSetting('login_background_color');
         } else {
             return '#dddddd';
         }

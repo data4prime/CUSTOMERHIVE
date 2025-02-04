@@ -17,7 +17,7 @@ class CreateTableGroupTenants extends Migration
         $table->increments('id');
         $table->unsignedInteger('group_id');
         $table->unsignedInteger('tenant_id');
-        $table->unique(['group_id', 'tenant_id'], 'unique');
+        $table->unique(['group_id', 'tenant_id'], 'group_tenant_unique');
         $table->foreign('group_id','group_fk')->references('id')->on('groups');
         $table->foreign('tenant_id','group_tenant_fk')->references('id')->on('tenants');
       });

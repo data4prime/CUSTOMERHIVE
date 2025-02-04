@@ -18,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('qlik_conf_id')->nullable();
             $table->timestamps();
+$table->dropForeign(['user_id']);
         });
     }
 

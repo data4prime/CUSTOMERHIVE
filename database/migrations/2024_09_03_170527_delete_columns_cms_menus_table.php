@@ -15,10 +15,8 @@ return new class extends Migration
     {
         Schema::table('cms_menus', function (Blueprint $table) {
             //drop method, url, auth, token columns
-            $table->dropColumn('method');
-            $table->dropColumn('url');
-            $table->dropColumn('auth');
-            $table->dropColumn('token');
+
+            $table->dropColumn(['method', 'url', 'auth', 'token']);
 
             //add new column boolean by deafult false, called 'primary'
             //$table->boolean('primary')->default(false);

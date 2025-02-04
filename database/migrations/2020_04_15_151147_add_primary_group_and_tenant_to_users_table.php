@@ -27,8 +27,10 @@ class AddPrimaryGroupAndTenantToUsersTable extends Migration
     public function down()
     {
         Schema::table('cms_users', function (Blueprint $table) {
-            $table->dropColumn('primary_group');
-            $table->dropColumn('tenant');
+
+
+
+            $table->dropColumn(['tenant', 'primary_group']);
         });
     }
 }

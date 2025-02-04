@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+DB::statement('DROP VIEW IF EXISTS users');
         DB::statement("
             CREATE VIEW users AS
 SELECT
@@ -31,6 +32,6 @@ WHERE ((NOT((`cms_users`.`status` LIKE '%Inactive%')))
      */
     public function down()
     {
-        DB::statement('DROP VIEW IF EXISTS nome_vista');
+        DB::statement('DROP VIEW IF EXISTS users');
     }
 };

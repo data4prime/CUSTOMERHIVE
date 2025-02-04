@@ -27,8 +27,9 @@ class AddColumnsGroupTenantToTableQlikItem extends Migration
     public function down()
     {
         Schema::table('qlik_items', function (Blueprint $table) {
-          $table->dropColumn('tenant');
-          $table->dropColumn('group');
+          /*$table->dropColumn('tenant');
+          $table->dropColumn('group');*/
+          $table->dropColumn(['tenant', 'group']);
         });
     }
 }

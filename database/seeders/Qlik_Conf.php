@@ -1,33 +1,14 @@
-<?php
+<?php 
 
 namespace Database\Seeders;
-
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
-class Qlik_Conf extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        //
-$this->call('QlikConf');
-   
-    }
-}
-//php artisan db:seed -–class=QlikConf
-
-
-
+use Illuminate\Support\Facades\DB;
 class QlikConf extends Seeder
 {
     public function run()
     {
-        $mod = [
+
+ $mod = [
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'Qlik Configuration',
                 'icon' => 'fa fa-cog',
@@ -37,7 +18,6 @@ class QlikConf extends Seeder
                 'is_protected' => 1,
                 'is_active' => 1,
             ];
-        DB::table('cms_moduls')->insert($mod);  
-        
+        DB::table('cms_moduls')->insert($mod);   
     }
 }

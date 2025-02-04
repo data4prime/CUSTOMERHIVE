@@ -18,7 +18,7 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedBigInteger('qlik_apps_id');
             $table->unsignedInteger('group_id');
-            $table->unique(['qlik_apps_id', 'group_id'], 'unique');
+            $table->unique(['qlik_apps_id', 'group_id'], 'qlik_app_group_unique');
             $table->foreign('qlik_apps_id')->references('id')->on('qlik_apps')->onDelete('cascade');
             $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
         });

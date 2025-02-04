@@ -18,7 +18,7 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedBigInteger('qlik_apps_id');
             $table->unsignedInteger('tenant_id');
-            $table->unique(['qlik_apps_id', 'tenant_id'], 'unique');
+            $table->unique(['qlik_apps_id', 'tenant_id'], 'qlik_app_tenant_unique');
             $table->foreign('qlik_apps_id')->references('id')->on('qlik_apps')->onDelete('cascade');
             $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
         });

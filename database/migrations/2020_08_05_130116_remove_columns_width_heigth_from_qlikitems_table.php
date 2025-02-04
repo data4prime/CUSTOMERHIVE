@@ -14,8 +14,8 @@ class RemoveColumnsWidthHeigthFromQlikitemsTable extends Migration
     public function up()
     {
         Schema::table('qlik_items', function (Blueprint $table) {
-            $table->dropColumn('frame_width');
-            $table->dropColumn('frame_height');
+
+            $table->dropColumn(['frame_width', 'frame_height']);
         });
     }
 

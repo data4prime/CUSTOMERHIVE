@@ -27,8 +27,8 @@ class AddColumnsGroupTenantToTableMenu extends Migration
     public function down()
     {
         Schema::table('cms_menus', function (Blueprint $table) {
-          $table->dropColumn('tenant');
-          $table->dropColumn('group');
+
+          $table->dropColumn(['tenant', 'group']);
         });
     }
 }

@@ -1,5 +1,5 @@
 # Usa un'immagine base di PHP 8.1 con tutti gli strumenti necessari
-FROM php:8.1-cli
+FROM php:8.1-apache
 
 ARG APP_USER=www
 RUN groupadd -r ${APP_USER} && useradd --no-log-init -r -g ${APP_USER} ${APP_USER}
@@ -36,18 +36,31 @@ RUN docker-php-ext-install \
 # Installa Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+RUN a2enmod ssl
+RUN a2enmod rewrite
+RUN a2enmod headers
+
+
 # Copia i file dell'applicazione
 COPY . /var/www/html
 
-RUN php artisan cache:clear
-RUN php artisan config:clear
-RUN php artisan view:clear
+#Copia i certificati
+#COPY /etc/letsencrypt/live/staging.thecustomerhive.com/fullchain.pem ./docker/certificates/fullchain.pem
+#COPY /etc/letsencrypt/live/staging.thecustomerhive.com/privkey.pem ./docker/certificates/privkey.pem
+
+
+
+
+
+
+# Installa le dipendenze Composer
+
+RUN composer install --no-dev --no-interaction
 
 RUN mkdir -p /var/www/html/storage/framework/sessions
 RUN mkdir -p /var/www/html/storage/framework/views
 RUN mkdir -p /var/www/html/storage/framework/cache
 RUN mkdir -p /var/www/html/bootstrap/cache
-
 
 
 # Imposta i permessi corretti
@@ -60,11 +73,7 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 #Imposta i permessi corretti cin chmod 
 RUN chmod -R 777 /var/www/html/storage /var/www/html/bootstrap
 
-# Installa le dipendenze Composer
-#RUN composer install --no-interaction --optimize-autoloader --no-dev
-RUN composer install
-
-
+RUN php artisan cache:clear
 
 # Genera la chiave dell'applicazione
 RUN php artisan key:generate
@@ -72,22 +81,12 @@ RUN php artisan key:generate
 # Storage link
 RUN php artisan storage:link
 
-# Esegui le migrazioni del database
-#RUN php artisan migrate --force
-#RUN php artisan db:seed
+
+
+COPY ./docker/apache-config.conf /etc/apache2/sites-available/000-default.conf
 
 # Esponi la porta di default di Laravel
 EXPOSE 80
 
+CMD ["apache2-foreground"]
 
-# Avvia il server di sviluppo
-#CMD php artisan serve --host=0.0.0.0 --port=80
-
-#CMD php artisan migrate --seed
-
-# Script di avvio
-#COPY ./docker/scripts/entrypoint.sh /usr/local/bin/
-#RUN chmod +x /usr/local/bin/entrypoint.sh
-CMD php artisan serve --host=0.0.0.0 --port=80
-
-#ENTRYPOINT ["entrypoint.sh"]

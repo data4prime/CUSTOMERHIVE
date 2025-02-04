@@ -144,6 +144,8 @@ class QlikHelper
       $qlik_item->disablePublicAccess();
     }
   }
+
+/*
   public static function getTicketFromConf($conf_id)
   {
     //get user data
@@ -197,16 +199,6 @@ class QlikHelper
       'x-qlik-xrfkey: ' . $xrfkey,
       'X-Qlik-User: UserDirectory=' . $user_directory . ';UserId=' . $qlik_login
     );
-    //DEBUG Qlik Ticket
-
-/*
-    file_put_contents(__DIR__ . '/qlik_ticket2.txt', $url . '/'.$endpoint."\n", FILE_APPEND);
-    file_put_contents(__DIR__ . '/qlik_ticket2.txt', json_encode($headers)."\n", FILE_APPEND);
-
-    file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertfile."\n", FILE_APPEND);
-    file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertkeyfile."\n", FILE_APPEND);
-    file_put_contents(__DIR__ . '/qlik_ticket2.txt', $QRSCertkeyfilePassword."\n", FILE_APPEND);
-*/
 
 
     $ch = curl_init($url . '/'.$endpoint);
@@ -239,7 +231,7 @@ class QlikHelper
     $response = json_decode($raw_response);
     return isset($response->Ticket) ? $response->Ticket : '';
   }
-
+*/
   /**
    *	Ottiene il qlik ticket per la connessione
    *
@@ -247,6 +239,7 @@ class QlikHelper
    *
    * @return string qlik ticket
    */
+/*
   public static function getTicket($qlik_item_id)
   {
     //get user data
@@ -333,7 +326,8 @@ class QlikHelper
     $response = json_decode($raw_response);
     return isset($response->Ticket) ? $response->Ticket : '';
   }
-
+*/
+/*
   public static function dataForTicketConf($conf_id) 
   {
     //get user data
@@ -404,30 +398,23 @@ class QlikHelper
     return $ret;
 
   }
-
+*/
   public static function getJWTTokenOP($id, $conf_id)
   {
 
-    //return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkYXN5c2VydmljZSIsInVzZXJEaXJlY3RvcnkiOiJEQVNZIn0.KBmZFS4AOFwxnqkmDp6-RrHwKW6tRpXpRinoaCXaoT5k-k78CxMONTK9cVK533qYk9snUD1l_CdUB1_3lukJGdD-hABss67GramtU07DA70uzNVreoaOn6_Vz4RTaioJbBnyfyWB6js7BNDRcLOsdbnlQyK_ilfWy6Fc-koolYNsNoKn9VOhnoRwXM5JAPGsSGW2SZuBQ5y_6m17tX-4XTxqyZjqgizo1BnWtSfMBdNeFVK7vcsOlasPIwp4x5fM3Nca_BJWuDXXcDT8bG9gyuG9YmlcGgtcUQo76oec7o6797MxUjqZ-HFtAEDFghMvRXK7TjeFa25JQDP3HlSV0A";
     $current_user = \App\User::find($id);
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
-    //$expire = $issuedA2->addMinutes(60)->timestamp;
-
-    //file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($qlik_conf)."\n", FILE_APPEND);
 
     $privateKey = $qlik_conf->private_key;
 
-    //if provateKey is not empty, get the content of the file
+
     if (!empty($privateKey)) {
       $privateKey = file_get_contents($privateKey);
     } else {
       $privateKey = "";
     }
-
-
-
 
     $qlik_user = DB::table('qlik_users')->where('user_id', $id)->where('qlik_conf_id', $conf_id)->first();
     if (!$qlik_user) {
@@ -454,23 +441,16 @@ class QlikHelper
     $myToken = JWT::encode($payload, $privateKey, 'RS256', null, $header);
 
 
-
-
-
     return $myToken;
   }
 
   public static function getJWTTokenOP2($id, $conf_id)
   {
 
-    //return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkYXN5c2VydmljZSIsInVzZXJEaXJlY3RvcnkiOiJEQVNZIn0.KBmZFS4AOFwxnqkmDp6-RrHwKW6tRpXpRinoaCXaoT5k-k78CxMONTK9cVK533qYk9snUD1l_CdUB1_3lukJGdD-hABss67GramtU07DA70uzNVreoaOn6_Vz4RTaioJbBnyfyWB6js7BNDRcLOsdbnlQyK_ilfWy6Fc-koolYNsNoKn9VOhnoRwXM5JAPGsSGW2SZuBQ5y_6m17tX-4XTxqyZjqgizo1BnWtSfMBdNeFVK7vcsOlasPIwp4x5fM3Nca_BJWuDXXcDT8bG9gyuG9YmlcGgtcUQo76oec7o6797MxUjqZ-HFtAEDFghMvRXK7TjeFa25JQDP3HlSV0A";
     $current_user = \App\User::find($id);
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
-    //$expire = $issuedA2->addMinutes(60)->timestamp;
-
-    //file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($qlik_conf)."\n", FILE_APPEND);
 
     $privateKey = $qlik_conf->private_key;
 
@@ -480,9 +460,6 @@ class QlikHelper
     } else {
       $privateKey = "";
     }
-
-    //file_put_contents(__DIR__ . '/qlik_token.txt', $privateKey."\n", FILE_APPEND);
-
 
     $qlik_user = DB::table('qlik_users')->where('user_id', $id)->where('qlik_conf_id', $conf_id)->first();
     if (!$qlik_user) {
@@ -510,9 +487,6 @@ class QlikHelper
       'userDirectory' => $user_directory,
     ]);
 
-    //file_put_contents(__DIR__ . '/qlik_token.txt', json_encode($payload)."\n", FILE_APPEND);
-
-
     $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
 
     $base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
@@ -527,8 +501,6 @@ class QlikHelper
 
     // Your JWT signed with the supplied private key
     $myToken = $data . "." . $base64UrlSignature;
-
-    //file_put_contents(__DIR__ . '/qlik_token.txt', $myToken."\n", FILE_APPEND);
 
 
     return $myToken;

@@ -10,6 +10,11 @@ class Tenant extends Model
     protected $table = 'tenants';
     use SoftDeletes;
 
+    protected $fillable = [
+        'domain_name', 'name', 'description'
+
+    ];
+
     /**
      * The attributes that should be hidden for arrays.
      *

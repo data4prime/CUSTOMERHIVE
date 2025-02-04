@@ -27,8 +27,8 @@ class AddColumnsWidthHeigthToMenuTable extends Migration
     public function down()
     {
         Schema::table('cms_menus', function (Blueprint $table) {
-            $table->dropColumn('frame_width');
-            $table->dropColumn('frame_height');
+
+            $table->dropColumn(['frame_width', 'frame_height']);
         });
     }
 }

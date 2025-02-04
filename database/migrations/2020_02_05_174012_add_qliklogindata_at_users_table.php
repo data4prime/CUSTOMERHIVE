@@ -27,8 +27,9 @@ class AddQliklogindataAtUsersTable extends Migration
     public function down()
     {
         Schema::table('cms_users', function (Blueprint $table) {
-            $table->dropColumn('user_directory');
-            $table->dropColumn('qlik_login');
+            /*$table->dropColumn('user_directory');
+            $table->dropColumn('qlik_login');*/
+            $table->dropColumn(['user_directory','qlik_login' ]);
         });
     }
 }

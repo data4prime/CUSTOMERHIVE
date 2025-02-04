@@ -14,8 +14,8 @@ class RemoveColumnsTenantGroupFromTableQlikItems extends Migration
     public function up()
     {
         Schema::table('qlik_items', function (Blueprint $table) {
-            $table->dropColumn('tenant');
-            $table->dropColumn('group');
+
+            $table->dropColumn(['tenant', 'group']);
         });
     }
 

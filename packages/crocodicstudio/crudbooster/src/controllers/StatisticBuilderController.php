@@ -101,14 +101,50 @@ class StatisticBuilderController extends CBController
         $id_cms_statistics = isset($row->id) ? $row->id : 0;
         $page_title = isset($row->name) ? $row->name : 'Dashboard';
 
-        $layout = $row->layout;
+        $layout = isset($row->layout) ? $row->layout : 0 ;
 
         $layout = DB::table('dashboard_layouts')->where('id', $layout)->first();
 
         if ($layout) {
             $code_layout = html_entity_decode($layout->code_layout);
         } else {
-            $code_layout = '';
+            $code_layout = "
+                <div class='statistic-row row'>
+        <div id='area1' class='col-sm-3 connectedSortable'>
+
+        </div>
+        <div id='area2' class='col-sm-3 connectedSortable'>
+
+        </div>
+        <div id='area3' class='col-sm-3 connectedSortable'>
+
+        </div>
+        <div id='area4' class='col-sm-3 connectedSortable'>
+
+        </div>
+    </div>
+
+<div class='statistic-row row'>
+        <div id='area5' class='col-sm-3 connectedSortable'>
+
+        </div>
+        <div id='area6' class='col-sm-3 connectedSortable'>
+
+        </div>
+        <div id='area7' class='col-sm-3 connectedSortable'>
+
+        </div>
+        <div id='area8' class='col-sm-3 connectedSortable'>
+
+        </div>
+    </div>
+
+    <div class='statistic-row row'>
+        <div id='area9' class='col-sm-12 connectedSortable'>
+
+        </div>
+</div>
+        ";
         }
 
         return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout', 'code_layout'));
