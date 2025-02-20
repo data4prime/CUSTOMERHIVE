@@ -291,17 +291,22 @@ class AdminCmsUsersController extends CBController
 
 			$id_user = DB::table('cms_users')->select('id')->where('email',Request::all()['email'] )->first()->id;
 			$updated_idp_qlik = [];
-
+			//dd(array_unique(array_diff_assoc($qlik_conf_ids,array_unique($qlik_conf_ids))));
+			$check_dupicates = array_unique(array_diff_assoc($qlik_conf_ids,array_unique($qlik_conf_ids)));
+			if (count($check_dupicates) > 0) {
+				CRUDBooster::redirectBack(trans('crudbooster.qlik_user_conf_exists'), 'error');
+			}
+			
 			foreach($qlik_conf_ids as $k => $v) {
 				//file_put_contents(__DIR__.'/qlik_users.txt',  $idp . PHP_EOL, FILE_APPEND);
 
 				if (!empty($v)) {
 
-					$check_user = DB::table('qlik_users')->where('user_id', $id_user)->where('qlik_conf_id', $v)->first();
+					/*$check_user = DB::table('qlik_users')->where('user_id', $id_user)->where('qlik_conf_id', $v)->first();
 
 					if ($check_user) {
 						CRUDBooster::redirectBack(trans('crudbooster.qlik_user_conf_exists'), 'error');
-					}
+					}*/
 
 
 					if (QlikHelper::confIsSAAS($v)) {
