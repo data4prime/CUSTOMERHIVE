@@ -358,17 +358,13 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	    */
 	public function hook_before_add(&$postdata)
 	{
-		if ($postdata['public_access'] == 'public_access') {
-			//create token
+		/*if ($postdata['public_access'] == 'public_access') {
 			$token = md5(config('app.salt') . $postdata['url'] . $postdata['title']);
-			//save token
 			$postdata['proxy_token'] = $token;
-			//save proxy enabled at
 			$now = date('Y-m-d H:i:s');
 			$postdata['proxy_enabled_at'] = $now;
 		}
-		//avoid sql error
-		unset($postdata['public_access']);
+		unset($postdata['public_access']);*/
 	}
 
 	/*
@@ -401,7 +397,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 
 		//QlikHelper::toggle_public_access($postdata['public_access'], $id);
 		//avoid sql error
-		unset($postdata['public_access']);
+		//unset($postdata['public_access']);
 	}
 
 	/*
