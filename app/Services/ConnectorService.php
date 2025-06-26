@@ -67,13 +67,11 @@ class ConnectorService
                 $license = $this->getLicenseFromFile();
                 Log::error("Unexpected license validation error: " . $e->getMessage());
             }
-            //dd($response);
 
             if ($license) {
                 //$license = $response->json();
                 Storage::disk('license')->put('license.json', json_encode($license));
 
-                dd($license);
 
                 $this->license = $license;
 
@@ -215,12 +213,10 @@ class ConnectorService
                 $license = $this->getLicenseFromFile();
                 Log::error("Unexpected license validation error: " . $e->getMessage());
             }
-            //dd($response);
 
             if ($response) {
                 $license = $response->json();
                 Storage::disk('license')->put('license.json', json_encode($license));
-                //dd($license);   
 
                 return $license->tenants_number >= $data['tenants_number'];
             }
