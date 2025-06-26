@@ -11,6 +11,8 @@ use LaravelReady\LicenseConnector\Exceptions\AuthException;
 
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Storage;
+
 class ConnectorService
 {
     use CacheKeys;

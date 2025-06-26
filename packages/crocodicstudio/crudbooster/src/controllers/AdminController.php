@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\ConnectorService;
 
+use Illuminate\Support\Facades\Storage;
+
 //use App\Classes\Custom\ChiveLicenseService;
 
 class AdminController extends CBController
