@@ -42,16 +42,26 @@ class ConnectorService
         if ($this->accessToken) {
             $url = Config::get('license-connector.license_server_url') . '/api/api-license/license-server/license';
 
-            $response = Http::withHeaders([
-                'x-host' => Config::get('app.url'),
-                'x-host-name' => Config::get('app.name'),
-                'Authorization' => "Bearer {$this->accessToken}",
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ])->post($url, $data);
+
+            try {
+                $response = Http::withHeaders([
+                    'x-host' => Config::get('app.url'),
+                    'x-host-name' => Config::get('app.name'),
+                    'Authorization' => "Bearer {$this->accessToken}",
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ])->timeout(5)->post($url, $data);
+            } catch (ConnectionException | RequestException $e) {
+                Log::error("License server timeout or request failed: " . $e->getMessage());
+
+    
+                $response = $this->validateLicenseFromFile();
+            } catch (\Exception $e) {
+                Log::error("Unexpected license validation error: " . $e->getMessage());
+            }
             //dd($response);
 
-            if ($response->ok()) {
+            if ($response) {
                 $license = $response->json();
                 Storage::disk('license')->put('license.json', json_encode($license));
 
@@ -169,16 +179,25 @@ class ConnectorService
         if ($this->accessToken) {
             $url = Config::get('license-connector.license_server_url') . '/api/api-license/license-server/license';
 
-            $response = Http::withHeaders([
-                'x-host' => Config::get('app.url'),
-                'x-host-name' => Config::get('app.name'),
-                'Authorization' => "Bearer {$this->accessToken}",
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ])->post($url, $data);
+            try {
+                $response = Http::withHeaders([
+                    'x-host' => Config::get('app.url'),
+                    'x-host-name' => Config::get('app.name'),
+                    'Authorization' => "Bearer {$this->accessToken}",
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ])->timeout(5)->post($url, $data);
+            } catch (ConnectionException | RequestException $e) {
+                Log::error("License server timeout or request failed: " . $e->getMessage());
+
+    
+                $response =  $this->validateLicenseFromFile();
+            } catch (\Exception $e) {
+                Log::error("Unexpected license validation error: " . $e->getMessage());
+            }
             //dd($response);
 
-            if ($response->ok()) {
+            if ($response) {
                 $license = $response->json();
                 Storage::disk('license')->put('license.json', json_encode($license));
                 //dd($license);   
