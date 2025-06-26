@@ -124,6 +124,8 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
     ];
 
+
+/*
     $license_server_url = config('license-connector.license_server_url');
     $curl = curl_init();
     curl_setopt_array($curl, array(
@@ -145,12 +147,18 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
     $response = curl_exec($curl);
     curl_close($curl);
+*/
+
+    $response = LicenseHelper::registerLicense($fields);
 
     $response = json_decode($response);
 
     if ($response->success == true) { 
 
       DB::table('license')->insert(['license_key' => $response->result->license_key]);
+      $json_file = json_encode($response->result);
+      //storage_path('app/license.json')
+      Storage::disk('local')->put('license.json', $json_file);
 
       return redirect(CRUDBooster::adminPath())->with('message', 'License activated successfully');
 

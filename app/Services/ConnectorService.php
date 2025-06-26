@@ -51,6 +51,7 @@ class ConnectorService
 
             if ($response->ok()) {
                 $license = $response->json();
+                Storage::disk('local')->put('license.json', json_encode($license));
 
                 //dd($license);
 
@@ -101,25 +102,61 @@ class ConnectorService
         return false;
     }
 
-public function getLicense(array $data = []): array | bool
+    public function getLicense(array $data = []): array | bool
     {
         if ($this->accessToken) {
             $url = Config::get('license-connector.license_server_url') . '/api/api-license/license-server/license';
 
-            $response = Http::withHeaders([
-                'x-host' => Config::get('app.url'),
-                'x-host-name' => Config::get('app.name'),
-                'Authorization' => "Bearer {$this->accessToken}",
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ])->post($url, $data);
-            //dd($response);
+            try {
+                $response = Http::withHeaders([
+                    'x-host' => Config::get('app.url'),
+                    'x-host-name' => Config::get('app.name'),
+                    'Authorization' => "Bearer {$this->accessToken}",
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ])->timeout(5)->post($url, $data);
 
-            if ($response->ok()) {
-                $license = $response->json();
 
-                return $license;
+                if ($response->ok()) {
+                    $license = $response->json();
+                    Storage::disk('local')->put('license.json', json_encode($license));
+                    return $license;
+                }
+
+            } catch (ConnectionException | RequestException $e) {
+                Log::error("License server timeout or request failed: " . $e->getMessage());
+
+    
+                return $this->validateLicenseFromFile();
+            } catch (\Exception $e) {
+                Log::error("Unexpected license validation error: " . $e->getMessage());
             }
+        }
+
+        return false;
+    }
+
+    protected function getLicenseFromFile(): bool
+    {
+        $path = storage_path('app/license.json');
+
+        if (!file_exists($path)) {
+            Log::warning("License fallback file not found at: {$path}");
+            return false;
+        }
+
+        try {
+            $json = file_get_contents($path);
+            $license = json_decode($json, true);
+
+
+
+            // Aggiungi logica di validazione aggiuntiva qui se necessario
+            Log::info("License validated using fallback file.");
+            return $license;
+
+        } catch (\Exception $e) {
+            Log::error("Error reading fallback license file: " . $e->getMessage());
         }
 
         return false;
@@ -141,6 +178,7 @@ public function getLicense(array $data = []): array | bool
 
             if ($response->ok()) {
                 $license = $response->json();
+                Storage::disk('local')->put('license.json', json_encode($license));
                 //dd($license);   
 
                 return $license->tenants_number >= $data['tenants_number'];

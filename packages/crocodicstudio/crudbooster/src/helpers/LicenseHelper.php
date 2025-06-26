@@ -14,6 +14,31 @@ use App\Services\ConnectorService;
 
 class LicenseHelper  {
 
+    public static function registerLicense($fields) {
+        $license_server_url = config('license-connector.license_server_url');
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $license_server_url.'/api/api-license/license-server/licenses',
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json',
+        ),
+
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_SSL_VERIFYPEER => 0,
+        CURLOPT_POSTFIELDS => json_encode($fields),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        return $response;
+    }
+
     public static function getLicense() {
         $licenseKey =  DB::table('license')->first();
 
