@@ -58,6 +58,7 @@ class ConnectorService
     
                 $license = $this->getLicenseFromFile();
             } catch (\Exception $e) {
+                $license = $this->getLicenseFromFile();
                 Log::error("Unexpected license validation error: " . $e->getMessage());
             }
             //dd($response);
