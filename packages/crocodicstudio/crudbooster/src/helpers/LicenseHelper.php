@@ -48,7 +48,7 @@ class LicenseHelper  {
 
     public static function canLicenseLogin() {
 
-        return true;
+        //return true;
 
 
         $licenseKey = self::getLicense();
@@ -66,7 +66,7 @@ class LicenseHelper  {
     }
 
     public static function canAddTenant() {
-        return true;
+        //return true;
         $licenseKey = self::getLicense();
 
         $tenants = TenantHelper::countTenants();
@@ -85,7 +85,7 @@ class LicenseHelper  {
 
     public static function getLicenseInfo() {
         
-        return false;
+        //return false;
         $licenseKey = self::getLicense();
 
           
@@ -108,7 +108,7 @@ class LicenseHelper  {
 
     public static function canAddUser() {
 
-        return true;
+        //return true;
         $licenseKey = self::getLicense();
 
         $users = UserHelper::countUsers();
@@ -124,7 +124,7 @@ class LicenseHelper  {
 
     public static function isActiveQlik() {
 
-        return true;
+        //return true;
 
         $licenseKey = self::getLicenseInfo();
 
@@ -133,7 +133,7 @@ class LicenseHelper  {
     }
 
     public static function isActiveChatAI() {
-        return true;
+        //return true;
 
         $licenseKey = self::getLicenseInfo();
 
