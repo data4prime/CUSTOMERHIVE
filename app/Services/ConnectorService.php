@@ -151,6 +151,9 @@ class ConnectorService
                 return $this->getLicenseFromFile();
             } catch (\Exception $e) {
                 Log::error("Unexpected license validation error: " . $e->getMessage());
+            } catch (NotFoundHttpException $e) {
+                $license = $this->getLicenseFromFile();
+                Log::error("Unexpected license validation error: " . $e->getMessage());
             }
         }
 
@@ -180,7 +183,10 @@ class ConnectorService
 
         } catch (\Exception $e) {
             Log::error("Error reading fallback license file: " . $e->getMessage());
-        }
+        } catch (NotFoundHttpException $e) {
+                $license = $this->getLicenseFromFile();
+                Log::error("Unexpected license validation error: " . $e->getMessage());
+            }
 
         return false;
     }
@@ -204,6 +210,9 @@ class ConnectorService
     
                 $response =  $this->getLicenseFromFile();
             } catch (\Exception $e) {
+                Log::error("Unexpected license validation error: " . $e->getMessage());
+            } catch (NotFoundHttpException $e) {
+                $license = $this->getLicenseFromFile();
                 Log::error("Unexpected license validation error: " . $e->getMessage());
             }
             //dd($response);
@@ -255,7 +264,10 @@ class ConnectorService
     
         } catch (\Exception $e) {
             Log::error("Unexpected license validation error: " . $e->getMessage());
-        }
+        } catch (NotFoundHttpException $e) {
+                $license = $this->getLicenseFromFile();
+                Log::error("Unexpected license validation error: " . $e->getMessage());
+            }
 
         $data = $response->json();
 
