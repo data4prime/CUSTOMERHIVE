@@ -53,7 +53,7 @@ class ConnectorService
 
             if ($response->ok()) {
                 $license = $response->json();
-                Storage::disk('local')->put('license.json', json_encode($license));
+                Storage::disk('license')->put('license.json', json_encode($license));
 
                 //dd($license);
 
@@ -121,7 +121,7 @@ class ConnectorService
 
                 if ($response->ok()) {
                     $license = $response->json();
-                    Storage::disk('local')->put('license.json', json_encode($license));
+                    Storage::disk('license')->put('license.json', json_encode($license));
                     return $license;
                 }
 
@@ -180,7 +180,7 @@ class ConnectorService
 
             if ($response->ok()) {
                 $license = $response->json();
-                Storage::disk('local')->put('license.json', json_encode($license));
+                Storage::disk('license')->put('license.json', json_encode($license));
                 //dd($license);   
 
                 return $license->tenants_number >= $data['tenants_number'];

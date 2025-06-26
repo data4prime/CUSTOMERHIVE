@@ -160,7 +160,7 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
       DB::table('license')->insert(['license_key' => $response->result->license_key]);
       $json_file = json_encode($response->result);
       //storage_path('app/license.json')
-      Storage::disk('local')->put('license.json', $json_file);
+      Storage::disk('license')->put('license.json', $json_file);
 
       return redirect(CRUDBooster::adminPath())->with('message', 'License activated successfully');
 
