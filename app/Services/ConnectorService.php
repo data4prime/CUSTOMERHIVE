@@ -152,6 +152,8 @@ class ConnectorService
 
     protected function getLicenseFromFile(): bool
     {
+
+        Log::info("getLicenseFromFile");
         $path = storage_path('app/license.json');
 
         if (!file_exists($path)) {
