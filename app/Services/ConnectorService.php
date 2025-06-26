@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Storage;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+
 class ConnectorService
 {
     use CacheKeys;
@@ -53,13 +56,14 @@ class ConnectorService
                 ])->timeout(5)->post($url, $data);
                 $license = $response->json();
             } catch (ConnectionException | RequestException $e) {
-                dd("ConnectionException | RequestException $e");
                 Log::error("License server timeout or request failed: " . $e->getMessage());
 
     
                 $license = $this->getLicenseFromFile();
             } catch (\Exception $e) {
-                dd("Exception $e");
+                $license = $this->getLicenseFromFile();
+                Log::error("Unexpected license validation error: " . $e->getMessage());
+            }  catch (NotFoundHttpException $e) {
                 $license = $this->getLicenseFromFile();
                 Log::error("Unexpected license validation error: " . $e->getMessage());
             }
