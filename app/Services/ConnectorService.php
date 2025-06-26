@@ -66,7 +66,7 @@ class ConnectorService
                 //$license = $response->json();
                 Storage::disk('license')->put('license.json', json_encode($license));
 
-                //dd($license);
+                dd($license);
 
                 $this->license = $license;
 
