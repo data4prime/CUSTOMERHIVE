@@ -51,18 +51,19 @@ class ConnectorService
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ])->timeout(5)->post($url, $data);
+                $license = $response->json();
             } catch (ConnectionException | RequestException $e) {
                 Log::error("License server timeout or request failed: " . $e->getMessage());
 
     
-                $response = $this->validateLicenseFromFile();
+                $license = $this->getLicenseFromFile();
             } catch (\Exception $e) {
                 Log::error("Unexpected license validation error: " . $e->getMessage());
             }
             //dd($response);
 
-            if ($response) {
-                $license = $response->json();
+            if ($license) {
+                //$license = $response->json();
                 Storage::disk('license')->put('license.json', json_encode($license));
 
                 //dd($license);
@@ -128,9 +129,10 @@ class ConnectorService
                     'Accept' => 'application/json',
                 ])->timeout(5)->post($url, $data);
 
+                $license = $response->json();
 
-                if ($response->ok()) {
-                    $license = $response->json();
+
+                if ($license) {
                     Storage::disk('license')->put('license.json', json_encode($license));
                     return $license;
                 }
@@ -139,7 +141,7 @@ class ConnectorService
                 Log::error("License server timeout or request failed: " . $e->getMessage());
 
     
-                return $this->validateLicenseFromFile();
+                return $this->getLicenseFromFile();
             } catch (\Exception $e) {
                 Log::error("Unexpected license validation error: " . $e->getMessage());
             }
@@ -191,7 +193,7 @@ class ConnectorService
                 Log::error("License server timeout or request failed: " . $e->getMessage());
 
     
-                $response =  $this->validateLicenseFromFile();
+                $response =  $this->getLicenseFromFile();
             } catch (\Exception $e) {
                 Log::error("Unexpected license validation error: " . $e->getMessage());
             }
