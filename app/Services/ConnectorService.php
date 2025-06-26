@@ -228,15 +228,23 @@ class ConnectorService
 
         $url = Config::get('license-connector.license_server_url') . '/api/api-license/license-server/auth/login';
 
-        $response = Http::withHeaders([
-            'x-host' => Config::get('app.url'),
-            'x-host-name' => Config::get('app.name'),
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ])->post($url, [
-            'license_key' => $licenseKey,
-            'ls_domain' => $_SERVER['HTTP_HOST'],
-        ]);
+        try {
+            $response = Http::withHeaders([
+                'x-host' => Config::get('app.url'),
+                'x-host-name' => Config::get('app.name'),
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ])->timeout(5)->post($url, [
+                'license_key' => $licenseKey,
+                'ls_domain' => $_SERVER['HTTP_HOST'],
+            ]);
+        } catch (ConnectionException | RequestException $e) {
+            Log::error("License server timeout or request failed: " . $e->getMessage());
+
+    
+        } catch (\Exception $e) {
+            Log::error("Unexpected license validation error: " . $e->getMessage());
+        }
 
         $data = $response->json();
 
