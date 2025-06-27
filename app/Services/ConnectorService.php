@@ -68,6 +68,8 @@ class ConnectorService
                 Log::error("Unexpected license validation error: " . $e->getMessage());
             }
 
+            //dd($license);
+
             if ($license) {
                 //$license = $response->json();
                 Storage::disk('license')->put('license.json', json_encode($license));
@@ -76,6 +78,10 @@ class ConnectorService
                 $this->license = $license;
 
                 $ret = $license && $license['status'] == 'active';
+
+                //dd($license['domain'] . " - " . $data['domain']);
+
+                //dd($ret && $license['domain'] == $data['domain']);
 
                 if (isset($data['tenants_number'])) {
                     $ret = $ret && $license['tenants_number'] >= $data['tenants_number'];
@@ -91,12 +97,17 @@ class ConnectorService
                     $ret = $ret && $license['path'] == env('APP_PATH'); //default path
                 }
 
-                if (isset($data['domain'])) {
+               // dd(isset($data['domain']));
+
+                if (isset($data['domain']) && $ret && $license['domain'] == $data['domain']) {
                     $ret = $ret && $license['domain'] == $data['domain'];
                 } else {
 
+                    //dd(env('APP_DOMAIN'));
+
                     //get domain from $_SERVER['HTTP_HOST']
-                    $domain = $_SERVER['HTTP_HOST'];
+                    //$domain = $_SERVER['HTTP_HOST'];
+                    $domain = env('APP_DOMAIN');
 
                     //if domain has a subdomain, get the subdomain
                     if (strpos($domain, '.') !== false) {
@@ -104,7 +115,7 @@ class ConnectorService
                         $domain = $domain[0];
                     }
 
-
+                    //dd($ret && $license['domain'] == $domain);
                     $ret = $ret && $license['domain'] == $domain;
                 }
 
@@ -252,7 +263,7 @@ class ConnectorService
                 'Accept' => 'application/json',
             ])->timeout(5)->post($url, [
                 'license_key' => $licenseKey,
-                'ls_domain' => $_SERVER['HTTP_HOST'],
+                'ls_domain' => env('APP_DOMAIN'),
             ]);
         } catch (ConnectionException | RequestException $e) {
             Log::error("License server timeout or request failed: " . $e->getMessage());

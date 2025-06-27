@@ -53,12 +53,15 @@ class LicenseHelper  {
 
         $licenseKey = self::getLicense();
 
+        //dd($licenseKey);
+
                 
         if (!$licenseKey)  {
             return false;
         }
 
-        $customData = ['license_key' => $licenseKey->license_key];
+       //$customData = ['license_key' => $licenseKey->license_key];
+        $customData = ['license_key' => $licenseKey->license_key, 'domain' => env('APP_DOMAIN')];
 
         $connectorService = new ConnectorService($licenseKey->license_key);
 
