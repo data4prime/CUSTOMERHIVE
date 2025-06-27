@@ -791,6 +791,7 @@ class ModulsController extends CBController
       CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
+  /**Prende i campi di input*/
     $column = Request::input('column');
     $name = Request::input('name');
     $join_table = Request::input('join_table');
@@ -798,8 +799,10 @@ class ModulsController extends CBController
     $is_image = Request::input('is_image');
     $is_download = Request::input('is_download');
     $callbackphp = Request::input('callbackphp');
+    $query = Request::input('query');
     $id = Request::input('id');
     $width = Request::input('width');
+
 
     $row = DB::table('cms_moduls')->where('id', $id)->first();
 
@@ -832,6 +835,10 @@ class ModulsController extends CBController
 
       if ($callbackphp[$i]) {
         $script_cols[$i] .= ',"callback_php"=>\'' . $callbackphp[$i] . '\'';
+      }
+
+      if ($query[$i]) {
+        $script_cols[$i] .= ',"query"=>\'' . addslashes($query[$i]) . '\'';
       }
 
       $script_cols[$i] .= "];";

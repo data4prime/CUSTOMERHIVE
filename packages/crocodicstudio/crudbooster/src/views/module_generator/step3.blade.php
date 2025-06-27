@@ -224,6 +224,7 @@
                         <th>Join Table (Optional)</th>
                         <th>Join Column (Optional)</th>
                         <th>CallbackPHP</th>
+                        <th>Query</th>
                         <th width="90px">Width (px)</th>
                         <th width='80px'>Image</th>
                         <th width='80px'>Download</th>
@@ -248,6 +249,9 @@
                                 </td>
                                 <td>
                                   <input type='text' name='callbackphp[]' class='form-control callbackphp notfocus' value='{{ isset($c["callback_php"]) ? $c["callback_php"] : "" }}' placeholder="Optional"/>
+                                </td>
+                                <td>
+                                  <input type='text' name='query[]' class='form-control callbackphp notfocus' value='{{ isset($c["query"]) ? $c["query"] : "" }}' placeholder="Optional"/>
                                 </td>
                                 <td>
                                   <input value='{{isset($c["width"])?$c["width"]:0}}' type='number' name='width[]' class='form-control'/>
@@ -289,6 +293,9 @@
                        </td>
                         <td>
                           <input type='text' name='callbackphp[]' class='form-control callbackphp notfocus' value='' placeholder="Optional"/>
+                        </td>
+                        <td>
+                            <input type='text' name='query[]' class='form-control callbackphp notfocus' value='' placeholder="Optional"/>
                         </td>
                         <td>
                           <input type='number' name='width[]' value='0' class='form-control'/>
