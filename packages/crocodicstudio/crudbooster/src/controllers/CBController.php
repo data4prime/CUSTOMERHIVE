@@ -644,6 +644,10 @@ class CBController extends Controller
                     $value = call_user_func($col['callback'], $row);
                 }
 
+                if (isset($col['query'])) {
+                    $value = $this->call_user_query($col['query'], $row);
+                }
+
                 $datavalue = @unserialize($value);
                 if ($datavalue !== false) {
                     if ($datavalue) {
@@ -683,6 +687,28 @@ class CBController extends Controller
 
         $data['target_layout'] = isset(\App\Menu::find(Request::get('m'))->target_layout) ? \App\Menu::find(Request::get('m'))->target_layout : 'default';
         return view("crudbooster::default.index", $data);
+    }
+
+    public function call_user_query($query, $row)
+    {
+        preg_match_all('/:([a-zA-Z0-9_]+)/', $query, $matches);
+
+        foreach ($matches[1] as $param) {
+            if (isset($row->$param)) {
+                $value = addslashes($row->$param);
+
+                if (is_string($value)) {
+                    $value = "'$value'";
+                }
+
+                $query = str_replace(':' . $param, $value, $query);
+            }
+        }
+
+        $value= DB::select(DB::raw($query))[0]->value;
+        //dd($value);
+
+        return $value;
     }
 
     public function getExportData()
