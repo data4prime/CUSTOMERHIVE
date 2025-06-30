@@ -116,7 +116,7 @@ class ConnectorService
                 Log::info($response->json());
 
 
-                if ($license && isset($license->id)) {
+                if ($license && isset($license['id'])) {
                     Storage::disk('license')->put('license.json', json_encode($license));
                     Log::info(json_encode($license));
                     return $license;
