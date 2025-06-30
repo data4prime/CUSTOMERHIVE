@@ -153,7 +153,8 @@ class ConnectorService
 
         if (!file_exists($path)) {
             Log::warning("License fallback file not found at: {$path}");
-            return false;
+            $customData = ['license_key' => $this->licenseKey , 'domain' => env('APP_DOMAIN')];
+            $this->writeLicense($customData);
         }
 
         try {
