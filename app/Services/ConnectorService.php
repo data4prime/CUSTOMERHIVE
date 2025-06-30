@@ -113,6 +113,7 @@ class ConnectorService
                 ])->timeout(5)->post($url, $data);
 
                 $license = $response->json();
+                Log::info($response->json());
 
 
                 if ($license && isset($license->id)) {
