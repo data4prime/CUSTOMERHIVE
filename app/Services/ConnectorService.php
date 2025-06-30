@@ -142,7 +142,7 @@ class ConnectorService
         return false;
     }
 
-    protected function getLicenseFromFile(): bool
+    protected function getLicenseFromFile(): array
     {
 
         Log::info("getLicenseFromFile");
