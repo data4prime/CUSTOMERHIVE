@@ -46,6 +46,17 @@ class LicenseHelper  {
         return $licenseKey;
     }
 
+    public static function writeLicense() {
+
+
+
+        $licenseKey = self::getLicense();
+        $customData = ['license_key' => $licenseKey->license_key, 'domain' => env('APP_DOMAIN')];
+        $connectorService = new ConnectorService($licenseKey->license_key);
+        return  $connectorService->writeLicense($customData);
+
+    }
+
     public static function canLicenseLogin() {
 
         //return true;
