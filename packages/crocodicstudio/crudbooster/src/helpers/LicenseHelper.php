@@ -11,6 +11,8 @@ use Validator;
 
 use App\Services\ConnectorService;
 
+use Illuminate\Support\Facades\Log;
+
 
 class LicenseHelper  {
 
@@ -51,6 +53,8 @@ class LicenseHelper  {
 
 
         $licenseKey = self::getLicense();
+        Log::info(json_encode($licenseKey));
+
         $customData = ['license_key' => $licenseKey->license_key, 'domain' => env('APP_DOMAIN')];
         $connectorService = new ConnectorService($licenseKey->license_key);
         return  $connectorService->writeLicense($customData);

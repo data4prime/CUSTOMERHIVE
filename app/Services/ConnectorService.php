@@ -101,6 +101,7 @@ class ConnectorService
     {
         if ($this->accessToken) {
             $url = Config::get('license-connector.license_server_url') . '/api/api-license/license-server/license';
+            Log::info(json_encode($url));
 
             try {
                 $response = Http::withHeaders([
@@ -116,6 +117,7 @@ class ConnectorService
 
                 if ($license && isset($license->id)) {
                     Storage::disk('license')->put('license.json', json_encode($license));
+                    Log::info(json_encode($license));
                     return $license;
                 }
 
@@ -145,7 +147,7 @@ class ConnectorService
     protected function getLicenseFromFile(): array
     {
 
-        Log::info("getLicenseFromFile");
+        Log::info(json_encode("getLicenseFromFile"));
         $path = storage_path('app/license.json');
 
         if (!file_exists($path)) {
@@ -160,7 +162,7 @@ class ConnectorService
 
 
             // Aggiungi logica di validazione aggiuntiva qui se necessario
-            Log::info("License validated using fallback file.");
+            Log::info(json_encode("License validated using fallback file."));
             return $license;
 
         } catch (\Exception $e) {
