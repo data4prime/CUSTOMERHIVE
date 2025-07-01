@@ -75,6 +75,8 @@ class LicenseHelper  {
             return false;
         }
 
+        LicenseHelper::writeLicense();
+
        //$customData = ['license_key' => $licenseKey->license_key];
         $customData = ['license_key' => $licenseKey->license_key, 'domain' => env('APP_DOMAIN')];
 
