@@ -52,6 +52,8 @@ class ConnectorService
            
                 $this->license = $license;
 
+                Log::info($license);
+
                 $ret = $license && $license['status'] == 'active';
 
 
@@ -165,6 +167,7 @@ class ConnectorService
 
             // Aggiungi logica di validazione aggiuntiva qui se necessario
             Log::info(json_encode("License validated using fallback file."));
+            Log::info($license);
             return $license;
 
         } catch (\Exception $e) {
