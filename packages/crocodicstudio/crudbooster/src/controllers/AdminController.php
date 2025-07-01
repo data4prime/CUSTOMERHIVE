@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\ConnectorService;
 
+use Illuminate\Support\Facades\Storage;
+
 //use App\Classes\Custom\ChiveLicenseService;
 
 class AdminController extends CBController
@@ -156,9 +158,13 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
     if ($response->success == true) { 
 
       DB::table('license')->insert(['license_key' => $response->result->license_key]);
-      $json_file = json_encode($response->result);
+      $response->result->status = "active";
+
+      LicenseHelper::writeLicense();
+
+      //$json_file = json_encode($response->result);
       //storage_path('app/license.json')
-      Storage::disk('local')->put('license.json', $json_file);
+      //Storage::disk('license')->put('license.json', $json_file);
 
       return redirect(CRUDBooster::adminPath())->with('message', 'License activated successfully');
 

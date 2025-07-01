@@ -11,6 +11,8 @@ use Validator;
 
 use App\Services\ConnectorService;
 
+use Illuminate\Support\Facades\Log;
+
 
 class LicenseHelper  {
 
@@ -46,19 +48,37 @@ class LicenseHelper  {
         return $licenseKey;
     }
 
-    public static function canLicenseLogin() {
+    public static function writeLicense() {
 
-        return true;
 
 
         $licenseKey = self::getLicense();
+        Log::info(json_encode($licenseKey));
+
+        $customData = ['license_key' => $licenseKey->license_key, 'domain' => env('APP_DOMAIN')];
+        $connectorService = new ConnectorService($licenseKey->license_key);
+        return  $connectorService->writeLicense($customData);
+
+    }
+
+    public static function canLicenseLogin() {
+
+        //return true;
+
+
+        $licenseKey = self::getLicense();
+
+        //dd($licenseKey);
 
                 
         if (!$licenseKey)  {
             return false;
         }
 
-        $customData = ['license_key' => $licenseKey->license_key];
+        LicenseHelper::writeLicense();
+
+       //$customData = ['license_key' => $licenseKey->license_key];
+        $customData = ['license_key' => $licenseKey->license_key, 'domain' => env('APP_DOMAIN')];
 
         $connectorService = new ConnectorService($licenseKey->license_key);
 
@@ -66,7 +86,7 @@ class LicenseHelper  {
     }
 
     public static function canAddTenant() {
-        return true;
+        //return true;
         $licenseKey = self::getLicense();
 
         $tenants = TenantHelper::countTenants();
@@ -85,7 +105,7 @@ class LicenseHelper  {
 
     public static function getLicenseInfo() {
         
-        return false;
+        //return false;
         $licenseKey = self::getLicense();
 
           
@@ -108,7 +128,7 @@ class LicenseHelper  {
 
     public static function canAddUser() {
 
-        return true;
+        //return true;
         $licenseKey = self::getLicense();
 
         $users = UserHelper::countUsers();
@@ -124,7 +144,7 @@ class LicenseHelper  {
 
     public static function isActiveQlik() {
 
-        return true;
+        //return true;
 
         $licenseKey = self::getLicenseInfo();
 
@@ -133,7 +153,7 @@ class LicenseHelper  {
     }
 
     public static function isActiveChatAI() {
-        return true;
+        //return true;
 
         $licenseKey = self::getLicenseInfo();
 

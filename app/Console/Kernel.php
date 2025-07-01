@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         //
         'App\Console\Commands\CheckUserExpiry',
         'App\Console\Commands\UserExpiryNotification',
+        'App\Console\Commands\GetLicense',
     ];
 
     /**
@@ -30,6 +31,7 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
         $schedule->command('user:check-expiry')->dailyAt('00:00');
         $schedule->command('user:expiry-notification')->dailyAt('00:10');
+        $schedule->command('command:GetLicense')->hourly();
     }
 
     /**

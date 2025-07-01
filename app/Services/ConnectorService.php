@@ -11,6 +11,13 @@ use LaravelReady\LicenseConnector\Exceptions\AuthException;
 
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Storage;
+
+use Illuminate\Support\Facades\Log;
+
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+
 class ConnectorService
 {
     use CacheKeys;
@@ -37,27 +44,19 @@ class ConnectorService
      */
     public function validateLicense(array $data = []): bool
     {
-        if ($this->accessToken) {
-            $url = Config::get('license-connector.license_server_url') . '/api/api-license/license-server/license';
 
-            $response = Http::withHeaders([
-                'x-host' => Config::get('app.url'),
-                'x-host-name' => Config::get('app.name'),
-                'Authorization' => "Bearer {$this->accessToken}",
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ])->post($url, $data);
-            //dd($response);
+            $license = $this->getLicenseFromFile();
+       
 
-            if ($response->ok()) {
-                $license = $response->json();
-                Storage::disk('local')->put('license.json', json_encode($license));
-
-                //dd($license);
-
+            if ($license) {
+           
                 $this->license = $license;
 
+                Log::info($license);
+
                 $ret = $license && $license['status'] == 'active';
+
+
 
                 if (isset($data['tenants_number'])) {
                     $ret = $ret && $license['tenants_number'] >= $data['tenants_number'];
@@ -73,19 +72,20 @@ class ConnectorService
                     $ret = $ret && $license['path'] == env('APP_PATH'); //default path
                 }
 
-                if (isset($data['domain'])) {
+
+
+                if (isset($data['domain']) && $ret && $license['domain'] == $data['domain']) {
                     $ret = $ret && $license['domain'] == $data['domain'];
                 } else {
 
-                    //get domain from $_SERVER['HTTP_HOST']
-                    $domain = $_SERVER['HTTP_HOST'];
 
-                    //if domain has a subdomain, get the subdomain
+                    $domain = env('APP_DOMAIN');
+
+
                     if (strpos($domain, '.') !== false) {
                         $domain = explode('.', $domain);
                         $domain = $domain[0];
                     }
-
 
                     $ret = $ret && $license['domain'] == $domain;
                 }
@@ -96,16 +96,14 @@ class ConnectorService
             //delete record from licenses table
             DB::table('license')->where('license_key', $this->licenseKey)->delete();
 
-
-        }
-
         return false;
     }
 
-    public function getLicense(array $data = []): array | bool
+    public function writeLicense(array $data = []): array | bool
     {
         if ($this->accessToken) {
             $url = Config::get('license-connector.license_server_url') . '/api/api-license/license-server/license';
+            Log::info(json_encode($url));
 
             try {
                 $response = Http::withHeaders([
@@ -116,19 +114,23 @@ class ConnectorService
                     'Accept' => 'application/json',
                 ])->timeout(5)->post($url, $data);
 
+                $license = $response->json();
+                Log::info($response->json());
 
-                if ($response->ok()) {
-                    $license = $response->json();
-                    Storage::disk('local')->put('license.json', json_encode($license));
+
+                if ($license && isset($license['id'])) {
+                    Storage::disk('license')->put('license.json', json_encode($license));
+                    Log::info(json_encode($license));
                     return $license;
                 }
 
             } catch (ConnectionException | RequestException $e) {
                 Log::error("License server timeout or request failed: " . $e->getMessage());
 
-    
-                return $this->validateLicenseFromFile();
             } catch (\Exception $e) {
+                Log::error("Unexpected license validation error: " . $e->getMessage());
+            } catch (NotFoundHttpException $e) {
+
                 Log::error("Unexpected license validation error: " . $e->getMessage());
             }
         }
@@ -136,13 +138,25 @@ class ConnectorService
         return false;
     }
 
-    protected function getLicenseFromFile(): bool
+    public function getLicense(array $data = []): array | bool
     {
+        $license = $this->getLicenseFromFile();
+        if ($license) {
+            return $license;
+        }
+        return false;
+    }
+
+    protected function getLicenseFromFile(): array
+    {
+
+        Log::info(json_encode("getLicenseFromFile"));
         $path = storage_path('app/license.json');
 
         if (!file_exists($path)) {
             Log::warning("License fallback file not found at: {$path}");
-            return false;
+            $customData = ['license_key' => $this->licenseKey , 'domain' => env('APP_DOMAIN')];
+            $this->writeLicense($customData);
         }
 
         try {
@@ -152,39 +166,27 @@ class ConnectorService
 
 
             // Aggiungi logica di validazione aggiuntiva qui se necessario
-            Log::info("License validated using fallback file.");
+            Log::info(json_encode("License validated using fallback file."));
+            Log::info($license);
             return $license;
 
         } catch (\Exception $e) {
             Log::error("Error reading fallback license file: " . $e->getMessage());
-        }
+        } catch (NotFoundHttpException $e) {
+                $license = $this->getLicenseFromFile();
+                Log::error("Unexpected license validation error: " . $e->getMessage());
+            }
 
         return false;
     }
 
     public function checkLicense(array $data = []): bool
     {
-        if ($this->accessToken) {
-            $url = Config::get('license-connector.license_server_url') . '/api/api-license/license-server/license';
-
-            $response = Http::withHeaders([
-                'x-host' => Config::get('app.url'),
-                'x-host-name' => Config::get('app.name'),
-                'Authorization' => "Bearer {$this->accessToken}",
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ])->post($url, $data);
-            //dd($response);
-
-            if ($response->ok()) {
-                $license = $response->json();
-                Storage::disk('local')->put('license.json', json_encode($license));
-                //dd($license);   
-
-                return $license->tenants_number >= $data['tenants_number'];
-            }
+        $license = $this->getLicenseFromFile();
+        if ($license) {
+            Storage::disk('license')->put('license.json', json_encode($license));
+            return $license->tenants_number >= $data['tenants_number'];
         }
-
         return false;
     }
 
@@ -207,15 +209,26 @@ class ConnectorService
 
         $url = Config::get('license-connector.license_server_url') . '/api/api-license/license-server/auth/login';
 
-        $response = Http::withHeaders([
-            'x-host' => Config::get('app.url'),
-            'x-host-name' => Config::get('app.name'),
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ])->post($url, [
-            'license_key' => $licenseKey,
-            'ls_domain' => $_SERVER['HTTP_HOST'],
-        ]);
+        try {
+            $response = Http::withHeaders([
+                'x-host' => Config::get('app.url'),
+                'x-host-name' => Config::get('app.name'),
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ])->timeout(5)->post($url, [
+                'license_key' => $licenseKey,
+                'ls_domain' => env('APP_DOMAIN'),
+            ]);
+        } catch (ConnectionException | RequestException $e) {
+            Log::error("License server timeout or request failed: " . $e->getMessage());
+
+    
+        } catch (\Exception $e) {
+            Log::error("Unexpected license validation error: " . $e->getMessage());
+        } catch (NotFoundHttpException $e) {
+                $license = $this->getLicenseFromFile();
+                Log::error("Unexpected license validation error: " . $e->getMessage());
+            }
 
         $data = $response->json();
 
