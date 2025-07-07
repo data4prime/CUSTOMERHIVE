@@ -12,6 +12,7 @@
       "help": "string help-block",
       "datatable_where": "string where condition",
       "datatable_format": "sql concat alike. e.g : id,' - ',title",
+      "parent_select": "string parent name",
       "default": "string default option"
     }
   }

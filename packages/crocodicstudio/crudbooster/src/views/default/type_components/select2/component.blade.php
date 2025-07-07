@@ -178,6 +178,8 @@ echo $enum;
                       $params = explode("|", $form['datatable_orig']);
                       if(!isset($params[2])) $params[2] = "id";
                       $value = DB::table($params[0])->where($params[2], (isset($id) ? $id : 0))->first()->{$params[1]};
+                    //$value = DB::table($params[0])->where($params[2], (isset($id) ? $id : 0))->first();
+                    //die(json_encode($value));
                       $value = explode(",", $value);
                     } else {
                      
@@ -191,6 +193,7 @@ echo $enum;
                        
                       $value = DB::table($form['relationship_table'])->where($foreignKey, (isset($id) ? $id : 0))->get();
                       $value = $value->pluck($foreignKey2)->toArray();
+                        
                     }
 
                     foreach ($result as $r) {

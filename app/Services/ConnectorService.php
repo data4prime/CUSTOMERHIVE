@@ -199,9 +199,15 @@ class ConnectorService
      */
     private function getAccessToken(string $licenseKey): null | string
     {
-        $accessTokenCacheKey = $this->getAccessTokenKey($licenseKey);
+        //$accessTokenCacheKey = $this->getAccessTokenKey($licenseKey);
 
-        $accessToken = Cache::get($accessTokenCacheKey, null);
+
+
+        //$accessToken = Cache::get($accessTokenCacheKey, null);
+        $accessToken = $this->getLicenseFromFile();
+        $accessToken = $accessToken['license_key'];
+
+
 
         if ($accessToken) {
             return $accessToken;
@@ -231,6 +237,7 @@ class ConnectorService
             }
 
         $data = $response->json();
+        //dd($data);
 
         if ($response->ok()) {
             if ($data['status'] === true) {
