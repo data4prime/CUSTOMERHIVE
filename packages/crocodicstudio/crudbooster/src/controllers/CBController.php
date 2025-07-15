@@ -840,7 +840,7 @@ class CBController extends Controller
         }
 
         if (Schema::hasColumn($table, 'deleted_at')) {
-            $result->where('deleted_at', null);
+            $result->whereNull('deleted_at');
         }
 
 
