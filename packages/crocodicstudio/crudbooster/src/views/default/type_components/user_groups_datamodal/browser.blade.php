@@ -18,7 +18,7 @@
   //tenant id dell'utente di cui sto modificando i gruppi
   $user_tenant_id = UserHelper::tenant(Request::get('select_to'));
   //bypass CBController getModalData per custom query
-  $result = DB::table('groups')
+  $result = DB::table('groups')->whereNull('deleted_at')
                 ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                       ->from('users_groups')
