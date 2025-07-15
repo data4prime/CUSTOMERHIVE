@@ -42,23 +42,29 @@
         }
 
     function hideModal{{ $name }}() {
+console.log('inside hidemodal');
         $('#modal-datamodal-{{$name}}').modal('hide');
     }
 
     function selectAdditionalData{{ $name }}(select_to_json) {
+        console.log('inside selectAdditionalData');
         $.each(select_to_json, function (key, val) {
-            // console.log('#' + key + ' = ' + val);
-            if (key == 'datamodal_id') {
-                $('#{{$name}} .input-id').val(val);
+            if (key != '') {
+                if (key == 'datamodal_id') {
+                    $('#{{$name}} .input-id').val(val);
+                }
+
+                if (key == 'datamodal_label') {
+                    $('#{{$name}} .input-label').val(val);
+                }
+                //#RAMA scrivi il valore dell'email nell'input add member
+
+                if (key == 'datamodal_description') {
+                    $('input[name=description]').val(val);
+                }
+                $('#' + key).val(val).trigger('change');
             }
-            if (key == 'datamodal_label') {
-                $('#{{$name}} .input-label').val(val);
-            }
-            //#RAMA scrivi il valore dell'email nell'input add member
-            if (key == 'datamodal_description') {
-                $('input[name=description]').val(val);
-            }
-            $('#' + key).val(val).trigger('change');
+
         });
             hideModal{{ $name }}();
     }
