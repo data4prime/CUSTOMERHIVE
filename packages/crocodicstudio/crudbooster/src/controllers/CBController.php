@@ -704,8 +704,12 @@ class CBController extends Controller
                 $query = str_replace(':' . $param, $value, $query);
             }
         }
-
-        $value= DB::select(DB::raw($query))[0]->value;
+        if (isset(DB::select(DB::raw($query))[0])) {
+            $value= DB::select(DB::raw($query))[0]->value;
+        } else {
+            $value = "";
+        }
+        //$value= DB::select(DB::raw($query))[0]->value;
         //dd($value);
 
         return $value;
@@ -833,6 +837,10 @@ class CBController extends Controller
                     }
                 }
             });
+        }
+
+        if (Schema::hasColumn($table, 'deleted_at')) {
+            $result->where('deleted_at', null);
         }
 
 
