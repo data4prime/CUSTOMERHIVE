@@ -35,9 +35,28 @@ zero leggendo i diff di git.
 |-----|--------|------|-------|------|
 | [001](001-auth-guard-additivo-fase-1.md) | Refactoring auth: guard Laravel additivo (Fase 1) | Auth | Completato | 2026-08-26 |
 | [002](002-cbbackend-guard-fase-3.md) | Refactoring auth: primo file migrato al guard (Fase 3), fix logout | Auth | Completato | 2026-08-26 |
+| [003](003-licensing-hardening.md) | Licensing: env configurabile, registerLicense() sicuro, opzione "ho già una licenza", riattivazione controlli | Licensing | Completato | 2026-08-26 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
+
+## Roadmap refactoring auth (strategia additiva)
+
+Percorso concordato per sostituire l'auth custom di CRUDBooster con i guard
+Laravel nativi (vedi [001](001-auth-guard-additivo-fase-1.md) per il
+dettaglio della strategia):
+
+- ✅ Fase 0 — Ricognizione
+- ✅ Fase 1 — Guard additivo su `postLogin()`
+- 🔶 Fase 3 — Migrazione dei 42 file individuati in Fase 0, uno alla volta.
+  **In corso, non come sprint dedicato**: si migra un file quando lo si
+  tocca comunque per un altro motivo. `CBBackend` migrato in
+  [002](002-cbbackend-guard-fase-3.md), **41 file ancora sul meccanismo
+  legacy**.
+- ⏸️ Fase 4 — Rimozione della scrittura della sessione legacy (solo quando
+  la Fase 3 sarà sostanzialmente completa). **Messa in pausa esplicitamente
+  dall'utente**, da riprendere più avanti — per ora si passa ad altre
+  sezioni del progetto da refactorare.
 
 ## Backlog — emerso ma non ancora assegnato a un intervento numerato
 
@@ -65,6 +84,13 @@ trasformate in un intervento vero e proprio:
   [`../test-coverage.md`](../test-coverage.md)). Da sistemare quando si
   affronterà il refactoring dell'auth (sostituzione con `request()->getHost()`
   o equivalente).
+
+- **Bug lato server di licenza remoto** (`license.thecustomerhive.com`,
+  progetto separato gestito dall'utente): il trial di attivazione
+  restituisce `LicenseService::getLicenseByDomain(): Argument #1 ($domain)
+  must be of type string, null given` — vedi
+  [003](003-licensing-hardening.md#rischi-e-note). Da correggere in
+  quel progetto, non qui.
 
 ## Documenti correlati
 

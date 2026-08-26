@@ -4,39 +4,19 @@ Cose da controllare/ripristinare prima di pushare su `main` (o comunque prima
 che il codice arrivi in staging/produzione). Aggiungere qui ogni volta che si
 introduce una modifica "temporanea" per lo sviluppo locale.
 
-## ☐ Riattivare i controlli di licenza
+## ✅ Riattivare i controlli di licenza — fatto (2026-08-26)
 
-Disattivati temporaneamente per poter lavorare in locale senza una licenza
-valida (il server di licenza remoto `license.thecustomerhive.com` dava
-errori — vedi `docs/login-e-licensing.md`).
+Erano stati disattivati temporaneamente per poter lavorare in locale senza
+una licenza valida. Riattivati in `LicenseHelper.php` (rimossi i 4 return
+anticipati `LICENSE-CHECK-DISABLED-DEV`), con l'aggiunta di un guard
+"nessuna licenza ancora" su `canAddTenant()`, `canAddUser()` e
+`getLicenseInfo()` (che ne erano privi e sarebbero andati in errore
+fatale a tabella `license` vuota). Dettaglio completo in
+[`refactoring/003-licensing-hardening.md`](refactoring/003-licensing-hardening.md).
 
-**File modificato**:
-- `packages/crocodicstudio/crudbooster/src/helpers/LicenseHelper.php`
-
-Tutti i punti toccati sono marcati con il tag `LICENSE-CHECK-DISABLED-DEV`,
-cercabile con:
-```
-grep -rn "LICENSE-CHECK-DISABLED-DEV" packages/
-```
-
-**Come riattivare**: rimuovere le righe `return ...;` (con il relativo
-commento del marker) aggiunte all'inizio di questi 4 metodi, lasciando il
-codice originale sottostante:
-
-- `canLicenseLogin()` — rimuovere `return true;` (bloccava il login se la
-  licenza non era valida)
-- `canAddTenant()` — rimuovere `return true;` (bloccava l'aggiunta di tenant
-  oltre il limite di licenza)
-- `canAddUser()` — rimuovere `return true;` (bloccava l'aggiunta di utenti
-  oltre il limite di licenza)
-- `getLicenseInfo()` — rimuovere `return false;` (senza questo, con nessuna
-  licenza in tabella `license` andava in fatal error `null->license_key`,
-  perché chiamato da `header.blade.php`/`sidebar.blade.php` su ogni pagina
-  per mostrare/nascondere i moduli Qlik/Chat AI)
-
-**Dopo la riattivazione**: verificare che login e caricamento dashboard
-funzionino ancora con una licenza valida configurata (altrimenti l'app torna
-a bloccare tutto come da comportamento originale).
+Il flusso di attivazione (trial e "ho già una licenza") resta bloccato da
+un bug lato server di licenza remoto, non da questo repository — vedi lo
+stesso documento.
 
 ---
 

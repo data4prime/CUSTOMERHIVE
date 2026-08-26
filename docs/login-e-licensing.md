@@ -52,9 +52,15 @@ del pacchetto CRUDBooster (`LicenseHelper`).
   stato/validità viene invece messo in cache su file:
   `storage/app/license.json` (disk `license` in `config/filesystems.php`,
   root = `storage/app/`).
-- **Server di licenza remoto**: `config/license-connector.php` punta a
-  `http://license.thecustomerhive.com` (un servizio esterno, separato da
-  questo progetto). `ConnectorService`:
+- **Server di licenza remoto**: `config/license-connector.php` legge
+  `env('LICENSE_SERVER_URL', 'http://license.thecustomerhive.com')` — un
+  servizio esterno, separato da questo progetto, gestito dallo stesso
+  utente. Configurabile via `.env` (`LICENSE_SERVER_URL`) per puntare a un
+  ambiente dev/staging diverso; se non impostata usa il default di
+  produzione. **Attenzione**: una riga `LICENSE_SERVER_URL=` presente ma
+  vuota nel `.env` blocca il fallback (una chiave vuota "vince" sul
+  default) — se non serve un valore diverso dal default, la riga va
+  rimossa del tutto, non lasciata vuota. `ConnectorService`:
   - `getAccessToken()` — fa login al server di licenza (`/auth/login`) con la
     `license_key`;
   - `writeLicense()` — chiama `/license-server/license` sul server remoto e
@@ -77,6 +83,29 @@ del pacchetto CRUDBooster (`LicenseHelper`).
   abilitare/disabilitare le feature Qlik e Chat AI.
 - **Nota operativa**: perché il login funzioni in un ambiente (locale o
   staging) serve una riga in `license` con una `license_key` valida e
-  raggiungibilità verso `license.thecustomerhive.com` — altrimenti
+  raggiungibilità verso il server di licenza — altrimenti
   `canLicenseLogin()` ritorna `false` e si viene reindirizzati alla schermata
   "License is missing or not valid" invece che alla dashboard.
+- **Attivazione della licenza** (`/admin/register-license`,
+  `AdminController::getLicensescreen()`/`postActivateLicense()`/
+  `postActivateExistingLicense()`): prima di qualunque tentativo, verifica
+  che `APP_PATH`/`APP_DOMAIN` siano configurati nel `.env`
+  (`licenseEnvironmentIsConfigured()`) — se mancano, redirect al login con
+  messaggio esplicativo invece di un errore generico del server remoto.
+  Due modalità:
+  - **Trial** (form principale): invia i dati al server remoto
+    (`LicenseHelper::registerLicense()`, endpoint `/licenses`) per ottenere
+    una nuova `license_key`.
+  - **"Ho già una licenza"** (link sotto il form): per chi ha già una
+    chiave ottenuta fuori da questo flusso. Salta la registrazione remota,
+    inserisce direttamente la chiave in `license` e riusa
+    `LicenseHelper::writeLicense()` per scaricare/validare i dati dal
+    server. In caso di chiave non valida, ripulisce lo stato locale e
+    mostra un messaggio d'errore invece di un 500.
+  - Entrambe leggono la risposta del server remoto in modo sicuro
+    (`isset()`/`??`, mai accesso diretto a proprietà non garantite): una
+    risposta inattesa produce un messaggio d'errore leggibile
+    (loggato anche in `storage/logs/laravel.log`), non un 500. Vedi
+    [`refactoring/003-licensing-hardening.md`](refactoring/003-licensing-hardening.md)
+    per il dettaglio dei fix e un bug noto lato server di licenza remoto
+    che al momento blocca il completamento del trial.
