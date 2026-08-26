@@ -72,11 +72,13 @@ il job `tests` è passato (`needs: tests`).
 - **Niente staging**: `main` non deploya da nessuna parte per ora. Quando si
   affronterà, si aggiungerà un job `deploy-staging` analogo con secret
   `STAGING_*`.
-- **Nessun rollback automatico**: se lo smoke test fallisce, il codice è
-  **già stato deployato** (il `git reset --hard` è già avvenuto) — il job
-  fallito segnala il problema, ma non riporta indietro il server allo stato
-  precedente. Un rollback andrebbe fatto a mano (`git reset --hard <commit
-  precedente>` sul server).
+- **Nessun rollback automatico su dev**: se lo smoke test fallisce, il
+  codice è **già stato deployato** (il `git reset --hard` è già avvenuto) —
+  il job fallito segnala il problema, ma non riporta indietro il server
+  allo stato precedente. Un rollback andrebbe fatto a mano (`git reset
+  --hard <commit precedente>` sul server). Da riconsiderare (es. rollback
+  automatico se lo smoke test fallisce) quando si costruirà la pipeline per
+  staging, ambiente più delicato di dev.
 - **Nessun backup del DB prima delle migration**: `migrate --force` gira
   direttamente. Accettabile per un ambiente di sviluppo condiviso come dev,
   da rivalutare per staging/produzione.
