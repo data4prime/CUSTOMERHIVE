@@ -75,6 +75,7 @@ Route::group(['middleware' => ['web'], 'namespace' => $namespace], function () {
 Route::group(['middleware' => ['web'], 'prefix' => config('crudbooster.ADMIN_PATH'), 'namespace' => $namespace], function () {
 
     Route::post('activate-license', ['uses' => 'AdminController@postActivateLicense', 'as' => 'postActivateLicense']);
+    Route::post('activate-existing-license', ['uses' => 'AdminController@postActivateExistingLicense', 'as' => 'postActivateExistingLicense']);
 
     Route::post('unlock-screen', ['uses' => 'AdminController@postUnlockScreen', 'as' => 'postUnlockScreen']);
 

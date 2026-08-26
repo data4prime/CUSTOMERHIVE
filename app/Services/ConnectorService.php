@@ -147,7 +147,7 @@ class ConnectorService
         return false;
     }
 
-    protected function getLicenseFromFile(): array
+    protected function getLicenseFromFile(): ?array
     {
 
         Log::info(json_encode("getLicenseFromFile"));
@@ -159,11 +159,21 @@ class ConnectorService
             $this->writeLicense($customData);
         }
 
+        // Nessun file locale disponibile (prima attivazione, o scrittura fallita
+        // sopra): nessuna licenza valida ancora, non un errore - il chiamante
+        // (getAccessToken/validateLicense) gestisce già il caso "nessuna licenza".
+        if (!file_exists($path)) {
+            return null;
+        }
+
         try {
             $json = file_get_contents($path);
             $license = json_decode($json, true);
 
-
+            if (!is_array($license)) {
+                Log::error("License fallback file is not valid JSON: {$path}");
+                return null;
+            }
 
             // Aggiungi logica di validazione aggiuntiva qui se necessario
             Log::info(json_encode("License validated using fallback file."));
@@ -177,7 +187,7 @@ class ConnectorService
                 Log::error("Unexpected license validation error: " . $e->getMessage());
             }
 
-        return false;
+        return null;
     }
 
     public function checkLicense(array $data = []): bool
@@ -199,13 +209,13 @@ class ConnectorService
      */
     private function getAccessToken(string $licenseKey): null | string
     {
-        //$accessTokenCacheKey = $this->getAccessTokenKey($licenseKey);
+        $accessTokenCacheKey = $this->getAccessTokenKey($licenseKey);
 
 
 
         //$accessToken = Cache::get($accessTokenCacheKey, null);
-        $accessToken = $this->getLicenseFromFile();
-        $accessToken = $accessToken['license_key'];
+        $licenseFromFile = $this->getLicenseFromFile();
+        $accessToken = $licenseFromFile['license_key'] ?? null;
 
 
 

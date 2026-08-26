@@ -62,9 +62,25 @@ class AdminController extends CBController
   }
 
 
+  /**
+   * path/domain per il license server vengono presi da APP_PATH/APP_DOMAIN
+   * nel .env (non dal form) per evitare che chi attiva la licenza da
+   * un'installazione possa scriverli a mano e attivare/manomettere la
+   * licenza di un ambiente diverso - vedi docs/login-e-licensing.md.
+   * Se non sono configurati, meglio dirlo subito con un messaggio chiaro
+   * che lasciar proseguire verso un errore generico del license server.
+   */
+  private function licenseEnvironmentIsConfigured()
+  {
+    return env('APP_PATH') && env('APP_DOMAIN');
+  }
+
   public function getLicensescreen()
   {
 
+    if (!$this->licenseEnvironmentIsConfigured()) {
+      return redirect()->route('getLogin')->with('message', 'Questo ambiente non è configurato per attivare una licenza (APP_PATH/APP_DOMAIN mancanti nel .env). Contatta chi gestisce il deploy.');
+    }
 
   //current domain
   $array = isset($_SERVER) && isset($_SERVER['HTTP_HOST']) ? explode('.', $_SERVER['HTTP_HOST']) : [];
@@ -102,6 +118,10 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
   public function postActivateLicense()
   {
+
+    if (!$this->licenseEnvironmentIsConfigured()) {
+      return redirect()->route('getLogin')->with('message', 'Questo ambiente non è configurato per attivare una licenza (APP_PATH/APP_DOMAIN mancanti nel .env). Contatta chi gestisce il deploy.');
+    }
 
     $licenseKey = LicenseHelper::getLicense();
 
@@ -156,7 +176,15 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
     $response = json_decode($response);
 
-    if ($response->success == true) { 
+    // La risposta del server di licenza non è sempre nella forma attesa
+    // ({success, result}) - può arrivare malformata, con un formato di
+    // errore diverso (es. validazione Laravel: {message, errors}), o non
+    // essere JSON valido. isset() qui non genera errori anche se $response
+    // è null o non ha le proprietà attese, a differenza dell'accesso
+    // diretto usato prima (causava un 500 su qualsiasi risposta inattesa).
+    $success = isset($response->success) && $response->success == true;
+
+    if ($success && isset($response->result->license_key)) {
 
       DB::table('license')->insert(['license_key' => $response->result->license_key]);
       $response->result->status = "active";
@@ -171,10 +199,65 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
 
       //return redirect()->route('getLogin')->with('message', 'License activated successfully');
-    } else {
-      return redirect()->route('getLicenseScreen')->with('message', $response->result);
     }
 
+    Log::warning('Registrazione licenza trial fallita o risposta inattesa dal server: ' . json_encode($response));
+
+    $errorMessage = $response->result ?? $response->message ?? null;
+
+    if (is_array($errorMessage) || is_object($errorMessage)) {
+      $errorMessage = json_encode($errorMessage);
+    }
+
+    if (!$errorMessage) {
+      $errorMessage = 'Richiesta di licenza non riuscita. Verifica i dati inseriti e riprova, oppure contatta chi gestisce il servizio di licenza.';
+    }
+
+    return redirect()->route('getLicenseScreen')->with('message', $errorMessage);
+
+  }
+
+  /**
+   * Attivazione con una licenza già esistente (es. ottenuta fuori dal flusso
+   * trial, o riattivata dopo aver cambiato ambiente): salta la registrazione
+   * remota su /licenses e usa direttamente la chiave inserita, riusando lo
+   * stesso meccanismo di scrittura/validazione già usato per il trial
+   * (LicenseHelper::writeLicense()) - vedi docs/login-e-licensing.md.
+   */
+  public function postActivateExistingLicense()
+  {
+
+    if (!$this->licenseEnvironmentIsConfigured()) {
+      return redirect()->route('getLogin')->with('message', 'Questo ambiente non è configurato per attivare una licenza (APP_PATH/APP_DOMAIN mancanti nel .env). Contatta chi gestisce il deploy.');
+    }
+
+    $license_key = trim((string) Request::input('license_key'));
+
+    if (!$license_key) {
+      return redirect()->route('getLicenseScreen')->with('message', 'Inserisci una chiave di licenza valida.');
+    }
+
+    Storage::disk('license')->delete('license.json');
+    DB::table('license')->delete();
+    DB::table('license')->insert(['license_key' => $license_key]);
+
+    try {
+      $license = LicenseHelper::writeLicense();
+    } catch (\LaravelReady\LicenseConnector\Exceptions\AuthException $e) {
+      // Il server di licenza rifiuta la chiave (formato non valido, non
+      // trovata, ecc.): non è un errore applicativo, è l'esito atteso di
+      // una chiave sbagliata, quindi non deve arrivare come 500.
+      Log::warning('Attivazione licenza esistente rifiutata dal server: ' . $e->getMessage());
+      $license = false;
+    }
+
+    if ($license) {
+      return redirect(CRUDBooster::adminPath())->with('message', 'License activated successfully');
+    }
+
+    DB::table('license')->delete();
+
+    return redirect()->route('getLicenseScreen')->with('message', 'Chiave di licenza non valida o server di licenza non raggiungibile. Riprova.');
   }
 
 

@@ -117,6 +117,29 @@
 
             </form><!-- /.lockscreen credentials -->
 
+            <div class="text-center" style="margin-top: 10px;">
+                <a href="#" onclick="document.getElementById('existing-license-form').style.display='block'; this.parentNode.style.display='none'; return false;">
+                    Ho già una licenza
+                </a>
+            </div>
+
+            <form id="existing-license-form" method='post' style="display:none; margin-top: 15px;"
+                action="{{url(config('crudbooster.ADMIN_PATH').'/activate-existing-license')}}">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+
+                <div class="mb-3 row has-feedback form-group">
+                    <input autocomplete='off' type="text" class="form-control" name='license_key' required
+                        placeholder="Chiave di licenza" />
+                </div>
+
+                <div class='row'>
+                    <div class='col-xs-12'>
+                        <button type="submit" class="btn btn-default btn-block btn-flat">
+                            Attiva licenza esistente</button>
+                    </div>
+                </div>
+            </form>
+
         </div><!-- /.lockscreen-item -->
         <div class="text-center">
 

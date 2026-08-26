@@ -1,6 +1,5 @@
 <?php
 
 return [
-    'license_server_url' => 'http://license.thecustomerhive.com',
-    //'license_server_url' => 'http://licens.thecustomerhive.com',
+    'license_server_url' => env('LICENSE_SERVER_URL', 'http://license.thecustomerhive.com'),
 ];

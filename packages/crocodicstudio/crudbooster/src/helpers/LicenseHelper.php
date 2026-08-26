@@ -12,33 +12,42 @@ use Validator;
 use App\Services\ConnectorService;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
 
 
 class LicenseHelper  {
 
+    /**
+     * Ritorna il corpo della risposta come stringa JSON grezza (stesso
+     * contratto di prima, il chiamante fa json_decode()) - cambia solo il
+     * meccanismo di trasporto: prima cURL grezzo con verifica SSL
+     * disattivata e nessun timeout (una richiesta bloccata poteva restare
+     * appesa per sempre), ora il client HTTP di Laravel, coerente con il
+     * resto di ConnectorService, con verifica SSL attiva (di default) e un
+     * timeout esplicito. Se il server non risponde in tempo o non è
+     * raggiungibile, ritorna un JSON di errore con la stessa forma che il
+     * chiamante già si aspetta ({success:false, result:"..."})  invece di
+     * bloccare la richiesta o far fallire json_decode() su un valore nullo.
+     */
     public static function registerLicense($fields) {
         $license_server_url = config('license-connector.license_server_url');
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => $license_server_url.'/api/api-license/license-server/licenses',
-        CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json',
-        ),
 
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_SSL_VERIFYHOST => 0,
-        CURLOPT_SSL_VERIFYPEER => 0,
-        CURLOPT_POSTFIELDS => json_encode($fields),
-        ));
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ])->timeout(15)->post($license_server_url . '/api/api-license/license-server/licenses', $fields);
 
-        $response = curl_exec($curl);
-        curl_close($curl);
-        return $response;
+            return $response->body();
+        } catch (ConnectionException $e) {
+            Log::error('License server non raggiungibile durante la registrazione: ' . $e->getMessage());
+
+            return json_encode([
+                'success' => false,
+                'result' => 'Il servizio di licenza non è raggiungibile al momento. Riprova più tardi.',
+            ]);
+        }
     }
 
     public static function getLicense() {
@@ -63,11 +72,6 @@ class LicenseHelper  {
 
     public static function canLicenseLogin() {
 
-        // [LICENSE-CHECK-DISABLED-DEV] controllo licenza disattivato temporaneamente
-        // per sviluppo locale (problemi con il server di licenza remoto). Rimuovere
-        // questo return per riattivare il controllo.
-        return true;
-
         $licenseKey = self::getLicense();
 
         //dd($licenseKey);
@@ -88,9 +92,11 @@ class LicenseHelper  {
     }
 
     public static function canAddTenant() {
-        // [LICENSE-CHECK-DISABLED-DEV] vedi canLicenseLogin() sopra
-        return true;
         $licenseKey = self::getLicense();
+
+        if (!$licenseKey) {
+            return false;
+        }
 
         $tenants = TenantHelper::countTenants();
   
@@ -108,14 +114,11 @@ class LicenseHelper  {
 
     public static function getLicenseInfo() {
 
-        // [LICENSE-CHECK-DISABLED-DEV] vedi canLicenseLogin() sopra: senza questo
-        // return, con nessuna licenza in tabella `license` la riga sotto va in
-        // fatal error (null->license_key) e rompe ogni pagina (chiamato da
-        // header.blade.php / sidebar.blade.php su ogni richiesta).
-        return false;
         $licenseKey = self::getLicense();
 
-          
+        if (!$licenseKey) {
+            return false;
+        }
 
         $connectorService = new ConnectorService($licenseKey->license_key);
 
@@ -135,9 +138,11 @@ class LicenseHelper  {
 
     public static function canAddUser() {
 
-        // [LICENSE-CHECK-DISABLED-DEV] vedi canLicenseLogin() sopra
-        return true;
         $licenseKey = self::getLicense();
+
+        if (!$licenseKey) {
+            return false;
+        }
 
         $users = UserHelper::countUsers();
 
