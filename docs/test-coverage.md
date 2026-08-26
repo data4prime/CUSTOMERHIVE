@@ -63,13 +63,17 @@ legacy) — questi test verificano anche quella.
 **Cosa copre**: il middleware `CBBackend` (CRUDBooster) — il gate che
 protegge ogni pagina dell'area admin ad ogni richiesta (non solo al login).
 Testato in isolamento usando la rotta vuota `GET /admin` come bersaglio
-minimo, per non dipendere da un controller applicativo specifico.
+minimo, per non dipendere da un controller applicativo specifico. Dopo
+l'intervento [002](refactoring/002-cbbackend-guard-fase-3.md) il check
+principale del middleware è `Auth::guest()` — simulare una richiesta
+autenticata richiede quindi anche il guard, non solo la sessione legacy
+(`getAdmin()` usa `actingAs()` oltre a `withSession()`).
 
 | Test | Cosa verifica |
 |---|---|
-| `test_richiesta_senza_sessione_reindirizza_al_login` | nessun `admin_id` in sessione → redirect a `/admin/login` |
-| `test_richiesta_con_sessione_valida_passa` | sessione valida, non bloccata → richiesta passa (200) |
-| `test_richiesta_con_sessione_bloccata_reindirizza_al_lock_screen` | `admin_lock=1` in sessione → redirect a `/admin/lock-screen` |
+| `test_richiesta_senza_sessione_reindirizza_al_login` | nessuna sessione/guard → redirect a `/admin/login` |
+| `test_richiesta_con_sessione_valida_passa` | sessione + guard validi, non bloccata → richiesta passa (200) |
+| `test_richiesta_con_sessione_bloccata_reindirizza_al_lock_screen` | `admin_lock=1` in sessione (letto ancora dal meccanismo legacy, non migrato) → redirect a `/admin/lock-screen` |
 
 **Scoperta scrivendo questo test** (non corretta, il middleware non è stato
 toccato): il middleware globale `App\Http\Middleware\SetUserPreferredLanguage`
@@ -80,14 +84,29 @@ altrimenti va in errore fatale (nessun controllo di null). In produzione non
 su un utente reale — ma è un altro punto fragile da tenere presente per il
 refactoring dell'auth.
 
+## `tests/Feature/LogoutTest.php`
+
+**Cosa copre**: `AdminController::getLogout()`. Ha permesso di scoprire
+(prima di introdurre una regressione in `CBBackend`) che `Session::flush()`
+da solo non invalida il guard Laravel — vedi
+[002](refactoring/002-cbbackend-guard-fase-3.md).
+
+| Test | Cosa verifica |
+|---|---|
+| `test_logout_invalida_sia_la_sessione_legacy_che_il_guard` | dopo il logout, sia `admin_id` è assente dalla sessione sia `Auth::guest()` è vero |
+
 ## Helper di test condivisi
 
-`tests/Concerns/SeedsCmsData.php` — trait con i metodi di seeding minimi
-validi per `tenants`/`groups`/`cms_privileges`/`cms_users` (i campi NOT NULL
-senza default in questo schema legacy vanno sempre passati esplicitamente:
-`tenants.domain_name`, `cms_users.tenant`/`primary_group`, ecc.). Usato da
-`LoginTest` e `CBBackendTest` — da riusare per i prossimi test che hanno
-bisogno di un utente/tenant di base.
+- `tests/Concerns/SeedsCmsData.php` — trait con i metodi di seeding minimi
+  validi per `tenants`/`groups`/`cms_privileges`/`cms_users` (i campi NOT
+  NULL senza default in questo schema legacy vanno sempre passati
+  esplicitamente: `tenants.domain_name`, `cms_users.tenant`/
+  `primary_group`, ecc.). Usato da `LoginTest`, `CBBackendTest`,
+  `LogoutTest`.
+- `tests/Concerns/LogsInAdmin.php` — trait con `postLoginFrom()` (simula
+  `POST /admin/login` da un dominio specifico, gestendo le due
+  particolarità di testabilità di `postLogin()` documentate nel file).
+  Usato da `LoginTest` e `LogoutTest`.
 
 ---
 
@@ -104,3 +123,15 @@ bisogno di un utente/tenant di base.
   usando silenziosamente la cache su file, condivisa con qualunque altro
   processo dell'app sullo stesso filesystem, causa di comportamento non
   riproducibile tra run. Corretto in `phpunit.xml`.
+- **Bug più serio corretto in seguito** (vedi
+  [002](refactoring/002-cbbackend-guard-fase-3.md) per il dettaglio
+  completo): `docker-compose.yml` forzava `DB_DATABASE`/`DB_USERNAME`/
+  `DB_PASSWORD` a livello di container per il servizio `app` — queste,
+  essendo già presenti nell'ambiente di processo, bloccavano
+  silenziosamente l'override di `.env.testing` (dotenv non sovrascrive
+  variabili già impostate). I test lanciati in locale via `docker compose
+  exec` stavano quindi girando sul **database di sviluppo vero**
+  (`customerhive`) invece che su `customerhive_testing`, svuotandolo ad
+  ogni run. La CI su GitHub Actions non ne era affetta (non passa da
+  `docker-compose.yml`). Corretto rimuovendo quelle tre variabili dal
+  blocco `environment:` del servizio `app`.

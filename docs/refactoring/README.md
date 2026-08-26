@@ -34,6 +34,7 @@ zero leggendo i diff di git.
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
 | [001](001-auth-guard-additivo-fase-1.md) | Refactoring auth: guard Laravel additivo (Fase 1) | Auth | Completato | 2026-08-26 |
+| [002](002-cbbackend-guard-fase-3.md) | Refactoring auth: primo file migrato al guard (Fase 3), fix logout | Auth | Completato | 2026-08-26 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
@@ -46,10 +47,11 @@ trasformate in un intervento vero e proprio:
 - **70 vulnerabilità segnalate da GitHub Dependabot** sul branch di default
   (2 critiche, 22 alte, 41 moderate, 5 basse) — da valutare come parte
   dell'audit di compatibilità dipendenze (vedi ordine di lavoro sotto).
-- **`app/Http/Controllers/` nel `.gitignore`** ma con i controller esistenti
-  comunque tracciati (aggiunti prima della regola): un controller **nuovo**
-  non verrebbe raccolto da `git add .`/`git add -A`, solo da `git add -f` —
-  rischio silenzioso di push incompleti.
+- ~~`app/Http/Controllers/` nel `.gitignore`~~ — **voluto, non un rischio**:
+  da interfaccia si possono creare moduli custom (controller generati), che
+  devono restare specifici dell'ambiente in cui vengono creati e non
+  finire nel repo condiviso. I 52 controller già tracciati lo erano prima
+  che la regola venisse introdotta.
 - ~~Compatibilità delle migration con SQLite non verificata~~ — risolto
   passando i test a MySQL vero (stesso motore della produzione), vedi
   [`../test-coverage.md`](../test-coverage.md).
