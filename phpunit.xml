@@ -23,7 +23,12 @@
         <env name="APP_ENV" value="testing"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
-        <env name="CACHE_STORE" value="array"/>
+        <!-- CACHE_STORE è il nome usato da Laravel 11+; questo progetto è su
+             Laravel 9, dove la chiave giusta è CACHE_DRIVER (vedi config/cache.php).
+             Senza questa, i test userebbero la cache su file di default,
+             condivisa con qualunque altro processo dell'app sullo stesso
+             container/filesystem — causa di test non isolati/flaky. -->
+        <env name="CACHE_DRIVER" value="array"/>
         <!--<env name="DB_CONNECTION" value="mysql"/>
         <env name="DB_DATABASE" value="testing2"/>-->
         <env name="MAIL_MAILER" value="array"/>

@@ -23,4 +23,11 @@ if [ ! -e public/storage ]; then
     php artisan storage:link
 fi
 
+echo "[entrypoint] Creo il database di test (se non esiste)"
+mysql --skip-ssl -h "${DB_HOST:-db}" -u root -p"${MYSQL_ROOT_PASSWORD:-root}" -e "
+    CREATE DATABASE IF NOT EXISTS customerhive_testing;
+    GRANT ALL PRIVILEGES ON customerhive_testing.* TO '${DB_USERNAME:-chive_user}'@'%';
+    FLUSH PRIVILEGES;
+" || echo "[entrypoint] DB non ancora raggiungibile, il DB di test verra' creato al prossimo avvio"
+
 exec "$@"

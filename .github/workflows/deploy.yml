@@ -15,6 +15,22 @@ jobs:
     name: Run tests
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: customerhive_testing
+          MYSQL_USER: chive_user
+          MYSQL_PASSWORD: chive_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -34,6 +50,8 @@ jobs:
           php artisan key:generate
 
       - name: Run tests
+        env:
+          DB_HOST: 127.0.0.1
         run: php artisan test
 
   deploy-dev:
