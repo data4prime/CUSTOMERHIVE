@@ -1,6 +1,38 @@
-composer install
-php artisan migrate
-php artisan db:seed
-php artisan key:generate
-php artisan storage:link
+SVILUPPO LOCALE (Docker)
+========================
 
+Requisiti: Docker Desktop.
+
+1. Copia il file di configurazione:
+     cp .env.example .env
+
+   (DB_HOST puo' restare invariato: docker-compose lo forza a "db" dentro il
+   container. Se vuoi, imposta DB_DATABASE / DB_USERNAME / DB_PASSWORD /
+   MYSQL_ROOT_PASSWORD / APP_PORT nel tuo .env: sono usati sia da Laravel
+   che da docker-compose.)
+
+2. Avvia i container:
+     docker compose up -d --build
+
+   Al primo avvio l'entrypoint installa le dipendenze Composer, genera
+   l'APP_KEY e crea lo storage link automaticamente.
+
+3. Applica le migration (ed eventuali seeder):
+     docker compose exec app php artisan migrate
+     docker compose exec app php artisan db:seed
+
+4. L'app e' raggiungibile su http://localhost:8080 (porta configurabile con
+   APP_PORT nel .env).
+
+Asset front-end (gulp), facoltativo:
+     docker compose --profile assets run --rm node
+
+Comandi utili:
+     docker compose exec app php artisan ...
+     docker compose exec app composer ...
+     docker compose logs -f app
+     docker compose down            # ferma i container (i dati MySQL restano nel volume)
+     docker compose down -v         # ferma i container e cancella anche il volume MySQL
+
+NOTA: questo setup Docker riguarda SOLO l'ambiente di sviluppo locale.
+Lo staging gira su una macchina remota separata, senza Docker.

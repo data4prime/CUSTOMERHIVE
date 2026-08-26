@@ -13,3 +13,5 @@ Homestead.yaml
 /public/cookie-name
 
 app/Http/Controllers/
+
+/.tokensave
