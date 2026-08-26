@@ -63,8 +63,10 @@ class LicenseHelper  {
 
     public static function canLicenseLogin() {
 
-        //return true;
-
+        // [LICENSE-CHECK-DISABLED-DEV] controllo licenza disattivato temporaneamente
+        // per sviluppo locale (problemi con il server di licenza remoto). Rimuovere
+        // questo return per riattivare il controllo.
+        return true;
 
         $licenseKey = self::getLicense();
 
@@ -86,7 +88,8 @@ class LicenseHelper  {
     }
 
     public static function canAddTenant() {
-        //return true;
+        // [LICENSE-CHECK-DISABLED-DEV] vedi canLicenseLogin() sopra
+        return true;
         $licenseKey = self::getLicense();
 
         $tenants = TenantHelper::countTenants();
@@ -104,8 +107,12 @@ class LicenseHelper  {
     }
 
     public static function getLicenseInfo() {
-        
-        //return false;
+
+        // [LICENSE-CHECK-DISABLED-DEV] vedi canLicenseLogin() sopra: senza questo
+        // return, con nessuna licenza in tabella `license` la riga sotto va in
+        // fatal error (null->license_key) e rompe ogni pagina (chiamato da
+        // header.blade.php / sidebar.blade.php su ogni richiesta).
+        return false;
         $licenseKey = self::getLicense();
 
           
@@ -128,7 +135,8 @@ class LicenseHelper  {
 
     public static function canAddUser() {
 
-        //return true;
+        // [LICENSE-CHECK-DISABLED-DEV] vedi canLicenseLogin() sopra
+        return true;
         $licenseKey = self::getLicense();
 
         $users = UserHelper::countUsers();
