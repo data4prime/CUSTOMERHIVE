@@ -90,7 +90,7 @@ class AdminController extends CBController
 
   //get tenant domain name
   $tenant_domain_name = isset($array[0]) ? $array[0] : '';
-$tenant_domain_name = $_SERVER['HTTP_HOST'];
+$tenant_domain_name = env('APP_DOMAIN');
 
 
   ob_start();
@@ -184,10 +184,10 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
     // diretto usato prima (causava un 500 su qualsiasi risposta inattesa).
     $success = isset($response->success) && $response->success == true;
 
-    if ($success && isset($response->result->license_key)) {
+    if ($success && isset($response->data->license_key)) {
 
-      DB::table('license')->insert(['license_key' => $response->result->license_key]);
-      $response->result->status = "active";
+      DB::table('license')->insert(['license_key' => $response->data->license_key]);
+      $response->data->status = "active";
 
       LicenseHelper::writeLicense();
 
@@ -203,7 +203,7 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
     Log::warning('Registrazione licenza trial fallita o risposta inattesa dal server: ' . json_encode($response));
 
-    $errorMessage = $response->result ?? $response->message ?? null;
+    $errorMessage = $response->message ?? null;
 
     if (is_array($errorMessage) || is_object($errorMessage)) {
       $errorMessage = json_encode($errorMessage);

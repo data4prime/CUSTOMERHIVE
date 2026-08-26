@@ -20,4 +20,20 @@ stesso documento.
 
 ---
 
+## ⚠️ Verificare che il license server di produzione parli già la nuova busta {success, data}
+
+`ConnectorService.php` (`getAccessToken`, `writeLicense`) e
+`AdminController::postActivateLicense()` sono stati aggiornati per leggere
+le risposte del license server nella nuova busta `{success, message, data}`
+invece del formato piatto precedente (`status`/`result` a livello radice).
+Verificato solo contro un'istanza Docker locale di LICENSES già aggiornata.
+
+**Prima di pushare su `main`**: confermare che `license.thecustomerhive.com`
+(produzione) risponda già con la nuova busta su `/auth/login` e
+`/license-server/license`/`/licenses` — altrimenti login e attivazione
+licenza si rompono immediatamente in produzione. Dettaglio in
+[`refactoring/004-licensing-envelope-success-data.md`](refactoring/004-licensing-envelope-success-data.md).
+
+---
+
 <!-- Aggiungere qui le prossime voci della checklist -->

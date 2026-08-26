@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 
@@ -114,8 +116,9 @@ class ConnectorService
                     'Accept' => 'application/json',
                 ])->timeout(5)->post($url, $data);
 
-                $license = $response->json();
-                Log::info($response->json());
+                $body = $response->json();
+                $license = $body['data'] ?? null;
+                Log::info($body);
 
 
                 if ($license && isset($license['id'])) {
@@ -250,9 +253,9 @@ class ConnectorService
         //dd($data);
 
         if ($response->ok()) {
-            if ($data['status'] === true) {
-                if (!empty($data['access_token'])) {
-                    $accessToken = $data['access_token'];
+            if ($data['success'] === true) {
+                if (!empty($data['data']['access_token'])) {
+                    $accessToken = $data['data']['access_token'];
 
                     Cache::put($accessTokenCacheKey, $accessToken, now()->addMinutes(60));
 

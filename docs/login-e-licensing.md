@@ -54,20 +54,33 @@ del pacchetto CRUDBooster (`LicenseHelper`).
   root = `storage/app/`).
 - **Server di licenza remoto**: `config/license-connector.php` legge
   `env('LICENSE_SERVER_URL', 'http://license.thecustomerhive.com')` — un
-  servizio esterno, separato da questo progetto, gestito dallo stesso
-  utente. Configurabile via `.env` (`LICENSE_SERVER_URL`) per puntare a un
-  ambiente dev/staging diverso; se non impostata usa il default di
-  produzione. **Attenzione**: una riga `LICENSE_SERVER_URL=` presente ma
-  vuota nel `.env` blocca il fallback (una chiave vuota "vince" sul
-  default) — se non serve un valore diverso dal default, la riga va
-  rimossa del tutto, non lasciata vuota. `ConnectorService`:
+  servizio esterno, separato da questo progetto (repo **LICENSES**), gestito
+  dallo stesso utente. Configurabile via `.env` (`LICENSE_SERVER_URL`) per
+  puntare a un ambiente dev/staging/locale diverso (es.
+  `http://host.docker.internal:8000` per un'istanza Docker locale di
+  LICENSES); se non impostata usa il default di produzione. **Attenzione**:
+  una riga `LICENSE_SERVER_URL=` presente ma vuota nel `.env` blocca il
+  fallback (una chiave vuota "vince" sul default) — se non serve un valore
+  diverso dal default, la riga va rimossa del tutto, non lasciata vuota.
+  Le risposte del server arrivano in una busta `{success, message, data}`
+  (vedi [004](refactoring/004-licensing-envelope-success-data.md)).
+  `ConnectorService`:
   - `getAccessToken()` — fa login al server di licenza (`/auth/login`) con la
-    `license_key`;
+    `license_key` e il dominio (`ls_domain` = `APP_DOMAIN`); legge il token
+    da `$data['data']['access_token']`;
   - `writeLicense()` — chiama `/license-server/license` sul server remoto e
-    scrive la risposta su `storage/app/license.json`;
+    scrive `$body['data']` su `storage/app/license.json`;
   - `validateLicense()` — legge `license.json` e controlla `status == 'active'`,
     numero di tenant/utenti consentiti (`tenants_number`, `clients_number`),
     e che `path`/`domain` corrispondano a `APP_PATH`/`APP_DOMAIN` nel `.env`.
+  - **`APP_DOMAIN` deve coincidere esattamente** con il `domain` con cui la
+    licenza è stata registrata lato server (confronto esatto in
+    `LicenseService::getLicenseByDomain()`, progetto LICENSES) — un
+    disallineamento (es. `localhost` vs `localhost:8080`) fa fallire il
+    login con "Invalid license key or license source." anche con una
+    licenza valida esistente. Il form di attivazione precompila il campo
+    `domain` proprio con `env('APP_DOMAIN')` per evitare questo mismatch
+    (vedi [004](refactoring/004-licensing-envelope-success-data.md)).
 - **Quando viene controllata**:
   - **al login** (`postLogin`, vedi sopra) tramite `LicenseHelper::canLicenseLogin()`;
   - **quando si aggiungono tenant/utenti** (`LicenseHelper::canAddTenant()`,
