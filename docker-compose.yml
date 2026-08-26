@@ -31,12 +31,18 @@ services:
     ports:
       - "${APP_PORT:-8080}:80"
     environment:
+      # Solo DB_HOST/DB_PORT/DB_CONNECTION: sono gli stessi sia per .env che
+      # per .env.testing (entrambi puntano al service "db"), quindi forzarli
+      # qui e' innocuo. DB_DATABASE/DB_USERNAME/DB_PASSWORD NON vanno forzati
+      # qui: essendo gia' presenti nell'ambiente del processo, bloccherebbero
+      # silenziosamente l'override di .env.testing quando gira "php artisan
+      # test" (dotenv non sovrascrive variabili gia' impostate) - i test
+      # finirebbero per usare il DB di sviluppo vero invece di
+      # customerhive_testing. .env e .env.testing hanno gia' i valori
+      # corretti per il proprio contesto.
       DB_CONNECTION: mysql
       DB_HOST: db
       DB_PORT: 3306
-      DB_DATABASE: ${DB_DATABASE:-customerhive}
-      DB_USERNAME: ${DB_USERNAME:-chive_user}
-      DB_PASSWORD: ${DB_PASSWORD:-chive_password}
     depends_on:
       db:
         condition: service_healthy
