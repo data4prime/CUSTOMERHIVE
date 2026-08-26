@@ -91,3 +91,8 @@ il job `tests` è passato (`needs: tests`).
   [`cicd-ssh-deploy-key.md`](cicd-ssh-deploy-key.md).
 - **HTTPS non attivo** su dev — lo smoke test e i link nella documentazione
   usano `http://`, da aggiornare quando verrà attivato.
+- **Cron/scheduler Laravel non configurato** su dev (i job schedulati in
+  `app/Console/Kernel.php`, es. controllo scadenza utenti, refresh licenza
+  ogni ora, non girano). Non necessario per l'uso attuale di dev, ma da
+  configurare se in futuro servisse — vedi il punto dedicato in
+  [`deploy-manuale-server.md`](deploy-manuale-server.md).

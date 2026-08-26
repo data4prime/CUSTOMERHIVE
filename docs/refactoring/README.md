@@ -38,6 +38,27 @@ zero leggendo i diff di git.
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
 
+## Backlog — emerso ma non ancora assegnato a un intervento numerato
+
+Cose notate durante altri lavori (setup Docker, CI/CD), non ancora
+trasformate in un intervento vero e proprio:
+
+- **70 vulnerabilità segnalate da GitHub Dependabot** sul branch di default
+  (2 critiche, 22 alte, 41 moderate, 5 basse) — da valutare come parte
+  dell'audit di compatibilità dipendenze (vedi ordine di lavoro sotto).
+- **`app/Http/Controllers/` nel `.gitignore`** ma con i controller esistenti
+  comunque tracciati (aggiunti prima della regola): un controller **nuovo**
+  non verrebbe raccolto da `git add .`/`git add -A`, solo da `git add -f` —
+  rischio silenzioso di push incompleti.
+- **Compatibilità delle migration con SQLite non verificata**: i test usano
+  `.env.testing` (SQLite in-memory), ma nessuno ha controllato se tutte le
+  migration del progetto (scritte pensando a MySQL) girano pulite su SQLite.
+  Non blocca nulla oggi (il test minimo attuale non tocca il DB), ma è da
+  verificare prima di aggiungere test con `RefreshDatabase`.
+- **Branch remoti obsoleti da ripulire**: `main_backup`, `main_backup2`,
+  `sapienza`, `qlikdashboard`, `bootstrapupdate`, `ckeditor`,
+  `license-local` — chiarire quali sono ancora utili prima di fare pulizia.
+
 ## Documenti correlati
 
 - [`../docker-local-dev.md`](../docker-local-dev.md) — ambiente di sviluppo locale
