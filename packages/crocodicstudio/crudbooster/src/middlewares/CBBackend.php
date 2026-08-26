@@ -5,6 +5,7 @@ namespace crocodicstudio\crudbooster\middlewares;
 use Closure;
 use CRUDBooster;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class CBBackend
 {
@@ -19,7 +20,12 @@ class CBBackend
     {
         $admin_path = config('crudbooster.ADMIN_PATH') ?: 'admin';
 
-        if (CRUDBooster::myId() == '') {
+        // Migrato dal controllo legacy CRUDBooster::myId() == '' al guard
+        // Laravel nativo (Fase 3 del refactoring auth, vedi
+        // docs/refactoring/). Equivalente perche' Auth::login()/Auth::logout()
+        // vengono ormai chiamati in coppia con la sessione legacy in
+        // postLogin()/getLogout() (Fase 1 e fix successivo).
+        if (Auth::guest()) {
             $url = url($admin_path.'/login');
 
             return redirect($url)->with('message', trans('crudbooster.not_logged_in'));

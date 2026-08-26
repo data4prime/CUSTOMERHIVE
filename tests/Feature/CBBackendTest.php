@@ -27,15 +27,27 @@ use Tests\TestCase;
  * problema perché admin_id viene sempre impostato da un login riuscito su
  * un utente reale — per questo qui si semina sempre un utente vero invece
  * di inventare un id a caso.
+ *
+ * Dopo l'intervento 002 (migrazione del check "loggato/non loggato" al
+ * guard Laravel, vedi docs/refactoring/) simulare una richiesta autenticata
+ * richiede sia la sessione legacy (letta da CRUDBooster::isLocked() per il
+ * lock screen, non ancora migrato) sia il guard (letto per il check
+ * principale) — da qui il parametro $authenticatedUserId di getAdmin().
  */
 class CBBackendTest extends TestCase
 {
     use RefreshDatabase;
     use SeedsCmsData;
 
-    private function getAdmin(array $session = [])
+    private function getAdmin(?int $authenticatedUserId = null, array $extraSession = [])
     {
-        return $this->withSession($session)->get('http://localhost/admin');
+        $request = $this->withSession($extraSession);
+
+        if ($authenticatedUserId !== null) {
+            $request = $request->actingAs(\App\User::find($authenticatedUserId));
+        }
+
+        return $request->get('http://localhost/admin');
     }
 
     public function test_richiesta_senza_sessione_reindirizza_al_login(): void
@@ -49,7 +61,7 @@ class CBBackendTest extends TestCase
     {
         $userId = $this->seedUser()['id'];
 
-        $response = $this->getAdmin(['admin_id' => $userId, 'admin_lock' => 0]);
+        $response = $this->getAdmin($userId, ['admin_id' => $userId, 'admin_lock' => 0]);
 
         $response->assertStatus(200);
     }
@@ -58,7 +70,7 @@ class CBBackendTest extends TestCase
     {
         $userId = $this->seedUser()['id'];
 
-        $response = $this->getAdmin(['admin_id' => $userId, 'admin_lock' => 1]);
+        $response = $this->getAdmin($userId, ['admin_id' => $userId, 'admin_lock' => 1]);
 
         $response->assertRedirect(url('admin/lock-screen'));
     }

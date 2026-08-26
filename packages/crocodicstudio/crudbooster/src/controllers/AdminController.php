@@ -267,7 +267,7 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
 
     if (
-          \Hash::check($password, $users->password) && $users->status == "Active" && 
+          \Hash::check($password, $users->password) && $users->status == "Active" &&
             ( ($tenant_domain_name == $tenant || !$tenant_domain_name) || $priv->is_superadmin == 1)
         ) {
       $priv = DB::table("cms_privileges")
@@ -385,6 +385,12 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
 
     $me = CRUDBooster::me();
     CRUDBooster::insertLog(trans("crudbooster.log_logout", ['email' => $me->email]));
+
+    // Aggiuntivo (vedi Fase 1 del refactoring auth, postLogin()): il guard
+    // Laravel non viene invalidato da Session::flush() da solo - va
+    // disconnesso esplicitamente, altrimenti dopo il logout la sessione
+    // legacy risulta pulita ma Auth::check() resta vero.
+    Auth::logout();
 
     Session::flush();
 
