@@ -3,6 +3,7 @@
 namespace crocodicstudio\crudbooster\controllers;
 
 use CRUDBooster;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
@@ -291,6 +292,17 @@ $tenant_domain_name = $_SERVER['HTTP_HOST'];
       Session::put('admin_lock', 0);
       Session::put('theme_color', $priv->theme_color);
       Session::put("appname", CRUDBooster::getSetting('appname'));
+
+      // Aggiuntivo, non sostituisce niente sopra: popola anche il guard
+      // Laravel standard (config/auth.php: guard 'web' -> App\User, gia'
+      // mappato su cms_users) in vista della migrazione dell'auth verso i
+      // guard nativi. Il codice esistente continua a leggere le chiavi di
+      // sessione admin_* esattamente come prima - vedi
+      // docs/refactoring/README.md per il piano.
+      $userModel = \App\User::find($users->id);
+      if ($userModel) {
+          Auth::login($userModel);
+      }
 
       CRUDBooster::insertLog(trans("crudbooster.log_login", ['email' => $users->email, 'ip' => Request::server('REMOTE_ADDR')]));
 

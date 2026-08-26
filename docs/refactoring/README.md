@@ -33,7 +33,7 @@ zero leggendo i diff di git.
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
-| —   | *(nessun intervento ancora registrato)* | | | |
+| [001](001-auth-guard-additivo-fase-1.md) | Refactoring auth: guard Laravel additivo (Fase 1) | Auth | Completato | 2026-08-26 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
@@ -50,17 +50,23 @@ trasformate in un intervento vero e proprio:
   comunque tracciati (aggiunti prima della regola): un controller **nuovo**
   non verrebbe raccolto da `git add .`/`git add -A`, solo da `git add -f` —
   rischio silenzioso di push incompleti.
-- **Compatibilità delle migration con SQLite non verificata**: i test usano
-  `.env.testing` (SQLite in-memory), ma nessuno ha controllato se tutte le
-  migration del progetto (scritte pensando a MySQL) girano pulite su SQLite.
-  Non blocca nulla oggi (il test minimo attuale non tocca il DB), ma è da
-  verificare prima di aggiungere test con `RefreshDatabase`.
+- ~~Compatibilità delle migration con SQLite non verificata~~ — risolto
+  passando i test a MySQL vero (stesso motore della produzione), vedi
+  [`../test-coverage.md`](../test-coverage.md).
 - **Branch remoti obsoleti da ripulire**: `main_backup`, `main_backup2`,
   `sapienza`, `qlikdashboard`, `bootstrapupdate`, `ckeditor`,
   `license-local` — chiarire quali sono ancora utili prima di fare pulizia.
+- **`AdminController::postLogin()` legge `$_SERVER['HTTP_HOST']`
+  direttamente** invece che tramite l'oggetto `Request` di Laravel —
+  funziona in produzione (Apache lo popola sempre) ma rende il codice
+  testabile solo forzando a mano la superglobale nei test (vedi
+  [`../test-coverage.md`](../test-coverage.md)). Da sistemare quando si
+  affronterà il refactoring dell'auth (sostituzione con `request()->getHost()`
+  o equivalente).
 
 ## Documenti correlati
 
 - [`../docker-local-dev.md`](../docker-local-dev.md) — ambiente di sviluppo locale
 - [`../login-e-licensing.md`](../login-e-licensing.md) — sistema di login e licensing attuale
 - [`../pre-push-checklist.md`](../pre-push-checklist.md) — cose da ripristinare/verificare prima di un push
+- [`../test-coverage.md`](../test-coverage.md) — catalogo dei test automatici esistenti
