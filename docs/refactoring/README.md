@@ -42,6 +42,7 @@ zero leggendo i diff di git.
 | [007](007-upload-path-relativo.md) | Upload file: salvato path relativo invece di URL assoluto, fix controllo "file rotto", migration di bonifica dati | Upload/File | Completato | 2026-08-27 |
 | [008](008-privileges-theme-color-bug.md) | PrivilegesController: creare un nuovo privilegio non deve cambiare il tema di chi lo crea | Bug fix | Completato | 2026-08-27 |
 | [009](009-module-helpers-cms-moduls-mancante.md) | Modulo "Module Helpers" senza riga in cms_moduls (404), seeder aggiornato | Bug fix / dati | Completato | 2026-08-27 |
+| [010](010-popup-select-non-si-chiude.md) | Popup "Browse data" non si chiudeva dopo Select (bug sistemico sui 7 componenti relazione) | Bug fix | Completato | 2026-08-27 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).

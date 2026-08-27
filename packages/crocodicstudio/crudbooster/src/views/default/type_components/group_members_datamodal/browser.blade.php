@@ -81,23 +81,17 @@ if (count($coloms_alias) < 2) {
                 ?>
             @endforeach
             <?php
+            // 'select_to' qui e' l'id usato per filtrare la lista (vedi sopra),
+            // non coppie "campo:destinazione" come nel componente base
+            // 'datamodal' da cui questo file e' stato copiato - il parsing di
+            // quel formato produceva una chiave inutile nel JSON (qui non
+            // mandava in eccezione lo script solo per un fallback diverso
+            // dagli altri componenti fratelli, ma restava comunque codice
+            // morto/fuorviante).
             $select_data_result = [];
             $select_data_result['datamodal_id'] = $row->id;
             $select_data_result['datamodal_label'] = $row->{$columns[1]} ?: $row->id;
             $select_data_result['datamodal_email'] = $row->email;
-            $select_data = Request::get('select_to');
-            if ($select_data) {
-                $select_data = explode(',', $select_data);
-                if ($select_data) {
-                    foreach ($select_data as $s) {
-                        $s_exp = explode(':', $s);
-                        $field_name = $s_exp[0];
-                        
-                        $target_field_name = isset($s_exp[1]) ? $s_exp[1] : $field_name;
-                        $select_data_result[$target_field_name] = isset($row->$field_name) ? $row->$field_name : '';
-                    }
-                }
-            }
             ?>
             <td><a class='btn btn-primary' href='javascript:void(0)' onclick='parent.selectAdditionalData{{$name}}({!! json_encode($select_data_result) !!})'><i
                             class='fa fa-check-circle'></i> {{trans('crudbooster.datamodal_select')}}</a></td>

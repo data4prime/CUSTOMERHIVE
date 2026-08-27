@@ -58,8 +58,20 @@ if (count($coloms_alias) < 2) {
                 if ($select_data) {
                     foreach ($select_data as $s) {
                         $s_exp = explode(':', $s);
+                        // Alcuni chiamanti (i componenti "*_datamodal" per
+                        // collegare due entita', es. tenant_group_datamodal)
+                        // passano qui un id nudo per filtrare la lista
+                        // (vedi sopra), non coppie "campo:destinazione" -
+                        // senza questo controllo si otteneva una chiave
+                        // vuota nel JSON, che in JS ($('#' + chiave))
+                        // diventava il selettore invalido '#', mandando in
+                        // eccezione lo script prima che il popup potesse
+                        // chiudersi.
+                        if (!isset($s_exp[1]) || $s_exp[1] === '') {
+                            continue;
+                        }
                         $field_name = $s_exp[0];
-                        $target_field_name = isset($s_exp[1]) ? $s_exp[1] : '' ;
+                        $target_field_name = $s_exp[1];
                         $select_data_result[$target_field_name] = isset($row->$field_name) ? $row->$field_name : '';
                     }
                 }

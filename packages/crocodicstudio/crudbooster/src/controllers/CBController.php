@@ -874,8 +874,20 @@ class CBController extends Controller
             case 'user_groups_datamodal':
                 return view('crudbooster::default.type_components.user_groups_datamodal.browser', $data);
                 break;
-            case 'user_groups_datamodal':
-                return view('crudbooster::default.type_components.user_groups_datamodal.browser', $data);
+            // Mancavano questi 3: senza un case dedicato finivano nel
+            // default (il componente generico "datamodal"), che ignora il
+            // campo "Description" del form (compilato via datamodal_description,
+            // mai valorizzato dal componente generico) e non esclude dalla
+            // lista le righe gia' collegate (whereNotExists nei rispettivi
+            // browser.blade.php dedicati).
+            case 'tenant_group_datamodal':
+                return view('crudbooster::default.type_components.tenant_group_datamodal.browser', $data);
+                break;
+            case 'group_tenant_datamodal':
+                return view('crudbooster::default.type_components.group_tenant_datamodal.browser', $data);
+                break;
+            case 'item_tenant_datamodal':
+                return view('crudbooster::default.type_components.item_tenant_datamodal.browser', $data);
                 break;
 
             default:

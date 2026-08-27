@@ -6,7 +6,7 @@ use CRUDBooster;
 use ModuleHelper;
 use UserHelper;
 use Session;
-use \crocodicstudio\crudbooster\controllers\AdminCmsUsersController;
+use App\Http\Controllers\System\AdminCmsUsersController;
 use App\Http\Controllers\AdminSmartphonesController;
 
 
