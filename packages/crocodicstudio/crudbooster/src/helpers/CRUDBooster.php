@@ -752,7 +752,18 @@ return Request::segment($segment);
     public static function mainpath($path = null)
     {
 
-        $controllername = str_replace(["\crocodicstudio\crudbooster\controllers\\", "App\Http\Controllers\\"], "", strtok(Route::currentRouteAction(), '@'));
+        // L'ordine conta: i prefissi piu' specifici (System\, con e senza
+        // backslash iniziale - dipende se la rotta e' registrata con
+        // $controllers_base_path in routes/web.php o via Route::group
+        // 'namespace' in routes.php) vanno prima di quello piu' corto
+        // (Controllers\) di cui sono un sottoinsieme, altrimenti str_replace
+        // lo consuma parzialmente e lascia un backslash residuo nel risultato.
+        $controllername = str_replace([
+            "\App\Http\Controllers\System\\",
+            "App\Http\Controllers\System\\",
+            "\crocodicstudio\crudbooster\controllers\\",
+            "App\Http\Controllers\\",
+        ], "", strtok(Route::currentRouteAction(), '@'));
         $route_url = route($controllername . 'GetIndex');
 
         if ($path) {

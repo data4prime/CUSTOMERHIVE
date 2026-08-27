@@ -13,6 +13,14 @@ Homestead.yaml
 .phpunit.result.cache
 /public/cookie-name
 
-app/Http/Controllers/
+# I controller creati da interfaccia (module builder di CRUDBooster) restano
+# non tracciati, sono specifici di ogni ambiente. I controller "di sistema"
+# spostati in System/ (docs/refactoring/006-*) sono invece codice vero e
+# proprio del progetto, vanno tracciati - da qui il /* + le eccezioni sotto
+# (una singola entry "app/Http/Controllers/" esclude anche i sottoalberi
+# negati, git richiede il "/*" per poter re-includere una sottocartella).
+app/Http/Controllers/*
+!app/Http/Controllers/System/
+!app/Http/Controllers/System/**
 
 /.tokensave

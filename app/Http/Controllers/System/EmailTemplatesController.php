@@ -1,4 +1,6 @@
-<?php namespace crocodicstudio\crudbooster\controllers;
+<?php
+
+namespace App\Http\Controllers\System;
 
 use CRUDBooster;
 use Illuminate\Support\Facades\Excel;

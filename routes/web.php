@@ -14,7 +14,9 @@
 use crocodicstudio\crudbooster\helpers\QlikHelper;
 use App\Http\Controllers\ApiListTenantsController;
 
-$controllers_base_path = '\crocodicstudio\crudbooster\controllers\\';
+// Controller "di sistema" spostati in App\Http\Controllers\System, vedi
+// docs/refactoring/006-controller-sistema-app-http-controllers-system.md
+$controllers_base_path = '\App\Http\Controllers\System\\';
 
 Route::get('/testapi' , function(){
     $test = new ApiListTenantsController();
@@ -48,7 +50,7 @@ Route::get('/', function () {
 
 
 //menù edit customization
-// Route::get('admin/menu_management', '\crocodicstudio\crudbooster\controllers\MenusController@getIndex');
+// Route::get('admin/menu_management', '\App\Http\Controllers\System\MenusController@getIndex');
 Route::get('admin/menu_management/edit/{id}', $controllers_base_path . 'MenusController@customEdit')->name('MenusControllerGetEdit');
 //Route::get('admin/menu_management/edit/{id}', $controllers_base_path . 'MenusController@getEdit')->name('MenusControllerGetEdit');
 // Route::post('/admin/menu_management/save-menu')->name('MenusControllerPostSaveMenu');

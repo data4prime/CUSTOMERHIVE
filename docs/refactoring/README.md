@@ -38,6 +38,7 @@ zero leggendo i diff di git.
 | [003](003-licensing-hardening.md) | Licensing: env configurabile, registerLicense() sicuro, opzione "ho già una licenza", riattivazione controlli | Licensing | Completato | 2026-08-26 |
 | [004](004-licensing-envelope-success-data.md) | Licensing: adeguamento alla busta {success, data} del license server, fix import mancanti, fix precompilazione dominio | Licensing | Completato | 2026-08-26 |
 | [005](005-connectorservice-cleanup.md) | ConnectorService: cleanup, fix crash su login irraggiungibile, test di caratterizzazione | Licensing | Completato | 2026-08-27 |
+| [006](006-controller-sistema-app-http-controllers-system.md) | Controller "di sistema" spostati da packages/ ad App\Http\Controllers\System | Architettura / CRUDBooster | Completato | 2026-08-27 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
@@ -60,6 +61,28 @@ dettaglio della strategia):
   dall'utente**, da riprendere più avanti — per ora si passa ad altre
   sezioni del progetto da refactorare.
 
+## Roadmap uscita da CRUDBooster (packages/)
+
+Percorso per portare `packages/crocodicstudio/crudbooster` a standard
+Laravel, tenendo separati i controller "di sistema" (versionati, nessun
+contratto esterno) dai controller creati da interfaccia in produzione
+(mai in questo repo, hanno un contratto esterno reale — vedi
+[006](006-controller-sistema-app-http-controllers-system.md) per l'analisi
+completa):
+
+- ✅ 21 controller "schermata" spostati in `App\Http\Controllers\System`
+  — [006](006-controller-sistema-app-http-controllers-system.md).
+- ⬜ Le 5 classi "motore" (`CBController`, `ApiController`, `Controller`,
+  `ExportData`, `ImportData`) restano in `packages/.../controllers/`: sono
+  la classe base che i controller generati da interfaccia estendono per
+  FQCN letterale (`extends \crocodicstudio\crudbooster\controllers\CBController`)
+  — spostabili solo con uno shim `class_alias()` che mantenga risolvibile
+  il vecchio FQCN. Discusso, non ancora implementato.
+- ⬜ Helper `CRUDBooster` (84 metodi, alias globale) — scomponibile in
+  servizi più piccoli mantenendo l'alias stabile come facciata.
+- ⬜ Asset statici (`assets/`, ~90% dei file del pacchetto) — lavoro
+  UI/UX separato, non backend.
+
 ## Backlog — emerso ma non ancora assegnato a un intervento numerato
 
 Cose notate durante altri lavori (setup Docker, CI/CD), non ancora
@@ -72,7 +95,12 @@ trasformate in un intervento vero e proprio:
   da interfaccia si possono creare moduli custom (controller generati), che
   devono restare specifici dell'ambiente in cui vengono creati e non
   finire nel repo condiviso. I 52 controller già tracciati lo erano prima
-  che la regola venisse introdotta.
+  che la regola venisse introdotta. **Aggiornato in
+  [006](006-controller-sistema-app-http-controllers-system.md)**: la regola
+  ora esclude `app/Http/Controllers/*` con un'eccezione esplicita per
+  `System/` (i controller "di sistema" spostati lì sono codice vero e
+  proprio del progetto, vanno tracciati) — il resto della cartella
+  (controller generati da interfaccia) resta ignorato come prima.
 - ~~Compatibilità delle migration con SQLite non verificata~~ — risolto
   passando i test a MySQL vero (stesso motore della produzione), vedi
   [`../test-coverage.md`](../test-coverage.md).

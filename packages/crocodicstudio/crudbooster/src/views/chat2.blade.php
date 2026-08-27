@@ -1,5 +1,5 @@
 @php 
-use crocodicstudio\crudbooster\controllers\AdminChatAIController;
+use App\Http\Controllers\System\AdminChatAIController;
 
 $chatai_conf = AdminChatAIController::getConf();
 

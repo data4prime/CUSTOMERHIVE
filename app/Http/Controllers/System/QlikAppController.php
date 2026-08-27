@@ -1,22 +1,25 @@
 <?php
 
-namespace crocodicstudio\crudbooster\controllers;
+namespace App\Http\Controllers\System;
+
+use crocodicstudio\crudbooster\controllers\CBController;
 
 use Session;
 use Request;
 use DB;
 use CRUDBooster;
 use \crocodicstudio\crudbooster\helpers\UserHelper;
+use \crocodicstudio\crudbooster\helpers\QlikHelper;
 
 
-class QlikConfController extends CBController
+class QlikAppController extends CBController
 {
 
 	public function cbInit()
 	{
 
 		# START CONFIGURATION DO NOT REMOVE THIS LINE
-		$this->title_field = "confname";
+		$this->title_field = "appname";
 		$this->limit = "20";
 		$this->orderby = "id,desc";
 		$this->global_privilege = true;
@@ -29,73 +32,62 @@ class QlikConfController extends CBController
 		$this->button_detail = true;
 		$this->button_show = false;
 		$this->button_filter = true;
-		$this->button_import = true;
-		$this->button_export = true;
-		$this->table = "qlik_confs";
+		$this->button_import = false;
+		$this->button_export = false;
+		$this->table = "qlik_apps";
 		# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = [];
-		$this->col[] = ["label" => "Configuration Name", "name" => "confname"];
-		$this->col[] = ["label" => "Type", "name" => "type"];
-        $this->col[] = ["label" => "Auth", "name" => "auth"];
-        $this->col[] = ["label" => "debug", "name" => "debug"];
+		$this->col[] = ["label" => "App Name", "name" => "appname"];
+        $this->col[] = ["label" => "App ID", "name" => "appid"];
+		//$this->col[] = ["label" => "Conf", "name" => "conf"];
+		$this->col[] = array("label" => "Qlik Conf", "name" => "conf", "join" => "qlik_confs,confname");
+
 
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
 
 		# START FORM DO NOT REMOVE THIS LINE
 		$this->form = [];
-		$this->form[] = ['label' => 'Configuration Name', 'name' => 'confname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Configuration Name'];
-        $this->form[] = ['label' => 'Type', 'name' => 'type', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'On-Premise;SAAS'];
-        $this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'JWT'];
-        //$this->form[] = ['label' => 'QRS Url', 'name' => 'url', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRS Url'];
-        $this->form[] = ['label' => 'URL', 'name' => 'url', 'type' => 'text',  'width' => 'col-sm-10', 'placeholder' => 'Enter URL'];
+		$this->form[] = ['label' => 'App Name', 'name' => 'appname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter App Name'];
+        $this->form[] = ['label' => 'App ID', 'name' => 'appid', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter App ID'];
+        $this->form[] = ['label' => 'Conf', 'name' => 'conf', 'type' => 'select', 'width' => 'col-sm-10',
+                            "datatable" => "qlik_confs,confname",
+                            "relationship_table" => "qlik_confs",
+                            'required' => true,
+                        ];
 
-        $this->form[] = ['label' => 'Port', 'name' => 'port', 'type' => 'text',  'width' => 'col-sm-10', 'placeholder' => 'Port'];
 
-        $this->form[] = ['label' => 'Endpoint', 'name' => 'endpoint', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Endpoint'];
-        //$this->form[] = ['label' => 'QRSCertfile', 'name' => 'QRSCertfile', 'type' => 'upload', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertfile'];
-        //$this->form[] = ['label' => 'QRSCertkeyfile', 'name' => 'QRSCertkeyfile', 'type' => 'upload', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertkeyfile'];
-        //$this->form[] = ['label' => 'QRSCertkeyfilePassword', 'name' => 'QRSCertkeyfilePassword', 'type' => 'password', 'width' => 'col-sm-10', 'placeholder' => 'Enter QRSCertkeyfilePassword'];
 
-        $this->form[] = ['label' => 'Key ID', 'name' => 'keyid', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Key ID'];
-        $this->form[] = ['label' => 'Issuer', 'name' => 'issuer', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Issuer'];
-        $this->form[] = ['label' => 'Web Int ID', 'name' => 'web_int_id', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Web Int ID'];
-        $this->form[] = ['label' => 'Private Key', 'name' => 'private_key', 'type' => 'upload', 'validation' => 'mimes:pem', 'width' => 'col-sm-10', 'placeholder' => 'Enter Private Key'];
-
-        $this->form[] = ['label' => 'Debug', 'name' => 'debug', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'Inactive;Active'];
-	$this->form[] = ['label' => 'Tenant Path', 'name' => 'tenant_path', 'type' => 'hidden', 'width' => 'col-sm-10', 'value' => env('APP_URL')];
-
-		//only superadmin can edit tenant
     if (CRUDBooster::isSuperadmin()) {
       $this->form[] = [
         'label' => 'Tenant',
-        'name' => 'qlikconfs_tenants',
+        'name' => 'qlikapps_tenants',
         "type" => "select2",
         "select2_multiple" => true,
         "datatable" => "tenants,name",
-        "relationship_table" => "qlikconfs_tenants",
+        "relationship_table" => "qlikapps_tenants",
         'required' => true,
         'validation' => 'required',
-        'value' => UserHelper::current_user_tenant() //default value per creazione nuovo record
+        'value' => UserHelper::current_user_tenant()
       ];
-      //superadmin vede i gruppi come cascading dropdown in base al tenant
+
       $this->form[] = [
         "label" => "Group",
-        "name" => "qlikconfs_groups",
+        "name" => "qlikapps_groups",
         "type" => "select2",
         "select2_multiple" => true,
         "datatable" => "groups,name",
-        "relationship_table" => "qlikconfs_groups",
+        "relationship_table" => "qlikapps_groups",
         "required" => true,
-        'parent_select' => 'qlikconfs_tenants',
+        'parent_select' => 'qlikapps_tenants',
         'parent_crosstable' => 'group_tenants',
         'fk_name' => 'tenant_id',
         'child_crosstable_fk_name' => 'group_id'
       ];
     } elseif (UserHelper::isTenantAdmin()) {
-      //Tenantadmin vede tenant in readonly (disabled) ma può modificare il group
+
       $this->form[] = [
         "label" => "Tenant",
         "name" => "tenant",
@@ -106,14 +98,14 @@ class QlikConfController extends CBController
         'value' => UserHelper::current_user_tenant(),
         'disabled' => true
       ];
-      //Tenantadmin vede solo i gruppi del proprio tenant
+
       $this->form[] = [
         "label" => "Group",
         "name" => "menu_groups",
         "type" => "select2",
         "select2_multiple" => true,
         "datatable" => "groups,name",
-        "relationship_table" => "qlikconfs_groups",
+        "relationship_table" => "qlikapps_groups",
         "required" => true,
         'parent_select' => 'tenant',
         'parent_crosstable' => 'group_tenants',
@@ -164,11 +156,7 @@ class QlikConfController extends CBController
 		$this->addaction = array();
 		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'fa fa-user', 'color' => 'info', 'title' => 'Members'];
 		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'fa fa-shield', 'color' => 'info', 'title' => 'Items'];
-		if (CRUDBooster::isSuperadmin()) {
-            $this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseHub/[id]'), 'icon' => 'fa fa-desktop', 'color' => 'primary', 'title' => 'Qlik Sense Hub'];
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseQMC/[id]'), 'icon' => 'fa fa-code', 'color' => 'primary', 'title' => 'Qlik Sense QMC'];
-            //$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Tenants'];
-		}
+
 		/*
         | ----------------------------------------------------------------------
         | Add More Button Selected
@@ -236,67 +224,7 @@ class QlikConfController extends CBController
         | $this->script_js = "function() { ... }";
         |
         */
-		
-        $this->script_js = "
-        document.addEventListener('DOMContentLoaded', function() {
-
-            const typeSelect = document.getElementsByName('type')[0];
-            //console.log(document.getElementsByName('type'));
-            const authSelect = document.getElementsByName('auth')[0];
-            //console.log(document.getElementsByName('auth'));
-
-            const fields = {
-                'On-Premise_JWT': ['confname', 'type', 'auth', 'url', 'port', 'endpoint', 'private_key'],
-                'SAAS_JWT': ['confname', 'type', 'auth', 'url', 'port', 'endpoint', 'keyid', 'issuer', 'web_int_id', 'private_key']
-            };
-
-            function updateVisibility() {
-                // Hide all fields initially
-                Object.keys(fields).forEach(key => {
-                    fields[key].forEach(fieldId => {
-
-                        if (document.getElementsByName(fieldId)[0]) {
-                            if (fieldId != 'confname' && fieldId != 'type' && fieldId != 'auth') {
-                                document.getElementsByName(fieldId)[0].parentNode.parentNode.classList.add('hidden');
-                            }
-                        }
-                    });
-                });
-
-                // Determine the selected options
-                const selectedType = typeSelect.value;
-                const selectedAuth = authSelect.value;
-
-                //console.log(selectedType);
-                //console.log(selectedAuth);
-
-
-                // Construct the key for the fields object
-                const fieldKey = selectedType + '_' + selectedAuth;
-
-                // If the key exists in the fields object, show the corresponding fields
-                if (fields[fieldKey]) {
-                    fields[fieldKey].forEach(fieldId => {
-                        //console.log('fieldID '+fieldId);
-
-                        if (document.getElementsByName(fieldId)[0]) {
-                            document.getElementsByName(fieldId)[0].parentNode.parentNode.classList.remove('hidden');
-                        }
-
-                        
-                    });
-                }
-            }
-
-            //console.log(typeSelect);
-            updateVisibility();
-
-            // Add event listeners to update visibility on change
-            typeSelect.addEventListener('change', updateVisibility);
-            authSelect.addEventListener('change', updateVisibility);
-        });
-            
-            ";
+		$this->script_js = "";
 
 
 		/*
@@ -356,6 +284,84 @@ class QlikConfController extends CBController
         |
         */
 		$this->load_css = array();
+	}
+
+	public static function getMashupFromCompID($compID) {
+		$mashup = DB::table('cms_statistic_components')->where('componentID', $compID)->first();
+		if (isset($mashup)){
+			$mashup = json_decode($mashup->config);
+			if (isset($mashup->mashups)) {
+				$mashup = $mashup->mashups;
+				$mashup = DB::table('qlik_apps')->where('id', $mashup)->first();
+			} else {
+				$mashup = null;
+			}
+
+			
+		} else {
+			$mashup = null;
+		}
+
+		return $mashup;
+
+	}
+
+	public static function getConf($id) {
+		$qlik_conf = DB::table('qlik_confs')->where('id', $id)->first();
+		$return = [];
+
+		$return['type'] = isset($qlik_conf->type) ? $qlik_conf->type : null;
+
+		if (isset($id) && $qlik_conf) {
+				$return['id'] = $qlik_conf->id;
+				$return['host'] = $qlik_conf->url;
+				$return['webIntegrationId'] = '';
+				$return['port'] = $qlik_conf->port;
+				$return['prefix'] = $qlik_conf->endpoint;
+				$return['auth'] = $qlik_conf->auth;
+			if (QlikHelper::confIsSAAS($id)) {
+				$return['id'] = $qlik_conf->id;
+				$return['host'] = $qlik_conf->url;
+				$return['webIntegrationId'] = $qlik_conf->web_int_id;
+				$return['port'] = $qlik_conf->port;
+				$return['prefix'] = $qlik_conf->endpoint;
+				$return['auth'] = $qlik_conf->auth;
+			} 
+		}
+
+		$return = (object) $return;
+		return $return;
+
+	}
+
+	public static function getMashups() {
+		//se super admin prendo tutti i mashups
+		if (CRUDBooster::isSuperadmin()) {
+			$mashups = DB::table('qlik_apps')
+			->select('qlik_apps.*')
+
+			->get();
+		} elseif (UserHelper::isTenantAdmin()) {
+			$mashups = DB::table('qlik_apps')
+				->select('qlik_apps.*')
+				->join('qlikapps_tenants', 'qlik_apps.id', '=', 'qlikapps_tenants.qlikmashup_id')
+
+				->where('tenant_id', UserHelper::current_user_tenant())
+
+				->get();
+		} else {
+			$mashups = DB::table('qlik_apps')
+						->select('qlik_apps.*')
+				->join('qlikapps_groups', 'qlik_apps.id', '=', 'qlikapps_groups.qlikmashup_id')
+				->join('group_users', 'group_users.group_id', '=', 'qlikapps_groups.group_id')
+				->where('group_users.user_id', CRUDBooster::myId())
+				->get();
+		}
+
+
+
+		return $mashups;
+
 	}
 
 

@@ -4,7 +4,11 @@
 use Illuminate\Support\Facades\DB;
 
 /* ROUTER FOR API GENERATOR */
-$namespace = '\crocodicstudio\crudbooster\controllers';
+// I controller "di sistema" (schermate admin CRUDBooster) vivono in
+// App\Http\Controllers\System (vedi docs/refactoring/006-*): CBController/
+// ApiController restano nel namespace del pacchetto, non sono modulo
+// routabili di per se'.
+$namespace = 'App\Http\Controllers\System';
 
 Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\CBAuthAPI'], 'namespace' => 'App\Http\Controllers'], function () {
     //Router for custom api defeault
@@ -24,7 +28,10 @@ Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\C
 
     $dir = scandir(base_path("app/Http/Controllers"));
     foreach ($dir as $v) {
-        if ($v == '.' || $v == '..' || $v == 'Auth') {
+        // is_dir() esclude anche System/ (controller "di sistema", non scandito
+        // qui) oltre ad Auth/ - lo scan e' pensato solo per i file generati
+        // direttamente dentro app/Http/Controllers.
+        if ($v == '.' || $v == '..' || $v == 'Auth' || is_dir(base_path("app/Http/Controllers/{$v}"))) {
             continue;
         }
         $v = str_replace('.php', '', $v);
@@ -123,15 +130,19 @@ Route::group([
     if (Request::is(config('crudbooster.ADMIN_PATH'))) {
         $menus = DB::table('cms_menus')->where('is_dashboard', 1)->first();
         if (! $menus) {
-            CRUDBooster::routeController('/', 'AdminController', $namespace = '\crocodicstudio\crudbooster\controllers');
+            CRUDBooster::routeController('/', 'AdminController', $namespace = 'App\Http\Controllers\System');
         }
     }
 
-    CRUDBooster::routeController('api_generator', 'ApiCustomController', $namespace = '\crocodicstudio\crudbooster\controllers');
+    CRUDBooster::routeController('api_generator', 'ApiCustomController', $namespace = 'App\Http\Controllers\System');
 
     try {
 
-        $master_controller = glob(__DIR__.'/controllers/*.php');
+        // I controller "di sistema" vivono fisicamente in app/Http/Controllers/System
+        // (non piu' in questa cartella): e' questo il criterio con cui si distingue
+        // un modulo di sistema (cms_moduls.controller punta a un file qui presente)
+        // da un modulo generato da interfaccia (finisce in App\Http\Controllers).
+        $master_controller = glob(app_path('Http/Controllers/System/*.php'));
         foreach ($master_controller as &$m) {
             $m = str_replace('.php', '', basename($m));
         }
@@ -140,7 +151,7 @@ Route::group([
 
         foreach ($moduls as $v) {
             if (@$v->path && @$v->controller) {
-                CRUDBooster::routeController($v->path, $v->controller, $namespace = '\crocodicstudio\crudbooster\controllers');
+                CRUDBooster::routeController($v->path, $v->controller, $namespace = 'App\Http\Controllers\System');
             }
         }
     } catch (Exception $e) {

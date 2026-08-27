@@ -2,7 +2,7 @@
 @php 
 
 use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
-use crocodicstudio\crudbooster\controllers\QlikAppController;
+use App\Http\Controllers\System\QlikAppController;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
 $conf = QlikAppController::getConf($qlik_conf);

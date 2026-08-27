@@ -1,6 +1,8 @@
 <?php
 
-namespace crocodicstudio\crudbooster\controllers;
+namespace App\Http\Controllers\System;
+
+use crocodicstudio\crudbooster\controllers\CBController;
 
 use Session;
 use Request;

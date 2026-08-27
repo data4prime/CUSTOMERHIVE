@@ -13,6 +13,23 @@ database, generatore di CRUD, sistema di menu. Non riceve aggiornamenti
 upstream: è il principale ostacolo/rischio per l'upgrade di Laravel e per il
 refactoring architetturale.
 
+**Controller "di sistema" vs controller generato da interfaccia**
+: CRUDBooster ha due tipi di controller, mai da mescolare. "Di sistema":
+scritti a mano, versionati in questo repo (in `App\Http\Controllers\System`
+dopo [006](006-controller-sistema-app-http-controllers-system.md), prima in
+`packages/crocodicstudio/crudbooster/src/controllers/`) — le schermate
+dell'admin panel di CRUDBooster stesso (utenti, gruppi, moduli, ecc.).
+"Generato da interfaccia": creato a runtime dal module builder
+(`ModulsController`/`CRUDBooster::generateController()`) quando un
+utente crea un modulo custom dal pannello, scritto in
+`app/Http/Controllers/` (gitignored, specifico di ogni ambiente/cliente,
+mai in questo repo). Il contratto tra i due: ogni controller generato fa
+`extends \crocodicstudio\crudbooster\controllers\CBController` con l'FQCN
+letterale — quella classe (motore del CRUD, non spostata in
+[006](006-controller-sistema-app-http-controllers-system.md)) deve restare
+risolvibile con quel nome esatto per non rompere le installazioni già in
+produzione.
+
 **Tenant / multi-tenancy**
 : Il progetto supporta più "tenant" (clienti/organizzazioni) sulla stessa
 installazione, tabella `tenants`. Ogni utente (`cms_users`) appartiene a un

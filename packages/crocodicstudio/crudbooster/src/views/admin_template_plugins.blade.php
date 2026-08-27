@@ -91,15 +91,23 @@ $("#draggable").resizable();
 
 <script>
 
-document.querySelector('#x-close-chatai').addEventListener('click', function () {
+// Presenti solo nelle pagine dove il widget ChatAI e' attivo/renderizzato -
+// null-check perche' su tutte le altre pagine admin questi elementi non
+// esistono nel DOM.
+var xCloseChatai = document.querySelector('#x-close-chatai');
+if (xCloseChatai) {
+    xCloseChatai.addEventListener('click', function () {
 
 $("#chatWindow").toggle();
 
 
 
 });
+}
 
-document.querySelector('.toggle-sidebar-btn').addEventListener('click', function () {
+var toggleSidebarBtn = document.querySelector('.toggle-sidebar-btn');
+if (toggleSidebarBtn) {
+    toggleSidebarBtn.addEventListener('click', function () {
 
 $("#chatWindow").toggle();
 
@@ -117,6 +125,7 @@ $("#chatWindow").toggle();
 
 
 });
+}
 
 
 

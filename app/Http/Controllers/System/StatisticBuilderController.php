@@ -1,12 +1,14 @@
 <?php
 
-namespace crocodicstudio\crudbooster\controllers;
+namespace App\Http\Controllers\System;
+
+use crocodicstudio\crudbooster\controllers\CBController;
 
 use CRUDBooster;
 use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
 use crocodicstudio\crudbooster\helpers\LicenseHelper;
 
-use \crocodicstudio\crudbooster\controllers\QlikAppController;
+use App\Http\Controllers\System\QlikAppController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Excel;
 use Illuminate\Support\Facades\PDF;
