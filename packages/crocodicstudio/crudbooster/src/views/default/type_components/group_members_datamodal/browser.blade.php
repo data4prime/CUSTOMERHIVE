@@ -22,7 +22,7 @@ $result = DB::table('cms_users')
                 ->whereRaw(
                     'users_groups.group_id = '.Request::get('select_to').'
                     AND users_groups.user_id = cms_users.id
-                    AND users_groups.deleted_at = null
+                    AND users_groups.deleted_at IS NULL
                     ');
               })
               ->whereIn('cms_users.tenant',$group_tenants);

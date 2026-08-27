@@ -25,7 +25,7 @@
                       ->whereRaw(
                           'users_groups.user_id = '.Request::get('select_to').'
                           AND users_groups.group_id = groups.id
-                          AND users_groups.deleted_at = null'
+                          AND users_groups.deleted_at IS NULL'
                         );
             })
             ->join('group_tenants','group_tenants.group_id','groups.id')
