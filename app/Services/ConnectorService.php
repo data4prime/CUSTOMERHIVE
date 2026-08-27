@@ -214,13 +214,7 @@ class ConnectorService
     {
         $accessTokenCacheKey = $this->getAccessTokenKey($licenseKey);
 
-
-
-        //$accessToken = Cache::get($accessTokenCacheKey, null);
-        $licenseFromFile = $this->getLicenseFromFile();
-        $accessToken = $licenseFromFile['license_key'] ?? null;
-
-
+        $accessToken = Cache::get($accessTokenCacheKey, null);
 
         if ($accessToken) {
             return $accessToken;
