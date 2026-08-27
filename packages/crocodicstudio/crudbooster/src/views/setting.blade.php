@@ -51,7 +51,7 @@
 
 <div style="width: 750px; margin: 0 auto;">
     <p align="right">
-        <a title="{{ trans('crudbooster.Add_Field_Setting') }}" class="btn btn-sm btn-primary" href="{{ route('SettingsControllerGetAdd') }}?group_setting={{ $page_title }}">
+        <a title="{{ trans('crudbooster.Add_Field_Setting') }}" class="btn btn-sm btn-primary" href="{{ route('SettingsControllerGetAdd') }}?group_setting={{ urlencode($page_title) }}">
             <i class="fa fa-plus"></i> {{ trans('crudbooster.Add_Field_Setting') }}
         </a>
     </p>
@@ -61,24 +61,14 @@
             <i class="fa fa-cog"></i> {{ $page_title }}
         </div>
         <div class="card-body">
-            <form method="post" id="form" enctype="multipart/form-data" action="{{ CRUDBooster::mainpath('save-setting?group_setting=' . $page_title) }}">
+            <form method="post" id="form" enctype="multipart/form-data" action="{{ CRUDBooster::mainpath('save-setting?group_setting=' . urlencode($page_title)) }}">
                 @csrf
                 <div class="box-body">
-                    @php
-
-                        $settings = DB::table('cms_settings')->where('group_setting', $page_title)->get();
-
-                     @endphp
+                    {{-- $settings arriva da SettingsController::getShow(): prima la
+                         query (e la UPDATE che ripara le label vuote) stavano qui. --}}
                     @foreach($settings as $s)
                         @php
                             $value = $s->content;
-
-                            if (! $s->label) {
-                                $label = ucwords(str_replace('_', ' ', $s->name));
-                                DB::table('cms_settings')->where('id', $s->id)->update(['label' => $label]);
-                                $s->label = $label;
-                            }
-
                             $dataenum = array_map('trim', explode(',', $s->dataenum));
                         @endphp
 
@@ -104,6 +94,15 @@
                             @switch($s->content_input_type)
                                 @case('text')
                                     <input type="text" class="form-control" name="{{ $s->name }}" value="{{ $value }}" />
+                                    @break
+
+                                @case('password')
+                                    {{-- Mai ripopolato col valore salvato: la password
+                                         non deve comparire in chiaro nel sorgente.
+                                         Campo vuoto = "non modificare" (vedi
+                                         postSaveSetting). --}}
+                                    <input type="password" class="form-control" name="{{ $s->name }}" value="" autocomplete="new-password" />
+                                    <div class="help-block">Leave empty to keep the current value.</div>
                                     @break
 
                                 @case('number')
@@ -142,6 +141,7 @@
                                     <div class="help-block">{{ trans('crudbooster.file_support_only') }} jpg,png,gif, Max 10 MB</div>
                                     @break
 
+                                @case('upload_document')
                                 @case('upload_file')
                                     @if ($value)
                                         <p>

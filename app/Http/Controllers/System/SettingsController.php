@@ -7,8 +7,6 @@ use crocodicstudio\crudbooster\controllers\CBController;
 use CRUDBooster;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Excel;
-use Illuminate\Support\Facades\PDF;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -46,7 +44,12 @@ class SettingsController extends CBController
             "label" => "Type",
             "name" => "content_input_type",
             "type" => "select",
-            "dataenum" => ["text", "number", "email", "textarea", "wysiwyg", "upload_image", "upload_document", "datepicker", "radio", "select"],
+            // Allineata ai case gestiti da setting.blade.php: "upload_document"
+            // era offerto qui ma la view non lo renderizzava (nessun campo a
+            // schermo, e valore azzerato ad ogni salvataggio del gruppo), mentre
+            // "upload_file" - usato da righe reali - non era selezionabile.
+            // "password" e' nuovo: serve per non mostrare in chiaro le password.
+            "dataenum" => ["text", "password", "number", "email", "textarea", "wysiwyg", "upload_image", "upload_file", "datepicker", "radio", "select"],
         ];
         $this->form[] = [
             "label" => "Radio / Select Data",
@@ -77,23 +80,62 @@ class SettingsController extends CBController
             CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
-        $data['page_title'] = urldecode(Request::get('group'));
+        $group = urldecode(Request::get('group'));
+        $data['page_title'] = $group;
+
+        // La SELECT dei setting del gruppo stava nella blade, insieme alla
+        // UPDATE che riempie le label vuote: una scrittura eseguita durante il
+        // render di una GET. La scrittura resta (comportamento invariato, la
+        // label si auto-ripara) ma vive qui, non nel template.
+        $settings = DB::table('cms_settings')->where('group_setting', $group)->get();
+        foreach ($settings as $s) {
+            if (!$s->label) {
+                $s->label = ucwords(str_replace('_', ' ', $s->name));
+                DB::table('cms_settings')->where('id', $s->id)->update(['label' => $s->label]);
+            }
+        }
+        $data['settings'] = $settings;
 
         return view('crudbooster::setting', $data);
     }
 
     function hook_before_edit(&$posdata, $id)
     {
-        $this->return_url = CRUDBooster::mainpath("show") . "?group=" . $posdata['group_setting'];
+        $this->return_url = CRUDBooster::mainpath("show") . "?group=" . urlencode($posdata['group_setting']);
     }
 
     function getDeleteFileSetting()
     {
+        // Mancava qualunque controllo: la rotta e' protetta solo da CBBackend,
+        // che verifica soltanto "utente autenticato" - quindi era raggiungibile
+        // da qualsiasi utente con qualsiasi privilegio, e azzerava il contenuto
+        // di un setting cancellandone il file. Gli altri due metodi custom di
+        // questo controller (getShow, postSaveSetting) fanno lo stesso check.
+        if (!CRUDBooster::isSuperadmin()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'Setting', 'module' => 'Setting']));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $id = g('id');
         $row = CRUDBooster::first('cms_settings', $id);
+        if (!$row) {
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
         Cache::forget('setting_' . $row->name);
-        if (Storage::exists($row->content)) {
-            Storage::delete($row->content);
+
+        // $row->content e' un path relativo alla public root (es.
+        // "/storage/uploads/...", oppure un vecchio URL assoluto), non un path
+        // relativo al disco 'local' - la cui root e' storage/app/public. Per
+        // questo Storage::exists() non lo trovava mai e il file restava orfano
+        // ad ogni cancellazione. Si risolve con public_path(), come fa il
+        // componente upload (vedi docs/refactoring/007-upload-path-relativo.md).
+        // La guardia sul contenuto non vuoto e' necessaria: public_path('') e'
+        // la cartella public stessa.
+        if ($row->content) {
+            $file = public_path($row->content);
+            if (is_file($file)) {
+                @unlink($file);
+            }
         }
         DB::table('cms_settings')->where('id', $id)->update(['content' => null]);
         CRUDBooster::redirect(Request::server('HTTP_REFERER'), trans('alert_delete_data_success'), 'success');
@@ -113,7 +155,22 @@ class SettingsController extends CBController
 
             $name = $set->name;
 
-            $content = Request::get($set->name);
+            // Se il campo non e' arrivato nella richiesta il setting non si
+            // tocca: prima veniva messo a NULL, quindi qualunque riga il cui
+            // input non venga renderizzato (o non venga inviato) si azzerava
+            // ad ogni salvataggio del gruppo. Un input di testo svuotato
+            // arriva comunque come stringa vuota, quindi resta cancellabile.
+            if (!Request::has($name) && !Request::hasFile($name)) {
+                continue;
+            }
+
+            $content = Request::get($name);
+
+            // Le password si renderizzano sempre vuote: campo vuoto significa
+            // "non modificare", altrimenti salvare il gruppo le cancellerebbe.
+            if ($set->content_input_type == 'password' && (string) $content === '') {
+                continue;
+            }
 
             if (Request::hasFile($name)) {
 
@@ -135,12 +192,13 @@ class SettingsController extends CBController
                 $filename = md5(str_random(5)) . '.' . $ext;
                 $storeFile = Storage::putFileAs($directory, $file, $filename);
                 if ($storeFile) {
-                    $content = $directory . '/' . $filename;
+                    // Path relativo alla public root, non URL assoluto: un URL
+                    // costruito da HTTP_HOST si congela sull'host visto durante
+                    // l'upload e si rompe al primo cambio di dominio, protocollo
+                    // o porta. Stessa convenzione di CRUDBooster::uploadFile()
+                    // (vedi docs/refactoring/007-upload-path-relativo.md).
+                    $content = '/storage/' . $directory . '/' . $filename;
                 }
-            $host = $_SERVER['HTTP_HOST'];
-            $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
-
-            $content = $protocol .'://'. $host . '/storage/' .$content;
             }
 
 
@@ -156,7 +214,21 @@ class SettingsController extends CBController
     function hook_before_add(&$arr)
     {
         $arr['name'] = str_slug($arr['label'], '_');
-        $this->return_url = CRUDBooster::mainpath("show") . "?group=" . $arr['group_setting'];
+
+        // "name" e' la chiave logica di un setting: la usano getSetting(), la
+        // cache ("setting_".$name), l'UPDATE di postSaveSetting e la dedup dei
+        // seeder (che tiene l'id piu' basso e cancella il resto). Un nome
+        // duplicato - anche in un gruppo diverso - farebbe scrivere due righe a
+        // vicenda e ne farebbe cancellare una al primo db:seed. C'e' anche un
+        // indice unique a DB: questo check evita di arrivarci con un errore SQL.
+        if (DB::table('cms_settings')->where('name', $arr['name'])->exists()) {
+            CRUDBooster::redirect(
+                CRUDBooster::mainpath('add') . '?group_setting=' . urlencode($arr['group_setting']),
+                'A setting named "' . $arr['name'] . '" already exists. Please choose a different label.'
+            );
+        }
+
+        $this->return_url = CRUDBooster::mainpath("show") . "?group=" . urlencode($arr['group_setting']);
     }
 
     function hook_after_edit($id)

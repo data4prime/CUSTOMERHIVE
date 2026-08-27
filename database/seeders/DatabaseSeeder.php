@@ -31,7 +31,10 @@ class DatabaseSeeder extends Seeder
         $this->call(Cms_settingsSeeder::class);
         $this->call(CmsEmailTemplates::class);
         $this->call(Cms_menusPrivileges::class);
-        $this->call(QlikSett::class);
+        // QlikSett rimosso: seminava il gruppo "Qlik Configuration" in
+        // cms_settings, morto da quando la configurazione Qlik vive nella
+        // tabella qlik_confs. La migration 2024_07_16_111255_delete_qlik_setting
+        // lo cancellava e questo seeder lo ricreava subito dopo.
         $this->call(QlikConf::class);
         
 
