@@ -17,9 +17,6 @@ use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Facades\Log;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-
 class ConnectorService
 {
     use CacheKeys;
@@ -46,59 +43,66 @@ class ConnectorService
      */
     public function validateLicense(array $data = []): bool
     {
+        $license = $this->getLicenseFromFile();
 
-            $license = $this->getLicenseFromFile();
-       
-
-            if ($license) {
-           
-                $this->license = $license;
-
-                Log::info($license);
-
-                $ret = $license && $license['status'] == 'active';
-
-
-
-                if (isset($data['tenants_number'])) {
-                    $ret = $ret && $license['tenants_number'] >= $data['tenants_number'];
-                }
-
-                if (isset($data['clients_number'])) {
-                    $ret = $ret && $license['clients_number'] >= $data['clients_number'];
-                }
-
-                if (isset($data['path'])) {
-                    $ret = $ret && $license['path'] == $data['path'];
-                } else {
-                    $ret = $ret && $license['path'] == env('APP_PATH'); //default path
-                }
-
-
-
-                if (isset($data['domain']) && $ret && $license['domain'] == $data['domain']) {
-                    $ret = $ret && $license['domain'] == $data['domain'];
-                } else {
-
-
-                    $domain = env('APP_DOMAIN');
-
-
-                    if (strpos($domain, '.') !== false) {
-                        $domain = explode('.', $domain);
-                        $domain = $domain[0];
-                    }
-
-                    $ret = $ret && $license['domain'] == $domain;
-                }
-
-                return $ret;
-            }
-
-            //delete record from licenses table
+        if (!$license) {
+            // Nessuna licenza locale valida: la entry per questa chiave non
+            // ha piu' senso, ripulisce lo stato invece di lasciarla orfana.
             DB::table('license')->where('license_key', $this->licenseKey)->delete();
 
-        return false;
+            return false;
+        }
+
+        $this->license = $license;
+        Log::info($license);
+
+        return $license['status'] == 'active'
+            && $this->licenseMeetsQuota($license, $data, 'tenants_number')
+            && $this->licenseMeetsQuota($license, $data, 'clients_number')
+            && $this->licenseMatchesPath($license, $data)
+            && $this->licenseMatchesDomain($license, $data);
+    }
+
+    private function licenseMeetsQuota(array $license, array $data, string $key): bool
+    {
+        if (!isset($data[$key])) {
+            return true;
+        }
+
+        return $license[$key] >= $data[$key];
+    }
+
+    private function licenseMatchesPath(array $license, array $data): bool
+    {
+        $path = $data['path'] ?? env('APP_PATH');
+
+        return $license['path'] == $path;
+    }
+
+    /**
+     * Nota: se $data['domain'] e' presente ma non corrisponde esattamente al
+     * dominio salvato nella licenza, NON si fallisce subito - si ricade sul
+     * confronto con env('APP_DOMAIN') (con lo stesso taglio sul primo punto
+     * usato altrove). Serve perche' i chiamanti (LicenseHelper) passano
+     * spesso env('APP_DOMAIN') grezzo come $data['domain'], che su domini
+     * con sottodominio (es. "dev.thecustomerhive.com") non combacia mai col
+     * dominio salvato in licenza (gia' tagliato a "dev"); il fallback e' ciò
+     * che fa effettivamente combaciare in quel caso. Comportamento esistente
+     * preservato as-is, non e' un bug introdotto da questo refactoring.
+     */
+    private function licenseMatchesDomain(array $license, array $data): bool
+    {
+        if (isset($data['domain']) && $license['domain'] == $data['domain']) {
+            return true;
+        }
+
+        $domain = env('APP_DOMAIN');
+
+        if (strpos($domain, '.') !== false) {
+            $domain = explode('.', $domain)[0];
+        }
+
+        return $license['domain'] == $domain;
     }
 
     public function writeLicense(array $data = []): array | bool
@@ -129,11 +133,7 @@ class ConnectorService
 
             } catch (ConnectionException | RequestException $e) {
                 Log::error("License server timeout or request failed: " . $e->getMessage());
-
             } catch (\Exception $e) {
-                Log::error("Unexpected license validation error: " . $e->getMessage());
-            } catch (NotFoundHttpException $e) {
-
                 Log::error("Unexpected license validation error: " . $e->getMessage());
             }
         }
@@ -185,10 +185,7 @@ class ConnectorService
 
         } catch (\Exception $e) {
             Log::error("Error reading fallback license file: " . $e->getMessage());
-        } catch (NotFoundHttpException $e) {
-                $license = $this->getLicenseFromFile();
-                Log::error("Unexpected license validation error: " . $e->getMessage());
-            }
+        }
 
         return null;
     }
@@ -235,16 +232,17 @@ class ConnectorService
         } catch (ConnectionException | RequestException $e) {
             Log::error("License server timeout or request failed: " . $e->getMessage());
 
-    
+            // Server di licenza irraggiungibile: nessun token, ma non e' un
+            // errore fatale - i chiamanti (writeLicense/getLicenseFromFile)
+            // gestiscono gia' un accessToken nullo senza fare la richiesta.
+            return null;
         } catch (\Exception $e) {
             Log::error("Unexpected license validation error: " . $e->getMessage());
-        } catch (NotFoundHttpException $e) {
-                $license = $this->getLicenseFromFile();
-                Log::error("Unexpected license validation error: " . $e->getMessage());
-            }
+
+            return null;
+        }
 
         $data = $response->json();
-        //dd($data);
 
         if ($response->ok()) {
             if ($data['success'] === true) {

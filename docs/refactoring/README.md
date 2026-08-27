@@ -37,6 +37,7 @@ zero leggendo i diff di git.
 | [002](002-cbbackend-guard-fase-3.md) | Refactoring auth: primo file migrato al guard (Fase 3), fix logout | Auth | Completato | 2026-08-26 |
 | [003](003-licensing-hardening.md) | Licensing: env configurabile, registerLicense() sicuro, opzione "ho già una licenza", riattivazione controlli | Licensing | Completato | 2026-08-26 |
 | [004](004-licensing-envelope-success-data.md) | Licensing: adeguamento alla busta {success, data} del license server, fix import mancanti, fix precompilazione dominio | Licensing | Completato | 2026-08-26 |
+| [005](005-connectorservice-cleanup.md) | ConnectorService: cleanup, fix crash su login irraggiungibile, test di caratterizzazione | Licensing | Completato | 2026-08-27 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).

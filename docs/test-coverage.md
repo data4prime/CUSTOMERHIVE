@@ -95,6 +95,50 @@ da solo non invalida il guard Laravel — vedi
 |---|---|
 | `test_logout_invalida_sia_la_sessione_legacy_che_il_guard` | dopo il logout, sia `admin_id` è assente dalla sessione sia `Auth::guest()` è vero |
 
+## `tests/Unit/Services/ConnectorServiceTest.php`
+
+**Cosa copre**: `App\Services\ConnectorService` — il client verso il license
+server esterno (auth, scrittura/lettura del fallback locale `license.json`,
+validazione della licenza). Test di **caratterizzazione**, scritti come
+parte dell'intervento [005](refactoring/005-connectorservice-cleanup.md).
+Manipola direttamente `storage/app/license.json` (salvato/ripristinato in
+`setUp()`/`tearDown()`) perché la classe mischia `Storage::disk('license')`
+in scrittura e `file_get_contents()` diretto in lettura — `Storage::fake()`
+non avrebbe intercettato quest'ultima. Le chiamate HTTP verso il license
+server sono sempre fake (`Http::fake()`), nessuna richiesta di rete reale.
+
+| Test | Cosa verifica |
+|---|---|
+| `test_usa_il_token_in_cache_senza_chiamare_auth_login` | token già in cache → nessuna chiamata a `/auth/login`, usato come Bearer |
+| `test_senza_token_in_cache_chiama_auth_login_e_lo_mette_in_cache` | cache vuota → login, token restituito messo in cache |
+| `test_auth_login_con_risposta_di_fallimento_lancia_AuthException` | risposta non-ok dal login → `AuthException` con il messaggio del server |
+| `test_login_irraggiungibile_non_va_in_crash_ma_disattiva_il_token` | eccezione di rete su `/auth/login` → nessun crash (bug corretto in 005), token nullo gestito a valle |
+| `test_writeLicense_scrive_il_file_locale_quando_il_server_risponde_con_un_id` | risposta con `data.id` → `license.json` scritto |
+| `test_writeLicense_ritorna_false_se_la_risposta_non_ha_un_id` | risposta senza id → `false`, nessun file scritto |
+| `test_writeLicense_ritorna_false_se_la_richiesta_fallisce` | eccezione di rete → `false` |
+| `test_getLicense_legge_il_file_locale_se_presente` | file valido presente → contenuto restituito |
+| `test_getLicense_ritorna_false_se_il_file_contiene_json_non_valido` | file corrotto → `false` |
+| `test_getLicense_se_il_file_manca_prova_a_riscriverlo_dal_server` | file assente → auto-riscrittura riuscita dal server → restituito |
+| `test_getLicense_ritorna_false_se_il_file_manca_e_il_server_non_lo_ricrea` | file assente, auto-riscrittura fallita → `false` |
+| `test_validateLicense_true_se_licenza_attiva_e_path_dominio_combaciano` | caso base positivo |
+| `test_validateLicense_false_se_status_non_active` | status diverso da `active` → `false` |
+| `test_validateLicense_false_se_tenants_number_insufficiente` | quota tenant insufficiente → `false` |
+| `test_validateLicense_false_se_clients_number_insufficiente` | quota client insufficiente → `false` |
+| `test_validateLicense_false_se_path_esplicito_non_combacia` | `path` esplicito diverso → `false` |
+| `test_validateLicense_false_se_nessun_dominio_combacia` | dominio licenza diverso sia dall'esplicito (assente) sia da `env('APP_DOMAIN')` → `false` |
+| `test_validateLicense_domain_esplicito_che_non_combacia_ricade_su_env_app_domain` | **pinna un quirk non ovvio**: `$data['domain']` esplicito che non combacia NON fa fallire subito, ricade sul confronto con `env('APP_DOMAIN')` — vedi commento su `licenseMatchesDomain()` nel codice |
+| `test_validateLicense_false_e_ripulisce_la_riga_license_se_manca_il_file` | nessuna licenza valida → `false` **e** riga corrispondente cancellata da `DB::table('license')` |
+
+**Dipendenze/scelte note**:
+- La tabella `license` non aveva mai avuto una migration (creata
+  manualmente nei DB reali in un momento imprecisato) — aggiunta in questo
+  stesso intervento (`database/migrations/2026_08_27_000000_create_license_table.php`,
+  guardata con `Schema::hasTable()` per non toccare i DB dove esiste già).
+- **Non ancora eseguiti**: questi test sono stati scritti e verificati solo
+  con `php -l` (sintassi) e lettura manuale — non è stata lanciata la suite
+  PHPUnit (regola esplicita dell'utente, vedi memoria). Da confermare verdi
+  con `php artisan test --filter=ConnectorServiceTest` alla prima occasione.
+
 ## Helper di test condivisi
 
 - `tests/Concerns/SeedsCmsData.php` — trait con i metodi di seeding minimi
