@@ -132,3 +132,4 @@ trasformate in un intervento vero e proprio:
 - [`../login-e-licensing.md`](../login-e-licensing.md) — sistema di login e licensing attuale
 - [`../pre-push-checklist.md`](../pre-push-checklist.md) — cose da ripristinare/verificare prima di un push
 - [`../test-coverage.md`](../test-coverage.md) — catalogo dei test automatici esistenti
+- [`../ui-ux-annotazioni.md`](../ui-ux-annotazioni.md) — cose notate sull'interfaccia da tenere a mente per il rinnovo UI/UX
