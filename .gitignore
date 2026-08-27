@@ -3,6 +3,12 @@
 /storage/app/public/*
 /storage/logs/*
 /storage/storage
+# Il symlink (o il file, su ambienti dove non sopravvive come symlink vero -
+# vedi docs/refactoring/006-*) va sempre rigenerato con `php artisan
+# storage:link`, mai committato: "/*" da solo ignorava solo il contenuto,
+# non il symlink stesso, motivo per cui in passato ne e' finito uno tracciato
+# con dentro il path del server di staging invece che rigenerato in locale.
+/public/storage
 /public/storage/*
 /vendor
 /.idea

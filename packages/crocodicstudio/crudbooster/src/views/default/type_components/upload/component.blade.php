@@ -8,35 +8,13 @@
     <div class="{{$col_width?:'col-sm-10'}}">
         @if($value)
             <?php
-if (function_exists('checkHttpStatus') === false) {
-    /**
-     * Verifica lo stato HTTP di un URL
-     *
-     * @param string $url URL da verificare
-     * @return bool Restituisce true se lo stato HTTP è 200, altrimenti false
-     */
-    function checkHttpStatus($url) {
-
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_NOBODY, true); 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10); 
-        curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        if ($httpCode == 200) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-}
-            //if(Storage::exists($value) || file_exists($value)):
-            if(checkHttpStatus($value)):
+            // $value e' un path relativo alla public root (es. "/storage/uploads/..."),
+            // non un URL assoluto (vedi CRUDBooster::uploadFile()) - il controllo va
+            // fatto sul disco, non con una richiesta HTTP: oltre a essere piu' lento,
+            // un self-request non funziona quando l'host/porta visti dal browser
+            // differiscono da quelli raggiungibili dal server stesso (es. sviluppo
+            // locale via Docker con port mapping).
+            if(file_exists(public_path($value))):
             $url = asset($value);
             $ext = pathinfo($url, PATHINFO_EXTENSION);
             $images_type = array('jpg', 'png', 'gif', 'jpeg', 'bmp', 'tiff');

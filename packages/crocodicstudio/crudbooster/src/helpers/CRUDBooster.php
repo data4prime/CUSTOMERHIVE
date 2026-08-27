@@ -218,13 +218,13 @@ public static function isProfilePage() {
             if (Storage::putFileAs($file_path, $file, $filename)) {
                 self::resizeImage($file_path . '/' . $filename, $resize_width, $resize_height, $ext);
 
-                //return '/storage'.$file_path . '/' . $filename;
-                //return $file_path . '/' . $filename;
-                //get host
-                $host = $_SERVER['HTTP_HOST'];
-                $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
-                //dd($protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
-                return $protocol .'://'. $host . '/storage' . $file_path . '/' . $filename;
+                // Path relativo (asset-relative), non URL assoluto: chi lo mostra
+                // usa asset() per costruire l'URL sull'host/porta della richiesta
+                // corrente - un URL assoluto salvato qui si "congela" sull'host
+                // visto al momento dell'upload, rompendosi appena cambia dominio,
+                // protocollo o (come nello sviluppo locale via Docker) la porta
+                // vista dall'esterno differisce da quella interna al container.
+                return '/storage' . $file_path . '/' . $filename;
 
             } else {
                 return null;
