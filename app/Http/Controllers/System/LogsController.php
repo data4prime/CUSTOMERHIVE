@@ -16,12 +16,17 @@ class LogsController extends CBController
         $this->table = 'cms_logs';
         $this->primary_key = 'id';
         $this->title_field = "ipaddress";
-        $this->button_bulk_action = true;
+        // I log non si modificano ne' si eliminano - button_edit era gia'
+        // disattivato, aggiunto anche button_delete. button_bulk_action era
+        // usato solo per l'azione "elimina selezionati" (nessuna altra
+        // azione bulk definita in questo modulo), quindi disattivato anche
+        // lui - altrimenti l'eliminazione restava comunque possibile da li'.
+        $this->button_bulk_action = false;
         $this->button_export = false;
         $this->button_import = false;
         $this->button_add = false;
         $this->button_edit = false;
-        $this->button_delete = true;
+        $this->button_delete = false;
 
         $this->col = [];
         $this->col[] = ["label" => "Time Access", "name" => "created_at"];

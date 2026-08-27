@@ -177,6 +177,21 @@ class Cms_modulsSeeder extends Seeder
                 'controller' => 'QlikConfController',
                 'is_protected' => 1,
                 'is_active' => 1,
+            ],
+            [
+                // Mancava: senza questa riga AdminModuleHelperController non
+                // ha nessuna rotta (il routing dei moduli di sistema dipende
+                // interamente da una riga cms_moduls), e ModuleHelperSeeder
+                // (che cerca "Module Helpers" per nome per crearsi il proprio
+                // link di aiuto) non trova nulla - vedi docs/refactoring/README.md.
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'Module Helpers',
+                'icon' => 'fa fa-question-circle',
+                'path' => 'module_helpers',
+                'table_name' => 'module_helpers',
+                'controller' => 'AdminModuleHelperController',
+                'is_protected' => 1,
+                'is_active' => 1,
             ]
 
         ];

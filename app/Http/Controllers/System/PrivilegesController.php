@@ -44,7 +44,20 @@ class PrivilegesController extends CBController
 
         $this->form = [];
         $this->form[] = ["label" => "Name", "name" => "name", 'required' => true];
-        $this->form[] = ["label" => "Privilege", "name" => "superprivilege", 'required' => true];
+        // "superprivilege" non e' una colonna reale di cms_privileges (e' un
+        // campo virtuale, tradotto in is_superadmin/is_tenantadmin al
+        // salvataggio - vedi postAddSave()/postEditSave()): senza
+        // callback_php, la pagina di dettaglio generica (form_detail.blade.php,
+        // l'unica a leggere davvero $this->form qui - add/edit usano la vista
+        // su misura privileges.blade.php) lo mostrerebbe vuoto. Testo semplice
+        // (non l'HTML del badge usato nella colonna della lista): il
+        // componente "text" di dettaglio esegue l'escape di $value.
+        $this->form[] = [
+            "label" => "Privilege",
+            "name" => "superprivilege",
+            'required' => true,
+            'callback_php' => '($row->is_superadmin==1)? "Superadmin": (($row->is_tenantadmin==1)? "Tenantadmin": "Standard")',
+        ];
         $this->form[] = ["label" => "Theme Color", "name" => "theme_color", 'required' => true];
 
         // $this->alert[] = [
@@ -121,9 +134,6 @@ class PrivilegesController extends CBController
 
         //default dashboard for this role inserted
         DB::table('cms_menus_privileges')->insert(['id_cms_menus' => 1, 'id_cms_privileges' => $id]);
-
-        //set theme
-        Session::put('theme_color', $this->arr['theme_color']);
 
         $priv = Request::input("privileges");
         if ($priv) {

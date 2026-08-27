@@ -44,7 +44,9 @@ class AdminCmsUsersController extends CBController
 		/*$this->col[] = array("label" => "User directory", "name" => "user_directory");*/
 
 
-		$this->col[] = array("label" => "Expiry date", "name" => "data_scadenza", "callback_php" => "date('d/m/Y',strtotime(\$row->data_scadenza))");
+		// Senza il controllo su vuoto, strtotime(null) ritorna 0 e date() lo
+		// formatta come 01/01/1970 (epoca Unix) invece di non mostrare nulla.
+		$this->col[] = array("label" => "Expiry date", "name" => "data_scadenza", "callback_php" => "empty(\$row->data_scadenza) ? '' : date('d/m/Y',strtotime(\$row->data_scadenza))");
 		$this->col[] = array("label" => "Status", "name" => "status");
 		$this->col[] = array("label" => "Photo", "name" => "photo", "image" => 1);
 

@@ -28,6 +28,7 @@ use \crocodicstudio\crudbooster\helpers\ModuleHelper;
 //use ModuleHelper;
 use \crocodicstudio\crudbooster\controllers\ExportData;
 use \crocodicstudio\crudbooster\controllers\ImportData;
+use App\Http\Controllers\System\LogsController;
 
 class CBController extends Controller
 {

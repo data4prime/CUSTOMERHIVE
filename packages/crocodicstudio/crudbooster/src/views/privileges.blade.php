@@ -81,11 +81,6 @@
           @push('bottom')
           <script type="text/javascript">
             $(function () {
-              $("select[name=theme_color]").change(function () {
-                var n = $(this).val();
-                $("body").attr("class", n);
-              })
-
               $('#set_as_superadmin input').click(function () {
                 var n = $(this).val();
                 if (n == '1') {
