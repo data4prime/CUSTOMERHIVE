@@ -78,7 +78,19 @@ etichetta tradotta usata da chiave dati — vedi *Rischi e note*.
 7. **`email_sender` era ancora il default upstream** `support@crudbooster.com`:
    un dominio di terzi presentato come mittente configurato.
 
-8. **Varie**: import di `Illuminate\Support\Facades\Excel` e `...\PDF` (classi
+8. **Upload fallito indistinguibile da uno riuscito**. `Storage::putFileAs()`
+   ritorna `false` senza sollevare eccezioni (caso tipico: directory non
+   scrivibile dall'utente del web server). Con `$storeFile` falso, `$content`
+   restava `null` - un input file non compare in `Request::get()` - si arrivava
+   all'UPDATE che **azzerava il setting**, e la pagina mostrava comunque
+   "Your setting has been saved !". Emerso in modo concreto: un'immagine
+   caricata su "Login Background Image" risultava salvata senza esserlo.
+
+9. **Nessuna preview delle immagini**. Per i setting di tipo `upload_image` la
+   pagina mostrava solo un link "Download file", quindi non c'era modo di
+   vedere a colpo d'occhio cosa fosse stato caricato.
+
+10. **Varie**: import di `Illuminate\Support\Facades\Excel` e `...\PDF` (classi
    che non esistono in quel namespace); view morta `setting_.blade.php`; la
    blade eseguiva la SELECT dei setting **e** una UPDATE per riparare le label
    vuote durante il render di una GET; il nome del gruppo finiva negli URL senza
@@ -103,6 +115,16 @@ etichetta tradotta usata da chiave dati — vedi *Rischi e note*.
     metterle a `NULL`. Un input di testo svuotato arriva comunque come stringa
     vuota, quindi resta cancellabile;
   - per i campi `password`, valore vuoto significa "non modificare".
+- `postSaveSetting()`, upload fallito: la riga non viene toccata (il valore
+  precedente resta), viene scritto un `Log::error` col path, e l'utente riceve
+  un messaggio `warning` con l'elenco dei campi falliti invece del messaggio di
+  successo.
+- `setting.blade.php`, tipo `upload_image`: preview dell'immagine (thumbnail
+  alta max 120px, cliccabile con il lightbox già caricato da
+  `admin_template_plugins`). Se il valore è in tabella ma il file non è sul
+  disco, invece dell'immagine rotta compare un avviso con il path mancante e il
+  pulsante di cancellazione resta disponibile per ripulire il valore. Un vecchio
+  URL assoluto non è verificabile su disco, quindi viene mostrato senza check.
 - `hook_before_add()`: blocca con messaggio esplicito se il nome tecnico
   derivato dalla label esiste già.
 - `dataenum` di `content_input_type`: `upload_document` → `upload_file`,
@@ -199,6 +221,15 @@ localmente per assenza di licenza, quindi niente verifica via browser):
   `public/storage/uploads/...`. Poi `getDeleteFileSetting` da utente **non**
   superadmin → riga e file intatti; da superadmin → `content` a `NULL` **e**
   file rimosso dal disco (niente più orfani).
+- Ramo "upload fallito": riprodotta la condizione reale (directory del mese di
+  proprietà `root` mentre Apache gira come `www-data`; il solo `chmod` non
+  basta a simularla, perché Flysystem rimette i permessi di default sulla
+  directory prima di scrivere). Risultato: valore precedente conservato,
+  `Log::error` scritto, messaggio di warning all'utente.
+- Preview: il ramo `upload_image` estratto dal file reale e renderizzato con
+  `Blade::render()` nei quattro casi — file presente (thumbnail + download),
+  file mancante (avviso, nessuna immagine rotta), vecchio URL assoluto
+  (mostrato senza check), nessun valore (input file).
 - Stato del DB locale ripristinato dopo i test.
 
 ## Rischi e note

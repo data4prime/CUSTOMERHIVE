@@ -124,11 +124,36 @@
                                 @case('upload')
                                 @case('upload_image')
                                     @if ($value)
-                                        <p>
-                                            <a href="{{ asset($value) }}" target="_blank" title="{{ trans('crudbooster.button_download_file') }} {{ $s->label }}">
-                                                <i class="fa fa-download"></i> {{ trans('crudbooster.button_download_file') }} {{ $s->label }}
-                                            </a>
-                                        </p>
+                                        @php
+                                            // $value e' un path relativo alla public root (es.
+                                            // "/storage/uploads/...") oppure, su installazioni non ancora
+                                            // bonificate, un vecchio URL assoluto: solo nel primo caso si
+                                            // puo' verificare il file su disco. La verifica evita di
+                                            // mostrare un'immagine rotta quando il valore e' rimasto in
+                                            // tabella ma il file no.
+                                            $is_absolute_url = (bool) preg_match('~^https?://~i', $value);
+                                            $file_missing = ! $is_absolute_url && ! is_file(public_path($value));
+                                        @endphp
+
+                                        @if ($file_missing)
+                                            <p class="text-danger" style="margin-bottom: 5px">
+                                                <i class="fa fa-exclamation-triangle"></i>
+                                                File not found on the server: <code>{{ $value }}</code>
+                                            </p>
+                                        @else
+                                            <p style="margin-bottom: 5px">
+                                                <a href="{{ asset($value) }}" data-lightbox="roadtrip" title="{{ $s->label }}">
+                                                    <img src="{{ asset($value) }}" alt="{{ $s->label }}"
+                                                         style="max-height: 120px; max-width: 100%; padding: 3px; border: 1px solid #ddd; background: #fff" />
+                                                </a>
+                                            </p>
+                                            <p>
+                                                <a href="{{ asset($value) }}" target="_blank" title="{{ trans('crudbooster.button_download_file') }} {{ $s->label }}">
+                                                    <i class="fa fa-download"></i> {{ trans('crudbooster.button_download_file') }} {{ $s->label }}
+                                                </a>
+                                            </p>
+                                        @endif
+
                                         <input type="hidden" name="{{ $s->name }}" value="{{ $value }}" />
                                         <div class="pull-right">
                                             <a class="btn btn-danger btn-sm" onclick="if (confirm('{{ trans('crudbooster.delete_title_confirm') }}')) window.location.href='{{ CRUDBooster::mainpath('delete-file-setting?id=' . $s->id) }}';" title="Click here to delete">

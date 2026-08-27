@@ -7,6 +7,7 @@ use crocodicstudio\crudbooster\controllers\CBController;
 use CRUDBooster;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -151,6 +152,7 @@ class SettingsController extends CBController
 
         $group = Request::get('group_setting');
         $setting = DB::table('cms_settings')->where('group_setting', $group)->get();
+        $upload_failed = [];
         foreach ($setting as $set) {
 
             $name = $set->name;
@@ -198,6 +200,21 @@ class SettingsController extends CBController
                     // o porta. Stessa convenzione di CRUDBooster::uploadFile()
                     // (vedi docs/refactoring/007-upload-path-relativo.md).
                     $content = '/storage/' . $directory . '/' . $filename;
+                } else {
+                    // Storage::putFileAs ritorna false SENZA eccezione (caso
+                    // tipico: directory non scrivibile dall'utente del web
+                    // server). Prima si finiva nell'UPDATE con $content a null,
+                    // quindi il setting veniva azzerato e la pagina mostrava
+                    // comunque "Your setting has been saved !": un upload
+                    // fallito era indistinguibile da uno riuscito.
+                    Log::error(
+                        'Settings: scrittura del file per "' . $name . '" fallita in '
+                        . storage_path('app/public/' . $directory)
+                        . ' - controllare i permessi di scrittura.'
+                    );
+                    $upload_failed[] = $set->label ?: $name;
+
+                    continue;
                 }
             }
 
@@ -206,6 +223,15 @@ class SettingsController extends CBController
             DB::table('cms_settings')->where('name', $set->name)->update(['content' => $content]);
 
             Cache::forget('setting_' . $set->name);
+        }
+
+        if ($upload_failed) {
+            return redirect()->back()->with([
+                'message' => 'Upload failed for: ' . implode(', ', $upload_failed)
+                    . '. The previous value has been kept. Check the write permissions on '
+                    . 'storage/app/public/uploads (details in the application log).',
+                'message_type' => 'warning',
+            ]);
         }
 
         return redirect()->back()->with(['message' => 'Your setting has been saved !', 'message_type' => 'success']);
