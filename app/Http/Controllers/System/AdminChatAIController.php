@@ -13,6 +13,7 @@ use GroupHelper;
 use Illuminate\Support\Facades\Route;
 
 use crocodicstudio\crudbooster\helpers\ChatAIHelper;
+use crocodicstudio\crudbooster\helpers\LicenseHelper;
 
 use App\ChatAIConf;
 use App\ItemsAllowed;
@@ -101,8 +102,11 @@ class AdminChatAIController extends CBController
         */
 		$this->addaction = array();
 		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('content/[id]'), 'icon' => 'fa fa-search', 'color' => 'info', 'title' => 'View item'];
-		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('access/[id]'), 'icon' => 'fa fa-users', 'color' => 'info', 'title' => 'Set group'];
-		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Set tenant'];
+		//modulo interamente ChatAI: senza il modulo in licenza niente pulsanti
+		if (LicenseHelper::isActiveChatAI()) {
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('access/[id]'), 'icon' => 'fa fa-users', 'color' => 'info', 'title' => 'Set group'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Set tenant'];
+		}
 
 
 		/*

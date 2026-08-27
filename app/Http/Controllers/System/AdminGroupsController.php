@@ -13,6 +13,7 @@ use \App\Group;
 use \App\GroupTenants;
 use \crocodicstudio\crudbooster\helpers\UserHelper;
 use \crocodicstudio\crudbooster\helpers\MyHelper;
+use \crocodicstudio\crudbooster\helpers\LicenseHelper;
 
 class AdminGroupsController extends CBController
 {
@@ -91,7 +92,11 @@ class AdminGroupsController extends CBController
         */
 		$this->addaction = array();
 		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'fa fa-user', 'color' => 'info', 'title' => 'Members'];
-		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'fa fa-shield', 'color' => 'info', 'title' => 'Items'];
+		//gli "items" del gruppo sono i qlik_items: senza il modulo Qlik in
+		//licenza la pagina non ha nulla da gestire, quindi si nasconde il pulsante
+		if (LicenseHelper::isActiveQlik()) {
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'fa fa-shield', 'color' => 'info', 'title' => 'Items'];
+		}
 		//solo superadmin gestisce i tenant
 		if (CRUDBooster::isSuperadmin()) {
 			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'info', 'title' => 'Tenants'];
@@ -458,6 +463,12 @@ class AdminGroupsController extends CBController
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
+		//gli allowed items sono qlik_items: senza il modulo Qlik in licenza
+		//non c'e' nulla da gestire, quindi l'endpoint e' chiuso anche via URL diretto
+		if (!LicenseHelper::isActiveQlik()) {
+			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+		}
+
 		$data = [];
 		$data['items'] = DB::table('items_allowed')
 			->where('items_allowed.group_id', $group_id)
@@ -494,6 +505,13 @@ class AdminGroupsController extends CBController
 		if (!CRUDBooster::isUpdate() && $this->global_privilege == FALSE || $this->button_edit == FALSE) {
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
+
+		//gli allowed items sono qlik_items: senza il modulo Qlik in licenza
+		//non c'e' nulla da gestire, quindi l'endpoint e' chiuso anche via URL diretto
+		if (!LicenseHelper::isActiveQlik()) {
+			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+		}
+
 		$item_id = $_POST['title'];
 		$return_url = $_POST['return_url'];
 		$ref_mainpath = $_POST['ref_mainpath'];
@@ -526,6 +544,12 @@ class AdminGroupsController extends CBController
 		//check auth update su groups
 		//TODO creaiamo permesso specifico da autorizzare e controllare per group membership?
 		if (!CRUDBooster::isUpdate() && $this->global_privilege == FALSE || $this->button_edit == FALSE) {
+			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+		}
+
+		//gli allowed items sono qlik_items: senza il modulo Qlik in licenza
+		//non c'e' nulla da gestire, quindi l'endpoint e' chiuso anche via URL diretto
+		if (!LicenseHelper::isActiveQlik()) {
 			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
