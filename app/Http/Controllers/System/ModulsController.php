@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Excel;
 use Illuminate\Support\Facades\PDF;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
-use crocodicstudio\crudbooster\fonts\Fontawesome;
+use App\Helpers\Fontawesome;
 // #RAMA
 use ModuleHelper;
 use UserHelper;

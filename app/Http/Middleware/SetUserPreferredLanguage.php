@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
-use crocodicstudio\crudbooster\helpers\CRUDBooster;
+use App\Helpers\CRUDBooster;
 
 class SetUserPreferredLanguage
 {
