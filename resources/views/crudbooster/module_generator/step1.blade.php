@@ -16,6 +16,30 @@
             })
 
         })
+
+        function formatIcon(icon) {
+            var originalOption = icon.element;
+            if (!originalOption || !$(originalOption).val()) {
+                return icon.text;
+            }
+            var iconClass = $(originalOption).val();
+            var label = $(originalOption).text();
+            return $('<span><i class="' + iconClass + '" style="width:18px;display:inline-block;text-align:center;margin-right:6px;"></i>' + label + '</span>');
+        }
+
+        // il campo #icon va inizializzato DOPO lo script generico
+        // $('.select2').select2() di module_generator/template.blade.php:
+        // lo span che select2 crea per contenere il campo ha lui stesso
+        // classe "select2", quindi se questa init girasse prima verrebbe
+        // ripreso e re-inizializzato dallo script generico, rompendo il
+        // widget (campo che appare vuoto).
+        setTimeout(function () {
+            $('#icon').select2({
+                width: "100%",
+                templateResult: formatIcon,
+                templateSelection: formatIcon
+            });
+        }, 0);
     })
 </script>
 @endpush
@@ -92,8 +116,8 @@
             <div class="row">
                 <label for="colFormLabelLg" class="col-sm-2 col-form-label">Icon</label>
                 <div class="col-sm-10">
-                    
-                <select name="icon" id="icon" required class="select2 form-control">
+
+                <select name="icon" id="icon" required class="select2-icon form-control">
                     @foreach($fontawesome as $f)
                     <option {{(isset($row->icon) && $row->icon == 'fa fa-'.$f)?"selected":""}} value="fa
                         fa-{{$f}}">{{$f}}</option>
