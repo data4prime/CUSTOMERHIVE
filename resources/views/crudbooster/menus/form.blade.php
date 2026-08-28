@@ -1,4 +1,44 @@
 @extends('crudbooster::admin_template')
+
+@push('bottom')
+<script type="text/javascript">
+    $(function () {
+        var colorSwatch = {
+            'normal': '#444',
+            'red': '#dd4b39',
+            'green': '#00a65a',
+            'aqua': '#00c0ef',
+            'light-blue': '#3c8dbc',
+            'yellow': '#f39c12',
+            'muted': '#777'
+        };
+
+        function formatColor(option) {
+            var value = option.id || (option.element && option.element.value);
+            if (!value) {
+                return option.text;
+            }
+            var swatchColor = colorSwatch[value] || value;
+            return $('<span><span style="display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:middle;background:' + swatchColor + ';"></span>' + option.text + '</span>');
+        }
+
+        // Il campo Color usa il componente select2 generico condiviso da
+        // tutto l'admin (gia' inizializzato con $('#color').select2() senza
+        // template): questa init va fatta DOPO, altrimenti lo span che
+        // select2 crea per contenerlo verrebbe ripreso e reinizializzato da
+        // quella generica, rompendo il widget (stesso bug del picker icone
+        // del Module Generator - campo che appare vuoto).
+        setTimeout(function () {
+            $('#color').select2({
+                width: '100%',
+                templateResult: formatColor,
+                templateSelection: formatColor
+            });
+        }, 0);
+    })
+</script>
+@endpush
+
 @section('content')
 <div>
 

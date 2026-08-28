@@ -57,26 +57,12 @@
 </style>
 @endpush
 
-@push('bottom')
-<script type="text/javascript">
-    $(function () {
-        function format(icon) {
-            var originalOption = icon.element;
-            var label = $(originalOption).text();
-            var val = $(originalOption).val();
-            if (!val) return label;
-            var $resp = $('<span><i style="margin-top:5px" class="pull-right ' + $(originalOption).val() + '"></i> ' + $(originalOption).data('label') + '</span>');
-            return $resp;
-        }
-
-        $('#list-icon').select2({
-            width: "100%",
-            templateResult: format,
-            templateSelection: format
-        });
-    })
-</script>
-@endpush
+{{-- L'init select2 con preview icona per #list-icon e' ora centralizzata in
+     resources/views/crudbooster/components/list_icon.blade.php, incluso in
+     ogni punto (qui e nel form add/edit standard) dove questo select viene
+     stampato: farla anche qui duplicherebbe l'init sullo stesso elemento
+     (stesso bug gia' visto nel picker icone del Module Generator: doppia
+     init -> campo che appare vuoto). --}}
 
 @push('bottom')
 <script src='{{asset("vendor/crudbooster/assets/jquery-sortable-min.js")}}'></script>

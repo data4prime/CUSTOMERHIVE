@@ -6,3 +6,25 @@
     </option>
     @endforeach
 </select>
+
+@push('bottom')
+<script type="text/javascript">
+    $(function () {
+        function formatIcon(icon) {
+            var originalOption = icon.element;
+            if (!originalOption || !$(originalOption).val()) {
+                return icon.text;
+            }
+            var iconClass = $(originalOption).val();
+            var label = $(originalOption).text();
+            return $('<span><i class="' + iconClass + '" style="width:18px;display:inline-block;text-align:center;margin-right:6px;"></i>' + label + '</span>');
+        }
+
+        $('#list-icon').select2({
+            width: '100%',
+            templateResult: formatIcon,
+            templateSelection: formatIcon
+        });
+    })
+</script>
+@endpush
