@@ -1,6 +1,6 @@
 <?php
 
-//DB 
+//DB
 use Illuminate\Support\Facades\DB;
 
 /* ROUTER FOR API GENERATOR */
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 // routabili di per se'.
 $namespace = 'App\Http\Controllers\System';
 
-Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\CBAuthAPI'], 'namespace' => 'App\Http\Controllers'], function () {
+Route::group(['middleware' => ['api', '\App\Http\Middleware\CBAuthAPI'], 'namespace' => 'App\Http\Controllers'], function () {
     //Router for custom api defeault
 
     //$apis = DB::table('cms_apicustom')->get();
@@ -18,7 +18,7 @@ Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\C
     /*foreach($apis as $k => $v) {
         if (isset($v->permalink)) {
             Route::any('api/'.$v->permalink, $v->controller.'@execute_api');
-        } 
+        }
     }*/
 
 
@@ -47,7 +47,7 @@ Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\C
             $permalink = $controller->permalink;
         }
 
-        
+
         $names = array_filter(preg_split('/(?=[A-Z])/', str_replace('Controller', '', $v)));
 
         $names = strtolower(implode('_', $names));
@@ -66,7 +66,7 @@ Route::group(['middleware' => ['api', '\crocodicstudio\crudbooster\middlewares\C
             } /* else {
                 Route::any('api/'.$names, $v.'@execute_api');
             }*/
-            
+
         }
     }
 });
@@ -99,7 +99,7 @@ Route::group(['middleware' => ['web'], 'prefix' => config('crudbooster.ADMIN_PAT
 
 // ROUTER FOR OWN CONTROLLER FROM CB
 Route::group([
-    'middleware' => ['web', '\crocodicstudio\crudbooster\middlewares\CBBackend'],
+    'middleware' => ['web', '\App\Http\Middleware\CBBackend'],
     'prefix' => config('crudbooster.ADMIN_PATH'),
     'namespace' => 'App\Http\Controllers',
 ], function () use ($namespace) {
@@ -121,7 +121,7 @@ Route::group([
 
 /* ROUTER FOR BACKEND CRUDBOOSTER */
 Route::group([
-    'middleware' => ['web', '\crocodicstudio\crudbooster\middlewares\CBBackend'],
+    'middleware' => ['web', '\App\Http\Middleware\CBBackend'],
     'prefix' => config('crudbooster.ADMIN_PATH'),
     'namespace' => $namespace,
 ], function () {
@@ -158,5 +158,3 @@ Route::group([
 
     }
 });
-$controllers_base_path = '\crocodicstudio\crudbooster\controllers\\';
-

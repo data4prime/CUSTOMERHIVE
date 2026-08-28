@@ -39,6 +39,8 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
+        $this->mapCrudboosterRoutes();
+
         //
     }
 
@@ -75,5 +77,22 @@ class RouteServiceProvider extends ServiceProvider
         ], function ($router) {
             require base_path('routes/api.php');
         });
+    }
+
+    /**
+     * Define the CRUDBooster routes for the application.
+     *
+     * Non avvolto in un Route::group() esterno: ogni blocco in
+     * routes/crudbooster.php definisce già i propri middleware/namespace/
+     * prefix (spostato da packages/crocodicstudio/crudbooster/src/routes.php,
+     * vedi docs/refactoring/031). Registrato per ultimo per preservare
+     * l'ordine di caricamento di prima (CRUDBoosterServiceProvider::boot()
+     * girava dopo RouteServiceProvider::boot()).
+     *
+     * @return void
+     */
+    protected function mapCrudboosterRoutes()
+    {
+        require base_path('routes/crudbooster.php');
     }
 }
