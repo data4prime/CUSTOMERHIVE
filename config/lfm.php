@@ -12,7 +12,7 @@ return [
 
     // Middlewares which should be applied to all package routes.
     // For laravel 5.1 and before, remove 'web' from the array.
-    'middlewares' => ['web', '\crocodicstudio\crudbooster\middlewares\CBBackend'],
+    'middlewares' => ['web', '\App\Http\Middleware\CBBackend'],
 
     // The url to this package. Change it if necessary.
     'prefix' => 'laravel-filemanager',
