@@ -36,6 +36,14 @@ class CBBackend
             return redirect($url);
         }
         if($request->url()==CRUDBooster::adminPath('')){
+            // Se arriviamo qui a seguito di un CRUDBooster::redirect(adminPath(), $msg)
+            // (es. azione bloccata/accesso negato), il redirect verso la
+            // dashboard qui sotto sostituisce la risposta e il messaggio flash
+            // andrebbe perso prima di essere mai mostrato: lo si rimanda
+            // avanti di una richiesta cosi' compare sulla pagina di dashboard.
+            if ($request->session()->has('message')) {
+                $request->session()->reflash();
+            }
             $menus=DB::table('cms_menus')->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '".CRUDBooster::myPrivilegeId()."')")->where('is_dashboard', 1)->where('is_active', 1)->first();
             if ($menus) {
                 if ($menus->type == 'Statistic') {

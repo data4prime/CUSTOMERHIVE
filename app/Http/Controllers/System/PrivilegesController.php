@@ -300,15 +300,17 @@ class PrivilegesController extends CBController
                 'name' => $row->{$this->title_field},
                 'module' => CRUDBooster::getCurrentModule()->name,
             ]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
         }
-        if ($id < 4) {
-            //can't delete default roles
+        if ($row->is_superadmin == 1) {
+            //non si puo' cancellare il ruolo superadmin (l'unico seedato di
+            //default - vedi CmsPrivilegesSeeder - senza questo controllo non
+            //resterebbe piu' nessun privilegio con accesso completo)
             CRUDBooster::insertLog(trans("crudbooster.log_try_delete", [
                 'name' => $row->{$this->title_field},
                 'module' => CRUDBooster::getCurrentModule()->name,
             ]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.cant_delete_role'));
+            CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.cant_delete_role'));
         }
 
 
