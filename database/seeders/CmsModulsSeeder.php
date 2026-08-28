@@ -192,6 +192,21 @@ class Cms_modulsSeeder extends Seeder
                 'controller' => 'AdminModuleHelperController',
                 'is_protected' => 1,
                 'is_active' => 1,
+            ],
+            [
+                // Stesso problema di "Module Helpers" sopra: il link nella
+                // sidebar (resources/views/crudbooster/sidebar.blade.php,
+                // sotto Statistic Builder) esiste gia', ma senza questa riga
+                // DashboardLayoutController non ha nessuna rotta -> 404 su
+                // /admin/dashboard_layouts.
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => trans('crudbooster.Dashboard_Layouts'),
+                'icon' => 'fa fa-th-large',
+                'path' => 'dashboard_layouts',
+                'table_name' => 'dashboard_layouts',
+                'controller' => 'DashboardLayoutController',
+                'is_protected' => 1,
+                'is_active' => 1,
             ]
 
         ];
