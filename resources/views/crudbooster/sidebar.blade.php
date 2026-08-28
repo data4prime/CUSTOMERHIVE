@@ -286,7 +286,7 @@
           <ul  class='treeview-menu'>
 <li data-collapse="3" class='treeview'>
           <a href='{{url("admin/dashboard_layouts")}}'>
-            <img class="menu qlik_logo" src=/images/apps.png />
+            <img class="menu qlik_logo" style="filter: brightness(0) invert(1);" src=/images/apps.png />
             <span>{{ trans('crudbooster.Dashboard_Layouts') }}</span> <i class="fa fa-angle-{{ trans("
               crudbooster.right") }} pull-{{ trans("crudbooster.right") }}"></i>
           </a>
