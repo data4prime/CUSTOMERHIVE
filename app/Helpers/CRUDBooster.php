@@ -426,6 +426,8 @@ public static function isProfilePage() {
 
     public static function redirect($to, $message, $type = 'warning')
     {
+        $to = self::sanitizeRedirectUrl($to);
+
         if (Request::ajax()) {
             $resp = response()
                 ->json(['message' => $message, 'message_type' => $type, 'redirect_url' => $to])
@@ -437,6 +439,33 @@ public static function isProfilePage() {
             $resp->send();
             exit;
         }
+    }
+
+    /**
+     * $to arriva spesso da input utente (es. return_url in query string).
+     * Senza controllo, redirect($to, ...) è un open redirect: un link con
+     * return_url che punta a un host esterno manderebbe un admin autenticato,
+     * dopo un salvataggio riuscito, su un sito arbitrario (utile per phishing).
+     * Ammessi solo path relativi (che non iniziano con "//", altrimenti sono
+     * URL protocol-relative verso un altro host) o URL assoluti con lo stesso
+     * host della richiesta corrente; altrimenti si torna alla dashboard admin.
+     */
+    protected static function sanitizeRedirectUrl($to)
+    {
+        if (!$to) {
+            return self::adminPath();
+        }
+
+        if (preg_match('#^/(?!/)#', $to)) {
+            return $to;
+        }
+
+        $host = parse_url($to, PHP_URL_HOST);
+        if ($host && $host === Request::getHost()) {
+            return $to;
+        }
+
+        return self::adminPath();
     }
 
     public static function isView()
