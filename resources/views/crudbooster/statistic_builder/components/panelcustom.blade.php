@@ -17,13 +17,46 @@
         </div>
     </div>
 @elseif($command=='configuration')
-@php 
+@php
+    $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
 
-$routeCollection = Illuminate\Support\Facades\Route::getRoutes();
+    // Nome leggibile del modulo (lo stesso mostrato in sidebar/menu) per
+    // ogni controller, cosi' la select mostra "Users Management - Lista"
+    // invece del nome tecnico "AdminCmsUsersController@getIndex".
+    $moduleNames = Illuminate\Support\Facades\DB::table('cms_moduls')->pluck('name', 'controller');
 
+    $actionLabels = [
+        'getIndex' => 'Lista',
+        'getAdd' => 'Aggiungi',
+    ];
 
+    // Costruiamo prima l'elenco completo (valore + etichetta), poi lo
+    // ordiniamo alfabeticamente per etichetta: con decine di moduli
+    // l'ordine "come li trova il router" era illeggibile.
+    $moduleOptions = [];
+    foreach ($routeCollection as $route) {
+        $action = $route->getAction('controller');
+        if (!$action) {
+            continue;
+        }
 
+        $controllerAndMethod = class_basename($action);
+        $parts = explode('@', $controllerAndMethod);
+        $controllerName = $parts[0];
+        $method = $parts[1] ?? '';
 
+        if ($method !== 'getIndex' && $method !== 'getAdd') {
+            continue;
+        }
+
+        $moduleLabel = $moduleNames[$controllerName] ?? trim(preg_replace('/(?<!^)([A-Z])/', ' $1', preg_replace('/^Admin|Controller$/', '', $controllerName)));
+
+        $moduleOptions[] = [
+            'value' => $route->getName(),
+            'label' => $moduleLabel . ' - ' . ($actionLabels[$method] ?? $method),
+        ];
+    }
+    usort($moduleOptions, fn ($a, $b) => strcasecmp($a['label'], $b['label']));
 @endphp
     <form method='post'>
         <input type='hidden' name='_token' value='{{csrf_token()}}'/>
@@ -42,28 +75,12 @@ $routeCollection = Illuminate\Support\Facades\Route::getRoutes();
         </div>-->
 
         <div class="mb-3 row">
-            <label>Route</label>
+            <label>Modulo da mostrare</label>
             <select name='config[value]' class='form-control'>
-@foreach($routeCollection as $key => $value)
-    @php
-        $action = $value->getAction('controller');
-        $controller = class_basename($action);
-        $method = explode('@', $controller);
-        if (isset($method[1])) {
-            $method = $method[1];
-        } else {
-            $method = '';
-        }
-
-    @endphp
-
-
-        @if ($method == 'getIndex' || $method == 'getAdd')
-            <option value="{{ $value->getName() }}" {{ @$config->route == $value->getName() ? 'selected' : '' }}>
-                {{ $controller }}
+@foreach($moduleOptions as $opt)
+            <option value="{{ $opt['value'] }}" {{ @$config->value == $opt['value'] ? 'selected' : '' }}>
+                {{ $opt['label'] }}
             </option>
-        @endif
-
 @endforeach
 
 
