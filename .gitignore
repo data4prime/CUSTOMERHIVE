@@ -30,3 +30,7 @@ app/Http/Controllers/*
 !app/Http/Controllers/System/**
 
 /.tokensave
+
+# Script locali di supporto (es. seed di dati di test), non fanno parte
+# del progetto - restano solo sulla macchina di sviluppo.
+/local-scripts
