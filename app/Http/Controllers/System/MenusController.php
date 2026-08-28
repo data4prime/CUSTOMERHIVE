@@ -787,7 +787,13 @@ class MenusController extends CBController
       $stat = CRUDBooster::first('cms_statistics', ['id' => $postdata['statistic_slug']]);
 
       $stat = isset($stat) ? $stat : null;
-      $postdata['path'] = 'statistic_builder/show/' . (isset($stat) && $stat != null) ? $stat->slug : '';
+      // Precedenza operatori: senza le parentesi attorno al ternario, '.'
+      // lega piu' stretto di '?:', quindi l'espressione a sinistra e'
+      // SEMPRE una stringa non vuota (quindi truthy) e il ramo "true" del
+      // ternario (solo $stat->slug, senza il prefisso) viene scelto
+      // sempre - il prefisso 'statistic_builder/show/' spariva ad ogni
+      // modifica del menu, rompendo il link (vedi cms_menus corrotti).
+      $postdata['path'] = 'statistic_builder/show/' . ((isset($stat) && $stat != null) ? $stat->slug : '');
     } elseif ($postdata['type'] == 'Module') {
       $stat = CRUDBooster::first('cms_moduls', ['id' => $postdata['module_slug']]);
       $postdata['path'] = $stat->path;

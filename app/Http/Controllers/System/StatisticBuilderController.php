@@ -84,10 +84,14 @@ class StatisticBuilderController extends CBController
         }
         $row = CRUDBooster::first($this->table, ['slug' => $m->path]);
 
+        if (!$row) {
+            CRUDBooster::redirect(CRUDBooster::adminPath(), 'Dashboard non trovata: il link non è più valido (probabilmente la dashboard è stata rinominata o eliminata).', 'warning');
+        }
+
         $id_cms_statistics = $row->id;
         $page_title = $row->name;
 
-        
+
 
         return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics'));
     }
@@ -159,6 +163,11 @@ class StatisticBuilderController extends CBController
 
         $slug = str_replace("statistic_builder/show/", "", $menus->path);
         $row = CRUDBooster::first($this->table, ['slug' => $slug]);
+
+        if (!$row) {
+            CRUDBooster::redirect(CRUDBooster::adminPath(), 'Dashboard non trovata: il link del menu non è più valido (probabilmente la dashboard è stata rinominata o eliminata).', 'warning');
+        }
+
         $id_cms_statistics = isset($row->id) ? $row->id : 0;
         $page_title = isset($row->name) ? $row->name : 'Dashboard';
 
@@ -173,6 +182,11 @@ class StatisticBuilderController extends CBController
 
         $this->cbLoader();
         $row = CRUDBooster::first($this->table, ['slug' => $slug]);
+
+        if (!$row) {
+            CRUDBooster::redirect(CRUDBooster::adminPath(), 'Dashboard non trovata: il link non è più valido (probabilmente la dashboard è stata rinominata o eliminata).', 'warning');
+        }
+
         $id_cms_statistics = $row->id;
         $page_title = $row->name;
 
@@ -394,9 +408,13 @@ class StatisticBuilderController extends CBController
         $arr['slug'] = str_slug($arr['name']);
     }
 
+    // Lo slug NON va rigenerato qui: viene usato come permalink pubblico
+    // (menu, /statistic_builder/show/{slug}, link condivisi). Se lo
+    // rigenerassimo dal nuovo nome ad ogni modifica, rinominare una
+    // dashboard già pubblicata romperebbe tutti i link esistenti verso il
+    // vecchio slug (vedi getShow()/getDashboard()).
     public function hook_before_edit(&$postdata, $id)
     {
-        $postdata['slug'] = str_slug($postdata['name']);
     }
 
     public function mashup($componentID) {
