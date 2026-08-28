@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use \crocodicstudio\crudbooster\helpers\UserHelper;
+use \App\Helpers\UserHelper;
 
 class Menu extends Model
 {

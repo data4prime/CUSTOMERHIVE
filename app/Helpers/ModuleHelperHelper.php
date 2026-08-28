@@ -1,6 +1,6 @@
 <?php
 
-namespace crocodicstudio\crudbooster\helpers;
+namespace App\Helpers;
 
 use Session;
 use Request;

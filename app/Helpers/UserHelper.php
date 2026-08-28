@@ -1,6 +1,6 @@
 <?php
 
-namespace crocodicstudio\crudbooster\helpers;
+namespace App\Helpers;
 
 use \App\User;
 use \App\Group;
@@ -8,6 +8,8 @@ use \App\Tenant;
 use \App\UsersGroup;
 use \App\Role;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\MyHelper;
+use App\Helpers\CRUDBooster;
 
 class UserHelper
 {

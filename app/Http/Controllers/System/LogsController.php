@@ -6,7 +6,7 @@ use crocodicstudio\crudbooster\controllers\CBController;
 
 use Illuminate\Support\Facades\Excel;
 use Illuminate\Support\Facades\PDF;
-use \crocodicstudio\crudbooster\helpers\UserHelper;
+use \App\Helpers\UserHelper;
 use \App\User;
 
 class LogsController extends CBController

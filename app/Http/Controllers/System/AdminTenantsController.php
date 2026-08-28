@@ -14,7 +14,7 @@ use \App\GroupTenants;
 use Illuminate\Support\Facades\Route;
 use TenantHelper;
 use MyHelper;
-use crocodicstudio\crudbooster\helpers\LicenseHelper;
+use App\Helpers\LicenseHelper;
 
 class AdminTenantsController extends CBController
 {

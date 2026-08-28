@@ -15,14 +15,14 @@ use App\QlikItem;
 use App\ItemsAllowed;
 use App\TenantsAllowed;
 use App\Menu;
-use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
+use App\Helpers\QlikHelper as HelpersQlikHelper;
 use MyHelper;
 
 //Log
 use Illuminate\Support\Facades\Log;
 
-use crocodicstudio\crudbooster\helpers\ModuleHelperHelper;
-use crocodicstudio\crudbooster\helpers\LicenseHelper;
+use App\Helpers\ModuleHelperHelper;
+use App\Helpers\LicenseHelper;
 
 class AdminQlikItemsController extends CBController
 {

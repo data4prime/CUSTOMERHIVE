@@ -1,5 +1,5 @@
 <?php
-namespace crocodicstudio\crudbooster\helpers;
+namespace App\Helpers;
 
 use Session;
 use Request;
@@ -9,6 +9,7 @@ use DB;
 use Route;
 use Validator;
 use \App\UsersGroup;
+use App\Helpers\CRUDBooster;
 
 class GroupHelper  {
 

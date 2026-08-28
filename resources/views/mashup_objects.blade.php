@@ -1,9 +1,9 @@
 
 @php 
 
-use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
+use App\Helpers\QlikHelper as HelpersQlikHelper;
 use App\Http\Controllers\System\QlikAppController;
-use crocodicstudio\crudbooster\helpers\CRUDBooster;
+use App\Helpers\CRUDBooster;
 
 $conf = QlikAppController::getConf($qlik_conf);
 //generate a random string

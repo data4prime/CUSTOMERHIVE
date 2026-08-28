@@ -9,17 +9,17 @@ use Request;
 //use DB;
 use Illuminate\Support\Facades\DB;
 //use CRUDbooster;
-use \crocodicstudio\crudbooster\helpers\CRUDBooster;
+use \App\Helpers\CRUDBooster;
 use Illuminate\Support\Facades\Route;
 use \App\Tenant;
 use \App\Group;
 use \App\UsersGroup;
-use \crocodicstudio\crudbooster\helpers\GroupHelper;
-use \crocodicstudio\crudbooster\helpers\UserHelper;
-use \crocodicstudio\crudbooster\helpers\MyHelper;
-use \crocodicstudio\crudbooster\helpers\ModuleHelper;
-use crocodicstudio\crudbooster\helpers\QlikHelper;
-use crocodicstudio\crudbooster\helpers\LicenseHelper;
+use \App\Helpers\GroupHelper;
+use \App\Helpers\UserHelper;
+use \App\Helpers\MyHelper;
+use \App\Helpers\ModuleHelper;
+use App\Helpers\QlikHelper;
+use App\Helpers\LicenseHelper;
 
 class AdminCmsUsersController extends CBController
 {

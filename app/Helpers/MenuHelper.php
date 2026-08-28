@@ -1,10 +1,12 @@
 <?php
 
-namespace crocodicstudio\crudbooster\helpers;
+namespace App\Helpers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use App\Menu;
+use App\Helpers\CRUDBooster;
+use App\Helpers\UserHelper;
 
 class MenuHelper
 {
@@ -247,7 +249,7 @@ class MenuHelper
       $result .= "<i class='$classes'></i>";
     }
 
-    
+
     $result .= "<span>$menu->name</span>";
     if (!empty($menu->children) and count($menu->children) > 0) {
       $result .= "<i class='fa fa-angle-" . trans("crudbooster.right") . " pull-" . trans("crudbooster.right") . "'></i>";

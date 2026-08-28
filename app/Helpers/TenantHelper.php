@@ -1,11 +1,13 @@
 <?php
-namespace crocodicstudio\crudbooster\helpers;
+namespace App\Helpers;
 
 use \App\Tenant;
 use \App\Modules;
 use \App\ModuleTenants;
 use \App\Role;
 use DB;
+use App\Helpers\CRUDBooster;
+use App\Helpers\ModuleHelper;
 
 class TenantHelper  {
 

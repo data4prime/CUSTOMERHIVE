@@ -5,8 +5,8 @@ namespace App\Http\Controllers\System;
 use crocodicstudio\crudbooster\controllers\CBController;
 
 use CRUDBooster;
-use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
-use crocodicstudio\crudbooster\helpers\LicenseHelper;
+use App\Helpers\QlikHelper as HelpersQlikHelper;
+use App\Helpers\LicenseHelper;
 
 use App\Http\Controllers\System\QlikAppController;
 use Illuminate\Support\Facades\DB;

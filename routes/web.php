@@ -11,7 +11,7 @@
 |vendor/laravel/framework/src/Illuminate/Container/Container.php:1301
 */
 
-use crocodicstudio\crudbooster\helpers\QlikHelper;
+use App\Helpers\QlikHelper;
 use App\Http\Controllers\ApiListTenantsController;
 
 // Controller "di sistema" spostati in App\Http\Controllers\System, vedi

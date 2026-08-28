@@ -1,5 +1,5 @@
 <?php
-namespace crocodicstudio\crudbooster\helpers;
+namespace App\Helpers;
 
 use Session;
 use Request;
@@ -10,6 +10,8 @@ use Route;
 use Validator;
 
 use App\Services\ConnectorService;
+use App\Helpers\TenantHelper;
+use App\Helpers\UserHelper;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -76,7 +78,7 @@ class LicenseHelper  {
 
         //dd($licenseKey);
 
-                
+
         if (!$licenseKey)  {
             return false;
         }
@@ -99,9 +101,8 @@ class LicenseHelper  {
         }
 
         $tenants = TenantHelper::countTenants();
-  
 
-        
+
 
         $connectorService = new ConnectorService($licenseKey->license_key);
 
@@ -109,7 +110,7 @@ class LicenseHelper  {
 
         return $connectorService->validateLicense($customData);
 
-        
+
     }
 
     public static function getLicenseInfo() {
@@ -127,12 +128,12 @@ class LicenseHelper  {
         $license = $connectorService->getLicense($customData);
 
         if ($license) {
-            
+
             return $license;
         } else {
             return false;
         }
-        
+
     }
 
 
@@ -152,7 +153,7 @@ class LicenseHelper  {
 
         return $connectorService->validateLicense($customData);
 
-        
+
     }
 
     public static function isActiveQlik() {
@@ -178,11 +179,11 @@ class LicenseHelper  {
         if (isset($array['modules']) && is_array($array['modules'])) {
             foreach ($array['modules'] as $module) {
                 if (isset($module['name']) && $module['name'] === $name) {
-                    return true; 
+                    return true;
                 }
             }
         }
-        return false; 
+        return false;
     }
 
 

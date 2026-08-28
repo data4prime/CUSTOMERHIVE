@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\Excel;
 use Illuminate\Support\Facades\PDF;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
-use \crocodicstudio\crudbooster\helpers\CRUDBooster;
-use crocodicstudio\crudbooster\fonts\Fontawesome;
-use \crocodicstudio\crudbooster\helpers\UserHelper;
-use \crocodicstudio\crudbooster\helpers\MenuHelper;
-use \crocodicstudio\crudbooster\helpers\LicenseHelper;
+use \App\Helpers\CRUDBooster;
+use App\Helpers\Fontawesome;
+use \App\Helpers\UserHelper;
+use \App\Helpers\MenuHelper;
+use \App\Helpers\LicenseHelper;
 use \App\Menu;
 use \App\MenuTenants;
 

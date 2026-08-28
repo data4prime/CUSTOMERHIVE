@@ -12,8 +12,8 @@ use GroupHelper;
 
 use Illuminate\Support\Facades\Route;
 
-use crocodicstudio\crudbooster\helpers\ChatAIHelper;
-use crocodicstudio\crudbooster\helpers\LicenseHelper;
+use App\Helpers\ChatAIHelper;
+use App\Helpers\LicenseHelper;
 
 use App\ChatAIConf;
 use App\ItemsAllowed;

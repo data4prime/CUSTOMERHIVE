@@ -1,6 +1,6 @@
 <?php
 
-namespace crocodicstudio\crudbooster\helpers;
+namespace App\Helpers;
 
 use App\ModuleTenants;
 use App\Tenant;
@@ -8,7 +8,9 @@ use App\GroupTenants;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Session;
-use crocodicstudio\crudbooster\helpers\QlikHelper;
+use App\Helpers\QlikHelper;
+use App\Helpers\CRUDBooster;
+use App\Helpers\UserHelper;
 
 class ModuleHelper
 {
@@ -37,7 +39,7 @@ class ModuleHelper
           $entity_group = $entity_group->group_id;
         }
 
-      } 
+      }
       if ($module->table == "qlik_apps") {
         $entity_group = DB::table("qlikapps_groups")->where('qlik_apps_id', $row->id)->where('group_id',UserHelper::primary_group(UserHelper::me()->id))->first();//->group_id;
         if ($entity_group) {
@@ -159,7 +161,7 @@ class ModuleHelper
       return true;
     }
 
-    
+
 
     if(ModuleHelper::is_manually_generated($module->table)) {
         $entity_group = DB::table($module->table)->where('id', $row->id)->first()->group;
@@ -307,7 +309,7 @@ if ($module->table == "qlik_apps") {
     if (UserHelper::isTenantAdmin(CRUDBooster::myId())) {
         if(ModuleHelper::can_tenant_admin_view($module, $row, $entity_group, $entity_tenant)) {
           return true;
-        } 
+        }
     }
 
     //se row è di tenant admin e current user non è tenant admin, return false
@@ -506,7 +508,7 @@ if ($module->table == "qlik_apps") {
     if (UserHelper::isTenantAdmin(CRUDBooster::myId())) {
         if(ModuleHelper::can_tenant_admin_view($module, $row, $entity_group, $entity_tenant)) {
           return true;
-        } 
+        }
     }
 
     if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
@@ -638,7 +640,7 @@ if(ModuleHelper::is_manually_generated($module->table)) {
     $entity_group = ModuleHelper::get_group_id($module, $row);
     $entity_tenant = ModuleHelper::get_tenant_id($module, $row);
 
-    
+
 
     /*if ($entity_tenant == UserHelper::current_user_tenant() && UserHelper::isTenantAdmin(CRUDBooster::myId())) {
       return true;

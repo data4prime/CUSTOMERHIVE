@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Support\Facades\Log;
 
-use crocodicstudio\crudbooster\helpers\LicenseHelper;
+use App\Helpers\LicenseHelper;
 use App\Services\ConnectorService;
 
 class GetLicense extends Command

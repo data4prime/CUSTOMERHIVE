@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\PDF;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
-use \crocodicstudio\crudbooster\helpers\CRUDBooster;
+use \App\Helpers\CRUDBooster;
 
 class PrivilegesController extends CBController
 {

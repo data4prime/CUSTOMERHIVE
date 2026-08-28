@@ -1,6 +1,6 @@
 <?php
 
-namespace crocodicstudio\crudbooster\helpers;
+namespace App\Helpers;
 
 use Session;
 use Request;
@@ -13,6 +13,10 @@ use App\ChatAIConf;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Carbon;
 use Firebase\JWT\JWT;
+use App\Helpers\MyHelper;
+use App\Helpers\GroupHelper;
+use App\Helpers\CRUDBooster;
+use App\Helpers\UserHelper;
 
 class ChatAIHelper
 {
@@ -113,7 +117,7 @@ class ChatAIHelper
     //prepare json of messsages
     $messages_json = json_encode($messages);
 
-    //json object 
+    //json object
 
     $json_obj = [
       'messages' => $messages_json,

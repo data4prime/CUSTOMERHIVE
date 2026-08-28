@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 use App\QlikItem;
 use App\Menu;
 
-use crocodicstudio\crudbooster\helpers\QlikHelper;
-use crocodicstudio\crudbooster\helpers\QlikHelper as HelpersQlikHelper;
+use App\Helpers\QlikHelper;
+use App\Helpers\QlikHelper as HelpersQlikHelper;
 
 //CRUDBooster 
 use CRUDBooster;

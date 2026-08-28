@@ -8,7 +8,7 @@ use Session;
 use Request;
 use DB;
 use CRUDBooster;
-use \crocodicstudio\crudbooster\helpers\UserHelper;
+use \App\Helpers\UserHelper;
 
 
 class QlikConfController extends CBController

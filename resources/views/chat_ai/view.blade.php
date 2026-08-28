@@ -8,7 +8,7 @@ $chat_messages = Session::get('chat_messages_'.$row->id);
 dd($chat_messages);
 */
 
-crocodicstudio\crudbooster\helpers\ChatAIHelper::getToken($row->id);
+App\Helpers\ChatAIHelper::getToken($row->id);
 
 
 

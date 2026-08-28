@@ -15,9 +15,9 @@ use \App\Modules;
 use \App\QlikItem;
 use \App\Group;
 use \App\AccessLog;
-use crocodicstudio\crudbooster\helpers\UserHelper;
+use App\Helpers\UserHelper;
 
-use crocodicstudio\crudbooster\helpers\LicenseHelper;
+use App\Helpers\LicenseHelper;
 
 use Illuminate\Support\Facades\Log;
 

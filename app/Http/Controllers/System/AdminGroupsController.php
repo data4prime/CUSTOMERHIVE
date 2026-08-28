@@ -11,9 +11,9 @@ use CRUDBooster;
 use \App\UsersGroup;
 use \App\Group;
 use \App\GroupTenants;
-use \crocodicstudio\crudbooster\helpers\UserHelper;
-use \crocodicstudio\crudbooster\helpers\MyHelper;
-use \crocodicstudio\crudbooster\helpers\LicenseHelper;
+use \App\Helpers\UserHelper;
+use \App\Helpers\MyHelper;
+use \App\Helpers\LicenseHelper;
 
 class AdminGroupsController extends CBController
 {

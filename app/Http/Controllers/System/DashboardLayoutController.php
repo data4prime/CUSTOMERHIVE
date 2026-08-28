@@ -8,8 +8,8 @@ use Session;
 use Request;
 use DB;
 use CRUDBooster;
-use \crocodicstudio\crudbooster\helpers\UserHelper;
-use \crocodicstudio\crudbooster\helpers\QlikHelper;
+use \App\Helpers\UserHelper;
+use \App\Helpers\QlikHelper;
 
 
 class DashboardLayoutController extends CBController

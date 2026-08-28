@@ -1,8 +1,13 @@
 <?php
 
-namespace crocodicstudio\crudbooster\helpers;
+namespace App\Helpers;
 
 use Illuminate\Support\Facades\DB;
+use App\Helpers\CB;
+use App\Helpers\ChatAIHelper;
+use App\Helpers\MenuHelper;
+use App\Helpers\QlikHelper;
+use App\Helpers\ModuleHelper;
 
 //use Cache;
 use Illuminate\Support\Facades\Cache;
@@ -23,7 +28,7 @@ use Illuminate\Support\Facades\Storage;
 //use Validator;
 use Illuminate\Support\Facades\Validator;
 //use UserHelper;
-use crocodicstudio\crudbooster\helpers\UserHelper;
+use App\Helpers\UserHelper;
 use Illuminate\Support\Facades\Log;
 
 

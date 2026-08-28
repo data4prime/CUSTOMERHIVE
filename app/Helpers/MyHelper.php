@@ -1,5 +1,5 @@
 <?php
-namespace crocodicstudio\crudbooster\helpers;
+namespace App\Helpers;
 
 use \Tremby\LaravelGitVersion\GitVersionHelper;
 
@@ -35,7 +35,7 @@ class MyHelper  {
     } else {
       $garbage = '';
     }
-    
+
     return $version;
   }
 
