@@ -8,7 +8,7 @@ foreach($forms as $form) {
 
   if (in_array($type, $asset_already)) continue;
   ?>
-@if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/asset.blade.php')))
+@if(file_exists(resource_path('views/crudbooster/default/type_components/'.$type.'/asset.blade.php')))
 @include('crudbooster::default.type_components.'.$type.'.asset')
 @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/asset.blade.php')))
 @include('vendor.crudbooster.type_components.'.$type.'.asset')
@@ -96,7 +96,7 @@ foreach($forms as $index=>$form) {
     $header_group_class = ($header_group_class) ?: "header-group-$index";
   }
   ?>
-@if(file_exists(base_path('/packages/crocodicstudio/crudbooster/src/views/default/type_components/'.$type.'/component.blade.php')))
+@if(file_exists(resource_path('views/crudbooster/default/type_components/'.$type.'/component.blade.php')))
 @include('crudbooster::default.type_components.'.$type.'.component')
 @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/component.blade.php')))
 @include('vendor.crudbooster.type_components.'.$type.'.component')
