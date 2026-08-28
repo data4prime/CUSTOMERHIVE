@@ -332,8 +332,25 @@ class AdminGroupsController extends CBController
 	public function hook_before_delete($id)
 	{
 		$members_count = UsersGroup::where('group_id', $id)->count();
-		if ($members_count > 0) {
-			CRUDBooster::redirect(CRUDBooster::adminPath('groups'), trans('crudbooster.delete_not_empty_group'));
+		//esclude i tenant soft-deleted (tenants.deleted_at): la pagina
+		//"tenant" del gruppo li nasconde gia' (stesso filtro), quindi un
+		//gruppo il cui unico tenant associato e' stato cancellato non deve
+		//restare bloccato per un'associazione ormai fantasma
+		$tenants_count = GroupTenants::where('group_id', $id)
+			->join('tenants', 'tenants.id', '=', 'group_tenants.tenant_id')
+			->where('tenants.deleted_at', null)
+			->count();
+
+		if ($members_count > 0 || $tenants_count > 0) {
+			$parts = [];
+			if ($members_count > 0) {
+				$parts[] = trans_choice('crudbooster.group_relation_members', $members_count, ['count' => $members_count]);
+			}
+			if ($tenants_count > 0) {
+				$parts[] = trans_choice('crudbooster.group_relation_tenants', $tenants_count, ['count' => $tenants_count]);
+			}
+
+			CRUDBooster::redirect(CRUDBooster::adminPath('groups'), trans('crudbooster.delete_group_has_relations', ['items' => implode(', ', $parts)]));
 		}
 	}
 
@@ -362,7 +379,11 @@ class AdminGroupsController extends CBController
 			->where('users_groups.group_id', $group_id)
 			->where('users_groups.deleted_at', null)
 			->join('cms_users', 'cms_users.id', '=', 'users_groups.user_id')
-			->join('cms_privileges', 'cms_privileges.id', '=', 'cms_users.id_cms_privileges');
+			//leftJoin (non join): un utente il cui privilegio e' stato
+			//cancellato (id_cms_privileges orfano) deve comunque comparire in
+			//lista, non sparire silenziosamente per una join che non trova
+			//corrispondenza
+			->leftJoin('cms_privileges', 'cms_privileges.id', '=', 'cms_users.id_cms_privileges');
 		if (UserHelper::isTenantAdmin()) {
 			//can only see group members of his own tenant
 			$data['members'] = $data['members']->where('cms_users.tenant', UserHelper::tenant(CRUDBooster::myId()));
