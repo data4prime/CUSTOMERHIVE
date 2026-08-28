@@ -17,6 +17,8 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\CheckUserExpiry',
         'App\Console\Commands\UserExpiryNotification',
         'App\Console\Commands\GetLicense',
+        'App\Console\Commands\MigrateLegacyCrudboosterExtends',
+        'App\Console\Commands\Mailqueues',
     ];
 
     /**

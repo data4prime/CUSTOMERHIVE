@@ -1,19 +1,20 @@
-<?php namespace crocodicstudio\crudbooster\commands;
+<?php
 
-use Cache;
-use CRUDBooster;
-use DB;
+namespace App\Console\Commands;
+
 use Illuminate\Console\Command;
-use Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use CRUDBooster;
 
 class Mailqueues extends Command
 {
     /**
-     * The console command name.
+     * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'mailqueues';
+    protected $signature = 'mailqueues';
 
     /**
      * The console command description.
