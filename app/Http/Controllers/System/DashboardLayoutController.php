@@ -8,6 +8,8 @@ use Session;
 use Request;
 use DB;
 use CRUDBooster;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 use \App\Helpers\UserHelper;
 use \App\Helpers\QlikHelper;
 
@@ -218,6 +220,242 @@ class DashboardLayoutController extends CBController
 
 
 	/*
+	 * Add/Edit del layout sostituiti con un builder visuale a righe/colonne
+	 * (invece del vecchio editor TinyMCE in cui l'admin scriveva l'HTML a
+	 * mano) - vedi docs/refactoring/. Il formato salvato in code_layout
+	 * resta identico (div.statistic-row.row > div#areaN.col-sm-X
+	 * .connectedSortable), quindi StatisticBuilderController/index.blade.php
+	 * e la tabella cms_statistic_components (area_name) non cambiano.
+	 * getDetail() e' overridato per mostrare un preview visivo del layout
+	 * (vedi sotto); il resto del CRUD generico (lista, cancellazione) resta
+	 * quello standard, non toccato.
+	 */
+
+	public function getAdd()
+	{
+		$this->cbLoader();
+
+		if (!CRUDBooster::isCreate() && $this->global_privilege == false) {
+			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
+		}
+
+		$data['page_title'] = trans('crudbooster.add_data_page_title', ['module' => 'Dashboard Layout']);
+		$data['row'] = null;
+		$data['rows_model'] = [[12]];
+		$data['action'] = CRUDBooster::mainpath('add-save');
+
+		return $this->cbView('dashboard_layouts.builder', $data);
+	}
+
+	public function getEdit($id)
+	{
+		$this->cbLoader();
+
+		if (!CRUDBooster::isRead() && $this->global_privilege == false) {
+			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
+		}
+
+		$row = DB::table($this->table)->where($this->primary_key, $id)->first();
+		if (!$row) {
+			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.missing_item'));
+		}
+
+		$html = html_entity_decode((string) $row->code_layout);
+		$parsed = $this->parseLayoutToGrid($html);
+
+		$data['page_title'] = trans('crudbooster.edit_data_page_title', ['module' => 'Dashboard Layout', 'name' => $row->layoutname]);
+		$data['row'] = $row;
+		//se il layout esistente non e' nel formato riconosciuto dal builder
+		//(es. scritto a mano/col vecchio TinyMCE con markup diverso), si
+		//riparte da una griglia vuota di default: senza modalita' avanzata
+		//non c'e' modo di preservare un HTML libero non riconosciuto, e il
+		//vecchio HTML resta com'era finche' non si salva davvero
+		$data['rows_model'] = $parsed ?: [[12]];
+		$data['action'] = CRUDBooster::mainpath("edit-save/$id");
+
+		return $this->cbView('dashboard_layouts.builder', $data);
+	}
+
+	public function getDetail($id)
+	{
+		$this->cbLoader();
+
+		if (!CRUDBooster::isRead() && $this->global_privilege == false) {
+			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
+		}
+
+		$row = DB::table($this->table)->where($this->primary_key, $id)->first();
+		if (!$row) {
+			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.missing_item'));
+		}
+
+		$data['page_title'] = trans('crudbooster.detail_data_page_title', ['module' => 'Dashboard Layout', 'name' => $row->layoutname]);
+		$data['row'] = $row;
+		$data['code_layout_html'] = html_entity_decode((string) $row->code_layout);
+
+		return $this->cbView('dashboard_layouts.detail', $data);
+	}
+
+	public function postAddSave()
+	{
+		$this->cbLoader();
+
+		if (!CRUDBooster::isCreate() && $this->global_privilege == false) {
+			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
+		}
+
+		$validator = Validator::make(Request::all(), [
+			'layoutname' => 'required|string|max:255',
+		]);
+		if ($validator->fails()) {
+			return redirect()->back()->withErrors($validator)->withInput();
+		}
+
+		$arr = [
+			'layoutname' => Request::input('layoutname'),
+			'code_layout' => $this->buildCodeLayoutFromRequest(),
+		];
+		if (Schema::hasColumn($this->table, 'created_at')) {
+			$arr['created_at'] = date('Y-m-d H:i:s');
+		}
+
+		DB::table($this->table)->insert($arr);
+
+		CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.alert_add_data_success'), 'success');
+	}
+
+	public function postEditSave($id, $validate = null)
+	{
+		$this->cbLoader();
+
+		if (!CRUDBooster::isUpdate() && $this->global_privilege == false) {
+			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
+		}
+
+		$validator = Validator::make(Request::all(), [
+			'layoutname' => 'required|string|max:255',
+		]);
+		if ($validator->fails()) {
+			return redirect()->back()->withErrors($validator)->withInput();
+		}
+
+		$arr = [
+			'layoutname' => Request::input('layoutname'),
+			'code_layout' => $this->buildCodeLayoutFromRequest(),
+		];
+		if (Schema::hasColumn($this->table, 'updated_at')) {
+			$arr['updated_at'] = date('Y-m-d H:i:s');
+		}
+
+		DB::table($this->table)->where($this->primary_key, $id)->update($arr);
+
+		CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.alert_update_data_success', ['module' => 'Dashboard Layout', 'title' => Request::input('layoutname')]), 'success');
+	}
+
+	/**
+	 * Genera l'HTML del layout dal modello a righe/colonne del builder
+	 * visuale, con gli id areaN gia' assegnati in ordine di riga/colonna
+	 * (nessuna modalita' avanzata/HTML libero).
+	 */
+	protected function buildCodeLayoutFromRequest()
+	{
+		$rows = json_decode((string) Request::input('layout_model', '[]'), true);
+		if (!is_array($rows)) {
+			$rows = [];
+		}
+
+		$n = 0;
+		$html = '';
+		foreach ($rows as $row) {
+			if (!is_array($row) || empty($row)) {
+				continue;
+			}
+			$html .= "<div class='statistic-row row'>\n";
+			foreach ($row as $width) {
+				$width = max(1, min(12, (int) $width));
+				$n++;
+				$html .= "    <div id='area{$n}' class='col-sm-{$width} connectedSortable'></div>\n";
+			}
+			$html .= "</div>\n";
+		}
+
+		return $html;
+	}
+
+	/**
+	 * Riconosce solo la forma div.statistic-row.row > div.col-sm-X
+	 * .connectedSortable (quella generata dal builder e dal fallback
+	 * hardcoded in StatisticBuilderController::getDashboard()). Qualunque
+	 * altra struttura (es. tabelle <td> create con il vecchio TinyMCE, o
+	 * markup scritto a mano) ritorna null - niente reverse-engineering
+	 * azzardato di HTML libero, si passa alla modalita' avanzata.
+	 */
+	protected function parseLayoutToGrid($html)
+	{
+		$html = trim((string) $html);
+		if ($html === '') {
+			return [];
+		}
+
+		libxml_use_internal_errors(true);
+		$dom = new \DOMDocument();
+		$loaded = $dom->loadHTML('<?xml encoding="utf-8" ?><div id="cb-root">' . $html . '</div>');
+		libxml_clear_errors();
+		if (!$loaded) {
+			return null;
+		}
+
+		$root = $dom->getElementById('cb-root');
+		if (!$root) {
+			return null;
+		}
+
+		$rows = [];
+		foreach ($root->childNodes as $node) {
+			if ($node->nodeType === XML_TEXT_NODE) {
+				if (trim($node->textContent) !== '') {
+					return null;
+				}
+				continue;
+			}
+			if ($node->nodeType !== XML_ELEMENT_NODE || strtolower($node->nodeName) !== 'div' || !$this->hasClass($node, 'statistic-row')) {
+				return null;
+			}
+
+			$cols = [];
+			foreach ($node->childNodes as $cell) {
+				if ($cell->nodeType === XML_TEXT_NODE) {
+					if (trim($cell->textContent) !== '') {
+						return null;
+					}
+					continue;
+				}
+				if ($cell->nodeType !== XML_ELEMENT_NODE || strtolower($cell->nodeName) !== 'div') {
+					return null;
+				}
+				if (!preg_match('/col-sm-(\d+)/', $cell->getAttribute('class'), $m)) {
+					return null;
+				}
+				$cols[] = (int) $m[1];
+			}
+
+			if (empty($cols)) {
+				return null;
+			}
+
+			$rows[] = $cols;
+		}
+
+		return $rows;
+	}
+
+	protected function hasClass($node, $class)
+	{
+		$classes = preg_split('/\s+/', trim($node->getAttribute('class')));
+		return in_array($class, $classes, true);
+	}
+
+	/*
 	    | ----------------------------------------------------------------------
 	    | Hook for button selected
 	    | ----------------------------------------------------------------------
@@ -262,7 +500,9 @@ class DashboardLayoutController extends CBController
 	    */
 	public function hook_before_add(&$postdata)
 	{
-		//Your code here
+		//Non piu' invocato: postAddSave() e' ora overridato sopra e non
+		//chiama piu' questo hook (il builder visuale genera gia' l'HTML
+		//con gli id assegnati). Lasciato per riferimento/eventuale rollback.
 		$postdata['code_layout'] = $this->aggiungiIdAElemTd($postdata['code_layout']);
 
 	}
@@ -291,7 +531,7 @@ class DashboardLayoutController extends CBController
 	    */
 	public function hook_before_edit(&$postdata, $id)
 	{
-
+		//Non piu' invocato: vedi nota su hook_before_add() sopra.
 		$postdata['code_layout'] = $this->aggiungiIdAElemTd($postdata['code_layout']);
 
 	}
@@ -341,8 +581,12 @@ class DashboardLayoutController extends CBController
 			return $matches[0];
 		}, $html);
 
-		$html = preg_replace_callback('/<td([^>]*)>(?:(?!id=).)*<\/td>/i', function($matches) use (&$n) {
-			//dd($matches);
+		// Quantificatore lazy (*?), non greedy: con 2+ <td> senza id di
+		// fila, la versione greedy originale consumava dal primo <td>
+		// fino all'ULTIMO </td> della stringa in un solo match, collassando
+		// piu' celle in una sola (perse). Con *? il match si ferma al primo
+		// </td> incontrato, una cella alla volta.
+		$html = preg_replace_callback('/<td([^>]*)>(?:(?!id=).)*?<\/td>/i', function($matches) use (&$n) {
 			$n++;
 			$id = 'area' . $n;
 			return '<td id="' . $id . '" class="'."connectedSortable".'"'  . '>'.'&nbsp;'.'</td>';
