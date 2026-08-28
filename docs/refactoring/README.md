@@ -70,6 +70,18 @@ zero leggendo i diff di git.
 | [035](035-fontawesome-spostato.md) | Fontawesome.php spostato in App\Helpers, fonts/ non esiste più | Architettura / CRUDBooster | Completato | 2026-08-28 |
 | [036](036-rimozione-assets-legacy.md) | Rimossa packages/.../src/assets/ (32 MB) — già pubblicata e tracciata in public/vendor/crudbooster/, zero contenuto mancante | Housekeeping | Completato | 2026-08-28 |
 | [037](037-views-spostate-resources.md) | views/ spostata in resources/views/crudbooster/, corretti 16 path assoluti hardcoded, 2 file morti eliminati — packages/.../src/ ora vuota | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [038](038-fix-open-redirect-return-url.md) | Fix: open redirect su CRUDBooster::redirect() — return_url non validato | Sicurezza | Completato | 2026-08-28 |
+| [039](039-fix-type-components-non-trovati.md) | Fix: "tipo di componente non trovato" — 9 file fuori da packages/ dimenticati in 037 | Bug fix | Completato | 2026-08-28 |
+| [040](040-fix-preview-immagini-mancante.md) | Fix: anteprima immagine mancante su colonne Logo/Favicon (Tenants) e un modulo custom | Bug fix | Completato | 2026-08-28 |
+| [041](041-color-picker-tenants.md) | Background Color/Font Color (Tenants): da testo libero a color picker nativo HTML5 | UI/UX | Completato | 2026-08-28 |
+| [042](042-tipo-color-lista-dettaglio.md) | Nuovo tipo di campo "color" riusabile: swatch anche in lista e dettaglio, non solo nel form | UI/UX | Completato | 2026-08-28 |
+| [043](043-privileges-form-come-standard.md) | Vista privileges: markup del form (card, label a due colonne, footer) allineato allo standard `crudbooster::default.form` | UI/UX | Completato | 2026-08-28 |
+| [044](044-privileges-delete-bloccato-e-messaggio-perso.md) | Bug: eliminazione privilegio bloccata da una regola sbagliata (`id < 4`) e messaggio di errore perso nel redirect verso la dashboard | Bug fix | Completato | 2026-08-28 |
+| [045](045-messaggio-cancellazione-gruppo-piu-specifico.md) | Messaggio di blocco cancellazione gruppo più specifico (distingue membri e tenant assegnati), chiude anche un rischio di errore SQL non gestito sui gruppi con soli tenant | UI/UX / Bug fix | Completato | 2026-08-28 |
+| [046](046-groups-members-leftjoin-privilegio-orfano.md) | Members del gruppo: un utente con privilegio cancellato (orfano) non deve sparire dalla lista (INNER JOIN → LEFT JOIN) | Bug fix | Completato | 2026-08-28 |
+| [047](047-user-isSuperAdmin-crash-privilegio-orfano.md) | Crash "is_superadmin on null" per un utente con privilegio orfano: `User::isSuperAdmin()`/`isTenantAdmin()` ora tollerano `Role::find()` che non trova nulla | Bug fix | Completato | 2026-08-28 |
+| [048](048-tenant-soft-deleted-non-deve-bloccare-cancellazione-gruppo.md) | Un tenant soft-deleted associato a un gruppo non deve più bloccarne la cancellazione (conteggio allineato al filtro già usato dalla pagina tenant del gruppo) | Bug fix | Completato | 2026-08-28 |
+| [049](049-select-detail-crash-fk-orfana.md) | Crash sul dettaglio di un modulo per un campo "select" con FK orfana (componente condiviso, non solo Users) | Bug fix | Completato | 2026-08-28 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).

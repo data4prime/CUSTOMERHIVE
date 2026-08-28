@@ -3,7 +3,11 @@ if (isset($form['datatable'])) {
     $datatable = explode(',', $form['datatable']);
     $table = $datatable[0];
     $field = $datatable[1];
-    echo CRUDBooster::first($table, ['id' => $value])->$field;
+    //il valore selezionato puo' puntare a una riga ormai cancellata (FK
+    //orfana, es. un privilegio eliminato): mostrare vuoto invece di
+    //far crashare la pagina di dettaglio
+    $related = CRUDBooster::first($table, ['id' => $value]);
+    echo $related ? $related->$field : '';
 }
 if (isset($form['dataquery'])) {
     $dataquery = $form['dataquery'];

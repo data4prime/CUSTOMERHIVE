@@ -42,13 +42,17 @@ class User extends Authenticatable
     public function isTenantAdmin()
     {
       $my_role_id = $this->id_cms_privileges;
-      return Role::find($my_role_id)->is_tenantadmin == 1;
+      $role = Role::find($my_role_id);
+      //un privilegio cancellato (riferimento orfano) non deve far crashare
+      //la pagina: un utente senza privilegio valido non ha permessi speciali
+      return $role && $role->is_tenantadmin == 1;
     }
 
     public function isSuperAdmin()
     {
       $my_role_id = $this->id_cms_privileges;
-      return Role::find($my_role_id)->is_superadmin == 1;
+      $role = Role::find($my_role_id);
+      return $role && $role->is_superadmin == 1;
     }
 
     /**
