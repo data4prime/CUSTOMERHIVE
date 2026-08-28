@@ -1,6 +1,6 @@
 <?php
 
-namespace crocodicstudio\crudbooster\controllers;
+namespace App\Http\Controllers\System;
 
 use CRUDBooster;
 use ModuleHelper;
@@ -489,11 +489,11 @@ class ApiController extends Controller
 
                 $debug[] = 'Data Fetch is OK';
                 //return response()->json($debug, 200);
-                
+
 
                 if ($rows) {
 
-                    foreach ($rows as $index => &$row) { 
+                    foreach ($rows as $index => &$row) {
 
                         $debug[] = 'Before init';
                        // return response()->json($this, 200);
@@ -633,7 +633,7 @@ class ApiController extends Controller
                 }
                 }
 
-                
+
             }
         } elseif ($action_type == 'save_add' || $action_type == 'save_edit') {
 
@@ -709,7 +709,7 @@ class ApiController extends Controller
                 DB::beginTransaction();
                 try {
                     $id = DB::table($table)->insertGetId($row_assign);
-                    
+
                     DB::commit();
                 } catch (\Exception $e) {
                     DB::rollBack();

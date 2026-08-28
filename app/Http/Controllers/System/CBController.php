@@ -1,13 +1,13 @@
 <?php
 
-namespace crocodicstudio\crudbooster\controllers;
+namespace App\Http\Controllers\System;
 
 error_reporting(E_ALL ^ E_NOTICE);
 
 //use CB;
-use \crocodicstudio\crudbooster\helpers\CB;
+use \App\Helpers\CB;
 //use CRUDBooster;
-use \crocodicstudio\crudbooster\helpers\CRUDBooster;
+use \App\Helpers\CRUDBooster;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
@@ -23,8 +23,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Schema;
 //use Schema;
 //use UserHelper;
-use \crocodicstudio\crudbooster\helpers\UserHelper;
-use \crocodicstudio\crudbooster\helpers\ModuleHelper;
+use \App\Helpers\UserHelper;
+use \App\Helpers\ModuleHelper;
 //use ModuleHelper;
 use \crocodicstudio\crudbooster\controllers\ExportData;
 use \crocodicstudio\crudbooster\controllers\ImportData;

@@ -44,6 +44,32 @@ zero leggendo i diff di git.
 | [009](009-module-helpers-cms-moduls-mancante.md) | Modulo "Module Helpers" senza riga in cms_moduls (404), seeder aggiornato | Bug fix / dati | Completato | 2026-08-27 |
 | [010](010-popup-select-non-si-chiude.md) | Popup "Browse data" non si chiudeva dopo Select (bug sistemico sui 7 componenti relazione) | Bug fix | Completato | 2026-08-27 |
 | [011](011-settings-hardening.md) | Sezione Settings: autorizzazione mancante su delete-file, upload con path relativo, rimozione gruppo Qlik dai seeder, unique su name (senza deduplica automatica), campo password, email_sender svuotato | Hardening / Dati | Completato | 2026-08-27 |
+| [012](012-controller-motore-shim-class-alias.md) | Prima classe "motore" spostata in App\Http\Controllers\System: Controller, con shim class_alias() | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [013](013-importdata-exportdata-shim-class-alias.md) | ImportData/ExportData spostate in App\Http\Controllers\System, con shim class_alias() | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [014](014-apicontroller-shim-class-alias.md) | ApiController spostata in App\Http\Controllers\System, con shim class_alias() | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [015](015-cbcontroller-shim-class-alias.md) | CBController spostata in App\Http\Controllers\System, con shim class_alias() — ultima classe motore | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [016](016-comando-migrazione-extends-legacy-clienti.md) | Comando artisan `crudbooster:migrate-legacy-extends` per riscrivere l'extends dei controller custom dei clienti | Architettura / CRUDBooster / Tooling | Completato | 2026-08-28 |
+| [017](017-rimozione-cartella-controllers-legacy.md) | Rimossa packages/.../controllers/: alias consolidati in app/Support/legacy_crudbooster_aliases.php (composer autoload.files) | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [018](018-commands-middlewares-validations-cleanup.md) | Mailqueues spostato in App\Console\Commands, comandi installer CRUDBooster eliminati, validation.php spostato in AppServiceProvider, CBBackend__.php eliminato | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [019](019-rimozione-localization-legacy.md) | Rimossa packages/.../localization/ — mai caricata a runtime, resources/lang già la fonte viva e tracciata su git | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [020](020-rimozione-userfiles-legacy.md) | Rimossa packages/.../userfiles/ — copie ridondanti di CBHook.php/readme.txt già tracciati, stub AdminCmsUsersController obsoleto | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [021](021-rimozione-configs-legacy.md) | Rimossa packages/.../configs/ — mergeConfigFrom() e publishes() rimossi, unica chiave differente (API_PATH) confermata mai usata | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [022](022-rimozione-database-legacy.md) | Rimossa packages/.../database/ — 0 migration e 1 solo seeder (già morto) esistevano solo nel pacchetto | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [023](023-helpers-nnhelper-moduleHelperhelper-myhelper.md) | Helpers (1/N): NNHelper eliminato (morto), ModuleHelperHelper e MyHelper spostati in App\Helpers | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [024](024-helpers-grouphelper-tenanthelper-cb.md) | Helpers (2/N): GroupHelper, TenantHelper, CB spostati in App\Helpers | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [025](025-helpers-chatai-license-menu.md) | Helpers (3/N): ChatAIHelper, LicenseHelper, MenuHelper spostati in App\Helpers (incl. 7 FQCN inline nelle view) | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [026](026-helpers-qlikhelper-modulehelper.md) | Helpers (4/N): QlikHelper e ModuleHelper spostati in App\Helpers | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [027](027-helpers-userhelper.md) | Helpers (5/N): UserHelper spostato in App\Helpers | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [028](028-helpers-functions-globali.md) | Helpers (6/N): funzioni globali (Helper.php) spostate in app/Helpers/functions.php | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [029](029-helpers-crudbooster-ultimo-pezzo.md) | Helpers (7/7): CRUDBooster.php spostato, packages/.../helpers/ non esiste più, corretto bug latente su MyHelper | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [030](030-middlewares-cbbackend-cbauthapi.md) | CBBackend/CBAuthAPI spostati in App\Http\Middleware, middlewares/ non esiste più (incl. riferimento in config/lfm.php) | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [031](031-routes-standard-laravel.md) | routes.php spostato in routes/crudbooster.php, caricato da RouteServiceProvider invece che dal service provider del pacchetto | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [032](032-crudboosterserviceprovider-pulizia-e-spostamento.md) | CRUDBoosterServiceProvider ripulito (3 registrazioni provider ridondanti + singleton morto rimossi) e spostato in App\Providers | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [033](033-crudbooster-docs-spostati.md) | Documentazione originale CRUDBooster (49 file) spostata da packages/.../docs/en/ a docs/crudbooster/ | Documentazione | Completato | 2026-08-28 |
+| [034](034-rimozione-file-vestigiali-pacchetto.md) | Rimossi .codeclimate.yml, .gitignore, composer.json, README.md — ultimi file vestigiali del pacchetto | Documentazione / Housekeeping | Completato | 2026-08-28 |
+| [035](035-fontawesome-spostato.md) | Fontawesome.php spostato in App\Helpers, fonts/ non esiste più | Architettura / CRUDBooster | Completato | 2026-08-28 |
+| [036](036-rimozione-assets-legacy.md) | Rimossa packages/.../src/assets/ (32 MB) — già pubblicata e tracciata in public/vendor/crudbooster/, zero contenuto mancante | Housekeeping | Completato | 2026-08-28 |
+| [037](037-views-spostate-resources.md) | views/ spostata in resources/views/crudbooster/, corretti 16 path assoluti hardcoded, 2 file morti eliminati — packages/.../src/ ora vuota | Architettura / CRUDBooster | Completato | 2026-08-28 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
@@ -77,16 +103,103 @@ completa):
 
 - ✅ 21 controller "schermata" spostati in `App\Http\Controllers\System`
   — [006](006-controller-sistema-app-http-controllers-system.md).
-- ⬜ Le 5 classi "motore" (`CBController`, `ApiController`, `Controller`,
-  `ExportData`, `ImportData`) restano in `packages/.../controllers/`: sono
-  la classe base che i controller generati da interfaccia estendono per
-  FQCN letterale (`extends \crocodicstudio\crudbooster\controllers\CBController`)
-  — spostabili solo con uno shim `class_alias()` che mantenga risolvibile
-  il vecchio FQCN. Discusso, non ancora implementato.
-- ⬜ Helper `CRUDBooster` (84 metodi, alias globale) — scomponibile in
-  servizi più piccoli mantenendo l'alias stabile come facciata.
-- ⬜ Asset statici (`assets/`, ~90% dei file del pacchetto) — lavoro
-  UI/UX separato, non backend.
+- ✅ Le 5 classi "motore" (`CBController`, `ApiController`, `Controller`,
+  `ExportData`, `ImportData`) — la base che i controller generati da
+  interfaccia estendono per FQCN letterale
+  (`extends \crocodicstudio\crudbooster\controllers\CBController`) — sono
+  state spostate una alla volta in `App\Http\Controllers\System`, con uno
+  shim `class_alias()` nel vecchio path che mantiene risolvibile il
+  vecchio FQCN:
+  - ✅ `Controller` spostata — [012](012-controller-motore-shim-class-alias.md).
+  - ✅ `ImportData`/`ExportData` spostate — [013](013-importdata-exportdata-shim-class-alias.md).
+  - ✅ `ApiController` spostata — [014](014-apicontroller-shim-class-alias.md).
+  - ✅ `CBController` spostata — [015](015-cbcontroller-shim-class-alias.md).
+- ✅ **La cartella `packages/.../controllers/` non esiste più** — i 5
+  `class_alias()` sono stati consolidati in un unico bootstrap,
+  `app/Support/legacy_crudbooster_aliases.php`, caricato via
+  `composer.json` → `autoload.files` — [017](017-rimozione-cartella-controllers-legacy.md).
+  Il vecchio FQCN resta comunque risolvibile per chi lo estende da fuori:
+  questo intervento ha spostato *dove* vive la compatibilità, non l'ha
+  eliminata.
+- ⬜ **Rimozione definitiva degli alias** (`app/Support/legacy_crudbooster_aliases.php`
+  e l'entry in `composer.json`): possibile solo dopo che *ogni* cliente
+  attivo è stato aggiornato almeno una volta con
+  `php artisan crudbooster:migrate-legacy-extends --apply` sui propri
+  controller custom (comando pronto —
+  [016](016-comando-migrazione-extends-legacy-clienti.md) — ma mai ancora
+  eseguito su un ambiente reale). Finché anche un solo cliente non è
+  passato da questo comando, gli alias restano necessari.
+- ✅ `commands/`, `middlewares/CBBackend__.php` (morto), `validations/` —
+  ripuliti: `Mailqueues` spostato in `App\Console\Commands`, i 3 comandi
+  installer storici (`crudbooster:install`/`:update`/`:version`, zero
+  riferimenti nel repo) eliminati, `validation.php` spostato in
+  `AppServiceProvider::boot()` — [018](018-commands-middlewares-validations-cleanup.md).
+- ✅ **`middlewares/` non esiste più** — `CBBackend`/`CBAuthAPI` spostati
+  in `App\Http\Middleware`, aggiornati anche i 3 riferimenti in
+  `routes.php` e 1 in `config/lfm.php` (unisharp/laravel-filemanager) —
+  [030](030-middlewares-cbbackend-cbauthapi.md).
+- ✅ **`routes.php` spostato in `routes/crudbooster.php`**, caricato da
+  `App\Providers\RouteServiceProvider::map()` (nuovo metodo
+  `mapCrudboosterRoutes()`, registrato per ultimo per preservare l'ordine
+  di prima) invece che da un `require` dentro il service provider del
+  pacchetto — [031](031-routes-standard-laravel.md).
+- ✅ **`CRUDBoosterServiceProvider` ripulito e spostato in
+  `App\Providers`** — rimosse 3 registrazioni di provider terze parti
+  ridondanti (già coperte dall'auto-discovery di Laravel, verificato nei
+  `composer.json` dei pacchetti) e un singleton morto; gli 8 alias custom
+  spostati in `config/app.php` → `aliases` (standard Laravel, invece di
+  `AliasLoader` programmatico) — [032](032-crudboosterserviceprovider-pulizia-e-spostamento.md).
+  **`packages/crocodicstudio/crudbooster/src/` ora contiene solo
+  `assets/`, `fonts/`, `views/`** — nessuna logica applicativa residua.
+- ✅ **`helpers/` non esiste più** — le 14 file spostate in `App\Helpers`,
+  un file (o pochi) alla volta dal più piccolo al più grande, nessuno
+  shim necessario (nessun controller custom cliente referenzia un helper
+  per FQCN, diversamente da `controllers/`):
+  - ✅ `NNHelper` eliminato (morto), `ModuleHelperHelper`/`MyHelper`
+    spostati — [023](023-helpers-nnhelper-moduleHelperhelper-myhelper.md).
+  - ✅ `GroupHelper`, `TenantHelper`, `CB` spostati —
+    [024](024-helpers-grouphelper-tenanthelper-cb.md).
+  - ✅ `ChatAIHelper`, `LicenseHelper`, `MenuHelper` spostati —
+    [025](025-helpers-chatai-license-menu.md).
+  - ✅ `QlikHelper`, `ModuleHelper` spostati —
+    [026](026-helpers-qlikhelper-modulehelper.md).
+  - ✅ `UserHelper` spostato — [027](027-helpers-userhelper.md).
+  - ✅ `Helper.php` (funzioni globali) spostato in
+    `app/Helpers/functions.php` — [028](028-helpers-functions-globali.md).
+  - ✅ `CRUDBooster.php` spostato per ultimo (80 KB, 101 metodi) —
+    [029](029-helpers-crudbooster-ultimo-pezzo.md).
+- ✅ `localization/` rimossa interamente — mai caricata a runtime
+  (nessun `loadTranslationsFrom()`, `resources/lang/*/crudbooster.php` già
+  la fonte viva e tracciata su git) — [019](019-rimozione-localization-legacy.md).
+- ✅ `userfiles/` rimossa interamente — le sue 3 copie erano ridondanti
+  (identiche a `app/Http/Controllers/CBHook.php` e
+  `resources/views/vendor/crudbooster/type_components/readme.txt`, già
+  tracciati) o uno stub obsoleto (`AdminCmsUsersController`, superato da
+  [006](006-controller-sistema-app-http-controllers-system.md)) —
+  [020](020-rimozione-userfiles-legacy.md).
+- ✅ `configs/` rimossa interamente — a differenza degli altri due, era
+  referenziata anche da `mergeConfigFrom()` (attivo ad ogni richiesta, non
+  solo un `publishes()` pigro); rimossa anche quella riga. Unica chiave
+  differente (`API_PATH`) confermata mai letta da nessuna parte —
+  [021](021-rimozione-configs-legacy.md).
+- ✅ `database/` rimossa interamente — 0 migration e 1 solo seeder
+  (`Qlik_Sett`, già rimosso esplicitamente dal `DatabaseSeeder.php` reale)
+  esistevano solo nel pacchetto — [022](022-rimozione-database-legacy.md).
+- ✅ `assets/` (32 MB) rimossa — già pubblicata e tracciata in
+  `public/vendor/crudbooster/`, zero contenuto mancante una volta
+  scartata una duplicazione ricorsiva interna al pacchetto (non
+  referenziata) — [036](036-rimozione-assets-legacy.md). **Nota**:
+  la stessa duplicazione esiste anche dentro
+  `public/vendor/crudbooster/assets/assets/` (15 MB, file live/tracciati
+  su git) — non toccata, possibile pulizia futura separata.
+- ✅ `views/` spostata in `resources/views/crudbooster/` (non
+  `resources/views/vendor/crudbooster/` — scelta esplicita dell'utente).
+  Trovati e corretti 16 path assoluti hardcoded (`base_path('packages/.../views/default/type_components/...')`
+  dentro un `file_exists()` a guardia di un `@include` — senza
+  correzione, ogni asset/component per tipo di campo form sarebbe
+  sparito silenziosamente da tutti i form dell'app) e 2 file morti
+  eliminati — [037](037-views-spostate-resources.md).
+  **`packages/crocodicstudio/crudbooster/src/` è ora vuota.**
 
 ## Backlog — emerso ma non ancora assegnato a un intervento numerato
 

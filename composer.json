@@ -36,6 +36,9 @@
         "classmap": [
             "database"
         ],
+        "files": [
+            "app/Support/legacy_crudbooster_aliases.php"
+        ],
         "psr-4": {
 "Tests\\": "tests/",
             "App\\": "app/",
