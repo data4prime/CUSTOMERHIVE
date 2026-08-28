@@ -1,16 +1,16 @@
 @if($command=='layout')
 <div id='{{$componentID}}' class='border-box'>
 
-    <div class="small-box [color]">
+    <div class="small-box" style="background-color: [color]">
         <div class='inner inner-box'>
-            <h3>[sql]</h3>
+            <h3 class="small-box-sql-value">[sql]</h3>
             <p>[name]</p>
         </div>
         <div class="icon">
             <ion-icon name="[icon]"></ion-icon>
             <!--<i class="ion [icon]"></i>-->
         </div>
-        <a href="[link]" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="[link]" class="small-box-footer">Dettagli <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 
     <div class='action pull-right'>
@@ -21,6 +21,20 @@
                 class='fa fa-trash'></i></a>
     </div>
 </div>
+
+<style>
+    /* .small-box-sql-error compare al posto del numero quando la query SQL
+       del widget fallisce - testo piu' piccolo e a capo, altrimenti un
+       messaggio d'errore lungo rompe il layout della card (pensata per un
+       numero corto) */
+    .small-box-sql-value .small-box-sql-error {
+        display: block;
+        font-size: 13px;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: break-word;
+    }
+</style>
 
 <script defer>
 if (!window.location.href.includes('statistic_builder/builder')) {
@@ -36,6 +50,19 @@ if (!window.location.href.includes('statistic_builder/builder')) {
 </script>
 
 @elseif($command=='configuration')
+<?php
+    //elenco delle icone Ionicons davvero disponibili, letto dal font/CSS gia'
+    //vendorizzato (public/vendor/crudbooster/ionic/), cosi' l'elenco nella
+    //select coincide sempre con quello che il widget puo' effettivamente
+    //mostrare - niente lista statica da tenere allineata a mano.
+    $ionIconsCssPath = public_path('vendor/crudbooster/ionic/css/ionicons.min.css');
+    $ionIconNames = [];
+    if (file_exists($ionIconsCssPath)) {
+        preg_match_all('/\.(ion-[a-z0-9-]+):before/', file_get_contents($ionIconsCssPath), $ionIconsMatches);
+        $ionIconNames = array_unique($ionIconsMatches[1]);
+        sort($ionIconNames);
+    }
+?>
 <form method='post'>
     <input type='hidden' name='_token' value='{{csrf_token()}}' />
     <input type='hidden' name='componentid' value='{{$componentID}}' />
@@ -46,19 +73,19 @@ if (!window.location.href.includes('statistic_builder/builder')) {
 
     <div class="mb-3 row">
         <label>Icon By Ionicons</label>
-        <input class="form-control" required name='config[icon]' type='text' value='{{@$config->icon}}' />
-        E.g : ion-bag . You can find more icon, checkout at <a target='_blank'
-            href='http://ionicons.com/'>ionicons.com</a>
+        <select class="form-control" id="smallbox-icon-select" required name='config[icon]' style="width:100%">
+            <option value="">-- seleziona un'icona --</option>
+            @foreach($ionIconNames as $ionIconName)
+            <option value="{{ $ionIconName }}" {{ (@$config->icon == $ionIconName) ? 'selected' : '' }}>{{ $ionIconName }}</option>
+            @endforeach
+        </select>
+        <div class="help-block">Cerca digitando, es. "bag". Anteprima su <a target='_blank'
+            href='http://ionicons.com/'>ionicons.com</a></div>
     </div>
 
     <div class="mb-3 row">
         <label>Color</label>
-        <select class='form-control' required name='config[color]'>
-            <option {{(@$config->color == 'bg-green')?"selected":""}} value='bg-green'>Green</option>
-            <option {{(@$config->color == 'bg-red')?"selected":""}} value='bg-red'>Red</option>
-            <option {{(@$config->color == 'bg-aqua')?"selected":""}} value='bg-aqua'>Aqua</option>
-            <option {{(@$config->color == 'bg-yellow')?"selected":""}} value='bg-yellow'>Yellow</option>
-        </select>
+        <input type='color' class='form-control' name='config[color]' value='{{ @$config->color ?: "#00c0ef" }}' />
     </div>
 
     <div class="mb-3 row">
@@ -76,6 +103,31 @@ if (!window.location.href.includes('statistic_builder/builder')) {
     </div>
 
 </form>
+
+<link rel='stylesheet' href='{{ asset("vendor/crudbooster/assets/select2/dist/css/select2.min.css") }}' />
+<script>
+    (function () {
+        // Questa form viene iniettata via $.html() dentro #modal-statistic
+        // (vedi statistic_builder/index.blade.php), non passa dal layout
+        // standard: un push in coda pagina qui non avrebbe nessuno stack
+        // ad ascoltarlo, quindi lo script per il select2 va incluso ed
+        // eseguito direttamente qui.
+        function initIconSelect() {
+            $('#smallbox-icon-select').select2({
+                width: '100%',
+                dropdownParent: $('#modal-statistic')
+            });
+        }
+        if (window.jQuery && $.fn.select2) {
+            initIconSelect();
+            return;
+        }
+        var script = document.createElement('script');
+        script.src = '{{ asset("vendor/crudbooster/assets/select2/dist/js/select2.full.js") }}';
+        script.onload = initIconSelect;
+        document.body.appendChild(script);
+    })();
+</script>
 @elseif($command=='showFunction')
 <?php
     if ($key == 'sql') {
@@ -89,7 +141,7 @@ if (!window.location.href.includes('statistic_builder/builder')) {
             }
             echo reset(DB::select(DB::raw($value))[0]);
         } catch (\Exception $e) {
-            echo 'ERROR';
+            echo "<span class='small-box-sql-error'>" . e($e->getMessage()) . "</span>";
         }
     } else {
         echo $value;

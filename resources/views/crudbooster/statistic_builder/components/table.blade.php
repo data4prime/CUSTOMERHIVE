@@ -47,28 +47,34 @@
 @elseif($command=='showFunction')
 <?php
     if($key == 'sql') {
+    $sql = null;
+    $sqlError = null;
     try {
         $sessions = Session::all();
 
         foreach ($sessions as $k => $val) {
-            //echo $key;
             if (gettype($val) == gettype($value)) {
-                $value = str_replace("[".$key."]", $val, $value);
-            } else {
-                //$value = "SELECT name as Nomr, email AS email FROM cms_users";
+                //sostituisce il placeholder della sessione corrente (es.
+                //[SESSION_NAME]), non il nome del campo - prima del fix
+                //veniva usato "$key" (sempre 'sql' a questo punto, mai un
+                //vero placeholder di sessione), la sostituzione non
+                //scattava mai
+                $value = str_replace("[".$k."]", $val, $value);
             }
-
-
-
         }
         $sql = DB::select(DB::raw($value));
     } catch (\Exception $e) {
-        die('ERROR');
+        //prima: die('ERROR') interrompeva l'intera risposta AJAX di
+        //getViewComponent() (niente piu' JSON valido), facendo sparire
+        //il widget dall'area invece di mostrare l'errore
+        $sqlError = $e->getMessage();
     }
     ?>
 
-@if($sql)
-<table class='table table-striped'>
+@if($sqlError)
+<div class="alert alert-danger table-widget-sql-error" style="margin:15px;">{{ $sqlError }}</div>
+@elseif($sql)
+<table id="table-widget-{{ $componentID }}" class='table table-striped'>
     <thead>
         <tr>
             @foreach($sql[0] as $key=>$val)
@@ -87,10 +93,24 @@
     </tbody>
 </table>
 <script type="text/javascript">
-    $('table.table').DataTable({
-        dom: "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
-    });
+    (function () {
+        // Selettore generico "table.table" (prima) inizializzava TUTTE le
+        // tabelle nella pagina, comprese quelle di altri widget Table gia'
+        // presenti sulla stessa dashboard: DataTables lancia un errore
+        // reinizializzando una tabella gia' trasformata, che puo' impedire
+        // l'inizializzazione anche di questa (tabella "tagliata" - niente
+        // ricerca/paginazione, tutte le righe renderizzate senza controllo).
+        // Scoped al solo id di questo widget, con controllo anti-doppia
+        // inizializzazione.
+        var $table = $('#table-widget-{{ $componentID }}');
+        if ($.fn.DataTable.isDataTable($table)) {
+            return;
+        }
+        $table.DataTable({
+            dom: "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        });
+    })();
 </script>
 @endif
 <?php

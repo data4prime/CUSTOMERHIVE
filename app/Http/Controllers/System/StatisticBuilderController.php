@@ -92,25 +92,25 @@ class StatisticBuilderController extends CBController
         return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics'));
     }
 
-    public function getDashboard()
+    /**
+     * Risolve la riga dashboard_layouts assegnata (se esiste) o la griglia
+     * di default a 9 aree - usata sia da getDashboard() che da getShow(),
+     * che prima duplicavano questa logica in modo incompleto (getShow() non
+     * la calcolava affatto, ricadendo sempre e comunque sulla griglia di
+     * default definita separatamente in index.blade.php, indipendentemente
+     * dal layout realmente assegnato alla dashboard).
+     *
+     * @return array{0: object|null, 1: string} [$layout, $code_layout]
+     */
+    private function resolveDashboardCodeLayout($layoutId)
     {
-        $this->cbLoader();
-
-        $menus = DB::table('cms_menus')->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '" . CRUDBooster::myPrivilegeId() . "')")->where('is_dashboard', 1)->where('is_active', 1)->first();
-
-        $slug = str_replace("statistic_builder/show/", "", $menus->path);
-        $row = CRUDBooster::first($this->table, ['slug' => $slug]);
-        $id_cms_statistics = isset($row->id) ? $row->id : 0;
-        $page_title = isset($row->name) ? $row->name : 'Dashboard';
-
-        $layout = isset($row->layout) ? $row->layout : 0 ;
-
-        $layout = DB::table('dashboard_layouts')->where('id', $layout)->first();
+        $layout = DB::table('dashboard_layouts')->where('id', $layoutId)->first();
 
         if ($layout) {
-            $code_layout = html_entity_decode($layout->code_layout);
-        } else {
-            $code_layout = "
+            return [$layout, html_entity_decode($layout->code_layout)];
+        }
+
+        $code_layout = "
                 <div class='statistic-row row'>
         <div id='area1' class='col-sm-3 connectedSortable'>
 
@@ -147,7 +147,23 @@ class StatisticBuilderController extends CBController
         </div>
 </div>
         ";
-        }
+
+        return [null, $code_layout];
+    }
+
+    public function getDashboard()
+    {
+        $this->cbLoader();
+
+        $menus = DB::table('cms_menus')->whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '" . CRUDBooster::myPrivilegeId() . "')")->where('is_dashboard', 1)->where('is_active', 1)->first();
+
+        $slug = str_replace("statistic_builder/show/", "", $menus->path);
+        $row = CRUDBooster::first($this->table, ['slug' => $slug]);
+        $id_cms_statistics = isset($row->id) ? $row->id : 0;
+        $page_title = isset($row->name) ? $row->name : 'Dashboard';
+
+        $layoutId = isset($row->layout) ? $row->layout : 0;
+        [$layout, $code_layout] = $this->resolveDashboardCodeLayout($layoutId);
 
         return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout', 'code_layout'));
     }
@@ -160,7 +176,10 @@ class StatisticBuilderController extends CBController
         $id_cms_statistics = $row->id;
         $page_title = $row->name;
 
-        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics'));
+        $layoutId = isset($row->layout) ? $row->layout : 0;
+        [$layout, $code_layout] = $this->resolveDashboardCodeLayout($layoutId);
+
+        return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout', 'code_layout'));
     }
 
     public function getBuilder($id_cms_statistics)

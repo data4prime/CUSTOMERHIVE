@@ -201,6 +201,17 @@ foreach($routeCollection as $key => $value) {
         cursor: move;
     }
 
+    /* Bordo visibile delle aree solo in modalita' builder (drag&drop dei
+       widget): sulla dashboard finita (getDashboard()/getShow(), stessa
+       vista index.blade.php) non deve comparire nessun bordo tratteggiato
+       intorno ai widget veri. */
+    .connectedSortable {
+        border: 2px dashed #ccc;
+        border-radius: 4px;
+        background: #fafafa;
+        min-height: 100px;
+    }
+
     @endif .connectedSortable {
         position: relative;
     }
@@ -239,13 +250,37 @@ foreach($routeCollection as $key => $value) {
     @endif
 
     function createSortable() {
+        // Ogni area del layout (id che inizia per "area") puo' contenere un
+        // solo widget alla volta: se un drop la porterebbe ad averne piu' di
+        // uno (widget spostato da un'altra area, o nuovo widget trascinato
+        // dalla sidebar - .button-widget-area, non ancora .border-box finche'
+        // addWidget() non lo materializza), l'operazione viene annullata e
+        // l'elemento torna da dove e' partito (jQuery UI sortable('cancel'),
+        // tecnica standard per rifiutare un drop tra connected sortable).
+        var dropRejected = false;
+
         $(".connectedSortable").sortable({
             placeholder: "sort-highlight",
             connectWith: ".connectedSortable",
             handle: ".card-header, .inner-box, .box-header mb-3, .btn-add-widget",
             forcePlaceholderSize: true,
             zIndex: 999999,
+            receive: function (event, ui) {
+                var $target = $(this);
+                var isArea = ($target.attr('id') || '').indexOf('area') === 0;
+                var occupantsCount = $target.children('.border-box, .button-widget-area').length;
+
+                if (isArea && occupantsCount > 1) {
+                    dropRejected = true;
+                    ui.sender.sortable('cancel');
+                }
+            },
             stop: function (event, ui) {
+                if (dropRejected) {
+                    dropRejected = false;
+                    return;
+                }
+
                 console.log(ui.item.attr('class'));
                 var className = ui.item.attr('class');
                 var idName = ui.item.attr('id');
@@ -335,6 +370,7 @@ foreach($routeCollection as $key => $value) {
 
             $('#modal-statistic .modal-title').text(name);
             $('#modal-statistic .modal-body').html("<i class='fa fa-spin fa-spinner'></i> Please wait loading...");
+            $('#modal-statistic-validation-alert').hide();
             $('#modal-statistic').modal('show');
 
             $.get("{{CRUDBooster::mainpath('edit-component')}}/" + componentID, function (response) {
@@ -345,24 +381,32 @@ foreach($routeCollection as $key => $value) {
         $('#modal-statistic .btn-submit').click(function () {
 
             $('#modal-statistic form .has-error').removeClass('has-error');
+            $('#modal-statistic-validation-alert').hide();
 
             var required_input = [];
+            var required_labels = [];
             $('#modal-statistic form').find('input[required],textarea[required],select[required]').each(function () {
                 var $input = $(this);
-                var $form_group = $input.parent('.mb-3 row');
                 var value = $input.val();
 
-                if (value == '') {
+                if (value == '' || value == null) {
                     required_input.push($input.attr('name'));
+                    // "class" (non "row") separa mb-3 e row: sono due classi
+                    // sullo stesso div, non un discendente - un selettore con
+                    // lo spazio ("mb-3 row") non trova mai il form-group.
+                    var label = $input.closest('.mb-3.row').find('label').first().text().trim();
+                    required_labels.push(label || $input.attr('name'));
                 }
             })
 
             if (required_input.length) {
-                setTimeout(function () {
-                    $.each(required_input, function (i, name) {
-                        $('#modal-statistic form').find('input[name="' + name + '"],textarea[name="' + name + '"],select[name="' + name + '"]').parent('.mb-3 row').addClass('has-error');
-                    })
-                }, 200);
+                $.each(required_input, function (i, name) {
+                    $('#modal-statistic form').find('input[name="' + name + '"],textarea[name="' + name + '"],select[name="' + name + '"]').closest('.mb-3.row').addClass('has-error');
+                })
+
+                $('#modal-statistic-validation-alert')
+                    .text('Campi obbligatori mancanti: ' + required_labels.join(', '))
+                    .show();
 
                 return false;
             }
@@ -405,6 +449,7 @@ foreach($routeCollection as $key => $value) {
                 <h4 class="modal-title">Modal title</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div id="modal-statistic-validation-alert" class="alert alert-danger" style="display:none; margin: 15px 15px 0 15px;"></div>
             <div class="modal-body" style="padding: 30px;">
                 <p>One fine body&hellip;</p>
             </div>
