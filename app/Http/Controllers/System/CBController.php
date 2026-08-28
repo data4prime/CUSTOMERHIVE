@@ -615,6 +615,10 @@ class CBController extends Controller
                     }
                 }
 
+                if (@$col['color'] && $value) {
+                    $value = "<span style='display:inline-block;width:16px;height:16px;border:1px solid #ccc;border-radius:3px;vertical-align:middle;background-color:" . e($value) . ";'></span> " . e($value);
+                }
+
                 if (@$col['download']) {
                     $url = '/storage'. (strpos($value, 'http://') !== false) ? $value : asset($value) . '?download=1';
                     if ($value) {

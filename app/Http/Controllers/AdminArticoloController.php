@@ -32,7 +32,7 @@
 			$this->col = [];
 			$this->col[] = ["label"=>"Codice","name"=>"codice"];
 			$this->col[] = ["label"=>"Descrizione","name"=>"descrizione"];
-			$this->col[] = ["label"=>"Immagine","name"=>"immagine"];
+			$this->col[] = ["label"=>"Immagine","name"=>"immagine","image"=>true];
 			$this->col[] = ["label"=>"Prezzo","name"=>"prezzo"];
 			$this->col[] = ["label"=>"UM","name"=>"um"];
 			$this->col[] = ["label"=>"Band Code","name"=>"band_code"];
