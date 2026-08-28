@@ -37,7 +37,12 @@ foreach($routeCollection as $key => $value) {
 
 @push('bottom')
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-<!--<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>-->
+{{-- Morris.js 0.5.1 richiede Raphael per disegnare (usa SVG via Raphael).
+     Nella pagina "show" arriva gia' caricato da admin_template_plugins.blade.php,
+     ma la pagina "builder" usa un layout standalone (statistic_builder/layout.blade.php)
+     che non lo include: senza questo script i widget Chart Area/Line/Bar
+     restano vuoti li' (Raphael undefined, Morris non riesce a disegnare). --}}
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
 
