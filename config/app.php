@@ -57,7 +57,7 @@ return [
     * #RAMA version
     */
 
-    'version' => \crocodicstudio\crudbooster\helpers\MyHelper::version(),
+    'version' => \App\Helpers\MyHelper::version(),
 
     /*
     |--------------------------------------------------------------------------
@@ -194,7 +194,7 @@ return [
         /*
          * #RAMA per crudbooster
          */
-        crocodicstudio\crudbooster\CRUDBoosterServiceProvider::class,
+        App\Providers\CRUDBoosterServiceProvider::class,
     ],
 
     /*
@@ -245,6 +245,17 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
+        // #RAMA per crudbooster (spostati da CRUDBoosterServiceProvider,
+        // vedi docs/refactoring/032)
+        'CRUDBooster' => App\Helpers\CRUDBooster::class,
+        'CB' => App\Helpers\CB::class,
+        'GroupHelper' => App\Helpers\GroupHelper::class,
+        'QlikHelper' => App\Helpers\QlikHelper::class,
+        'ModuleHelper' => App\Helpers\ModuleHelper::class,
+        'TenantHelper' => App\Helpers\TenantHelper::class,
+        'UserHelper' => App\Helpers\UserHelper::class,
+        'MyHelper' => App\Helpers\MyHelper::class,
 
     ],
 
