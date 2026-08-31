@@ -172,8 +172,9 @@ class MenusController extends CBController
   					$('#module_slug').prop('required',false);
   					$('#statistic_slug').prop('required',false);
   					$('#qlik_slug').prop('required',false);
+  					$('#chat_ai').prop('required',false);
             $('#form-group-target_layout').hide();
-  					$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug').hide();
+  					$('#form-group-module_slug,#form-group-statistic_slug,#form-group-qlik_slug,#form-group-chat_ai').hide();
   					$('#form-group-frame_width,#form-group-frame_height').hide();
   					$('#form-group-path').show();
   				}
@@ -351,7 +352,7 @@ class MenusController extends CBController
   					}
             else
             {
-  						$('#module_slug,#statistic_slug,#qlik_slug').prop('required',false);
+  						$('#module_slug,#statistic_slug,#qlik_slug,#chat_ai').prop('required',false);
 
   						$('#path').prop('required',true);
   						$('#form-group-path label .text-danger').remove();
