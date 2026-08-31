@@ -244,20 +244,21 @@ class ConnectorService
 
         $data = $response->json();
 
-        if ($response->ok()) {
-            if ($data['success'] === true) {
-                if (!empty($data['data']['access_token'])) {
-                    $accessToken = $data['data']['access_token'];
+        if ($response->ok() && is_array($data) && ($data['success'] ?? false) === true) {
+            if (!empty($data['data']['access_token'])) {
+                $accessToken = $data['data']['access_token'];
 
-                    Cache::put($accessTokenCacheKey, $accessToken, now()->addMinutes(60));
+                Cache::put($accessTokenCacheKey, $accessToken, now()->addMinutes(60));
 
-                    return $accessToken;
-                } else {
-                    throw new AuthException($data['message']);
-                }
+                return $accessToken;
             }
         }
 
-        throw new AuthException($data['message']);
+        // Risposta del license server non nella busta {success, message,
+        // data} attesa (formato inatteso, non solo "success:false") - non
+        // si assume piu' che $data['message'] esista.
+        $message = is_array($data) ? ($data['message'] ?? 'Risposta del license server non valida') : 'Risposta del license server non valida (formato inatteso)';
+
+        throw new AuthException($message);
     }
 }

@@ -90,14 +90,23 @@ class LicenseHelper  {
             return false;
         }
 
-        LicenseHelper::writeLicense();
+        try {
+            LicenseHelper::writeLicense();
 
-       //$customData = ['license_key' => $licenseKey->license_key];
-        $customData = ['license_key' => $licenseKey->license_key, 'domain' => env('APP_DOMAIN')];
+           //$customData = ['license_key' => $licenseKey->license_key];
+            $customData = ['license_key' => $licenseKey->license_key, 'domain' => env('APP_DOMAIN')];
 
-        $connectorService = new ConnectorService($licenseKey->license_key);
+            $connectorService = new ConnectorService($licenseKey->license_key);
 
-        return  $connectorService->validateLicense($customData);
+            return  $connectorService->validateLicense($customData);
+        } catch (\LaravelReady\LicenseConnector\Exceptions\AuthException $e) {
+            // Server di licenza irraggiungibile o risposta malformata: non
+            // deve bloccare il login dell'intero ambiente con un 500, si
+            // comporta come "licenza non valida" (stesso esito di prima).
+            Log::warning('canLicenseLogin: errore dal license server: ' . $e->getMessage());
+
+            return false;
+        }
     }
 
     public static function canAddTenant() {
