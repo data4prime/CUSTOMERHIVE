@@ -12,11 +12,10 @@ use Tests\TestCase;
  * Test di caratterizzazione per AdminController::postLogin() (CRUDBooster).
  * Fissano il comportamento ATTUALE del login, non modificano il controller.
  *
- * Nota: il controllo di licenza (LicenseHelper::canLicenseLogin()) è oggi
- * bypassato incondizionatamente (tag LICENSE-CHECK-DISABLED-DEV) — questi
- * test dipendono da quel bypass per non fare chiamate di rete verso il
- * license server esterno. Quando il bypass verrà rimosso, questi test
- * andranno rivisti (vedi docs/pre-push-checklist.md).
+ * Nota: il controllo di licenza (LicenseHelper::canLicenseLogin()) ritorna
+ * sempre true in ambiente 'testing' (vedi LicenseHelper::canLicenseLogin())
+ * per non dipendere da un license server esterno raggiungibile — questi
+ * test non coprono il flusso di licenza, solo login/logout.
  */
 class LoginTest extends TestCase
 {
