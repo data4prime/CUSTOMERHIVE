@@ -92,6 +92,7 @@ zero leggendo i diff di git.
 | [057](057-table-widget-die-rimuove-widget-query-sbagliata.md) | Widget "Table": una query SQL sbagliata faceva sparire il widget (`die('ERROR')` rompeva l'intera risposta AJAX) — ora mostra l'errore reale, corretto anche un bug nella sostituzione dei placeholder di sessione | Bug fix | Completato | 2026-08-28 |
 | [058](058-getshow-non-caricava-il-layout-assegnato.md) | `StatisticBuilderController::getShow()` non caricava il layout assegnato alla dashboard, ricadendo sempre sulla griglia di default a 9 aree — widget in posizione diversa tra builder e dashboard reale | Bug fix | Completato | 2026-08-28 |
 | [059](059-table-widget-datatable-selettore-troppo-generico.md) | Widget "Table": selettore DataTable globale (`table.table`) poteva confliggere con altri widget Table sulla stessa dashboard ("tabella tagliata") — scoped al singolo widget con controllo anti-doppia-inizializzazione | Bug fix | Completato | 2026-08-28 |
+| [060](060-groups-can-view-crash-standard-e-tenants-list-vuota.md) | `ModuleHelper::can_view()`: un utente Standard che lista `/admin/groups` con gruppi di piu' tenant otteneva un 500 (query/null-check sbagliati in `get_group_id()`/`get_tenant_id()`); documentato anche che un tenantadmin non vede nessun tenant in lista Tenants (nessun fix, solo caratterizzazione) | Bug fix / caratterizzazione | Parzialmente completato | 2026-09-01 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).

@@ -95,6 +95,78 @@ da solo non invalida il guard Laravel — vedi
 |---|---|
 | `test_logout_invalida_sia_la_sessione_legacy_che_il_guard` | dopo il logout, sia `admin_id` è assente dalla sessione sia `Auth::guest()` è vero |
 
+## `tests/Feature/TenantsCrudTest.php`, `GroupsCrudTest.php`, `PrivilegesCrudTest.php`, `UsersCrudTest.php`
+
+**Cosa coprono**: il CRUD di ciascuno dei 4 moduli di sistema Tenants,
+Groups, Privileges, Users — creazione/modifica/cancellazione via
+`CBController` (Tenants, Groups, Users) o via il proprio controller
+completamente custom (`PrivilegesController`), inclusi gli hook
+(`hook_before_add`/`hook_before_edit`/`hook_before_delete`/
+`hook_after_add`) e le regole di business specifiche di ciascun modulo
+(derivazione del `domain_name` per Tenants, traduzione
+`superprivilege` → `is_superadmin`/`is_tenantadmin` per Privileges,
+associazione al gruppo primario per Users, ecc.). Attore sempre
+superadmin fresco (`SeedsCmsData::actingAsSuperadmin()`); fuori scope
+volutamente il sotto-form/le sotto-pagine Qlik.
+
+Ha richiesto un refactoring esteso e propedeutico di
+`CRUDBooster::redirect()`/`CBController::validation()` (da `exit()` a
+`return` di una `Response`, 155 punti di chiamata in tutto il codebase)
+perché il flusso `exit()`-based del codice legacy non era altrimenti
+testabile con il client HTTP di Laravel. Ha anche fatto emergere e
+corretto 3 bug reali preesistenti: `TenantHelper::unique_domain_name()`
+(un `return` mancante nel ramo ricorsivo), `CRUDBooster::
+sidebarDashboard()` (nessun controllo di null), il placeholder
+`%field%` mai sostituito in `SettingsController::cbInit()`.
+
+**Dipendenze/scelte note**:
+- `Tests\Concerns\SeedsCmsData::registerAdminModule(s)()` registra a
+  mano, in `setUp()`, sia la riga `cms_moduls` sia la rotta stessa
+  (`CRUDBooster::routeController()`), perché `routes/crudbooster.php`
+  legge `cms_moduls` al boot dell'app, prima che un test possa
+  seminarla — e registra sempre l'intero set di moduli di sistema,
+  perché il layout admin condiviso li referenzia tutti incondizionatamente.
+- `UsersCrudTest` imposta/ripristina a mano in `setUp()`/`tearDown()`
+  `$_SERVER['REQUEST_URI']`/`HTTP_HOST`/`REMOTE_ADDR`/`HTTP_USER_AGENT`
+  — letti direttamente (non via `Request` Laravel) da
+  `AdminCmsUsersController::cbInit()`, `CRUDBooster::isAddPage()`/
+  `isProfilePage()` e `add_log_ch()` (chiamata da
+  `GroupHelper::add()`), non popolati dal client di test.
+
+## `tests/Feature/CrossModuleRelationsTest.php`
+
+**Cosa copre**: le relazioni TRA i 4 moduli sopra (non il CRUD interno
+di ciascuno), in particolare l'isolamento per tenant nelle liste admin
+per un attore non superadmin. L'isolamento **non** vive in una `WHERE`
+nella query di `CBController::getIndex()` (quella riga esiste ma è
+commentata) ma riga-per-riga dopo il fetch, in `ModuleHelper::
+can_view()`.
+
+| Test | Cosa verifica |
+|---|---|
+| `test_lista_utenti_isola_per_tenant_un_tenantadmin` | un tenantadmin non vede utenti di un tenant diverso dal proprio |
+| `test_lista_tenants_nessun_tenant_visibile_per_un_tenantadmin` | **caratterizzazione di un gap**: nessun ramo per la tabella `tenants` in `can_view()`/`get_tenant_id()` → un non-superadmin non vede nessun tenant in lista, nemmeno il proprio (non un crash, solo lista vuota) — vedi [060](refactoring/060-groups-can-view-crash-standard-e-tenants-list-vuota.md), non corretto |
+| `test_lista_gruppi_tenantadmin_vede_solo_i_gruppi_del_proprio_tenant` | isolamento Groups per tenantadmin (filtro SQL + `can_view()` ridondanti) |
+| `test_lista_gruppi_standard_vede_solo_i_gruppi_del_proprio_tenant` | isolamento Groups per uno Standard (solo `can_view()`, nessun filtro SQL) — prima del fix in [060](refactoring/060-groups-can-view-crash-standard-e-tenants-list-vuota.md) crashava con 500 |
+| `test_cancellazione_privilegio_in_uso_riesce_e_utente_orfano_non_ha_piu_permessi_speciali` | comportamento già deciso in 044/046/047: nessun guard "in uso", l'utente orfano perde solo i permessi speciali, nessun crash |
+| `test_cancellazione_tenant_con_gruppo_associato_ma_senza_utenti_riesce_e_lascia_association_orfana` | `AdminTenantsController::hook_before_delete()` controlla solo gli utenti membri, non `group_tenants`: riesce e lascia una riga orfana |
+| `test_modifica_privilegio_utente_non_tocca_lappartenenza_ai_gruppi` | cambiare `id_cms_privileges` non innesca la logica di `hook_before_edit()` che gestisce cambi di tenant/gruppo primario |
+| `test_creazione_gruppi_in_tenant_diversi_non_si_mescolano` | `Group::add_tenant()` associa il nuovo gruppo solo al tenant di chi lo crea |
+
+**Scoperto scrivendo questo test** (corretto, vedi
+[060](refactoring/060-groups-can-view-crash-standard-e-tenants-list-vuota.md)):
+`ModuleHelper::get_group_id()`/`get_tenant_id()`, ramo `groups`,
+crashavano con un 500 per un attore Standard che lista `/admin/groups`
+con gruppi di più di un tenant (query sbagliata + nessun controllo di
+null prima di dereferenziare `first()`).
+
+**Dipendenze/scelte note**:
+- `SeedsCmsData::actingAsTenantUser()` (nuovo helper): autentica il
+  test come Tenantadmin/Standard, popolando `cms_privileges_roles` e la
+  sessione `admin_privileges_roles` con la stessa forma prodotta da
+  `AdminController::postLogin()` — necessario perché `CRUDBooster::
+  isView()`/`isRead()` per un non superadmin leggono da lì.
+
 ## `tests/Unit/Services/ConnectorServiceTest.php`
 
 **Cosa copre**: `App\Services\ConnectorService` — il client verso il license
