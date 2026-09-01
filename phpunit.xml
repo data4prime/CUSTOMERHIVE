@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="bootstrap/autoload.php"
-
          colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false">
+         stopOnFailure="false"
+         cacheDirectory=".phpunit.cache">
     <testsuites>
-
-
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
@@ -23,8 +17,9 @@
         <env name="APP_ENV" value="testing"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
-        <!-- CACHE_STORE è il nome usato da Laravel 11+; questo progetto è su
-             Laravel 9, dove la chiave giusta è CACHE_DRIVER (vedi config/cache.php).
+        <!-- CACHE_STORE è il nome usato da Laravel 11+; questo progetto tiene
+             la propria chiave CACHE_DRIVER in config/cache.php (mai
+             rinominata durante gli upgrade), quindi resta quella giusta.
              Senza questa, i test userebbero la cache su file di default,
              condivisa con qualunque altro processo dell'app sullo stesso
              container/filesystem — causa di test non isolati/flaky. -->
@@ -37,5 +32,4 @@
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
     </php>
-
 </phpunit>

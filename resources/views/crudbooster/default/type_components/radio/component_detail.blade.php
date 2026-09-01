@@ -22,7 +22,7 @@ if ((isset($form['datatable']) && isset($form['relationship_table'])) && $form['
     }
 } elseif (isset($form['dataquery']) && $form['dataquery']) {
     $dataquery = $form['dataquery'];
-    $query = DB::select(DB::raw($dataquery));
+    $query = DB::select($dataquery);
     if ($query) {
         foreach ($query as $q) {
             if ($q->value == $value) {

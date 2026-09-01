@@ -2,7 +2,7 @@
 # Il codice applicativo NON viene copiato qui: in locale il progetto viene
 # montato come bind mount da docker-compose.yml, cosi' le modifiche ai file
 # sono visibili subito senza rebuild.
-FROM php:8.1-apache
+FROM php:8.3-apache
 
 WORKDIR /var/www/html
 

@@ -17,6 +17,7 @@ Homestead.yaml
 .env
 .ftpconfig
 .phpunit.result.cache
+.phpunit.cache/
 /public/cookie-name
 
 # I controller creati da interfaccia (module builder di CRUDBooster) restano

@@ -136,7 +136,7 @@ function update_objects(select){
                 }
                 
             }
-            echo reset(DB::select(DB::raw($value))[0]);
+            echo reset(DB::select($value)[0]);
         } catch (\Exception $e) {
             echo 'ERROR';
         }

@@ -139,7 +139,7 @@ if (!window.location.href.includes('statistic_builder/builder')) {
                 }
                 
             }
-            echo reset(DB::select(DB::raw($value))[0]);
+            echo reset(DB::select($value)[0]);
         } catch (\Exception $e) {
             echo "<span class='small-box-sql-error'>" . e($e->getMessage()) . "</span>";
         }

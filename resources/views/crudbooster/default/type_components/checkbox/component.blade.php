@@ -113,7 +113,7 @@ id='form-group-{{$name}}' style="{!! @$form['style'] !!}">
 
         if (isset($form['dataquery'])) {
 
-            $query = DB::select(DB::raw($form['dataquery']));
+            $query = DB::select($form['dataquery']);
             @$value = explode(';', $value);
             if ($query) {
                 foreach ($query as $q) {

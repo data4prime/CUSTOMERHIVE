@@ -709,8 +709,8 @@ class CBController extends Controller
                 $query = str_replace(':' . $param, $value, $query);
             }
         }
-        if (isset(DB::select(DB::raw($query))[0])) {
-            $value= DB::select(DB::raw($query))[0]->value;
+        if (isset(DB::select($query)[0])) {
+            $value= DB::select($query)[0]->value;
         } else {
             $value = "";
         }
@@ -765,7 +765,7 @@ class CBController extends Controller
     public function postDataQuery()
     {
         $query = Request::get('query');
-        $query = DB::select(DB::raw($query));
+        $query = DB::select($query);
 
         return response()->json($query);
     }

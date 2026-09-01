@@ -118,7 +118,7 @@ use Illuminate\Support\Facades\Schema;
             {
               if (@$form['dataquery'])
               {
-                $query = DB::select(DB::raw($form['dataquery']));
+                $query = DB::select($form['dataquery']);
                 if (isset($query))
                 {
                   foreach ($query as $q)

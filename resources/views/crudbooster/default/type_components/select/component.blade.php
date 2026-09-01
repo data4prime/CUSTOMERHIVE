@@ -123,7 +123,7 @@ $add_field = is_array($parent_select) ? $parent_select[1] : '';
             {
 
             //$query = DB::select(DB::raw($form['dataquery']))->get();
-$query = DB::select(DB::raw($form['dataquery']));
+$query = DB::select($form['dataquery']);
 
             if (isset($query))
             {

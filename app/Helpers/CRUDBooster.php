@@ -12,8 +12,7 @@ use App\Helpers\ModuleHelper;
 //use Cache;
 use Illuminate\Support\Facades\Cache;
 //use DB;
-//use Image;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Image;
 
 //use Request;
 use Illuminate\Support\Facades\Request;
@@ -251,36 +250,24 @@ public static function isProfilePage() {
         Storage::makeDirectory($file_path_thumbnail, 0777, true);
 
         if (in_array(strtolower($ext), $images_ext)) {
+            $sourcePath = storage_path('app/' . $file_path . '/' . $filename);
+
+            $img = Image::fromPath($sourcePath);
 
             if ($resize_width && $resize_height) {
-                $img = Image::make(storage_path('app/' . $file_path . '/' . $filename));
-                $img->fit($resize_width, $resize_height);
-                $img->save(storage_path('app/' . $file_path . '/' . $filename), $qty);
+                $img = $img->cover($resize_width, $resize_height);
             } elseif ($resize_width && !$resize_height) {
-                $img = Image::make(storage_path('app/' . $file_path . '/' . $filename));
-                $img->resize($resize_width, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $img->save(storage_path('app/' . $file_path . '/' . $filename), $qty);
+                $img = $img->resize(width: $resize_width);
             } elseif (!$resize_width && $resize_height) {
-                $img = Image::make(storage_path('app/' . $file_path . '/' . $filename));
-                $img->resize(null, $resize_height, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $img->save(storage_path('app/' . $file_path . '/' . $filename), $qty);
-            } else {
-                $img = Image::make(storage_path('app/' . $file_path . '/' . $filename));
-                if ($img->width() > 1300) {
-                    $img->resize(1300, null, function ($constraint) {
-                        $constraint->aspectRatio();
-                    });
-                }
-                $img->save(storage_path('app/' . $file_path . '/' . $filename), $qty);
+                $img = $img->resize(height: $resize_height);
+            } elseif ($img->width() > 1300) {
+                $img = $img->resize(width: 1300);
             }
 
-            $img = Image::make(storage_path('app/' . $file_path . '/' . $filename));
-            $img->fit(350, 350);
-            $img->save(storage_path('app/' . $file_path_thumbnail . '/' . $filename), $thumbQty);
+            file_put_contents($sourcePath, $img->quality($qty)->toBytes());
+
+            $thumbPath = storage_path('app/' . $file_path_thumbnail . '/' . $filename);
+            file_put_contents($thumbPath, Image::fromPath($sourcePath)->cover(350, 350)->quality($thumbQty)->toBytes());
         }
     }
 
@@ -852,7 +839,7 @@ return Request::segment($segment);
 
         try {
             //MySQL & SQL Server
-            $isNULL = DB::select(DB::raw("select IS_NULLABLE from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='$table' and COLUMN_NAME = '$field'"))[0]->IS_NULLABLE;
+            $isNULL = DB::select("select IS_NULLABLE from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='$table' and COLUMN_NAME = '$field'")[0]->IS_NULLABLE;
             $isNULL = ($isNULL == 'YES') ? true : false;
             Cache::forever('field_isNull_' . $table . '_' . $field, $isNULL);
         } catch (\Exception $e) {
@@ -873,7 +860,7 @@ return Request::segment($segment);
 
             try {
                 //MySQL & SQL Server
-                $typedata = DB::select(DB::raw("select DATA_TYPE from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='$table' and COLUMN_NAME = '$field'"))[0]->DATA_TYPE;
+                $typedata = DB::select("select DATA_TYPE from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='$table' and COLUMN_NAME = '$field'")[0]->DATA_TYPE;
             } catch (\Exception $e) {
             }
 
@@ -1206,15 +1193,16 @@ return Request::segment($segment);
         if (!$table) {
             return 'id';
         }
-        //dd($pk = DB::getDoctrineSchemaManager()->listTableDetails($table));
-        $pk = DB::getDoctrineSchemaManager()->listTableDetails($table)->getPrimaryKey();
-        //dd($pk);
-        if (!$pk) {
-            //return null;
+        // Doctrine DBAL rimosso da Laravel 11 (getDoctrineSchemaManager()
+        // non esiste piu') - sostituito dall'introspezione nativa dello
+        // schema di Laravel (Schema::getIndexes()).
+        $primaryIndex = collect(Schema::getIndexes($table))->firstWhere('primary', true);
+
+        if (!$primaryIndex || empty($primaryIndex['columns'])) {
             //#RAMA if module generator is creating a new table the table has not be created yet and the above methods can't find anything
             return 'id';
         }
-        return $pk->getColumns()[0];
+        return $primaryIndex['columns'][0];
     }
 
     public static function newId($table)

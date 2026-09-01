@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class ImportData implements ToCollection
 {
-    public function collection(Collection $rows)
+    public function collection(Collection $rows): void
     {
 
     }

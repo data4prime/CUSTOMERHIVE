@@ -62,7 +62,7 @@
                 $value = str_replace("[".$k."]", $val, $value);
             }
         }
-        $sql = DB::select(DB::raw($value));
+        $sql = DB::select($value);
     } catch (\Exception $e) {
         //prima: die('ERROR') interrompeva l'intera risposta AJAX di
         //getViewComponent() (niente piu' JSON valido), facendo sparire

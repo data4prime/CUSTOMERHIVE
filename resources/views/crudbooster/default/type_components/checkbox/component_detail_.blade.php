@@ -11,7 +11,7 @@ if ((isset($form['datatable']) && isset($form['relationship_table'])) && $form['
     $value = DB::table($datatable_tab)->select($datatable_field)->whereIn('id', $ids)->pluck($datatable_field)->toArray();
 } elseif (isset($form['dataquery']) && $form['dataquery']) {
     $dataquery = $form['dataquery'];
-    $query = DB::select(DB::raw($dataquery));
+    $query = DB::select($dataquery);
     if ($query) {
         foreach ($query as $q) {
             if ($q->value == $value) {

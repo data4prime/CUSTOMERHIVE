@@ -11,7 +11,7 @@ class QlikItem extends Model
     protected $table = 'qlik_items';
     public $timestamps = false;
     use SoftDeletes;
-    protected $dates = ['deleted_at'];
+    protected $casts = ['deleted_at' => 'datetime'];
 
 		/**
 		*	Trova i gruppi autorizzati all'item

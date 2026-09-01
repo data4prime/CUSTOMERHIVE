@@ -9,6 +9,8 @@
 |
 */
 
+use Illuminate\Support\Facades\Image;
+
 if(!function_exists('assetThumbnail')) {
 	function assetThumbnail($path) {
 		$path = str_replace('uploads/','uploads_thumbnail/',$path);
@@ -24,8 +26,8 @@ if(!function_exists('assetResize')) {
 	    if(Storage::exists($newLocation)) {
 	        return asset($newLocation);
 	    }else{
-	        $img = Image::make(storage_path($path))->fit($width,$height);
-	        $img->save(storage_path($newLocation),$quality);
+	        $bytes = Image::fromPath(storage_path($path))->cover($width, $height)->quality($quality)->toBytes();
+	        file_put_contents(storage_path($newLocation), $bytes);
 	        return asset($newLocation);
 	    }
 	}

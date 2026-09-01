@@ -1529,7 +1529,13 @@ class ModulsController extends CBController
           $result = Schema::table($table_name, function (Blueprint $table) use ($column) {
             $type = $column->type;
             $columnname = ModuleHelper::sql_name_encode($column->name);
-            $table->$type("{$columnname}")->change();
+            // Le colonne dinamiche di questo generatore sono sempre create
+            // nullable() (mai NOT NULL/unsigned/con default) - vedi il ramo
+            // "add column" piu' sopra e la Schema::create() per la nuova
+            // tabella. Da Laravel 11 change() droppa i modificatori non
+            // ripetuti esplicitamente: senza questo nullable() la colonna
+            // diventerebbe NOT NULL dopo un cambio di tipo dall'admin.
+            $table->$type("{$columnname}")->nullable()->change();
           });
           add_log_ch('mg edit table change column data type', 'Column ' . $columnname . ' from ' . $existing_table[$index]['type'] . ' to ' . $column->type);
         }
@@ -1540,9 +1546,10 @@ class ModulsController extends CBController
             $columnname = ModuleHelper::sql_name_encode($column->name);
             if ($type == 'integer') {
               //integer defaults to autoincrement without second parameter set to false if length is set as third attribute of the integer method
-              $table->integer("{$columnname}")->length($column->size)->change();
+              // nullable(): vedi commento sul change() di tipo poco sopra.
+              $table->integer("{$columnname}")->length($column->size)->nullable()->change();
             } else {
-              $table->$type("{$columnname}", $column->size)->change();
+              $table->$type("{$columnname}", $column->size)->nullable()->change();
             }
           });
           add_log_ch('mg edit table change column data size', 'Column ' . $column->name. ' from ' . $existing_table[$index]['type'] . ' to ' . $column->type);

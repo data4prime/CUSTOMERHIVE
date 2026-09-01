@@ -176,4 +176,17 @@ return [
 
     'http_only' => true,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Session Serialization
+    |--------------------------------------------------------------------------
+    |
+    | Esplicito a 'php' (comportamento di sempre) invece di lasciare il
+    | default di Laravel 13, che sarebbe 'json' e invaliderebbe tutte le
+    | sessioni attive degli utenti al primo deploy dopo l'upgrade.
+    |
+    */
+
+    'serialization' => env('SESSION_SERIALIZATION', 'php'),
+
 ];

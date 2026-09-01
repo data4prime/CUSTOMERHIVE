@@ -11,7 +11,7 @@ class ChatAIConf extends Model
     protected $table = 'chatai_confs';
     public $timestamps = false;
     use SoftDeletes;
-    protected $dates = ['deleted_at'];
+    protected $casts = ['deleted_at' => 'datetime'];
 
 		/**
 		*	Trova i gruppi autorizzati al ChatAIConf

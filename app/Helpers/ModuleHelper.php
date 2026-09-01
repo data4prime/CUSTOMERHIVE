@@ -426,11 +426,11 @@ if ($module->table == "qlik_apps") {
 
     //get row tenant
     if (empty($row->tenant) && Schema::hasColumn($module->table, 'tenant')) {
-      $row->tenant = DB::select(DB::raw("select tenant from " . $module->table . " where id='" . $row->id . "' "))[0]->tenant;
+      $row->tenant = DB::select("select tenant from " . $module->table . " where id='" . $row->id . "' ")[0]->tenant;
     }
     //get row group
     if (empty($row->group) && Schema::hasColumn($module->table, 'group')) {
-      $row->group = DB::select(DB::raw("select `group` from " . $module->table . " where id='" . $row->id . "' "))[0]->group;
+      $row->group = DB::select("select `group` from " . $module->table . " where id='" . $row->id . "' ")[0]->group;
     }
 
     //check group/tenant on manually generated modules
@@ -685,10 +685,10 @@ if(ModuleHelper::is_manually_generated($module->table)) {
     }
 
     if (empty($row->tenant) && Schema::hasColumn($module->table, 'tenant')) {
-      $row->tenant = DB::select(DB::raw("select tenant from " . $module->table . " where id='" . $row->id . "' "))[0]->tenant;
+      $row->tenant = DB::select("select tenant from " . $module->table . " where id='" . $row->id . "' ")[0]->tenant;
     }
     if (empty($row->group) && Schema::hasColumn($module->table, 'group')) {
-      $row->group = DB::select(DB::raw("select group from " . $module->table . " where id='" . $row->id . "' "))[0]->group;
+      $row->group = DB::select("select group from " . $module->table . " where id='" . $row->id . "' ")[0]->group;
     }
 
     //check group/tenant

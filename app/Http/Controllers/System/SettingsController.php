@@ -27,7 +27,13 @@ class SettingsController extends CBController
         $this->button_export = false;
 
         $this->col = [];
-        $this->col[] = ["label" => "Nama", "name" => "name", "callback_php" => "ucwords(str_replace('_',' ',%field%))"];
+        // "%field%" non e' un placeholder riconosciuto da CBController::
+        // getIndex() (che sostituisce solo token "[nomecampo]", o si puo'
+        // referenziare $row direttamente essendo gia' in scope nell'eval())
+        // - restava cosi' com'e' dentro eval(), causando un ParseError su
+        // ogni caricamento di questa pagina (bug preesistente, non legato
+        // all'upgrade Laravel).
+        $this->col[] = ["label" => "Nama", "name" => "name", "callback_php" => "ucwords(str_replace('_',' ',\$row->name))"];
         $this->col[] = ["label" => "Setting", "name" => "content"];
 
         $this->form = [];
