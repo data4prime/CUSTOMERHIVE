@@ -40,6 +40,32 @@ trait SeedsCmsData
     }
 
     /**
+     * Crea una voce di menu (cms_menus) di primo livello, pronta per essere
+     * mostrata da MenuHelper::get_menu()/menu_to_html() (parent_id=0,
+     * sorting valorizzato). Nessuna associazione privilege/tenant/group
+     * creata qui: aggiungerle esplicitamente nel test se servono per
+     * l'isolamento per tenant o per i permessi di modifica/cancellazione.
+     */
+    protected function seedMenu(array $overrides = []): array
+    {
+        $data = array_merge([
+            'name' => 'Voce Di Menu Test',
+            'type' => 'URL',
+            'path' => 'https://example.com',
+            'parent_id' => 0,
+            'sorting' => 1,
+            'is_active' => 1,
+            'is_dashboard' => 0,
+            'icon' => 'fa fa-link',
+            'created_at' => now(),
+        ], $overrides);
+
+        $menuId = DB::table('cms_menus')->insertGetId($data);
+
+        return array_merge($data, ['id' => $menuId]);
+    }
+
+    /**
      * Le route dei moduli CRUD (Tenants, Users, ecc.) si registrano
      * leggendo cms_moduls quando l'applicazione boota (routes/crudbooster.php,
      * sezione "ROUTER FOR BACKEND CRUDBOOSTER") - PRIMA che un test possa
@@ -162,8 +188,15 @@ trait SeedsCmsData
         $superadminPrivilegeId = $this->seedPrivilege(isSuperadmin: true);
         $user = $this->seedUser(['tenant' => $tenantId, 'id_cms_privileges' => $superadminPrivilegeId]);
 
-        $this->withSession(['admin_id' => $user['id'], 'admin_lock' => 0, 'admin_is_superadmin' => 1])
-            ->actingAs(\App\User::find($user['id']));
+        $this->withSession([
+            'admin_id' => $user['id'],
+            'admin_lock' => 0,
+            'admin_is_superadmin' => 1,
+            // AdminController::postLogin() la popola sempre - alcuni hook
+            // (es. MenusController) la leggono via CRUDBooster::
+            // myPrivilegeId() per risalire alla privilege dell'attore.
+            'admin_privileges' => $superadminPrivilegeId,
+        ])->actingAs(\App\User::find($user['id']));
 
         return ['userId' => $user['id'], 'tenantId' => $tenantId];
     }
@@ -226,6 +259,7 @@ trait SeedsCmsData
             'admin_lock' => 0,
             'admin_is_superadmin' => 0,
             'admin_privileges_roles' => $roles,
+            'admin_privileges' => $privilegeId,
         ])->actingAs(\App\User::find($user['id']));
 
         return ['userId' => $user['id'], 'tenantId' => $tenantId, 'privilegeId' => $privilegeId];

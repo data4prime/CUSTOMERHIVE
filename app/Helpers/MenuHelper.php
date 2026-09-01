@@ -159,11 +159,12 @@ class MenuHelper
       $result .= $menu->name;
       $result .= "<span class='pull-right'>";
       if ($can_edit_menu) {
-        $href = "";
-        if (route("MenusControllerGetEdit", ["id" => $menu->id])) {
-          //$href = route("MenusControllerGetEdit", ["id" => $menu->id]) . "?return_url=" . $return_url;
-          $href = route("MenusControllerGetEdit") . "/" . $menu->id . "?return_url=" . $return_url;
-        }
+        // route() richiede sempre il parametro 'id' (la rotta e'
+        // admin/menu_management/edit/{id}, non opzionale): la versione
+        // precedente lo passava solo nell'if di controllo, mai nella
+        // chiamata usata per l'href reale, causando un
+        // UrlGenerationException su ogni voce di menu modificabile.
+        $href = route("MenusControllerGetEdit", ["id" => $menu->id]) . "?return_url=" . $return_url;
         //dd($href);
         $result .= "<a class='fa fa-pencil' title='Edit' href='$href'></a>";
       }

@@ -1679,7 +1679,10 @@ class CBController extends Controller
         if (!ModuleHelper::can_delete($this, $row)) {
             //log denied access
             CRUDBooster::insertLog(trans("crudbooster.log_try_delete", [
-                'name' => $module->{$this->title_field},
+                // $module non e' mai stata definita qui (probabile refuso
+                // di copia da un altro punto) - va letto da $row, come
+                // qualche riga sotto per il log della delete riuscita.
+                'name' => $row->{$this->title_field},
                 'module' => CRUDBooster::getCurrentModule()->name
             ]));
             //kick out

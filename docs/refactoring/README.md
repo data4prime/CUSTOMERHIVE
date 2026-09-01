@@ -95,6 +95,7 @@ zero leggendo i diff di git.
 | [060](060-groups-can-view-crash-standard-e-tenants-list-vuota.md) | `ModuleHelper::can_view()`: un utente Standard che lista `/admin/groups` con gruppi di piu' tenant otteneva un 500 (query/null-check sbagliati in `get_group_id()`/`get_tenant_id()`); documentato anche che un tenantadmin non vede nessun tenant in lista Tenants (nessun fix, solo caratterizzazione) | Bug fix / caratterizzazione | Parzialmente completato | 2026-09-01 |
 | [061](061-icona-modulo-privileges-incoerente.md) | Icona del modulo Privileges incoerente tra testata pagina (`fa fa-cog`, da `cms_moduls`) e sidebar (`fa fa-key`, hardcoded) — allineata la testata alla sidebar via migration dati | Bug fix (UI) | Completato | 2026-09-01 |
 | [062](062-pulsante-add-member-in-tenants-group.md) | `/admin/tenants/group/{id}`: il pulsante diceva "Add member" (copiato dalla view analoga di Groups) invece di "Add group" | Bug fix (UI) | Completato | 2026-09-01 |
+| [063](063-menu-management-bug-e-test-crud.md) | Menu Management: 3 bug reali corretti (UrlGenerationException su ogni voce modificabile, crash creando la prima voce su tabella vuota, `CBController::getDelete()` crashava su qualunque cancellazione bloccata in QUALUNQUE modulo) + 14 test CRUD | Bug fix + test | Completato | 2026-09-01 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).

@@ -715,7 +715,10 @@ class MenusController extends CBController
       $postdata['path'] = 'chat_ai/content/' . $postdata['chat_ai'];
     }
     //id that this menu will be saved with
-    $id = (Menu::orderby('id', 'desc')->first()->id) + 1;
+    // Tabella vuota (nessuna voce di menu esiste ancora, es. subito dopo
+    // un'installazione pulita) -> first() torna null, ->id crashava.
+    $lastMenu = Menu::orderby('id', 'desc')->first();
+    $id = ($lastMenu ? $lastMenu->id : 0) + 1;
     //add menu id as GET parameter for target layout fullpage/fillcontent
     $postdata['path'] .= '?m=' . $id;
 
@@ -779,9 +782,14 @@ class MenusController extends CBController
       $menu = DB::table('cms_menus')->
             whereRaw("cms_menus.id IN (select id_cms_menus from cms_menus_privileges where id_cms_privileges = '" . CRUDBooster::myPrivilegeId() . "')")->where('is_dashboard', 1)->where('is_active', 1)->first();
       if ($menu && $menu->id == $id) {
-        //redirect back with error message
-        CRUDBooster::redirectBack(trans('crudbooster.cannot_disable_dashboard'), 'error');
-      } 
+        // CRUDBooster::redirectBack() esce ancora con exit() in ogni ramo
+        // (non toccata dal refactor generale di redirect()/validation() -
+        // e' usata anche da un paio di view Blade dove un semplice return
+        // non basterebbe a fermare il rendering, quindi non va rifattorizzata
+        // qui): usiamo redirect() (gia' testabile) per restare nello stesso
+        // pattern hook_before_edit()->Response degli altri controller.
+        return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.cannot_disable_dashboard'), 'error');
+      }
     }
 
     if ($postdata['type'] == 'Statistic') {

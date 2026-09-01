@@ -153,6 +153,44 @@ hook/gruppo/privilege da seminare per popolare la lista).
 | `test_filter_uguale_richiede_corrispondenza_esatta` | `type='='` non deve combaciare con un valore che e' solo un prefisso/sottostringa (a differenza di `like`) |
 | `test_filter_su_piu_colonne_applica_and` | due `filter_column[...]` insieme sono in AND, non OR: una riga che soddisfa solo una condizione resta esclusa |
 
+## `tests/Feature/MenusCrudTest.php`
+
+**Cosa copre**: il CRUD del modulo Menu Management (`MenusController` -
+non usa la view standard di `CBController::getIndex()`, ha un albero
+drag-and-drop dedicato). Ha fatto emergere e corretto 3 bug reali
+(dettagli in [063](refactoring/063-menu-management-bug-e-test-crud.md)):
+`UrlGenerationException` su ogni voce di menu modificabile,
+crash creando la primissima voce di menu su una `cms_menus` vuota, e
+un crash in `CBController::getDelete()` (controller BASE, non solo
+Menu Management) su qualunque cancellazione bloccata da
+`ModuleHelper::can_delete()`.
+
+| Test | Cosa verifica |
+|---|---|
+| `test_lista_mostra_le_voci_di_menu_attive_e_inattive` | lista attiva/inattiva (regressione bug UrlGenerationException) |
+| `test_creazione_prima_voce_di_menu_su_tabella_vuota_non_va_in_crash` | regressione crash su `cms_menus` vuota |
+| `test_creazione_menu_di_tipo_url_riesce_e_aggiunge_il_parametro_m_al_path` | `path` per type URL riceve sempre `?m=<id>` |
+| `test_creazione_menu_di_tipo_module_costruisce_il_path_dal_modulo_selezionato` | `path` per type Module = path del modulo + `?m=<id>` |
+| `test_creazione_menu_di_tipo_statistic_costruisce_il_path_dalla_statistic_selezionata` | idem per type Statistic |
+| `test_creazione_di_un_tenantadmin_assegna_automaticamente_il_suo_tenant` | `hook_after_add()` -> `Menu::assign_default_tenant()` |
+| `test_modifica_menu_riesce_e_aggiorna_i_campi_base` | modifica riesce |
+| `test_modifica_di_un_menu_di_tipo_module_perde_il_parametro_m` | **caratterizzazione** (non un fix): il suffisso `?m=` sparisce ad ogni modifica di un menu Module/Statistic/Qlik/Agent AI |
+| `test_non_si_puo_disattivare_lunica_voce_impostata_come_dashboard` | regola dashboard-unica (regressione del fix mirato che sostituisce `redirectBack()` con `redirect()` in questo solo punto) |
+| `test_cancellazione_menu_orfanizza_i_figli_invece_di_cancellarli` | `hook_after_delete()` -> `MenuHelper::promote_orphans()` |
+| `test_cancellazione_menu_rimuove_le_associazioni_privilege` | pulizia `cms_menus_privileges` |
+| `test_tenantadmin_non_puo_modificare_un_menu_condiviso_tra_piu_tenant` | `can_menu()`: un tenantadmin non tocca un menu con piu' di un tenant associato (regressione bug `CBController::getDelete()`) |
+| `test_creazione_sincronizza_privileges_tenants_e_gruppi_nelle_pivot_table` | meccanismo generico `relationship_table` di CBController |
+| `test_post_save_menu_riordina_e_reimposta_il_genitore` | endpoint drag-and-drop `postSaveMenu()` |
+
+**Dipendenze/scelte note**:
+- `SeedsCmsData::actingAsSuperadmin()`/`actingAsTenantUser()` ora
+  impostano anche `admin_privileges` in sessione (mancava - alcuni
+  hook, qui `MenusController`, leggono `CRUDBooster::myPrivilegeId()`).
+  Cambio additivo, non ha impattato i test preesistenti.
+- Fuori scope volutamente: i tipi Qlik/Agent AI (gated da licenza) e
+  `CRUDBooster::redirectBack()` (ancora `exit()`-based, usata anche da
+  2 Blade view - vedi 063 per il perche' non e' stata toccata).
+
 ## `tests/Feature/CrossModuleRelationsTest.php`
 
 **Cosa copre**: le relazioni TRA i 4 moduli sopra (non il CRUD interno
