@@ -133,6 +133,26 @@ sidebarDashboard()` (nessun controllo di null), il placeholder
   `isProfilePage()` e `add_log_ch()` (chiamata da
   `GroupHelper::add()`), non popolati dal client di test.
 
+## `tests/Feature/ListIndexSearchAndPaginationTest.php`
+
+**Cosa copre**: la ricerca (`?q=`) e il numero di record per pagina
+(`?limit=`) di `CBController::getIndex()` — due parametri GET comuni a
+tutte le liste admin, non specifici di un modulo. Verificati sul modulo
+Tenants (il più semplice tra quelli coperti da `*CrudTest.php`: nessun
+hook/gruppo/privilege da seminare per popolare la lista).
+
+| Test | Cosa verifica |
+|---|---|
+| `test_ricerca_q_filtra_per_nome` | `?q=testo` mostra solo le righe la cui colonna visibile combacia (LIKE) |
+| `test_ricerca_q_senza_corrispondenze_non_mostra_righe` | nessuna corrispondenza → riga non mostrata |
+| `test_limit_riduce_i_record_mostrati_alla_pagina` | `?limit=1` con 2 record → solo l'ultimo creato (ordinamento esplicito `id,desc` di `AdminTenantsController`) |
+| `test_limit_piu_alto_del_numero_di_record_li_mostra_tutti` | `?limit=200` (> record esistenti) → tutti mostrati |
+| `test_sort_ascendente_ordina_i_risultati_per_colonna` | `?filter_column[name][sorting]=asc` (click su header colonna) → ordine diverso da quello di default (id,desc), a prova che il sort e' applicato davvero |
+| `test_sort_discendente_ordina_i_risultati_per_colonna` | stesso, `sorting=desc` |
+| `test_filter_like_su_una_colonna_specifica` | `?filter_column[name][type]=like&value=...` (modale filtro avanzato) — like scoped a una sola colonna |
+| `test_filter_uguale_richiede_corrispondenza_esatta` | `type='='` non deve combaciare con un valore che e' solo un prefisso/sottostringa (a differenza di `like`) |
+| `test_filter_su_piu_colonne_applica_and` | due `filter_column[...]` insieme sono in AND, non OR: una riga che soddisfa solo una condizione resta esclusa |
+
 ## `tests/Feature/CrossModuleRelationsTest.php`
 
 **Cosa copre**: le relazioni TRA i 4 moduli sopra (non il CRUD interno
