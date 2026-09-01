@@ -197,10 +197,12 @@ $tenant_domain_name = env('APP_DOMAIN');
       //storage_path('app/license.json')
       //Storage::disk('license')->put('license.json', $json_file);
 
-      return redirect(CRUDBooster::adminPath())->with('message', 'License activated successfully');
-
-
-      //return redirect()->route('getLogin')->with('message', 'License activated successfully');
+      // Non si e' ancora loggati a questo punto: un redirect verso
+      // adminPath() passa dal middleware CBBackend, che essendo utente
+      // guest sovrascrive questo messaggio con "not_logged_in" prima che
+      // sia mai mostrato. Si va quindi direttamente alla pagina di login,
+      // dove il messaggio arriva intatto.
+      return redirect()->route('getLogin')->with('message', 'Licenza attivata con successo. Effettua il login per continuare.');
     }
 
     Log::warning('Registrazione licenza trial fallita o risposta inattesa dal server: ' . json_encode($response));
@@ -254,7 +256,12 @@ $tenant_domain_name = env('APP_DOMAIN');
     }
 
     if ($license) {
-      return redirect(CRUDBooster::adminPath())->with('message', 'License activated successfully');
+      // Non si e' ancora loggati a questo punto: un redirect verso
+      // adminPath() passa dal middleware CBBackend, che essendo utente
+      // guest sovrascrive questo messaggio con "not_logged_in" prima che
+      // sia mai mostrato. Si va quindi direttamente alla pagina di login,
+      // dove il messaggio arriva intatto.
+      return redirect()->route('getLogin')->with('message', 'Licenza attivata con successo. Effettua il login per continuare.');
     }
 
     DB::table('license')->delete();
