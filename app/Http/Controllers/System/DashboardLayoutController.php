@@ -236,7 +236,7 @@ class DashboardLayoutController extends CBController
 		$this->cbLoader();
 
 		if (!CRUDBooster::isCreate() && $this->global_privilege == false) {
-			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
+			return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
 		}
 
 		$data['page_title'] = trans('crudbooster.add_data_page_title', ['module' => 'Dashboard Layout']);
@@ -252,12 +252,12 @@ class DashboardLayoutController extends CBController
 		$this->cbLoader();
 
 		if (!CRUDBooster::isRead() && $this->global_privilege == false) {
-			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
+			return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
 		}
 
 		$row = DB::table($this->table)->where($this->primary_key, $id)->first();
 		if (!$row) {
-			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.missing_item'));
+			return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.missing_item'));
 		}
 
 		$html = html_entity_decode((string) $row->code_layout);
@@ -281,12 +281,12 @@ class DashboardLayoutController extends CBController
 		$this->cbLoader();
 
 		if (!CRUDBooster::isRead() && $this->global_privilege == false) {
-			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
+			return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
 		}
 
 		$row = DB::table($this->table)->where($this->primary_key, $id)->first();
 		if (!$row) {
-			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.missing_item'));
+			return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.missing_item'));
 		}
 
 		$data['page_title'] = trans('crudbooster.detail_data_page_title', ['module' => 'Dashboard Layout', 'name' => $row->layoutname]);
@@ -301,7 +301,7 @@ class DashboardLayoutController extends CBController
 		$this->cbLoader();
 
 		if (!CRUDBooster::isCreate() && $this->global_privilege == false) {
-			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
+			return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
 		}
 
 		$validator = Validator::make(Request::all(), [
@@ -321,7 +321,7 @@ class DashboardLayoutController extends CBController
 
 		DB::table($this->table)->insert($arr);
 
-		CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.alert_add_data_success'), 'success');
+		return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.alert_add_data_success'), 'success');
 	}
 
 	public function postEditSave($id, $validate = null)
@@ -329,7 +329,7 @@ class DashboardLayoutController extends CBController
 		$this->cbLoader();
 
 		if (!CRUDBooster::isUpdate() && $this->global_privilege == false) {
-			CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
+			return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
 		}
 
 		$validator = Validator::make(Request::all(), [
@@ -349,7 +349,7 @@ class DashboardLayoutController extends CBController
 
 		DB::table($this->table)->where($this->primary_key, $id)->update($arr);
 
-		CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.alert_update_data_success', ['module' => 'Dashboard Layout', 'title' => Request::input('layoutname')]), 'success');
+		return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.alert_update_data_success', ['module' => 'Dashboard Layout', 'title' => Request::input('layoutname')]), 'success');
 	}
 
 	/**

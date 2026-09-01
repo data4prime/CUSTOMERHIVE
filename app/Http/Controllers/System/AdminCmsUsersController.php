@@ -237,7 +237,7 @@ class AdminCmsUsersController extends CBController
 	public function create_qlik_user($id)
 	{
 		$ret = QlikHelper::createUser($id);
-		CRUDBooster::redirect(url()->previous(),  trans($ret['mex']), $ret['style']);
+		return CRUDBooster::redirect(url()->previous(),  trans($ret['mex']), $ret['style']);
 	}
 
 	public function getProfile()
@@ -351,9 +351,9 @@ class AdminCmsUsersController extends CBController
 			$message = "The number of users has exceeded the limit allowed by the current license.";
 			//$message .= '<br><br>' . "Please contact the administrator to increase the number of tenants allowed.";
 			$message_type = 'warning';
-			CRUDBooster::redirect( g('return_url') ?: CRUDBooster::referer() , $message, $message_type);
+			return CRUDBooster::redirect( g('return_url') ?: CRUDBooster::referer() , $message, $message_type);
 			//dd("License not valid");
-		} 
+		}
 
 
 		unset($postdata['password_confirmation']);
@@ -373,8 +373,7 @@ class AdminCmsUsersController extends CBController
 	{
 		//forbid user to delete himself
 		if ($id == CRUDBooster::myId()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath('users'), trans('crudbooster.delete_self'));
-			exit;
+			return CRUDBooster::redirect(CRUDBooster::adminPath('users'), trans('crudbooster.delete_self'));
 		}
 		//cascade delete users_groups
 		UsersGroup::where('user_id', $id)->delete();
@@ -399,7 +398,7 @@ class AdminCmsUsersController extends CBController
 				'name' => $user->{$this->title_field},
 				'module' => CRUDBooster::getCurrentModule()->name,
 			]));
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
 		}
 
 		$data = array();
@@ -424,7 +423,7 @@ class AdminCmsUsersController extends CBController
 	{
 		//check auth
 		if (!CRUDBooster::isRead() && $this->global_privilege == FALSE || $this->button_edit == FALSE) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data = [];
@@ -466,7 +465,7 @@ class AdminCmsUsersController extends CBController
 		//check auth update su groups
 		//TODO creaiamo permesso specifico da autorizzare e controllare per group membership?
 		if (!CRUDBooster::isUpdate() && $this->global_privilege == FALSE || $this->button_edit == FALSE) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$group_id = $_POST['name'];
 		$return_url = $_POST['return_url'];
@@ -499,12 +498,12 @@ class AdminCmsUsersController extends CBController
 		//check auth update su groups
 		//TODO creaiamo permesso specifico da autorizzare e controllare per group membership?
 		if (!CRUDBooster::isUpdate() && $this->global_privilege == FALSE || $this->button_edit == FALSE) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		//check if group_id and user_id are int
 		if (!MyHelper::is_int($group_id) or !MyHelper::is_int($user_id)) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data['delete'] = DB::table('users_groups')

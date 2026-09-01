@@ -119,7 +119,7 @@ JS;
         $arr['slug'] = str_slug($arr['name'], '_');
 
         if (!$arr['slug']) {
-            CRUDBooster::redirect(
+            return CRUDBooster::redirect(
                 CRUDBooster::mainpath('add'),
                 'The Template Name does not produce a valid slug. Please use letters and spaces.'
             );
@@ -128,7 +128,7 @@ JS;
         // Due template con lo stesso slug renderebbero ambiguo quale viene
         // recuperato dagli invii (first() prende il primo per id).
         if (DB::table($this->table)->where('slug', $arr['slug'])->exists()) {
-            CRUDBooster::redirect(
+            return CRUDBooster::redirect(
                 CRUDBooster::mainpath('add'),
                 'A template with slug "' . $arr['slug'] . '" already exists. Please choose a different Template Name.'
             );

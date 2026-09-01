@@ -295,7 +295,7 @@ class AdminTenantsController extends CBController
 			$message = "The number of tenants has exceeded the limit allowed by the current license.";
 			//$message .= '<br><br>' . "Please contact the administrator to increase the number of tenants allowed.";
 			$message_type = 'warning';
-			CRUDBooster::redirect( g('return_url') ?: CRUDBooster::referer() , $message, $message_type);
+			return CRUDBooster::redirect( g('return_url') ?: CRUDBooster::referer() , $message, $message_type);
 			//dd("License not valid");
 		}
 	}
@@ -327,7 +327,7 @@ class AdminTenantsController extends CBController
 			->where('id', '!=', $id)
 			->count();
 		if ($exists > 0) {
-			CRUDBooster::redirect(CRUDBooster::adminPath('tenants'), trans('crudbooster.not_unique_domain'));
+			return CRUDBooster::redirect(CRUDBooster::adminPath('tenants'), trans('crudbooster.not_unique_domain'));
 		}
 	}
 
@@ -354,7 +354,7 @@ class AdminTenantsController extends CBController
 	{
 		$members_count = User::where('tenant', $id)->count();
 		if ($members_count > 0) {
-			CRUDBooster::redirect(CRUDBooster::adminPath('tenants'), trans('crudbooster.delete_not_empty_tenant'));
+			return CRUDBooster::redirect(CRUDBooster::adminPath('tenants'), trans('crudbooster.delete_not_empty_tenant'));
 		}
 	}
 
@@ -380,7 +380,7 @@ class AdminTenantsController extends CBController
 				'name' => $row->{$this->title_field},
 				'module' => CRUDBooster::getCurrentModule()->name,
 			]));
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
 		}
 
 		$page_menu = Route::getCurrentRoute()->getActionName();
@@ -395,7 +395,7 @@ class AdminTenantsController extends CBController
 	{
 		//check auth
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data = [];
@@ -416,7 +416,7 @@ class AdminTenantsController extends CBController
 	{
 		//check auth
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data['tenant_id'] = $tenant_id;
@@ -452,7 +452,7 @@ class AdminTenantsController extends CBController
 	{
 
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$group_id = $_POST['name'];
 		$return_url = $_POST['return_url'];
@@ -483,12 +483,12 @@ class AdminTenantsController extends CBController
 	public function remove_group($tenant_id, $group_id)
 	{
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		//check if tenant_id and user_id are int
 		if (!MyHelper::is_int($group_id) or !MyHelper::is_int($tenant_id)) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data['delete'] = GroupTenants::where('group_id', $group_id)

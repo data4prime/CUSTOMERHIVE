@@ -645,7 +645,7 @@ class MenusController extends CBController
     $module = CRUDBooster::getCurrentModule();
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
     $privileges = DB::table('cms_privileges')->get();
@@ -682,7 +682,7 @@ class MenusController extends CBController
         'name' => $row->{$this->title_field},
         'module' => CRUDBooster::getCurrentModule()->name,
       ]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
     $page_title = 'Edit Menu';
     $command = 'add';
@@ -761,7 +761,7 @@ class MenusController extends CBController
         'name' => $id,
         'module' => CRUDBooster::getCurrentModule()->name,
       ]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
     //frame width and height data
     $postdata['frame_width'] .= $postdata['frame_width_unit'];
@@ -841,7 +841,7 @@ class MenusController extends CBController
         'name' => $id,
         'module' => CRUDBooster::getCurrentModule()->name,
       ]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
   }
 

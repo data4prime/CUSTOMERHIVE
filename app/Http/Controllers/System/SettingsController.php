@@ -84,7 +84,7 @@ class SettingsController extends CBController
 
         if (!CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'Setting', 'module' => 'Setting']));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         $group = urldecode(Request::get('group'));
@@ -120,13 +120,13 @@ class SettingsController extends CBController
         // questo controller (getShow, postSaveSetting) fanno lo stesso check.
         if (!CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'Setting', 'module' => 'Setting']));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         $id = g('id');
         $row = CRUDBooster::first('cms_settings', $id);
         if (!$row) {
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
         Cache::forget('setting_' . $row->name);
 
@@ -145,7 +145,7 @@ class SettingsController extends CBController
             }
         }
         DB::table('cms_settings')->where('id', $id)->update(['content' => null]);
-        CRUDBooster::redirect(Request::server('HTTP_REFERER'), trans('alert_delete_data_success'), 'success');
+        return CRUDBooster::redirect(Request::server('HTTP_REFERER'), trans('alert_delete_data_success'), 'success');
     }
 
     function postSaveSetting()
@@ -153,7 +153,7 @@ class SettingsController extends CBController
 
         if (!CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'Setting', 'module' => 'Setting']));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         $group = Request::get('group_setting');
@@ -254,7 +254,7 @@ class SettingsController extends CBController
         // vicenda e ne farebbe cancellare una al primo db:seed. C'e' anche un
         // indice unique a DB: questo check evita di arrivarci con un errore SQL.
         if (DB::table('cms_settings')->where('name', $arr['name'])->exists()) {
-            CRUDBooster::redirect(
+            return CRUDBooster::redirect(
                 CRUDBooster::mainpath('add') . '?group_setting=' . urlencode($arr['group_setting']),
                 'A setting named "' . $arr['name'] . '" already exists. Please choose a different label.'
             );

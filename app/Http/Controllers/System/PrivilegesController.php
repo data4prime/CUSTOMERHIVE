@@ -72,7 +72,7 @@ class PrivilegesController extends CBController
 
         if (!CRUDBooster::isCreate() && $this->global_privilege == false) {
             CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module' => CRUDBooster::getCurrentModule()->name]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
         }
 
         $id = 0;
@@ -109,10 +109,13 @@ class PrivilegesController extends CBController
                 'name' => Request::input($this->title_field),
                 'module' => CRUDBooster::getCurrentModule()->name,
             ]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
         }
 
-        $this->validation(Request::all());
+        $validationResult = $this->validation(Request::all());
+        if ($validationResult instanceof \Symfony\Component\HttpFoundation\Response) {
+            return $validationResult;
+        }
         $this->input_assignment(Request::all());
 
         $this->arr['is_superadmin'] = 0;
@@ -159,7 +162,7 @@ class PrivilegesController extends CBController
 
 
 
-        CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_add_data_success"), 'success');
+        return CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_add_data_success"), 'success');
     }
 
     public function hook_before_edit(&$postdata, $user_id)
@@ -188,7 +191,7 @@ class PrivilegesController extends CBController
                 'name' => $row->{$this->title_field},
                 'module' => CRUDBooster::getCurrentModule()->name,
             ]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         $page_title = trans('crudbooster.edit_data_page_title', ['module' => 'Privilege', 'name' => $row->name]);
@@ -217,10 +220,13 @@ class PrivilegesController extends CBController
 
         if (!CRUDBooster::isUpdate() && $this->global_privilege == false) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_add", ['name' => $row->{$this->title_field}, 'module' => CRUDBooster::getCurrentModule()->name]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
-        $this->validation($id);
+        $validationResult = $this->validation($id);
+        if ($validationResult instanceof \Symfony\Component\HttpFoundation\Response) {
+            return $validationResult;
+        }
         $this->input_assignment($id);
 
         // set superadmin / tenantadmin
@@ -283,7 +289,7 @@ class PrivilegesController extends CBController
             Session::put('theme_color', $this->arr['theme_color']);
         }
 
-        CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_update_data_success", [
+        return CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_update_data_success", [
             'module' => "Privilege",
             'title' => $row->name,
         ]), 'success');
@@ -300,7 +306,7 @@ class PrivilegesController extends CBController
                 'name' => $row->{$this->title_field},
                 'module' => CRUDBooster::getCurrentModule()->name,
             ]));
-            CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
         }
         if ($row->is_superadmin == 1) {
             //non si puo' cancellare il ruolo superadmin (l'unico seedato di
@@ -310,13 +316,13 @@ class PrivilegesController extends CBController
                 'name' => $row->{$this->title_field},
                 'module' => CRUDBooster::getCurrentModule()->name,
             ]));
-            CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.cant_delete_role'));
+            return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.cant_delete_role'));
         }
 
 
         DB::table($this->table)->where($this->primary_key, $id)->delete();
         DB::table("cms_privileges_roles")->where("id_cms_privileges", $row->id)->delete();
 
-        CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_delete_data_success"), 'success');
+        return CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_delete_data_success"), 'success');
     }
 }

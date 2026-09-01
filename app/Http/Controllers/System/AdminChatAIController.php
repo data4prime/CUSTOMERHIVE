@@ -403,7 +403,7 @@ class AdminChatAIController extends CBController
 	{
 		//check auth
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$data['item_id'] = $item_id;
 		$data['chat_ai'] = ChatAIConf::find($item_id);
@@ -436,7 +436,7 @@ class AdminChatAIController extends CBController
 	{
 		//check auth
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data['item_id'] = $item_id;
@@ -471,7 +471,7 @@ class AdminChatAIController extends CBController
 	{
 
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$tenant_id = $_POST['name'];
 		$return_url = $_POST['return_url'];
@@ -502,12 +502,12 @@ class AdminChatAIController extends CBController
 	public function remove_tenant($item_id, $tenant_id)
 	{
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		//check if tenant_id and user_id are int
 		if (!MyHelper::is_int($tenant_id) or !MyHelper::is_int($item_id)) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data['delete'] = TenantsAllowed::where('item_id', $item_id)
@@ -521,7 +521,7 @@ class AdminChatAIController extends CBController
 	public function add_authorization($item_id)
 	{
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$group_id = $_POST['name'];
@@ -554,12 +554,12 @@ class AdminChatAIController extends CBController
 	public function remove_authorization($item_id, $group_id)
 	{
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		//check if group_id and user_id are int
 		if (!MyHelper::is_int($group_id) or !MyHelper::is_int($item_id)) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data['delete'] = ItemsAllowed::where('item_id', $item_id)
@@ -580,7 +580,7 @@ class AdminChatAIController extends CBController
 				'name' => $row->{$this->title_field},
 				'module' => CRUDBooster::getCurrentModule()->name,
 			]));
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
 		}
 
 		$page_menu = Route::getCurrentRoute()->getActionName();
@@ -613,7 +613,7 @@ class AdminChatAIController extends CBController
 				'name' => $row->{$this->title_field},
 				'module' => CRUDBooster::getCurrentModule()->name,
 			]));
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
 		}
 
 		$module = CRUDBooster::getCurrentModule();
@@ -730,14 +730,14 @@ class AdminChatAIController extends CBController
 	{
 		$allowed = ChatAIHelper::can_see_item($qlik_item_id);
 		if (!$allowed) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$data = [];
 		$data['row'] = ChatAIConf::find($qlik_item_id);
 		//dd($data);
 		if (empty($data['row'])) {
 
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.missing_item"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.missing_item"));
 		}
 
 		//$type = CRUDBooster::getSetting('type');

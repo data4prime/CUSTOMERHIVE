@@ -85,7 +85,7 @@ class StatisticBuilderController extends CBController
         $row = CRUDBooster::first($this->table, ['slug' => $m->path]);
 
         if (!$row) {
-            CRUDBooster::redirect(CRUDBooster::adminPath(), 'Dashboard non trovata: il link non è più valido (probabilmente la dashboard è stata rinominata o eliminata).', 'warning');
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), 'Dashboard non trovata: il link non è più valido (probabilmente la dashboard è stata rinominata o eliminata).', 'warning');
         }
 
         $id_cms_statistics = $row->id;
@@ -165,7 +165,7 @@ class StatisticBuilderController extends CBController
         $row = CRUDBooster::first($this->table, ['slug' => $slug]);
 
         if (!$row) {
-            CRUDBooster::redirect(CRUDBooster::adminPath(), 'Dashboard non trovata: il link del menu non è più valido (probabilmente la dashboard è stata rinominata o eliminata).', 'warning');
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), 'Dashboard non trovata: il link del menu non è più valido (probabilmente la dashboard è stata rinominata o eliminata).', 'warning');
         }
 
         $id_cms_statistics = isset($row->id) ? $row->id : 0;
@@ -184,7 +184,7 @@ class StatisticBuilderController extends CBController
         $row = CRUDBooster::first($this->table, ['slug' => $slug]);
 
         if (!$row) {
-            CRUDBooster::redirect(CRUDBooster::adminPath(), 'Dashboard non trovata: il link non è più valido (probabilmente la dashboard è stata rinominata o eliminata).', 'warning');
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), 'Dashboard non trovata: il link non è più valido (probabilmente la dashboard è stata rinominata o eliminata).', 'warning');
         }
 
         $id_cms_statistics = $row->id;
@@ -202,7 +202,7 @@ class StatisticBuilderController extends CBController
 
         if (!CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'Builder', 'module' => 'Statistic']));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         $page_title = 'Statistic Builder';
@@ -332,7 +332,7 @@ class StatisticBuilderController extends CBController
 
         if (!CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'Edit Component', 'module' => 'Statistic']));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         $component_row = CRUDBooster::first('cms_statistic_components', ['componentID' => $componentID]);
@@ -395,7 +395,7 @@ class StatisticBuilderController extends CBController
     {
         if (!CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'Delete Component', 'module' => 'Statistic']));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         DB::table('cms_statistic_components')->where('componentID', $id)->delete();

@@ -32,7 +32,7 @@ class ApiCustomController extends CBController
 
         if (! CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'API Index', 'module' => 'API']));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         $data = [];
@@ -141,7 +141,7 @@ class ApiCustomController extends CBController
 
         if (! CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'API Index', 'module' => 'API']));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         $data['page_title'] = 'API Generator';
@@ -166,7 +166,7 @@ class ApiCustomController extends CBController
 
         if (! CRUDBooster::isSuperadmin()) {
             CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'API Edit', 'module' => 'API']));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         $row = DB::table('cms_apicustom')->where('id', $id)->first();

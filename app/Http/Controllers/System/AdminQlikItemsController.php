@@ -568,7 +568,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	{
 		//check auth
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$data['item_id'] = $item_id;
 		$data['qlik_item'] = QlikItem::find($item_id);
@@ -601,7 +601,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	{
 		//check auth
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data['item_id'] = $item_id;
@@ -636,7 +636,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	{
 
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$tenant_id = $_POST['name'];
 		$return_url = $_POST['return_url'];
@@ -667,12 +667,12 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	public function remove_tenant($item_id, $tenant_id)
 	{
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		//check if tenant_id and user_id are int
 		if (!MyHelper::is_int($tenant_id) or !MyHelper::is_int($item_id)) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data['delete'] = TenantsAllowed::where('item_id', $item_id)
@@ -686,7 +686,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	public function add_authorization($item_id)
 	{
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$group_id = $_POST['name'];
@@ -719,12 +719,12 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	public function remove_authorization($item_id, $group_id)
 	{
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		//check if group_id and user_id are int
 		if (!MyHelper::is_int($group_id) or !MyHelper::is_int($item_id)) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data['delete'] = ItemsAllowed::where('item_id', $item_id)
@@ -745,7 +745,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 				'name' => $row->{$this->title_field},
 				'module' => CRUDBooster::getCurrentModule()->name,
 			]));
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
 		}
 
 		$page_menu = Route::getCurrentRoute()->getActionName();
@@ -779,7 +779,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 				'name' => $row->{$this->title_field},
 				'module' => CRUDBooster::getCurrentModule()->name,
 			]));
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
 		}
 
 		$module = CRUDBooster::getCurrentModule();
@@ -798,7 +798,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		$this->cbLoader();
 		if (!CRUDBooster::isSuperadmin()) {
 			CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module' => CRUDBooster::getCurrentModule()->name]));
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data = [];
@@ -829,7 +829,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
-				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+				return CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
 			}
 			$data['token'] = $token;
 			$data['item_url'] = $conf->url;
@@ -879,7 +879,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		$this->cbLoader();
 		if (!CRUDBooster::isSuperadmin()) {
 			CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module' => CRUDBooster::getCurrentModule()->name]));
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$conf = DB::table('qlik_confs')->where('id', $qlik_item)->first();
@@ -913,7 +913,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 
 			if (empty($token)) {
 				$data['error'] = 'JWT Token generation failed!';
-				CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
+				return CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
 			}
 			$data['token'] = $token;
 			$data['item_url'] = $conf->url;

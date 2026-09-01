@@ -68,7 +68,12 @@ class TenantHelper  {
         $name = $name_without_number.$new_number;
       }
       //recursive call
-      $name = TenantHelper::unique_domain_name($name);
+      // Il valore ricalcolato veniva scartato: mancava questo return, il
+      // ramo "if" (l'unico che gestisce un domain_name gia' esistente)
+      // ritornava sempre null - un tenant il cui nome genera un domain_name
+      // duplicato falliva con un errore SQL ("domain_name cannot be null"),
+      // anche in produzione.
+      return TenantHelper::unique_domain_name($name);
     }
     else{
       return $name;

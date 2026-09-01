@@ -48,7 +48,16 @@ class ModuleHelper
 
       }
       if ($module->table == "groups") {
-        $entity_group = DB::table("group_tenants")->where('group_id', $row->id)->where('group_id',UserHelper::current_user_tenant() )->first()->group_id;
+        // Il secondo where filtrava per errore ancora su group_id invece
+        // che su tenant_id (query sempre vuota per qualunque gruppo il
+        // cui id non coincidesse per puro caso con il tenant dell'attore),
+        // e mancava il controllo su null prima di leggere ->group_id -
+        // stesso pattern di null-safety gia' usato sopra per qlik_confs/
+        // qlik_apps.
+        $entity_group = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id', UserHelper::current_user_tenant())->first();
+        if ($entity_group) {
+          $entity_group = $entity_group->group_id;
+        }
       }
       if ($module->table == "cms_users") {
         $entity_group = DB::table($module->table)->where('id', $row->id)->first()->primary_group;
@@ -81,7 +90,13 @@ class ModuleHelper
       }
 
       if ($module->table == "groups") {
-        $entity_tenant = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id',UserHelper::current_user_tenant() )->first()->tenant_id;
+        // Stesso gap di null-safety di get_group_id() sopra: un gruppo che
+        // non appartiene al tenant dell'attore non ha nessuna riga
+        // corrispondente in group_tenants, first() torna null.
+        $entity_tenant = DB::table("group_tenants")->where('group_id', $row->id)->where('tenant_id', UserHelper::current_user_tenant())->first();
+        if ($entity_tenant) {
+          $entity_tenant = $entity_tenant->tenant_id;
+        }
       }
       if ($module->table == "cms_users") {
         $entity_tenant = DB::table($module->table)->where('id', $row->id)->first()->tenant;

@@ -230,7 +230,7 @@ class CBController extends Controller
 
         if (!CRUDBooster::isView() && !$this->global_privilege) {
             CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         if (Request::get('parent_table')) {
@@ -1128,20 +1128,21 @@ class CBController extends Controller
             $message = $validator->messages();
             $message_all = $message->all();
 
+            // Ritorna la response invece di inviarla ed uscire con exit()
+            // (stesso refactor e stessa motivazione di CRUDBooster::redirect()
+            // - vedi il commento li'). IMPORTANTE per chi chiama validation():
+            // va sempre preceduto da `return` per fermarsi qui in caso di
+            // validazione fallita, invece di proseguire come se fosse tutto ok.
             if (Request::ajax()) {
-                $res = response()->json([
+                return response()->json([
                     'message' => trans('crudbooster.alert_validation_error', ['error' => implode(', ', $message_all)]),
                     'message_type' => 'warning',
-                ])->send();
-                exit;
+                ]);
             } else {
-                $res = redirect()->back()->with("errors", $message)->with([
+                return redirect()->back()->with("errors", $message)->with([
                     'message' => trans('crudbooster.alert_validation_error', ['error' => implode(', ', $message_all)]),
                     'message_type' => 'warning',
                 ])->withInput();
-                \Session::driver()->save();
-                $res->send();
-                exit;
             }
         }
     }
@@ -1279,7 +1280,7 @@ class CBController extends Controller
         $this->cbLoader();
         if (!CRUDBooster::isCreate() && $this->global_privilege == false || $this->button_add == false) {
             CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module' => CRUDBooster::getCurrentModule()->name]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
         }
 
         $page_title = trans("crudbooster.add_data_page_title", ['module' => CRUDBooster::getCurrentModule()->name]);
@@ -1300,11 +1301,14 @@ class CBController extends Controller
                 'name' => Request::input($this->title_field),
                 'module' => CRUDBooster::getCurrentModule()->name,
             ]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
         }
         $request = $this->hook_before_validation();
 
-        $this->validation(null, $request);
+        $validationResult = $this->validation(null, $request);
+        if ($validationResult instanceof \Symfony\Component\HttpFoundation\Response) {
+            return $validationResult;
+        }
         $this->input_assignment();
 
         // #RAMA created_at should already be populated by sql
@@ -1337,7 +1341,10 @@ class CBController extends Controller
             }
         }
 
-        $this->hook_before_add($this->arr);
+        $hookResult = $this->hook_before_add($this->arr);
+        if ($hookResult instanceof \Symfony\Component\HttpFoundation\Response) {
+            return $hookResult;
+        }
 
         //$this->arr[$this->primary_key] = $id = CRUDBooster::newId($this->table); //error on sql server
         $lastInsertId = $id = DB::table($this->table)->insertGetId($this->arr);
@@ -1439,15 +1446,15 @@ class CBController extends Controller
 
         if ($this->return_url) {
             if (Request::get('submit') == trans('crudbooster.button_save_more')) {
-                CRUDBooster::redirect(Request::server('HTTP_REFERER'), trans("crudbooster.alert_add_data_success"), 'success');
+                return CRUDBooster::redirect(Request::server('HTTP_REFERER'), trans("crudbooster.alert_add_data_success"), 'success');
             } else {
-                CRUDBooster::redirect($this->return_url, trans("crudbooster.alert_add_data_success"), 'success');
+                return CRUDBooster::redirect($this->return_url, trans("crudbooster.alert_add_data_success"), 'success');
             }
         } else {
             if (Request::get('submit') == trans('crudbooster.button_save_more')) {
-                CRUDBooster::redirect(CRUDBooster::mainpath('add'), trans("crudbooster.alert_add_data_success"), 'success');
+                return CRUDBooster::redirect(CRUDBooster::mainpath('add'), trans("crudbooster.alert_add_data_success"), 'success');
             } else {
-                CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_add_data_success"), 'success');
+                return CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_add_data_success"), 'success');
             }
         }
     }
@@ -1465,7 +1472,7 @@ class CBController extends Controller
                 'module' => CRUDBooster::getCurrentModule()->name
             ]));
             //kick out
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         $page_menu = Route::getCurrentRoute()->getActionName();
@@ -1500,15 +1507,18 @@ class CBController extends Controller
                 'module' => CRUDBooster::getCurrentModule()->name
             ]));
             //kick out
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
 
         if (!$validate) {
-            $this->validation($id);
+            $validationResult = $this->validation($id);
+            if ($validationResult instanceof \Symfony\Component\HttpFoundation\Response) {
+                return $validationResult;
+            }
         }
 
-        
+
         $this->input_assignment($id);
 
         if (Schema::hasColumn($this->table, 'updated_at')) {
@@ -1528,7 +1538,10 @@ class CBController extends Controller
             $this->arr['tenant'] = $_POST['tenant'];
         }
 
-        $this->hook_before_edit($this->arr, $id);
+        $hookResult = $this->hook_before_edit($this->arr, $id);
+        if ($hookResult instanceof \Symfony\Component\HttpFoundation\Response) {
+            return $hookResult;
+        }
 
 
 
@@ -1644,15 +1657,15 @@ class CBController extends Controller
 
         if (!$validate) {
             if ($this->return_url) {
-                CRUDBooster::redirect($this->return_url, trans("crudbooster.alert_update_data_success"), 'success');
+                return CRUDBooster::redirect($this->return_url, trans("crudbooster.alert_update_data_success"), 'success');
             } else {
                 if (Request::get('submit') == trans('crudbooster.button_save_more')) {
-                    CRUDBooster::redirect(CRUDBooster::mainpath('add'), trans("crudbooster.alert_update_data_success"), 'success');
+                    return CRUDBooster::redirect(CRUDBooster::mainpath('add'), trans("crudbooster.alert_update_data_success"), 'success');
                 } else {
-                    CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_update_data_success"), 'success');
+                    return CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_update_data_success"), 'success');
                 }
             }
-        } 
+        }
 
 
     }
@@ -1670,7 +1683,7 @@ class CBController extends Controller
                 'module' => CRUDBooster::getCurrentModule()->name
             ]));
             //kick out
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         //insert log
@@ -1684,7 +1697,10 @@ class CBController extends Controller
             )
         );
 
-        $this->hook_before_delete($id);
+        $hookResult = $this->hook_before_delete($id);
+        if ($hookResult instanceof \Symfony\Component\HttpFoundation\Response) {
+            return $hookResult;
+        }
 
         if (CRUDBooster::isColumnExists($this->table, 'deleted_by')) {
             DB::table($this->table)->where($this->primary_key, $id)->update(['deleted_by' => CRUDBooster::myId()]);
@@ -1699,7 +1715,7 @@ class CBController extends Controller
 
         $url = g('return_url') ?: CRUDBooster::referer();
 
-        CRUDBooster::redirect($url, trans("crudbooster.alert_delete_data_success"), 'success');
+        return CRUDBooster::redirect($url, trans("crudbooster.alert_delete_data_success"), 'success');
     }
 
     public function getDetail($id)
@@ -1715,7 +1731,7 @@ class CBController extends Controller
                 'module' => CRUDBooster::getCurrentModule()->name,
             ]));
             //kick out
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         $module = CRUDBooster::getCurrentModule();
@@ -2155,16 +2171,19 @@ class CBController extends Controller
         $button_name = Request::input('button_name');
 
         if (!$id_selected) {
-            CRUDBooster::redirect($_SERVER['HTTP_REFERER'], trans("crudbooster.alert_select_a_data"), 'warning');
+            return CRUDBooster::redirect($_SERVER['HTTP_REFERER'], trans("crudbooster.alert_select_a_data"), 'warning');
         }
 
         if ($button_name == 'delete') {
             if (!CRUDBooster::isDelete()) {
                 CRUDBooster::insertLog(trans("crudbooster.log_try_delete_selected", ['module' => CRUDBooster::getCurrentModule()->name]));
-                CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+                return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
             }
 
-            $this->hook_before_delete($id_selected);
+            $hookResult = $this->hook_before_delete($id_selected);
+            if ($hookResult instanceof \Symfony\Component\HttpFoundation\Response) {
+                return $hookResult;
+            }
             $tablePK = CB::pk($this->table);
             if (CRUDBooster::isColumnExists($this->table, 'deleted_at')) {
 
@@ -2207,7 +2226,7 @@ class CBController extends Controller
                 'name' => $row->{$this->title_field},
                 'module' => CRUDBooster::getCurrentModule()->name,
             ]));
-            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         $row = DB::table($this->table)->where($this->primary_key, $id)->first();
@@ -2226,7 +2245,7 @@ class CBController extends Controller
             'module' => CRUDBooster::getCurrentModule()->name,
         ]));
 
-        CRUDBooster::redirect(Request::server('HTTP_REFERER'), trans('crudbooster.alert_delete_data_success'), 'success');
+        return CRUDBooster::redirect(Request::server('HTTP_REFERER'), trans('crudbooster.alert_delete_data_success'), 'success');
     }
 
     public function postUploadSummernote()
@@ -2258,7 +2277,7 @@ class CBController extends Controller
         //dd($this);
         $id_selected = Request::input('ids');
         if (!$id_selected) {
-            CRUDBooster::redirect($_SERVER['HTTP_REFERER'], trans("crudbooster.alert_select_a_data"), 'warning');
+            return CRUDBooster::redirect($_SERVER['HTTP_REFERER'], trans("crudbooster.alert_select_a_data"), 'warning');
         }
         $table = Request::input('table');
 
@@ -2315,12 +2334,12 @@ class CBController extends Controller
 
 
         if ($this->return_url) {
-            CRUDBooster::redirect($this->return_url, trans("crudbooster.alert_update_data_success"), 'success');
+            return CRUDBooster::redirect($this->return_url, trans("crudbooster.alert_update_data_success"), 'success');
         } else {
             if (Request::get('submit') == trans('crudbooster.button_save_more')) {
-                CRUDBooster::redirect(CRUDBooster::mainpath('add'), trans("crudbooster.alert_update_data_success"), 'success');
+                return CRUDBooster::redirect(CRUDBooster::mainpath('add'), trans("crudbooster.alert_update_data_success"), 'success');
             } else {
-                CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_update_data_success"), 'success');
+                return CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_update_data_success"), 'success');
             }
         }
 

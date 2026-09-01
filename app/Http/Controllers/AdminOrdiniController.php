@@ -270,7 +270,7 @@
 	        $this->cbLoader();
 	        if (! CRUDBooster::isCreate() && $this->global_privilege == false || $this->button_add == false) {
 	            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module' => CRUDBooster::getCurrentModule()->name]));
-	            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+	            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 	        }
 
 	        $page_title = trans("crudbooster.add_data_page_title", ['module' => CRUDBooster::getCurrentModule()->name]);
@@ -296,7 +296,7 @@
 							'module' => CRUDBooster::getCurrentModule()->name
 						]));
 						//kick out
-						CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+						return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
 					}
 
 					$page_menu = Route::getCurrentRoute()->getActionName();

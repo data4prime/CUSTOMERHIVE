@@ -278,7 +278,7 @@ class UserHelper
   public static function me()
   {
 		/*if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}*/
     $user_id = CRUDBooster::myId();
     $user = User::find($user_id);

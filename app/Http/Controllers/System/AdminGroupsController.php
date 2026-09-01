@@ -350,7 +350,7 @@ class AdminGroupsController extends CBController
 				$parts[] = trans_choice('crudbooster.group_relation_tenants', $tenants_count, ['count' => $tenants_count]);
 			}
 
-			CRUDBooster::redirect(CRUDBooster::adminPath('groups'), trans('crudbooster.delete_group_has_relations', ['items' => implode(', ', $parts)]));
+			return CRUDBooster::redirect(CRUDBooster::adminPath('groups'), trans('crudbooster.delete_group_has_relations', ['items' => implode(', ', $parts)]));
 		}
 	}
 
@@ -371,7 +371,7 @@ class AdminGroupsController extends CBController
 	{
 		//check auth
 		if (!CRUDBooster::isRead() && $this->global_privilege == FALSE || $this->button_edit == FALSE) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data = [];
@@ -422,7 +422,7 @@ class AdminGroupsController extends CBController
 		//check auth update su groups
 		//TODO creaiamo permesso specifico da autorizzare e controllare per group membership?
 		if (!CRUDBooster::isUpdate() && $this->global_privilege == FALSE || $this->button_edit == FALSE) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$user_id = $_POST['name'];
@@ -457,12 +457,12 @@ class AdminGroupsController extends CBController
 		//check auth update su groups
 		//TODO creaiamo permesso specifico da autorizzare e controllare per group membership?
 		if (!CRUDBooster::isUpdate() && $this->global_privilege == FALSE || $this->button_edit == FALSE) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		//check if group_id and user_id are int
 		if (!MyHelper::is_int($group_id) or !MyHelper::is_int($user_id)) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		//check if it's user's primary group
@@ -481,13 +481,13 @@ class AdminGroupsController extends CBController
 	{
 		//check auth
 		if (!CRUDBooster::isRead() && $this->global_privilege == FALSE || $this->button_edit == FALSE) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		//gli allowed items sono qlik_items: senza il modulo Qlik in licenza
 		//non c'e' nulla da gestire, quindi l'endpoint e' chiuso anche via URL diretto
 		if (!LicenseHelper::isActiveQlik()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data = [];
@@ -524,13 +524,13 @@ class AdminGroupsController extends CBController
 		//check auth update su groups
 		//TODO creaiamo permesso specifico da autorizzare e controllare per group allowed item?
 		if (!CRUDBooster::isUpdate() && $this->global_privilege == FALSE || $this->button_edit == FALSE) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		//gli allowed items sono qlik_items: senza il modulo Qlik in licenza
 		//non c'e' nulla da gestire, quindi l'endpoint e' chiuso anche via URL diretto
 		if (!LicenseHelper::isActiveQlik()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$item_id = $_POST['title'];
@@ -565,18 +565,18 @@ class AdminGroupsController extends CBController
 		//check auth update su groups
 		//TODO creaiamo permesso specifico da autorizzare e controllare per group membership?
 		if (!CRUDBooster::isUpdate() && $this->global_privilege == FALSE || $this->button_edit == FALSE) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		//gli allowed items sono qlik_items: senza il modulo Qlik in licenza
 		//non c'e' nulla da gestire, quindi l'endpoint e' chiuso anche via URL diretto
 		if (!LicenseHelper::isActiveQlik()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		//check if group_id and user_id are int
 		if (!MyHelper::is_int($group_id) or !MyHelper::is_int($item_id)) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data['delete'] = DB::table('items_allowed')
@@ -591,7 +591,7 @@ class AdminGroupsController extends CBController
 	{
 		//check auth
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data['group_id'] = $group_id;
@@ -628,7 +628,7 @@ class AdminGroupsController extends CBController
 	{
 
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$tenant_id = $_POST['name'];
 		$return_url = $_POST['return_url'];
@@ -659,12 +659,12 @@ class AdminGroupsController extends CBController
 	public function remove_tenant($group_id, $tenant_id)
 	{
 		if (!CRUDBooster::isSuperadmin()) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		//check if tenant_id and user_id are int
 		if (!MyHelper::is_int($tenant_id) or !MyHelper::is_int($group_id)) {
-			CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		$data['delete'] = GroupTenants::where('group_id', $group_id)

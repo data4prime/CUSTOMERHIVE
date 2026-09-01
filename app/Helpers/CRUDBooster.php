@@ -411,21 +411,31 @@ public static function isProfilePage() {
         }
     }
 
+    /**
+     * Ritorna la response invece di inviarla ed uscire con exit() (fino a
+     * prima del 2026-09 lo faceva): l'exit() impediva completamente di
+     * testare qualunque azione CRUD via HTTP simulato (terminava l'intero
+     * processo PHPUnit, non solo la richiesta) e bypassava la normale
+     * pipeline di middleware di Laravel (incluso il salvataggio sessione
+     * via StartSession, per questo prima c'era la chiamata esplicita a
+     * Session::driver()->save() qui sotto - ora non serve piu', la fa la
+     * pipeline normalmente perche' la response torna a percorrerla tutta).
+     *
+     * IMPORTANTE per chi chiama questo metodo: va sempre preceduto da
+     * `return` (anche dentro un hook_* - il chiamante del hook deve a sua
+     * volta controllare se il valore ritornato è una Response e in quel
+     * caso ritornarla subito, altrimenti l'esecuzione continua invece di
+     * fermarsi come faceva l'exit() prima).
+     */
     public static function redirect($to, $message, $type = 'warning')
     {
         $to = self::sanitizeRedirectUrl($to);
 
         if (Request::ajax()) {
-            $resp = response()
-                ->json(['message' => $message, 'message_type' => $type, 'redirect_url' => $to])
-                ->send();
-            exit;
-        } else {
-            $resp = redirect($to)->with(['message' => $message, 'message_type' => $type]);
-            Session::driver()->save();
-            $resp->send();
-            exit;
+            return response()->json(['message' => $message, 'message_type' => $type, 'redirect_url' => $to]);
         }
+
+        return redirect($to)->with(['message' => $message, 'message_type' => $type]);
     }
 
     /**
@@ -597,6 +607,14 @@ public static function isProfilePage() {
         }
 */
 
+        // Nessun menu con is_dashboard=1 per questo privilegio (es. nessun
+        // menu ancora configurato): sidebar.blade.php gestisce gia' questo
+        // caso con @if($dashboard), manca solo il null-check qui - stesso
+        // pattern gia' usato per lo stesso identico controllo in
+        // CBBackend::handle().
+        if (!$menu) {
+            return null;
+        }
 
         switch ($menu->type) {
             case 'Route':

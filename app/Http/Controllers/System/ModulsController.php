@@ -243,7 +243,7 @@ class ModulsController extends CBController
         'name' => $row->{$this->title_field},
         'module' => CRUDBooster::getCurrentModule()->name,
       ]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
     $page_title = 'Edit Module Generator';
@@ -267,7 +267,7 @@ class ModulsController extends CBController
         'name' => $row->{$this->title_field},
         'module' => CRUDBooster::getCurrentModule()->name,
       ]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
     $modules = ModuleHelper::getEditableModules();
@@ -285,7 +285,7 @@ class ModulsController extends CBController
     ModuleHelper::update_enabled_tenants($_POST['module_tenant_enabler']);
     //}
 
-    CRUDBooster::redirect(Request::server('HTTP_REFERER'), trans('crudbooster.alert_update_data_success'), 'success');
+    return CRUDBooster::redirect(Request::server('HTTP_REFERER'), trans('crudbooster.alert_update_data_success'), 'success');
   }
 
   function hook_query_index(&$query)
@@ -310,7 +310,7 @@ class ModulsController extends CBController
         'name' => $module->{$this->title_field},
         'module' => CRUDBooster::getCurrentModule()->name,
       ]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
     //insert log
@@ -380,8 +380,7 @@ class ModulsController extends CBController
       $message_type = 'warning';
       add_log_ch('delete module', $alert, 'log');
       //stop module delete
-      CRUDBooster::redirect($url, $message, $message_type);
-      exit;
+      return CRUDBooster::redirect($url, $message, $message_type);
     } else {
       add_log_ch('delete module', 'Delete module ' . $module->name, 'log');
     }
@@ -420,7 +419,7 @@ class ModulsController extends CBController
       $message_type = 'success';
     }
 
-    CRUDBooster::redirect($url, $message, $message_type);
+    return CRUDBooster::redirect($url, $message, $message_type);
   }
 
   function hook_before_delete($id)
@@ -466,7 +465,7 @@ class ModulsController extends CBController
 
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
     return redirect()->route("ModulsControllerGetStep1");
@@ -480,7 +479,7 @@ class ModulsController extends CBController
 
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
     $tables = CRUDBooster::listTables('mg');
@@ -522,7 +521,7 @@ class ModulsController extends CBController
 
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
     //module name
@@ -654,7 +653,7 @@ class ModulsController extends CBController
 
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
     $module = Modules::find($id);
@@ -704,7 +703,7 @@ class ModulsController extends CBController
 
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
     $messages = $this->save_table($request);
 
@@ -724,7 +723,7 @@ class ModulsController extends CBController
 
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
     $row = DB::table('cms_moduls')->where('id', $id)->first();
@@ -790,7 +789,7 @@ class ModulsController extends CBController
 
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
   /**Prende i campi di input*/
@@ -874,7 +873,7 @@ class ModulsController extends CBController
 
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
     $row = DB::table('cms_moduls')->where('id', $id)->first();
@@ -1014,7 +1013,7 @@ class ModulsController extends CBController
 
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
     $row = DB::table('cms_moduls')->where('id', $id)->first();
@@ -1099,10 +1098,13 @@ class ModulsController extends CBController
         'name' => Request::input($this->title_field),
         'module' => CRUDBooster::getCurrentModule()->name,
       ]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
     }
 
-    $this->validation();
+    $validationResult = $this->validation();
+    if ($validationResult instanceof \Symfony\Component\HttpFoundation\Response) {
+      return $validationResult;
+    }
     $this->input_assignment();
 
     //Generate Controller
@@ -1178,12 +1180,12 @@ class ModulsController extends CBController
 
     $ref_parameter = Request::input('ref_parameter');
     if (Request::get('return_url')) {
-      CRUDBooster::redirect(Request::get('return_url'), trans("crudbooster.alert_add_data_success"), 'success');
+      return CRUDBooster::redirect(Request::get('return_url'), trans("crudbooster.alert_add_data_success"), 'success');
     } else {
       if (Request::get('submit') == trans('crudbooster.button_save_more')) {
-        CRUDBooster::redirect(CRUDBooster::mainpath('add'), trans("crudbooster.alert_add_data_success"), 'success');
+        return CRUDBooster::redirect(CRUDBooster::mainpath('add'), trans("crudbooster.alert_add_data_success"), 'success');
       } else {
-        CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_add_data_success"), 'success');
+        return CRUDBooster::redirect(CRUDBooster::mainpath(), trans("crudbooster.alert_add_data_success"), 'success');
       }
     }
   }
@@ -1196,10 +1198,13 @@ class ModulsController extends CBController
 
     if (!CRUDBooster::isUpdate() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans("crudbooster.log_try_add", ['name' => $row->{$this->title_field}, 'module' => CRUDBooster::getCurrentModule()->name]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
-    $this->validation();
+    $validationResult = $this->validation();
+    if ($validationResult instanceof \Symfony\Component\HttpFoundation\Response) {
+      return $validationResult;
+    }
     $this->input_assignment();
 
     //Generate Controller
@@ -1220,7 +1225,7 @@ class ModulsController extends CBController
     $roles = DB::table('cms_privileges_roles')->where('id_cms_privileges', CRUDBooster::myPrivilegeId())->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')->get();
     Session::put('admin_privileges_roles', $roles);
 
-    CRUDBooster::redirect(Request::server('HTTP_REFERER'), trans('crudbooster.alert_update_data_success'), 'success');
+    return CRUDBooster::redirect(Request::server('HTTP_REFERER'), trans('crudbooster.alert_update_data_success'), 'success');
   }
 
   /*
@@ -1234,7 +1239,7 @@ class ModulsController extends CBController
 
     if (!CRUDBooster::isSuperadmin()) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
-      CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
     $id = $request['id'];
     $module = Modules::find($id);

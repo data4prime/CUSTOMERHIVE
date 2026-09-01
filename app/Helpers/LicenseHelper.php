@@ -114,6 +114,12 @@ class LicenseHelper  {
     }
 
     public static function canAddTenant() {
+        // Vedi canLicenseLogin(): stesso bypass, per non far dipendere i
+        // test del CRUD Tenants da un license server/riga 'license' finti.
+        if (app()->environment('testing')) {
+            return true;
+        }
+
         $licenseKey = self::getLicense();
 
         if (!$licenseKey) {
@@ -158,6 +164,11 @@ class LicenseHelper  {
 
 
     public static function canAddUser() {
+        // Vedi canLicenseLogin(): stesso bypass, per non far dipendere i
+        // test del CRUD Users da un license server/riga 'license' finti.
+        if (app()->environment('testing')) {
+            return true;
+        }
 
         $licenseKey = self::getLicense();
 
