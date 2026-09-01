@@ -26,11 +26,11 @@ class ConnectorService
     private $licenseKey;
     private $accessToken;
 
-    public function __construct(string $licenseKey)
+    public function __construct(string $licenseKey, bool $forceTokenRefresh = false)
     {
         $this->licenseKey = $licenseKey;
 
-        $this->accessToken = $this->getAccessToken($licenseKey);
+        $this->accessToken = $this->getAccessToken($licenseKey, $forceTokenRefresh);
     }
 
     /**
@@ -131,6 +131,14 @@ class ConnectorService
                     return $license;
                 }
 
+                // Il server e' stato raggiunto ed ha risposto, ma senza una
+                // licenza valida (es. cancellata lato server): il file
+                // locale stale non va lasciato intatto come nel caso
+                // "server down" (catch sotto) - va invalidato, cosi'
+                // getLicenseFromFile()/validateLicense() non si fidano piu'
+                // di dati ormai inesistenti sul server.
+                Storage::disk('license')->delete('license.json');
+
             } catch (ConnectionException | RequestException $e) {
                 Log::error("License server timeout or request failed: " . $e->getMessage());
             } catch (\Exception $e) {
@@ -204,14 +212,20 @@ class ConnectorService
      * Get access token for the given domain
      *
      * @param string $licenseKey
+     * @param bool $forceTokenRefresh Se true, ignora il token in cache e
+     *   rifà l'autenticazione col license server. Serve al gate di login
+     *   (LicenseHelper::canLicenseLogin()): senza questo, un token ancora
+     *   in cache (fino a 60 minuti) evita del tutto la chiamata di auth che
+     *   scoprirebbe che licenza/utente sono stati eliminati lato server, e
+     *   il login continuerebbe a fidarsi del license.json locale stale.
      *
      * @return string
      */
-    private function getAccessToken(string $licenseKey): null | string
+    private function getAccessToken(string $licenseKey, bool $forceTokenRefresh = false): null | string
     {
         $accessTokenCacheKey = $this->getAccessTokenKey($licenseKey);
 
-        $accessToken = Cache::get($accessTokenCacheKey, null);
+        $accessToken = $forceTokenRefresh ? null : Cache::get($accessTokenCacheKey, null);
 
         if ($accessToken) {
             return $accessToken;

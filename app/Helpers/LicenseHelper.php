@@ -67,7 +67,11 @@ class LicenseHelper  {
         Log::info(json_encode($licenseKey));
 
         $customData = ['license_key' => $licenseKey->license_key, 'domain' => env('APP_DOMAIN')];
-        $connectorService = new ConnectorService($licenseKey->license_key);
+        // forceTokenRefresh: il refresh chiamato dal gate di login deve
+        // verificare la licenza in tempo reale, non riusare un access token
+        // ancora in cache che nasconderebbe una licenza/utente cancellati
+        // lato server. Vedi ConnectorService::getAccessToken().
+        $connectorService = new ConnectorService($licenseKey->license_key, true);
         return  $connectorService->writeLicense($customData);
 
     }
