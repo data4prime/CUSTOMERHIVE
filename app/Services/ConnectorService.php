@@ -8,8 +8,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 
-use LaravelReady\LicenseConnector\Traits\CacheKeys;
-use LaravelReady\LicenseConnector\Exceptions\AuthException;
+use App\Exceptions\AuthException;
 
 use Illuminate\Support\Facades\DB;
 
@@ -19,8 +18,6 @@ use Illuminate\Support\Facades\Log;
 
 class ConnectorService
 {
-    use CacheKeys;
-
     public $license;
 
     private $licenseKey;
@@ -274,5 +271,15 @@ class ConnectorService
         $message = is_array($data) ? ($data['message'] ?? 'Risposta del license server non valida') : 'Risposta del license server non valida (formato inatteso)';
 
         throw new AuthException($message);
+    }
+
+    /**
+     * Prima fornito da LaravelReady\LicenseConnector\Traits\CacheKeys,
+     * inlineato per togliere la dipendenza dal pacchetto (era l'unico
+     * metodo del trait usato in tutto il progetto).
+     */
+    private function getAccessTokenKey(string $licenseKey): string
+    {
+        return "license-connector:access-token-{$licenseKey}";
     }
 }

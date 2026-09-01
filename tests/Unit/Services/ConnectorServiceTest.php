@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\Services;
 
+use App\Exceptions\AuthException;
 use App\Services\ConnectorService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use LaravelReady\LicenseConnector\Exceptions\AuthException;
 use Tests\TestCase;
 
 /**

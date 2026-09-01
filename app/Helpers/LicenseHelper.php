@@ -103,7 +103,7 @@ class LicenseHelper  {
             $connectorService = new ConnectorService($licenseKey->license_key);
 
             return  $connectorService->validateLicense($customData);
-        } catch (\LaravelReady\LicenseConnector\Exceptions\AuthException $e) {
+        } catch (\App\Exceptions\AuthException $e) {
             // Server di licenza irraggiungibile o risposta malformata: non
             // deve bloccare il login dell'intero ambiente con un 500, si
             // comporta come "licenza non valida" (stesso esito di prima).

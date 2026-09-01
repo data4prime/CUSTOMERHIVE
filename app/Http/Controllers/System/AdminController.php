@@ -247,7 +247,7 @@ $tenant_domain_name = env('APP_DOMAIN');
 
     try {
       $license = LicenseHelper::writeLicense();
-    } catch (\LaravelReady\LicenseConnector\Exceptions\AuthException $e) {
+    } catch (\App\Exceptions\AuthException $e) {
       // Il server di licenza rifiuta la chiave (formato non valido, non
       // trovata, ecc.): non è un errore applicativo, è l'esito atteso di
       // una chiave sbagliata, quindi non deve arrivare come 500.
