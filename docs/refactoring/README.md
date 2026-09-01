@@ -93,6 +93,8 @@ zero leggendo i diff di git.
 | [058](058-getshow-non-caricava-il-layout-assegnato.md) | `StatisticBuilderController::getShow()` non caricava il layout assegnato alla dashboard, ricadendo sempre sulla griglia di default a 9 aree — widget in posizione diversa tra builder e dashboard reale | Bug fix | Completato | 2026-08-28 |
 | [059](059-table-widget-datatable-selettore-troppo-generico.md) | Widget "Table": selettore DataTable globale (`table.table`) poteva confliggere con altri widget Table sulla stessa dashboard ("tabella tagliata") — scoped al singolo widget con controllo anti-doppia-inizializzazione | Bug fix | Completato | 2026-08-28 |
 | [060](060-groups-can-view-crash-standard-e-tenants-list-vuota.md) | `ModuleHelper::can_view()`: un utente Standard che lista `/admin/groups` con gruppi di piu' tenant otteneva un 500 (query/null-check sbagliati in `get_group_id()`/`get_tenant_id()`); documentato anche che un tenantadmin non vede nessun tenant in lista Tenants (nessun fix, solo caratterizzazione) | Bug fix / caratterizzazione | Parzialmente completato | 2026-09-01 |
+| [061](061-icona-modulo-privileges-incoerente.md) | Icona del modulo Privileges incoerente tra testata pagina (`fa fa-cog`, da `cms_moduls`) e sidebar (`fa fa-key`, hardcoded) — allineata la testata alla sidebar via migration dati | Bug fix (UI) | Completato | 2026-09-01 |
+| [062](062-pulsante-add-member-in-tenants-group.md) | `/admin/tenants/group/{id}`: il pulsante diceva "Add member" (copiato dalla view analoga di Groups) invece di "Add group" | Bug fix (UI) | Completato | 2026-09-01 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).

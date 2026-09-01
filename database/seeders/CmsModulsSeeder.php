@@ -29,7 +29,7 @@ class Cms_modulsSeeder extends Seeder
 
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => trans('crudbooster.Privileges'),
-                'icon' => 'fa fa-cog',
+                'icon' => 'fa fa-key',
                 'path' => 'privileges',
                 'table_name' => 'cms_privileges',
                 'controller' => 'PrivilegesController',

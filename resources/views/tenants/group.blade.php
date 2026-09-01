@@ -59,7 +59,7 @@
                 @endif
 
                 @if($button_save && isset($command) && $command != 'detail')
-                <input type="submit" name="submit" value='{{trans("crudbooster.button_add_member")}}'
+                <input type="submit" name="submit" value='{{trans("crudbooster.button_add_group")}}'
                   class='btn btn-success'>
                 @endif
 
