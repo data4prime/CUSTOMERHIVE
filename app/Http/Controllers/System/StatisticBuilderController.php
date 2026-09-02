@@ -383,6 +383,24 @@ class StatisticBuilderController extends CBController
 
     public function postSaveComponent()
     {
+        // Unico punto di scrittura di 'config' (compresa la chiave 'sql' di
+        // alcuni widget - Small Box/Table/Chart Area/Bar/Line/Qlik - che
+        // getViewComponent() esegue letteralmente via DB::select() quando
+        // il widget viene renderizzato). Senza questo controllo, QUALUNQUE
+        // utente autenticato - non solo superadmin, a differenza di
+        // getBuilder()/getEditComponent()/getDeleteComponent() in questo
+        // stesso controller - poteva scrivere SQL arbitrario in un widget
+        // di una dashboard esistente ed eseguirlo contro il DB reale con la
+        // semplice visualizzazione di quella dashboard da parte di
+        // chiunque (getViewComponent()/getListComponent() restano
+        // volutamente SENZA questo controllo: sono usati anche dalla
+        // pagina di visualizzazione normale delle dashboard - show.blade.php
+        // - non solo dall'editor, quindi non vanno limitati al superadmin).
+        if (!CRUDBooster::isSuperadmin()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'Save Component', 'module' => 'Statistic']));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         DB::table('cms_statistic_components')->where('componentID', Request::get('componentid'))->update([
             'name' => Request::get('name'),
             'config' => json_encode(Request::get('config')),

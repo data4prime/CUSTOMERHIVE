@@ -99,6 +99,7 @@ zero leggendo i diff di git.
 | [064](064-settings-bug-e-test-crud.md) | Settings: 3 bug reali corretti (`CRUDBooster::valid()` chiamava `exit()` invece di tornare una Response, bloccando la testabilita' degli upload non validi; cancellare una riga di setting non invalidava la cache ne' cancellava il file associato) + 27 test CRUD | Bug fix + test | Completato | 2026-09-02 |
 | [065](065-api-generator-rce-e-test.md) | **API Generator: RCE autenticata corretta** (`generateAPI()`/`postSaveApiCustom()` incollavano input utente grezzo dentro sorgente PHP scritto su disco come controller live - risolto con `var_export()`) + path traversal nel nome file + 2 bug null-safety + 19 test. Nota: nessun controllo di privilegio su gran parte del controller (punto A) resta deliberatamente non corretto, rimandato | Sicurezza + Bug fix + test | Completato (parziale) | 2026-09-02 |
 | [066](066-api-execute-null-safety-e-test.md) | API Generator: `ApiController::execute_api()` crashava con 500 su un permalink senza riga `cms_apicustom` corrispondente (dereferenziato prima del controllo esistenza) + 6 test sul comportamento a runtime (parametri/risposte su list/detail) | Bug fix + test | Completato | 2026-09-02 |
+| [067](067-statistic-builder-sql-arbitrario-e-test.md) | **Statistic Builder: SQL arbitrario corretto** (`postSaveComponent()` - unico punto di scrittura di `config`, incluso il campo "SQL Query" che alcuni widget eseguono via `DB::select()` in fase di rendering - non aveva alcun controllo di privilegio) + 14 test. Nota: stesso pattern di 065, gap generico di autorizzazione su altri 3 endpoint del controller resta deliberatamente non corretto, rimandato | Sicurezza + Bug fix + test | Completato (parziale) | 2026-09-02 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
@@ -249,6 +250,18 @@ trasformate in un intervento vero e proprio:
   "Rischi e note" in quel documento. Riprendere aggiungendo lo stesso check
   `CRUDBooster::isSuperadmin()` già presente su `getIndex()`/`getGenerator()`/
   `getEditApi()` dello stesso controller.
+- **`StatisticBuilderController` (modulo Statistic Builder): nessun
+  controllo di privilegio** su `postAddComponent()`, `postUpdateAreaComponent()`,
+  `getListComponent()` — a differenza di `getBuilder()`/`getEditComponent()`/
+  `getDeleteComponent()`/`postSaveComponent()` (quest'ultima corretta in
+  [067](067-statistic-builder-sql-arbitrario-e-test.md)) dello stesso
+  controller. Nessuno di questi 3 permette di iniettare SQL eseguibile (il
+  `config` di un componente appena creato è sempre vuoto), ma manca
+  qualunque validazione che `componentid`/`id_cms_statistics` appartengano
+  alla dashboard su cui l'utente dovrebbe poter agire (IDOR). Deliberatamente
+  rimandato — vedi "Rischi e note" in [067](067-statistic-builder-sql-arbitrario-e-test.md).
+  Riprendere aggiungendo lo stesso check già presente sugli altri metodi
+  del controller, più una validazione di appartenenza componente/dashboard.
 - **Autenticazione delle API custom (`CRUDBooster::authAPI()`, modulo API
   Generator) da modernizzare**: schema "fatto in casa" (chiave condivisa in
   `cms_apikey` + timestamp + user agent → `md5()`, confrontato con l'header

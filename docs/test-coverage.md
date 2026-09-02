@@ -355,6 +355,52 @@ per il bug null-safety trovato e corretto scrivendo questi test.
   parametro oltre al caso base (`exists`, `unique`, `date_format`, ecc.) —
   fuori scope di questo intervento.
 
+## `tests/Feature/StatisticBuilderCrudTest.php`
+
+**Cosa copre**: il modulo Statistic Builder (`StatisticBuilderController` —
+dashboard BI con widget configurabili: Small Box, Table, Chart Area/Bar/
+Line, Qlik). Ha fatto emergere e corretto una vulnerabilità più grave di
+quella di API Generator ([065](refactoring/065-api-generator-rce-e-test.md)):
+`postSaveComponent()` — l'unico punto di scrittura di `config`, compresa
+la chiave `sql` che 6 dei 10 tipi di widget eseguono letteralmente via
+`DB::select()` in fase di rendering — non aveva **nessun** controllo di
+privilegio: qualunque utente autenticato poteva scrivere SQL arbitrario in
+un widget di qualunque dashboard esistente ed eseguirlo contro il DB reale
+alla semplice visualizzazione di quella pagina. Dettagli in
+[067](refactoring/067-statistic-builder-sql-arbitrario-e-test.md).
+
+| Test | Cosa verifica |
+|---|---|
+| `test_postsavecomponent_nega_accesso_a_non_superadmin` | **regressione del fix**: un non-superadmin non scrive più `config` |
+| `test_postsavecomponent_riesce_per_un_superadmin` | l'uso legittimo (superadmin) continua a funzionare |
+| `test_lista_mostra_le_dashboard_esistenti` | caratterizzazione CRUD base |
+| `test_creazione_dashboard_genera_slug_da_name` | `hook_before_add()`: slug da `str_slug($name)` |
+| `test_modifica_dashboard_non_rigenera_lo_slug` | **caratterizzazione, non un bug**: lo slug è il permalink pubblico, `hook_before_edit()` è vuoto apposta |
+| `test_cancellazione_dashboard_riesce` | `cms_statistics` non ha `deleted_at`: DELETE fisica |
+| `test_getshow_su_slug_inesistente_reindirizza` | redirect gestito (già presente) |
+| `test_getshow_con_layout_assegnato_risolve_code_layout` | layout da `dashboard_layouts` |
+| `test_getshow_senza_layout_usa_griglia_di_default` | griglia di default a 9 aree |
+| `test_getbuilder_nega_accesso_a_non_superadmin` / `test_geteditcomponent_nega_accesso_a_non_superadmin` | controlli di accesso già esistenti (non un gap) |
+| `test_caratterizzazione_postaddcomponent_e_raggiungibile_da_utente_senza_permessi` | **caratterizzazione di un gap noto, non un fix** — vedi backlog in [`refactoring/README.md`](refactoring/README.md) |
+| `test_caratterizzazione_postupdateareacomponent_e_raggiungibile_da_utente_senza_permessi` | idem |
+| `test_caratterizzazione_getlistcomponent_e_raggiungibile_da_utente_senza_permessi` | idem |
+
+**Dipendenze/scelte note**:
+- Verificato e scartato come falso allarme: `component_name` (usato senza
+  sanificazione in `view('...components.'.$component_name)`) sembrava un
+  possibile path traversal — `Illuminate\View\FileViewFinder` converte
+  ogni `.` in `/` su tutta la stringa, quindi un `..` letterale non
+  sopravvive mai come vera risalita di directory.
+- Deliberatamente non testato: il rendering end-to-end di un widget SQL
+  configurato correttamente (proverebbe che il fix non ha rotto l'uso
+  legittimo, ma richiede di renderizzare Blade reali con dipendenze
+  esterne — rimandato, deciso con l'utente).
+- Bug null-safety su `getBuilder()`/`getEditComponent()`/`getViewComponent()`
+  con un id/componentID inesistente (crash 500) trovati in analisi ma non
+  corretti — i test sui controlli di accesso usano sempre un id/componentID
+  reale per non sfiorare quel path (il check `isSuperadmin()` gira comunque
+  prima di qualunque dereferenziazione pericolosa).
+
 ## `tests/Feature/CrossModuleRelationsTest.php`
 
 **Cosa copre**: le relazioni TRA i 4 moduli sopra (non il CRUD interno
