@@ -184,9 +184,12 @@ class SettingsController extends CBController
 
 
                 if ($set->content_input_type == 'upload_image') {
-                    CRUDBooster::valid([$name => 'image|max:10000'], 'view');
+                    $validResult = CRUDBooster::valid([$name => 'image|max:10000'], 'view');
                 } else {
-                    CRUDBooster::valid([$name => 'mimes:pem,doc,docx,xls,xlsx,ppt,pptx,pdf,zip,rar|max:20000'], 'view');
+                    $validResult = CRUDBooster::valid([$name => 'mimes:pem,doc,docx,xls,xlsx,ppt,pptx,pdf,zip,rar|max:20000'], 'view');
+                }
+                if ($validResult instanceof \Symfony\Component\HttpFoundation\Response) {
+                    return $validResult;
                 }
 
                 $file = Request::file($name);
@@ -269,5 +272,31 @@ class SettingsController extends CBController
 
         /* REMOVE CACHE */
         Cache::forget('setting_' . $row->name);
+    }
+
+    /**
+     * cms_settings non ha 'deleted_at' (vedi migration originale): getDelete()
+     * ereditato da CBController fa una DELETE fisica. Senza questo hook,
+     * cancellare una riga NON invalidava la cache (CRUDBooster::getSetting()
+     * usa Cache::forever(), quindi il valore vecchio restava servito a chi la
+     * leggeva, indefinitamente) e lasciava orfano l'eventuale file caricato
+     * (stessa logica di pulizia gia' usata da getDeleteFileSetting() sopra,
+     * qui applicata anche alla cancellazione dell'intera riga).
+     */
+    function hook_before_delete($id)
+    {
+        $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+        if (!$row) {
+            return;
+        }
+
+        Cache::forget('setting_' . $row->name);
+
+        if ($row->content) {
+            $file = public_path($row->content);
+            if (is_file($file)) {
+                @unlink($file);
+            }
+        }
     }
 }

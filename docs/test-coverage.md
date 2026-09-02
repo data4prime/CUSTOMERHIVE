@@ -191,6 +191,64 @@ Menu Management) su qualunque cancellazione bloccata da
   `CRUDBooster::redirectBack()` (ancora `exit()`-based, usata anche da
   2 Blade view - vedi 063 per il perche' non e' stata toccata).
 
+## `tests/Feature/SettingsCrudTest.php`
+
+**Cosa copre**: il modulo Settings — meta' CRUD standard su `cms_settings`
+(`SettingsController` + `CBController`), meta' le due schermate custom che
+sono il vero front-end (`getShow()`/`postSaveSetting()`, il salvataggio
+massivo di un intero gruppo di setting) e `getDeleteFileSetting()`. Ha fatto
+emergere e corretto 3 bug reali (dettagli in
+[064](refactoring/064-settings-bug-e-test-crud.md)): `CRUDBooster::valid()`
+chiamava `exit()` invece di tornare una Response (bloccava la testabilita'
+degli upload non validi — stesso refactor gia' fatto per
+`CRUDBooster::redirect()`/`CBController::validation()`), e cancellare una
+riga di setting non invalidava la cache ne' cancellava il file caricato
+associato (nessun `hook_before_delete()`/`hook_after_delete()`).
+
+| Test | Cosa verifica |
+|---|---|
+| `test_lista_mostra_le_righe_di_setting` | lista, regressione bug storico `%field%` in `cbInit()` |
+| `test_creazione_setting_genera_name_da_slug_della_label` | `hook_before_add()`: `name` derivato dallo slug di `label` |
+| `test_creazione_setting_con_name_duplicato_viene_bloccata` | `name` e' la chiave logica (usata da cache/`getSetting()`), duplicati bloccati |
+| `test_modifica_setting_invalida_la_cache` | `hook_after_edit()` -> `Cache::forget()` |
+| `test_cancellazione_riga_invalida_la_cache` | **regressione bug 2**: `hook_before_delete()` invalida la cache |
+| `test_cancellazione_riga_con_file_associato_rimuove_il_file_fisico` | **regressione bug 3**: `hook_before_delete()` cancella anche il file fisico |
+| `test_cancellazione_riga_senza_content_non_va_in_errore` | guardia sul `content` vuoto |
+| `test_getshow_nega_accesso_a_non_superadmin` | `getShow()`: check `isSuperadmin()` esplicito |
+| `test_getshow_mostra_i_setting_del_gruppo_richiesto` | filtro per `group_setting` |
+| `test_getshow_ripara_le_label_vuote` | side-effect noto: una GET ripara le label vuote nel DB |
+| `test_postsavesetting_nega_accesso_a_non_superadmin` | `postSaveSetting()`: check `isSuperadmin()` esplicito |
+| `test_postsavesetting_ignora_i_campi_non_presenti_nella_request` | regressione di un bug gia' corretto: un campo assente non azzera il setting |
+| `test_postsavesetting_permette_di_svuotare_un_campo_di_testo` | "assente" ≠ "vuoto": un campo di testo inviato vuoto resta cancellabile |
+| `test_postsavesetting_password_vuota_non_sovrascrive_il_valore_esistente` | password vuota = "non modificare" |
+| `test_postsavesetting_password_valorizzata_aggiorna_il_valore` | password valorizzata aggiorna |
+| `test_postsavesetting_upload_image_valido_salva_path_relativo` | path salvato relativo (`/storage/uploads/YYYY-MM/...`), non URL assoluto |
+| `test_postsavesetting_upload_image_non_valido_viene_rifiutato` | **regressione bug 1**: prima non testabile (`exit()`) |
+| `test_postsavesetting_upload_file_con_estensione_non_ammessa_viene_rifiutato` | stesso fix, ramo mimes generico |
+| `test_postsavesetting_upload_fallito_lato_storage_non_azzera_il_valore` | `Storage::putFileAs()` → `false` (bug gia' corretto in passato): messaggio di warning, valore precedente conservato |
+| `test_postsavesetting_salvataggio_riuscito_invalida_la_cache_per_ogni_setting_toccato` | cache invalidata per ogni riga salvata |
+| `test_getdeletefilesetting_nega_accesso_a_non_superadmin` | **il bug piu' a rischio trovato in analisi**: prima nessun controllo di accesso |
+| `test_getdeletefilesetting_rimuove_il_file_e_azzera_il_content` | rimozione file fisico via `public_path()` + azzeramento `content` |
+| `test_getdeletefilesetting_su_content_gia_vuoto_non_fa_nulla` | guardia gia' presente |
+| `test_getdeletefilesetting_invalida_la_cache` | `Cache::forget()` |
+| `test_getsetting_legge_dal_db_e_mette_in_cache_forever` | `CRUDBooster::getSetting()`: cache-first, `Cache::forever()` |
+| `test_getsetting_una_volta_in_cache_ignora_i_cambi_nel_db` | cache non invalidata da un `UPDATE` diretto sul DB |
+| `test_getsetting_su_nome_inesistente_torna_null` | nome inesistente → `null` |
+
+**Dipendenze/scelte note**:
+- Gli upload riusciti/rifiutati via `postSaveSetting()` usano
+  `Storage::fake('local')` (il disco di default in
+  `config/filesystems.php`) — nessun file reale toccato.
+- `getDeleteFileSetting()`/la cancellazione riga leggono e cancellano il
+  file via `public_path()` diretto, non tramite lo Storage facade —
+  `Storage::fake()` non li intercetta. Questi test scrivono un file reale
+  sotto `public/storage/uploads/phpunit-settings-test/`, ripulito in
+  `tearDown()` ad ogni test.
+- `test_postsavesetting_upload_fallito_lato_storage_non_azzera_il_valore`
+  sostituisce l'intero facade Storage con un mock (`Storage::shouldReceive`)
+  per simulare una scrittura fallita — piu' fragile se in futuro
+  `postSaveSetting()` chiamasse altri metodi Storage nello stesso percorso.
+
 ## `tests/Feature/CrossModuleRelationsTest.php`
 
 **Cosa copre**: le relazioni TRA i 4 moduli sopra (non il CRUD interno

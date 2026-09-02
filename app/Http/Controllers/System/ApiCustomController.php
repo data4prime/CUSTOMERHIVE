@@ -215,7 +215,10 @@ class ApiCustomController extends CBController
 
     public function getStatusApikey()
     {
-        CRUDBooster::valid(['id', 'status'], 'view');
+        $validResult = CRUDBooster::valid(['id', 'status'], 'view');
+        if ($validResult instanceof \Symfony\Component\HttpFoundation\Response) {
+            return $validResult;
+        }
 
         $id = Request::get('id');
         $status = (Request::get('status') == 1) ? "active" : "non active";

@@ -66,6 +66,32 @@ trait SeedsCmsData
     }
 
     /**
+     * Crea una riga cms_settings pronta per i test del modulo Settings
+     * (SettingsController). 'name' e' la chiave logica (usata da
+     * CRUDBooster::getSetting(), dalla cache "setting_".$name e da
+     * postSaveSetting() per il WHERE dell'update) - univoca a DB, va sempre
+     * passato un valore diverso tra chiamate nello stesso test se si
+     * seminano piu' righe.
+     */
+    protected function seedSetting(array $overrides = []): array
+    {
+        $data = array_merge([
+            'name' => 'setting_test_' . uniqid(),
+            'label' => 'Setting Test',
+            'group_setting' => 'General Setting',
+            'content_input_type' => 'text',
+            'content' => 'valore iniziale',
+            'dataenum' => null,
+            'helper' => null,
+            'created_at' => now(),
+        ], $overrides);
+
+        $settingId = DB::table('cms_settings')->insertGetId($data);
+
+        return array_merge($data, ['id' => $settingId]);
+    }
+
+    /**
      * Le route dei moduli CRUD (Tenants, Users, ecc.) si registrano
      * leggendo cms_moduls quando l'applicazione boota (routes/crudbooster.php,
      * sezione "ROUTER FOR BACKEND CRUDBOOSTER") - PRIMA che un test possa

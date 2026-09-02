@@ -1071,6 +1071,13 @@ return Request::segment($segment);
         });
     }
 
+    /**
+     * Ritorna la response invece di inviarla ed uscire con exit() (stesso
+     * refactor e stessa motivazione di CRUDBooster::redirect() e
+     * CBController::validation() - vedi i commenti li'). IMPORTANTE per chi
+     * chiama valid(): va sempre preceduto da `return` in caso di validazione
+     * fallita, invece di proseguire come se fosse tutto ok.
+     */
     public static function valid($arr = [], $type = 'json')
     {
         $input_arr = Request::all();
@@ -1103,14 +1110,10 @@ return Request::segment($segment);
                 $result = [];
                 $result['api_status'] = 0;
                 $result['api_message'] = implode(', ', $message);
-                $res = response()->json($result, 200);
-                $res->send();
-                exit;
+
+                return response()->json($result, 200);
             } else {
-                $res = redirect()->back()->with(['message' => implode('<br/>', $message), 'message_type' => 'warning'])->withInput();
-                Session::driver()->save();
-                $res->send();
-                exit;
+                return redirect()->back()->with(['message' => implode('<br/>', $message), 'message_type' => 'warning'])->withInput();
             }
         }
     }

@@ -96,6 +96,7 @@ zero leggendo i diff di git.
 | [061](061-icona-modulo-privileges-incoerente.md) | Icona del modulo Privileges incoerente tra testata pagina (`fa fa-cog`, da `cms_moduls`) e sidebar (`fa fa-key`, hardcoded) — allineata la testata alla sidebar via migration dati | Bug fix (UI) | Completato | 2026-09-01 |
 | [062](062-pulsante-add-member-in-tenants-group.md) | `/admin/tenants/group/{id}`: il pulsante diceva "Add member" (copiato dalla view analoga di Groups) invece di "Add group" | Bug fix (UI) | Completato | 2026-09-01 |
 | [063](063-menu-management-bug-e-test-crud.md) | Menu Management: 3 bug reali corretti (UrlGenerationException su ogni voce modificabile, crash creando la prima voce su tabella vuota, `CBController::getDelete()` crashava su qualunque cancellazione bloccata in QUALUNQUE modulo) + 14 test CRUD | Bug fix + test | Completato | 2026-09-01 |
+| [064](064-settings-bug-e-test-crud.md) | Settings: 3 bug reali corretti (`CRUDBooster::valid()` chiamava `exit()` invece di tornare una Response, bloccando la testabilita' degli upload non validi; cancellare una riga di setting non invalidava la cache ne' cancellava il file associato) + 27 test CRUD | Bug fix + test | Completato | 2026-09-02 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
