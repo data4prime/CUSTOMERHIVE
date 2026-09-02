@@ -286,6 +286,7 @@ permalink con `/`/`..` permetteva path traversal nel file scritto).
 | `test_getscreetkey_mostra_le_api_key_esistenti` | caratterizzazione |
 | `test_getindex_nega_accesso_a_non_superadmin` / `test_getgenerator_nega_accesso_a_non_superadmin` / `test_geteditapi_nega_accesso_a_non_superadmin` | controlli di accesso già esistenti (non un gap, a differenza degli altri metodi del controller) |
 | `test_caratterizzazione_postsaveapicustom_e_raggiungibile_da_utente_senza_alcun_permesso` | **caratterizzazione di un gap noto, non un fix**: nessun controllo di privilegio su `postSaveApiCustom()` — vedi backlog in [`refactoring/README.md`](refactoring/README.md) |
+| `test_creazione_api_salva_i_parametri_e_le_risposte_configurate` | persistenza: `parameters`/`responses` salvati esattamente come inviati dal form — il comportamento a runtime di questa configurazione è coperto da [`ApiExecuteTest.php`](#testsfeatureapiexecutetestphp) sotto |
 
 **Dipendenze/scelte note**:
 - A differenza di Settings (che scrive in `public/storage/`), qui i file
@@ -299,14 +300,60 @@ permalink con `/`/`..` permetteva path traversal nel file scritto).
   questo intervento, se la riga manca) — i test seminano sempre quella
   riga per non inciamparci mentre testano altro.
 - **Non verificato che l'API generata sia poi effettivamente richiamabile
-  end-to-end**: `generateAPI()` costruisce lo `use` statement del
-  controller generato assumendo o `App\Http\Controllers\` (root) o
-  `crocodicstudio\crudbooster\controllers\` — quest'ultimo namespace non
-  esiste più nel repo (pacchetto rimosso), e la maggior parte dei
-  controller di sistema oggi vive sotto `App\Http\Controllers\System\`,
-  non nella root. La feature sembra quindi già rotta end-to-end
-  indipendentemente da questo intervento — vedi "Rischi e note" in
-  [065](refactoring/065-api-generator-rce-e-test.md).
+  end-to-end tramite la rotta dinamica**: `generateAPI()` costruisce lo
+  `use` statement del controller "figlio" del modulo (es.
+  `AdminTenantsController`) assumendo o `App\Http\Controllers\` (root,
+  corretto solo per tabelle `mg_*`/Module Generator) o
+  `crocodicstudio\crudbooster\controllers\` — quest'ultimo risolve solo
+  per le 5 classi "motore" aliasate in
+  `app/Support/legacy_crudbooster_aliases.php` (`ApiController` inclusa,
+  **non** i 52 controller "schermata" come `AdminTenantsController`, oggi
+  sotto `App\Http\Controllers\System\`). Per una tabella di sistema
+  (non-`mg_`) il file generato non è quindi caricabile. La logica di
+  `execute_api()` in sé (parametri/risposte/azione) **è** invece coperta,
+  bypassando la generazione file — vedi
+  [`ApiExecuteTest.php`](#testsfeatureapiexecutetestphp) sotto e
+  [066](refactoring/066-api-execute-null-safety-e-test.md).
+
+## `tests/Feature/ApiExecuteTest.php`
+
+**Cosa copre**: `ApiController::execute_api()` — il metodo che gestisce
+davvero una chiamata a una API generata dal modulo API Generator, letto da
+`cms_apicustom` **per `permalink` a ogni richiesta** (parametri/risposte/
+azione/where non sono mai "cotti" nel controller generato). A differenza
+di `ApiCustomCrudTest.php` (che copre la creazione/generazione), qui si
+registra in `setUp()` una rotta ad-hoc che istanzia `ApiController`
+direttamente, bypassando del tutto `generateAPI()`/il routing dinamico —
+vedi la nota sopra sul perché quella catena non è affidabile per una
+tabella di sistema, e [066](refactoring/066-api-execute-null-safety-e-test.md)
+per il bug null-safety trovato e corretto scrivendo questi test.
+
+| Test | Cosa verifica |
+|---|---|
+| `test_execute_api_list_rispetta_i_parametri_e_le_risposte_configurate` | un parametro filtra i risultati, solo i campi `used=1` compaiono nella risposta |
+| `test_execute_api_detail_rispetta_le_risposte_configurate` | idem — scoperta di comportamento: `detail`, a differenza di `list`, fa il merge dei campi della riga direttamente nel livello superiore della response, non sotto `data` |
+| `test_execute_api_senza_header_x_user_viene_rifiutato` | `ApiController::login()`: richiede l'header `X-user` con l'email di un `cms_users` attivo |
+| `test_execute_api_rifiuta_il_metodo_http_non_configurato` | `method_type` configurato vs verbo HTTP della richiesta |
+| `test_execute_api_su_permalink_inesistente_non_va_in_crash` | **regressione**: `$row_api` veniva dereferenziato prima del controllo di esistenza — prima 500, ora messaggio d'errore gestito |
+
+**Dipendenze/scelte note**:
+- Questi test **non** passano dal middleware `CBAuthAPI`/
+  `CRUDBooster::authAPI()` (token+timestamp+user agent) — la rotta ad-hoc
+  non lo applica deliberatamente, per isolare la logica di `execute_api()`
+  da quel layer. Non ancora testato — vedi backlog in
+  [`refactoring/README.md`](refactoring/README.md) (stessa voce sulla
+  modernizzazione dell'autenticazione API).
+- La rotta ad-hoc istanzia una sottoclasse anonima di `ApiController` che
+  dichiara la proprietà `$controller` (assente sulla classe base —
+  impostarla dall'esterno senza dichiararla creerebbe una proprietà
+  dinamica, deprecata in PHP 8.2+), valorizzata con un vero
+  `SettingsController` — necessario perché `execute_api()` lo usa per
+  `cbInit()`/`ModuleHelper::can_view()` sul ramo `detail` anche per un
+  attore superadmin.
+- Non verificati `aksi` diversi da `list`/`detail` (`insert`/`update`/
+  `delete`, visti nel file ma non testati) né i singoli `type` di
+  parametro oltre al caso base (`exists`, `unique`, `date_format`, ecc.) —
+  fuori scope di questo intervento.
 
 ## `tests/Feature/CrossModuleRelationsTest.php`
 

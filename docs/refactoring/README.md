@@ -98,6 +98,7 @@ zero leggendo i diff di git.
 | [063](063-menu-management-bug-e-test-crud.md) | Menu Management: 3 bug reali corretti (UrlGenerationException su ogni voce modificabile, crash creando la prima voce su tabella vuota, `CBController::getDelete()` crashava su qualunque cancellazione bloccata in QUALUNQUE modulo) + 14 test CRUD | Bug fix + test | Completato | 2026-09-01 |
 | [064](064-settings-bug-e-test-crud.md) | Settings: 3 bug reali corretti (`CRUDBooster::valid()` chiamava `exit()` invece di tornare una Response, bloccando la testabilita' degli upload non validi; cancellare una riga di setting non invalidava la cache ne' cancellava il file associato) + 27 test CRUD | Bug fix + test | Completato | 2026-09-02 |
 | [065](065-api-generator-rce-e-test.md) | **API Generator: RCE autenticata corretta** (`generateAPI()`/`postSaveApiCustom()` incollavano input utente grezzo dentro sorgente PHP scritto su disco come controller live - risolto con `var_export()`) + path traversal nel nome file + 2 bug null-safety + 19 test. Nota: nessun controllo di privilegio su gran parte del controller (punto A) resta deliberatamente non corretto, rimandato | Sicurezza + Bug fix + test | Completato (parziale) | 2026-09-02 |
+| [066](066-api-execute-null-safety-e-test.md) | API Generator: `ApiController::execute_api()` crashava con 500 su un permalink senza riga `cms_apicustom` corrispondente (dereferenziato prima del controllo esistenza) + 6 test sul comportamento a runtime (parametri/risposte su list/detail) | Bug fix + test | Completato | 2026-09-02 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
@@ -248,6 +249,20 @@ trasformate in un intervento vero e proprio:
   "Rischi e note" in quel documento. Riprendere aggiungendo lo stesso check
   `CRUDBooster::isSuperadmin()` già presente su `getIndex()`/`getGenerator()`/
   `getEditApi()` dello stesso controller.
+- **Autenticazione delle API custom (`CRUDBooster::authAPI()`, modulo API
+  Generator) da modernizzare**: schema "fatto in casa" (chiave condivisa in
+  `cms_apikey` + timestamp + user agent → `md5()`, confrontato con l'header
+  `X-Authorization-Token`). Problemi noti: nessuna scadenza reale sul
+  timestamp (solo l'uguaglianza dell'hash), MD5 invece di un HMAC standard,
+  autenticazione **disattivata di default** a meno che il setting
+  `api_debug_mode` non sia impostato esplicitamente a `'false'`, chiavi che
+  non scadono/ruotano mai. Candidato naturale: **Laravel Sanctum** (già nel
+  core della versione Laravel in uso) — token opachi con scadenza/revoca
+  per-token, hashati correttamente nel DB. Da trattare come lavoro a sé
+  (tocca `CBAuthAPI`/`authAPI()` e potenzialmente i controller generati da
+  API Generator e chi consuma queste API oggi — verificare prima chi le
+  chiama in produzione), non un fix isolato. Stessa area di codice del
+  gap di autorizzazione sopra: valutare di riprenderli insieme.
 - ~~`app/Http/Controllers/` nel `.gitignore`~~ — **voluto, non un rischio**:
   da interfaccia si possono creare moduli custom (controller generati), che
   devono restare specifici dell'ambiente in cui vengono creati e non

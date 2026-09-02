@@ -77,6 +77,19 @@ class ApiController extends Controller
 
         $row_api = DB::table('cms_apicustom')->where('permalink', $this->permalink)->first();
 
+        // $row_api veniva letto (aksi/tabel qui sotto, method_type poco
+        // sotto) PRIMA del controllo "Check the row is exists or not" piu'
+        // avanti in questo metodo: un permalink senza una riga cms_apicustom
+        // corrispondente crashava con 500 ("Attempt to read property on
+        // null") invece del messaggio d'errore gestito gia' previsto piu'
+        // sotto per questo stesso caso.
+        if (!$row_api) {
+            $result['api_status'] = 0;
+            $result['api_message'] = 'Sorry this API endpoint is no longer available or has been changed. Please make sure endpoint is correct.';
+
+            goto show;
+        }
+
         $action_type = $row_api->aksi;
         $table = $row_api->tabel;
         $pk = CRUDBooster::pk($table);

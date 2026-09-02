@@ -236,6 +236,52 @@ class ApiCustomCrudTest extends TestCase
         $this->assertSame(base_path('app/Http/Controllers'), dirname($generatedPath));
     }
 
+    /**
+     * Persistenza (a differenza degli altri test di questo file, non è una
+     * regressione di sicurezza): verifica che i parametri e le risposte
+     * configurati nel form vengano salvati esattamente come inviati. Il
+     * comportamento a runtime di questa configurazione (come
+     * ApiController::execute_api() la applica a una richiesta reale) è
+     * coperto da tests/Feature/ApiExecuteTest.php.
+     */
+    public function test_creazione_api_salva_i_parametri_e_le_risposte_configurate(): void
+    {
+        $this->actingAsSuperadmin();
+        $table = 'mg_phpunit_test_' . uniqid();
+        $this->seedApiModule($table);
+
+        $response = $this->post('http://localhost/admin/api_generator/save-api-custom', $this->baseApiPayload([
+            'nama' => 'Phpunit Test Parametri',
+            'tabel' => $table,
+            'permalink' => 'phpunit_test_parametri',
+            'method_type' => 'get',
+            'params_name' => ['group_setting'],
+            'params_type' => ['text'],
+            'params_config' => [''],
+            'params_required' => ['0'],
+            'params_used' => ['1'],
+            'responses_name' => ['name', 'content'],
+            'responses_type' => ['text', 'text'],
+            'responses_subquery' => ['', ''],
+            'responses_used' => ['1', '1'],
+        ]));
+
+        $response->assertStatus(302);
+        $row = DB::table('cms_apicustom')->where('permalink', 'phpunit_test_parametri')->first();
+        $this->assertNotNull($row);
+        $this->fixtureFiles[] = base_path('app/Http/Controllers/' . $row->controller);
+
+        $parameters = unserialize($row->parameters);
+        $this->assertCount(1, $parameters);
+        $this->assertSame('group_setting', $parameters[0]['name']);
+        $this->assertSame('0', $parameters[0]['required']);
+
+        $responses = unserialize($row->responses);
+        $this->assertCount(2, $responses);
+        $this->assertSame('name', $responses[0]['name']);
+        $this->assertSame('content', $responses[1]['name']);
+    }
+
     // ---------------------------------------------------------------
     // Regressione RCE - modifica (preg_replace_callback su un controller
     // gia' esistente su disco)
