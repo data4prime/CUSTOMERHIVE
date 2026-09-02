@@ -97,6 +97,7 @@ zero leggendo i diff di git.
 | [062](062-pulsante-add-member-in-tenants-group.md) | `/admin/tenants/group/{id}`: il pulsante diceva "Add member" (copiato dalla view analoga di Groups) invece di "Add group" | Bug fix (UI) | Completato | 2026-09-01 |
 | [063](063-menu-management-bug-e-test-crud.md) | Menu Management: 3 bug reali corretti (UrlGenerationException su ogni voce modificabile, crash creando la prima voce su tabella vuota, `CBController::getDelete()` crashava su qualunque cancellazione bloccata in QUALUNQUE modulo) + 14 test CRUD | Bug fix + test | Completato | 2026-09-01 |
 | [064](064-settings-bug-e-test-crud.md) | Settings: 3 bug reali corretti (`CRUDBooster::valid()` chiamava `exit()` invece di tornare una Response, bloccando la testabilita' degli upload non validi; cancellare una riga di setting non invalidava la cache ne' cancellava il file associato) + 27 test CRUD | Bug fix + test | Completato | 2026-09-02 |
+| [065](065-api-generator-rce-e-test.md) | **API Generator: RCE autenticata corretta** (`generateAPI()`/`postSaveApiCustom()` incollavano input utente grezzo dentro sorgente PHP scritto su disco come controller live - risolto con `var_export()`) + path traversal nel nome file + 2 bug null-safety + 19 test. Nota: nessun controllo di privilegio su gran parte del controller (punto A) resta deliberatamente non corretto, rimandato | Sicurezza + Bug fix + test | Completato (parziale) | 2026-09-02 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
@@ -236,6 +237,17 @@ trasformate in un intervento vero e proprio:
 - **70 vulnerabilità segnalate da GitHub Dependabot** sul branch di default
   (2 critiche, 22 alte, 41 moderate, 5 basse) — da valutare come parte
   dell'audit di compatibilità dipendenze (vedi ordine di lavoro sotto).
+- **[Priorità alta] `ApiCustomController` (modulo API Generator): nessun
+  controllo di privilegio** su `postSaveApiCustom()`, `getDeleteApi()`,
+  `getGenerateScreetKey()`, `getStatusApikey()`, `getDeleteApiKey()` —
+  `CBBackend` verifica solo "sei loggato", non il modulo/privilegio.
+  Qualunque utente autenticato, indipendentemente dal privilegio, può
+  creare/modificare/cancellare API generate e chiavi API. Deliberatamente
+  rimandato durante [065](065-api-generator-rce-e-test.md) (che ha corretto
+  la RCE raggiungibile tramite questo gap, non il gap stesso) — vedi
+  "Rischi e note" in quel documento. Riprendere aggiungendo lo stesso check
+  `CRUDBooster::isSuperadmin()` già presente su `getIndex()`/`getGenerator()`/
+  `getEditApi()` dello stesso controller.
 - ~~`app/Http/Controllers/` nel `.gitignore`~~ — **voluto, non un rischio**:
   da interfaccia si possono creare moduli custom (controller generati), che
   devono restare specifici dell'ambiente in cui vengono creati e non

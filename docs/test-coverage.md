@@ -249,6 +249,65 @@ associato (nessun `hook_before_delete()`/`hook_after_delete()`).
   per simulare una scrittura fallita — piu' fragile se in futuro
   `postSaveSetting()` chiamasse altri metodi Storage nello stesso percorso.
 
+## `tests/Feature/ApiCustomCrudTest.php`
+
+**Cosa copre**: il modulo API Generator (`ApiCustomController` +
+`CRUDBooster::generateAPI()`). A differenza degli altri moduli, il focus
+principale non è il CRUD in sé ma una vulnerabilità seria trovata in
+analisi e corretta prima di scrivere i test (dettagli in
+[065](refactoring/065-api-generator-rce-e-test.md)): **Remote Code
+Execution autenticata**. `postSaveApiCustom()` scrive su disco un vero
+controller Laravel (diventa immediatamente un file autoloaded), il cui
+sorgente veniva costruito incollando `$table_name`/`$permalink`/
+`$method_type` grezzi dentro literal PHP a doppi apici — una virgoletta
+nel valore rompeva il literal e permetteva di iniettare PHP arbitrario.
+Corretto con `var_export()` (literal a singoli apici, mai interpolato) sia
+in creazione sia in modifica (dove è emerso un secondo bug indipendente:
+la sintassi speciale `$1`/`\1` della stringa di replacement di
+`preg_replace()` — risolto con `preg_replace_callback()`). Sanificato
+anche `$controllerName` (nome classe/file del controller generato — un
+permalink con `/`/`..` permetteva path traversal nel file scritto).
+
+| Test | Cosa verifica |
+|---|---|
+| `test_creazione_api_con_valori_pericolosi_in_tabella_e_method_type_vengono_salvati_come_dato_letterale` | **regressione RCE**: `tabel`/`method_type` finiscono nel file generato solo via `var_export()` |
+| `test_creazione_api_con_permalink_pericoloso_sanifica_il_nome_controller_e_salva_il_permalink_come_dato` | nome classe/file sanificato, permalink grezzo comunque salvato come dato letterale |
+| `test_creazione_api_con_permalink_contenente_slash_non_scrive_file_fuori_da_controllers` | regressione path traversal |
+| `test_modifica_api_con_valori_pericolosi_non_inietta_codice_nel_controller_esistente` | stessa regressione RCE, ramo modifica (`preg_replace_callback`) |
+| `test_modifica_api_con_permalink_contenente_dollaro_e_backslash_non_viene_alterato_dalla_sostituzione` | regressione specifica del bug `$1`/`\1` di `preg_replace()` |
+| `test_getdeleteapi_su_id_inesistente_non_va_in_crash` | null-safety: prima 500, ora `{"status":0}` |
+| `test_creazione_api_con_nome_file_collidente_ma_senza_riga_corrispondente_non_va_in_crash` | null-safety: file orfano su collisione di nome |
+| `test_modifica_api_con_permalink_duplicato_viene_rifiutata` | regressione dello swap `redirectBack()` → `redirect(referer)` |
+| `test_modifica_api_con_id_senza_controller_associato_viene_rifiutata` | idem |
+| `test_getgeneratescreetkey_crea_una_riga_cms_apikey_attiva` | caratterizzazione |
+| `test_getstatusapikey_aggiorna_lo_stato_di_una_api_key` | caratterizzazione |
+| `test_getstatusapikey_senza_id_o_status_viene_rifiutato` | regressione del fix su `CRUDBooster::valid()` (condiviso con Settings, [064](refactoring/064-settings-bug-e-test-crud.md)) — prima `exit()`, non testabile |
+| `test_getdeleteapikey_cancella_la_riga` / `test_getdeleteapikey_su_id_inesistente_ritorna_status_zero` | caratterizzazione |
+| `test_getscreetkey_mostra_le_api_key_esistenti` | caratterizzazione |
+| `test_getindex_nega_accesso_a_non_superadmin` / `test_getgenerator_nega_accesso_a_non_superadmin` / `test_geteditapi_nega_accesso_a_non_superadmin` | controlli di accesso già esistenti (non un gap, a differenza degli altri metodi del controller) |
+| `test_caratterizzazione_postsaveapicustom_e_raggiungibile_da_utente_senza_alcun_permesso` | **caratterizzazione di un gap noto, non un fix**: nessun controllo di privilegio su `postSaveApiCustom()` — vedi backlog in [`refactoring/README.md`](refactoring/README.md) |
+
+**Dipendenze/scelte note**:
+- A differenza di Settings (che scrive in `public/storage/`), qui i file
+  generati/modificati finiscono **dentro l'albero sorgente vero e
+  proprio** (`app/Http/Controllers/`, tracciato da git). Ogni test traccia
+  i file che crea, ripuliti in `tearDown()` più uno sweep di sicurezza su
+  qualunque `*PhpunitTest*.php` rimasto (tutti i permalink/nomi usati nel
+  file contengono "PhpunitTest" per essere intercettati).
+- `generateAPI()` cerca il controller "genitore" del modulo via
+  `cms_moduls.table_name` (bug null-safety pre-esistente, non toccato in
+  questo intervento, se la riga manca) — i test seminano sempre quella
+  riga per non inciamparci mentre testano altro.
+- **Non verificato che l'API generata sia poi effettivamente richiamabile
+  end-to-end**: `generateAPI()` costruisce lo `use` statement del
+  controller generato assumendo o `App\Http\Controllers\` (root) o
+  `crocodicstudio\crudbooster\controllers\` — quest'ultimo namespace non
+  esiste più nel repo (pacchetto rimosso), e la maggior parte dei
+  controller di sistema oggi vive sotto `App\Http\Controllers\System\`,
+  non nella root. La feature sembra quindi già rotta end-to-end
+  indipendentemente da questo intervento — vedi "Rischi e note" in
+  [065](refactoring/065-api-generator-rce-e-test.md).
+
 ## `tests/Feature/CrossModuleRelationsTest.php`
 
 **Cosa copre**: le relazioni TRA i 4 moduli sopra (non il CRUD interno

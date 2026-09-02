@@ -1721,6 +1721,16 @@ crocodicstudio\crudbooster\controllers\
         $manually_generated = ModuleHelper::is_manually_generated($table_name);
         $path = $manually_generated == true ? "App\Http\Controllers\\" : "crocodicstudio\crudbooster\controllers\\";
         $controller = DB::table('cms_moduls')->where('table_name', $table_name)->first()->controller;
+        // $table_name/$permalink/$method_type finiscono nel sorgente PHP di un
+        // controller che viene poi scritto su disco e diventa un file
+        // autoloaded (app/Http/Controllers) - erano incollati grezzi dentro
+        // stringhe PHP con doppi apici: un valore con una virgoletta rompeva
+        // il literal e permetteva di iniettare PHP arbitrario (RCE), e anche
+        // senza rompere il literal un valore con "$" veniva comunque
+        // interpolato da PHP (le stringhe con doppi apici lo fanno sempre).
+        // var_export() produce un literal PHP a singoli apici correttamente
+        // escapato, che non interpola mai nulla - stessa unica difesa valida
+        // per embeddare un valore arbitrario dentro sorgente PHP generato.
         $php = '
 		<?php namespace App\Http\Controllers;
 
@@ -1733,9 +1743,9 @@ crocodicstudio\crudbooster\controllers\
 		class Api' . $controller_name . 'Controller extends \crocodicstudio\crudbooster\controllers\ApiController {
             public $controller = null;
 		    function __construct() {
-				$this->table       = "' . $table_name . '";
-				$this->permalink   = "' . $permalink . '";
-				$this->method_type = "' . $method_type . '";
+				$this->table       = ' . var_export($table_name, true) . ';
+				$this->permalink   = ' . var_export($permalink, true) . ';
+				$this->method_type = ' . var_export($method_type, true) . ';
                 $this->controller = new '."{$controller}".'();
 		    }
 		';

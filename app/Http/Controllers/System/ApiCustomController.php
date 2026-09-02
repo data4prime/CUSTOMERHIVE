@@ -363,10 +363,14 @@ class ApiCustomController extends CBController
             $check_permalink = DB::table('cms_apicustom')->where('permalink', g('permalink'))->where('id','!=', g('id') )->first();
 
             if ($check_permalink) {
-                return CRUDBooster::redirectBack(trans('crudbooster.api_permalink_already_exists'), 'error');
+                // redirectBack() e' ancora exit()-based (non toccata - usata
+                // anche da 2 Blade view Qlik, vedi docs/refactoring/063):
+                // qui si usa redirect() (gia' return-based) verso il referer,
+                // stesso comportamento visibile, testabile via HTTP simulato.
+                return CRUDBooster::redirect(CRUDBooster::referer(), trans('crudbooster.api_permalink_already_exists'), 'error');
             }
 
-            
+
 
             $controller = DB::table('cms_apicustom')->where('id', g('id'))->first();//->controller;
 
@@ -374,8 +378,8 @@ class ApiCustomController extends CBController
                 $controller = $controller->controller;
             } else {
                 //return back
-                return CRUDBooster::redirectBack( trans('crudbooster.api_controller_not_found'), 'error');
-                
+                return CRUDBooster::redirect(CRUDBooster::referer(), trans('crudbooster.api_controller_not_found'), 'error');
+
             }
 
 
@@ -388,22 +392,35 @@ class ApiCustomController extends CBController
             $controller_path = base_path("app/Http/Controllers/").$controller;
             $contents = file_get_contents($controller_path);
 
-            // '/\$this->permalink\s*=\s*["\'].*?["\']\s*;/', 
-            $new_contents = preg_replace(
-                '/\$this->permalink\s*=\s*["\']((?:[^"\'\\\\]|\\\\.)*)["\']\\s*;/', 
-                '$this->permalink = "'.$a['permalink'].'";',
+            // $a['permalink']/$a['tabel']/$a['method_type'] finiscono nel
+            // sorgente PHP di un controller gia' su disco, live (autoloaded):
+            // preg_replace() con una stringa di replacement grezza aveva DUE
+            // problemi di sicurezza distinti. (1) il valore veniva incollato
+            // dentro un literal PHP a doppi apici nel file generato: una
+            // virgoletta rompeva il literal e permetteva di iniettare PHP
+            // arbitrario (RCE) - risolto con var_export(), che produce un
+            // literal a singoli apici correttamente escapato e mai
+            // interpolato. (2) anche a parte questo, la STRINGA DI
+            // REPLACEMENT di preg_replace() ha una sua sintassi speciale
+            // ($1, \1, $0 vengono sostituiti con i gruppi catturati): un
+            // valore contenente '$' o '\' produceva una sostituzione diversa
+            // da quella attesa - risolto passando a preg_replace_callback(),
+            // il cui valore di ritorno viene inserito letteralmente.
+            $new_contents = preg_replace_callback(
+                '/\$this->permalink\s*=\s*["\']((?:[^"\'\\\\]|\\\\.)*)["\']\\s*;/',
+                fn () => '$this->permalink = ' . var_export($a['permalink'], true) . ';',
                 $contents
             );
 
-            $new_contents = preg_replace(
-                '/\$this->table\s*=\s*["\']((?:[^"\'\\\\]|\\\\.)*)["\']\\s*;/', 
-                '$this->table = "'.$a['tabel'].'";',
+            $new_contents = preg_replace_callback(
+                '/\$this->table\s*=\s*["\']((?:[^"\'\\\\]|\\\\.)*)["\']\\s*;/',
+                fn () => '$this->table = ' . var_export($a['tabel'], true) . ';',
                 $new_contents
             );
 
-            $new_contents = preg_replace(
-                '/\$this->method_type\s*=\s*["\']((?:[^"\'\\\\]|\\\\.)*)["\']\\s*;/', 
-                '$this->method_type = "'.$a['method_type'].'";',
+            $new_contents = preg_replace_callback(
+                '/\$this->method_type\s*=\s*["\']((?:[^"\'\\\\]|\\\\.)*)["\']\\s*;/',
+                fn () => '$this->method_type = ' . var_export($a['method_type'], true) . ';',
                 $new_contents
             );
 
@@ -420,13 +437,29 @@ class ApiCustomController extends CBController
 
             $controllerName = ucwords(str_replace('_', ' ', $a['permalink']));
             $controllerName = str_replace(' ', '', $controllerName);
+            // $controllerName finisce nel NOME CLASSE e nel NOME FILE del
+            // controller generato (non dentro una stringa PHP, quindi
+            // var_export() qui non aiuta): senza sanificazione, un permalink
+            // con '/', '.' o virgolette permetteva di scrivere il file fuori
+            // da app/Http/Controllers/ (path traversal) o di iniettare
+            // codice nel nome classe. Un nome classe PHP valido e' comunque
+            // solo lettere/cifre/underscore, quindi questo non toglie nulla
+            // a un permalink che produceva gia' un controller funzionante.
+            $controllerName = preg_replace('/[^A-Za-z0-9_]/', '', $controllerName);
 
-            
             //check if controller already exists
             $controller = 'Api'.$controllerName.'Controller.php';
             $controller_path = base_path("app/Http/Controllers/").$controller;
             if (file_exists($controller_path)) {
-                $controller_db = DB::table('cms_apicustom')->where('controller', $controller)->first()->id;
+                // Se il file esiste ma non c'e' una riga cms_apicustom
+                // corrispondente (file orfano/collisione con un controller
+                // non generato da qui), ->first() torna null e ->id
+                // crashava con 500 invece di un errore gestito.
+                $collidingApi = DB::table('cms_apicustom')->where('controller', $controller)->first();
+                if (!$collidingApi) {
+                    return CRUDBooster::redirect(CRUDBooster::referer(), trans('crudbooster.api_controller_not_found'), 'error');
+                }
+                $controller_db = $collidingApi->id;
                 $controller = 'Api'.$controllerName.$controller_db.'Controller.php';
                 $controllerName = $controllerName.$controller_db;
 
@@ -448,6 +481,12 @@ class ApiCustomController extends CBController
     {
         $this->cbLoader();
         $row = DB::table('cms_apicustom')->where('id', $id)->first();
+
+        // Un $id inesistente crashava con 500 ($row->controller su null)
+        // invece di un errore gestito.
+        if (!$row) {
+            return response()->json(['status' => 0]);
+        }
 
         $controller = $row->controller;
 
