@@ -1789,6 +1789,19 @@ crocodicstudio\crudbooster\controllers\
         // #RAMA
         // $exception = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
+        // $table arriva grezzo da ModulsController::postStep1() (il <select>
+        // della tabella e' solo lato client, mai rivalidato server-side) e
+        // finisce sia nel sorgente PHP generato (vedi piu' sotto) sia in
+        // query di introspezione schema (CB::pk()/Schema::getIndexes(),
+        // CRUDBooster::getFieldType()): quest'ultima usa string
+        // interpolation cruda, e persino Schema::getIndexes() di Laravel
+        // usa una quoteString() NON parametrizzata ("'$value'", zero
+        // escaping) - un apice nel valore causa un vero SQL injection, non
+        // solo una query che fallisce a vuoto. sql_name_encode() (lo stesso
+        // filtro gia' applicato a ogni nome di tabella/colonna creato da
+        // questo modulo) neutralizza entrambi i problemi in un colpo solo.
+        $table = ModuleHelper::sql_name_encode($table);
+
         $exception = config('app.reserved_column_names');
         $image_candidate = explode(',', config('crudbooster.IMAGE_FIELDS_CANDIDATE'));
         $password_candidate = explode(',', config('crudbooster.PASSWORD_FIELDS_CANDIDATE'));
@@ -1812,6 +1825,16 @@ crocodicstudio\crudbooster\controllers\
             $controllername = str_replace(' ', '', $controllername) . 'Controller';
         }
 
+        // $controllername finisce nel NOME CLASSE e nel NOME FILE del
+        // controller generato (non dentro una stringa PHP, var_export() qui
+        // non aiuta): senza sanificazione, un $name/$table con '/','.' o
+        // virgolette permetteva di scrivere il file fuori da
+        // app/Http/Controllers/ (path traversal) o di rompere la sintassi
+        // della dichiarazione di classe. Stesso fix gia' applicato a
+        // $controllerName in ApiCustomController::postSaveApiCustom(), vedi
+        // docs/refactoring/065.
+        $controllername = preg_replace('/[^A-Za-z0-9_]/', '', $controllername);
+
         $coloms = CRUDBooster::getTableColumns($table);
         $name_col = CRUDBooster::getNameTable($coloms);
         $pk = CB::pk($table);
@@ -1829,6 +1852,16 @@ crocodicstudio\crudbooster\controllers\
         $button_bulk_action = 'TRUE';
         $global_privilege = 'FALSE';
 
+        // $table finisce nel sorgente PHP di un controller scritto su disco
+        // e diventato immediatamente autoloaded (app/Http/Controllers): era
+        // incollato grezzo dentro un literal a doppi apici - una virgoletta
+        // nel valore rompeva il literal e permetteva di iniettare PHP
+        // arbitrario (RCE), raggiungibile da ModulsController::postStep1()
+        // quando si seleziona una tabella esistente (il valore arriva dal
+        // <select> lato client, non rivalidato server-side). Stesso fix
+        // (var_export(), literal a singoli apici mai interpolato) gia'
+        // applicato a CRUDBooster::generateAPI(), vedi docs/refactoring/065
+        // e 068.
         $php = '
 <?php namespace App\Http\Controllers;
 
@@ -1841,7 +1874,7 @@ crocodicstudio\crudbooster\controllers\
 
 	    public function cbInit() {
 	    	# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->table 			   = "' . $table . '";
+			$this->table 			   = ' . var_export($table, true) . ';
 			$this->title_field         = "' . $name_col . '";
 			$this->limit               = 20;
 			$this->orderby             = "' . $pk . ',desc";

@@ -401,6 +401,52 @@ alla semplice visualizzazione di quella pagina. Dettagli in
   reale per non sfiorare quel path (il check `isSuperadmin()` gira comunque
   prima di qualunque dereferenziazione pericolosa).
 
+## `tests/Feature/ModuleGeneratorCrudTest.php`
+
+**Cosa copre**: il modulo Module Generator (`ModulsController` +
+`CRUDBooster::generateController()` — il wizard a 5 step che genera i
+controller CRUD dei moduli custom). Ha fatto emergere e corretto **3 RCE
+indipendenti + 1 SQL injection vera**, stessa classe di vulnerabilità di
+API Generator ([065](refactoring/065-api-generator-rce-e-test.md)) ma in
+più punti: `CRUDBooster::generateController()`, `postStep3()` (colonne) e
+`postStep5()` (configurazione) incollavano input utente grezzo dentro il
+sorgente PHP di un controller scritto su disco e autoloaded — risolto con
+`var_export()`/whitelist. `Schema::getIndexes()` di Laravel (chiamata da
+`CB::pk()` dentro `generateController()`) usa una `quoteString()` **non
+parametrizzata** — lo stesso valore non sanificato era quindi anche SQL
+injection reale, non solo un'iniezione PHP. Dettagli in
+[068](refactoring/068-module-generator-rce-e-test.md).
+
+| Test | Cosa verifica |
+|---|---|
+| `test_step1_con_nome_tabella_pericoloso_lo_salva_come_dato_letterale_nel_controller_generato` | **regressione**: `table_name` pericoloso sanificato (`sql_name_encode()`) prima di raggiungere sia il sorgente generato sia `Schema::getIndexes()` |
+| `test_step1_con_nome_contenente_slash_sanifica_il_controller_e_non_scrive_file_fuori_da_controllers` | **regressione path traversal**: nome controller sanificato a `[A-Za-z0-9_]` |
+| `test_step3_con_valori_pericolosi_nelle_colonne_li_salva_come_dato_letterale` | **regressione RCE**: label/name/join/width/callback_php/query pericolosi via `var_export()` |
+| `test_step3_scrive_il_flag_download_quando_richiesto` | **regressione bug**: flag "download" (controllava una variabile mai definita) ora scritto |
+| `test_step3_nega_accesso_a_non_superadmin_anche_con_pieno_accesso_al_modulo` | **regressione privilegio**: `isSuperadmin()` aggiunto, non bypassabile con soli permessi CRUD sul modulo |
+| `test_step5_con_valori_pericolosi_li_salva_come_dato_letterale_e_forza_sempre_table` | **regressione RCE**: title_field/orderby pericolosi via `var_export()`, `table` sempre dal valore reale in DB |
+| `test_step5_ignora_le_chiavi_post_non_previste_dal_form` | **regressione whitelist**: una chiave POST non prevista (es. proprietà arbitraria) non finisce più nel file |
+| `test_step5_nega_accesso_a_non_superadmin_anche_con_pieno_accesso_al_modulo` | **regressione privilegio**: prima non c'era ALCUN controllo su questo metodo |
+| `test_getdelete_nega_cancellazione_di_un_modulo_protetto_anche_via_id_diretto` | **regressione**: `is_protected` ricontrollato anche bypassando il filtro della index list |
+| `test_getdelete_su_id_inesistente_non_va_in_crash` | **regressione null-safety** |
+| `test_getdelete_cancella_un_modulo_non_protetto` | nessuna regressione sul comportamento esistente |
+| `test_gettablecolumns_nega_accesso_senza_privilegio_di_visualizzazione` / `test_getcheckslug_nega_accesso_senza_privilegio_di_visualizzazione` | **regressione**: prima nessun controllo, schema di qualunque tabella esposto a chiunque loggato |
+| `test_gettablecolumns_restituisce_le_colonne_con_privilegio` / `test_getcheckslug_conta_gli_slug_esistenti_con_privilegio` | l'uso legittimo (con privilegio) continua a funzionare |
+
+**Dipendenze/scelte note**:
+- Come `ApiCustomCrudTest.php`, i file generati/modificati finiscono
+  dentro `app/Http/Controllers/` (tracciato da git): ogni test traccia i
+  file toccati in `$fixtureFiles`, ripuliti in `tearDown()` insieme a uno
+  sweep su qualunque `*PhpunitTest*.php` rimasto.
+- Bug indipendente corretto per far passare i test: `add_log_ch()`
+  (`app/Helpers/functions.php`) leggeva `$_SERVER['REMOTE_ADDR']`/
+  `HTTP_USER_AGENT` senza fallback — crash `Undefined array key` in un
+  contesto senza quelle chiavi (richieste HTTP simulate). Corretto con
+  `?? null`.
+- Deliberatamente non estesi a `isSuperadmin()`: `getStep1`-`postStep2`/
+  `getStep4` restano protetti dal solo `isView()` — vedi backlog in
+  [`refactoring/README.md`](refactoring/README.md).
+
 ## `tests/Feature/CrossModuleRelationsTest.php`
 
 **Cosa copre**: le relazioni TRA i 4 moduli sopra (non il CRUD interno

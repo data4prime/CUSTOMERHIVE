@@ -120,8 +120,11 @@ function add_log_ch($category, $description, $type='log')
   $log = new App\Log;
 	$log->created_at = date('Y-m-d H:i:s');
 	$log->created_by = CRUDBooster::myId();
-	$log->ip = $_SERVER['REMOTE_ADDR'];
-	$log->useragent = $_SERVER['HTTP_USER_AGENT'];
+	// REMOTE_ADDR/HTTP_USER_AGENT possono mancare (es. richieste simulate
+	// nei test, alcuni contesti CLI/proxy) - senza il fallback andava in
+	// crash con un errore "Undefined array key" invece di loggare comunque.
+	$log->ip = $_SERVER['REMOTE_ADDR'] ?? null;
+	$log->useragent = $_SERVER['HTTP_USER_AGENT'] ?? null;
 	$log->url = Request::url();
 	$log->category = trim(addslashes($category));
 	$log->type = trim(addslashes($type));

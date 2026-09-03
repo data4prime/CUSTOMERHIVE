@@ -305,6 +305,24 @@ class ModulsController extends CBController
       ->where($this->primary_key, $id)
       ->first();
 
+    if (!$module) {
+      return redirect()->back();
+    }
+
+    // hook_query_index() (usato da getIndex()) nasconde i moduli protetti
+    // (is_protected=1) dalla lista, ma getDelete() carica la riga per id
+    // senza rifiltrare - enumerando gli id si poteva cancellare/rompere un
+    // modulo di sistema (riga cms_moduls + file controller unlinkato in
+    // hook_before_delete() + voci di menu), bypassando il filtro della
+    // lista. Vedi docs/refactoring/068.
+    if ($module->is_protected) {
+      CRUDBooster::insertLog(trans("crudbooster.log_try_delete", [
+        'name' => $module->{$this->title_field},
+        'module' => CRUDBooster::getCurrentModule()->name,
+      ]));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+
     if (!CRUDBooster::isDelete() && $this->global_privilege == false || $this->button_delete == false) {
       CRUDBooster::insertLog(trans("crudbooster.log_try_delete", [
         'name' => $module->{$this->title_field},
@@ -444,6 +462,16 @@ class ModulsController extends CBController
 
   public function getTableColumns($table)
   {
+    $this->cbLoader();
+
+    // Nessun controllo qui prima: espone lo schema (nomi colonna) di
+    // QUALUNQUE tabella - incluse cms_users, cms_apikey, ecc. - a chiunque
+    // fosse autenticato, a prescindere dal privilegio sul modulo Module
+    // Generator. Vedi docs/refactoring/068.
+    if (!CRUDBooster::isView() && $this->global_privilege == false) {
+      return response()->json([], 403);
+    }
+
     $columns = CRUDBooster::getTableColumns($table);
 
     return response()->json($columns);
@@ -451,6 +479,12 @@ class ModulsController extends CBController
 
   public function getCheckSlug($slug)
   {
+    $this->cbLoader();
+
+    if (!CRUDBooster::isView() && $this->global_privilege == false) {
+      return response()->json([], 403);
+    }
+
     $check = DB::table('cms_moduls')->where('path', $slug)->count();
     $lastId = DB::table('cms_moduls')->max('id') + 1;
 
@@ -528,6 +562,20 @@ class ModulsController extends CBController
     $name = Request::get('name');
     $table_name = Request::get('table');
     $icon = Request::get('icon');
+
+    if ($table_name == 'new') {
+      $table_name = ModuleHelper::sql_name_encode(config('app.module_generator_prefix') . $name);
+    } else {
+      // Il <select> della tabella e' solo lato client, mai rivalidato
+      // server-side: senza sanificazione un table_name malevolo finiva
+      // salvato grezzo in cms_moduls.table_name e raggiungeva sia il
+      // sorgente PHP generato (CRUDBooster::generateController(), RCE) sia
+      // query di introspezione schema con SQL injection vera
+      // (Schema::getIndexes() usa una quoteString() non parametrizzata) -
+      // vedi docs/refactoring/068. Nessun impatto per una selezione
+      // legittima: i nomi tabella reali sono gia' in questo formato.
+      $table_name = ModuleHelper::sql_name_encode($table_name);
+    }
     $path = $table_name;
 
     if (!Request::get('id')) {
@@ -535,11 +583,6 @@ class ModulsController extends CBController
       $created_at = now();
       //$this->table equals cms_moduls
       $id = DB::table($this->table)->max('id') + 1; // id del nuovo modulo
-
-      if ($table_name == 'new') {
-        $table_name = ModuleHelper::sql_name_encode(config('app.module_generator_prefix') . $name);
-        $path = $table_name;
-      }
 
       if (
         DB::table('cms_moduls')
@@ -792,6 +835,15 @@ class ModulsController extends CBController
       return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
+    // Scrive direttamente nel sorgente PHP del controller generato (vedi
+    // sotto): stesso livello di rischio della modifica dello schema DB in
+    // save_table() (che gia' richiede isSuperadmin()), quindi stesso check
+    // qui - vedi docs/refactoring/068.
+    if (!CRUDBooster::isSuperadmin()) {
+      CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+
   /**Prende i campi di input*/
     $column = Request::input('column');
     $name = Request::input('name');
@@ -816,30 +868,43 @@ class ModulsController extends CBController
         continue;
       }
 
-      $script_cols[$i] = "\t\t\t" . '$this->col[] = ["label"=>"' . $col . '","name"=>"' . $name[$i] . '"';
+      // column/name/join_table/join_field/width/callbackphp finiscono nel
+      // sorgente PHP del controller generato (file_put_contents() piu' in
+      // basso, su un file gia' autoloaded da Laravel): prima venivano
+      // incollati grezzi dentro literal a doppi/singoli apici senza alcun
+      // escaping (query era l'unico con addslashes()) - una virgoletta nel
+      // valore rompeva il literal e permetteva di iniettare PHP arbitrario
+      // (RCE). var_export() produce sempre un literal a singoli apici
+      // correttamente escapato, mai interpolato - stesso fix gia' applicato
+      // a CRUDBooster::generateAPI()/generateController(), vedi
+      // docs/refactoring/065 e 068.
+      $script_cols[$i] = "\t\t\t" . '$this->col[] = ["label"=>' . var_export($col, true) . ',"name"=>' . var_export($name[$i], true);
 
       if ($join_table[$i] && $join_field[$i]) {
-        $script_cols[$i] .= ',"join"=>"' . $join_table[$i] . ',' . $join_field[$i] . '"';
+        $script_cols[$i] .= ',"join"=>' . var_export($join_table[$i] . ',' . $join_field[$i], true);
       }
 
       if ($is_image[$i]) {
         $script_cols[$i] .= ',"image"=>true';
       }
 
-      if (isset($id_download[$i])) {
+      // Bug pre-esistente: controllava $id_download (mai definita, isset()
+      // sempre falso) invece di $is_download - il flag "download" non
+      // veniva mai scritto sulla colonna.
+      if ($is_download[$i]) {
         $script_cols[$i] .= ',"download"=>true';
       }
 
       if ($width[$i]) {
-        $script_cols[$i] .= ',"width"=>"' . $width[$i] . '"';
+        $script_cols[$i] .= ',"width"=>' . var_export($width[$i], true);
       }
 
       if ($callbackphp[$i]) {
-        $script_cols[$i] .= ',"callback_php"=>\'' . $callbackphp[$i] . '\'';
+        $script_cols[$i] .= ',"callback_php"=>' . var_export($callbackphp[$i], true);
       }
 
       if ($query[$i]) {
-        $script_cols[$i] .= ',"query"=>\'' . addslashes($query[$i]) . '\'';
+        $script_cols[$i] .= ',"query"=>' . var_export($query[$i], true);
       }
 
       $script_cols[$i] .= "];";
@@ -1042,30 +1107,54 @@ class ModulsController extends CBController
   public function postStep5()
   {
     $this->cbLoader();
+
+    // Prima non c'era ALCUN controllo qui (nemmeno il debole isView() usato
+    // dagli altri step) - scrive direttamente nel sorgente PHP del
+    // controller generato, stesso livello di rischio di save_table() (che
+    // gia' richiede isSuperadmin()) - vedi docs/refactoring/068.
+    if (!CRUDBooster::isSuperadmin()) {
+      CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => 'Module Generator - Step 5']));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+
     $id = Request::input('id');
     $row = DB::table('cms_moduls')->where('id', $id)->first();
 
     $post = Request::all();
 
-    $post['table'] = $row->table_name;
+    // Whitelist: solo le chiavi realmente esposte dal form dello step5
+    // (resources/views/crudbooster/module_generator/step5.blade.php)
+    // possono diventare proprieta' del controller generato. Prima si
+    // iterava su OGNI chiave POST (tranne _token/id/submit): sia la chiave
+    // (nome di proprieta' PHP) sia il valore erano controllati
+    // dall'attaccante e incollati grezzi in un literal a doppi apici senza
+    // alcun escaping - RCE. var_export() sui valori (literal a singoli
+    // apici, mai interpolato) chiude anche l'iniezione via valore, ma senza
+    // whitelist un attaccante potrebbe comunque impostare proprieta'
+    // arbitrarie del controller (es. table) - la whitelist resta
+    // necessaria.
+    $allowed_keys = [
+      'title_field', 'limit', 'orderby', 'global_privilege',
+      'button_table_action', 'button_bulk_action', 'button_action_style',
+      'button_add', 'button_edit', 'button_delete', 'button_detail',
+      'button_filter', 'button_import', 'button_export',
+    ];
+
+    $config = ['table' => $row->table_name];
+    foreach ($allowed_keys as $key) {
+      if (array_key_exists($key, $post)) {
+        $config[$key] = $post[$key];
+      }
+    }
 
     $script_config = [];
-    $exception = ['_token', 'id', 'submit'];
     $i = 0;
-    foreach ($post as $key => $val) {
-      if (in_array($key, $exception)) {
-        continue;
-      }
-
-      if ($val != 'true' && $val != 'false') {
-        $value = '"' . $val . '"';
-      } else {
+    foreach ($config as $key => $val) {
+      if ($val === 'true' || $val === 'false') {
         $value = $val;
+      } else {
+        $value = var_export($val, true);
       }
-
-      // if($key == 'orderby') {
-      // 	$value = ;
-      // }
 
       $script_config[$i] = "\t\t\t" . '$this->' . $key . ' = ' . $value . ';';
       $i++;

@@ -100,6 +100,7 @@ zero leggendo i diff di git.
 | [065](065-api-generator-rce-e-test.md) | **API Generator: RCE autenticata corretta** (`generateAPI()`/`postSaveApiCustom()` incollavano input utente grezzo dentro sorgente PHP scritto su disco come controller live - risolto con `var_export()`) + path traversal nel nome file + 2 bug null-safety + 19 test. Nota: nessun controllo di privilegio su gran parte del controller (punto A) resta deliberatamente non corretto, rimandato | Sicurezza + Bug fix + test | Completato (parziale) | 2026-09-02 |
 | [066](066-api-execute-null-safety-e-test.md) | API Generator: `ApiController::execute_api()` crashava con 500 su un permalink senza riga `cms_apicustom` corrispondente (dereferenziato prima del controllo esistenza) + 6 test sul comportamento a runtime (parametri/risposte su list/detail) | Bug fix + test | Completato | 2026-09-02 |
 | [067](067-statistic-builder-sql-arbitrario-e-test.md) | **Statistic Builder: SQL arbitrario corretto** (`postSaveComponent()` - unico punto di scrittura di `config`, incluso il campo "SQL Query" che alcuni widget eseguono via `DB::select()` in fase di rendering - non aveva alcun controllo di privilegio) + 14 test. Nota: stesso pattern di 065, gap generico di autorizzazione su altri 3 endpoint del controller resta deliberatamente non corretto, rimandato | Sicurezza + Bug fix + test | Completato (parziale) | 2026-09-02 |
+| [068](068-module-generator-rce-e-test.md) | **Module Generator: 3 RCE + 1 SQL injection corretti** (`CRUDBooster::generateController()`, `postStep3()`, `postStep5()` incollavano input utente grezzo dentro sorgente PHP scritto su disco come controller live - risolto con `var_export()`/whitelist; `Schema::getIndexes()` con lo stesso valore era SQL injection vera per una `quoteString()` di Laravel non parametrizzata - risolto con `sql_name_encode()`) + path traversal nel nome file + `getDelete()` non ricontrollava `is_protected` + 2 endpoint senza alcun controllo di privilegio + 1 bug (flag "download" mai scritto) + 15 test | Sicurezza + Bug fix + test | Completato | 2026-09-03 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
@@ -262,6 +263,18 @@ trasformate in un intervento vero e proprio:
   rimandato — vedi "Rischi e note" in [067](067-statistic-builder-sql-arbitrario-e-test.md).
   Riprendere aggiungendo lo stesso check già presente sugli altri metodi
   del controller, più una validazione di appartenenza componente/dashboard.
+- **`ModulsController` (modulo Module Generator): privilegio debole su
+  `getStep1`-`postStep2`/`getStep4`** — restano protetti solo dal check
+  `isView()` già presente (permesso di sola visualizzazione, non
+  `isCreate()`/`isUpdate()`), a differenza di `postStep3()`/`postStep5()`
+  (portati a `isSuperadmin()` in [068](068-module-generator-rce-e-test.md),
+  stesso livello già richiesto da `save_table()`/step2 per la DDL).
+  Deliberatamente non esteso a tutto il wizard in quell'intervento per non
+  rischiare di rompere un uso legittimo con permessi di sola view non
+  ancora caratterizzato (vedi "Rischi e note" in 068). Riprendere
+  verificando prima se in produzione esistono davvero utenti non-superadmin
+  che usano il wizard, poi eventualmente allineare tutti gli step a
+  `isSuperadmin()`.
 - **Autenticazione delle API custom (`CRUDBooster::authAPI()`, modulo API
   Generator) da modernizzare**: schema "fatto in casa" (chiave condivisa in
   `cms_apikey` + timestamp + user agent → `md5()`, confrontato con l'header
