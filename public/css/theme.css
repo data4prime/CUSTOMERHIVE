@@ -1,0 +1,1788 @@
+/*
+ * CustomerHive — revamp UI/UX, Fase 0 + Fase 1
+ * Token di design + stili del guscio condiviso (header/sidebar/footer)
+ * e delle pagine di autenticazione standalone (login/lockscreen/forgot).
+ *
+ * File isolato da custom.css per rollback semplice (basta rimuovere il
+ * link a questo file + la cartella fonts/ per tornare indietro).
+ *
+ * Font self-hosted: Plus Jakarta Sans, singolo file variabile (pesi
+ * 400-800, sottoinsieme latino) scaricato da fonts.gstatic.com in
+ * public/fonts/plus-jakarta-sans/ - nessuna richiesta esterna a runtime.
+ */
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('../fonts/plus-jakarta-sans/plus-jakarta-sans-variable.woff2') format('woff2');
+}
+
+:root {
+  --ch-bg: #f7f7f9;
+  --ch-surface: #ffffff;
+  --ch-border: #e6e6ea;
+  --ch-border-strong: #d8d8de;
+  --ch-text: #16161d;
+  --ch-text-secondary: #55555f;
+  --ch-text-muted: #8b8b96;
+
+  --ch-accent: #4f46e5;
+  --ch-accent-dark: #3730a3;
+  --ch-accent-soft: #eef0fd;
+
+  --ch-success: #0f9d58;
+  --ch-success-soft: #e7f7ee;
+  --ch-warning: #b7791f;
+  --ch-warning-soft: #fdf3e2;
+  --ch-danger: #d1373f;
+  --ch-danger-soft: #fbeaeb;
+  --ch-violet: #7c3aed;
+  --ch-violet-soft: #f2ecfd;
+  --ch-blue: #2563eb;
+  --ch-blue-soft: #e8f0fe;
+
+  --ch-radius-lg: 14px;
+  --ch-radius-md: 10px;
+  --ch-shadow-sm: 0 1px 2px rgba(16, 16, 24, 0.04), 0 1px 3px rgba(16, 16, 24, 0.03);
+
+  /*
+   * Larghezza sidebar: AdminLTE.min.css la da' per scontata a 230px in
+   * decine di selettori vendorizzati (content-wrapper/footer/logo/navbar
+   * + le transform di apertura/chiusura mobile e desktop) - un'unica
+   * variabile qui, riusata in ogni override sotto, evita che i valori
+   * vadano fuori sincrono se in futuro si tocca di nuovo questo numero.
+   */
+  --ch-sidebar-width: 300px;
+
+  /* Ruolo attivo di default: nessun override (accento indigo di brand) */
+  --ch-role-accent: var(--ch-accent);
+  --ch-role-accent-dark: var(--ch-accent-dark);
+  --ch-role-accent-soft: var(--ch-accent-soft);
+}
+
+/*
+ * Mappa cms_privileges.theme_color (select chiusa a 12 valori in
+ * privileges.blade.php, skin AdminLTE storiche) -> accento del nuovo
+ * design. Il body riceve data-role-accent solo per un valore riconosciuto
+ * (vedi admin_template.blade.php); qualunque altro caso (vuoto o non
+ * riconosciuto) resta sul default sopra - mai un accento rotto/vuoto.
+ * Le varianti "-light" condividono lo stesso accento della base: la
+ * distinzione chiaro/scuro delle skin AdminLTE originali non ha un
+ * equivalente diretto nel nuovo design (che ha una sola sidebar scura,
+ * non due varianti per skin).
+ */
+body[data-role-accent="blue"] {
+  --ch-role-accent: var(--ch-blue);
+  --ch-role-accent-dark: #1d4ed8;
+  --ch-role-accent-soft: var(--ch-blue-soft);
+}
+body[data-role-accent="yellow"] {
+  --ch-role-accent: var(--ch-warning);
+  --ch-role-accent-dark: #92600e;
+  --ch-role-accent-soft: var(--ch-warning-soft);
+}
+body[data-role-accent="green"] {
+  --ch-role-accent: var(--ch-success);
+  --ch-role-accent-dark: #0b7a45;
+  --ch-role-accent-soft: var(--ch-success-soft);
+}
+body[data-role-accent="purple"] {
+  --ch-role-accent: var(--ch-violet);
+  --ch-role-accent-dark: #5b21b6;
+  --ch-role-accent-soft: var(--ch-violet-soft);
+}
+body[data-role-accent="red"] {
+  --ch-role-accent: var(--ch-danger);
+  --ch-role-accent-dark: #9f2a30;
+  --ch-role-accent-soft: var(--ch-danger-soft);
+}
+body[data-role-accent="black"] {
+  --ch-role-accent: var(--ch-text);
+  --ch-role-accent-dark: #000000;
+  --ch-role-accent-soft: #eeeef0;
+}
+
+/* ==========================================================================
+   Guscio condiviso (admin_template / header / sidebar / footer)
+   ========================================================================== */
+
+body.ch-shell {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--ch-bg);
+  color: var(--ch-text);
+}
+
+body.ch-shell .wrapper {
+  background: var(--ch-bg);
+}
+
+/*
+ * AdminLTE.min.css da' a .content-wrapper un margin-top:50px pensato per
+ * la modalita' "header fixed" (dove il contenuto deve scorrere sotto un
+ * header fuori dal flusso) - qui .main-header e' position:relative
+ * (dentro il flusso normale), quindi quei 50px sono spazio duplicato:
+ * il documento posiziona gia' .content-wrapper subito dopo l'header.
+ */
+body.ch-shell .content-wrapper {
+  margin-top: 0;
+  margin-left: var(--ch-sidebar-width);
+}
+
+body.ch-shell .content-header {
+  padding-top: 18px;
+}
+
+/* --- Header ---
+ * Sfondo pieno nell'accento di ruolo (indaco di brand se il privilegio
+ * non ne ha uno mappato - vedi --ch-role-accent in :root) invece di
+ * bianco piatto: il "Theme Color" di Privileges ora si vede, non solo
+ * in due dettagli minori. Testo/icone chiari per contrasto - tutti gli
+ * accenti della palette (--ch-blue/--ch-warning/--ch-success/--ch-violet/
+ * --ch-danger/--ch-text per "black", indaco di default) sono scuri
+ * abbastanza da reggere testo bianco. */
+/*
+ * Bordo sottile invece di ombra (stesso principio della sidebar), ma
+ * senza angoli arrotondati su richiesta esplicita dell'utente - qui
+ * l'header resta un rettangolo pieno.
+ */
+body.ch-shell .main-header {
+  background: var(--ch-role-accent);
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: none;
+  position: relative;
+}
+
+body.ch-shell .main-header .logo {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  width: var(--ch-sidebar-width);
+}
+
+body.ch-shell .main-header .logo:hover {
+  background: transparent;
+}
+
+body.ch-shell .main-header .logo-img {
+  max-height: 30px;
+  max-width: 160px;
+  width: auto;
+  display: block;
+}
+
+body.ch-shell .main-header .navbar {
+  background: transparent;
+  margin-left: var(--ch-sidebar-width);
+}
+
+body.ch-shell .main-header .sidebar-toggle {
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: var(--ch-radius-md);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+body.ch-shell .main-header .sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+/*
+ * Bottoni icona quadrati SOLO per le voci a icona singola (helper,
+ * notifiche) - esclude esplicitamente .user-menu (avatar+nome+freccia,
+ * larghezza variabile). Prima era ":not()" mancante: la regola generica
+ * (piu' specifica per via del selettore "li > a" con 2 elementi contro
+ * l'1 solo della regola .user-menu) vinceva comunque e schiacciava
+ * avatar+nome+freccia in un riquadro 36x36, tagliando il testo.
+ */
+body.ch-shell .main-header .navbar-custom-menu .nav > li:not(.user-menu) > a {
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: var(--ch-radius-md);
+  width: 36px;
+  height: 36px;
+  margin: 8px 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+body.ch-shell .main-header .navbar-custom-menu .nav > li:not(.user-menu) > a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+body.ch-shell .main-header .navbar-custom-menu .user-menu > a {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  margin: 8px 2px;
+  padding: 0 10px 0 6px;
+  gap: 8px;
+  border-radius: var(--ch-radius-md);
+  color: rgba(255, 255, 255, 0.9);
+  transition: background-color .15s ease, color .15s ease;
+}
+
+body.ch-shell .main-header .navbar-custom-menu .user-menu > a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+body.ch-shell .main-header .navbar-custom-menu .badge {
+  background: #ffffff !important;
+  color: var(--ch-role-accent-dark) !important;
+  font-weight: 700;
+}
+
+body.ch-shell .main-header .user-menu .user-image {
+  margin: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+body.ch-shell .dropdown-menu {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  box-shadow: 0 12px 28px rgba(24, 20, 15, 0.12);
+  overflow: hidden;
+}
+
+/*
+ * Pannello utente (nome/ruolo/data + Profile/Lock/Logout): AdminLTE
+ * dava a .user-header uno sfondo colorato legato alla classe skin-*
+ * (rimossa in Fase 1) e testo bianco fisso all'80% di opacita' - senza
+ * quello sfondo il testo restava bianco su bianco, invisibile.
+ */
+body.ch-shell .user-menu .dropdown-menu {
+  width: 280px;
+  padding: 0;
+}
+
+/*
+ * !important su height/padding: stesso selettore composto di AdminLTE
+ * (".navbar-nav > .user-menu > .dropdown-menu > li.user-header") impone
+ * height:175px fisso - senza !important il contenuto reale (nome +
+ * ruolo + data, piu' alto di 175px) sborda oltre il bordo del pannello,
+ * finendo sopra la riga dei pulsanti sotto (bug segnalato dall'utente).
+ */
+body.ch-shell .user-header {
+  background: var(--ch-bg) !important;
+  height: auto !important;
+  padding: 22px 20px 18px !important;
+  text-align: center;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell .user-header img {
+  width: 64px !important;
+  height: 64px !important;
+  margin: 0 auto 12px auto;
+  display: block;
+}
+
+/*
+ * !important necessario: AdminLTE.min.css definisce il colore su
+ * ".navbar-nav > .user-menu > .dropdown-menu > li.user-header > p"
+ * (4 classi + 2 elementi), piu' specifico di un normale
+ * "body.ch-shell .user-header p" - senza !important il bianco
+ * all'80% di AdminLTE vince comunque (bianco su sfondo chiaro,
+ * invisibile).
+ */
+body.ch-shell .user-header p {
+  color: var(--ch-text) !important;
+  font-weight: 700;
+  font-size: 14px;
+  margin: 0;
+}
+
+body.ch-shell .user-header p small {
+  display: block;
+  color: var(--ch-text-secondary) !important;
+  font-weight: 400;
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+body.ch-shell .user-header p small em {
+  font-style: normal;
+  color: var(--ch-text-muted) !important;
+}
+
+body.ch-shell .user-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+}
+
+body.ch-shell .user-footer > div {
+  float: none;
+  display: flex;
+  gap: 8px;
+}
+
+body.ch-shell .user-footer .btn {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  background: var(--ch-surface);
+  color: var(--ch-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 12px;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+body.ch-shell .user-footer .btn:hover {
+  background: var(--ch-bg);
+  color: var(--ch-text);
+}
+
+body.ch-shell .user-footer .btn-danger {
+  background: var(--ch-danger);
+  border-color: var(--ch-danger);
+  color: #ffffff;
+}
+
+body.ch-shell .user-footer .btn-danger:hover {
+  background: #b32e35;
+  border-color: #b32e35;
+  color: #ffffff;
+}
+
+/* --- Sidebar ---
+ * Su richiesta esplicita dell'utente (riferimento: todo/sidebar.webp),
+ * poi corretta su ulteriore richiesta: stesso stile ad angoli
+ * arrotondati, ma non piu' una card "sospesa" (niente margine/ombra su
+ * tutti i lati). .main-sidebar (230px, position assoluta di AdminLTE,
+ * invariata) e' ora la superficie visibile stessa - attaccata a
+ * sinistra/sopra/sotto come l'originale, arrotondata solo sul lato che
+ * confina col contenuto (angoli in alto/basso a destra).
+ */
+/*
+ * padding-top:64px (non 0 come gli altri lati): l'header e' dentro lo
+ * stesso .wrapper con z-index piu' alto (1030 contro 810 della sidebar)
+ * e occupa i primi ~52px - senza questo padding il contenuto ci finiva
+ * sotto/dietro, invisibile nella sua parte superiore.
+ */
+body.ch-shell .main-sidebar {
+  background: var(--ch-surface);
+  border-right: 1px solid var(--ch-border);
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: none;
+  padding-top: 64px;
+  overflow: hidden;
+  width: var(--ch-sidebar-width);
+}
+
+/*
+ * Sidebar allargata (230px -> var(--ch-sidebar-width), vedi :root) per
+ * far stare su una riga sola le voci di menu dinamiche annidate (moduli
+ * custom, nome libero in cms_menus.name - vedi anche il rientro ridotto
+ * piu' sotto). AdminLTE.min.css usa pero' 230px anche nelle transform
+ * che aprono/chiudono la sidebar (mobile: nascosta di default; desktop:
+ * nascosta quando il body ha class "sidebar-collapse", cioe' dopo il
+ * click sul toggle nell'header) - senza questi override, chiudendo la
+ * sidebar ne resterebbe visibile una striscia di 50px (280-230) sul
+ * bordo sinistro.
+ */
+@media (max-width: 767px) {
+  body.ch-shell .main-sidebar {
+    transform: translate(calc(-1 * var(--ch-sidebar-width)), 0);
+  }
+
+  body.ch-shell.sidebar-open .content-wrapper,
+  body.ch-shell.sidebar-open .main-footer {
+    transform: translate(var(--ch-sidebar-width), 0);
+  }
+}
+
+/*
+ * Su desktop AdminLTE.min.css non si limita a spostare .main-sidebar
+ * fuori schermo quando il body ha class "sidebar-collapse" - azzera
+ * anche il margin-left di .content-wrapper/.main-footer per far
+ * riespandere il contenuto nello spazio liberato
+ * (".sidebar-collapse .content-wrapper{margin-left:0}"). La nostra
+ * regola base (piu' su, "body.ch-shell .content-wrapper") ha pero'
+ * specificita' maggiore di quella di AdminLTE e continuava a vincere
+ * anche da chiuso, lasciando un vuoto di --ch-sidebar-width a sinistra
+ * del contenuto - va ripetuta qui con una selettore ancora piu'
+ * specifico (".sidebar-collapse" in piu' sul body) per lo stato chiuso.
+ */
+@media (min-width: 768px) {
+  body.ch-shell.sidebar-collapse .main-sidebar {
+    transform: translate(calc(-1 * var(--ch-sidebar-width)), 0);
+  }
+
+  body.ch-shell.sidebar-collapse .content-wrapper,
+  body.ch-shell.sidebar-collapse .main-footer {
+    margin-left: 0;
+  }
+}
+
+body.ch-shell .main-sidebar .sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+body.ch-shell .main-sidebar .main-menu {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/*
+ * Pannello utente in cima alla sidebar (spostato dal basso su richiesta
+ * dell'utente), trattato come "mini-card" separata dal resto del menu.
+ * width:auto esplicito - AdminLTE da' a .user-panel width:100% nel suo
+ * CSS base: 100% + margini orizzontali sborda dal contenitore (il 100%
+ * si calcola PRIMA di aggiungere i margini) - bug gia' trovato nel giro
+ * precedente, stessa causa qui.
+ */
+body.ch-shell .main-sidebar .user-panel {
+  width: auto;
+  margin: 10px 10px 6px 10px;
+  padding: 10px;
+  background: var(--ch-bg);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  box-sizing: border-box;
+}
+
+body.ch-shell .main-sidebar .user-panel .image img {
+  border: 2px solid var(--ch-surface);
+}
+
+body.ch-shell .main-sidebar .user-panel .info,
+body.ch-shell .main-sidebar .user-panel .info p,
+body.ch-shell .main-sidebar .user-panel .info a {
+  color: var(--ch-text);
+}
+
+/* Sezioni: solo spaziatura ed etichetta muta, niente banda colorata -
+   coerente con la reference (pulita, non a blocchi). */
+body.ch-shell .sidebar-menu > li.header {
+  background: transparent;
+  color: var(--ch-text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 16px 18px 8px 18px;
+}
+
+/*
+ * display:flex sull'intera riga (icona + etichetta + freccia): le voci
+ * del menu statico (sidebar.blade.php) hanno etichette brevi e non
+ * mostravano il problema, ma le voci dinamiche generate da
+ * MenuHelper::menu_to_html_for_sidebar() (moduli custom, nome libero in
+ * cms_menus.name) possono essere lunghe - con la sola disposizione
+ * inline precedente (icona/testo/freccia "pull-right" con float) un
+ * testo troppo lungo per lo spazio residuo accanto alla freccia flottata
+ * andava a capo SOTTO la freccia (bug segnalato dall'utente). display:flex
+ * fa ignorare il float alla freccia (diventa un elemento flex come gli
+ * altri, sempre alla fine della riga). La causa di fondo pero' era la
+ * mancanza di spazio disponibile: risolta a monte allargando la sidebar
+ * (--ch-sidebar-width in :root) e riducendo il rientro per livello di
+ * annidamento (.treeview-menu piu' sotto) cosi' l'etichetta sta su una
+ * riga sola senza dover ne' troncare ne' andare a capo.
+ */
+body.ch-shell .sidebar-menu li > a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ch-text-secondary);
+  border-radius: var(--ch-radius-md);
+  margin: 2px 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+body.ch-shell .sidebar-menu li > a:hover {
+  background: var(--ch-bg);
+  color: var(--ch-text);
+}
+
+/*
+ * white-space:nowrap + ellipsis resta come rete di sicurezza per il
+ * caso limite di un'etichetta eccezionalmente lunga anche col nuovo
+ * spazio disponibile - non e' piu' il comportamento "normale" atteso
+ * (che ora e' una riga sola leggibile per intero), scatta solo se
+ * qualcuno inserisce un nome di menu davvero fuori scala.
+ */
+body.ch-shell .sidebar-menu li > a > span {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.ch-shell .sidebar-menu li > a > i,
+body.ch-shell .sidebar-menu li > a > img {
+  flex: none;
+}
+
+.ch-nav-icon {
+  flex: none;
+  opacity: 0.75;
+}
+
+.ch-nav-chevron {
+  flex: none;
+  opacity: 0.5;
+  margin-top: 3px;
+  transition: transform .15s ease;
+}
+
+/*
+ * Freccetta della voce dinamica generata da MenuHelper (FontAwesome
+ * "fa-angle-right"/"fa-angle-left" a seconda della lingua/RTL) - stessa
+ * transizione della versione SVG statica, per la rotazione qui sotto.
+ */
+body.ch-shell .sidebar-menu li > a > .fa-angle-right,
+body.ch-shell .sidebar-menu li > a > .fa-angle-left {
+  transition: transform .15s ease;
+}
+
+/*
+ * Freccetta ruotata di 90 gradi (da "punta a destra" a "punta in
+ * basso") quando la voce e' aperta. Il JS di AdminLTE
+ * (dist/js/app.js, $.AdminLTE.tree) aggiunge la classe "menu-open" al
+ * <ul class="treeview-menu">, non al <li> genitore - :has() e' l'unico
+ * modo in puro CSS per far reagire la freccetta (dentro l'<a> che
+ * precede quell'<ul>) allo stato del fratello successivo. Niente
+ * fallback per browser senza :has(): senza, la freccetta resta
+ * semplicemente statica come prima (nessuna rottura, solo nessuna
+ * animazione).
+ */
+body.ch-shell .sidebar-menu li:has(> ul.treeview-menu.menu-open) > a > .ch-nav-chevron,
+body.ch-shell .sidebar-menu li:has(> ul.treeview-menu.menu-open) > a > .fa-angle-right,
+body.ch-shell .sidebar-menu li:has(> ul.treeview-menu.menu-open) > a > .fa-angle-left {
+  transform: rotate(90deg);
+}
+
+/*
+ * Stato attivo: pillola pastello nell'accento di ruolo (--ch-role-accent-soft,
+ * pensato apposta per sfondi chiari - su sfondo scuro nel giro precedente
+ * non funzionava, serviva color-mix() come workaround; su sfondo chiaro
+ * torna utilizzabile cosi' com'e'). Barra colorata a sinistra come
+ * indicatore aggiuntivo.
+ */
+body.ch-shell .sidebar-menu > li.active {
+  position: relative;
+}
+
+body.ch-shell .sidebar-menu > li.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--ch-role-accent);
+}
+
+body.ch-shell .sidebar-menu > li.active > a,
+body.ch-shell .sidebar-menu > li.active > a:hover {
+  background: var(--ch-role-accent-soft);
+  color: var(--ch-role-accent-dark);
+  font-weight: 600;
+  border-left: none;
+}
+
+/*
+ * Sottomenu con linea di collegamento verticale + trattino prima di
+ * ogni voce (come la reference), al posto del semplice rientro. La
+ * linea e' un pseudo-elemento sull'intera <ul>, i trattini sulle singole
+ * voci.
+ */
+/*
+ * Rientro ridotto (era margin-left:28px + padding-left:8px = 36px per
+ * livello): con menu annidati fino a 3 livelli (moduli custom via
+ * MenuHelper) i rientri sommati mangiavano da soli oltre 100px, la causa
+ * principale per cui le etichette lunghe non ci stavano su una riga -
+ * vedi anche --ch-sidebar-width in :root, l'altra meta' della stessa
+ * correzione.
+ */
+body.ch-shell .sidebar-menu .treeview-menu {
+  background: transparent;
+  position: relative;
+  margin-left: 14px;
+  padding-left: 4px;
+}
+
+body.ch-shell .sidebar-menu .treeview-menu::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 1px;
+  background: var(--ch-border-strong);
+}
+
+body.ch-shell .sidebar-menu .treeview-menu > li > a {
+  position: relative;
+  color: var(--ch-text-secondary);
+  font-size: 13px;
+  padding: 7px 12px 7px 18px;
+  margin: 1px 4px;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+body.ch-shell .sidebar-menu .treeview-menu > li > a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background: var(--ch-border-strong);
+}
+
+body.ch-shell .sidebar-menu .treeview-menu > li.active > a,
+body.ch-shell .sidebar-menu .treeview-menu > li > a:hover {
+  background: var(--ch-bg);
+  color: var(--ch-text);
+}
+
+/* --- Footer --- */
+/*
+ * Layout a flex (non piu' pull-left/pull-right - classi Bootstrap 3,
+ * rimosse da Bootstrap 5, il posizionamento dipendeva solo da AdminLTE.min.css
+ * ancora caricato) + riga d'accento in alto a specchio di quella
+ * dell'header, stessa palette.
+ */
+/*
+ * Bordo sottile in alto invece di ombra (stesso principio della
+ * sidebar), niente angoli arrotondati su richiesta esplicita
+ * dell'utente.
+ */
+body.ch-shell .main-footer {
+  background: var(--ch-surface);
+  border: none;
+  border-top: 1px solid var(--ch-border);
+  color: var(--ch-text-muted);
+  font-size: 12.5px;
+  padding: 12px 20px;
+  position: relative;
+  margin-left: var(--ch-sidebar-width);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+body.ch-shell .main-footer::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, #f3a73d 0%, var(--ch-role-accent) 55%, transparent 100%);
+  opacity: 0.4;
+}
+
+body.ch-shell .main-footer a {
+  color: var(--ch-role-accent);
+}
+
+body.ch-shell .main-footer a:hover {
+  color: var(--ch-role-accent-dark);
+}
+
+body.ch-shell .ch-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+body.ch-shell .ch-footer-sep {
+  color: var(--ch-border-strong);
+}
+
+/* ==========================================================================
+   Pagine di autenticazione (login / lockscreen / forgot)
+   Standalone: proprio <head>, non passano da admin_template. Queste
+   regole sostituiscono Bootstrap 3 su queste 3 pagine soltanto.
+   ========================================================================== */
+
+.ch-auth {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--ch-text);
+  background: var(--ch-bg);
+}
+
+.ch-auth * {
+  box-sizing: border-box;
+}
+
+/*
+ * Sfondo decorativo intonato ai colori del logo CustomerHive (arancio
+ * dell'esagono/"Hive", verde salvia di "Customer") su tutta la pagina:
+ * layout a colonna singola, logo in alto al centro, form centrato sopra
+ * lo sfondo condiviso.
+ */
+.ch-auth-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background-color: #18140f;
+  background-image:
+    radial-gradient(circle at 88% -10%, rgba(243, 167, 61, 0.4) 0%, rgba(243, 167, 61, 0) 55%),
+    radial-gradient(circle at -10% 108%, rgba(147, 165, 147, 0.28) 0%, rgba(147, 165, 147, 0) 55%),
+    radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: auto, auto, 22px 22px;
+  background-repeat: no-repeat, no-repeat, repeat;
+  padding: 40px;
+}
+
+.ch-auth-shell .ch-brand {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ch-auth-shell .ch-brand-footer {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: #8a8478;
+}
+
+.ch-auth-formpanel {
+  /* width:100% - lo shell e' align-items:center (per centrare logo/
+     copyright senza farli allargare), quindi va data esplicitamente,
+     altrimenti .ch-auth-formbox si restringe al contenuto invece di
+     usare il suo max-width. */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*
+ * Card "a vetro" invece di un riquadro bianco pieno: leggermente
+ * trasparente + sfocatura dello sfondo dietro (backdrop-filter) cosi' i
+ * bagliori/la texture della pagina restano leggibili attraverso la card,
+ * bordo sottile chiaro (non un contorno netto) e ombra calda invece di
+ * nera pura - per non sembrare "incollata sopra" lo sfondo.
+ */
+.ch-auth-formbox {
+  width: 100%;
+  max-width: 460px;
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--ch-radius-lg);
+  box-shadow: 0 25px 50px -12px rgba(24, 20, 15, 0.5), 0 0 0 1px rgba(243, 167, 61, 0.08);
+  padding: 36px;
+}
+
+.ch-auth-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ch-accent);
+  margin-bottom: 10px;
+}
+
+.ch-auth-formbox h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.01em;
+}
+
+.ch-auth-formbox .ch-auth-lede {
+  font-size: 14px;
+  color: var(--ch-text-secondary);
+  margin: 0 0 28px 0;
+}
+
+.ch-auth-field {
+  margin-bottom: 18px;
+}
+
+.ch-auth-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ch-text);
+  margin-bottom: 6px;
+}
+
+.ch-auth-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  padding: 11px 14px;
+  background: var(--ch-surface);
+}
+
+.ch-auth-input input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--ch-text);
+  background: transparent;
+  padding: 0;
+}
+
+.ch-auth-input input::placeholder {
+  color: var(--ch-text-muted);
+}
+
+.ch-auth-input svg {
+  flex: none;
+  color: var(--ch-text-muted);
+}
+
+.ch-auth-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--ch-text-secondary);
+  margin-bottom: 22px;
+}
+
+.ch-auth-row a {
+  color: var(--ch-text);
+  font-weight: 600;
+}
+
+.ch-auth-row a:hover {
+  color: var(--ch-accent);
+}
+
+.ch-auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--ch-accent);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--ch-radius-md);
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+.ch-auth-btn:hover {
+  background: var(--ch-accent-dark);
+  color: #ffffff;
+}
+
+.ch-auth-btn-secondary {
+  background: var(--ch-surface);
+  color: var(--ch-text);
+  border: 1px solid var(--ch-border);
+}
+
+.ch-auth-btn-secondary:hover {
+  background: var(--ch-bg);
+  color: var(--ch-text);
+}
+
+.ch-auth-help {
+  font-size: 12.5px;
+  color: var(--ch-text-muted);
+  text-align: center;
+  margin-top: 28px;
+}
+
+.ch-auth-alert {
+  border-radius: var(--ch-radius-md);
+  padding: 12px 14px;
+  font-size: 13.5px;
+  margin-bottom: 20px;
+}
+
+.ch-auth-alert-warning {
+  background: var(--ch-warning-soft);
+  color: #7a4f0f;
+}
+
+/* Lockscreen: stessa formbox del login, solo avatar+nome al posto del
+   titolo/sottotitolo. */
+.ch-lockscreen-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 16px auto;
+  display: block;
+  border: 1px solid var(--ch-border);
+}
+
+.ch-lockscreen-name {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   Vista lista CRUD (Fase 3) — template condiviso da tutti i moduli
+   (resources/views/crudbooster/default/{index,table}.blade.php,
+   components/action.blade.php, pagination Bootstrap 5 di Laravel).
+   Solo CSS: nessuna riga toccata in questi file, per restare
+   comportamentalmente identico su tutti i moduli che li condividono
+   (rischio piu' alto della roadmap - vedi project-uiux-revamp-plan).
+   ========================================================================== */
+
+/* --- Header di pagina (titolo/icona/breadcrumb/azioni) --- */
+body.ch-shell .content-header {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+body.ch-shell .content-header h1 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ch-text);
+  margin: 0 0 6px 0;
+}
+
+/*
+ * #title_icon e' un singolo <i> FontAwesome nel markup originale (non
+ * un'icona dentro un contenitore dedicato) - lo stile qui lo trasforma
+ * in un badge quadrato tinto applicando background/radius direttamente
+ * su di esso, senza bisogno di un wrapper aggiuntivo nel Blade.
+ */
+body.ch-shell .content-header h1 #title_icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  font-size: 15px;
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+  border-radius: var(--ch-radius-md);
+  order: -1;
+}
+
+body.ch-shell .content-header h1 #help_icon {
+  font-size: 15px;
+  color: var(--ch-text-muted);
+}
+
+body.ch-shell .breadcrumb {
+  background: transparent;
+  padding: 0;
+  margin: 0 0 18px 0;
+  font-size: 12.5px;
+  color: var(--ch-text-muted);
+}
+
+body.ch-shell .breadcrumb > li + li::before {
+  color: var(--ch-border-strong);
+}
+
+body.ch-shell .breadcrumb .active {
+  color: var(--ch-text-secondary);
+  font-weight: 600;
+}
+
+/*
+ * Bottoni azione nel titolo (Aggiungi/Esporta/Importa + eventuali
+ * index_button custom per modulo): stessa forma per tutti (arrotondati,
+ * niente gradiente 3D di Bootstrap 3), ma il colore Bootstrap esistente
+ * (btn-success per "Aggiungi", btn-primary per Esporta/Importa) resta
+ * il selettore - non e' stato aggiunto/rimosso nessun class nel Blade.
+ * btn-success resta pieno (azione primaria "crea"), btn-primary diventa
+ * ghost/outline (azioni secondarie) - stessa gerarchia visiva del
+ * mockup approvato, ottenuta riusando i colori semantici gia' presenti
+ * invece di introdurne di nuovi.
+ */
+body.ch-shell .content-header h1 .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--ch-radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  vertical-align: middle;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+body.ch-shell .content-header h1 .btn-success {
+  background: var(--ch-accent);
+  border-color: var(--ch-accent);
+  color: #fff;
+}
+
+body.ch-shell .content-header h1 .btn-success:hover {
+  background: var(--ch-accent-dark);
+  border-color: var(--ch-accent-dark);
+}
+
+body.ch-shell .content-header h1 .btn-primary {
+  background: var(--ch-surface);
+  border-color: var(--ch-border);
+  color: var(--ch-text-secondary);
+}
+
+body.ch-shell .content-header h1 .btn-primary:hover {
+  background: var(--ch-bg);
+  color: var(--ch-text);
+}
+
+/* --- Box/card che racchiude toolbar + tabella --- */
+body.ch-shell .box {
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-lg);
+  box-shadow: var(--ch-shadow-sm);
+}
+
+body.ch-shell .box-header {
+  border-bottom: none;
+  padding: 16px 16px 12px 16px;
+}
+
+body.ch-shell .box-body {
+  padding: 0 16px 16px 16px;
+}
+
+/*
+ * Toolbar (Azioni multiple / Ordina e filtra / ricerca / righe per
+ * pagina): tutti pulsanti "ghost" della stessa altezza, la ricerca come
+ * pillola con bordo unico (il markup e' un .input-group Bootstrap con
+ * pezzi separati - qui i bordi interni vengono rimossi e ne resta uno
+ * solo esterno, arrotondato).
+ */
+body.ch-shell .selected-action > .btn,
+body.ch-shell #btn_advanced_filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: var(--ch-radius-md);
+  border: 1px solid var(--ch-border);
+  background: var(--ch-surface);
+  color: var(--ch-text-secondary);
+  font-size: 12.5px;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+body.ch-shell .selected-action > .btn:hover,
+body.ch-shell #btn_advanced_filter:hover,
+body.ch-shell #btn_advanced_filter.active {
+  background: var(--ch-bg);
+  color: var(--ch-text);
+}
+
+/*
+ * border-radius:var(--ch-radius-lg) invece di una pillola piena
+ * (999px): con un solo bottone rimasto (tolta l'icona di reset su
+ * richiesta dell'utente) l'icona di ricerca finiva troppo vicina al
+ * bordo destro, dentro la zona in cui una pillola a raggio pieno
+ * ritaglia un semicerchio - risultato: icona "tagliata"/disallineata.
+ * Un raggio piu' morbido evita del tutto la zona di ritaglio critica.
+ */
+body.ch-shell .box-tools .input-group {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-lg);
+  background: var(--ch-surface);
+  overflow: hidden;
+  height: 34px;
+}
+
+body.ch-shell .box-tools .input-group .form-control {
+  border: none;
+  background: transparent;
+  height: 32px;
+  box-shadow: none;
+  font-size: 12.5px;
+}
+
+/*
+ * Bottone di ricerca come riquadro quadrato con icona centrata
+ * (stesso principio delle azioni riga) invece del padding asimmetrico
+ * di default di Bootstrap, che lasciava l'icona non centrata nel suo
+ * riquadro.
+ */
+body.ch-shell .box-tools .input-group .input-group-btn .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ch-text-muted);
+  box-shadow: none;
+}
+
+body.ch-shell .box-tools .input-group .input-group-btn .btn:hover {
+  color: var(--ch-text);
+}
+
+body.ch-shell #form-limit-paging .form-control {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  height: 34px;
+  font-size: 12.5px;
+  color: var(--ch-text-secondary);
+  box-shadow: none;
+}
+
+body.ch-shell .dropdown-menu {
+  padding: 6px;
+}
+
+body.ch-shell .dropdown-menu .dropdown-item {
+  border-radius: var(--ch-radius-md);
+  font-size: 13px;
+}
+
+body.ch-shell .dropdown-menu .dropdown-item a,
+body.ch-shell .dropdown-menu .dropdown-item > a {
+  border-radius: var(--ch-radius-md);
+}
+
+/* --- Tabella --- */
+body.ch-shell #table_dashboard {
+  border: none;
+}
+
+body.ch-shell #table_dashboard > thead > tr > th,
+body.ch-shell #table_dashboard > tbody > tr > td {
+  border: none;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell #table_dashboard > thead > tr {
+  background: transparent;
+}
+
+body.ch-shell #table_dashboard > thead > tr > th {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ch-text-muted);
+  padding: 10px 14px;
+  white-space: nowrap;
+}
+
+body.ch-shell #table_dashboard > thead > tr > th a {
+  color: inherit;
+}
+
+body.ch-shell #table_dashboard > thead > tr > th .fa-sort,
+body.ch-shell #table_dashboard > thead > tr > th .fa-sort-asc,
+body.ch-shell #table_dashboard > thead > tr > th .fa-sort-desc {
+  opacity: 0.5;
+}
+
+body.ch-shell #table_dashboard > tbody > tr > td {
+  padding: 10px 14px;
+  font-size: 13.5px;
+  color: var(--ch-text);
+  background: transparent !important;
+}
+
+body.ch-shell #table_dashboard > tbody > tr:hover > td {
+  background: var(--ch-bg) !important;
+}
+
+body.ch-shell #table_dashboard > tbody > tr:last-child > td {
+  border-bottom: none;
+}
+
+/*
+ * La riga di piede tabella ripete solo i nomi colonna gia' visibili
+ * nell'intestazione (nessun link/funzione, solo testo statico via PHP
+ * in table.blade.php) - puramente decorativa e ridondante nel nuovo
+ * linguaggio visivo, quindi nascosta. Nessun impatto funzionale: non
+ * risulta letta da nessuno script.
+ */
+body.ch-shell #table_dashboard > tfoot {
+  display: none;
+}
+
+body.ch-shell #table_dashboard input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--ch-accent);
+}
+
+/*
+ * Azioni riga (view/edit/delete), stile di default "button_icon" -
+ * generate in components/action.blade.php come <a class="btn btn-sm
+ * btn-{primary|success|danger} btn-{detail|edit|delete}"> dentro un
+ * <div class="button_action">. Da bottoni pieni colorati a icone
+ * "ghost" (bordo/sfondo solo in hover) - stesso principio gia' usato
+ * per le altre viste (niente riquadri colorati a raffica).
+ *
+ * Alcuni moduli (Statistic Builder, Module Generator) aggiungono in
+ * piu' un bottone custom via $addaction (es. "Builder", "Module
+ * Wizard") che nello stesso file PHP include anche l'etichetta di
+ * testo, non solo l'icona - schiacciata in un riquadro 30x30 dava
+ * esattamente l'effetto "brutto" segnalato (testo e icona accavallati).
+ * font-size:0 sul bottone nasconde il testo (un nodo di testo puro,
+ * non selezionabile via CSS altrimenti) senza toccare il PHP che lo
+ * genera - l'icona riprende una dimensione esplicita cosi' da non
+ * sparire anch'essa.
+ */
+body.ch-shell .button_action .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  margin-left: 4px;
+  border-radius: var(--ch-radius-md);
+  background: transparent;
+  border: none;
+  color: var(--ch-text-muted);
+  box-shadow: none;
+  font-size: 0;
+}
+
+body.ch-shell .button_action .btn i {
+  font-size: 13px;
+}
+
+body.ch-shell .button_action .btn.btn-detail:hover {
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+}
+
+body.ch-shell .button_action .btn.btn-edit:hover {
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+}
+
+body.ch-shell .button_action .btn.btn-delete:hover {
+  background: var(--ch-danger-soft);
+  color: var(--ch-danger);
+}
+
+/*
+ * Hover generico per i bottoni custom $addaction (nessuna delle classi
+ * btn-detail/btn-edit/btn-delete sopra) - stesso trattamento "accento
+ * tenue" delle azioni di vista/modifica, invece di restare senza
+ * feedback al passaggio del mouse.
+ */
+body.ch-shell .button_action .btn:not(.btn-detail):not(.btn-edit):not(.btn-delete):hover {
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+}
+
+/* --- Paginazione (vista Bootstrap 5 di Laravel, non un file del progetto) --- */
+body.ch-shell .pagination {
+  gap: 4px;
+}
+
+body.ch-shell .pagination .page-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: var(--ch-radius-md);
+  border: 1px solid var(--ch-border);
+  color: var(--ch-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+body.ch-shell .pagination .page-item.active .page-link {
+  background: var(--ch-accent);
+  border-color: var(--ch-accent);
+  color: #fff;
+}
+
+body.ch-shell .pagination .page-item.disabled .page-link {
+  color: var(--ch-text-muted);
+  background: transparent;
+  border-color: var(--ch-border);
+}
+
+body.ch-shell .pagination .page-link:hover {
+  background: var(--ch-bg);
+  color: var(--ch-text);
+}
+
+body.ch-shell nav p.text-muted {
+  color: var(--ch-text-muted) !important;
+  font-size: 12.5px;
+}
+
+/* ==========================================================================
+   Popup "Ordina e filtra" (#advanced_filter_modal in
+   default/table.blade.php) - stessa card arrotondata/bordo sottile
+   delle altre superfici, griglia di filtri riscritta in CSS Grid al
+   posto delle colonne Bootstrap (row/col-sm-*) per allinearla come nel
+   mockup approvato. Markup Blade toccato solo per 3 aggiunte innocue:
+   riga di intestazione colonne, classe "is-active" quando un filtro e'
+   davvero impostato (stesso helper CRUDBooster::getTypeFilter() gia'
+   usato per i "selected" delle option), rimozione del prefisso "**"
+   decorativo dai placeholder - nessun name/id/attributo funzionale
+   modificato.
+   ========================================================================== */
+
+body.ch-shell #advanced_filter_modal .modal-content {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-lg);
+  box-shadow: var(--ch-shadow-md);
+  overflow: hidden;
+}
+
+body.ch-shell #advanced_filter_modal .modal-header {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell #advanced_filter_modal .modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+  margin: 0;
+}
+
+/*
+ * L'icona fa-filter diventa un badge quadrato tinto, stesso
+ * trattamento gia' usato per #title_icon nell'header di pagina -
+ * niente wrapper aggiuntivo nel Blade, solo styling diretto sull'<i>.
+ */
+body.ch-shell #advanced_filter_modal .modal-title .fa-filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+  border-radius: var(--ch-radius-md);
+}
+
+body.ch-shell #advanced_filter_modal .modal-subtitle {
+  font-size: 12px;
+  color: var(--ch-text-muted);
+  font-weight: 500;
+  margin: 2px 0 0 40px;
+}
+
+body.ch-shell #advanced_filter_modal .modal-body {
+  padding: 6px 22px 10px;
+  max-height: 62vh;
+  overflow-y: auto;
+}
+
+/* Intestazione colonne (Colonna/Condizione/Valore/Ordinamento) */
+body.ch-shell #advanced_filter_modal .filter-row-head {
+  display: grid;
+  grid-template-columns: 130px 155px 1fr 130px;
+  gap: 12px;
+  padding: 10px 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ch-text-muted);
+  border-bottom: 1px solid var(--ch-border);
+}
+
+/*
+ * Reset del sistema a griglia Bootstrap (margini negativi di .row,
+ * padding orizzontale dei .col-sm-*) - la riga diventa una CSS Grid
+ * gestita da noi, le colonne Bootstrap restano nel markup (non e'
+ * stato tolto nulla) ma perdono il loro effetto percentuale.
+ */
+body.ch-shell #advanced_filter_modal .mb-3.row {
+  margin: 0;
+}
+
+body.ch-shell #advanced_filter_modal .row-filter-combo {
+  display: grid;
+  grid-template-columns: 130px 155px 1fr 130px;
+  gap: 12px;
+  align-items: center;
+  margin: 0;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell #advanced_filter_modal .mb-3.row:last-child .row-filter-combo {
+  border-bottom: none;
+}
+
+body.ch-shell #advanced_filter_modal .row-filter-combo > [class*="col-"] {
+  width: auto;
+  padding: 0;
+}
+
+body.ch-shell #advanced_filter_modal .row-filter-combo.is-active {
+  background: var(--ch-accent-soft);
+  margin: 0 -22px;
+  padding: 10px 22px;
+  border-radius: var(--ch-radius-md);
+  border-bottom: none;
+}
+
+body.ch-shell #advanced_filter_modal .row-filter-combo.is-active strong {
+  color: var(--ch-accent-dark);
+}
+
+body.ch-shell #advanced_filter_modal .row-filter-combo strong {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+}
+
+body.ch-shell #advanced_filter_modal select.form-control,
+body.ch-shell #advanced_filter_modal input.form-control {
+  height: 36px;
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  font-size: 12.5px;
+  color: var(--ch-text);
+  box-shadow: none;
+}
+
+body.ch-shell #advanced_filter_modal input.form-control:disabled {
+  background: var(--ch-bg);
+  color: var(--ch-text-muted);
+}
+
+/*
+ * Stato "tra" (between): il markup Blade decide se mostrare questo
+ * blocco impostando display:block/none INLINE (via style="...") in
+ * base al filtro attivo - va rispettato cosi' com'e' (non e' safe
+ * forzarlo con !important: si applicherebbe a tutte le righe, anche a
+ * quelle che devono restare nascoste). Il layout affiancato dei due
+ * campi da/a si ottiene quindi sui FIGLI (i due .col-sm-6, che non
+ * hanno uno style inline proprio) con display:table-cell - a
+ * differenza di inline-flex/percentuali, un layout a tabella non va a
+ * capo per arrotondamenti sub-pixel quando le due celle occupano
+ * esattamente il 100% del contenitore (successo con inline-flex).
+ */
+body.ch-shell #advanced_filter_modal .between-group.row {
+  margin: 0;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+body.ch-shell #advanced_filter_modal .between-group [class*="col-"] {
+  display: table-cell;
+  width: 50%;
+  padding: 0 4px;
+  vertical-align: middle;
+}
+
+body.ch-shell #advanced_filter_modal .between-group [class*="col-"]:first-child {
+  padding-left: 0;
+}
+
+body.ch-shell #advanced_filter_modal .between-group [class*="col-"]:last-child {
+  padding-right: 0;
+}
+
+body.ch-shell #advanced_filter_modal .between-group .input-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+body.ch-shell #advanced_filter_modal .between-group .input-group-text {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: 11.5px;
+  color: var(--ch-text-muted);
+  white-space: nowrap;
+}
+
+body.ch-shell #advanced_filter_modal .modal-footer {
+  padding: 14px 22px;
+  border-top: 1px solid var(--ch-border);
+}
+
+/* Bottoni modale - stesso trattamento ghost/primario su tutti i popup
+   di table.blade.php (filtro, export, mass edit), non solo su questo. */
+body.ch-shell .modal-footer .btn {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--ch-radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+body.ch-shell .modal-footer .btn-default {
+  background: var(--ch-surface);
+  border-color: var(--ch-border);
+  color: var(--ch-text-secondary);
+}
+
+body.ch-shell .modal-footer .btn-default:hover {
+  background: var(--ch-bg);
+  color: var(--ch-text);
+}
+
+body.ch-shell .modal-footer .btn-primary {
+  background: var(--ch-accent);
+  border-color: var(--ch-accent);
+  color: #fff;
+}
+
+body.ch-shell .modal-footer .btn-primary:hover {
+  background: var(--ch-accent-dark);
+  border-color: var(--ch-accent-dark);
+}
+
+/* ==========================================================================
+   Vista dettaglio/form (default/form.blade.php, usato da detail/add/edit
+   con lo stesso .card.card-default - qui si restilizza solo il guscio
+   condiviso e la tabella #table-detail, non i singoli campi del form
+   (form_body.blade.php), lasciati per un giro successivo opportunistico
+   come da roadmap. Vedi mockup approvato in
+   [[project-uiux-revamp-plan]].
+   ========================================================================== */
+
+/*
+ * Link "torna alla lista" (form.blade.php e index.blade.php condividono
+ * lo stesso pattern <a><i class="fa fa-chevron-circle-left/right"></i>
+ * testo</a>, senza una classe dedicata) - :has() evita di dover toccare
+ * il Blade per aggiungere una classe.
+ */
+body.ch-shell .content a:has(> i.fa-chevron-circle-left),
+body.ch-shell .content a:has(> i.fa-chevron-circle-right) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ch-text-secondary);
+  margin-bottom: 14px;
+}
+
+body.ch-shell .content a:has(> i.fa-chevron-circle-left):hover,
+body.ch-shell .content a:has(> i.fa-chevron-circle-right):hover {
+  color: var(--ch-accent-dark);
+}
+
+body.ch-shell .card.card-default {
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-lg);
+  box-shadow: var(--ch-shadow-sm);
+  overflow: hidden;
+}
+
+body.ch-shell .card.card-default .card-header {
+  background: transparent;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell .card.card-default .card-header strong {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+}
+
+/*
+ * L'icona del modulo (<i class="{{modulo->icon}}">) diventa un badge
+ * quadrato tinto, stesso trattamento gia' usato per il titolo di
+ * pagina e l'intestazione del popup filtro - styling diretto
+ * sull'<i>, nessun wrapper aggiuntivo nel Blade.
+ */
+body.ch-shell .card.card-default .card-header strong > i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 15px;
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+  border-radius: var(--ch-radius-md);
+}
+
+body.ch-shell .box-footer {
+  background: transparent !important;
+  padding: 14px 22px;
+  border-top: 1px solid var(--ch-border);
+}
+
+body.ch-shell .box-footer .btn {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: var(--ch-radius-md);
+  font-size: 13.5px;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+body.ch-shell .box-footer .btn-success {
+  background: var(--ch-accent);
+  border-color: var(--ch-accent);
+  color: #fff;
+}
+
+body.ch-shell .box-footer .btn-success:hover {
+  background: var(--ch-accent-dark);
+  border-color: var(--ch-accent-dark);
+}
+
+body.ch-shell .box-footer .btn-default {
+  background: var(--ch-surface);
+  border-color: var(--ch-border);
+  color: var(--ch-text-secondary);
+}
+
+body.ch-shell .box-footer .btn-default:hover {
+  background: var(--ch-bg);
+  color: var(--ch-text);
+}
+
+/*
+ * #table-detail (default/form_detail.blade.php): tabella label/valore
+ * a riga singola per campo. table-striped di Bootstrap va sovrascritto
+ * con !important sulle singole celle (specificita' alta del selettore
+ * ":nth-of-type(odd)" di Bootstrap sul tbody implicito) - la tinta
+ * delle righe dispari qui non arriva via background-color ma via
+ * box-shadow inset (tecnica di Bootstrap 5.3 per il tema delle
+ * tabelle), quindi va neutralizzato anche quello.
+ */
+body.ch-shell #table-detail {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+body.ch-shell #table-detail td {
+  padding: 13px 22px;
+  font-size: 13.5px;
+  vertical-align: middle;
+  border: none;
+  border-top: 1px solid var(--ch-border);
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.ch-shell #table-detail tr:first-child td {
+  border-top: none;
+}
+
+body.ch-shell #table-detail td:first-child {
+  width: 240px;
+  font-weight: 700;
+  color: var(--ch-text-secondary);
+}
+
+body.ch-shell #table-detail td:last-child {
+  color: var(--ch-text);
+  font-weight: 600;
+}
+
+/*
+ * Badge Si'/No per i campi checkbox (booleani) in vista dettaglio -
+ * generato in type_components/checkbox/component_detail.blade.php.
+ * Non applicato ai campi select (dataenum/datatable/dataquery): quel
+ * component_detail fa un echo generico del valore, senza un modo
+ * affidabile per sapere se un dato valore ha un significato "positivo/
+ * negativo" da colorare.
+ */
+.ch-bool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ch-bool-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.ch-bool-yes {
+  background: var(--ch-success-soft);
+  color: var(--ch-success);
+}
+
+.ch-bool-yes .ch-bool-dot {
+  background: var(--ch-success);
+}
+
+.ch-bool-no {
+  background: var(--ch-bg);
+  color: var(--ch-text-secondary);
+  border: 1px solid var(--ch-border);
+}
+
+.ch-bool-no .ch-bool-dot {
+  background: var(--ch-text-muted);
+}

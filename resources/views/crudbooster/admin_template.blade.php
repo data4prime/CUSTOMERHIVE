@@ -35,10 +35,13 @@
     @php
     $main_css = asset("vendor/crudbooster/assets/css/main.css").'?r='.time();
     $custom_css = asset('css/custom.css').'?r='.time();
+    $theme_css = asset('css/theme.css').'?r='.time();
     @endphp
 
     <link rel='stylesheet' href='{{ $main_css}}' type="text/css" />
     <link rel='stylesheet' href="{{$custom_css}}" type="text/css" />
+    <!-- Revamp UI/UX (Fase 0+1): token di design + font self-hosted, vedi docs/refactoring -->
+    <link rel='stylesheet' href="{{$theme_css}}" type="text/css" />
     <link rel='stylesheet' href="{{isset($style_css) ? $style_css : ''}}" type="text/css" />
 
 
@@ -102,8 +105,26 @@
 @yield('content')
 @else
 
+@php
+    // Revamp UI/UX: cms_privileges.theme_color (select chiusa a 12 skin
+    // AdminLTE storiche, vedi privileges.blade.php) non pilota piu' una
+    // classe skin-* (il nuovo design ha un solo linguaggio visivo), ma
+    // resta usato per un accento colore per ruolo (vedi theme.css) -
+    // deciso con l'utente durante il piano del revamp. Le varianti
+    // "-light" condividono lo stesso accento della base.
+    $role_accent_map = [
+        'skin-blue' => 'blue', 'skin-blue-light' => 'blue',
+        'skin-yellow' => 'yellow', 'skin-yellow-light' => 'yellow',
+        'skin-green' => 'green', 'skin-green-light' => 'green',
+        'skin-purple' => 'purple', 'skin-purple-light' => 'purple',
+        'skin-red' => 'red', 'skin-red-light' => 'red',
+        'skin-black' => 'black', 'skin-black-light' => 'black',
+    ];
+    $role_accent = $role_accent_map[Session::get('theme_color')] ?? null;
+@endphp
 <body style="font-size: 14px;"
-    class="@php echo (Session::get('theme_color'))?:'skin-blue'; echo ' '; echo config('crudbooster.ADMIN_LAYOUT'); @endphp {{isset($sidebar_mode) ?: ''}}">
+    @if($role_accent) data-role-accent="{{ $role_accent }}" @endif
+    class="ch-shell @php echo config('crudbooster.ADMIN_LAYOUT'); @endphp {{isset($sidebar_mode) ?: ''}}">
     <div id='app' class="wrapper">
 
         <!-- Header -->

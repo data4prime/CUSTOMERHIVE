@@ -28,12 +28,9 @@ if ((isset($form['datatable']) && isset($form['relationship_table'])) && $form['
 foreach ($value as $k => $v) {
 
     if ($v == 1) {
-        echo trans('crudbooster.confirmButtonText');
+        echo "<span class='ch-bool-badge ch-bool-yes'><span class='ch-bool-dot'></span>" . e(trans('crudbooster.confirmButtonText')) . "</span>";
     } else {
-        echo trans('crudbooster.confirmation_no');
+        echo "<span class='ch-bool-badge ch-bool-no'><span class='ch-bool-dot'></span>" . e(trans('crudbooster.confirmation_no')) . "</span>";
     }
-
-   
-    //echo "<span class='badge'>". ($v == 1 ) ? trans('crudbooster.confirmButtonText') : trans('crudbooster.confirmation_no') ."</span> ";
 }
 ?>

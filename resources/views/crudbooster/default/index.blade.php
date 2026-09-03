@@ -137,23 +137,40 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
             </a>
             @endif
 
-            <form method='get' style="display:inline-block;width: 260px;" action='{{Request::url()}}'>
+            <form method='get' id='form-search-crud' style="display:inline-block;width: 260px;" action='{{Request::url()}}'>
                 <div class="input-group">
                     <input type="text" name="q" value="{{ Request::get('q') }}"
                         class="form-control input-sm pull-{{ trans('crudbooster.right') }}"
                         placeholder="{{trans('crudbooster.filter_search')}}" />
                     {!! CRUDBooster::getUrlParameters(['q']) !!}
                     <div class="input-group-btn">
-                        @if(Request::get('q'))
-
-                        <button type='button' onclick='location.href="{{ CRUDBooster::mainpath().$build_query}}"'
-                            title="{{trans('crudbooster.button_reset')}}" class='btn  btn-warning'><i
-                                class='fa fa-ban'></i></button>
-                        @endif
                         <button type='submit' class="btn  btn-default"><i class="fa fa-search"></i></button>
                     </div>
                 </div>
             </form>
+
+            @push('bottom')
+            <script>
+                /*
+                 * Ricerca "live": invia il form automaticamente 500ms dopo
+                 * l'ultimo carattere digitato, invece di richiedere Invio o
+                 * il click sulla lente - stesso meccanismo (submit GET,
+                 * ricarica pagina), solo automatico. L'icona di reset e'
+                 * stata rimossa su richiesta: per svuotare la ricerca ora
+                 * basta cancellare il testo dal campo.
+                 */
+                $(function () {
+                    var $searchInput = $('#form-search-crud input[name="q"]');
+                    var searchTimer;
+                    $searchInput.on('input', function () {
+                        clearTimeout(searchTimer);
+                        searchTimer = setTimeout(function () {
+                            $('#form-search-crud').trigger('submit');
+                        }, 500);
+                    });
+                });
+            </script>
+            @endpush
 
 
             <form method='get' id='form-limit-paging' style="display:inline-block" action='{{Request::url()}}'>

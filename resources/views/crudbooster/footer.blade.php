@@ -1,34 +1,11 @@
 <footer class="main-footer">
-    <!-- To the right -->
-    <!--<div class="pull-{{ trans('crudbooster.right') }} hidden-xs">
+    <strong>{{ trans('crudbooster.copyright') }} &copy; {{ date('Y') }}. {{ trans('crudbooster.all_rights_reserved') }}</strong>
 
-        &nbsp;|&nbsp;<a  data-bs-toggle="modal" data-target="#licenseModal">{{ trans('crudbooster.license') }}</a>
-    </div>-->
-
-
-
-    <div class="pull-{{ trans('crudbooster.right') }} hidden-xs">
-
-        &nbsp;|&nbsp;<a style="color: #3c8dbc;" data-bs-toggle="modal"   data-bs-target="#licenseModal">{{ trans('crudbooster.license') }}</a>
+    <div class="ch-footer-right hidden-xs">
+        <a data-bs-toggle="modal" data-bs-target="#licenseModal">{{ trans('crudbooster.license') }}</a>
+        <span class="ch-footer-sep">&middot;</span>
+        <span>{{ trans('crudbooster.powered_by') }} Data4Prime</span>
+        <span class="ch-footer-sep">&middot;</span>
+        <span>{{ Session::get('appname') }} {{ config('app.version') }}</span>
     </div>
-
-
-    <div class="pull-{{ trans('crudbooster.right') }} hidden-xs">
-        {{ trans('crudbooster.powered_by') }} Data4Prime
-    </div>
-
-    <div style="margin-right:15px;" class="pull-{{ trans('crudbooster.right') }} hidden-xs">
-        {{Session::get('appname')}} {{ config('app.version') }}
-    </div>
-    <!-- Default to the left -->
-    <strong>{{ trans('crudbooster.copyright') }} &copy; <?php echo date('Y') ?>. {{ trans('crudbooster.all_rights_reserved') }} .</strong>
 </footer>
-
-
-
-
-
-
-
-
-

@@ -343,19 +343,29 @@ $total = $result->total();
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header" style="justify-content: space-between;">
-                
-                <h4 class="modal-title"><i class='fa fa-filter'></i> {{trans("crudbooster.filter_dialog_title")}}</h4>
+                <div>
+                    <h4 class="modal-title"><i class='fa fa-filter'></i> {{trans("crudbooster.filter_dialog_title")}}</h4>
+                    @isset($module_name)
+                    <div class="modal-subtitle">{{ $module_name }} &middot; {{ count($columns) }} {{ count($columns) == 1 ? 'colonna disponibile' : 'colonne disponibili' }}</div>
+                    @endisset
+                </div>
 <button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
                     </button>
             </div>
             <form method='get' action=''>
                 <div class="modal-body">
+                    <div class="filter-row-head">
+                        <div>Colonna</div>
+                        <div>Condizione</div>
+                        <div>Valore</div>
+                        <div>Ordinamento</div>
+                    </div>
                     <?php foreach($columns as $key => $col):?>
                     <?php if (isset($col['image']) || isset($col['download']) || (isset($col['visible']) && $col['visible'] === FALSE)) continue;?>
 
                     <div class='mb-3 row'>
 
-                        <div class='row-filter-combo row'>
+                        <div class='row-filter-combo row {{ CRUDBooster::getTypeFilter($col["field_with"]) ? "is-active" : "" }}'>
 
                             <div class="col-sm-2">
                                 <strong>{{$col['label']}}</strong>
@@ -364,7 +374,7 @@ $total = $result->total();
                             <div class='col-sm-3'>
                                 <select name='filter_column[{{$col["field_with"]}}][type]'
                                     data-type='{{$col["type_data"]}}' class="filter-combo form-control">
-                                    <option value=''>** {{trans("crudbooster.filter_select_operator_type")}}</option>
+                                    <option value=''>{{trans("crudbooster.filter_select_operator_type")}}</option>
                                     @if(in_array($col['type_data'],['string','varchar','text','char']))
                                     <option {{ (CRUDBooster::getTypeFilter($col["field_with"])=='like' )?"selected":""
                                         }} value='like'>{{trans("crudbooster.filter_like")}}</option> @endif
@@ -409,7 +419,7 @@ $total = $result->total();
 
                             <div class='col-sm-5'>
                                 <input type='text' class='filter-value form-control' style='{{ isset($col["field_with"]) &&
-                                    (CRUDBooster::getTypeFilter($col["field_with"])==' between' ) ? "display:none"
+                                    (CRUDBooster::getTypeFilter($col["field_with"])=='between' ) ? "display:none"
                                     :"display:block"}}' disabled name='filter_column[{{$col["field_with"]}}][value]'
                                     value='{{ (!is_array(CRUDBooster::getValueFilter($col["field_with"])))?CRUDBooster::getValueFilter($col["field_with"]):"" }}'>
 
@@ -461,7 +471,7 @@ $total = $result->total();
 
                             <div class='col-sm-2'>
                                 <select class='form-control' name='filter_column[{{$col["field_with"]}}][sorting]'>
-                                    <option value=''>** Sorting</option>
+                                    <option value=''>Ordinamento</option>
                                     <option {{ (CRUDBooster::getSortingFilter($col["field_with"])=='asc' )?"selected":""
                                         }} value='asc'>{{trans("crudbooster.filter_ascending")}}</option>
                                     <option {{ (CRUDBooster::getSortingFilter($col["field_with"])=='desc'

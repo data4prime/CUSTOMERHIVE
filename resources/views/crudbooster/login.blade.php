@@ -4,20 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>{{trans("crudbooster.page_title_login")}} : {{ isset($tenant->name) ? $tenant->name : '' }}</title>
-    <meta name='generator' content='CRUDBooster' />
+    <meta name='generator' content='CustomerHive' />
     <meta name='robots' content='noindex,nofollow' />
     <link rel="shortcut icon" href="{{ $favicon }}">
-
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <!-- Bootstrap 3.3.2 -->
-    <link href="{{asset('vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet"
-        type="text/css" />
-    <!-- Font Awesome Icons -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"
-        type="text/css" />
-    <!-- Theme style -->
-    <link href="{{asset('vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css')}}" rel="stylesheet"
-        type="text/css" />
 
     <!-- support rtl-->
     @if (in_array(App::getLocale(), ['ar', 'fa']))
@@ -25,118 +15,75 @@
     <link href="{{ asset('vendor/crudbooster/assets/rtl.css')}}" rel="stylesheet" type="text/css" />
     @endif
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-
-    <link rel='stylesheet' href='{{asset("vendor/crudbooster/assets/css/main.css")}}' />
-    <style type="text/css">
-        .login-page,
-        .register-page {
-            background: {{ $background }};
-
-            color: {{ $front_color}} !important;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
-        }
-
-        .login-box,
-        .register-box {
-            margin: 2% auto;
-        }
-
-        .login-box-body {
-            box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.8);
-            background: rgba(255, 255, 255, 0.9);
-
-            color: {{ $front_color}} !important;
-        }
-
-        html,
-        body {
-            overflow: hidden;
-        }
-    </style>
+    <link rel='stylesheet' href="{{ asset('css/theme.css').'?r='.time() }}" type="text/css" />
+    {{--
+        Su richiesta esplicita dell'utente (2026-09-03): il pannello brand
+        resta sempre quello scuro del mockup, senza l'immagine/colore di
+        sfondo personalizzabili per tenant (CRUDBooster::getBackgroundColor()/
+        getBackgroundImage()/frontColor() - $background/$front_color restano
+        calcolati dal controller ma non piu' usati qui). Il logo resta
+        dinamico per tenant (vedi sotto).
+    --}}
 </head>
 
-<body class="login-page">
+<body class="ch-auth">
+    <div class="ch-auth-shell">
+        <div class="ch-brand">
+            <img src="{{ $logo }}" alt="{{ isset($tenant->name) ? $tenant->name : 'CustomerHive' }}"
+                style="max-width:200px;max-height:56px;">
+        </div>
 
-    <div class="login-box">
-        <div class="login-logo">
-            <a href="{{url('/')}}">
-                <img title="{!! !empty(Session::get('appname')) ? CRUDBooster::getSetting('appname') : '' !!}"
-                    src="{{ $logo }}" style='max-width: 100%;max-height:170px' />
-            </a>
-        </div><!-- /.login-logo -->
-        <div class="login-box-body">
+        <div class="ch-auth-formpanel">
+            <div class="ch-auth-formbox">
+                <div class="ch-auth-eyebrow">{{ strtoupper(trans('crudbooster.button_sign_in')) }}</div>
+                <h2>{{ trans('crudbooster.page_title_login') }}</h2>
+                <p class="ch-auth-lede">{{ trans('crudbooster.login_message') }}</p>
 
-            @if ( Session::get('message') != '' )
-            <div class='alert alert-warning'>
-                {{ Session::get('message') }}
-            </div>
-            @endif
-
-            <p class='login-box-msg'>{{trans("crudbooster.login_message")}}</p>
-            <form autocomplete='off' action="{{ route('postLogin') }}" method="post">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-
-                @if(!empty(config('services.google')))
-
-                <div style="margin-bottom:10px" class='row'>
-                    <div class='col-xs-12'>
-
-                        <a href='{{route("redirect", ' google')}}' class="btn btn-primary btn-block btn-flat"><i
-                                class='fa fa-google'></i>
-                            Google Login</a>
-
-                        <hr>
-                    </div>
-                </div>
+                @if ( Session::get('message') != '' )
+                <div class="ch-auth-alert ch-auth-alert-warning">{{ Session::get('message') }}</div>
                 @endif
 
-                <div class="form-group has-feedback ">
-                    <input autocomplete='off' type="text" class="form-control" name='email' required
-                        placeholder="Email" />
-                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                </div>
-                <div class="form-group has-feedback">
-                    <input autocomplete='off' type="password" class="form-control" name='password' required
-                        placeholder="Password" />
-                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                </div>
-                <div style="margin-bottom:10px" class='form-group'>
-                    <div>
-                        <button type="submit" class="btn btn-primary btn-block btn-flat"><i class='fa fa-lock'></i>
-                            {{trans("crudbooster.button_sign_in")}}</button>
+                @if(!empty(config('services.google')))
+                <a href='{{route("redirect", "google")}}' class="ch-auth-btn ch-auth-btn-secondary" style="margin-bottom:18px;">
+                    <i class='fa fa-google'></i> Google Login
+                </a>
+                <div style="text-align:center;font-size:12px;color:var(--ch-text-muted);margin-bottom:18px;">oppure</div>
+                @endif
+
+                <form autocomplete='off' action="{{ route('postLogin') }}" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+
+                    <div class="ch-auth-field">
+                        <label>Email</label>
+                        <div class="ch-auth-input">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg>
+                            <input autocomplete='off' type="text" name='email' required placeholder="nome.cognome@azienda.com" />
+                        </div>
                     </div>
-                </div>
 
-                <div class='form-group'>
-                    <div  align="center">
-                        <p style="padding:10px 0px 10px 0px">{{trans("crudbooster.text_forgot_password")}} <a
-                                href='{{route("getForgot")}}'>{{trans("crudbooster.click_here")}}</a></p>
+                    <div class="ch-auth-field">
+                        <label>Password</label>
+                        <div class="ch-auth-input">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+                            <input autocomplete='off' type="password" name='password' required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
+                        </div>
                     </div>
-                </div>
-            </form>
 
+                    <div class="ch-auth-row">
+                        <span></span>
+                        <a href='{{route("getForgot")}}'>{{trans("crudbooster.text_forgot_password")}}</a>
+                    </div>
 
-            <br />
-            <!--a href="#">I forgot my password</a-->
+                    <button type="submit" class="ch-auth-btn">
+                        {{trans("crudbooster.button_sign_in")}}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13,6 19,12 13,18"/></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
 
-        </div><!-- /.login-box-body -->
-
-    </div><!-- /.login-box -->
-
-
-    <!-- jQuery 2.2.3 -->
-    <script src="{{asset('vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
-    <!-- Bootstrap 3.4.1 JS -->
-    <script src="{{asset('vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min.js')}}"
-        type="text/javascript"></script>
+        <div class="ch-brand-footer">&copy; {{ date('Y') }} CustomerHive</div>
+    </div>
 </body>
 
 </html>

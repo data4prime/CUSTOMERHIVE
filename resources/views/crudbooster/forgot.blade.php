@@ -9,90 +9,52 @@
     <link rel="shortcut icon"
         href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <!-- Bootstrap 3.3.2 -->
-    <link href="{{asset('vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet"
-        type="text/css" />
-    <!-- Font Awesome Icons -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"
-        type="text/css" />
-    <!-- Theme style -->
-    <link href="{{asset('vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css')}}" rel="stylesheet"
-        type="text/css" />
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-    <link rel='stylesheet' href='{{asset("vendor/crudbooster/assets/css/main.css")}}' />
-    <link rel='stylesheet' href='{{asset("vendor/crudbooster/assets/css/main.css")}}' />
-    <style type="text/css">
-        .login-page,
-        .register-page {
-            background: {{ $background }};
 
-            color: {{ $tenant->login_font_color ?: '#ffffff'}} !important;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
-        }
-
-        .login-box-body {
-            box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.8);
-            background: rgba(255, 255, 255, 0.9);
-
-            color: @php echo CRUDBooster::getSetting("login_font_color")?:'#666666'@endphp !important;
-        }
-    </style>
+    <link rel='stylesheet' href="{{ asset('css/theme.css').'?r='.time() }}" type="text/css" />
 </head>
 
-<body class="login-page">
-    <div class="login-box">
-        <div class="login-logo">
-            <a href="{{url('/')}}">
-                <img title='{!!(isset($appname))? $appname : "<b>CRUD</b>Booster"!!}' src='{{ $logo }}'
-                    style='max-width: 100%;max-height:170px' />
-            </a>
-        </div><!-- /.login-logo -->
-        <div class="login-box-body">
+<body class="ch-auth">
+    <div class="ch-auth-shell">
+        <div class="ch-brand">
+            <img src="{{ $logo }}" alt="{{ isset($tenant->name) ? $tenant->name : 'CustomerHive' }}"
+                style="max-width:200px;max-height:56px;">
+        </div>
 
-            @if ( Session::get('message') != '' )
-            <div class='alert alert-warning'>
-                {{ Session::get('message') }}
+        <div class="ch-auth-formpanel">
+            <div class="ch-auth-formbox">
+                <div class="ch-auth-eyebrow">{{ strtoupper(trans('crudbooster.page_title_forgot')) }}</div>
+                <h2>{{trans("crudbooster.page_title_forgot")}}</h2>
+                <p class="ch-auth-lede">{{trans("crudbooster.forgot_message")}}</p>
+
+                @if ( Session::get('message') != '' )
+                <div class="ch-auth-alert ch-auth-alert-warning">{{ Session::get('message') }}</div>
+                @endif
+
+                <form action="{{ route('postForgot') }}" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+
+                    <div class="ch-auth-field">
+                        <label>Email</label>
+                        <div class="ch-auth-input">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg>
+                            <input type="email" name='email' required placeholder="nome.cognome@azienda.com" />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="ch-auth-btn" style="margin-top:6px;">
+                        {{trans("crudbooster.button_submit")}}
+                    </button>
+                </form>
+
+                <p class="ch-auth-help">
+                    {{trans("crudbooster.forgot_text_try_again")}}
+                    <a href='{{route("getLogin")}}'>{{trans("crudbooster.click_here")}}</a>
+                </p>
             </div>
-            @endif
+        </div>
 
-            <p class="login-box-msg">{{trans("crudbooster.forgot_message")}}</p>
-            <form action="{{ route('postForgot') }}" method="post">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                <div class="mb-3 row has-feedback">
-                    <input type="email" class="form-control" name='email' required placeholder="Email Address" />
-                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                </div>
-                <div class="row">
-                    <div class="col-xs-8">
-                        {{trans("crudbooster.forgot_text_try_again")}} <a
-                            href='{{route("getLogin")}}'>{{trans("crudbooster.click_here")}}</a>
-                    </div><!-- /.col -->
-                    <div class="col-xs-4">
-                        <button type="submit"
-                            class="btn btn-primary btn-block btn-flat">{{trans("crudbooster.button_submit")}}</button>
-                    </div><!-- /.col -->
-                </div>
-            </form>
-
-            <br />
-            <!--a href="#">I forgot my password</a-->
-
-        </div><!-- /.login-box-body -->
-    </div><!-- /.login-box -->
-
-    <!-- jQuery 2.2.3 -->
-    <script src="{{asset('vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
-    <!-- Bootstrap 3.4.1 JS -->
-    <script src="{{asset('vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min.js')}}"
-        type="text/javascript"></script>
-
+        <div class="ch-brand-footer">&copy; {{ date('Y') }} CustomerHive</div>
+    </div>
 </body>
 
 </html>

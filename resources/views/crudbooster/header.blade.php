@@ -34,11 +34,20 @@ if ($method != 'content_view') {
 <header class="main-header">
 
     <!-- Logo -->
-    <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}' class="logo">{{CRUDBooster::getSetting('appname')}}</a>
+    <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}' class="logo">
+        <img src="{{ CRUDBooster::getSetting('logo') ? asset(CRUDBooster::getSetting('logo')) : asset('/images/customerhive_trasparente.png') }}"
+            alt="{{ CRUDBooster::getSetting('appname') }}" class="logo-img">
+    </a>
 <!--navbar navbar-expand-lg navbar-light justify-content-between-->
     <!-- Header Navbar -->
     <nav style="padding: 0;" class="navbar navbar-expand-sm navbar-light justify-content-between" role="navigation">
-        <!-- Sidebar toggle button-->
+        <!-- Sidebar toggle button. ATTENZIONE: data-bs-toggle="offcanvas" non
+             e' markup morto di Bootstrap 5 (era stato rimosso per errore
+             durante il revamp UI/UX, rompendo il toggle) - questa copia
+             vendorizzata/personalizzata di AdminLTE dist/js/app.js usa
+             letteralmente questo attributo come selettore per agganciare il
+             click (vedi $.AdminLTE.options.sidebarToggleSelector nello
+             stesso file). Non rimuovere senza aggiornare anche quel JS. -->
         <a href="#" class="sidebar-toggle" data-bs-toggle="offcanvas" role="button">
             <span class="visually-hidden">Toggle navigation</span>
         </a>
