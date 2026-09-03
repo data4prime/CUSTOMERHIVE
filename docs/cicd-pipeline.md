@@ -30,7 +30,7 @@ tuttora manuale — vedi "Limiti noti" sotto).
 Gira su ogni push e pull request verso `dev` o `main`.
 
 1. Checkout del codice
-2. Setup PHP 8.1 con le estensioni richieste dal progetto
+2. Setup PHP 8.3 con le estensioni richieste dal progetto
 3. `composer install`
 4. Prepara `.env` (da `.env.example`) e genera `APP_KEY`
 5. `php artisan test`

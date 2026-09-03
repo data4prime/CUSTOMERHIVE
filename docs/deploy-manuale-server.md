@@ -31,10 +31,14 @@ Nei comandi sotto, sostituisci `<dominio>` con `dev.thecustomerhive.com` o
 
 ## 1. Requisiti software sul server
 
-- [ ] **PHP 8.1** (stessa versione usata in locale via Docker, per coerenza)
-      con le estensioni:
+- [ ] **PHP 8.3** (richiesto da `composer.json` dopo l'upgrade a Laravel 13,
+      stessa versione usata in locale via Docker, per coerenza) con le
+      estensioni:
       `pdo_mysql mbstring exif pcntl bcmath gd zip intl curl xml fileinfo openssl ctype tokenizer json`
-      (`gd` compilata con supporto freetype/jpeg per le immagini).
+      (`gd` compilata con supporto freetype/jpeg per le immagini). Su Ubuntu,
+      se i repo di sistema non hanno PHP 8.3, aggiungere la PPA
+      `ppa:ondrej/php` (o, se il mirror Launchpad dà errori 404 temporanei,
+      il repository diretto `packages.sury.org`).
 - [ ] **Composer 2**.
 - [ ] **MySQL 8** (o accesso a un'istanza MySQL 8 già esistente).
 - [ ] **Apache** con `mod_rewrite` e `mod_headers` abilitati (oppure Nginx +
@@ -167,7 +171,7 @@ server {
     }
 
     location ~ \.php$ {
-        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
         fastcgi_index index.php;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
@@ -222,7 +226,7 @@ licenza ogni ora — vedi `app/Console/Kernel.php`):
 Riepilogo puntato dei passi sopra, da spuntare in ordine per il primo deploy:
 
 - [ ] 0. Server provisionato, DNS puntato, deploy key GitHub configurata
-- [ ] 1. Stack software installato (PHP 8.1 + estensioni, Composer, MySQL, Apache/Nginx, git)
+- [ ] 1. Stack software installato (PHP 8.3 + estensioni, Composer, MySQL, Apache/Nginx, git)
 - [ ] 2. `git clone` branch `dev` + verifica nessun bypass licenza residuo
 - [ ] 3. `.env` compilato (`APP_PATH=dev`, `APP_DOMAIN=dev.thecustomerhive.com`, `APP_DEBUG=true`)
 - [ ] 4. `composer install --no-dev`

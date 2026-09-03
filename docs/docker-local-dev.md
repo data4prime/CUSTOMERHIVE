@@ -50,7 +50,7 @@ su una macchina remota separata, senza Docker.
   filesystem host (l'IDE non li vede, ma non serve: sono codice di terze
   parti o cache generata).
 - Servizi definiti in `docker-compose.yml`:
-  - `app` — PHP 8.1 + Apache
+  - `app` — PHP 8.3 + Apache
   - `db` — MySQL 8 (dati persistiti nel volume `customerhive-mysql`)
   - `node` — compilazione asset front-end con gulp, facoltativo (vedi sotto)
 
