@@ -132,7 +132,21 @@ class LicenseHelper  {
 
         $connectorService = new ConnectorService($licenseKey->license_key);
 
-        $customData = ['tenants_number' => $tenants + 1, 'license_key' => $licenseKey->license_key];
+        /*
+         * 'domain'/'path' vanno passati esplicitamente, come gia' fa
+         * canLicenseLogin() - senza, ConnectorService::licenseMatchesDomain()
+         * ricade su un confronto con APP_DOMAIN troncato al primo punto
+         * (pensato per un altro caso), che fallisce sempre quando il dominio
+         * salvato in licenza e' un sottodominio per intero (es.
+         * "dev.thecustomerhive.com"): il confronto diventa "dev.thecustomerhive.com"
+         * contro "dev" e non combacia mai, anche con tenants_number capiente.
+         */
+        $customData = [
+            'tenants_number' => $tenants + 1,
+            'license_key' => $licenseKey->license_key,
+            'domain' => env('APP_DOMAIN'),
+            'path' => env('APP_PATH'),
+        ];
 
         return $connectorService->validateLicense($customData);
 
@@ -180,7 +194,15 @@ class LicenseHelper  {
 
         $connectorService = new ConnectorService($licenseKey->license_key);
 
-        $customData = ['clients_number' => $users + 1, 'license_key' => $licenseKey->license_key];
+        // Vedi il commento in canAddTenant(): stesso motivo per passare
+        // esplicitamente 'domain'/'path' invece di lasciarli al fallback
+        // troncato di licenseMatchesDomain().
+        $customData = [
+            'clients_number' => $users + 1,
+            'license_key' => $licenseKey->license_key,
+            'domain' => env('APP_DOMAIN'),
+            'path' => env('APP_PATH'),
+        ];
 
         return $connectorService->validateLicense($customData);
 
