@@ -40,8 +40,22 @@
 </div>
 
 @push('bottom')
+<?php
+// datamodal_where/datamodal_select_to sono opzionali (vedi info.json) -
+// se il campo non li configura, l'accesso diretto a $form[...] va in
+// "Undefined array key". datamodal_columns_alias_name (con "_name": e'
+// la chiave che il popup Options salva davvero, vedi info.json e
+// ModulsController::postStep4() - un semplice array_merge, nessuna
+// rinomina) veniva letta qui senza "_name": anche configurata, non
+// aveva mai effetto; e isset(...) && urlencode(...) e' un AND booleano,
+// non una scelta tra i due valori - stampava sempre "1" o "" invece del
+// valore.
+$datamodal_where = $form['datamodal_where'] ?? '';
+$datamodal_select_to = $form['datamodal_select_to'] ?? '';
+$datamodal_columns_alias = $form['datamodal_columns_alias_name'] ?? '';
+?>
 <script type="text/javascript">
-    var url_{{ $name }} = "{{CRUDBooster::mainpath('modal-data')}}?table={{$form['datamodal_table']}}&columns=id,{{$form['datamodal_columns']}}&name_column={{$name}}&where={{urlencode($form['datamodal_where'])}}&select_to={{ urlencode($form['datamodal_select_to']) }}&columns_name_alias={{ isset($form['datamodal_columns_alias']) && urlencode($form['datamodal_columns_alias']) }}";
+    var url_{{ $name }} = "{{CRUDBooster::mainpath('modal-data')}}?table={{$form['datamodal_table']}}&columns=id,{{$form['datamodal_columns']}}&name_column={{$name}}&where={{urlencode($datamodal_where)}}&select_to={{ urlencode($datamodal_select_to) }}&columns_name_alias={{ urlencode($datamodal_columns_alias) }}";
 
     function showModal{{ $name }}() {
         $('#iframe-modal-{{$name}}').attr('src', url_{{ $name }});
