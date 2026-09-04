@@ -48,15 +48,38 @@ return [
             'root' => storage_path('app/'),
         ],
 
+        /*
+         * 'visibility' + 'permissions' aggiunti qui (non c'erano):
+         * Storage::makeDirectory()/putFileAs() chiamati senza ::disk(...)
+         * in CBController/SettingsController/CRUDBooster.php usano questo
+         * disco di default. Senza 'visibility' esplicita, Flysystem crea
+         * cartelle/file con la visibilita' "private" di default (0700/0600
+         * - solo il proprietario, niente per il gruppo del web server) a
+         * prescindere dai parametri 0777 passati in quelle chiamate: il
+         * metodo reale (FilesystemAdapter::makeDirectory($path), vedi
+         * vendor) accetta un solo argomento, quelli extra sono ignorati da
+         * PHP silenziosamente. Effetto visto in produzione: cartelle upload
+         * mensili (uploads/{id}/{anno-mese}) inaccessibili a chiunque non
+         * sia esattamente l'utente di sistema del web server.
+         */
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
+            'visibility' => 'public',
+            'permissions' => [
+                'file' => ['public' => 0664, 'private' => 0600],
+                'dir' => ['public' => 0775, 'private' => 0700],
+            ],
         ],
 
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
             'visibility' => 'public',
+            'permissions' => [
+                'file' => ['public' => 0664, 'private' => 0600],
+                'dir' => ['public' => 0775, 'private' => 0700],
+            ],
         ],
 
         's3' => [

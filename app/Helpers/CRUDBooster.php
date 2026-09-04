@@ -178,7 +178,9 @@ public static function isProfilePage() {
         @$mime_type = $mime_type[1];
         if ($mime_type) {
             $filePath = 'uploads/' . $userID . '/' . date('Y-m');
-            Storage::makeDirectory($filePath, 0777, true);
+            // Permessi/visibilita' della cartella creata: config/filesystems.php
+            // ('local'), non i parametri qui - makeDirectory() accetta solo $path.
+            Storage::makeDirectory($filePath);
             $filename = md5(str_random(5)) . '.' . $mime_type;
             if (Storage::put($filePath . '/' . $filename, $filedata)) {
                 self::resizeImage($filePath . '/' . $filename);
@@ -210,7 +212,7 @@ public static function isProfilePage() {
             $file_path = '/uploads/' . $userID . '/' . date('Y-m');
 
             //Create Directory Monthly
-            Storage::makeDirectory($file_path, 0777, true);
+            Storage::makeDirectory($file_path);
 
             if ($encrypt == true) {
                 $filename = md5(str_random(5)) . '.' . $ext;
@@ -247,7 +249,7 @@ public static function isProfilePage() {
         $file_path = trim(str_replace($filename, '', $fullFilePath), '/');
 
         $file_path_thumbnail = 'uploads_thumbnail/' . date('Y-m');
-        Storage::makeDirectory($file_path_thumbnail, 0777, true);
+        Storage::makeDirectory($file_path_thumbnail);
 
         if (in_array(strtolower($ext), $images_ext)) {
             $sourcePath = storage_path('app/' . $file_path . '/' . $filename);

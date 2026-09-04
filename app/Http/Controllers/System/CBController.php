@@ -2160,7 +2160,9 @@ class CBController extends Controller
 
             //Create Directory Monthly
             $filePath = 'uploads/' . CB::myId() . '/' . date('Y-m');
-            Storage::makeDirectory($filePath, 0777, true);
+            // Permessi/visibilita' della cartella creata: config/filesystems.php
+            // ('local'), non i parametri qui - makeDirectory() accetta solo $path.
+            Storage::makeDirectory($filePath);
 
             //Move file to storage
             $filename = md5(str_random(5)) . '.' . $ext;
