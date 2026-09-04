@@ -40,18 +40,22 @@
 
                     if (@$col['image']) {
                         if ($value == '') {
-                            $value = "http://placehold.it/50x50&text=NO+IMAGE";
+                            $value = "http://placehold.it/50x50?text=NO+IMAGE";
                         }
                         $pic = (strpos($value, 'http://') !== FALSE) ? $value : asset($value);
                         $pic_small = $pic;
                         if (Request::input('fileformat') == 'pdf') {
                             echo "<td><a data-lightbox='roadtrip' rel='group_{{$table}}' title='$col[label]: $title' href='".$pic."'><img class='rounded-circle' width='40px' height='40px' src='".$pic_small."'/></a></td>";
                         } else {
-                            echo "<td>$pic</td>";
+                            echo "<td>".htmlspecialchars($pic, ENT_QUOTES, 'UTF-8')."</td>";
                         }
                     } elseif (@$col['download']) {
                         $url = (strpos($value, 'http://') !== FALSE) ? $value : asset($value);
-                        echo "<td><a class='btn btn-sm btn-primary' href='$url' target='_blank' title='Download File'>Download</a></td>";
+                        if (Request::input('fileformat') == 'pdf') {
+                            echo "<td><a class='btn btn-sm btn-primary' href='$url' target='_blank' title='Download File'>Download</a></td>";
+                        } else {
+                            echo "<td><a class='btn btn-sm btn-primary' href='".htmlspecialchars($url, ENT_QUOTES, 'UTF-8')."' target='_blank' title='Download File'>Download</a></td>";
+                        }
                     } else {
 
                         //limit character
@@ -77,6 +81,15 @@
                             if (isset($col['callback'])) {
                                 $value = call_user_func($col['callback'], $row);
                             }
+                        } else {
+                            // xls/csv passano da PhpSpreadsheet, che legge
+                            // questo HTML con DOMDocument::loadHTML() - un
+                            // parser rigoroso: un valore con "&", "<" o ">"
+                            // non escapati (es. "Ricerca & Sviluppo") manda
+                            // in errore l'intera esportazione, non solo la
+                            // singola cella. Il PDF (dompdf, sopra) tollera
+                            // HTML malformato e non ne ha bisogno.
+                            $value = htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
                         }
 
                         echo "<td>".$value."</td>";

@@ -156,8 +156,19 @@ foreach($routeCollection as $key => $value) {
         border-left: 1px dashed transparent;
     }
 
+    /*
+     * Spazio tra i widget: qui perche' index.blade.php e' incluso sia
+     * dalla dashboard pubblicata (show.blade.php, tema ch-shell) sia
+     * dal builder drag&drop (builder.blade.php, layout standalone senza
+     * theme.css) - un'unica regola vale per entrambe le pagine invece
+     * di doverla duplicare. Margine su .border-box (il widget vero e
+     * proprio), non su .connectedSortable (l'area/colonna): l'area di
+     * drop resta della dimensione originale, il widget si stacca solo
+     * visivamente da quelli vicini.
+     */
     .border-box {
         position: relative;
+        margin: 0 10px 24px 10px;
     }
 
     .border-box .action {
@@ -237,6 +248,35 @@ foreach($routeCollection as $key => $value) {
         left: 45%;
         top: 30%;
         transform: translate(-50%, -50%);
+    }
+
+    /* Sostituisce lo spinner dentro .area-loading quando la chiamata
+       view-component fallisce (vedi .fail() piu' sotto) - stesso box,
+       cosi' il widget non resta a caricare all'infinito senza che
+       l'utente sappia perche'. */
+    .area-loading:has(.ch-widget-error) {
+        background: #fbeaeb;
+        border-color: #d1373f;
+    }
+
+    .area-loading .ch-widget-error {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        height: 100%;
+        padding: 0 16px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #d1373f;
+        text-align: center;
+    }
+
+    .area-loading .ch-widget-error i {
+        position: static;
+        transform: none;
+        font-size: 18px;
     }
 </style>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -340,6 +380,15 @@ foreach($routeCollection as $key => $value) {
                             $('#area-loading-' + obj.componentID).remove();
                             $('#' + areaname).append(view.layout);
 
+                        }).fail(function (xhr) {
+                            // Prima: uno spinner restava li' per sempre se
+                            // il widget andava in errore lato server (nessun
+                            // .fail(), lo spinner e' l'unico stato mostrato
+                            // finche' l'utente non ricarica la pagina).
+                            $('#area-loading-' + obj.componentID).html(
+                                "<div class='ch-widget-error'><i class='fa fa-exclamation-triangle'></i>" +
+                                "<span>Impossibile caricare questo widget (HTTP " + xhr.status + ").</span></div>"
+                            );
                         })
                     })
                 }

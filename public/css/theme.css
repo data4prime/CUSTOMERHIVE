@@ -46,6 +46,11 @@
   --ch-radius-lg: 14px;
   --ch-radius-md: 10px;
   --ch-shadow-sm: 0 1px 2px rgba(16, 16, 24, 0.04), 0 1px 3px rgba(16, 16, 24, 0.03);
+  /* Mai definito finora nonostante l'uso in piu' punti (popup filtro,
+     licenza, ...): var() con un custom property non definita non fa
+     fallback silenzioso al valore precedente, box-shadow risultava
+     "none" ovunque veniva referenziato. */
+  --ch-shadow-md: 0 4px 12px rgba(16, 16, 24, 0.08), 0 2px 6px rgba(16, 16, 24, 0.06);
 
   /*
    * Larghezza sidebar: AdminLTE.min.css la da' per scontata a 230px in
@@ -155,31 +160,26 @@ body.ch-shell .main-header {
   position: relative;
 }
 
-body.ch-shell .main-header .logo {
-  background: transparent;
-  border: none;
-  display: flex;
-  align-items: center;
-  padding: 0 18px;
-  width: var(--ch-sidebar-width);
-}
-
-body.ch-shell .main-header .logo:hover {
-  background: transparent;
-}
-
-body.ch-shell .main-header .logo-img {
-  max-height: 30px;
-  max-width: 160px;
-  width: auto;
-  display: block;
-}
-
+/*
+ * Il logo (colori fissi, pensato per un fondo neutro) e' stato spostato
+ * in cima alla sidebar (vedi sidebar.blade.php/.sidebar-logo piu' sotto)
+ * proprio perche' l'accento di ruolo di Privileges puo' essere un colore
+ * qualsiasi e non sta bene con tutti i colori del logo - qui l'header
+ * non ospita piu' nulla a sinistra, la navbar parte da margin-left:0.
+ */
 body.ch-shell .main-header .navbar {
   background: transparent;
-  margin-left: var(--ch-sidebar-width);
+  margin-left: 0;
 }
 
+/*
+ * Il burger segue il bordo della sidebar (margin-left = larghezza
+ * sidebar quando aperta, 0 quando chiusa - vedi il reset nel media
+ * query .sidebar-collapse piu' sotto) invece di restare fermo
+ * nell'angolo dell'header. Il margin-left sta sul bottone stesso, non
+ * su .navbar: il resto della barra (notifiche, utente), gia' ancorato
+ * a destra da justify-content-between, non deve muoversi insieme.
+ */
 body.ch-shell .main-header .sidebar-toggle {
   color: rgba(255, 255, 255, 0.85);
   border-radius: var(--ch-radius-md);
@@ -188,7 +188,8 @@ body.ch-shell .main-header .sidebar-toggle {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color .15s ease, color .15s ease;
+  margin-left: var(--ch-sidebar-width);
+  transition: background-color .15s ease, color .15s ease, margin-left .3s ease-in-out;
 }
 
 body.ch-shell .main-header .sidebar-toggle:hover {
@@ -429,6 +430,10 @@ body.ch-shell .main-sidebar {
   body.ch-shell.sidebar-collapse .main-footer {
     margin-left: 0;
   }
+
+  body.ch-shell.sidebar-collapse .main-header .sidebar-toggle {
+    margin-left: 0;
+  }
 }
 
 body.ch-shell .main-sidebar .sidebar {
@@ -447,31 +452,29 @@ body.ch-shell .main-sidebar .main-menu {
 }
 
 /*
- * Pannello utente in cima alla sidebar (spostato dal basso su richiesta
- * dell'utente), trattato come "mini-card" separata dal resto del menu.
- * width:auto esplicito - AdminLTE da' a .user-panel width:100% nel suo
- * CSS base: 100% + margini orizzontali sborda dal contenitore (il 100%
- * si calcola PRIMA di aggiungere i margini) - bug gia' trovato nel giro
- * precedente, stessa causa qui.
+ * Logo in cima alla sidebar, al posto della vecchia card utente (vedi
+ * header.blade.php/main-header piu' sopra: spostato da li' proprio
+ * perche' quello sfondo prende l'accento di ruolo di Privileges, che
+ * puo' essere un colore qualsiasi e non sta bene con tutti i colori
+ * fissi del logo). Qui sta sempre sullo sfondo neutro della sidebar.
  */
-body.ch-shell .main-sidebar .user-panel {
+body.ch-shell .sidebar-logo {
+  display: flex;
+  align-items: center;
+  flex: none;
+  padding: 20px 22px;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell .sidebar-logo:hover {
+  background: transparent;
+}
+
+body.ch-shell .sidebar-logo-img {
+  max-height: 34px;
+  max-width: 100%;
   width: auto;
-  margin: 10px 10px 6px 10px;
-  padding: 10px;
-  background: var(--ch-bg);
-  border: 1px solid var(--ch-border);
-  border-radius: var(--ch-radius-md);
-  box-sizing: border-box;
-}
-
-body.ch-shell .main-sidebar .user-panel .image img {
-  border: 2px solid var(--ch-surface);
-}
-
-body.ch-shell .main-sidebar .user-panel .info,
-body.ch-shell .main-sidebar .user-panel .info p,
-body.ch-shell .main-sidebar .user-panel .info a {
-  color: var(--ch-text);
+  display: block;
 }
 
 /* Sezioni: solo spaziatura ed etichetta muta, niente banda colorata -
@@ -703,12 +706,30 @@ body.ch-shell .main-footer::before {
   opacity: 0.4;
 }
 
+/*
+ * "License" nel footer - stesso trattamento a pillola del link "torna
+ * alla lista" (vedi piu' sotto): niente sottolineato, sfondo tenue
+ * all'hover invece del solo cambio colore. Accento di ruolo
+ * (--ch-role-accent-soft) e non quello generico, per restare coerente
+ * col resto del footer (gradiente in alto, colore del link) che segue
+ * gia' il colore del ruolo dell'utente.
+ */
 body.ch-shell .main-footer a {
   color: var(--ch-role-accent);
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: var(--ch-radius-md);
+  /* Il link non ha un href (apre il popup via data-bs-toggle) - senza
+     href un <a> non riceve cursor:pointer di default dal browser e si
+     comporta visivamente come testo semplice. */
+  cursor: pointer;
+  transition: color .15s ease, background .15s ease;
 }
 
 body.ch-shell .main-footer a:hover {
   color: var(--ch-role-accent-dark);
+  background: var(--ch-role-accent-soft);
+  text-decoration: none;
 }
 
 body.ch-shell .ch-footer-right {
@@ -1379,19 +1400,25 @@ body.ch-shell nav p.text-muted {
    modificato.
    ========================================================================== */
 
-body.ch-shell #advanced_filter_modal .modal-content {
+body.ch-shell #advanced_filter_modal .modal-content,
+body.ch-shell #export-data .modal-content,
+body.ch-shell #mass_editing_modal .modal-content {
   border: 1px solid var(--ch-border);
   border-radius: var(--ch-radius-lg);
   box-shadow: var(--ch-shadow-md);
   overflow: hidden;
 }
 
-body.ch-shell #advanced_filter_modal .modal-header {
+body.ch-shell #advanced_filter_modal .modal-header,
+body.ch-shell #export-data .modal-header,
+body.ch-shell #mass_editing_modal .modal-header {
   padding: 16px 22px;
   border-bottom: 1px solid var(--ch-border);
 }
 
-body.ch-shell #advanced_filter_modal .modal-title {
+body.ch-shell #advanced_filter_modal .modal-title,
+body.ch-shell #export-data .modal-title,
+body.ch-shell #mass_editing_modal .modal-title {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1402,11 +1429,14 @@ body.ch-shell #advanced_filter_modal .modal-title {
 }
 
 /*
- * L'icona fa-filter diventa un badge quadrato tinto, stesso
- * trattamento gia' usato per #title_icon nell'header di pagina -
- * niente wrapper aggiuntivo nel Blade, solo styling diretto sull'<i>.
+ * L'icona (fa-filter per il filtro, fa-download per l'export, fa-pencil
+ * per il mass edit) diventa un badge quadrato tinto, stesso trattamento
+ * gia' usato per #title_icon nell'header di pagina - niente wrapper
+ * aggiuntivo nel Blade, solo styling diretto sull'<i>.
  */
-body.ch-shell #advanced_filter_modal .modal-title .fa-filter {
+body.ch-shell #advanced_filter_modal .modal-title .fa-filter,
+body.ch-shell #export-data .modal-title .fa-download,
+body.ch-shell #mass_editing_modal .modal-title .fa-pencil {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1418,17 +1448,275 @@ body.ch-shell #advanced_filter_modal .modal-title .fa-filter {
   border-radius: var(--ch-radius-md);
 }
 
-body.ch-shell #advanced_filter_modal .modal-subtitle {
+body.ch-shell #advanced_filter_modal .modal-subtitle,
+body.ch-shell #export-data .modal-subtitle,
+body.ch-shell #mass_editing_modal .modal-subtitle {
   font-size: 12px;
   color: var(--ch-text-muted);
   font-weight: 500;
   margin: 2px 0 0 40px;
 }
 
-body.ch-shell #advanced_filter_modal .modal-body {
+body.ch-shell #advanced_filter_modal .modal-body,
+body.ch-shell #export-data .modal-body,
+body.ch-shell #mass_editing_modal .modal-body {
   padding: 6px 22px 10px;
   max-height: 62vh;
   overflow-y: auto;
+}
+
+body.ch-shell #export-data select.form-control,
+body.ch-shell #export-data input.form-control {
+  height: 36px;
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  font-size: 12.5px;
+  color: var(--ch-text);
+  box-shadow: none;
+}
+
+body.ch-shell #export-data label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+  margin-bottom: 6px;
+}
+
+body.ch-shell #export-data .help-block {
+  font-size: 11.5px;
+  color: var(--ch-text-muted);
+  margin-top: 6px;
+}
+
+/* Suffisso "righe" dentro il campo Righe massime. */
+body.ch-shell #export-data .export-input-suffix {
+  position: relative;
+}
+
+body.ch-shell #export-data .export-input-suffix input.form-control {
+  padding-right: 52px;
+}
+
+body.ch-shell #export-data .export-input-suffix span {
+  position: absolute;
+  right: 12px;
+  top: 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ch-text-muted);
+  pointer-events: none;
+}
+
+/*
+ * Controllo segmentato per Formato esportazione/Orientamento pagina:
+ * radio native nascoste visivamente ma presenti nel DOM (name/value
+ * invariati, il backend continua a leggere lo stesso input Request) -
+ * lo stato attivo e' puro CSS via :checked, nessun JS necessario per
+ * il toggle visivo.
+ */
+body.ch-shell #export-data .export-seg {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 3px;
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  padding: 3px;
+}
+
+body.ch-shell #export-data .export-seg-option {
+  position: relative;
+  margin: 0;
+}
+
+body.ch-shell #export-data .export-seg-option input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+body.ch-shell #export-data .export-seg-option span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 34px;
+  border-radius: calc(var(--ch-radius-md) - 3px);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ch-text-2);
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+body.ch-shell #export-data .export-seg-option input:checked + span {
+  background: var(--ch-accent);
+  color: #ffffff;
+}
+
+body.ch-shell #export-data .export-seg-option input:focus-visible + span {
+  outline: 2px solid var(--ch-accent-soft);
+  outline-offset: 1px;
+}
+
+body.ch-shell #export-data .export-seg-sm .export-seg-option span {
+  font-size: 12px;
+}
+
+/*
+ * Sezione "Colonne da esportare" e link "Impostazioni avanzate PDF":
+ * stesso pattern a disclosure (chiusa di default, non allunga il
+ * popup sui moduli con molte colonne - vedi JS: .slideToggle() +
+ * classe "is-open" per ruotare la chevron).
+ */
+body.ch-shell #export-data .export-disclosure {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  overflow: hidden;
+}
+
+body.ch-shell #export-data .export-disclosure-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 13px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+  background: var(--ch-bg);
+  cursor: pointer;
+  user-select: none;
+}
+
+body.ch-shell #export-data p:has(> .toggle_advanced_report) {
+  margin: 0 0 18px 0;
+}
+
+body.ch-shell #export-data .toggle_advanced_report {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 13px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+  background: var(--ch-bg);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+body.ch-shell #export-data .toggle_advanced_report:hover {
+  color: var(--ch-text);
+}
+
+body.ch-shell #export-data .export-count-pill {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--ch-text-2);
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+body.ch-shell #export-data .export-pdf-pill {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ch-accent-dark);
+  background: var(--ch-accent-soft);
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+body.ch-shell #export-data .export-disclosure-spacer {
+  flex: 1;
+}
+
+body.ch-shell #export-data .export-disclosure-chevron {
+  transform: rotate(-90deg);
+  opacity: 0.6;
+  transition: transform .15s ease;
+}
+
+body.ch-shell #export-data .export-disclosure.is-open .export-disclosure-chevron,
+body.ch-shell #export-data .toggle_advanced_report.is-open .export-disclosure-chevron {
+  transform: rotate(0deg);
+}
+
+body.ch-shell #export-data .export-disclosure-body {
+  padding: 14px 13px;
+}
+
+body.ch-shell #export-data .export-columns-toolbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+body.ch-shell #export-data .export-columns-toolbar .help-block {
+  margin: 0;
+}
+
+body.ch-shell #export-data .export-columns-toggle-all {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ch-accent);
+  white-space: nowrap;
+}
+
+body.ch-shell #export-data .export-columns-toggle-all:hover {
+  color: var(--ch-accent-dark);
+}
+
+body.ch-shell #export-data .export-columns-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 14px;
+}
+
+body.ch-shell #export-data .export-columns-grid .checkbox {
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--ch-text-2);
+}
+
+body.ch-shell #export-data .export-columns-grid .checkbox input {
+  accent-color: var(--ch-accent);
+  margin-right: 7px;
+}
+
+body.ch-shell #export-data .export-pdf-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 0 16px;
+}
+
+body.ch-shell #export-data .export-default-paper-check {
+  margin-top: -8px;
+}
+
+body.ch-shell #export-data .export-default-paper-check label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ch-text-2);
+}
+
+body.ch-shell #export-data .export-default-paper-check input {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--ch-accent);
 }
 
 /* Intestazione colonne (Colonna/Condizione/Valore/Ordinamento) */
@@ -1595,6 +1883,211 @@ body.ch-shell .modal-footer .btn-primary:hover {
   border-color: var(--ch-accent-dark);
 }
 
+/*
+ * Stato disabilitato (Mass Edit: "Submit" resta disabilitato finche'
+ * nessun campo e' selezionato per l'aggiornamento - vedi
+ * updateMassEditApplyButton() in table.blade.php) - generico su tutti i
+ * popup, non solo su questo, per coerenza se un altro bottone dovesse
+ * usare [disabled] in futuro.
+ */
+body.ch-shell .modal-footer .btn-primary:disabled,
+body.ch-shell .modal-footer .btn-primary[disabled] {
+  background: var(--ch-border-strong);
+  border-color: var(--ch-border-strong);
+  color: var(--ch-text-muted);
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Popup Licenza (crudbooster/license_modal.blade.php), aperto dal link
+   "License" nel footer - stesso guscio card/modal gia' usato per il
+   popup filtro (#advanced_filter_modal): bordo/radius/ombra sul
+   .modal-content, icona del titolo come badge tinto. La tabella
+   label/valore diventa lo stesso stile di #table-detail (vedi
+   default/form_detail.blade.php) al posto della tabella con bordi di
+   Bootstrap. Il bottone "Close" e' passato a .btn-default nel Blade
+   (stessa classe usata dal Close/Annulla di tutti gli altri popup
+   dell'app) cosi' eredita lo stile gia' definito sopra per
+   .modal-footer .btn-default, senza bisogno di regole dedicate qui.
+   ========================================================================== */
+body.ch-shell #licenseModal .modal-content {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-lg);
+  box-shadow: var(--ch-shadow-md);
+  overflow: hidden;
+}
+
+body.ch-shell #licenseModal .modal-header {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell #licenseModal .modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+  margin: 0;
+}
+
+body.ch-shell #licenseModal .modal-title .fa-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+  border-radius: var(--ch-radius-md);
+}
+
+body.ch-shell #licenseModal .modal-body {
+  padding: 6px 22px 4px;
+}
+
+body.ch-shell #licenseModal table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+body.ch-shell #licenseModal table tr {
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell #licenseModal table tr:last-child {
+  border-bottom: none;
+}
+
+body.ch-shell #licenseModal table th,
+body.ch-shell #licenseModal table td {
+  border: none;
+  padding: 10px 4px;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+body.ch-shell #licenseModal table th {
+  width: 40%;
+  font-weight: 700;
+  color: var(--ch-text-secondary);
+}
+
+body.ch-shell #licenseModal table td {
+  color: var(--ch-text);
+  font-weight: 600;
+}
+
+body.ch-shell #licenseModal table .badge {
+  background: var(--ch-accent-soft) !important;
+  color: var(--ch-accent-dark) !important;
+  font-weight: 600;
+  font-size: 11.5px;
+  padding: 4px 11px;
+}
+
+body.ch-shell #licenseModal .modal-footer {
+  padding: 14px 22px;
+  border-top: 1px solid var(--ch-border);
+}
+
+/* ==========================================================================
+   Toast di notifica (admin_template.blade.php: $alerts + Session::get
+   ('message'), es. "I dati sono stati aggiunti!") - prima un alert
+   Bootstrap piatto in cima al contenuto, da chiudere a mano, col titolo
+   scherzoso "Wow, ottimo lavoro...". Ora una card fluttuante in alto a
+   destra che non sposta il contenuto, si chiude da sola (autohide
+   nativo Bootstrap 5, vedi lo script in admin_template.blade.php) ma
+   resta comunque chiudibile a mano.
+   ========================================================================== */
+body.ch-shell .ch-toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 360px;
+  max-width: calc(100vw - 40px);
+}
+
+body.ch-shell .ch-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-left: 4px solid var(--ch-text-muted);
+  border-radius: var(--ch-radius-md);
+  box-shadow: var(--ch-shadow-md);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ch-text);
+}
+
+body.ch-shell .ch-toast-icon {
+  flex: none;
+  font-size: 16px;
+  margin-top: 1px;
+  color: var(--ch-text-muted);
+}
+
+body.ch-shell .ch-toast-body {
+  flex: 1;
+  min-width: 0;
+}
+
+body.ch-shell .ch-toast-body strong {
+  display: block;
+  margin-bottom: 2px;
+  font-weight: 700;
+  color: var(--ch-text);
+}
+
+body.ch-shell .ch-toast .btn-close {
+  flex: none;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+body.ch-shell .ch-toast-success {
+  border-left-color: var(--ch-success);
+}
+
+body.ch-shell .ch-toast-success .ch-toast-icon {
+  color: var(--ch-success);
+}
+
+body.ch-shell .ch-toast-danger {
+  border-left-color: var(--ch-danger);
+}
+
+body.ch-shell .ch-toast-danger .ch-toast-icon {
+  color: var(--ch-danger);
+}
+
+body.ch-shell .ch-toast-warning {
+  border-left-color: var(--ch-warning);
+}
+
+body.ch-shell .ch-toast-warning .ch-toast-icon {
+  color: var(--ch-warning);
+}
+
+body.ch-shell .ch-toast-info .ch-toast-icon,
+body.ch-shell .ch-toast-primary .ch-toast-icon {
+  color: var(--ch-blue);
+}
+
+body.ch-shell .ch-toast-info,
+body.ch-shell .ch-toast-primary {
+  border-left-color: var(--ch-blue);
+}
+
 /* ==========================================================================
    Vista dettaglio/form (default/form.blade.php, usato da detail/add/edit
    con lo stesso .card.card-default - qui si restilizza solo il guscio
@@ -1615,15 +2108,21 @@ body.ch-shell .content a:has(> i.fa-chevron-circle-right) {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  padding: 5px 12px 5px 10px;
+  border-radius: var(--ch-radius-md);
   font-size: 13px;
   font-weight: 600;
   color: var(--ch-text-secondary);
+  text-decoration: none;
   margin-bottom: 14px;
+  transition: color .15s ease, background .15s ease;
 }
 
 body.ch-shell .content a:has(> i.fa-chevron-circle-left):hover,
 body.ch-shell .content a:has(> i.fa-chevron-circle-right):hover {
   color: var(--ch-accent-dark);
+  background: var(--ch-accent-soft);
+  text-decoration: none;
 }
 
 body.ch-shell .card.card-default {
@@ -1785,4 +2284,843 @@ body.ch-shell #table-detail td:last-child {
 
 .ch-bool-no .ch-bool-dot {
   background: var(--ch-text-muted);
+}
+
+/* ==========================================================================
+   Widget Statistic Builder (Fase 6a — restyle leggero)
+   Scope volutamente ristretto a `.border-box`, il wrapper generato da
+   OGNI components/*.blade.php (smallbox/panelarea/panelcustom/chart*/
+   table/qlikwidget) attorno al singolo widget - non esiste altrove
+   nell'app. La griglia/layout della dashboard stessa
+   (statistic_builder/index.blade.php: `.statistic-row`, `#area1..#area9`,
+   `.connectedSortable`) resta intatta: righe/colonne restano una scelta
+   dell'utente nel builder, non decise da questo restyle.
+   Morris.js + Raphael (grafici) e jQuery UI Sortable (drag&drop) restano
+   la libreria/il comportamento di prima - vedi project-uiux-revamp-plan.
+   ========================================================================== */
+
+/* --- Card comune (Panel Area, Module Panel, Chart Area/Line/Bar, Table) ---
+   .card.card-default e' gia' ristilizzato globalmente per l'intero
+   pannello (Fase 3, vedi sopra in questo file - vista dettaglio/form) -
+   qui solo le rifiniture specifiche del contesto widget: tipografia
+   dell'header (qui testo semplice, senza lo <strong> con icona badge
+   della vista form) e spaziatura del body. */
+.border-box .card.card-default .card-header {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+}
+
+.border-box .card.card-default .card-body {
+  padding: 14px 18px 18px;
+  font-size: 13.5px;
+  color: var(--ch-text-2);
+}
+
+.border-box .card.card-default .card-body > p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+/*
+ * Module Panel (panelcustom.blade.php) incorpora via AJAX l'HTML reale
+ * di un altro modulo (solo `#content_section`, senza il suo `<h1>` di
+ * pagina - vive in `.content-header`, una `<section>` sorella separata
+ * in admin_template.blade.php, quindi non viene mai catturata). Quel
+ * contenuto porta con se' il proprio `.box` gia' ristilizzato (Fase 3) -
+ * senza reset qui si vedrebbe una card dentro la card (doppio bordo/
+ * doppia ombra): l'involucro esterno (il widget) resta l'unica cornice
+ * visibile, quello interno (il modulo) si "smonta" nel body.
+ */
+.border-box .card.card-default .card-body .box {
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.border-box .card.card-default .card-body .box-header {
+  padding: 0 0 12px;
+}
+
+.border-box .card.card-default .card-body .box-body {
+  padding: 0;
+}
+
+/*
+ * Azioni edit/elimina (matita/cestino): visibili solo in modalita'
+ * builder (la vista getBuilder mostra `.action` al passaggio del mouse
+ * via una regola inline in index.blade.php; sulla dashboard finita uno
+ * script nello stesso components/*.blade.php la nasconde comunque via
+ * `.hide()` inline, piu' specifico di qualunque CSS esterno) - qui solo
+ * l'estetica quando E' visibile, non tocchiamo ne' il toggle ne' il suo
+ * posizionamento assoluto (invariati). Da blocco rosso pieno a coppia
+ * di icone ghost coerenti col resto del pannello (stesso trattamento
+ * gia' usato per le azioni riga della vista lista CRUD).
+ */
+.border-box .action {
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  box-shadow: var(--ch-shadow-md);
+  width: auto;
+  padding: 4px;
+  gap: 2px;
+  opacity: 1;
+}
+
+.border-box .action a {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--ch-radius-md);
+  color: var(--ch-text-muted);
+  font-size: 12px;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.border-box .action a:hover {
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+}
+
+/* --- Small Box (numero da SQL + icona Ionicons + colore configurabile) ---
+ * Il colore resta quello scelto dall'utente nel widget (comportamento
+ * invariato - non e' un token del design system, e' un dato per-widget
+ * salvato in DB) applicato all'intero blocco come gia' faceva AdminLTE:
+ * qui solo raggio/ombra coerenti col resto del pannello e tipografia
+ * piu' pulita, non un redesign del modello colore.
+ */
+.border-box .small-box {
+  border-radius: var(--ch-radius-lg);
+  box-shadow: var(--ch-shadow-sm);
+  overflow: hidden;
+}
+
+.border-box .small-box .inner-box {
+  padding: 20px 20px 8px;
+}
+
+.border-box .small-box .small-box-sql-value {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.border-box .small-box .inner-box p {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 4px 0 0;
+}
+
+.border-box .small-box .icon {
+  top: 8px;
+  right: 14px;
+  font-size: 60px;
+  opacity: 0.28;
+  color: #ffffff;
+}
+
+.border-box .small-box .icon ion-icon {
+  color: #ffffff;
+}
+
+.border-box .small-box .small-box-footer {
+  background: rgba(0, 0, 0, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 0;
+}
+
+.border-box .small-box .small-box-footer:hover {
+  background: rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+}
+
+/* --- Table (query SQL sola lettura, DataTables) ---
+ * Stesso principio gia' usato per la toolbar/tabella della vista lista
+ * CRUD (Fase 3): ricerca a pillola, intestazioni maiuscolo/mute,
+ * paginazione a pillole. Selettori delle classi standard di DataTables
+ * (non usate altrove nell'app: la vista lista CRUD ha una tabella/
+ * paginazione proprie, non il plugin DataTables) - scope a `.border-box`
+ * comunque per esplicitare che riguarda solo il widget.
+ */
+.border-box .dataTables_wrapper {
+  padding: 0 18px 16px;
+}
+
+.border-box .dataTables_length label,
+.border-box .dataTables_filter label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ch-text-muted);
+}
+
+.border-box .dataTables_length select {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  height: 32px;
+  font-size: 12.5px;
+  color: var(--ch-text-2);
+  padding: 0 8px;
+}
+
+.border-box .dataTables_filter input {
+  border: 1px solid var(--ch-border);
+  border-radius: 999px;
+  height: 32px;
+  padding: 0 14px;
+  font-size: 12.5px;
+  margin-left: 6px;
+}
+
+.border-box table.dataTable {
+  border-collapse: collapse !important;
+  width: 100% !important;
+}
+
+.border-box table.dataTable thead > tr > th {
+  background: transparent !important;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ch-text-muted);
+  border-bottom: 1px solid var(--ch-border) !important;
+  padding: 10px 12px !important;
+  white-space: nowrap;
+}
+
+.border-box table.dataTable tbody > tr > td {
+  font-size: 13px;
+  color: var(--ch-text);
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+.border-box table.dataTable.table-striped > tbody > tr:nth-of-type(odd) > * {
+  background: transparent;
+  box-shadow: none;
+}
+
+.border-box table.dataTable tbody tr:hover > td {
+  background: var(--ch-bg);
+}
+
+.border-box .dataTables_info {
+  font-size: 12px;
+  color: var(--ch-text-muted);
+  padding-top: 10px;
+}
+
+.border-box .dataTables_paginate .paginate_button {
+  min-width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--ch-radius-md) !important;
+  border: 1px solid var(--ch-border) !important;
+  background: var(--ch-surface) !important;
+  color: var(--ch-text-2) !important;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-left: 4px;
+  padding: 0 8px !important;
+}
+
+.border-box .dataTables_paginate .paginate_button.current {
+  background: var(--ch-accent) !important;
+  border-color: var(--ch-accent) !important;
+  color: #ffffff !important;
+}
+
+.border-box .dataTables_paginate .paginate_button.disabled {
+  color: var(--ch-text-muted) !important;
+}
+
+/* --- Chart Area / Line / Bar (Morris.js + Raphael, libreria invariata) ---
+ * I colori delle serie/griglia sono opzioni JS passate al costruttore
+ * Morris (vedi chartarea/chartline/chartbar.blade.php), non stilizzabili
+ * da CSS perche' Morris disegna con Raphael (attributi SVG inline, non
+ * classi). Qui solo il tooltip (`.morris-hover`, un div che Morris
+ * appende al `<body>`, quindi fuori da `.border-box` - non scopabile a
+ * un widget preciso, ma la classe la usa solo questo componente in
+ * tutta l'app).
+ */
+.morris-hover.morris-default-style {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  box-shadow: var(--ch-shadow-md);
+  padding: 8px 11px;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.morris-hover-row-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ch-text);
+  margin-bottom: 4px;
+}
+
+.morris-hover-point {
+  font-size: 12px;
+  color: var(--ch-text-2);
+}
+
+/* --- Qlik Widget (oggetto Qlik Sense live via iframe/mashup) ---
+ * Solo la cornice: dimensione/sorgente dell'iframe restano quelle
+ * decise dal mashup Qlik (invariate).
+ */
+.border-box iframe {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+}
+
+/* ==========================================================================
+   Pagina "Importa Dati" (resources/views/crudbooster/import.blade.php) -
+   scope su #box_main (id univoco di questa pagina, verificato) e sulle
+   classi ch-* introdotte apposta (nuove, non usate altrove). I 3 passaggi
+   (Carica file / Adatta colonne / Importazione) sono 3 rami @if mutuamente
+   esclusivi dello stesso file - stessa card, stesso stepper, solo lo stato
+   "attivo" cambia lato server in base ai parametri della request.
+   ========================================================================== */
+
+body.ch-shell .ch-import-stepper {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 22px;
+}
+
+body.ch-shell .ch-import-stepper .ch-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+}
+
+body.ch-shell .ch-import-stepper .ch-step-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  border: 2px solid var(--ch-border-strong);
+  color: var(--ch-text-muted);
+  background: var(--ch-surface);
+}
+
+body.ch-shell .ch-import-stepper .ch-step-label {
+  margin-top: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ch-text-muted);
+  text-align: center;
+}
+
+body.ch-shell .ch-import-stepper .ch-step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--ch-border-strong);
+  margin-top: 17px;
+}
+
+body.ch-shell .ch-import-stepper .ch-step.is-done .ch-step-circle {
+  background: var(--ch-accent);
+  border-color: var(--ch-accent);
+  color: #ffffff;
+}
+
+body.ch-shell .ch-import-stepper .ch-step.is-done .ch-step-label {
+  color: var(--ch-text);
+}
+
+body.ch-shell .ch-import-stepper .ch-step-line.is-done {
+  background: var(--ch-accent);
+}
+
+body.ch-shell .ch-import-stepper .ch-step.is-current .ch-step-circle {
+  border-color: var(--ch-accent);
+  color: var(--ch-accent-dark);
+  background: var(--ch-accent-soft);
+}
+
+body.ch-shell .ch-import-stepper .ch-step.is-current .ch-step-label {
+  color: var(--ch-text);
+}
+
+/* --- Card comune ai 3 passaggi --- */
+body.ch-shell #box_main.card {
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-lg);
+  box-shadow: var(--ch-shadow-sm);
+  overflow: hidden;
+}
+
+body.ch-shell #box_main .card-header {
+  background: transparent;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--ch-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+body.ch-shell #box_main .card-header .ch-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+  border-radius: var(--ch-radius-md);
+  flex: none;
+}
+
+body.ch-shell #box_main .card-title {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+}
+
+body.ch-shell #box_main .card-body {
+  padding: 22px;
+}
+
+body.ch-shell #box_main label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+  margin-bottom: 6px;
+}
+
+body.ch-shell #box_main .help-block {
+  font-size: 11.5px;
+  color: var(--ch-text-muted);
+  margin-top: 6px;
+}
+
+body.ch-shell #box_main select.form-control,
+body.ch-shell #box_main input.form-control {
+  height: 36px;
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  font-size: 12.5px;
+  color: var(--ch-text);
+  box-shadow: none;
+}
+
+body.ch-shell #box_main .btn {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: var(--ch-radius-md);
+  font-size: 13.5px;
+  font-weight: 600;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+body.ch-shell #box_main .btn-default {
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  color: var(--ch-text-2);
+}
+
+body.ch-shell #box_main .btn-default:hover {
+  background: var(--ch-bg);
+  color: var(--ch-text);
+}
+
+body.ch-shell #box_main .btn-primary {
+  background: var(--ch-accent);
+  border-color: var(--ch-accent);
+  color: #ffffff;
+}
+
+body.ch-shell #box_main .btn-primary:hover {
+  background: var(--ch-accent-dark);
+  border-color: var(--ch-accent-dark);
+}
+
+body.ch-shell #box_main .btn-success {
+  background: var(--ch-success);
+  border-color: var(--ch-success);
+  color: #ffffff;
+}
+
+body.ch-shell #box_main .btn-success:hover {
+  background: #0b7a45;
+  border-color: #0b7a45;
+}
+
+body.ch-shell #box_main .card-footer {
+  background: transparent;
+  padding: 16px 22px;
+  border-top: 1px solid var(--ch-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* --- Pannello informativo (sostituisce i .callout AdminLTE) --- */
+body.ch-shell #box_main .ch-info-panel {
+  display: flex;
+  gap: 12px;
+  background: var(--ch-accent-soft);
+  border-radius: var(--ch-radius-md);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+
+body.ch-shell #box_main .ch-info-panel > i {
+  flex: none;
+  color: var(--ch-accent-dark);
+  font-size: 15px;
+  margin-top: 2px;
+}
+
+body.ch-shell #box_main .ch-info-panel .ch-info-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ch-accent-dark);
+  margin: 0 0 5px;
+}
+
+body.ch-shell #box_main .ch-info-panel .ch-info-lede {
+  font-size: 12.5px;
+  color: var(--ch-text-2);
+  margin: 0 0 6px;
+}
+
+body.ch-shell #box_main .ch-info-panel ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  color: var(--ch-text-2);
+  line-height: 1.7;
+}
+
+body.ch-shell #box_main .ch-info-panel.is-warning {
+  background: var(--ch-warning-soft);
+}
+
+body.ch-shell #box_main .ch-info-panel.is-warning > i {
+  color: #8a5b0f;
+}
+
+/* --- Step 1: zona di caricamento file (drag&drop) --- */
+body.ch-shell #box_main .ch-dropzone {
+  border: 1.5px dashed var(--ch-border-strong);
+  border-radius: var(--ch-radius-md);
+  padding: 36px 20px;
+  text-align: center;
+  background: var(--ch-bg);
+  transition: border-color .15s ease, background-color .15s ease;
+}
+
+body.ch-shell #box_main .ch-dropzone.is-drag {
+  border-color: var(--ch-accent);
+  background: var(--ch-accent-soft);
+}
+
+body.ch-shell #box_main .ch-dropzone-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin: 0 auto 14px;
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ch-accent);
+  font-size: 17px;
+}
+
+body.ch-shell #box_main .ch-dropzone p {
+  margin: 0 0 12px;
+  font-size: 13.5px;
+  color: var(--ch-text-2);
+}
+
+body.ch-shell #box_main .ch-dropzone-formats {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+body.ch-shell #box_main .ch-format-chip {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ch-text-2);
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+body.ch-shell #box_main .ch-file-picked {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  font-size: 13px;
+}
+
+body.ch-shell #box_main .ch-file-picked i {
+  color: var(--ch-success);
+  flex: none;
+}
+
+body.ch-shell #box_main .ch-file-picked span {
+  color: var(--ch-text-muted);
+  margin-left: auto;
+  font-size: 12px;
+}
+
+/* --- Step 2: tabella di corrispondenza colonne --- */
+body.ch-shell #box_main .ch-map-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+}
+
+body.ch-shell #box_main table.ch-map-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 620px;
+}
+
+body.ch-shell #box_main table.ch-map-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ch-text-muted);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--ch-border);
+  background: var(--ch-bg);
+  white-space: nowrap;
+}
+
+body.ch-shell #box_main table.ch-map-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--ch-border);
+  vertical-align: middle;
+}
+
+body.ch-shell #box_main table.ch-map-table tr:last-child td {
+  border-bottom: none;
+}
+
+body.ch-shell #box_main .ch-src-col {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ch-text);
+}
+
+body.ch-shell #box_main .ch-fk-hint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ch-border);
+  color: var(--ch-text-2);
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: 6px;
+  cursor: help;
+}
+
+body.ch-shell #box_main select.form-control.select_column {
+  height: 34px;
+  min-width: 220px;
+  width: auto;
+}
+
+body.ch-shell #box_main .ch-map-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 12.5px;
+  color: var(--ch-text-2);
+}
+
+body.ch-shell #box_main .ch-map-summary i {
+  color: var(--ch-accent);
+}
+
+/* --- Step 3: barra di avanzamento --- */
+body.ch-shell #box_main .progress {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--ch-bg);
+  border: 1px solid var(--ch-border);
+  overflow: hidden;
+  box-shadow: none;
+  margin: 0;
+}
+
+body.ch-shell #box_main .progress-bar {
+  background-color: var(--ch-accent);
+  background-image: none;
+}
+
+body.ch-shell #box_main #status-import {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+  margin: 0 0 14px;
+}
+
+body.ch-shell #box_main #status-import.text-success {
+  color: var(--ch-success);
+}
+
+/* ==========================================================================
+   Popup "Mass Edit" (#mass_editing_modal in default/table.blade.php,
+   righe campo in mass_edit/form_body.blade.php) - stessa card/testata
+   ristilizzata degli altri popup di questa pagina (vedi sopra in questo
+   stesso file). Ogni riga campo include (via type_components/{type}/
+   component.blade.php) lo stesso componente usato nei form di add/edit
+   reali - MAI modificato qui, e' condiviso con quei form: lo scope resta
+   sempre `#mass_editing_modal ...`, non le classi dei type_components.
+   ========================================================================== */
+
+body.ch-shell #mass_editing_modal .ch-mass-edit-notice {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+  padding: 12px 22px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+body.ch-shell #mass_editing_modal .ch-mass-edit-notice i {
+  margin-top: 1px;
+  flex: none;
+}
+
+/* --- Riga campo (component condiviso + spunta "Aggiorna questo campo") --- */
+body.ch-shell #mass_editing_modal .ch-mass-edit-field {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell #mass_editing_modal .ch-mass-edit-field:last-child {
+  border-bottom: none;
+}
+
+/*
+ * Il componente condiviso (type_components/*/component.blade.php) porta
+ * il proprio `.row.mb-3` con margini negativi Bootstrap - qui non e'
+ * piu' annidato dentro un altro `.row` (il vecchio bug di questo popup:
+ * vedi commit precedente), quindi rende gia' correttamente da solo. Solo
+ * un margine inferiore piu' contenuto per non allontanarlo troppo dalla
+ * spunta subito sotto.
+ */
+body.ch-shell #mass_editing_modal .ch-mass-edit-field > .row.mb-3 {
+  margin-bottom: 8px;
+}
+
+body.ch-shell #mass_editing_modal .ch-mass-edit-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ch-text-2);
+  cursor: pointer;
+  margin: 0;
+}
+
+body.ch-shell #mass_editing_modal .ch-mass-edit-toggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--ch-accent);
+  margin: 0;
+}
+
+/* --- "Informazioni di sistema" (box AdminLTE collassabile, invariato: solo estetica) --- */
+body.ch-shell #mass_editing_modal .box.box-info {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  box-shadow: none;
+  margin-top: 6px;
+}
+
+body.ch-shell #mass_editing_modal .box.box-info .box-header {
+  background: var(--ch-bg);
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--ch-border);
+  display: flex;
+  align-items: center;
+}
+
+body.ch-shell #mass_editing_modal .box.box-info .box-title {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+}
+
+body.ch-shell #mass_editing_modal .box.box-info .box-title i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  font-size: 12px;
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+  border-radius: var(--ch-radius-md);
+}
+
+body.ch-shell #mass_editing_modal .box.box-info .btn-box-tool {
+  color: var(--ch-text-muted);
+}
+
+body.ch-shell #mass_editing_modal .box.box-info .box-body {
+  padding: 4px 14px 6px;
+}
+
+body.ch-shell #mass_editing_modal .box.box-info .ch-mass-edit-field:first-child {
+  padding-top: 10px;
 }

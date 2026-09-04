@@ -31,7 +31,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header" style="justify-content: space-between;">
-        <h5 class="modal-title" id="licenseModalLabel">{{ trans('crudbooster.license') }}</h5>
+        <h5 class="modal-title" id="licenseModalLabel"><i class="fa fa-key"></i> {{ trans('crudbooster.license') }}</h5>
 
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
           
@@ -67,15 +67,10 @@
             <th>Is Trial</th>
             <td>{{ ($license['is_trial'] == 1) ? 'YES' : 'NO' }}</td>
           </tr>
-          <tr></tr>
+          <tr>
             <th>Is Lifetime</th>
             <td>{{ ($license['is_lifetime'] == 1) ? 'YES' : 'NO' }}</td>
           </tr>
-<!--
-          <tr>
-            <th>Is Lifetime</th>
-            <td>{{ $license['is_lifetime'] }}</td>
-          </tr>-->
           <tr>
             <th>Clients Number</th>
             <td>{{ $license['clients_number'] }}</td>
@@ -109,7 +104,7 @@
         
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
      
       </div>
     </div>

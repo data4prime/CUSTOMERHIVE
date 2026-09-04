@@ -156,7 +156,7 @@ $fields_to_eliminate = ['multitext', 'password', 'child'];
                     <div class="box-body no-padding">
     @endif
 
-<div class="row">
+<div class="ch-mass-edit-field">
     @if(file_exists(resource_path('views/crudbooster/default/type_components/'.$type.'/component.blade.php')))
         @include('crudbooster::default.type_components.'.$type.'.component')
     @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/component.blade.php')))
@@ -165,22 +165,15 @@ $fields_to_eliminate = ['multitext', 'password', 'child'];
         <p class='text-danger'>{{ $type }} is not found in type component system</p><br />
     @endif
 
-    @if($type == 'checkbox')
-
-        <div class="col-sm-2">
+    <label class="ch-mass-edit-toggle">
+        @if($type == 'checkbox')
             <input type="checkbox" class="form-check-input" name="mass_edit_{{ $name }}[]">
-        </div>
-    @else
-        <div class="col-sm-2">
+        @else
             <input type="checkbox" class="form-check-input" name="mass_edit_{{ $name }}">
-        </div>
-    @endif
-
-
-
-    
+        @endif
+        <span>Aggiorna questo campo</span>
+    </label>
 </div>
-<hr>
     @if($name == 'group')
                     </div>
                 </div>

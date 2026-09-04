@@ -33,11 +33,6 @@ if ($method != 'content_view') {
 <!-- Main Header -->
 <header class="main-header">
 
-    <!-- Logo -->
-    <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}' class="logo">
-        <img src="{{ CRUDBooster::getSetting('logo') ? asset(CRUDBooster::getSetting('logo')) : asset('/images/customerhive_trasparente.png') }}"
-            alt="{{ CRUDBooster::getSetting('appname') }}" class="logo-img">
-    </a>
 <!--navbar navbar-expand-lg navbar-light justify-content-between-->
     <!-- Header Navbar -->
     <nav style="padding: 0;" class="navbar navbar-expand-sm navbar-light justify-content-between" role="navigation">

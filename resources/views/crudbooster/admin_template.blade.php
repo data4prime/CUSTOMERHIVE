@@ -259,26 +259,48 @@
 
             <!-- Main content -->
             <section id='content_section' class="content">
-                @if(@$alerts)
-                @foreach(@$alerts as $alert)
-                <div style="font-size: 12px;" class='alert alert-{{$alert["type"]}} alert-dismissable'>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true"></button>
-                    {!! $alert['message'] !!}
+
+                @if(@$alerts || Session::get('message') != '')
+                @php
+                /*
+                 * Icona per tipo di toast - stesso set usato altrove nel
+                 * revamp (badge Si/No, popup filtro/licenza). "primary"
+                 * mappato come "info": stesso trattamento testuale che
+                 * avevano gia' in crudbooster.alert_primary/alert_info.
+                 */
+                $ch_toast_icon = [
+                    'success' => 'fa-check-circle',
+                    'danger' => 'fa-times-circle',
+                    'warning' => 'fa-exclamation-triangle',
+                    'info' => 'fa-info-circle',
+                    'primary' => 'fa-info-circle',
+                ];
+                @endphp
+                <div class="ch-toast-container" aria-live="polite" aria-atomic="true">
+                    @if(@$alerts)
+                    @foreach(@$alerts as $alert)
+                    <div class="toast ch-toast ch-toast-{{ $alert['type'] }}" role="alert" aria-live="assertive"
+                        aria-atomic="true" data-bs-delay="6000">
+                        <i class="fa {{ $ch_toast_icon[$alert['type']] ?? 'fa-info-circle' }} ch-toast-icon"></i>
+                        <div class="ch-toast-body">{!! $alert['message'] !!}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    @endforeach
+                    @endif
+
+                    @if (Session::get('message') != '')
+                    <div class="toast ch-toast ch-toast-{{ Session::get('message_type') }}" role="alert"
+                        aria-live="assertive" aria-atomic="true" data-bs-delay="6000">
+                        <i class="fa {{ $ch_toast_icon[Session::get('message_type')] ?? 'fa-info-circle' }} ch-toast-icon"></i>
+                        <div class="ch-toast-body">
+                            <strong>{{ trans('crudbooster.alert_'.Session::get('message_type')) }}</strong>
+                            {!! Session::get('message') !!}
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    @endif
                 </div>
-                @endforeach
                 @endif
-
-
-                @if (Session::get('message')!='')
-                <div class='alert alert-{{ Session::get("message_type") }}'>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true"></button>
-                    <h4><i class="icon fa fa-info"></i> {{ trans("crudbooster.alert_".Session::get("message_type")) }}
-                    </h4>
-                    {!!Session::get('message')!!}
-                </div>
-                @endif
-
-
 
                 <!-- Your Page Content Here -->
                 @yield('content')
@@ -307,6 +329,15 @@
 
 
     <script type="text/javascript">@php echo  $script_js @endphp</script>
+
+    <script type="text/javascript">
+        // Toast di notifica (torna alla lista/salvataggio/errore ecc.) -
+        // autohide nativo di Bootstrap 5, niente da gestire a mano oltre
+        // all'inizializzazione.
+        document.querySelectorAll('.ch-toast').forEach(function (el) {
+            new bootstrap.Toast(el).show();
+        });
+    </script>
 
 
 

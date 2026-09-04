@@ -71,7 +71,13 @@
                 $query = DB::select($sql);
                 foreach ($query as $r) {
                     $datax[] = $r->label;
-                    $datamerger[] = $r->value;
+                    // Indicizzato per label (non per posizione): ogni
+                    // query puo' restituire un numero diverso di righe
+                    // (es. una categoria ha meno mesi con ordini di
+                    // un'altra) - un indice puramente posizionale andava
+                    // fuori dai limiti dell'array piu' corto ("Undefined
+                    // array key") non appena le serie divergevano.
+                    $datamerger[$r->label] = $r->value;
                 }
             } catch (\Exception $e) {
 
@@ -80,7 +86,7 @@
             $dataPoints[$i] = $datamerger;
         }
 
-        $datax = array_unique($datax);
+        $datax = array_values(array_unique($datax));
 
         $area_name = explode(';', $config->area_name);
         $area_name_safe = $area_name;
@@ -94,7 +100,10 @@
             $dr['y'] = $d;
             foreach ($area_name as $e => $name) {
                 $name = str_slug($name, '_');
-                $dr[$name] = $dataPoints[$e][$i];
+                // 0 se questa serie non ha un valore per questa label
+                // (vedi commento sopra), invece di un accesso fuori
+                // dai limiti dell'array.
+                $dr[$name] = $dataPoints[$e][$d] ?? 0;
             }
             $data_result[] = $dr;
         }
@@ -121,7 +130,19 @@
         goals: [{{ $config-> goals}}],
             @endif
     behaveLikeLine: true,
-        hideHover: 'auto'
+        hideHover: 'auto',
+        /*
+         * Colori/griglia allineati ai token di public/css/theme.css
+         * (--ch-accent/--ch-text-muted/--ch-success/--ch-warning e
+         * --ch-border/--ch-text-muted) - Morris.js disegna con Raphael
+         * (SVG via attributi inline), niente CSS var() qui: i valori
+         * vanno ripetuti a mano come esadecimali letterali.
+         */
+        lineColors: ['#4f46e5', '#8b8b96', '#0f9d58', '#b7791f'],
+        gridLineColor: '#e6e6ea',
+        gridTextColor: '#8b8b96',
+        gridTextFamily: "'Plus Jakarta Sans', sans-serif",
+        gridTextSize: 11
                 });
             })
 </script>

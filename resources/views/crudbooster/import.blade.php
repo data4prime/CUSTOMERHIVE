@@ -5,7 +5,7 @@
     @if(isset($button_show_data) || isset($button_reload_data) || isset($button_new_data) || isset($button_delete_data) || isset($index_button) || isset($columns))
         <!--<div id='card-actionmenu' class='box'>
             <div class='card-body'>
-                
+
             </div>
         </div>-->
     @endif
@@ -13,24 +13,28 @@
 
     @if(Request::get('file') && Request::get('import'))
 
-        <ul class='nav nav-tabs'>
-            <li class="nav-item" style="background:#eeeeee">
-                <a class="nav-link" style="color:#111" 
-                    onclick="if(confirm('Are you sure want to leave ?')) location.href='{{ CRUDBooster::mainpath("import-data") }}'"
-                    href='javascript:;'><i class='fa fa-download'></i> {{ trans('crudbooster.upload_a_file') }} &raquo;
-                </a>
-            </li>
-            <li class="nav-item" style="background:#eeeeee">
-                <a class="nav-link" style="color:#111" href='#'><i class='fa fa-cogs'></i> {{ trans('crudbooster.adjustment') }} &raquo;</a>
-            </li>
-            <li class="nav-item" style="background:#ffffff" class='active'>
-                <a class="nav-link" style="color:#111" href='#'><i class='fa fa-cloud-download'></i> {{ trans('crudbooster.importing') }} &raquo;</a>
-            </li>
-        </ul>
+        <div class="ch-import-stepper">
+            <a class="ch-step is-done" href='javascript:;'
+                onclick="if(confirm('Are you sure want to leave ?')) location.href='{{ CRUDBooster::mainpath("import-data") }}'">
+                <span class="ch-step-circle"><i class="fa fa-check"></i></span>
+                <span class="ch-step-label">{{ trans('crudbooster.upload_a_file') }}</span>
+            </a>
+            <span class="ch-step-line is-done"></span>
+            <a class="ch-step is-done" href='#'>
+                <span class="ch-step-circle"><i class="fa fa-check"></i></span>
+                <span class="ch-step-label">{{ trans('crudbooster.adjustment') }}</span>
+            </a>
+            <span class="ch-step-line is-done"></span>
+            <a class="ch-step is-current" href='#'>
+                <span class="ch-step-circle">3</span>
+                <span class="ch-step-label">{{ trans('crudbooster.importing') }}</span>
+            </a>
+        </div>
 
         <!-- Box -->
         <div id='box_main' class="card card-primary">
             <div class="card-header mb-3 with-border">
+                <i class="ch-card-icon fa fa-cloud-download"></i>
                 <h3 class="card-title">{{ trans('crudbooster.importing') }}</h3>
                 <div class="card-tools">
                 </div>
@@ -38,7 +42,7 @@
 
             <div class="card-body">
 
-                <p style='font-weight: bold' id='status-import'><i class='fa fa-spin fa-spinner'></i>{{ trans('crudbooster.please_wait_importing') }}</p>
+                <p id='status-import'><i class='fa fa-spin fa-spinner'></i> {{ trans('crudbooster.please_wait_importing') }}</p>
                 <div class="progress">
                     <div id='progress-import' class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" aria-valuenow="40"
                          aria-valuemin="0" aria-valuemax="100" style="width: 0%">
@@ -97,23 +101,28 @@
 
     @if(Request::get('file') && !Request::get('import'))
 
-        <ul class='nav nav-tabs'>
-            <li  class="nav-item" style="background:#eeeeee">
-                <a class="nav-link" style="color:#111"
-                                              onclick="if(confirm('Are you sure want to leave ?')) location.href='{{ CRUDBooster::mainpath("import-data") }}'"
-                                              href='javascript:;'><i class='fa fa-download'></i> {{ trans('crudbooster.upload_a_file') }} &raquo;</a>
-            </li>
-            <li  class="nav-item" style="background:#ffffff" class='active'>
-                <a class="nav-link" style="color:#111" href='#'><i class='fa fa-cogs'></i> {{ trans('crudbooster.adjustment') }} &raquo;</a>
-            </li>
-            <li  class="nav-item" style="background:#eeeeee">
-                <a  class="nav-link" style="color:#111" href='#'><i class='fa fa-cloud-download'></i> {{ trans('crudbooster.importing') }} &raquo;</a>
-            </li>
-        </ul>
+        <div class="ch-import-stepper">
+            <a class="ch-step is-done" href='javascript:;'
+                onclick="if(confirm('Are you sure want to leave ?')) location.href='{{ CRUDBooster::mainpath("import-data") }}'">
+                <span class="ch-step-circle"><i class="fa fa-check"></i></span>
+                <span class="ch-step-label">{{ trans('crudbooster.upload_a_file') }}</span>
+            </a>
+            <span class="ch-step-line is-done"></span>
+            <a class="ch-step is-current" href='#'>
+                <span class="ch-step-circle">2</span>
+                <span class="ch-step-label">{{ trans('crudbooster.adjustment') }}</span>
+            </a>
+            <span class="ch-step-line"></span>
+            <a class="ch-step" href='#'>
+                <span class="ch-step-circle">3</span>
+                <span class="ch-step-label">{{ trans('crudbooster.importing') }}</span>
+            </a>
+        </div>
 
         <!-- Box -->
         <div id='box_main' class="card card-primary">
             <div class="card-header mb-3 with-border">
+                <i class="ch-card-icon fa fa-sliders"></i>
                 <h3 class="card-title">{{ trans('crudbooster.adjustment') }}</h3>
                 <div class="card-tools">
 
@@ -133,51 +142,56 @@
             <form method='post' id="form" enctype="multipart/form-data" action='{{$action}}'>
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="card-body table-responsive no-padding">
-                    <div class='callout callout-info'>
-                        * {{ trans('crudbooster.just_ignoring_the_column_where_you_are_not_sure_the_data_is_suit_with_the_column_or_not') }}<br/>
-                        * {{ trans('crudbooster.warning_cant_import') }}
+                    <div class="ch-info-panel is-warning">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        <ul>
+                            <li>{{ trans('crudbooster.just_ignoring_the_column_where_you_are_not_sure_the_data_is_suit_with_the_column_or_not') }}</li>
+                            <li>{{ trans('crudbooster.warning_cant_import') }}</li>
+                        </ul>
                     </div>
-                    @push('head')
-                        <style type="text/css">
-                            th, td {
-                                white-space: nowrap;
-                            }
-                        </style>
-                    @endpush
-                    <table class='table table-bordered' style="width:130%">
-                        <thead>
-                        <tr class='success'>
-                            @foreach($table_columns as $k=>$column)
-                                <?php
-                                $help = '';
-                                if ($column == 'id' || $column == 'created_at' || $column == 'updated_at' || $column == 'deleted_at') continue;
-                                if (substr($column, 0, 3) == 'id_') {
-                                    $relational_table = substr($column, 3);
-                                    $help = "<a href='#' title='This is foreign key, so the System will be inserting new data to table `$relational_table` if doesn`t exists'><strong>(?)</strong></a>";
-                                }
-                                ?>
-                                <th data-no-column='{{$k}}'>{{ $column }} {!! $help !!}</th>
-                            @endforeach
-                        </tr>
-                        </thead>
-                        <tbody>
 
-                        <tr>
-                            @foreach($table_columns as $k=>$column)
-                                <?php if ($column == 'id' || $column == 'created_at' || $column == 'updated_at' || $column == 'deleted_at') continue;?>
-                                <td data-no-column='{{$k}}'>
-                                    <select style='width:120px' class='form-control select_column' name='select_column[{{$k}}]'>
-                                        <option value=''>** Set Column for {{$column}}</option>
-                                        @foreach($data_import_column as $k => $import_column)
-                                            <option value='{{$k}}'>{{$import_column}}</option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                            @endforeach
-                        </tr>
-                        </tbody>
-                    </table>
-
+                    <div class="ch-map-table-wrap">
+                        <table class="ch-map-table">
+                            <thead>
+                                <tr>
+                                    <th>Colonna nel file</th>
+                                    <th>Corrispondenza</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($table_columns as $k=>$column)
+                                    @continue($column == 'id' || $column == 'created_at' || $column == 'updated_at' || $column == 'deleted_at')
+                                    <?php
+                                        $help = '';
+                                        if (substr($column, 0, 3) == 'id_') {
+                                            $relational_table = substr($column, 3);
+                                            $help = "This is foreign key, so the System will be inserting new data to table `$relational_table` if doesn`t exists";
+                                        }
+                                    ?>
+                                    <tr>
+                                        <td data-no-column='{{$k}}'>
+                                            <span class="ch-src-col">{{ $column }}</span>
+                                            @if($help)
+                                                <span class="ch-fk-hint" title="{{ $help }}">?</span>
+                                            @endif
+                                        </td>
+                                        <td data-no-column='{{$k}}'>
+                                            <select class='form-control select_column' name='select_column[{{$k}}]'>
+                                                <option value=''>Non importare questa colonna</option>
+                                                @foreach($data_import_column as $dk=>$dcol)
+                                                    <option value='{{$dk}}'>{{$dcol}}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="ch-map-summary">
+                        <i class="fa fa-info-circle"></i>
+                        <span id="ch-map-summary-text"></span>
+                    </div>
 
                 </div><!-- /.card-body -->
 
@@ -192,6 +206,26 @@
                                     if (n) total_selected_column = total_selected_column + 1;
                                 })
                             }, 200);
+
+                            /*
+                             * Contatore visibile "N di M colonne assegnate" nel nuovo
+                             * pannello (vedi ch-map-summary sopra) - indipendente dal
+                             * total_selected_column qui sopra (usato solo dalla
+                             * validazione al submit), aggiornato ad ogni cambio invece
+                             * che a polling.
+                             */
+                            var $mapSelects = $('.select_column');
+                            var mapTotal = $mapSelects.length;
+                            function updateMapSummary() {
+                                var mapped = $mapSelects.filter(function () { return $(this).val(); }).length;
+                                var text = mapped + ' di ' + mapTotal + ' colonne assegnate';
+                                if (mapped < mapTotal) {
+                                    text += ' &middot; ' + (mapTotal - mapped) + ' verranno ignorate';
+                                }
+                                $('#ch-map-summary-text').html(text);
+                            }
+                            $mapSelects.on('change', updateMapSummary);
+                            updateMapSummary();
                         })
 
                         function check_selected_column() {
@@ -224,20 +258,28 @@
     @endif
 
     @if(!Request::get('file'))
-        <ul class='nav nav-tabs'>
-            <li  class="nav-item" style="background:#ffffff" >
-                <a class="nav-link" style="color:#111"
-                                                             onclick="if(confirm('Are you sure want to leave ?')) 
-                                                                location.href='{{ CRUDBooster::mainpath("import-data") }}'"
-                                                             href='javascript:;'><i class='fa fa-download'></i> {{ trans("crudbooster.upload_a_file") }} &raquo;</a>
-            </li>
-            <li class="nav-item" style="background:#eeeeee"><a class="nav-link" style="color:#111" href='#'><i class='fa fa-cogs'></i> {{ trans("crudbooster.adjustment") }} &raquo;</a></li>
-            <li class="nav-item" style="background:#eeeeee"><a class="nav-link" style="color:#111" href='#'><i class='fa fa-cloud-download'></i> {{ trans("crudbooster.importing") }} &raquo;</a></li>
-        </ul>
+        <div class="ch-import-stepper">
+            <a class="ch-step is-current" href='javascript:;'
+                onclick="if(confirm('Are you sure want to leave ?')) location.href='{{ CRUDBooster::mainpath("import-data") }}'">
+                <span class="ch-step-circle">1</span>
+                <span class="ch-step-label">{{ trans("crudbooster.upload_a_file") }}</span>
+            </a>
+            <span class="ch-step-line"></span>
+            <a class="ch-step" href='#'>
+                <span class="ch-step-circle">2</span>
+                <span class="ch-step-label">{{ trans("crudbooster.adjustment") }}</span>
+            </a>
+            <span class="ch-step-line"></span>
+            <a class="ch-step" href='#'>
+                <span class="ch-step-circle">3</span>
+                <span class="ch-step-label">{{ trans("crudbooster.importing") }}</span>
+            </a>
+        </div>
 
         <!-- Box -->
         <div id='box_main' class="card card-primary">
             <div class="card-header mb-3 with-border">
+                <i class="ch-card-icon fa fa-upload"></i>
                 <h3 class="card-title">{{ trans("crudbooster.upload_a_file") }}</h3>
                 <div class="card-tools">
 
@@ -258,21 +300,80 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="card-body">
 
-                    <div class='callout callout-success'>
-                        <h4>{{ trans('crudbooster.welcome_to_data_importer_tool') }}</h4>
-                        {{ trans('crudbooster.before_doing_upload_a_file_its_better_to_read_this_below_instructions') }} : <br/>
-                        * {{ trans('crudbooster.file_format_should_be') }} : xls / xlsx / csv<br/>
-                        * {{ trans('crudbooster.if_you_have_a_big_file_data') }}<br/>
-                        * {{ trans('crudbooster.this_tool_is_generate_data') }}.<br/>
-                        * {{ trans('crudbooster.table_structure') }}
+                    <div class="ch-info-panel">
+                        <i class="fa fa-info-circle"></i>
+                        <div>
+                            <p class="ch-info-title">{{ trans('crudbooster.welcome_to_data_importer_tool') }}</p>
+                            <p class="ch-info-lede">{{ trans('crudbooster.before_doing_upload_a_file_its_better_to_read_this_below_instructions') }}:</p>
+                            <ul>
+                                <li>{{ trans('crudbooster.file_format_should_be') }} : xls / xlsx / csv</li>
+                                <li>{{ trans('crudbooster.if_you_have_a_big_file_data') }}</li>
+                                <li>{{ trans('crudbooster.this_tool_is_generate_data') }}.</li>
+                                <li>{{ trans('crudbooster.table_structure') }}</li>
+                            </ul>
+                        </div>
                     </div>
 
                     <div class='mb-3 row'>
                         <label>File XLS / CSV</label>
-                        <input type='file' name='userfile' class='form-control' required/>
+                        <div class="ch-dropzone" id="ch-import-dropzone">
+                            <div class="ch-dropzone-icon"><i class="fa fa-cloud-upload"></i></div>
+                            <p><strong>Trascina qui il file</strong> oppure</p>
+                            <button type="button" class="btn btn-default" id="ch-choose-file-btn">Scegli file</button>
+                            <input type='file' name='userfile' id="ch-import-file-input" class='form-control' required style="display:none" />
+                            <div class="ch-dropzone-formats">
+                                <span class="ch-format-chip">XLS</span>
+                                <span class="ch-format-chip">XLSX</span>
+                                <span class="ch-format-chip">CSV</span>
+                            </div>
+                        </div>
+                        <div class="ch-file-picked" id="ch-file-picked" style="display:none">
+                            <i class="fa fa-file-text-o"></i>
+                            <b id="ch-file-picked-name"></b>
+                            <span id="ch-file-picked-size"></span>
+                        </div>
                         <div class='help-block'>{{ trans('crudbooster.file_support_only') }} : XLS, XLSX, CSV</div>
                     </div>
                 </div><!-- /.card-body -->
+
+                @push('bottom')
+                    <script type="text/javascript">
+                        (function () {
+                            var dropzone = document.getElementById('ch-import-dropzone');
+                            var input = document.getElementById('ch-import-file-input');
+                            var chooseBtn = document.getElementById('ch-choose-file-btn');
+                            var picked = document.getElementById('ch-file-picked');
+                            var pickedName = document.getElementById('ch-file-picked-name');
+                            var pickedSize = document.getElementById('ch-file-picked-size');
+
+                            function showPicked(file) {
+                                if (!file) return;
+                                pickedName.textContent = file.name;
+                                pickedSize.textContent = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+                                picked.style.display = 'flex';
+                            }
+
+                            chooseBtn.addEventListener('click', function () {
+                                input.click();
+                            });
+                            input.addEventListener('change', function () {
+                                showPicked(input.files[0]);
+                            });
+
+                            ['dragover', 'dragleave', 'drop'].forEach(function (evt) {
+                                dropzone.addEventListener(evt, function (e) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    dropzone.classList.toggle('is-drag', evt === 'dragover');
+                                    if (evt === 'drop' && e.dataTransfer.files.length) {
+                                        input.files = e.dataTransfer.files;
+                                        showPicked(input.files[0]);
+                                    }
+                                });
+                            });
+                        })();
+                    </script>
+                @endpush
 
                 <div class="card-footer">
                     <!--<div class='pull-right'>-->

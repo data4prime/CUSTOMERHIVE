@@ -215,17 +215,19 @@ $total = $result->total();
 
 
 
-        if ($('#export-data select[name="fileformat"]').val() == 'pdf') {
+        if ($('#export-data input[name="fileformat"]:checked').val() == 'pdf') {
             $(".toggle_advanced_report").show();
 
         } else {
             $(".toggle_advanced_report").hide();
         }
 
+        $("#csv-options").toggle($('#export-data input[name="fileformat"]:checked').val() == 'csv');
 
-        //on change of input with name fileformat
+        //on change of input with name fileformat (era una <select>, ora radio a
+        //controllo segmentato - stesso evento "change", cambia solo il selettore)
 
-        $('#export-data select[name="fileformat"]').change(function () {
+        $('#export-data input[name="fileformat"]').change(function () {
             var fileformat = $(this).val();
             //show advanced export if fileformat is pdf (class toggle_advanced_report)
             if (fileformat == 'pdf') {
@@ -234,23 +236,63 @@ $total = $result->total();
             } else {
                 $(".toggle_advanced_report").hide();
                 $("#advanced_export").slideUp();
+                $(".toggle_advanced_report").removeClass('is-open');
             }
-            
+
+            $("#csv-options").toggle(fileformat == 'csv');
         })
 
-        var toggle_advanced_report_boolean = 1;
+        /*
+         * Prima: il click sostituiva l'intero contenuto del link
+         * (icona+testo) via .html(). Il link ora porta anche un badge
+         * "Solo per PDF" e una chevron - sostituendo l'html si perderebbero.
+         * Stesso comportamento (slideDown/slideUp), solo una classe
+         * "is-open" al posto dello scambio di icona/testo (la chevron
+         * ruota via CSS in base a quella classe).
+         */
         $(".toggle_advanced_report").click(function () {
-
-            if (toggle_advanced_report_boolean == 1) {
+            var $this = $(this);
+            if (!$this.hasClass('is-open')) {
                 $("#advanced_export").slideDown();
-                $(this).html("<i class='fa fa-minus-square-o'></i> {{trans('crudbooster.export_dialog_show_advanced')}}");
-                toggle_advanced_report_boolean = 0;
+                $this.addClass('is-open');
             } else {
                 $("#advanced_export").slideUp();
-                $(this).html("<i class='fa fa-plus-square-o'></i> {{trans('crudbooster.export_dialog_show_advanced')}}");
-                toggle_advanced_report_boolean = 1;
+                $this.removeClass('is-open');
             }
+        })
 
+        /* Sezione colonne esportazione: chiudibile, per non allungare
+           subito il popup sui moduli con molte colonne. */
+        $("#export-columns-disclosure .export-disclosure-head").click(function () {
+            $(this).closest('.export-disclosure')
+                .toggleClass('is-open')
+                .find('.export-disclosure-body')
+                .slideToggle(150);
+        })
+
+        function updateExportColumnsCount() {
+            var $checkboxes = $('.export-column-checkbox');
+            var checkedCount = $checkboxes.filter(':checked').length;
+            $('.export-columns-checked-count').text(checkedCount);
+            /*
+             * Testo del link in italiano hardcoded, non via trans(): stesso
+             * principio già seguito per il sottotitolo di #advanced_filter_modal
+             * (vedi "colonna disponibile"/"colonne disponibili" qui sotto) -
+             * testo introdotto dal revamp, non fa parte delle chiavi
+             * crudbooster.* già tradotte in 9 lingue.
+             */
+            $('.export-columns-toggle-all').text(
+                checkedCount === $checkboxes.length ? 'Deseleziona tutto' : 'Seleziona tutto'
+            );
+        }
+
+        $('.export-column-checkbox').change(updateExportColumnsCount);
+
+        $('.export-columns-toggle-all').click(function () {
+            var $checkboxes = $('.export-column-checkbox');
+            var shouldCheck = $checkboxes.filter(':checked').length !== $checkboxes.length;
+            $checkboxes.prop('checked', shouldCheck);
+            updateExportColumnsCount();
         })
 
 
@@ -502,40 +544,28 @@ $total = $result->total();
     </div>
 </div>
 
-
-<script>
-    $(function () {
-        $('.btn-filter-data').click(function () {
-            $('#filter-data').modal('show');
-        })
-
-        $('.btn-export-data').click(function () {
-            $('#export-data').modal('show');
-        })
-
-        var toggle_advanced_report_boolean = 1;
-        $(".toggle_advanced_report").click(function () {
-
-            if (toggle_advanced_report_boolean == 1) {
-                $("#advanced_export").slideDown();
-                $(this).html("<i class='fa fa-minus-square-o'></i> {{trans('crudbooster.export_dialog_show_advanced')}}");
-                toggle_advanced_report_boolean = 0;
-            } else {
-                $("#advanced_export").slideUp();
-                $(this).html("<i class='fa fa-plus-square-o'></i> {{trans('crudbooster.export_dialog_show_advanced')}}");
-                toggle_advanced_report_boolean = 1;
-            }
-
-        })
-    })
-</script>
+<!--
+  Qui nel markup originale c'era un secondo <script> che ri-registrava
+  gli stessi handler già legati sopra (.btn-filter-data/.btn-export-data)
+  più una vecchia versione di .toggle_advanced_report basata su .html()
+  (sostituiva icona+testo del link) - un doppione preesistente, non
+  introdotto da questo intervento. Rimosso: con il nuovo markup del link
+  (badge "Solo per PDF" + chevron) quel .html() avrebbe cancellato il
+  contenuto ad ogni click, e il doppio binding causava comunque un
+  secondo toggle non voluto sullo stesso click.
+-->
 
 <!-- MODAL FOR EXPORT DATA-->
 <div class="modal fade" tabindex="-1" role="dialog" id='export-data'>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" style="justify-content: space-between;">
-                <h4 class="modal-title"><i class='fa fa-download'></i> {{trans("crudbooster.export_dialog_title")}}</h4>
+                <div>
+                    <h4 class="modal-title"><i class='fa fa-download'></i> {{trans("crudbooster.export_dialog_title")}}</h4>
+                    @isset($module_name)
+                    <div class="modal-subtitle">{{ $module_name }} &middot; {{ $total }} {{ $total == 1 ? 'riga corrisponde ai filtri attivi' : 'righe corrispondono ai filtri attivi' }}</div>
+                    @endisset
+                </div>
                 <button class="btn-close" aria-label="Close" type="button" data-bs-dismiss="modal">
                     </button>
             </div>
@@ -547,7 +577,7 @@ $total = $result->total();
                     <div class="mb-3 row">
                         <label>{{trans("crudbooster.export_dialog_filename")}}</label>
                         <input type='text' name='filename' class='form-control' required
-                            value='Report {{ isset($module_name) ? $module_name : '' }} - {{date("d M Y")}}' />
+                            value='{{ CRUDBooster::getCurrentModule()->name }} - {{date("d M Y")}}' />
                         <div class='help-block'>
                             {{trans("crudbooster.export_dialog_help_filename")}}
                         </div>
@@ -555,69 +585,129 @@ $total = $result->total();
 
                     <div class="mb-3 row">
                         <label>{{trans("crudbooster.export_dialog_maxdata")}}</label>
-                        <input type='number' name='limit' class='form-control' required value='100' max="100000"
-                            min="1" />
+                        <div class="export-input-suffix">
+                            <input type='number' name='limit' class='form-control' required value='100' max="100000"
+                                min="1" />
+                            <span>righe</span>
+                        </div>
                         <div class='help-block'>{{trans("crudbooster.export_dialog_help_maxdata")}}</div>
                     </div>
 
                     <div class='mb-3 form-group'>
-                        <label class="mb-3">{{trans("crudbooster.export_dialog_columns")}}</label><br />
-                        @foreach($columns as $col)
-                        <div class='checkbox inline'><label><input type='checkbox' checked name='columns[]'
-                                    value='{{$col["name"]}}'>{{$col["label"]}}</label></div>
-                        @endforeach
+                        <div class="export-disclosure" id="export-columns-disclosure">
+                            <div class="export-disclosure-head">
+                                <i class="fa fa-columns"></i>
+                                {{trans("crudbooster.export_dialog_columns")}}
+                                <span class="export-count-pill"><span class="export-columns-checked-count">{{ count($columns) }}</span> di {{ count($columns) }} selezionate</span>
+                                <span class="export-disclosure-spacer"></span>
+                                <i class="fa fa-chevron-down export-disclosure-chevron"></i>
+                            </div>
+                            <div class="export-disclosure-body" style="display:none">
+                                <div class="export-columns-toolbar">
+                                    <span class="help-block" style="margin:0;">Deseleziona le colonne che non ti servono nel file esportato.</span>
+                                    <a href='javascript:void(0)' class='export-columns-toggle-all'>Deseleziona tutto</a>
+                                </div>
+                                <div class='export-columns-grid'>
+                                    @foreach($columns as $col)
+                                    <div class='checkbox inline'><label><input type='checkbox' checked class='export-column-checkbox' name='columns[]'
+                                                value='{{$col["name"]}}'>{{$col["label"]}}</label></div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mb-3 row">
                         <label>{{trans("crudbooster.export_dialog_format_export")}}</label>
-                        <select name='fileformat' class='form-control'>
-                            <option value='pdf'>PDF</option>
-                            <option value='xls'>Microsoft Excel (xls)</option>
-                            <option value='csv'>CSV</option>
-                        </select>
+                        <div class="export-seg" role="radiogroup">
+                            <label class="export-seg-option">
+                                <input type="radio" name="fileformat" value="pdf" checked>
+                                <span><i class="fa fa-file-pdf-o"></i> PDF</span>
+                            </label>
+                            <label class="export-seg-option">
+                                <input type="radio" name="fileformat" value="xls">
+                                <span><i class="fa fa-file-excel-o"></i> Microsoft Excel (xls)</span>
+                            </label>
+                            <label class="export-seg-option">
+                                <input type="radio" name="fileformat" value="csv">
+                                <span><i class="fa fa-file-text-o"></i> CSV</span>
+                            </label>
+                        </div>
                     </div>
 
-                    <p><a href='javascript:void(0)' class='toggle_advanced_report'><i class='fa fa-plus-square-o'></i>
-                            {{trans("crudbooster.export_dialog_show_advanced")}}</a></p>
+                    <div class="mb-3 row" id="csv-options" style="display:none">
+                        <div class="export-pdf-grid">
+                            <div class="mb-3 row">
+                                <label>Separatore campi</label>
+                                <select class='form-control' name='csv_delimiter'>
+                                    <option value=',' selected>Virgola (,)</option>
+                                    <option value=';'>Punto e virgola (;)</option>
+                                    <option value='tab'>Tabulazione</option>
+                                    <option value='|'>Pipe (|)</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 row">
+                                <label>Delimitatore testo</label>
+                                <select class='form-control' name='csv_enclosure'>
+                                    <option value='&quot;' selected>Doppio apice (")</option>
+                                    <option value="'">Apice singolo (')</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p><a href='javascript:void(0)' class='toggle_advanced_report'><i class='fa fa-sliders'></i>
+                            {{trans("crudbooster.export_dialog_show_advanced")}}
+                            <span class="export-pdf-pill">Solo per PDF</span>
+                            <span class="export-disclosure-spacer"></span>
+                            <i class="fa fa-chevron-down export-disclosure-chevron"></i></a></p>
 
                     <div id='advanced_export' style='display: none'>
 
+                        <div class="export-pdf-grid">
+                            <div class="mb-3 row">
+                                <label>{{trans("crudbooster.export_dialog_page_size")}}</label>
+                                <select class='form-control' name='page_size'>
+                                    <option <?php (isset($setting->default_paper_size) && $setting->default_paper_size ==
+                                        'Letter') ? "selected" : ""?>
+                                        value='Letter'>Letter</option>
+                                    <option <?php (isset($setting->default_paper_size) && $setting->default_paper_size ==
+                                        'Legal') ? "selected" : ""?>
+                                        value='Legal'>Legal</option>
+                                    <option <?php (isset($setting->default_paper_size) && $setting->default_paper_size ==
+                                        'Ledger') ? "selected" : ""?>
+                                        value='Ledger'>Ledger</option>
+                                    <?php for($i = 0;$i <= 8;$i++):
+                                            $select = (isset($setting->default_paper_size) && $setting->default_paper_size == 'A'.$i) ? "selected" : "";
+                                            ?>
+                                    <option <?php $select?> value='A{{$i}}'>A{{$i}}</option>
+                                    <?php endfor;?>
 
-                        <div class="mb-3 row">
-                            <label>{{trans("crudbooster.export_dialog_page_size")}}</label>
-                            <select class='form-control' name='page_size'>
-                                <option <?php (isset($setting->default_paper_size) && $setting->default_paper_size ==
-                                    'Letter') ? "selected" : ""?>
-                                    value='Letter'>Letter</option>
-                                <option <?php (isset($setting->default_paper_size) && $setting->default_paper_size ==
-                                    'Legal') ? "selected" : ""?>
-                                    value='Legal'>Legal</option>
-                                <option <?php (isset($setting->default_paper_size) && $setting->default_paper_size ==
-                                    'Ledger') ? "selected" : ""?>
-                                    value='Ledger'>Ledger</option>
-                                <?php for($i = 0;$i <= 8;$i++):
-                                        $select = (isset($setting->default_paper_size) && $setting->default_paper_size == 'A'.$i) ? "selected" : "";
-                                        ?>
-                                <option <?php $select?> value='A{{$i}}'>A{{$i}}</option>
-                                <?php endfor;?>
+                                    <?php for($i = 0;$i <= 10;$i++):
+                                            $select = (isset($setting->default_paper_size) && $setting->default_paper_size == 'B'.$i) ? "selected" : "";
+                                            ?>
+                                    <option <?php $select?> value='B{{$i}}'>B{{$i}}</option>
+                                    <?php endfor;?>
+                                </select>
+                            </div>
 
-                                <?php for($i = 0;$i <= 10;$i++):
-                                        $select = (isset($setting->default_paper_size) && $setting->default_paper_size == 'B'.$i) ? "selected" : "";
-                                        ?>
-                                <option <?php $select?> value='B{{$i}}'>B{{$i}}</option>
-                                <?php endfor;?>
-                            </select>
-                            <div class='help-block'><input type='checkbox' name='default_paper_size' value='1' />
-                                {{trans("crudbooster.export_dialog_set_default")}}</div>
+                            <div class="mb-3 row">
+                                <label>{{trans("crudbooster.export_dialog_page_orientation")}}</label>
+                                <div class="export-seg export-seg-sm" role="radiogroup">
+                                    <label class="export-seg-option">
+                                        <input type="radio" name="page_orientation" value="potrait" checked>
+                                        <span>Verticale</span>
+                                    </label>
+                                    <label class="export-seg-option">
+                                        <input type="radio" name="page_orientation" value="landscape">
+                                        <span>Orizzontale</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="mb-3 row">
-                            <label>{{trans("crudbooster.export_dialog_page_orientation")}}</label>
-                            <select class='form-control' name='page_orientation'>
-                                <option value='potrait'>Potrait</option>
-                                <option value='landscape'>Landscape</option>
-                            </select>
-                        </div>
+                        <div class='help-block export-default-paper-check'><label><input type='checkbox' name='default_paper_size' value='1' />
+                                {{trans("crudbooster.export_dialog_set_default")}}</label></div>
                     </div>
 
                 </div>
@@ -636,13 +726,19 @@ $total = $result->total();
 <script>
 $('#mass_editing_button').click(function () {
 
-    console.log("CLICKED");
     $('#mass_editing_modal').modal('show');
 
     //get inputs with checkbox name
     var checkboxes = $("input[name='checkbox[]']:checked");
 
-    console.log(checkboxes);
+    /*
+     * Pulisce gli ids[] di un'apertura precedente del popup (senza
+     * ricaricare la pagina) - altrimenti si accumulano ids gia' inseriti
+     * insieme ai nuovi ad ogni riapertura. Bug preesistente (non
+     * introdotto qui), diventato piu' rilevante ora che il conteggio
+     * "N righe selezionate" e' mostrato nel popup.
+     */
+    $('#form-mass-editing input[name="ids[]"]').remove();
 
     //for each checkbox, create an input and insert into the form
     checkboxes.each(function () {
@@ -653,6 +749,11 @@ $('#mass_editing_button').click(function () {
             .val(id);
         $('#form-mass-editing').append($(input));
     });
+
+    var rowsLabel = checkboxes.length + (checkboxes.length == 1 ? ' riga selezionata' : ' righe selezionate');
+    $('#mass-edit-count-label').text(rowsLabel);
+    $('#mass-edit-count-suffix').text('· ' + rowsLabel);
+    updateMassEditApplyButton();
 
 })
 
@@ -667,9 +768,16 @@ $('#mass_editing_button').click(function () {
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form method="post" action="{{ CRUDBooster::mainpath('mass-edit') }}" id="form-mass-editing">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="mass_editing_modalLabel"><i class="fa fa-pencil"></i> Mass Edit</h4>
+                <div class="modal-header" style="justify-content: space-between;">
+                    <div>
+                        <h4 class="modal-title" id="mass_editing_modalLabel"><i class="fa fa-pencil"></i> Mass Edit</h4>
+                        <div class="modal-subtitle">@isset($module_name){{ $module_name }} &middot; @endisset<span id="mass-edit-count-label">0 righe selezionate</span></div>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="ch-mass-edit-notice">
+                    <i class="fa fa-info-circle"></i>
+                    Attiva la spunta solo sui campi che vuoi aggiornare: gli altri resteranno invariati sulle righe selezionate.
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -677,8 +785,8 @@ $('#mass_editing_button').click(function () {
                     @include("crudbooster::mass_edit.form_body")
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ trans("crudbooster.button_close") }}</button>
-                    <button type="submit" class="btn btn-primary btn-submit">{{ trans('crudbooster.button_submit') }}</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">{{ trans("crudbooster.button_close") }}</button>
+                    <button type="submit" class="btn btn-primary btn-submit" id="mass-edit-submit-btn" disabled>{{ trans('crudbooster.button_submit') }} <span id="mass-edit-count-suffix"></span></button>
                 </div>
             </form>
         </div>
@@ -729,7 +837,21 @@ $('#mass_editing_modal input, #mass_editing_modal select').change(function () {
             checkbox.prop('checked', false);
         }
     }
+
+    updateMassEditApplyButton();
 })
+
+/*
+ * Il pulsante "Submit" resta disabilitato finche' nessun campo e'
+ * selezionato per l'aggiornamento (tutti gli input mass_edit_* sono
+ * checkbox, indipendentemente dal tipo del campo reale - vedi
+ * mass_edit/form_body.blade.php) - evita un invio che non cambierebbe
+ * nulla sulle righe selezionate.
+ */
+function updateMassEditApplyButton() {
+    var anyChecked = $('#mass_editing_modal input[name^="mass_edit_"]:checked').length > 0;
+    $('#mass-edit-submit-btn').prop('disabled', !anyChecked);
+}
 
 
 

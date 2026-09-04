@@ -605,9 +605,14 @@ class CBController extends Controller
                 $label = $col['label'];
 
                 if (isset($col['image'])) {
-                    if ($value == '') {
-                        //$value = "<a  data-lightbox='roadtrip' rel='group_{{$table}}' title='$label: $title' href='/storage" . UserHelper::icon(@$row->id) . "'><img width='40px' height='40px' src='/storage" . UserHelper::icon(@$row->id) . "'/></a>";
+                    // Fallback all'avatar utente: ha senso solo per cms_users.photo
+                    // (UserHelper::icon() cerca uno user per id - su un'altra tabella
+                    // mostrerebbe l'avatar di uno user scelto a caso in base all'id,
+                    // vedi lo stesso fix in type_components/upload/component_detail.blade.php).
+                    if ($value == '' && $this->table === 'cms_users' && $col['field'] === 'photo') {
                         $value = "<a  data-lightbox='roadtrip' rel='group_{{$table}}' title='$label: $title' href='" . UserHelper::icon(@$row->id) . "'><img width='40px' height='40px' src='" . UserHelper::icon(@$row->id) . "'/></a>";
+                    } elseif ($value == '') {
+                        $value = '';
                     } else {
                         $pic = (strpos($value, 'http://') !== false) ? $value : asset($value);
                         //$pic = '/storage' . $value;
@@ -756,7 +761,11 @@ class CBController extends Controller
 
                 break;
             case 'csv':
-                return Excel::download(new ExportData($response, $filename, $paperorientation), $filename . '.csv');
+                $csvDelimiter = Request::input('csv_delimiter', ',');
+                $csvDelimiter = $csvDelimiter === 'tab' ? "\t" : $csvDelimiter;
+                $csvEnclosure = Request::input('csv_enclosure', '"');
+
+                return Excel::download(new ExportData($response, $filename, $paperorientation, $csvDelimiter, $csvEnclosure), $filename . '.csv');
 
                 break;
         }

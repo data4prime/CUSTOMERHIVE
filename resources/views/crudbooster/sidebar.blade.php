@@ -4,15 +4,14 @@
   <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
 
-    <!-- Sidebar user card: in cima -->
-    <div class="user-panel">
-      <div class="pull-{{ trans('crudbooster.left') }} image">
-        <img src="{{ CRUDBooster::myPhoto() }}" class="rounded-circle" alt="{{ trans('crudbooster.user_image') }}" />
-      </div>
-      <div class="pull-{{ trans('crudbooster.left') }} info">
-        <p>{{ CRUDBooster::myName() }}</p>
-      </div>
-    </div>
+    <!-- Logo: spostato qui dall'header (vedi header.blade.php) - resta
+         sempre sullo sfondo neutro della sidebar invece che sull'accento
+         di ruolo di Privileges, che puo' essere un colore qualsiasi e non
+         sta bene con tutti i colori fissi del logo. -->
+    <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}' class="sidebar-logo">
+        <img src="{{ CRUDBooster::getSetting('logo') ? asset(CRUDBooster::getSetting('logo')) : asset('/images/customerhive_trasparente.png') }}"
+            alt="{{ CRUDBooster::getSetting('appname') }}" class="sidebar-logo-img">
+    </a>
 
     <div class='main-menu'>
       <!-- Sidebar Menu -->
