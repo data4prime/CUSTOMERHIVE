@@ -3124,3 +3124,155 @@ body.ch-shell #mass_editing_modal .box.box-info .box-body {
 body.ch-shell #mass_editing_modal .box.box-info .ch-mass-edit-field:first-child {
   padding-top: 10px;
 }
+
+/* ==========================================================================
+   Popup "Options" del Module Generator (module_generator/step4.blade.php,
+   #myModal) - i campi mostrati dentro dipendono dal tipo scelto per la
+   riga di form (es. "datamodal": tabella/colonne/dimensione popup) e
+   vengono generati in due punti che devono restare identici: il primo
+   giro lato PHP (riga gia' in tabella) e via JS quando si cambia tipo
+   dalla riga di suggerimento - stesse classi in entrambi.
+   ========================================================================== */
+body.ch-shell #myModal .modal-content {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-lg);
+  box-shadow: var(--ch-shadow-md);
+  overflow: hidden;
+}
+
+body.ch-shell #myModal .modal-header {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell #myModal .modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+  margin: 0;
+}
+
+body.ch-shell #myModal .modal-title .fa-cog {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+  border-radius: var(--ch-radius-md);
+}
+
+body.ch-shell #myModal .modal-body {
+  padding: 18px 22px 6px;
+  max-height: 62vh;
+  overflow-y: auto;
+}
+
+body.ch-shell #myModal .modal-footer {
+  padding: 14px 22px;
+  border-top: 1px solid var(--ch-border);
+}
+
+/*
+ * Nota informativa sul campo (es. "questo tipo va usato solo sul lato
+ * genitore della relazione") - stesso trattamento tenue gia' usato per
+ * i badge/avvisi altrove, non il vecchio .alert-warning pieno di Bootstrap.
+ */
+body.ch-shell #myModal .mg-opt-alert {
+  display: flex;
+  gap: 10px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  background: var(--ch-warning-soft);
+  color: #7a5510;
+  border-radius: var(--ch-radius-md);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+body.ch-shell #myModal .mg-opt-field {
+  margin-bottom: 16px;
+}
+
+body.ch-shell #myModal .mg-opt-field:last-child {
+  margin-bottom: 4px;
+}
+
+body.ch-shell #myModal .mg-opt-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ch-text);
+}
+
+body.ch-shell #myModal .mg-opt-required {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: var(--ch-danger-soft);
+  color: var(--ch-danger);
+}
+
+body.ch-shell #myModal .mg-opt-field .form-control {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  font-size: 13px;
+  color: var(--ch-text);
+  box-shadow: none;
+}
+
+body.ch-shell #myModal .mg-opt-help {
+  margin-top: 5px;
+  font-size: 11.5px;
+  color: var(--ch-text-muted);
+}
+
+/* Controllo segmentato per le opzioni radio (es. datamodal_size:
+   large/small) invece della fila di <input type=radio> con etichette
+   inline - stesso pattern gia' usato nel popup Export Data. */
+body.ch-shell #myModal .mg-opt-seg {
+  display: inline-flex;
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  overflow: hidden;
+}
+
+body.ch-shell #myModal .mg-opt-seg-option {
+  position: relative;
+  margin: 0;
+  padding: 7px 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ch-text-secondary);
+  background: var(--ch-surface);
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+body.ch-shell #myModal .mg-opt-seg-option:not(:last-child) {
+  border-right: 1px solid var(--ch-border);
+}
+
+body.ch-shell #myModal .mg-opt-seg-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+body.ch-shell #myModal .mg-opt-seg-option:has(input:checked) {
+  background: var(--ch-accent);
+  color: #fff;
+}

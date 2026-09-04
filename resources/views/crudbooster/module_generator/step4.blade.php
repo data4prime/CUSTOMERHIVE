@@ -160,34 +160,34 @@ $(function () {
       t.parent('tr').find('.option_area').empty();
       $.getJSON("{{CRUDBooster::mainpath('type-info')}}/" + v, function (data) {
         if (data.alert) {
-          t.parent('tr').find('.option_area').prepend("<div class='alert alert-warning'><strong>IMPORTANT</strong><br/>" + data.alert + "</div>");
+          t.parent('tr').find('.option_area').prepend("<div class='mg-opt-alert'><i class='fa fa-exclamation-triangle'></i><span>" + data.alert + "</span></div>");
         }
         if (data.attribute.required) {
           $.each(data.attribute.required, function (key, val) {
             var form_group_html = '';
+            var required_badge = " <span class='mg-opt-required'>Required</span>";
             if (val instanceof Object) {
-              form_group_html += "<div class='mb-3 row'><label>" + key + "</label>";
-              if (val.type) {
-                if (val.type == 'radio') {
-                  $.each(val.enum, function (i, o) {
-                    form_group_html += "<input type='radio' name='option[" + tr_index + "][" + key + "]' value='" + o + "'/> " + o + " &nbsp;&nbsp;";
-                  })
-                } else {
-                  if (val.type == 'array') {
-                    form_group_html += "<input class='form-control required' name='option[" + tr_index + "][" + key + "]' placeholder='" + val.placeholder + "' type='text'/>";
-                    form_group_html += "<input name='option[" + tr_index + "][" + key + "_type]' value='array' type='hidden'/>";
-                  } else {
-                    form_group_html += "<input class='form-control required' name='option[" + tr_index + "][" + key + "]' placeholder='" + val.placeholder + "' type='text'/>";
-                  }
-                }
+              if (val.type && val.type == 'radio') {
+                form_group_html += "<div class='mg-opt-field'><label class='mg-opt-label'>" + key + required_badge + "</label>";
+                form_group_html += "<div class='mg-opt-seg' role='radiogroup'>";
+                $.each(val.enum, function (i, o) {
+                  form_group_html += "<label class='mg-opt-seg-option'><input type='radio' name='option[" + tr_index + "][" + key + "]' value='" + o + "'/><span>" + o + "</span></label>";
+                })
+                form_group_html += "</div></div>";
               } else {
-                form_group_html += "<input class='form-control required' name='option[" + tr_index + "][" + key + "]' placeholder='" + val + "' type='text'/>";
+                form_group_html += "<div class='mg-opt-field'><label class='mg-opt-label'>" + key + required_badge + "</label>";
+                if (val.type == 'array') {
+                  form_group_html += "<input class='form-control required' name='option[" + tr_index + "][" + key + "]' placeholder='" + val.placeholder + "' type='text'/>";
+                  form_group_html += "<input name='option[" + tr_index + "][" + key + "_type]' value='array' type='hidden'/>";
+                } else {
+                  form_group_html += "<input class='form-control required' name='option[" + tr_index + "][" + key + "]' placeholder='" + val.placeholder + "' type='text'/>";
+                }
+                form_group_html += "</div>";
               }
-              form_group_html += "</div>";
             } else {
               form_group_html +=
-              "<div class='mb-3 row'>" +
-              "<label>" + key + "</label>" +
+              "<div class='mg-opt-field'>" +
+              "<label class='mg-opt-label'>" + key + required_badge + "</label>" +
               "<input class='form-control required' name='option[" + tr_index + "][" + key + "]' placeholder='" + val + "' type='text'/>" +
               "</div>"
               ;
@@ -198,8 +198,8 @@ $(function () {
         if (data.attribute.requiredOne) {
           $.each(data.attribute.requiredOne, function (key, val) {
             t.parent('tr').find('.option_area').append(
-              "<div class='mb-3 row'>" +
-              "<label>" + key + "</label>" +
+              "<div class='mg-opt-field'>" +
+              "<label class='mg-opt-label'>" + key + " <span class='mg-opt-required'>Required</span></label>" +
               "<input class='form-control required-one'  name='option[" + tr_index + "][" + key + "]' placeholder='" + val + "' type='text'/>" +
               "</div>"
             );
@@ -210,16 +210,16 @@ $(function () {
             if (typeof(val) == "object") {
               if (val.type == 'textarea') {
                 t.parent('tr').find('.option_area').append(
-                  "<div class='mb-3 row'>" +
-                  "<label>" + key + "</label>" +
+                  "<div class='mg-opt-field'>" +
+                  "<label class='mg-opt-label'>" + key + "</label>" +
                   "<textarea class='form-control' name='option[" + tr_index + "][" + key + "]' placeholder='" + val.placeholder + "' ></textarea>" +
                   "</div>"
                 );
               }
             } else {
               t.parent('tr').find('.option_area').append(
-                "<div class='mb-3 row'>" +
-                "<label>" + key + "</label>" +
+                "<div class='mg-opt-field'>" +
+                "<label class='mg-opt-label'>" + key + "</label>" +
                 "<input class='form-control' name='option[" + tr_index + "][" + key + "]' placeholder='" + val + "' type='text'/>" +
                 "</div>"
               );
@@ -380,8 +380,9 @@ $(function () {
                   ?>
 
                   @if(isset($types->alert))
-                  <div class="alert alert-warning">
-                    {!! $types->alert !!}
+                  <div class="mg-opt-alert">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <span>{!! $types->alert !!}</span>
                   </div>
                   @endif
 
@@ -392,27 +393,30 @@ $(function () {
                       if(is_object($val)):
                         if($val->type && $val->type == 'radio'):
                           ?>
-                          <div class="mb-3 row">
-                            <label>{{$key}}</label>
-                            @foreach($val->enum as $enum)
-                            <input type="radio" name="option[{{$index}}][{{$key}}]"
-                            {{ ($enum == $value)?"checked":"" }} value="{{$enum}}"> {{$enum}}
-                            @endforeach
-
+                          <div class="mg-opt-field">
+                            <label class="mg-opt-label">{{$key}} <span class="mg-opt-required">Required</span></label>
+                            <div class="mg-opt-seg" role="radiogroup">
+                              @foreach($val->enum as $enum)
+                              <label class="mg-opt-seg-option">
+                                <input type="radio" name="option[{{$index}}][{{$key}}]"
+                                {{ ($enum == $value)?"checked":"" }} value="{{$enum}}"><span>{{$enum}}</span>
+                              </label>
+                              @endforeach
+                            </div>
                           </div>
 
                         <?php else:?>
 
-                          <div class="mb-3 row">
-                            <label>{{$key}}</label>
+                          <div class="mg-opt-field">
+                            <label class="mg-opt-label">{{$key}} <span class="mg-opt-required">Required</span></label>
                             <input type="text" name="option[{{$index}}][{{$key}}]" placeholder="{{$val->placeholder}}" value="{{$value}}"
                             class="form-control">
                           </div>
                         <?php endif;?>
                       <?php else:?>
 
-                        <div class="mb-3 row">
-                          <label>{{$key}}</label>
+                        <div class="mg-opt-field">
+                          <label class="mg-opt-label">{{$key}} <span class="mg-opt-required">Required</span></label>
                           <input type="text" name="option[{{$index}}][{{$key}}]" placeholder="{{$val}}" value="{{$value}}" class="form-control">
                         </div>
 
@@ -426,8 +430,8 @@ $(function () {
                       foreach($types->attribute->requiredOne as $key=>$val):
                         @$value = $form[$key];
                         ?>
-                        <div class="mb-3 row">
-                          <label>{{$key}}</label>
+                        <div class="mg-opt-field">
+                          <label class="mg-opt-label">{{$key}} <span class="mg-opt-required">Required</span></label>
                           <input type="text" name="option[{{$index}}][{{$key}}]" placeholder="{{$val}}" value="{{$value}}" class="form-control">
                         </div>
                       <?php endforeach; endif;?>
@@ -437,8 +441,8 @@ $(function () {
                         foreach($types->attribute->optional as $key=>$val):
                           @$value = $form[$key];
                           ?>
-                          <div class="mb-3 row">
-                            <label>{{$key}}</label>
+                          <div class="mg-opt-field">
+                            <label class="mg-opt-label">{{$key}}</label>
                             @if(is_object($val) && property_exists($val, 'type') && $val->type == 'textarea')
                             <textarea type="text" name="option[{{$index}}][{{$key}}]" placeholder="{{$val->placeholder}}"
                               class="form-control">{{$value}}</textarea>
