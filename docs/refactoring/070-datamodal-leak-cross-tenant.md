@@ -6,6 +6,8 @@
 - **File/aree di codice coinvolte**:
   - `app/Http/Controllers/System/AdminGroupsController.php` (`members()`)
   - `app/Http/Controllers/System/AdminCmsUsersController.php` (`groups()`)
+  - `app/Http/Controllers/System/CBController.php` (`getModalData()`,
+    generalizzazione - vedi "Aggiornamento" in fondo)
 
 ## Contesto
 
@@ -96,6 +98,20 @@ verificare manualmente prima del prossimo giro di test in dev:
   stesso pattern (`getModalData()` non lo fa automaticamente).
 - Nessuna migrazione, nessuna modifica a dati esistenti: solo la query
   del popup di ricerca cambia.
+
+## Aggiornamento: scoping generico esteso ai moduli generati da interfaccia
+
+Risolta anche la lacuna descritta sopra in "Rischi e note"
+("`getModalData()` non applica scoping automatico"): per le tabelle `mg_*`
+generate dal Module Generator, `CBController::getModalData()` ora applica
+uno scoping automatico per tenant/gruppo **una sola volta a livello di
+endpoint generico**, invece di richiedere che ogni form imposti
+`datamodal_where` a mano (rischio di dimenticarsene su un modulo nuovo,
+segnalato sopra). In aggiunta, per gli utenti "basic" (né superadmin né
+tenant admin) esclude anche le righe create da un tenant admin, replicando
+a livello di query la stessa regola già applicata riga per riga da
+`ModuleHelper::can_view()` in altri punti (qui necessaria perché questo
+endpoint non passa da `can_view()`).
 
 ## Rollback
 
