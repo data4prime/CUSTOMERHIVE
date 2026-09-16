@@ -83,6 +83,7 @@ class PrivilegesController extends CBController
             ->orWhere('table_name', 'groups')
             ->orWhere('table_name', 'cms_users')
             ->orWhere('table_name', 'cms_menus')
+            ->orWhere('table_name', 'cms_logs')
             ->whereNull('deleted_at')
             ->select(
                 "cms_moduls.*",
@@ -203,6 +204,7 @@ class PrivilegesController extends CBController
             ->orWhere('table_name', 'groups')
             ->orWhere('table_name', 'cms_users')
             ->orWhere('table_name', 'cms_menus')
+            ->orWhere('table_name', 'cms_logs')
             ->select("cms_moduls.*")
             ->orderby("name", "asc")
             ->get();
