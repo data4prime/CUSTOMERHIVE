@@ -41,6 +41,9 @@ class AdminCmsUsersController extends CBController
 		$this->col[] = array("label" => "Name", "name" => "name");
 		$this->col[] = array("label" => "Email", "name" => "email");
 		$this->col[] = array("label" => "Privilege", "name" => "id_cms_privileges", "join" => "cms_privileges,name");
+		if (CRUDBooster::isSuperadmin()) {
+			$this->col[] = array("label" => "Tenant", "name" => "tenant", "join" => "tenants,name");
+		}
 		/*$this->col[] = array("label" => "User directory", "name" => "user_directory");*/
 
 
@@ -449,7 +452,12 @@ class AdminCmsUsersController extends CBController
 
 		//add group form
 		$data['forms'] = [];
-		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'user_groups_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'groups', 'datamodal_where' => "", 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $user_id, 'required' => true];
+		//il popup di ricerca (getModalData) non applica scoping automatico:
+		//senza questo where un tenant admin vede e puo' selezionare gruppi
+		//di qualsiasi altro tenant (i gruppi non hanno una colonna tenant
+		//diretta, l'appartenenza e' nella tabella pivot group_tenants)
+		$datamodal_where = UserHelper::isTenantAdmin() ? 'id in (select group_id from group_tenants where tenant_id = ' . (int) UserHelper::current_user_tenant() . ')' : "";
+		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'user_groups_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'groups', 'datamodal_where' => $datamodal_where, 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $user_id, 'required' => true];
 		$data['forms'][] = ['label' => 'Description', 'name' => 'description', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-6', 'placeholder' => 'Group description', 'readonly' => true];
 		$data['action'] = CRUDBooster::mainpath($user_id . "/add_group");
 		$data['return_url'] = CRUDBooster::mainpath('groups/' . $user_id);
