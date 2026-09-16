@@ -857,6 +857,24 @@ class CBController extends Controller
             $result->whereNull('deleted_at');
         }
 
+        // Scoping automatico per tenant/gruppo sui popup datamodal di ogni
+        // modulo generato da interfaccia (tabelle mg_*): a differenza della
+        // lista principale del modulo, questo endpoint e' generico e prima
+        // d'ora si affidava solo al 'datamodal_where' impostato a mano nel
+        // singolo campo del form - se lasciato vuoto (caso comune, vedi
+        // docs/refactoring/070-datamodal-leak-cross-tenant.md), un tenant
+        // admin o un utente "basic" vedeva record di qualsiasi altro
+        // tenant/gruppo. Applicato qui una sola volta cosi' copre ogni
+        // modulo, presente e futuro, senza dover intervenire modulo per
+        // modulo in ogni ambiente.
+        if (ModuleHelper::is_manually_generated($table) && !CRUDBooster::isSuperadmin()) {
+            if (Schema::hasColumn($table, 'tenant')) {
+                $result->where($table . '.tenant', UserHelper::current_user_tenant());
+            }
+            if (!UserHelper::isTenantAdmin() && Schema::hasColumn($table, 'group')) {
+                $result->whereIn($table . '.group', UserHelper::current_user_groups());
+            }
+        }
 
         if ($where) {
             $result->whereraw($where);
