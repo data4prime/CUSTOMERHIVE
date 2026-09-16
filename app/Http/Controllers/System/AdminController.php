@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Password;
 use \App\Tenant;
 use \App\Modules;
 use \App\QlikItem;
@@ -457,19 +458,87 @@ $tenant_domain_name = env('APP_DOMAIN');
       return redirect()->back()->with(['message' => implode(', ', $message), 'message_type' => 'danger']);
     }
 
-    $rand_string = str_random(5);
-    $password = \Hash::make($rand_string);
+    $email = Request::input('email');
 
-    DB::table(config('crudbooster.USER_TABLE'))->where('email', Request::input('email'))->update(['password' => $password]);
+    // Non generiamo/mandiamo piu' una password in chiaro via email (era di
+    // soli 5 caratteri e bypassava la policy password del form utenti - vedi
+    // docs/refactoring/072-forgot-password-link-invece-di-password-in-chiaro.md).
+    // Il broker nativo Illuminate\Auth\Passwords (tabella password_resets,
+    // TTL in config/auth.php) genera un token; l'invio vero resta sul
+    // sistema di template email di CrudBooster (cms_email_templates) come
+    // tutte le altre mail dell'app, tramite la callback esplicita cosi' non
+    // scatta anche la notifica Laravel di default.
+    // sendResetLink() ignora silenziosamente le richieste ravvicinate per la
+    // stessa email (RESET_THROTTLED) senza invocare la callback: niente
+    // spam di email a raffica sullo stesso utente.
+    Password::sendResetLink(['email' => $email], function ($user, $token) use ($email) {
+      $data = CRUDBooster::first(config('crudbooster.USER_TABLE'), ['email' => $email]);
+      $data->reset_url = CRUDBooster::adminPath('reset-password/' . $token) . '?email=' . urlencode($email);
 
-    $appname = CRUDBooster::getSetting('appname');
-    $user = CRUDBooster::first(config('crudbooster.USER_TABLE'), ['email' => g('email')]);
-    $user->password = $rand_string;
-    CRUDBooster::sendEmail(['to' => $user->email, 'data' => $user, 'template' => 'forgot_password_backend']);
+      CRUDBooster::sendEmail(['to' => $email, 'data' => $data, 'template' => 'forgot_password_backend']);
+    });
 
-    CRUDBooster::insertLog(trans("crudbooster.log_forgot", ['email' => g('email'), 'ip' => Request::server('REMOTE_ADDR')]));
+    CRUDBooster::insertLog(trans("crudbooster.log_forgot", ['email' => $email, 'ip' => Request::server('REMOTE_ADDR')]));
 
     return redirect()->route('getLogin')->with('message', trans("crudbooster.message_forgot_password"));
+  }
+
+  public function getResetPassword($token)
+  {
+    if (CRUDBooster::myId()) {
+      return redirect(CRUDBooster::adminPath());
+    }
+
+    $array = isset($_SERVER) && isset($_SERVER['HTTP_HOST']) ? explode('.', $_SERVER['HTTP_HOST']) : [];
+
+    //tenant specific login page
+    $tenant_domain_name = isset($array[0]) ? $array[0] : '';
+    $tenant = Tenant::where('domain_name', $tenant_domain_name)->first();
+    $favicon = CRUDBooster::getFavicon($tenant);
+
+    $logo = CRUDBooster::getLogo($tenant);
+
+    $background_color = CRUDBooster::getBackgroundColor($tenant);
+
+    $background_image_src = CRUDBooster::getBackgroundImage($tenant);
+    $background = $background_color . " url(" . $background_image_src . ")";
+
+    $email = Request::input('email');
+
+    return view('crudbooster::reset_password', compact('tenant', 'favicon', 'logo', 'background', 'token', 'email'));
+  }
+
+  public function postResetPassword()
+  {
+    // Stessa policy password del form utenti (AdminCmsUsersController) -
+    // regola 'not_common_password' registrata in AppServiceProvider::boot().
+    $validator = Validator::make(Request::all(), [
+      'token' => 'required',
+      'email' => 'required|email',
+      'password' => 'required|min:12|max:72|confirmed|not_common_password',
+    ]);
+
+    if ($validator->fails()) {
+      $message = $validator->errors()->all();
+
+      return redirect()->back()->withInput(Request::only('email', 'token'))->with(['message' => implode(', ', $message), 'message_type' => 'danger']);
+    }
+
+    $status = Password::reset(
+      Request::only('email', 'password', 'password_confirmation', 'token'),
+      function ($user, $password) {
+        $user->password = \Hash::make($password);
+        $user->save();
+      }
+    );
+
+    if ($status !== Password::PASSWORD_RESET) {
+      return redirect()->back()->withInput(Request::only('email', 'token'))->with(['message' => trans('crudbooster.message_reset_password_failed'), 'message_type' => 'danger']);
+    }
+
+    CRUDBooster::insertLog(trans("crudbooster.log_reset_password", ['email' => Request::input('email'), 'ip' => Request::server('REMOTE_ADDR')]));
+
+    return redirect()->route('getLogin')->with('message', trans('crudbooster.message_reset_password_success'));
   }
 
   public function getLogout()

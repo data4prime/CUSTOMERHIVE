@@ -7,6 +7,11 @@ return [
     'page_title_forgot' => 'Password Dimenticata',
     'forgot_message' => 'Inserisci il tuo indirizzo email per richiedere la password',
     "forgot_text_try_again" => "Vuoi provare ad accedere di nuovo?",
+    'page_title_reset_password' => 'Reimposta Password',
+    'reset_password_message' => 'Scegli una nuova password per il tuo account.',
+    'reset_password_policy_hint' => 'Minimo 12 caratteri. Evita password comuni o facilmente prevedibili.',
+    'label_new_password' => 'Nuova password',
+    'label_new_password_confirmation' => 'Conferma nuova password',
     'text_no_notification' => "Hai 0 notifiche",
     'text_view_all_notification' => 'Visualizza Tutto',
     'label_button_profile' => "Profilo",
@@ -33,7 +38,9 @@ return [
 
 
     'message_after_logout' => 'Grazie, a presto!',
-    'message_forgot_password' => 'Abbiamo inviato una nuova password al tuo email, controlla la posta in arrivo o la cartella spam!',
+    'message_forgot_password' => 'Se l\'indirizzo email esiste nel nostro sistema, ti abbiamo inviato un link per reimpostare la password - controlla la posta in arrivo o la cartella spam!',
+    'message_reset_password_success' => 'La tua password è stata cambiata, ora puoi accedere con quella nuova.',
+    'message_reset_password_failed' => 'Questo link per reimpostare la password non è valido o è scaduto, richiedine uno nuovo.',
 
     'page_not_found' => 'Oops! Pagina Non Trovata',
     'page_not_found_text' => 'Non riusciamo a trovare la pagina che stai cercando.',
@@ -56,6 +63,7 @@ return [
     'log_delete_image' => 'Elimina l\'immagine di :name nel :module',
     'log_login' => ':email ha effettuato il login con l\'IP :ip',
     'log_forgot' => 'Qualcuno con l\'IP :ip ha richiesto una password per :email',
+    'log_reset_password' => ':email ha reimpostato la password con l\'IP :ip',
     'log_logout' => ':email ha effettuato il logout',
 
 

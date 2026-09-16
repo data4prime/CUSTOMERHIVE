@@ -7,6 +7,11 @@ return [
     'page_title_forgot' => 'Forgot Password',
     'forgot_message' => 'Enter your email address, to request password',
     "forgot_text_try_again" => "Try login again ?",
+    'page_title_reset_password' => 'Reset Password',
+    'reset_password_message' => 'Choose a new password for your account.',
+    'reset_password_policy_hint' => 'Minimum 12 characters. Avoid common or predictable passwords.',
+    'label_new_password' => 'New password',
+    'label_new_password_confirmation' => 'Confirm new password',
     'text_no_notification' => "You have 0 notifications",
     'text_view_all_notification' => 'View All',
     'label_button_profile' => "Profile",
@@ -33,7 +38,9 @@ return [
     'text_loading' => 'Please wait loading...',
 
     'message_after_logout' => 'Thank You, See You Later !',
-    'message_forgot_password' => 'We have sent new password to your email, check inbox or spambox !',
+    'message_forgot_password' => 'If that email address exists in our system, we have sent a password reset link to it - check inbox or spambox !',
+    'message_reset_password_success' => 'Your password has been changed, you can now login with the new one.',
+    'message_reset_password_failed' => 'This password reset link is invalid or has expired, please request a new one.',
 
     'page_not_found' => 'Oops! Page Not Found',
     'page_not_found_text' => 'We are unable search the page that you are looking for.',
@@ -56,6 +63,7 @@ return [
     'log_delete_image' => 'Delete the image of :name at :module',
     'log_login' => ':email login with IP Address :ip',
     'log_forgot' => 'Someone with IP :ip request a password for :email',
+    'log_reset_password' => ':email reset their password with IP :ip',
     'log_logout' => ':email logout',
 
     'alert_delete_selected' => 'Are you sure want to delete all selected data ?',

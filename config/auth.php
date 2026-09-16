@@ -96,6 +96,12 @@ return [
             'provider' => 'users',
             'table' => 'password_resets',
             'expire' => 60,
+            // Senza 'throttle', il default e' 0 (nessun limite): chi
+            // richiede il reset piu' volte di seguito invaliderebbe il link
+            // precedente ad ogni richiesta (DatabaseTokenRepository::create()
+            // cancella sempre il token precedente prima di crearne uno
+            // nuovo) senza nessun freno sulla frequenza delle richieste.
+            'throttle' => 60,
         ],
     ],
 

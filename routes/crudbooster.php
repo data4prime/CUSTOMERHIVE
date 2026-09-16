@@ -90,6 +90,8 @@ Route::group(['middleware' => ['web'], 'prefix' => config('crudbooster.ADMIN_PAT
     Route::get('register-license', ['uses' => 'AdminController@getLicensescreen', 'as' => 'getLicenseScreen']);
     Route::post('forgot', ['uses' => 'AdminController@postForgot', 'as' => 'postForgot']);
     Route::get('forgot', ['uses' => 'AdminController@getForgot', 'as' => 'getForgot']);
+    Route::post('reset-password', ['uses' => 'AdminController@postResetPassword', 'as' => 'postResetPassword']);
+    Route::get('reset-password/{token}', ['uses' => 'AdminController@getResetPassword', 'as' => 'getResetPassword']);
     Route::post('register', ['uses' => 'AdminController@postRegister', 'as' => 'postRegister']);
     Route::get('register', ['uses' => 'AdminController@getRegister', 'as' => 'getRegister']);
     Route::get('logout', ['uses' => 'AdminController@getLogout', 'as' => 'getLogout']);
