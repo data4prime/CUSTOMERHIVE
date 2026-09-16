@@ -189,13 +189,13 @@ compila il modulo, il generator non lo valida.
 **Fatture** (collegata a Contratti via relazione `datamodal`/child, per
 testare il master-detail generato, non solo CRUD piatto):
 
-| Campo | Tipo colonna | Widget form | Note |
-| --- | --- | --- | --- |
-| Numero Fattura | Testo | Testo | es. `FT-2026-0001` |
-| Contratto | Numero (id) | datamodal/child → Contratti | relazione master-detail |
-| Importo | Numero | Numero | es. `12500` |
-| Data Fattura | **Testo** (non Numero) | Data | es. `2026-03-10` |
-| Pagata | Booleano | Checkbox | |
+| Campo          | Tipo colonna           | Widget form                 | Note                    |
+| -------------- | ---------------------- | --------------------------- | ----------------------- |
+| Numero Fattura | Testo                  | Testo                       | es. `FT-2026-0001`      |
+| Contratto      | Numero (id)            | datamodal/child → Contratti | relazione master-detail |
+| Importo        | Numero                 | Numero                      | es. `12500`             |
+| Data Fattura   | **Testo** (non Numero) | Data                        | es. `2026-03-10`        |
+| Pagata         | Booleano               | Checkbox                    |                         |
 
 ## Statistic Builder — dashboard differenziate per gruppo
 
