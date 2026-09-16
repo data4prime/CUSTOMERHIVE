@@ -64,6 +64,13 @@
               </a>
               @endif
               @endif
+              @if(isset($command) && $command == 'detail' && CRUDBooster::isUpdate() && $button_edit && @$row)
+              <a href='{{ CRUDBooster::mainpath("edit/".$row->id)."?return_url=".urlencode(Request::fullUrl())."&parent_id=".g("parent_id")."&parent_field=".$parent_field }}'
+                class='btn btn-success'>
+                <i class='fa fa-pencil'></i> {{trans("crudbooster.action_edit_data")}}
+              </a>
+              @endif
+
               @if(CRUDBooster::isCreate() || CRUDBooster::isUpdate())
 
               @if(CRUDBooster::isCreate() && $button_addmore==TRUE && isset($command) && $command == 'add')

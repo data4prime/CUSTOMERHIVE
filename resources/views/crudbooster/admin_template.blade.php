@@ -185,14 +185,14 @@
 
                     @if($button_export && CRUDBooster::getCurrentMethod() == 'getIndex')
                     <a href="javascript:void(0)" id='btn_export_data' data-url-parameter='{{$build_query}}'
-                        title='Export Data' class="btn btn-sm btn-primary btn-export-data">
+                        title="{{trans('crudbooster.button_export')}}" class="btn btn-sm btn-primary btn-export-data">
                         <i class="fa fa-upload"></i> {{trans("crudbooster.button_export")}}
                     </a>
                     @endif
 
                     @if($button_import && CRUDBooster::getCurrentMethod() == 'getIndex')
                     <a href="{{ CRUDBooster::mainpath('import-data') }}" id='btn_import_data'
-                        data-url-parameter='{{$build_query}}' title='Import Data'
+                        data-url-parameter='{{$build_query}}' title="{{trans('crudbooster.button_import')}}"
                         class="btn btn-sm btn-primary btn-import-data">
                         <i class="fa fa-download"></i> {{trans("crudbooster.button_import")}}
                     </a>

@@ -1226,6 +1226,23 @@ body.ch-shell #table_dashboard > tbody > tr > td {
   border-bottom: 1px solid var(--ch-border);
 }
 
+/*
+ * .table-bordered di Bootstrap 5 mette un bordo sulla RIGA <tr> stessa
+ * (".table-bordered > :not(caption) > *" imposta solo border-width, non
+ * border-color - il colore resta al valore iniziale CSS, currentColor,
+ * cioe' il colore del testo quasi nero) - non sulle celle, che gestiamo
+ * gia' noi con un bordo chiaro dedicato. Nel rendering a bordi separati
+ * di questa tabella il bordo chiaro delle celle non lo maschera del
+ * tutto: sopra il primo dato dopo l'intestazione e soprattutto sotto
+ * l'ultima riga (nessuna cella successiva con cui "competere") resta
+ * visibile come riga scura piena. Annullato qui, i bordi restano quelli
+ * disegnati sulle celle (th/td) piu' sotto in questo file.
+ */
+body.ch-shell #table_dashboard > thead > tr,
+body.ch-shell #table_dashboard > tbody > tr {
+  border: none;
+}
+
 body.ch-shell #table_dashboard > thead > tr {
   background: transparent;
 }
@@ -1250,11 +1267,21 @@ body.ch-shell #table_dashboard > thead > tr > th .fa-sort-desc {
   opacity: 0.5;
 }
 
+/*
+ * box-shadow:none in aggiunta a background:transparent - Bootstrap 5.3
+ * disegna la zebratura di .table-striped con un box-shadow inset
+ * (rgba(0,0,0,.05) su spread 9999px), non con background-color: senza
+ * annullare anche quello, all'incontro tra due cornici (fine header/
+ * inizio corpo tabella, o tra righe con parita' diversa) l'ombra
+ * semitrasparente si accumula e sembra una riga nera piena (stesso
+ * fix gia' fatto per #table-detail in form_detail.blade.php).
+ */
 body.ch-shell #table_dashboard > tbody > tr > td {
   padding: 10px 14px;
   font-size: 13.5px;
   color: var(--ch-text);
   background: transparent !important;
+  box-shadow: none !important;
 }
 
 body.ch-shell #table_dashboard > tbody > tr:hover > td {
@@ -2103,8 +2130,17 @@ body.ch-shell .ch-toast-primary {
  * testo</a>, senza una classe dedicata) - :has() evita di dover toccare
  * il Blade per aggiungere una classe.
  */
-body.ch-shell .content a:has(> i.fa-chevron-circle-left),
-body.ch-shell .content a:has(> i.fa-chevron-circle-right) {
+/*
+ * :not(.btn) esclude i bottoni "Back" del footer form (default/form.blade.php,
+ * tenants/group.blade.php - <a class='btn btn-default'> con la stessa
+ * icona fa-chevron-circle-left): senza, questa regola (pensata solo per
+ * il link "torna alla lista" sopra la card) ci aggiungeva anche
+ * padding/margin-bottom propri, in conflitto con lo stile gia' dato a
+ * quei bottoni da ".box-footer .btn" piu' sotto - il sintomo era un
+ * bottone "Back" spostato di qualche pixel rispetto a "Save" accanto.
+ */
+body.ch-shell .content a:has(> i.fa-chevron-circle-left):not(.btn),
+body.ch-shell .content a:has(> i.fa-chevron-circle-right):not(.btn) {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -2118,8 +2154,8 @@ body.ch-shell .content a:has(> i.fa-chevron-circle-right) {
   transition: color .15s ease, background .15s ease;
 }
 
-body.ch-shell .content a:has(> i.fa-chevron-circle-left):hover,
-body.ch-shell .content a:has(> i.fa-chevron-circle-right):hover {
+body.ch-shell .content a:has(> i.fa-chevron-circle-left):not(.btn):hover,
+body.ch-shell .content a:has(> i.fa-chevron-circle-right):not(.btn):hover {
   color: var(--ch-accent-dark);
   background: var(--ch-accent-soft);
   text-decoration: none;
@@ -2131,6 +2167,14 @@ body.ch-shell .card.card-default {
   border-radius: var(--ch-radius-lg);
   box-shadow: var(--ch-shadow-sm);
   overflow: hidden;
+  /*
+   * Alcune viste (es. tenants/group.blade.php) mettono subito dopo
+   * questa card un secondo box (es. l'elenco dei gruppi gia' assegnati)
+   * senza alcun margine tra i due - qui appiccicati uno all'altro senza
+   * respiro. Un margine inferiore qui e' innocuo ovunque altro sia
+   * l'ultimo elemento della pagina.
+   */
+  margin-bottom: 24px;
 }
 
 body.ch-shell .card.card-default .card-header {
@@ -2166,10 +2210,103 @@ body.ch-shell .card.card-default .card-header strong > i {
   border-radius: var(--ch-radius-md);
 }
 
+/*
+ * Pattern Bootstrap 3 (.input-group-btn come <span> avvolgente attorno
+ * a uno o piu' bottoni dentro un .input-group) rimasto in molti
+ * type_components dei form (datamodal, filemanager, googlemaps, le
+ * varianti *_datamodal per le relazioni many-to-many, ecc. - "Sfoglia
+ * Dati" e simili): Bootstrap 5 gestisce da solo altezza e angoli
+ * arrotondati per i figli DIRETTI di .input-group, ma quello <span> di
+ * troppo li esclude da quel meccanismo (il bottone torna alle misure
+ * di default del browser, piu' alto e con angoli non arrotondati
+ * rispetto al campo affiancato). display:contents rende lo <span>
+ * invisibile al layout (resta nel DOM, nessun file Blade toccato): i
+ * bottoni al suo interno diventano figli diretti flex di .input-group
+ * e Bootstrap 5 li tratta correttamente da solo, senza altro CSS
+ * nostro da scrivere.
+ */
+body.ch-shell .input-group-btn {
+  display: contents;
+}
+
+/*
+ * display:contents fa partecipare i bottoni al layout flex di
+ * .input-group, ma i selettori nativi di Bootstrap 5 per arrotondare/
+ * allineare i bordi (es. ".input-group > .btn") non scattano comunque:
+ * quei selettori guardano la struttura del DOM (bottone dentro lo
+ * <span>, non figlio diretto), non il rendering. Altezza/bordi/angoli
+ * vanno quindi ridichiarati qui a mano.
+ */
+body.ch-shell .input-group .form-control {
+  height: 36px;
+  border: 1px solid var(--ch-border);
+  border-right: none;
+  border-radius: var(--ch-radius-md) 0 0 var(--ch-radius-md);
+  font-size: 12.5px;
+  color: var(--ch-text);
+  box-shadow: none;
+}
+
+body.ch-shell .input-group-btn .btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+body.ch-shell .input-group-btn .btn:last-child {
+  border-top-right-radius: var(--ch-radius-md);
+  border-bottom-right-radius: var(--ch-radius-md);
+}
+
+body.ch-shell .input-group-btn .btn.btn-primary {
+  background: var(--ch-accent);
+  border-color: var(--ch-accent);
+  color: #ffffff;
+}
+
+body.ch-shell .input-group-btn .btn.btn-primary:hover {
+  background: var(--ch-accent-dark);
+  border-color: var(--ch-accent-dark);
+}
+
+body.ch-shell .input-group-btn .btn.btn-info {
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-left: none;
+  color: var(--ch-text-2);
+}
+
+body.ch-shell .input-group-btn .btn.btn-info:hover {
+  background: var(--ch-bg);
+  color: var(--ch-text);
+}
+
 body.ch-shell .box-footer {
   background: transparent !important;
   padding: 14px 22px;
   border-top: 1px solid var(--ch-border);
+}
+
+/*
+ * Riga dei bottoni del footer come flex container: allineamento
+ * verticale robusto indipendentemente dal tipo di elemento (<a>/<input
+ * type="submit">) usato per ciascun bottone. Scope a .col-sm-10 SOLO
+ * dentro .box-footer: nelle righe di campo normali (dentro .box-body/
+ * .card-body) .col-sm-10 resta intoccato, qui e' sempre e solo la riga
+ * dei bottoni.
+ */
+body.ch-shell .box-footer .col-sm-10 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 body.ch-shell .box-footer .btn {
@@ -3077,15 +3214,22 @@ body.ch-shell #mass_editing_modal .ch-mass-edit-toggle input {
   margin: 0;
 }
 
-/* --- "Informazioni di sistema" (box AdminLTE collassabile, invariato: solo estetica) --- */
-body.ch-shell #mass_editing_modal .box.box-info {
+/*
+ * "Informazioni di sistema" (box AdminLTE collassabile con
+ * data-widget="collapse" - il toggle è quello nativo di AdminLTE, non
+ * tocchiamolo): stesso pattern (box.box-info.collapsed-box) usato sia
+ * nel form add/edit vero (default/form_body.blade.php) sia nel popup
+ * Mass Edit (mass_edit/form_body.blade.php) - generico, non scoperto a
+ * un solo contesto, cosi' l'aspetto resta identico nei due posti.
+ */
+body.ch-shell .box.box-info {
   border: 1px solid var(--ch-border);
   border-radius: var(--ch-radius-md);
   box-shadow: none;
   margin-top: 6px;
 }
 
-body.ch-shell #mass_editing_modal .box.box-info .box-header {
+body.ch-shell .box.box-info .box-header {
   background: var(--ch-bg);
   padding: 12px 14px;
   border-bottom: 1px solid var(--ch-border);
@@ -3093,14 +3237,14 @@ body.ch-shell #mass_editing_modal .box.box-info .box-header {
   align-items: center;
 }
 
-body.ch-shell #mass_editing_modal .box.box-info .box-title {
+body.ch-shell .box.box-info .box-title {
   margin: 0;
   font-size: 12.5px;
   font-weight: 700;
   color: var(--ch-text);
 }
 
-body.ch-shell #mass_editing_modal .box.box-info .box-title i {
+body.ch-shell .box.box-info .box-title i {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -3113,11 +3257,11 @@ body.ch-shell #mass_editing_modal .box.box-info .box-title i {
   border-radius: var(--ch-radius-md);
 }
 
-body.ch-shell #mass_editing_modal .box.box-info .btn-box-tool {
+body.ch-shell .box.box-info .btn-box-tool {
   color: var(--ch-text-muted);
 }
 
-body.ch-shell #mass_editing_modal .box.box-info .box-body {
+body.ch-shell .box.box-info .box-body {
   padding: 4px 14px 6px;
 }
 

@@ -72,25 +72,30 @@
                 $width = isset($col['width']) ?: "auto";
 				$style = isset($col['style']) ?: "";
                 $mainpath = trim(CRUDBooster::mainpath(), '/').$build_query;
+                // trans() invece del testo inglese letterale - stesse chiavi
+                // gia' usate altrove per lo stesso concetto (filter_sort_*),
+                // solo mai riusate qui.
+                $sortAscTitle = trans('crudbooster.filter_sort_ascending');
+                $sortDescTitle = trans('crudbooster.filter_sort_descending');
                 echo "<th width='$width' $style>";
                 if (isset($sort_column[$field])) {
                     switch ($sort_column[$field]['sorting']) {
                         case 'asc':
                             $url = CRUDBooster::urlFilterColumn($field, 'sorting', 'desc');
-                            echo "<a href='$url' title='Click to sort descending'>$colname &nbsp; <i class='fa fa-sort-desc'></i></a>";
+                            echo "<a href='$url' title='$sortDescTitle'>$colname &nbsp; <i class='fa fa-sort-desc'></i></a>";
                             break;
                         case 'desc':
                             $url = CRUDBooster::urlFilterColumn($field, 'sorting', 'asc');
-                            echo "<a href='$url' title='Click to sort ascending'>$colname &nbsp; <i class='fa fa-sort-asc'></i></a>";
+                            echo "<a href='$url' title='$sortAscTitle'>$colname &nbsp; <i class='fa fa-sort-asc'></i></a>";
                             break;
                         default:
                             $url = CRUDBooster::urlFilterColumn($field, 'sorting', 'asc');
-                            echo "<a href='$url' title='Click to sort ascending'>$colname &nbsp; <i class='fa fa-sort'></i></a>";
+                            echo "<a href='$url' title='$sortAscTitle'>$colname &nbsp; <i class='fa fa-sort'></i></a>";
                             break;
                     }
                 } else {
                     $url = CRUDBooster::urlFilterColumn($field, 'sorting', 'asc');
-                    echo "<a href='$url' title='Click to sort ascending'>$colname &nbsp; <i class='fa fa-sort'></i></a>";
+                    echo "<a href='$url' title='$sortAscTitle'>$colname &nbsp; <i class='fa fa-sort'></i></a>";
                 }
 
                 echo "</th>";
@@ -770,7 +775,7 @@ $('#mass_editing_button').click(function () {
             <form method="post" action="{{ CRUDBooster::mainpath('mass-edit') }}" id="form-mass-editing">
                 <div class="modal-header" style="justify-content: space-between;">
                     <div>
-                        <h4 class="modal-title" id="mass_editing_modalLabel"><i class="fa fa-pencil"></i> Mass Edit</h4>
+                        <h4 class="modal-title" id="mass_editing_modalLabel"><i class="fa fa-pencil"></i> Modifica multipla</h4>
                         <div class="modal-subtitle">@isset($module_name){{ $module_name }} &middot; @endisset<span id="mass-edit-count-label">0 righe selezionate</span></div>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
