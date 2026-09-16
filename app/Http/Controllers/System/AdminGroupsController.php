@@ -406,7 +406,12 @@ class AdminGroupsController extends CBController
 
 		//add member form
 		$data['forms'] = [];
-		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'group_members_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'cms_users', 'datamodal_where' => '', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $group_id, 'required' => true];
+		//il popup di ricerca (getModalData) non applica scoping automatico:
+		//senza questo where un tenant admin vede e puo' selezionare utenti
+		//di qualsiasi altro tenant, non solo i propri (vedi riga 387 sopra,
+		//che invece filtra correttamente la lista membri gia' esistenti)
+		$datamodal_where = UserHelper::isTenantAdmin() ? 'tenant = ' . (int) UserHelper::tenant(CRUDBooster::myId()) : '';
+		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'group_members_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'cms_users', 'datamodal_where' => $datamodal_where, 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $group_id, 'required' => true];
 		$data['forms'][] = ['label' => 'Email', 'name' => 'email', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-6', 'placeholder' => 'User email', 'readonly' => true, 'required' => true];
 		$data['action'] = CRUDBooster::mainpath($group_id . "/add_member");
 		$data['return_url'] = CRUDBooster::mainpath('members/' . $group_id);
