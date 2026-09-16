@@ -188,7 +188,23 @@ class AdminCmsUsersController extends CBController
 
 
 
-		$this->form[] = array("label" => "Password", "name" => "password", "type" => "password", "help" => "Leave empty if no change is needed");
+		// Policy password in stile NIST 800-63B: lunghezza minima invece di
+		// regole di composizione, blocco password comuni/prevedibili (vedi
+		// App\Helpers\PasswordPolicy e AppServiceProvider::boot()). 'nullable'
+		// preserva il comportamento "lascia vuoto per non cambiarla" in
+		// modifica/profilo; in creazione diventa 'required' cosi' non si
+		// possono piu' creare utenti senza password.
+		// form_body.blade.php deduce da solo l'asterisco "required" cercando
+		// la sottostringa 'required' dentro 'validation', quindi non serve
+		// ripeterlo anche nella chiave 'required' dell'array.
+		$password_validation = (CRUDBooster::isAddPage() ? 'required|' : 'nullable|') . 'min:12|max:72|confirmed|not_common_password';
+		$this->form[] = array(
+			"label" => "Password",
+			"name" => "password",
+			"type" => "password",
+			"validation" => $password_validation,
+			"help" => "Minimum 12 characters. Avoid common or predictable passwords." . (CRUDBooster::isAddPage() ? '' : ' Leave empty if no change is needed.'),
+		);
 		$this->form[] = array("label" => "Password Confirmation", "name" => "password_confirmation", "type" => "password", "help" => "Leave empty if no change is needed");
 
 		if (!CRUDBooster::isAddPage() && !CRUDBooster::isProfilePage() ) {
