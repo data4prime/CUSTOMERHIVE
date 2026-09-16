@@ -35,3 +35,11 @@ app/Http/Controllers/*
 # Script locali di supporto (es. seed di dati di test), non fanno parte
 # del progetto - restano solo sulla macchina di sviluppo.
 /local-scripts
+
+# Config/workspace locale dell'editor Obsidian usato per navigare docs/ -
+# stato personale (layout finestre, plugin attivi), non contenuto del
+# progetto.
+/docs/.obsidian/
+
+# Note/todo personali di lavoro, non pensate per il repo condiviso.
+/todo/
