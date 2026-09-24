@@ -21,6 +21,15 @@ comportamentali prima, contesto tecnico dopo.
   *behavior-preserving*: cambiamenti piccoli e verificabili, non riscritture
   ampie "e si spera funzioni". Se una modifica cambia comportamento visibile
   (non solo struttura interna), dirlo esplicitamente.
+- **Ogni testo visibile in UI va aggiunto in inglese E in italiano, mai
+  hardcoded in una sola lingua.** Usare `trans('crudbooster.chiave')` (mai
+  stringhe letterali in blade/PHP per testo mostrato all'utente), aggiungendo
+  la stessa chiave sia in `resources/lang/en/crudbooster.php` sia in
+  `resources/lang/it/crudbooster.php`. Per testo generato via JS (embedded in
+  uno `<script>`), passare la stringa già tradotta da Blade con
+  `{!! json_encode(trans('crudbooster.chiave')) !!}`, non scriverla in chiaro
+  nel JS. Vale per help text, messaggi di validazione custom, hint dinamici,
+  label di bottoni/campi — qualunque cosa l'utente legga.
 - **Dentro questa cartella** (ambiente Docker locale, non i server remoti) è
   invece normale eseguire liberamente comandi di verifica — `docker compose
   exec/up`, `php artisan migrate/route:list`, lint, ecc. — senza fermarsi a
@@ -105,6 +114,27 @@ esattamente come l'agente Explore che questa stessa regola vieta sopra, e
 in più un comando Bash con un prefisso di variabile d'ambiente non è
 analizzabile staticamente dal controllo permessi, quindi fa comunque
 comparire una richiesta di conferma anche dentro la cartella del progetto.
+
+## Comandi Bash semplici (evitano prompt di conferma inutili)
+
+Il controllo permessi (`permissions.blockReadsOutsideWorkingDirectories`)
+verifica staticamente, leggendo il testo del comando, che i file letti
+restino dentro la cartella di lavoro. Su un comando semplice ci riesce; su
+un comando composito (più istruzioni incatenate con `&&`, pipe come `|
+head`/`| grep`, più righe nello stesso blocco, o un prefisso `cd "..." &&`)
+spesso non riesce a dimostrarlo e chiede conferma — anche per operazioni di
+sola lettura, anche dentro la cartella del progetto, indipendentemente dal
+permesso di eseguire comandi liberamente qui dentro. `git diff <path>` in
+particolare non è riconosciuto come un "leggi questo file" ovvio quanto
+`cat <path>`.
+
+Per evitare questi prompt evitabili:
+- **Non ripetere `cd "..." &&`** a inizio comando: la working directory
+  resta impostata da una chiamata Bash all'altra all'interno della stessa
+  sessione, non serve reimpostarla ogni volta.
+- Per una singola lettura (un file, un `git diff` su un path, un `git log`)
+  preferire **un comando semplice per chiamata** invece di incatenarne
+  più con `&&`/pipe quando non è necessario.
 
 **Tenere sempre aggiornato l'indice di tokensave** (non il tool in sé): dopo
 un batch di modifiche ampio, un cambio di branch, o se i risultati sembrano

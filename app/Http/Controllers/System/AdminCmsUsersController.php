@@ -164,10 +164,10 @@ class AdminCmsUsersController extends CBController
 		}
 
 		$this->form[] = array(
-			"label" => "Expiry date", 
-			"type" => "date", 
-			"name" => "data_scadenza", 
-			'required' => false, 
+			"label" => "Expiry date",
+			"type" => "date",
+			"name" => "data_scadenza",
+			'required' => false,
 			'validation' => 'date',
 			'disable' => UserHelper::isTenantAdmin() || CRUDBooster::isSuperadmin() ? false : true,
 		);
@@ -203,9 +203,9 @@ class AdminCmsUsersController extends CBController
 			"name" => "password",
 			"type" => "password",
 			"validation" => $password_validation,
-			"help" => "Minimum 12 characters. Avoid common or predictable passwords." . (CRUDBooster::isAddPage() ? '' : ' Leave empty if no change is needed.'),
+			"help" => trans('crudbooster.reset_password_policy_hint') . (CRUDBooster::isAddPage() ? '' : ' ' . trans('crudbooster.password_leave_empty_hint')),
 		);
-		$this->form[] = array("label" => "Password Confirmation", "name" => "password_confirmation", "type" => "password", "help" => "Leave empty if no change is needed");
+		$this->form[] = array("label" => "Password Confirmation", "name" => "password_confirmation", "type" => "password", "help" => trans('crudbooster.password_leave_empty_hint'));
 
 		if (!CRUDBooster::isAddPage() && !CRUDBooster::isProfilePage() ) {
 		//QLIK USERS START

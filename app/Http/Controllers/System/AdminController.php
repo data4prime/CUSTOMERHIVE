@@ -86,7 +86,9 @@ class AdminController extends CBController
     }
 
   //current domain
-  $array = isset($_SERVER) && isset($_SERVER['HTTP_HOST']) ? explode('.', $_SERVER['HTTP_HOST']) : [];
+  // Host dalla Request di Laravel invece che da $_SERVER['HTTP_HOST'] (vedi docs/refactoring/081 e 084).
+  $host = Request::getHost();
+  $array = $host !== '' ? explode('.', $host) : [];
 
   //get path from env
   $path = env('APP_PATH');
@@ -291,11 +293,21 @@ $tenant_domain_name = env('APP_DOMAIN');
   public function getLogin()
   {
     if (CRUDBooster::myId()) {
-      return redirect(CRUDBooster::adminPath());
+      if (Auth::check()) {
+        return redirect(CRUDBooster::adminPath());
+      }
+      // Sessione legacy orfana: admin_id presente ma il guard non trova piu'
+      // l'utente (es. cancellato mentre era loggato). CBBackend (sul guard)
+      // rimanda qui, e rimandare a /admin creava un ciclo infinito di
+      // redirect: si svuota la sessione e si mostra il login. Vedi
+      // docs/refactoring/081.
+      Session::flush();
     }
 
 
-    $array = isset($_SERVER) && isset($_SERVER['HTTP_HOST']) ? explode('.', $_SERVER['HTTP_HOST']) : [];
+    // Host dalla Request di Laravel invece che da $_SERVER['HTTP_HOST'] (vedi docs/refactoring/081 e 084).
+    $host = Request::getHost();
+    $array = $host !== '' ? explode('.', $host) : [];
 
     //tenant specific login page
     $tenant_domain_name = isset($array[0]) ? $array[0] : '';
@@ -346,7 +358,12 @@ $tenant_domain_name = env('APP_DOMAIN');
         ->where("id", $users->tenant)
         ->first()->domain_name;
 
-    $array = isset($_SERVER) && isset($_SERVER['HTTP_HOST']) ? explode('.', $_SERVER['HTTP_HOST']) : [];
+    // Host dalla Request di Laravel invece che da $_SERVER['HTTP_HOST']
+    // (stesso valore in produzione, a parte l'eventuale porta che getHost()
+    // non include; testabile senza forzare la superglobale). Vedi
+    // docs/refactoring/081.
+    $host = Request::getHost();
+    $array = $host !== '' ? explode('.', $host) : [];
 
     //tenant specific login page
     $tenant_domain_name = isset($array[0]) ? $array[0] : '';
@@ -428,7 +445,9 @@ $tenant_domain_name = env('APP_DOMAIN');
       return redirect(CRUDBooster::adminPath());
     }
 
-    $array = isset($_SERVER) && isset($_SERVER['HTTP_HOST']) ? explode('.', $_SERVER['HTTP_HOST']) : [];
+    // Host dalla Request di Laravel invece che da $_SERVER['HTTP_HOST'] (vedi docs/refactoring/081 e 084).
+    $host = Request::getHost();
+    $array = $host !== '' ? explode('.', $host) : [];
 
     //tenant specific login page
     $tenant_domain_name = isset($array[0]) ? $array[0] : '';
@@ -489,7 +508,9 @@ $tenant_domain_name = env('APP_DOMAIN');
       return redirect(CRUDBooster::adminPath());
     }
 
-    $array = isset($_SERVER) && isset($_SERVER['HTTP_HOST']) ? explode('.', $_SERVER['HTTP_HOST']) : [];
+    // Host dalla Request di Laravel invece che da $_SERVER['HTTP_HOST'] (vedi docs/refactoring/081 e 084).
+    $host = Request::getHost();
+    $array = $host !== '' ? explode('.', $host) : [];
 
     //tenant specific login page
     $tenant_domain_name = isset($array[0]) ? $array[0] : '';

@@ -101,7 +101,7 @@ Route::group(['middleware' => ['web'], 'prefix' => config('crudbooster.ADMIN_PAT
 
 // ROUTER FOR OWN CONTROLLER FROM CB
 Route::group([
-    'middleware' => ['web', '\App\Http\Middleware\CBBackend'],
+    'middleware' => ['web', '\App\Http\Middleware\CBBackend', '\App\Http\Middleware\EnforceModuleLicense'],
     'prefix' => config('crudbooster.ADMIN_PATH'),
     'namespace' => 'App\Http\Controllers',
 ], function () use ($namespace) {
@@ -119,11 +119,44 @@ Route::group([
     }
 });
 
+// ROUTER FOR API GENERATOR (v2, Sanctum) - vedi docs/refactoring/086.
+// Stessi controller generati da CRUDBooster::generateAPI() (stesso
+// execute_api(), nessuna logica duplicata) e stesso identico scan di
+// app/Http/Controllers/ usato sopra per registrare le API "v1" (stessa
+// logica per ricavare $permalink dalla proprieta' pubblica del
+// controller, non dal nome del file) - solo il prefisso ('api2' invece
+// di 'api') e il middleware di autenticazione cambiano (Bearer token via
+// Sanctum invece di CBAuthAPI/authAPI()). Additivo: non tocca in alcun
+// modo le rotte 'api/*' esistenti.
+Route::group(['middleware' => ['api', 'auth:sanctum'], 'namespace' => 'App\Http\Controllers'], function () {
+    try {
+        $dir = scandir(base_path('app/Http/Controllers'));
+        foreach ($dir as $v) {
+            if ($v == '.' || $v == '..' || $v == 'Auth' || is_dir(base_path("app/Http/Controllers/{$v}"))) {
+                continue;
+            }
+            $v = str_replace('.php', '', $v);
+
+            $controller = app("App\Http\Controllers\\".$v);
+            $permalink = isset($controller->permalink) ? $controller->permalink : null;
+
+            $names = array_filter(preg_split('/(?=[A-Z])/', str_replace('Controller', '', $v)));
+            $names = strtolower(implode('_', $names));
+
+            if (substr($names, 0, 4) == 'api_' && $permalink) {
+                Route::any('api2/'.$permalink, $v.'@execute_api');
+            }
+        }
+    } catch (Exception $e) {
+
+    }
+});
+
 // Route::get('/admin/mg_ordini/{ordine}/righe/add', [AdminRigheController::class, 'show']);
 
 /* ROUTER FOR BACKEND CRUDBOOSTER */
 Route::group([
-    'middleware' => ['web', '\App\Http\Middleware\CBBackend'],
+    'middleware' => ['web', '\App\Http\Middleware\CBBackend', '\App\Http\Middleware\EnforceModuleLicense'],
     'prefix' => config('crudbooster.ADMIN_PATH'),
     'namespace' => $namespace,
 ], function () {

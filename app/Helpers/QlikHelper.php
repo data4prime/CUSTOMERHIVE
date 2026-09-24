@@ -188,7 +188,11 @@ class QlikHelper
     ];
 
 
-    $myToken = JWT::encode($payload, $privateKey, 'RS256', null, $header);
+    try {
+      $myToken = JWT::encode($payload, $privateKey, 'RS256', null, $header);
+    } catch (\DomainException $e) {
+      return self::jwtKeyError($conf_id, $e);
+    }
 
 
     return $myToken;
@@ -319,9 +323,27 @@ class QlikHelper
       'name' => $current_user->name
     ];
 
-    $myToken = JWT::encode($payload, $privateKey, 'RS256', $keyid, $header);
+    try {
+      $myToken = JWT::encode($payload, $privateKey, 'RS256', $keyid, $header);
+    } catch (\DomainException $e) {
+      return self::jwtKeyError($conf_id, $e);
+    }
 
     return $myToken;
+  }
+
+  /**
+   * Chiave privata Qlik non utilizzabile per firmare il JWT: vuota/non
+   * valida (gia' con php-jwt 6.x) o RSA < 2048 bit (rifiutata da 7.x, fix
+   * CVE-2025-45769). Prima l'eccezione arrivava fino alla pagina (500); ora
+   * si logga e si restituisce un token vuoto, che i chiamanti gestiscono
+   * gia' ("JWT Token generation failed!"). Vedi docs/refactoring/083.
+   */
+  private static function jwtKeyError($conf_id, \DomainException $e): string
+  {
+    \Log::warning('Qlik JWT non generato (conf ' . $conf_id . '): ' . $e->getMessage());
+
+    return '';
   }
 
   public static function createUser($id, $conf_id)

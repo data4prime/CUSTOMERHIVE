@@ -6,6 +6,7 @@ use App\QlikItem;
 use App\Observers\QlikItemObserver;
 use App\Helpers\PasswordPolicy;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Sanctum\Sanctum;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
@@ -50,6 +51,24 @@ class AppServiceProvider extends ServiceProvider
 
             return !PasswordPolicy::containsContextWord($value, [$data['email'] ?? null, $data['name'] ?? null]);
         }, 'The :attribute is too common or too easy to guess. Please choose a different one.');
+
+        // I token del binario api2 (docs/refactoring/086/088) sono dei
+        // Personal Access Token legati a un utente cms_users esistente:
+        // Sanctum di suo controlla solo il token (scadenza/revoca), non lo
+        // stato dell'utente collegato. Senza questo controllo, disattivare
+        // un utente (status='Inactive', es. dipendente uscito) o farlo
+        // scadere (CheckUserExpiry lo mette Inactive) non avrebbe alcun
+        // effetto sui suoi token già emessi - resterebbero validi per
+        // sempre finché non revocati a mano.
+        Sanctum::authenticateAccessTokensUsing(function ($accessToken, bool $isValid) {
+            if (!$isValid) {
+                return false;
+            }
+
+            $tokenable = $accessToken->tokenable;
+
+            return $tokenable && $tokenable->status === 'Active';
+        });
     }
 
     /**

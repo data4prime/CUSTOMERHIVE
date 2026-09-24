@@ -12,22 +12,23 @@
 */
 
 use App\Helpers\QlikHelper;
-use App\Http\Controllers\ApiListTenantsController;
 
 // Controller "di sistema" spostati in App\Http\Controllers\System, vedi
 // docs/refactoring/006-controller-sistema-app-http-controllers-system.md
 $controllers_base_path = '\App\Http\Controllers\System\\';
-
-Route::get('/testapi' , function(){
-    $test = new ApiListTenantsController();
-    dd($test);
-});
 
 Route::get('/', function () {
     //esiste ancora la view('welcome')
     //TODO spostare tutto /admin in / per migliorare url se stiamo usando solo /admin e non c'è nessuna pagina pubblicata in /
     return redirect('admin');
 });
+
+// Route custom dei moduli a licenza (Qlik, ChatAI): login obbligatorio
+// (CBBackend, prima assente su queste route) + modulo incluso in licenza.
+// Vedi docs/refactoring/076-guard-licenza-e-login-moduli-qlik-chatai.md.
+$licensed_module_middleware = [\App\Http\Middleware\CBBackend::class, \App\Http\Middleware\EnforceModuleLicense::class];
+
+Route::middleware($licensed_module_middleware)->group(function () use ($controllers_base_path) {
 
 //create qlik user
 
@@ -46,6 +47,32 @@ Route::get('/', function () {
     Route::get('admin/qlik_items/tenant/{qlik_item_id}', $controllers_base_path . 'AdminQlikItemsController@tenant');
     Route::post('admin/qlik_items/{qlik_item_id}/add_tenant', $controllers_base_path . 'AdminQlikItemsController@add_tenant');
     Route::get('admin/qlik_items/{qlik_item_id}/remove_tenant/{tenant_id}', $controllers_base_path . 'AdminQlikItemsController@remove_tenant');
+
+//Qlik Server Routes
+
+    Route::get('admin/qlik_confs/QlikServerSenseHub/{id}', $controllers_base_path . 'AdminQlikItemsController@GetRouteSenseHub')->name('QlikServerSenseHub');
+    Route::get('admin/qlik_confs/QlikServerSenseQMC/{id}', $controllers_base_path . 'AdminQlikItemsController@GetRouteSenseQMC')->name('QlikServerSenseQMC');
+
+//chat ai
+
+    Route::get('admin/chat_ai/content/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@content_view');
+
+    Route::get('admin/chat_ai/access/{chat_ai_id}/alert/{alert_id}', $controllers_base_path . 'AdminChatAIController@access');
+    Route::get('admin/chat_ai/access/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@access');
+    Route::post('admin/chat_ai/{chat_ai_id}/auth', $controllers_base_path . 'AdminChatAIController@add_authorization');
+    Route::get('admin/chat_ai/{chat_ai_id}/deauth/{group_id}', $controllers_base_path . 'AdminChatAIController@remove_authorization');
+    Route::get('admin/chat_ai/tenant/{chat_ai_id}/alert/{alert_id}', $controllers_base_path . 'AdminChatAIController@tenant');
+    Route::get('admin/chat_ai/tenant/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@tenant');
+    Route::post('admin/chat_ai/{chat_ai_id}/add_tenant', $controllers_base_path . 'AdminChatAIController@add_tenant');
+    Route::get('admin/chat_ai/{chat_ai_id}/remove_tenant/{tenant_id}', $controllers_base_path . 'AdminChatAIController@remove_tenant');
+
+    Route::post('admin/chat_ai/send_message', $controllers_base_path . 'AdminChatAIController@send_message');
+    Route::post('admin/chat_ai/send_message_agent', $controllers_base_path . 'AdminChatAIController@send_message_agent');
+
+});
+
+// Link pubblico a un item Qlik (proxy token): volutamente fuori dal gruppo
+// sopra, non richiede login.
     Route::get('qi/{proxy_token}', $controllers_base_path . 'QlikItemsController@show');
 
 
@@ -88,10 +115,7 @@ Route::get('admin/users/groups/{user_id}', $controllers_base_path . 'AdminCmsUse
 Route::post('admin/users/{user_id}/add_group', $controllers_base_path . 'AdminCmsUsersController@add_group');
 Route::get('admin/users/{user_id}/remove_group/{group_id}', $controllers_base_path . 'AdminCmsUsersController@remove_group');
 
-//Qlik Server Routes
-
-    Route::get('admin/qlik_confs/QlikServerSenseHub/{id}', $controllers_base_path . 'AdminQlikItemsController@GetRouteSenseHub')->name('QlikServerSenseHub');
-    Route::get('admin/qlik_confs/QlikServerSenseQMC/{id}', $controllers_base_path . 'AdminQlikItemsController@GetRouteSenseQMC')->name('QlikServerSenseQMC');
+//Qlik Server Routes: spostate nel gruppo $licensed_module_middleware in alto
 
 
 //modules
@@ -107,22 +131,6 @@ Route::get('/mashup-objects/{mashup}/{componentID}/{objectid}',$controllers_base
 //Route::post('/admin/mass_editing',$controllers_base_path .'ModulsController@postMassEdit' );
 
 
-//chat ai
-
-
-
-    Route::get('admin/chat_ai/content/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@content_view');
-
-    Route::get('admin/chat_ai/access/{chat_ai_id}/alert/{alert_id}', $controllers_base_path . 'AdminChatAIController@access');
-    Route::get('admin/chat_ai/access/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@access');
-    Route::post('admin/chat_ai/{chat_ai_id}/auth', $controllers_base_path . 'AdminChatAIController@add_authorization');
-    Route::get('admin/chat_ai/{chat_ai_id}/deauth/{group_id}', $controllers_base_path . 'AdminChatAIController@remove_authorization');
-    Route::get('admin/chat_ai/tenant/{chat_ai_id}/alert/{alert_id}', $controllers_base_path . 'AdminChatAIController@tenant');
-    Route::get('admin/chat_ai/tenant/{chat_ai_id}', $controllers_base_path . 'AdminChatAIController@tenant');
-    Route::post('admin/chat_ai/{chat_ai_id}/add_tenant', $controllers_base_path . 'AdminChatAIController@add_tenant');
-    Route::get('admin/chat_ai/{chat_ai_id}/remove_tenant/{tenant_id}', $controllers_base_path . 'AdminChatAIController@remove_tenant');
-
-    Route::post('admin/chat_ai/send_message', $controllers_base_path . 'AdminChatAIController@send_message');
-    Route::post('admin/chat_ai/send_message_agent', $controllers_base_path . 'AdminChatAIController@send_message_agent');
+//chat ai: spostate nel gruppo $licensed_module_middleware in alto
 
 

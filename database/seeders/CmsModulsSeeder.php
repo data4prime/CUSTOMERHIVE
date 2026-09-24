@@ -179,6 +179,37 @@ class Cms_modulsSeeder extends Seeder
                 'is_active' => 1,
             ],
             [
+                // Mancava: stesso problema di "Module Helpers"/"Dashboard
+                // Layouts" sotto - senza questa riga AdminChatAIController
+                // non ha nessuna rotta generata (AdminChatAIControllerGetIndex
+                // e le altre CRUD, incluso il link nella sidebar
+                // url("admin/chat_ai")), a prescindere da licenza attiva,
+                // controller e tabella già presenti - vedi
+                // docs/refactoring/README.md, backlog "modulo ChatAI".
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'Chat AI',
+                'icon' => 'fa fa-comments',
+                'path' => 'chat_ai',
+                'table_name' => 'chatai_confs',
+                'controller' => 'AdminChatAIController',
+                'is_protected' => 1,
+                'is_active' => 1,
+            ],
+            [
+                // Modulo di gestione dei token Sanctum del binario api2
+                // (vedi docs/refactoring/086) - stesso pattern di
+                // Module Helpers/Dashboard Layouts sotto: senza questa riga
+                // ApiTokensController non ha nessuna rotta generata.
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => trans('crudbooster.Api_Tokens'),
+                'icon' => 'fa fa-key',
+                'path' => 'api_tokens',
+                'table_name' => 'personal_access_tokens',
+                'controller' => 'ApiTokensController',
+                'is_protected' => 1,
+                'is_active' => 1,
+            ],
+            [
                 // Mancava: senza questa riga AdminModuleHelperController non
                 // ha nessuna rotta (il routing dei moduli di sistema dipende
                 // interamente da una riga cms_moduls), e ModuleHelperSeeder

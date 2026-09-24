@@ -116,9 +116,9 @@
 
         <div class="mb-4">
             <label for="apiBaseUrl" class="form-label">API BASE URL</label>
-            <input type="text" id="apiBaseUrl" readonly class="form-control" 
-                title="Hanya klik dan otomatis copy to clipboard (kecuali Safari)" 
-                onClick="this.select(); document.execCommand('copy');" 
+            <input type="text" id="apiBaseUrl" readonly class="form-control"
+                title="Hanya klik dan otomatis copy to clipboard (kecuali Safari)"
+                onClick="this.select(); document.execCommand('copy');"
                 value="{{url('api')}}" />
             <div class="form-text">Clicca sul campo sopra per copiare l'URL negli appunti.</div>
         </div>
@@ -128,7 +128,7 @@
             <label>API BASE URL</label>
             <input type='text' readonly class='form-control'
                 title='Hanya klik dan otomatis copy to clipboard (kecuali Safari)'
-                onClick="this.setSelectionRange(0, this.value.length); document.execCommand('copy');" 
+                onClick="this.setSelectionRange(0, this.value.length); document.execCommand('copy');"
                 value='{{url('api')}}' />
         </div>-->
         <div class="mb-4">
@@ -150,6 +150,33 @@
             </div>
             <div class="mb-2">
                 <code>X-user:</code> User Email
+            </div>
+        </div>
+
+        {{--
+            Binario api2 (Bearer token via Laravel Sanctum), additivo e
+            parallelo ad api/ sopra - vedi docs/refactoring/086/090. Stesso
+            permalink di ogni riga della tabella sotto, prefisso diverso.
+        --}}
+        <div class="mb-4">
+            <label for="apiBaseUrlV2" class="form-label">{{ trans('crudbooster.api_doc_api2_base_url_label') }}</label>
+            <input type="text" id="apiBaseUrlV2" readonly class="form-control"
+                onClick="this.select(); document.execCommand('copy');"
+                value="{{url('api2')}}" />
+            <div class="form-text">Clicca sul campo sopra per copiare l'URL negli appunti.</div>
+        </div>
+        <div class="mb-4">
+            <h5>{{ trans('crudbooster.api_doc_api2_howto_title') }}</h5>
+            <div class="mb-2">
+                <strong>{{ trans('crudbooster.api_doc_api2_howto_header') }}</strong>
+            </div>
+            <div class="mb-2">
+                <code>Authorization:</code> <span class="text-muted">Bearer &lt;token&gt;</span>
+            </div>
+            <div class="mb-2">
+                {!! trans('crudbooster.api_doc_api2_howto_hint', [
+                    'link' => '<a href="'.url(config('crudbooster.ADMIN_PATH').'/api_tokens').'">'.trans('crudbooster.api_doc_api2_howto_hint_link_label').'</a>',
+                ]) !!}
             </div>
         </div>
 
@@ -214,8 +241,8 @@
                             <tr>
                                 <td width="12%"><strong>URL</strong></td>
                                 <td>
-                                    <input title="Click to copy!" type="text" class="form-control" readonly 
-                                           onClick="this.select(); document.execCommand('copy');" 
+                                    <input title="Click to copy!" type="text" class="form-control" readonly
+                                           onClick="this.select(); document.execCommand('copy');"
                                            value="/{{$api->permalink}}" />
                                 </td>
                             </tr>

@@ -10,6 +10,13 @@ return [
     'page_title_reset_password' => 'Reimposta Password',
     'reset_password_message' => 'Scegli una nuova password per il tuo account.',
     'reset_password_policy_hint' => 'Minimo 12 caratteri. Evita password comuni o facilmente prevedibili.',
+    'password_leave_empty_hint' => 'Lascia vuoto se non vuoi cambiarla.',
+    'password_strength_too_short' => 'Troppo corta: minimo :min caratteri.',
+    'password_strength_common' => 'È una password troppo comune, facile da indovinare.',
+    'password_strength_sequential' => 'Contiene una sequenza o ripetizione troppo lunga (es. "123456", "aaaaaa").',
+    'password_strength_context_name_email' => 'Non usare il tuo nome o la tua email nella password.',
+    'password_strength_context_email' => 'Non usare la tua email nella password.',
+    'password_strength_valid' => 'Password valida.',
     'label_new_password' => 'Nuova password',
     'label_new_password_confirmation' => 'Conferma nuova password',
     'text_no_notification' => "Hai 0 notifiche",
@@ -159,6 +166,9 @@ return [
 
     'cant_delete_primary_group' => 'Spiacente, non puoi eliminare il gruppo principale dell\'utente',
     'denied_access' => 'Spiacente, non hai accesso a quest\'area',
+    'module_not_licensed' => 'Questa funzionalità non è inclusa nella tua licenza',
+    'chatai_passphrase_help' => 'Almeno 32 caratteri. Deve coincidere con la passphrase configurata sul servizio AI che verifica il token.',
+    'chatai_token_error' => 'Impossibile autenticarsi con il servizio AI: la passphrase configurata non è valida (servono almeno 32 caratteri). Chiedi a un amministratore di aggiornare la configurazione Chat AI.',
     'denied_update' => 'Spiacente, non hai il permesso di aggiornare questi dati',
     'denied_create' => 'Spiacente, non hai il permesso di creare questi dati',
     'denied_delete' => 'Spiacente, non hai il permesso di eliminare questi dati',
@@ -402,7 +412,42 @@ return [
 
     "api_permalink_already_exists" => "Lo slug API esiste già",
 
-    "qlikmodule_not_active" => "La tua licenza non comprende il modulo Qlik!"
+    "qlikmodule_not_active" => "La tua licenza non comprende il modulo Qlik!",
 
+    // Modulo API Tokens (binario api2, Sanctum - vedi docs/refactoring/086)
+    "Api_Tokens" => "Token API",
+    "api_tokens_col_name" => "Nome",
+    "api_tokens_col_user" => "Utente collegato",
+    "api_tokens_col_created" => "Creato il",
+    "api_tokens_col_expires" => "Scadenza",
+    "api_tokens_col_last_used" => "Ultimo utilizzo",
+    "api_tokens_never" => "Mai",
+    "api_tokens_add_page_title" => "Genera nuovo token API",
+    "api_tokens_reveal_page_title" => "Token generato",
+    "api_tokens_invalid_user" => "Utente non trovato",
+    "api_tokens_not_editable" => "I token non sono modificabili: revocalo e generane uno nuovo",
+    "api_tokens_log_generated" => "Generato il token API \":name\" per l'utente \":user\"",
+    "api_tokens_field_user" => "Utente",
+    "api_tokens_field_user_help" => "Il token erediterà i permessi di questo utente (come un Personal Access Token) - se l'utente viene disattivato, il token smette di funzionare",
+    "api_tokens_field_name" => "Nome del token",
+    "api_tokens_field_name_help" => "Solo per riconoscerlo nell'elenco (es. il nome dell'integrazione)",
+    "api_tokens_field_expiry" => "Scadenza",
+    "api_tokens_field_expiry_custom" => "Data personalizzata",
+    "api_tokens_expiry_30" => "30 giorni",
+    "api_tokens_expiry_90" => "90 giorni",
+    "api_tokens_expiry_365" => "1 anno",
+    "api_tokens_expiry_never" => "Nessuna scadenza",
+    "api_tokens_expiry_custom_option" => "Data personalizzata...",
+    "api_tokens_reveal_warning" => "Copia subito questo token: non verrà più mostrato in chiaro.",
+    "api_tokens_reveal_copy" => "Copia",
+    "api_tokens_reveal_copied" => "Copiato!",
+    "api_tokens_submit" => "Genera token",
+
+    // Documentazione API (api_documentation.blade.php / api_documentation_public.blade.php) - vedi docs/refactoring/090
+    "api_doc_api2_base_url_label" => "API2 BASE URL (Bearer Token)",
+    "api_doc_api2_howto_title" => "Come usarla (api2)",
+    "api_doc_api2_howto_header" => "Header:",
+    "api_doc_api2_howto_hint" => "Genera un token dalla pagina :link, poi mandalo come sopra su qualunque chiamata.",
+    "api_doc_api2_howto_hint_link_label" => "Token API",
 
 ];

@@ -61,6 +61,26 @@
                 X-Authorization-Time : TIME<br>
                 X-user : User Email
             </div>
+
+            {{--
+                Binario api2 (Bearer token via Laravel Sanctum), additivo e
+                parallelo ad api/ sopra - vedi docs/refactoring/086/090.
+                Stesso permalink di ogni riga della tabella sotto, prefisso
+                diverso.
+            --}}
+            <div class='mb-3 row'>
+                <label>{{ trans('crudbooster.api_doc_api2_base_url_label') }}</label>
+                <input type='text' readonly class='form-control'
+                       onClick="this.setSelectionRange(0, this.value.length); document.execCommand('copy');" value='{{url('api2')}}'/>
+            </div>
+            <div class='mb-3 row'>
+                <label>{{ trans('crudbooster.api_doc_api2_howto_title') }}</label><br/>
+                <label>{{ trans('crudbooster.api_doc_api2_howto_header') }}</label><br/>
+                Authorization : Bearer &lt;token&gt;<br/>
+                {!! trans('crudbooster.api_doc_api2_howto_hint', [
+                    'link' => '<a href="'.url(config('crudbooster.ADMIN_PATH').'/api_tokens').'">'.trans('crudbooster.api_doc_api2_howto_hint_link_label').'</a>',
+                ]) !!}
+            </div>
             <table class='table table-striped table-api table-bordered'>
                 <thead>
                 <tr class='info'>

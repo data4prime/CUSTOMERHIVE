@@ -308,6 +308,10 @@
               <a href='{{Route("ApiCustomControllerGetScreetKey")}}'><i class='fa fa-bars'></i>
                 <span>{{ trans('crudbooster.Generate_Screet_Key') }}</span></a>
             </li>
+            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/api_tokens*')) ? 'active' : '' }}">
+              <a href='{{url("admin/api_tokens")}}'><i class='fa fa-key'></i>
+                <span>{{ trans('crudbooster.Api_Tokens') }}</span></a>
+            </li>
           </ul>
         </li>
 

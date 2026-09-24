@@ -211,8 +211,16 @@ class ChatAIHelper
     // Passphrase segreta per firmare il token
     $secretKey = $conf->token;
 
-    // Generazione del token
-    $jwt = JWT::encode($payload, $secretKey, 'HS256');
+    // Generazione del token. firebase/php-jwt 7.x rifiuta le passphrase
+    // HS256 piu' corte di 32 byte (fix CVE-2025-45769): invece di un 500 si
+    // logga e si restituisce false, e i chiamanti mostrano un messaggio.
+    // Vedi docs/refactoring/083-firebase-php-jwt-7.md.
+    try {
+      $jwt = JWT::encode($payload, (string) $secretKey, 'HS256');
+    } catch (\DomainException | \InvalidArgumentException $e) {
+      \Log::warning('ChatAI JWT non generato (conf ' . $conf_id . '): ' . $e->getMessage());
+      return false;
+    }
 
     return $jwt;
 

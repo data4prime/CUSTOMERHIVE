@@ -45,6 +45,14 @@ return [
             'driver' => 'token',
             'provider' => 'users',
         ],
+
+        // Usato dal secondo binario di API custom (api2, Bearer token via
+        // Laravel Sanctum) invece dello schema fatto in casa di 'api'
+        // (CRUDBooster::authAPI()/CBAuthAPI) - vedi docs/refactoring/086.
+        'sanctum' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+        ],
     ],
 
     /*

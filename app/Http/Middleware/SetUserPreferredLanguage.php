@@ -22,8 +22,11 @@ class SetUserPreferredLanguage
     public function handle(Request $request, Closure $next)
     {
 
-        if (CRUDBooster::myId() && CRUDBooster::getLang()) {
-            App::setLocale( CRUDBooster::getLang());
+        // getLang() una sola volta (prima 2 query per richiesta) e null-safe
+        // se l'utente in sessione non esiste piu' - vedi docs/refactoring/081.
+        $lang = CRUDBooster::myId() ? CRUDBooster::getLang() : null;
+        if ($lang) {
+            App::setLocale($lang);
         }
         return $next($request);
     }

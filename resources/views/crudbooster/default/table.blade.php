@@ -79,7 +79,7 @@
                 $sortDescTitle = trans('crudbooster.filter_sort_descending');
                 echo "<th width='$width' $style>";
                 if (isset($sort_column[$field])) {
-                    switch ($sort_column[$field]['sorting']) {
+                    switch ($sort_column[$field]['sorting'] ?? '') {
                         case 'asc':
                             $url = CRUDBooster::urlFilterColumn($field, 'sorting', 'desc');
                             echo "<a href='$url' title='$sortDescTitle'>$colname &nbsp; <i class='fa fa-sort-desc'></i></a>";

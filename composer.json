@@ -10,11 +10,12 @@
     "require": {
         "php": "^8.3",
         "barryvdh/laravel-dompdf": "^3.0",
-        "firebase/php-jwt": "^6.10",
+        "firebase/php-jwt": "^7.0",
         "guzzlehttp/guzzle": "^7.8",
         "intervention/image": "^4.0",
         "laravel/framework": "^13.0",
         "laravel/helpers": "^1.6",
+        "laravel/sanctum": "^4.3",
         "maatwebsite/excel": "^4.0",
         "nunomaduro/collision": "^8.0",
         "ramsey/uuid": "^4.7",

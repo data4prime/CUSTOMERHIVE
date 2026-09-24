@@ -67,7 +67,10 @@ class AdminChatAIController extends CBController
 		$this->form[] = ['label' => 'Method', 'name' => 'method', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'GET;POST', 'placeholder' => 'Method to call the API'];
 		$this->form[] = ['label' => 'Auth', 'name' => 'auth', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'dataenum' => 'JWT;', 'placeholder' => 'Authentication method'];
 		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'API endpoint'];
-		$this->form[] = ['label' => 'Passphrase', 'name' => 'token', 'type' => 'textarea', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'Token Passphrase'];
+		// min:32: firebase/php-jwt 7.x rifiuta chiavi HS256 piu' corte di 32
+		// byte (vedi docs/refactoring/083). Vale per nuove configurazioni e
+		// per ogni modifica; le esistenti piu' corte vanno aggiornate.
+		$this->form[] = ['label' => 'Passphrase', 'name' => 'token', 'type' => 'textarea', 'validation' => 'required|string|min:32', 'width' => 'col-sm-10', 'placeholder' => 'Token Passphrase', 'help' => trans('crudbooster.chatai_passphrase_help')];
 		$this->form[] = ['label' => 'Primary', 'name' => 'primary', 'type' => 'checkbox', 'value' => 1, 'width' => 'col-sm-10', 'placeholder' => 'Primary configuration',];
 		$this->form[] = ['label' => 'URL Help', 'name' => 'url_help', 'type' => 'text', 'validation' => 'string|min:1|max:200', 'width' => 'col-sm-10', 'placeholder' => 'Chat AI helper'];
 
@@ -646,6 +649,14 @@ class AdminChatAIController extends CBController
 
 		$token = ChatAIHelper::getToken($chatai_conf->id);
 
+		// Passphrase non utilizzabile (es. < 32 caratteri con php-jwt 7.x):
+		// stesso formato di risposta dell'errore di rete sotto. Vedi
+		// docs/refactoring/083.
+		if (!$token) {
+			echo json_encode(["message" => trans('crudbooster.chatai_token_error')]);
+			return;
+		}
+
 		// Imposta i dati da inviare nel corpo della richiesta
 		$data = [
 			"action" => "sendMessage",
@@ -792,6 +803,12 @@ class AdminChatAIController extends CBController
 		$url = $chatai_conf->url;
 		//$token = $chatai_conf->token;
 		$token = ChatAIHelper::getToken($chatai_conf->id);
+
+		// Vedi send_message(): passphrase non utilizzabile.
+		if (!$token) {
+			echo json_encode(["message" => trans('crudbooster.chatai_token_error')]);
+			return;
+		}
 
 		// Imposta i dati da inviare nel corpo della richiesta
 		$data = [

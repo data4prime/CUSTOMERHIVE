@@ -10,6 +10,13 @@ return [
     'page_title_reset_password' => 'Reset Password',
     'reset_password_message' => 'Choose a new password for your account.',
     'reset_password_policy_hint' => 'Minimum 12 characters. Avoid common or predictable passwords.',
+    'password_leave_empty_hint' => 'Leave empty if no change is needed.',
+    'password_strength_too_short' => 'Too short: minimum :min characters.',
+    'password_strength_common' => "That's a common password, easy to guess.",
+    'password_strength_sequential' => 'Contains a sequence or repetition that\'s too long (e.g. "123456", "aaaaaa").',
+    'password_strength_context_name_email' => "Don't use your name or email in the password.",
+    'password_strength_context_email' => "Don't use your email in the password.",
+    'password_strength_valid' => 'Valid password.',
     'label_new_password' => 'New password',
     'label_new_password_confirmation' => 'Confirm new password',
     'text_no_notification' => "You have 0 notifications",
@@ -152,6 +159,9 @@ return [
 
     'cant_delete_primary_group' => 'Sorry, you can\'t delete user\'s primary group',
     'denied_access' => 'Sorry, you are not allowed to access this area',
+    'module_not_licensed' => 'This feature is not included in your license',
+    'chatai_passphrase_help' => 'At least 32 characters. It must match the passphrase configured on the AI service that verifies the token.',
+    'chatai_token_error' => 'Unable to authenticate with the AI service: the configured passphrase is not valid (at least 32 characters are required). Ask an administrator to update the Chat AI configuration.',
     'denied_update' => 'Sorry, you are not allowed to update this data',
     'denied_create' => 'Sorry, you are not allowed to create this data',
     'denied_delete' => 'Sorry, you are not allowed to delete this data',
@@ -409,6 +419,42 @@ return [
 
     "api_permalink_already_exists" => "API Slug already exists",
 
-    "qlikmodule_not_active" => "Your license does not include the Qlik module."
+    "qlikmodule_not_active" => "Your license does not include the Qlik module.",
+
+    // API Tokens module (api2 track, Sanctum - see docs/refactoring/086)
+    "Api_Tokens" => "API Tokens",
+    "api_tokens_col_name" => "Name",
+    "api_tokens_col_user" => "Linked user",
+    "api_tokens_col_created" => "Created at",
+    "api_tokens_col_expires" => "Expires",
+    "api_tokens_col_last_used" => "Last used",
+    "api_tokens_never" => "Never",
+    "api_tokens_add_page_title" => "Generate new API token",
+    "api_tokens_reveal_page_title" => "Token generated",
+    "api_tokens_invalid_user" => "User not found",
+    "api_tokens_not_editable" => "Tokens can't be edited: revoke it and generate a new one",
+    "api_tokens_log_generated" => "Generated API token \":name\" for user \":user\"",
+    "api_tokens_field_user" => "User",
+    "api_tokens_field_user_help" => "The token will inherit this user's permissions (like a Personal Access Token) - if the user is deactivated, the token stops working",
+    "api_tokens_field_name" => "Token name",
+    "api_tokens_field_name_help" => "For your own reference in the list (e.g. the integration's name)",
+    "api_tokens_field_expiry" => "Expiry",
+    "api_tokens_field_expiry_custom" => "Custom date",
+    "api_tokens_expiry_30" => "30 days",
+    "api_tokens_expiry_90" => "90 days",
+    "api_tokens_expiry_365" => "1 year",
+    "api_tokens_expiry_never" => "Never expires",
+    "api_tokens_expiry_custom_option" => "Custom date...",
+    "api_tokens_reveal_warning" => "Copy this token now: it won't be shown again.",
+    "api_tokens_reveal_copy" => "Copy",
+    "api_tokens_reveal_copied" => "Copied!",
+    "api_tokens_submit" => "Generate token",
+
+    // API documentation (api_documentation.blade.php / api_documentation_public.blade.php) - see docs/refactoring/090
+    "api_doc_api2_base_url_label" => "API2 BASE URL (Bearer Token)",
+    "api_doc_api2_howto_title" => "How To Use (api2)",
+    "api_doc_api2_howto_header" => "Header:",
+    "api_doc_api2_howto_hint" => "Generate a token from the :link page, then send it as above on any request.",
+    "api_doc_api2_howto_hint_link_label" => "API Tokens",
 
 ];

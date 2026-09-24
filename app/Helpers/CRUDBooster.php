@@ -38,7 +38,11 @@ class CRUDBooster
 
     public static function getLang() {
 
-        return $lang = DB::table('cms_users')->where('id', self::myId())->first()->lang;
+        // ?-> : un admin_id in sessione che non corrisponde piu' a un utente
+        // (es. utente cancellato mentre era loggato) mandava in errore
+        // fatale ogni richiesta web, perche' SetUserPreferredLanguage gira
+        // nel gruppo 'web' prima di qualunque controllo di login.
+        return DB::table('cms_users')->where('id', self::myId())->first()?->lang;
 
     }
 
@@ -102,9 +106,10 @@ class CRUDBooster
 
     public static function isEditPage() {
 
-        $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
-        //dd($currentUrl);
+        // Path dalla Request di Laravel invece che da $_SERVER['HTTP_HOST']/['REQUEST_URI']
+        // (testabile senza forzare le superglobali, vedi docs/refactoring/084). Il pattern
+        // controlla solo il path, l'host non serve mai stato incluso nel confronto.
+        $currentUrl = request()->getRequestUri();
 
         $pattern = '/edit\/\d+.*/';
 
@@ -118,9 +123,7 @@ class CRUDBooster
 
     public static function isAddPage() {
 
-        $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
-        //dd($currentUrl);
+        $currentUrl = request()->getRequestUri();
 
         $pattern = "/users/add";
 
@@ -134,9 +137,7 @@ class CRUDBooster
 
 public static function isProfilePage() {
 
-        $currentUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
-        //dd($currentUrl);
+        $currentUrl = request()->getRequestUri();
 
         $pattern = "/users/profile";
 
@@ -906,7 +907,7 @@ return Request::segment($segment);
     {
         $filter = Request::get('filter_column');
         if (!empty($filter[$field])) {
-            return $filter[$field]['sorting'];
+            return $filter[$field]['sorting'] ?? null;
         }
     }
 
@@ -1571,7 +1572,9 @@ return Request::segment($segment);
         return true;
     }
 
-    public static function sendFCM($regID = [], $data)
+    // $regID senza default: un parametro opzionale prima di uno obbligatorio
+    // era gia' di fatto obbligatorio (deprecation PHP 8). Firma equivalente.
+    public static function sendFCM($regID, $data)
     {
         if (!$data['title'] || !$data['content']) {
             return 'title , content null !';
@@ -1658,9 +1661,12 @@ return Request::segment($segment);
                         break;
                     case 'int':
                         $filtered_column_data['type'] = 'number';
-                        $size = str_replace('int(', '', $column['COLUMN_TYPE']);
-                        $size = preg_replace('/\).*/', '', $size);
-                        $filtered_column_data['size'] = $size;
+                        // MySQL 8 non riporta piu' la display width ("int" o
+                        // "int unsigned" invece di "int(11)"): il vecchio
+                        // str_replace() restituiva allora la stringa "int" come
+                        // size. Ora: numero se la width c'e', altrimenti null
+                        // (i chiamanti hanno gia' un fallback, es. ?: 11).
+                        $filtered_column_data['size'] = preg_match('/^int\((\d+)\)/', $column['COLUMN_TYPE'], $m) ? (int) $m[1] : null;
                         break;
                     case 'tinyint':
                         //TODO

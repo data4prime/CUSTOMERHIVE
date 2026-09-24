@@ -2316,6 +2316,9 @@ body.ch-shell .box-footer .btn {
   font-size: 13.5px;
   font-weight: 600;
   box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 body.ch-shell .box-footer .btn-success {
