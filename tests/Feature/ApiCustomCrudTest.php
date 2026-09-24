@@ -555,20 +555,17 @@ class ApiCustomCrudTest extends TestCase
     }
 
     // ---------------------------------------------------------------
-    // Caratterizzazione del punto A (deliberatamente non corretto)
+    // Punto A corretto (docs/refactoring/078): tutti gli endpoint del
+    // modulo riservati al superadmin
     // ---------------------------------------------------------------
 
     /**
-     * CARATTERIZZAZIONE di un gap noto, non un fix (punto A, deciso con
-     * l'utente di rimandare - vedi docs/refactoring/065): a differenza di
-     * getIndex()/getGenerator()/getEditApi(), postSaveApiCustom() non ha
-     * ALCUN controllo di privilegio proprio - CBBackend verifica solo "sei
-     * loggato", non il modulo/privilegio. Un utente Standard senza alcun
-     * permesso assegnato puo' comunque creare API generate. Questo test
-     * fissa il comportamento ATTUALE, cosi' da accorgersi (test che inizia
-     * a fallire) il giorno in cui verra' introdotto un controllo qui.
+     * Prima di 078 questo era un test di CARATTERIZZAZIONE del gap (un
+     * utente senza alcun permesso poteva creare API generate). Ora e' la
+     * regressione del fix: la richiesta viene rifiutata e nessuna riga/file
+     * viene creato.
      */
-    public function test_caratterizzazione_postsaveapicustom_e_raggiungibile_da_utente_senza_alcun_permesso(): void
+    public function test_postsaveapicustom_nega_accesso_a_utente_senza_alcun_permesso(): void
     {
         $tenantId = $this->seedTenant();
         $this->actingAsTenantUser($tenantId, isTenantadmin: false, visibleModulePaths: []);
@@ -583,9 +580,40 @@ class ApiCustomCrudTest extends TestCase
         ]));
 
         $response->assertStatus(302);
-        $response->assertSessionHas('message_type', 'success');
-        $row = DB::table('cms_apicustom')->where('permalink', 'phpunit_test_no_privilege')->first();
-        $this->assertNotNull($row, "Caratterizzazione: un utente senza alcun permesso puo' comunque creare una API generata (punto A, non corretto).");
-        $this->fixtureFiles[] = base_path('app/Http/Controllers/' . $row->controller);
+        $response->assertSessionHas('message', trans('crudbooster.denied_access'));
+        $this->assertDatabaseMissing('cms_apicustom', ['permalink' => 'phpunit_test_no_privilege']);
+        $this->assertFileDoesNotExist(base_path('app/Http/Controllers/ApiPhpunitTestNoPrivilegeController.php'));
+    }
+
+    public function test_endpoint_api_key_e_gestione_api_negano_accesso_a_tenant_admin(): void
+    {
+        $tenantId = $this->seedTenant();
+        $this->actingAsTenantUser($tenantId, isTenantadmin: true, visibleModulePaths: ['api_generator']);
+        $keyId = DB::table('cms_apikey')->insertGetId(['screetkey' => 'chiave-phpunit-test-privata', 'status' => 'active', 'hit' => 0, 'created_at' => now()]);
+        $apiId = DB::table('cms_apicustom')->insertGetId([
+            'nama' => 'Phpunit Test Delete Access', 'tabel' => 'x', 'permalink' => 'phpunit_test_delete_access',
+            'method_type' => 'get', 'controller' => 'x.php', 'created_at' => now(),
+        ]);
+        $apiKeysBefore = DB::table('cms_apikey')->count();
+
+        foreach ([
+            'screet-key',
+            'generate-screet-key',
+            "status-apikey?id={$keyId}&status=0",
+            "delete-api-key?id={$keyId}",
+            'column-table/cms_users/list',
+            'download-postman',
+            "delete-api/{$apiId}",
+        ] as $endpoint) {
+            $response = $this->get("http://localhost/admin/api_generator/{$endpoint}");
+
+            $response->assertStatus(302);
+            $response->assertSessionHas('message', trans('crudbooster.denied_access'));
+            $this->assertStringNotContainsString('chiave-phpunit-test-privata', $response->getContent(), "{$endpoint} espone le API key");
+        }
+
+        $this->assertSame($apiKeysBefore, DB::table('cms_apikey')->count(), 'generate-screet-key ha creato una chiave');
+        $this->assertDatabaseHas('cms_apikey', ['id' => $keyId, 'status' => 'active']);
+        $this->assertDatabaseHas('cms_apicustom', ['id' => $apiId]);
     }
 }

@@ -26,6 +26,24 @@ class ApiCustomController extends CBController
         $this->button_export = false;
     }
 
+    /**
+     * Tutto il modulo API Generator e' riservato al superadmin (come gia'
+     * getIndex()/getGenerator()/getEditApi()): CBBackend verifica solo "sei
+     * loggato", quindi senza questo controllo gli altri endpoint erano
+     * usabili da qualunque utente autenticato. Vedi
+     * docs/refactoring/078-api-generator-privilegi.md.
+     * Ritorna la risposta di accesso negato, o null se si puo' procedere.
+     */
+    private function denyUnlessSuperadmin(string $name)
+    {
+        if (CRUDBooster::isSuperadmin()) {
+            return null;
+        }
+        CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => $name, 'module' => 'API']));
+
+        return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+
     function getIndex()
     {
         $this->cbLoader();
@@ -65,6 +83,9 @@ class ApiCustomController extends CBController
     function getDownloadPostman()
     {
         $this->cbLoader();
+        if ($denied = $this->denyUnlessSuperadmin('API Postman Export')) {
+            return $denied;
+        }
         $data = [];
         $data['variables'] = [];
         $data['info'] = [
@@ -128,6 +149,9 @@ class ApiCustomController extends CBController
     public function getScreetKey()
     {
         $this->cbLoader();
+        if ($denied = $this->denyUnlessSuperadmin('API Key List')) {
+            return $denied;
+        }
         $data['page_title'] = 'API Generator';
         $data['page_menu'] = Route::getCurrentRoute()->getActionName();
         $data['apikeys'] = DB::table('cms_apikey')->get();
@@ -193,6 +217,9 @@ class ApiCustomController extends CBController
     function getGenerateScreetKey()
     {
         $this->cbLoader();
+        if ($denied = $this->denyUnlessSuperadmin('API Key Generate')) {
+            return $denied;
+        }
         //Generate a random string.
         $token = openssl_random_pseudo_bytes(16);
 
@@ -215,6 +242,9 @@ class ApiCustomController extends CBController
 
     public function getStatusApikey()
     {
+        if ($denied = $this->denyUnlessSuperadmin('API Key Status')) {
+            return $denied;
+        }
         $validResult = CRUDBooster::valid(['id', 'status'], 'view');
         if ($validResult instanceof \Symfony\Component\HttpFoundation\Response) {
             return $validResult;
@@ -230,6 +260,9 @@ class ApiCustomController extends CBController
 
     public function getDeleteApiKey()
     {
+        if ($denied = $this->denyUnlessSuperadmin('API Key Delete')) {
+            return $denied;
+        }
 
         $id = Request::get('id');
         if (DB::table('cms_apikey')->where('id', $id)->delete()) {
@@ -242,6 +275,9 @@ class ApiCustomController extends CBController
     function getColumnTable($table, $type = 'list')
     {
         $this->cbLoader();
+        if ($denied = $this->denyUnlessSuperadmin('API Column Table')) {
+            return $denied;
+        }
         $result = [];
 
         $cols = CRUDBooster::getTableColumns($table);
@@ -293,6 +329,9 @@ class ApiCustomController extends CBController
     function postSaveApiCustom()
     {
         $this->cbLoader();
+        if ($denied = $this->denyUnlessSuperadmin('API Save')) {
+            return $denied;
+        }
         $posts = Request::all();
 
         $a = [];
@@ -480,7 +519,10 @@ class ApiCustomController extends CBController
     function getDeleteApi($id)
     {
         $this->cbLoader();
-        $row = DB::table('cms_apicustom')->where('id', $id)->first();
+        if ($denied = $this->denyUnlessSuperadmin('API Delete')) {
+            return $denied;
+        }
+        $row =DB::table('cms_apicustom')->where('id', $id)->first();
 
         // Un $id inesistente crashava con 500 ($row->controller su null)
         // invece di un errore gestito.
