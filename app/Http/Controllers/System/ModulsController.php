@@ -469,6 +469,28 @@ class ModulsController extends CBController
     //$module->delete();
   }
 
+  /**
+   * Il wizard del Module Generator (step 1-5 + endpoint AJAX usati solo dal
+   * wizard) crea/modifica tabelle, righe cms_moduls/privilegi/menu e
+   * sorgente PHP dei controller generati: riservato al superadmin, come gia'
+   * postStep3()/postStep5()/save_table()/getEdit(). Prima gli altri step
+   * richiedevano solo il permesso di visualizzazione (e postStep4() nessun
+   * controllo). Vedi docs/refactoring/080-module-generator-wizard-solo-superadmin.md.
+   * Ritorna la risposta di accesso negato, o null se si puo' procedere.
+   */
+  private function denyWizardUnlessSuperadmin($moduleName, bool $json = false)
+  {
+    if (CRUDBooster::isSuperadmin()) {
+      return null;
+    }
+    if ($json) {
+      return response()->json([], 403);
+    }
+    CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $moduleName]));
+
+    return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+  }
+
   public function getTableColumns($table)
   {
     $this->cbLoader();
@@ -479,6 +501,9 @@ class ModulsController extends CBController
     // Generator. Vedi docs/refactoring/068.
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       return response()->json([], 403);
+    }
+    if ($denied = $this->denyWizardUnlessSuperadmin('Module Generator', true)) {
+      return $denied;
     }
 
     $columns = CRUDBooster::getTableColumns($table);
@@ -492,6 +517,9 @@ class ModulsController extends CBController
 
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       return response()->json([], 403);
+    }
+    if ($denied = $this->denyWizardUnlessSuperadmin('Module Generator', true)) {
+      return $denied;
     }
 
     $check = DB::table('cms_moduls')->where('path', $slug)->count();
@@ -510,6 +538,9 @@ class ModulsController extends CBController
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
       return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
+    if ($denied = $this->denyWizardUnlessSuperadmin($module->name)) {
+      return $denied;
+    }
 
     return redirect()->route("ModulsControllerGetStep1");
   }
@@ -523,6 +554,9 @@ class ModulsController extends CBController
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
       return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+    if ($denied = $this->denyWizardUnlessSuperadmin($module->name)) {
+      return $denied;
     }
 
     $tables = CRUDBooster::listTables('mg');
@@ -565,6 +599,9 @@ class ModulsController extends CBController
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
       return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+    if ($denied = $this->denyWizardUnlessSuperadmin($module->name)) {
+      return $denied;
     }
 
     //module name
@@ -707,6 +744,9 @@ class ModulsController extends CBController
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
       return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
+    if ($denied = $this->denyWizardUnlessSuperadmin($module->name)) {
+      return $denied;
+    }
 
     $module = Modules::find($id);
     //if $modules['table_name'] is not set, go back
@@ -757,6 +797,9 @@ class ModulsController extends CBController
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
       return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
+    if ($denied = $this->denyWizardUnlessSuperadmin($module->name ?? 'Module Generator')) {
+      return $denied;
+    }
     $messages = $this->save_table($request);
 
     $data = array();
@@ -776,6 +819,9 @@ class ModulsController extends CBController
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
       return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+    if ($denied = $this->denyWizardUnlessSuperadmin($module->name)) {
+      return $denied;
     }
 
     $row = DB::table('cms_moduls')->where('id', $id)->first();
@@ -949,6 +995,9 @@ class ModulsController extends CBController
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
       return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
+    if ($denied = $this->denyWizardUnlessSuperadmin($module->name)) {
+      return $denied;
+    }
 
     $row = DB::table('cms_moduls')->where('id', $id)->first();
 
@@ -991,6 +1040,12 @@ class ModulsController extends CBController
   public function postStep4()
   {
     $this->cbLoader();
+
+    // Prima nessun controllo: scrive il blocco FORM nel sorgente PHP del
+    // controller generato, come postStep3()/postStep5().
+    if ($denied = $this->denyWizardUnlessSuperadmin('Module Generator - Step 4')) {
+      return $denied;
+    }
 
     $post = Request::all();
     $id = $post['id'];
@@ -1088,6 +1143,9 @@ class ModulsController extends CBController
     if (!CRUDBooster::isView() && $this->global_privilege == false) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
       return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+    if ($denied = $this->denyWizardUnlessSuperadmin($module->name)) {
+      return $denied;
     }
 
     $row = DB::table('cms_moduls')->where('id', $id)->first();

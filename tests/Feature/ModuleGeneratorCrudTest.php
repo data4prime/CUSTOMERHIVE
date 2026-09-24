@@ -494,4 +494,66 @@ class ModuleGeneratorCrudTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(['total' => 1]);
     }
+
+    // ---------------------------------------------------------------
+    // Regressione - wizard riservato al superadmin (docs/refactoring/080):
+    // prima gli step 1/2/4 richiedevano solo isView(), postStep4() nulla
+    // ---------------------------------------------------------------
+
+    public function test_step1_post_nega_accesso_a_non_superadmin_anche_con_pieno_accesso_al_modulo(): void
+    {
+        $tenantId = $this->seedTenant();
+        $this->actingAsTenantUser($tenantId, isTenantadmin: true, visibleModulePaths: ['module_generator']);
+
+        $response = $this->post('http://localhost/admin/module_generator/step1', [
+            'name' => 'Phpunit Test Step1 Denied',
+            'table' => 'new',
+            'icon' => 'fa fa-bug',
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('message', trans('crudbooster.denied_access'));
+        $this->assertDatabaseMissing('cms_moduls', ['name' => 'Phpunit Test Step1 Denied']);
+    }
+
+    public function test_step4_post_nega_accesso_a_non_superadmin_anche_con_pieno_accesso_al_modulo(): void
+    {
+        $tenantId = $this->seedTenant();
+        $this->actingAsTenantUser($tenantId, isTenantadmin: true, visibleModulePaths: ['module_generator']);
+        $module = $this->seedFixtureModule('PhpunitTestStep4DeniedFixtureController');
+        $this->writeFixtureModuleControllerFile('PhpunitTestStep4DeniedFixtureController');
+        $path = base_path('app/Http/Controllers/PhpunitTestStep4DeniedFixtureController.php');
+        $originalContents = file_get_contents($path);
+
+        $response = $this->post('http://localhost/admin/module_generator/step4', [
+            'id' => $module['id'],
+            'label' => ['Label'],
+            'name' => ['campo'],
+            'width' => ['col-sm-10'],
+            'type' => ['text'],
+            'validation' => [''],
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('message', trans('crudbooster.denied_access'));
+        $this->assertSame($originalContents, file_get_contents($path));
+    }
+
+    public function test_pagine_e_ajax_del_wizard_negano_accesso_a_non_superadmin(): void
+    {
+        $tenantId = $this->seedTenant();
+        $this->actingAsTenantUser($tenantId, isTenantadmin: true, visibleModulePaths: ['module_generator']);
+        $module = $this->seedFixtureModule('PhpunitTestWizardDeniedFixtureController');
+        $this->writeFixtureModuleControllerFile('PhpunitTestWizardDeniedFixtureController');
+
+        foreach (['add', 'step1', "step2/{$module['id']}", "step3/{$module['id']}", "step4/{$module['id']}", "step5/{$module['id']}"] as $page) {
+            $response = $this->get("http://localhost/admin/module_generator/{$page}");
+
+            $response->assertStatus(302);
+            $response->assertSessionHas('message', trans('crudbooster.denied_access'));
+        }
+
+        $this->get('http://localhost/admin/module_generator/table-columns/cms_moduls')->assertStatus(403);
+        $this->get('http://localhost/admin/module_generator/check-slug/whatever')->assertStatus(403);
+    }
 }
