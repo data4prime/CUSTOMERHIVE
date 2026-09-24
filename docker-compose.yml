@@ -70,16 +70,3 @@ services:
       retries: 10
     networks:
       - laravel
-
-  # Compilazione asset front-end (gulp). Facoltativo: `docker compose --profile assets up node`
-  node:
-    image: node:14-alpine
-    container_name: customerhive_node
-    working_dir: /var/www/html
-    volumes:
-      - .:/var/www/html
-    command: sh -c "npm install && npm run dev"
-    profiles:
-      - assets
-    networks:
-      - laravel

@@ -44,9 +44,10 @@ Nei comandi sotto, sostituisci `<dominio>` con `dev.thecustomerhive.com` o
 - [ ] **Apache** con `mod_rewrite` e `mod_headers` abilitati (oppure Nginx +
       PHP-FPM, vedi variante sotto).
 - [ ] **git**.
-- [ ] Non serve Node/npm sul server: gli asset compilati (`public/css`,
-      `public/js`) sono già committati nel repo (build fatta in locale con
-      `npm run prod`), non c'è build step da eseguire in produzione.
+- [ ] Non serve Node/npm sul server: CSS/JS sono file statici già
+      committati in `public/` (modificati a mano, nessuna build step — la
+      vecchia build gulp è stata rimossa, vedi
+      `docs/refactoring/082-rimossa-build-gulp-e-package-json.md`).
 
 ## 2. Recupero del codice
 

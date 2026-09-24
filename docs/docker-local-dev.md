@@ -52,7 +52,9 @@ su una macchina remota separata, senza Docker.
 - Servizi definiti in `docker-compose.yml`:
   - `app` — PHP 8.3 + Apache
   - `db` — MySQL 8 (dati persistiti nel volume `customerhive-mysql`)
-  - `node` — compilazione asset front-end con gulp, facoltativo (vedi sotto)
+  - (il vecchio servizio `node` per la build gulp è stato rimosso: build
+    morta, nessun output usato dal sito — vedi
+    [082](refactoring/082-rimossa-build-gulp-e-package-json.md))
 
 ## Comandi utili
 
@@ -62,11 +64,6 @@ docker compose exec app composer ...         # comandi composer
 docker compose logs -f app                   # log dell'applicazione
 docker compose down                          # ferma i container (i dati MySQL restano)
 docker compose down -v                       # ferma i container e cancella anche il DB
-```
-
-Compilazione asset front-end (gulp), facoltativa:
-```
-docker compose --profile assets run --rm node
 ```
 
 ## Problemi comuni
