@@ -126,6 +126,37 @@
 </a>
 @endif
 
+@elseif($button_action_style == 'button_icon_strict')
+{{--
+  Come lo stile di default (icone, ultimo @else sotto), ma rispetta
+  davvero $button_detail/$button_edit/$button_delete anche per il
+  superadmin - lo stile di default delega a ModuleHelper::can_view()/
+  can_edit()/can_delete(), che per il superadmin ritornano sempre true
+  a prescindere dai flag del modulo ("admin can always see everything",
+  scelta voluta e non toccata qui per non cambiare comportamento in
+  tutti gli altri moduli). Usare questo stile quando un'azione va
+  nascosta per chiunque, superadmin incluso (es. ApiTokensController:
+  un token non ha un vero "modifica"/"dettaglio").
+--}}
+
+@if(CRUDBooster::isRead() && $button_detail)
+<a class='btn btn-sm btn-primary btn-detail' title='{{trans("crudbooster.action_detail_data")}}'
+  href='{{CRUDBooster::mainpath("detail/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())}}'><i
+    class='fa fa-eye'></i></a>
+@endif
+
+@if(CRUDBooster::isUpdate() && $button_edit)
+<a class='btn btn-sm btn-success btn-edit' title='{{trans("crudbooster.action_edit_data")}}'
+  href='{{CRUDBooster::mainpath("edit/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())."&parent_id=".g("parent_id")."&parent_field=".$parent_field}}'><i
+    class='fa fa-pencil'></i></a>
+@endif
+
+@if(CRUDBooster::isDelete() && $button_delete)
+<?php $url = CRUDBooster::mainpath("delete/".$row->$pk);?>
+<a class='btn btn-sm btn-danger btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
+  onclick='{{CRUDBooster::deleteConfirm($url)}}'><i class='fa fa-trash'></i></a>
+@endif
+
 @elseif($button_action_style == 'dropdown')
 
 <div class='btn-group btn-group-action'>
