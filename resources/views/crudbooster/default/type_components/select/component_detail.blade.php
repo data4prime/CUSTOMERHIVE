@@ -22,6 +22,26 @@ if (isset($form['dataquery'])) {
     }
 }
 if (isset($form['dataenum'])) {
-    echo $value;
+    // Stessa sintassi "valore|Etichetta" gestita dal form di modifica
+    // (type_components/select/component.blade.php): senza questo
+    // mapping, un dataenum con valore ed etichetta diversi (es.
+    // '1|Yes', '0|No') mostrava qui il valore grezzo invece
+    // dell'etichetta (es. "1" invece di "Yes"). Nessun cambiamento per i
+    // dataenum dove valore ed etichetta coincidono già (es. 'Active').
+    $dataenum = $form['dataenum'];
+    $dataenum = is_array($dataenum) ? $dataenum : explode(';', $dataenum);
+    $label = $value;
+    foreach ($dataenum as $d) {
+        if (strpos($d, '|') !== false) {
+            [$val, $lab] = explode('|', $d, 2);
+        } else {
+            $val = $lab = $d;
+        }
+        if ((string) $value === (string) $val) {
+            $label = $lab;
+            break;
+        }
+    }
+    echo $label;
 }
 ?>
