@@ -107,6 +107,25 @@ zero leggendo i diff di git.
 | [072](072-forgot-password-link-invece-di-password-in-chiaro.md) | **Password dimenticata: link di reset invece di password in chiaro via email** — `postForgot()` generava una password di 5 caratteri e la mandava in chiaro via email, bypassando la policy password. Corretto usando il broker nativo Laravel (token con scadenza/uso singolo, tabella `password_resets` creata) mantenendo l'invio sul sistema di template email esistente; nuove pagine `reset-password` con la stessa policy password del form utenti | Sicurezza | Completato | 2026-09-16 |
 | [073](073-module-generator-export-import.md) | Module Generator: nuova export/import di un modulo custom in JSON (tabella, colonne, form), riusando gli stessi meccanismi di scrittura gia' messi in sicurezza per il wizard (`var_export`/`min_var_export`, marcatori `# START/END` - vedi 068). Il modulo importato non viene assegnato automaticamente a menu/ruoli, va abilitato da Privileges | Feature | Completato | 2026-09-16 |
 | [074](074-password-policy-nist.md) | **Policy password stile NIST 800-63B su `cms_users`**: nessuna regola prima (nemmeno il confronto tra password e conferma). Aggiunta lunghezza minima (12) invece di regole di composizione rigide, blocklist di password comuni/prevedibili, blocco di sequenze/ripetizioni e di password contenenti email/nome utente. Applicata solo in scrittura: gli hash gia' esistenti restano validi, il login non dipende dalla policy | Sicurezza | Completato | 2026-09-16 |
+| [075](075-filter-column-sorting-mancante-500.md) | Vista lista: 500 `Undefined array key "sorting"` con un querystring `filter_column` parziale (senza la chiave `sorting`, solo URL costruiti a mano) — corretto sia in `default/table.blade.php` (frecce di ordinamento) sia in `CRUDBooster::getSortingFilter()` (popup "Ordina e filtra") con `??` | Bug fix | Completato | 2026-09-24 |
+| [076](076-guard-licenza-e-login-moduli-qlik-chatai.md) | **Guard di licenza e login per Qlik/ChatAI**: le route custom di `routes/web.php` (Qlik e ChatAI) non passavano da `CBBackend` — `send_message`/`send_message_agent` erano eseguibili da anonimi fino alla chiamata al servizio AI. Aggiunto `CBBackend` + nuovo middleware `EnforceModuleLicense` (prefisso di path → modulo in licenza), applicato anche ai gruppi CRUD di `routes/crudbooster.php`: `qlik_items`/`qlik_confs`/`chat_ai` non più raggiungibili via URL senza il modulo in licenza, con protezione anti-loop per dashboard di tipo Qlik | Sicurezza + Licensing | Completato | 2026-09-24 |
+| [077](077-rimossa-route-debug-testapi.md) | Rimossa la route pubblica di debug `GET /testapi` (`dd()` di un controller generato, senza login) | Sicurezza | Completato | 2026-09-24 |
+| [078](078-api-generator-privilegi.md) | **API Generator: tutti gli endpoint riservati al superadmin** — 8 endpoint senza controllo di privilegio (creazione/cancellazione API, elenco/creazione/stato/cancellazione API key in chiaro, colonne di qualunque tabella, export Postman) usabili da qualunque utente loggato. Punto A di 065 | Sicurezza + test | Completato | 2026-09-24 |
+| [079](079-statistic-builder-privilegi-componenti.md) | Statistic Builder: `add-component`/`update-area-component` riservati al superadmin come il resto dell'editor; `list-component` non espone più `config` (query SQL dei widget) ai non superadmin. Aperta la decisione sulla visibilità delle dashboard per ruolo | Sicurezza + test | Completato (parziale) | 2026-09-24 |
+| [080](080-module-generator-wizard-solo-superadmin.md) | **Module Generator: tutto il wizard riservato al superadmin** — step 1/2/4 richiedevano solo il permesso di visualizzazione (`postStep1` creava moduli con controller, permessi e menu), `postStep4` nessun controllo | Sicurezza + test | Completato | 2026-09-24 |
+| [081](081-fix-robustezza-helper-e-login.md) | Fix di robustezza: `getTableStructure()` size `"int"` su MySQL 8, deprecation `sendFCM()`, `getLang()`/`SetUserPreferredLanguage` null-safe, `postLogin()` con `Request::getHost()`, ciclo di redirect `/admin`↔`/admin/login` con sessione legacy orfana | Bug fix | Completato | 2026-09-24 |
+| [082](082-rimossa-build-gulp-e-package-json.md) | Rimossi build gulp/elixir morta (`package.json`, `gulpfile.js`, servizio Docker `node`) e 2 `package.json` del plugin datetimepicker vendorizzato: fonte della maggior parte degli avvisi Dependabot, nulla girava in produzione | Dipendenze | Completato | 2026-09-24 |
+| [093](093-execute-api-cbinit-privilegi.md) | `execute_api()`: chiamato `cbInit()` sul controller collegato (mai fatto prima) - risolve i privilegi per i moduli Module Generator (`mg_*`, tenant admin) e `cms_users`/`groups`; trovato un secondo gap in `ModuleHelper::can_list()`/simili (nessun ramo generico per `global_privilege=true` sulle altre tabelle), non corretto perché tocca l'autorizzazione di ogni pagina CRUD admin | Sicurezza / Bug fix | Completato (parziale) | 2026-09-24 |
+| [092](092-execute-api-controller-self-healing.md) | `execute_api()`: risolto a runtime il `$this->controller` mancante nelle API generate da versioni vecchie del generatore (7 dei 14 controller già presenti in locale) - trovato un gap più ampio, non corretto: l'azione `list` sembra restituire sempre zero righe per un chiamante non superadmin | Bug fix | Completato | 2026-09-24 |
+| [091](091-bug-noti-execute-api-logscontroller-visibilita-dashboard.md) | Tre bug noti chiusi in un giro: `execute_api()` (`$debug_mode_message` assegnata dopo un `goto`), `LogsController` (Edit/Delete visibili al superadmin, stesso bug di 089), visibilità dashboard implementata (menu-based, `StatisticBuilderController`) | Bug fix / Sicurezza | Completato | 2026-09-24 |
+| [090](090-doc-api-generator-menziona-api2.md) | Documentazione API Generator (admin e pubblica): aggiunta la sezione "come usare api2" (Bearer token) accanto a quella esistente di `api/` | Documentazione / UI | Completato | 2026-09-24 |
+| [089](089-button-edit-detail-visibili-a-superadmin.md) | `button_edit`/`button_detail=false` ignorati per il superadmin quando un modulo usa lo stile azioni di default (`ModuleHelper::can_edit()`/`can_view()` bypassano sempre per il superadmin) - aggiunto uno stile opt-in (`button_icon_strict`) che li rispetta davvero, usato da `api_tokens`; stile di default non toccato altrove (es. `LogsController`, stesso bug, non corretto di proposito) | Bug fix / UI | Completato | 2026-09-24 |
+| [088](088-api-tokens-modello-pat.md) | `api_tokens`: rimosso il flag dedicato "client API" (creava confusione col conteggio licenza) - un token è ora un Personal Access Token generabile per qualunque utente esistente, invalidato automaticamente se l'utente viene disattivato | Sicurezza / API | Completato | 2026-09-24 |
+| [087](087-dataenum-detail-view-valore-grezzo.md) | Pagine di dettaglio: campi `select`/`radio` con `dataenum` "valore\|Etichetta" mostravano il valore grezzo (es. "1"/"0") invece dell'etichetta (Users/Menu Management/Module Generator) - corretto nel componente condiviso; corretto anche un crash 500 preesistente e scollegato sul campo Target Layout | Bug fix | Completato | 2026-09-24 |
+| [086](086-api2-sanctum.md) | Nuovo binario `api2` (Bearer token via Laravel Sanctum, scadenza scelta alla generazione) parallelo e additivo ad `api/` esistente (invariato); modulo admin superadmin-only per generare/revocare token; utenti "client API" bloccati dal login web | Sicurezza / API | Completato | 2026-09-24 |
+| [085](085-pulizia-file-morti-e-branch-obsoleti.md) | Rimossi 3 file inutilizzati (`phpunit.xml.bak`, `5.0` vuoto, duplicazione 15MB `public/vendor/crudbooster/assets/assets/`); cancellati 8 branch remoti obsoleti, tutti confermati senza commit unici rispetto a main/dev | Housekeeping | Completato | 2026-09-24 |
+| [084](084-host-request-path-e-chatai-cms-moduls.md) | `$_SERVER['HTTP_HOST']`/`REQUEST_URI` residui sostituiti con `Request`/`request()` in 4 metodi di `AdminController` e 3 di `CRUDBooster` (pattern segnalato in 081); aggiunta la riga mancante in `cms_moduls` per `AdminChatAIController` (stesso bug di 009/050, modulo ChatAI senza rotte) | Bug fix / robustezza / dati | Completato | 2026-09-24 |
+| [083](083-firebase-php-jwt-7.md) | **`firebase/php-jwt` 6→7** (CVE-2025-45769): la 7.x rifiuta passphrase HS256 < 32 byte e chiavi RSA < 2048 bit — aggiunti try/catch con log e messaggio (niente più 500, anche per chiavi Qlik vuote), validazione `min:32` sulla Passphrase Chat AI. **Verificare passphrase e chiavi dei clienti prima del deploy** (query nel documento) | Dipendenze / Sicurezza | Completato | 2026-09-24 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
@@ -243,58 +262,71 @@ completa):
 Cose notate durante altri lavori (setup Docker, CI/CD), non ancora
 trasformate in un intervento vero e proprio:
 
-- **70 vulnerabilità segnalate da GitHub Dependabot** sul branch di default
-  (2 critiche, 22 alte, 41 moderate, 5 basse) — da valutare come parte
-  dell'audit di compatibilità dipendenze (vedi ordine di lavoro sotto).
-- **[Priorità alta] `ApiCustomController` (modulo API Generator): nessun
-  controllo di privilegio** su `postSaveApiCustom()`, `getDeleteApi()`,
-  `getGenerateScreetKey()`, `getStatusApikey()`, `getDeleteApiKey()` —
-  `CBBackend` verifica solo "sei loggato", non il modulo/privilegio.
-  Qualunque utente autenticato, indipendentemente dal privilegio, può
-  creare/modificare/cancellare API generate e chiavi API. Deliberatamente
-  rimandato durante [065](065-api-generator-rce-e-test.md) (che ha corretto
-  la RCE raggiungibile tramite questo gap, non il gap stesso) — vedi
-  "Rischi e note" in quel documento. Riprendere aggiungendo lo stesso check
-  `CRUDBooster::isSuperadmin()` già presente su `getIndex()`/`getGenerator()`/
-  `getEditApi()` dello stesso controller.
-- **`StatisticBuilderController` (modulo Statistic Builder): nessun
-  controllo di privilegio** su `postAddComponent()`, `postUpdateAreaComponent()`,
-  `getListComponent()` — a differenza di `getBuilder()`/`getEditComponent()`/
-  `getDeleteComponent()`/`postSaveComponent()` (quest'ultima corretta in
-  [067](067-statistic-builder-sql-arbitrario-e-test.md)) dello stesso
-  controller. Nessuno di questi 3 permette di iniettare SQL eseguibile (il
-  `config` di un componente appena creato è sempre vuoto), ma manca
-  qualunque validazione che `componentid`/`id_cms_statistics` appartengano
-  alla dashboard su cui l'utente dovrebbe poter agire (IDOR). Deliberatamente
-  rimandato — vedi "Rischi e note" in [067](067-statistic-builder-sql-arbitrario-e-test.md).
-  Riprendere aggiungendo lo stesso check già presente sugli altri metodi
-  del controller, più una validazione di appartenenza componente/dashboard.
-- **`ModulsController` (modulo Module Generator): privilegio debole su
-  `getStep1`-`postStep2`/`getStep4`** — restano protetti solo dal check
-  `isView()` già presente (permesso di sola visualizzazione, non
-  `isCreate()`/`isUpdate()`), a differenza di `postStep3()`/`postStep5()`
-  (portati a `isSuperadmin()` in [068](068-module-generator-rce-e-test.md),
-  stesso livello già richiesto da `save_table()`/step2 per la DDL).
-  Deliberatamente non esteso a tutto il wizard in quell'intervento per non
-  rischiare di rompere un uso legittimo con permessi di sola view non
-  ancora caratterizzato (vedi "Rischi e note" in 068). Riprendere
-  verificando prima se in produzione esistono davvero utenti non-superadmin
-  che usano il wizard, poi eventualmente allineare tutti gli step a
-  `isSuperadmin()`.
+- ~~70 vulnerabilità segnalate da GitHub Dependabot~~ (conteggio di
+  agosto, era Laravel 9) — **rivalutato il 2026-09-24**: lato PHP ne
+  restava 1 (`firebase/php-jwt`, aggiornata in [083](083-firebase-php-jwt-7.md),
+  `composer audit` ora pulito); il resto veniva dai `package.json` della build morta,
+  rimossi in [082](082-rimossa-build-gulp-e-package-json.md). Punto cieco
+  rimasto: librerie JS copiate a mano in `public/vendor/` (nessun manifest,
+  Dependabot non le vede) — serve un censimento dedicato.
+- ~~`ApiCustomController`: nessun controllo di privilegio~~ — **risolto in
+  [078](078-api-generator-privilegi.md)** (2026-09-24).
+- ~~`StatisticBuilderController`: nessun controllo di privilegio su
+  add/update/list component~~ — **risolto in
+  [079](079-statistic-builder-privilegi-componenti.md)** (2026-09-24).
+  ~~**Resta aperto**: la visibilità delle dashboard per ruolo non è mai
+  verificata lato server~~ — **implementato in
+  [091](091-bug-noti-execute-api-logscontroller-visibilita-dashboard.md)**
+  (2026-09-24): visibile solo a superadmin o a chi ha un menu (stesso
+  meccanismo di `cms_menus_privileges` già in uso) verso quella specifica
+  dashboard. **Comportamento visibile cambiato**: un link condiviso
+  funziona solo se la dashboard è davvero nel menu del ruolo di chi lo
+  apre.
+- ~~`ModulsController`: privilegio debole sul wizard~~ — **risolto in
+  [080](080-module-generator-wizard-solo-superadmin.md)** (2026-09-24).
+  Prima del deploy verificare sui clienti che nessun ruolo non superadmin
+  usi il wizard.
 - **Autenticazione delle API custom (`CRUDBooster::authAPI()`, modulo API
-  Generator) da modernizzare**: schema "fatto in casa" (chiave condivisa in
-  `cms_apikey` + timestamp + user agent → `md5()`, confrontato con l'header
+  Generator)**: schema "fatto in casa" (chiave condivisa in `cms_apikey` +
+  timestamp + user agent → `md5()`, confrontato con l'header
   `X-Authorization-Token`). Problemi noti: nessuna scadenza reale sul
   timestamp (solo l'uguaglianza dell'hash), MD5 invece di un HMAC standard,
   autenticazione **disattivata di default** a meno che il setting
   `api_debug_mode` non sia impostato esplicitamente a `'false'`, chiavi che
-  non scadono/ruotano mai. Candidato naturale: **Laravel Sanctum** (già nel
-  core della versione Laravel in uso) — token opachi con scadenza/revoca
-  per-token, hashati correttamente nel DB. Da trattare come lavoro a sé
-  (tocca `CBAuthAPI`/`authAPI()` e potenzialmente i controller generati da
-  API Generator e chi consuma queste API oggi — verificare prima chi le
-  chiama in produzione), non un fix isolato. Stessa area di codice del
-  gap di autorizzazione sopra: valutare di riprenderli insieme.
+  non scadono/ruotano mai. **Non risolto per `api/` esistente** (nessuno
+  di questi problemi è stato toccato lì) — **risolto per i nuovi client**
+  con un binario parallelo e additivo, `api2` (Bearer token via Laravel
+  Sanctum, scadenza per-token scelta alla generazione), vedi
+  [086](086-api2-sanctum.md). Migrazione volontaria, per cliente, non uno
+  switch globale: `api/` resta con lo schema debole finché un cliente non
+  passa a `api2`. **Deciso 2026-09-24**: si accetta così per ora; quando
+  i client saranno migrati su `api2`, `api/` verrà disattivato del
+  tutto (nessuna data ancora).
+- ~~**Bug scollegato trovato lavorando su 086, priorità alta**:
+  `ApiController::execute_api()` va in `ErrorException` ("Undefined
+  variable $debug_mode_message")~~ — **risolto in
+  [091](091-bug-noti-execute-api-logscontroller-visibilita-dashboard.md)**
+  (2026-09-24): la variabile veniva assegnata dopo il primo `goto show;`
+  del metodo (permalink senza riga `cms_apicustom`), non prima come gli
+  altri 7 punti che leggono `show:`. ~~**Nuovo bug trovato verificando il
+  fix con un permalink reale**: i controller generati già presenti in
+  locale (es. `ApiHiveController.php`) non impostano
+  `$this->controller`~~ — **risolto in
+  [092](092-execute-api-controller-self-healing.md)** (2026-09-24), a
+  runtime, senza toccare i file generati esistenti.
+- ~~**Trovato risolvendo 092, priorità da valutare**: l'azione `list` del
+  modulo API Generator sembra restituire **sempre zero righe** per
+  qualunque chiamante non superadmin~~ — **`cbInit()` ora chiamato in
+  [093](093-execute-api-cbinit-privilegi.md)** (2026-09-24): risolve i
+  moduli Module Generator (`mg_*`, tenant admin) e `cms_users`/`groups`.
+  **Resta aperto**: `ModuleHelper::can_list()`/`can_view()`/`can_edit()`/
+  `can_delete()`/`can_add()` non hanno un ramo generico per
+  `global_privilege=true` su altre tabelle (a differenza delle pagine
+  CRUD admin normali, dove basta da solo) — un modulo di sistema con
+  `global_privilege=true` ma senza scoping tenant/gruppo resta comunque
+  negato per un non superadmin. Non corretto: tocca `ModuleHelper`,
+  usato da ogni pagina CRUD admin, non solo dall'API Generator — serve
+  una valutazione a parte.
 - ~~`app/Http/Controllers/` nel `.gitignore`~~ — **voluto, non un rischio**:
   da interfaccia si possono creare moduli custom (controller generati), che
   devono restare specifici dell'ambiente in cui vengono creati e non
@@ -308,16 +340,19 @@ trasformate in un intervento vero e proprio:
 - ~~Compatibilità delle migration con SQLite non verificata~~ — risolto
   passando i test a MySQL vero (stesso motore della produzione), vedi
   [`../test-coverage.md`](../test-coverage.md).
-- **Branch remoti obsoleti da ripulire**: `main_backup`, `main_backup2`,
+- ~~**Branch remoti obsoleti da ripulire**: `main_backup`, `main_backup2`,
   `sapienza`, `qlikdashboard`, `bootstrapupdate`, `ckeditor`,
-  `license-local` — chiarire quali sono ancora utili prima di fare pulizia.
-- **`AdminController::postLogin()` legge `$_SERVER['HTTP_HOST']`
-  direttamente** invece che tramite l'oggetto `Request` di Laravel —
-  funziona in produzione (Apache lo popola sempre) ma rende il codice
-  testabile solo forzando a mano la superglobale nei test (vedi
-  [`../test-coverage.md`](../test-coverage.md)). Da sistemare quando si
-  affronterà il refactoring dell'auth (sostituzione con `request()->getHost()`
-  o equivalente).
+  `license-local`~~ — **risolto in
+  [085](085-pulizia-file-morti-e-branch-obsoleti.md)** (2026-09-24):
+  verificato che tutti (+ `master`) sono ancestor completo di `main`/`dev`
+  (zero commit unici), cancellati da origin.
+- ~~`AdminController::postLogin()` legge `$_SERVER['HTTP_HOST']`~~ —
+  **risolto in [081](081-fix-robustezza-helper-e-login.md)** (2026-09-24).
+  ~~Stesso pattern ancora presente in `getLogin()`/`getForgot()`/
+  `getResetPassword()`/`getLicensescreen()` e in
+  `CRUDBooster::isEditPage()`/`isAddPage()`/`isProfilePage()`~~ —
+  **risolto in [084](084-host-request-path-e-chatai-cms-moduls.md)**
+  (2026-09-24).
 
 - **Bug lato server di licenza remoto** (`license.thecustomerhive.com`,
   progetto separato gestito dall'utente): il trial di attivazione
@@ -325,6 +360,19 @@ trasformate in un intervento vero e proprio:
   must be of type string, null given` — vedi
   [003](003-licensing-hardening.md#rischi-e-note). Da correggere in
   quel progetto, non qui.
+
+- ~~`GET /testapi` pubblico con `dd()`~~ — **rimossa in
+  [077](077-rimossa-route-debug-testapi.md)** (2026-09-24).
+- ~~`getTableStructure()` size `"int"`~~, ~~deprecation `sendFCM()`~~,
+  ~~`SetUserPreferredLanguage` senza null-check~~ — **risolti in
+  [081](081-fix-robustezza-helper-e-login.md)** (2026-09-24).
+- ~~**Ambiente locale: modulo ChatAI non registrato in `cms_moduls`**~~ →
+  ~~`chat_ai/access|tenant/{id}` danno 500 (`Route
+  [AdminChatAIControllerGetIndex] not defined`) anche con licenza ChatAI
+  attiva.~~ — **risolto in
+  [084](084-host-request-path-e-chatai-cms-moduls.md)** (2026-09-24): non
+  era solo il DB locale, mancava la riga anche nel seeder (si sarebbe
+  ripresentato su ogni installazione pulita), stesso pattern di 009/050.
 
 ## Documenti correlati
 

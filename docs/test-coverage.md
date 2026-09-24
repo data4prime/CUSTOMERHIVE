@@ -285,7 +285,8 @@ permalink con `/`/`..` permetteva path traversal nel file scritto).
 | `test_getdeleteapikey_cancella_la_riga` / `test_getdeleteapikey_su_id_inesistente_ritorna_status_zero` | caratterizzazione |
 | `test_getscreetkey_mostra_le_api_key_esistenti` | caratterizzazione |
 | `test_getindex_nega_accesso_a_non_superadmin` / `test_getgenerator_nega_accesso_a_non_superadmin` / `test_geteditapi_nega_accesso_a_non_superadmin` | controlli di accesso già esistenti (non un gap, a differenza degli altri metodi del controller) |
-| `test_caratterizzazione_postsaveapicustom_e_raggiungibile_da_utente_senza_alcun_permesso` | **caratterizzazione di un gap noto, non un fix**: nessun controllo di privilegio su `postSaveApiCustom()` — vedi backlog in [`refactoring/README.md`](refactoring/README.md) |
+| `test_postsaveapicustom_nega_accesso_a_utente_senza_alcun_permesso` | regressione di [078](refactoring/078-api-generator-privilegi.md) (prima: caratterizzazione del gap) — rifiutato, nessuna riga/file creato |
+| `test_endpoint_api_key_e_gestione_api_negano_accesso_a_tenant_admin` | regressione di 078: 7 endpoint (API key, colonne tabella, export Postman, delete API) rifiutati per un tenant admin, nessuna API key esposta/modificata |
 | `test_creazione_api_salva_i_parametri_e_le_risposte_configurate` | persistenza: `parameters`/`responses` salvati esattamente come inviati dal form — il comportamento a runtime di questa configurazione è coperto da [`ApiExecuteTest.php`](#testsfeatureapiexecutetestphp) sotto |
 
 **Dipendenze/scelte note**:
@@ -355,6 +356,35 @@ per il bug null-safety trovato e corretto scrivendo questi test.
   parametro oltre al caso base (`exists`, `unique`, `date_format`, ecc.) —
   fuori scope di questo intervento.
 
+## `tests/Feature/Api2SanctumAuthTest.php`
+
+**Cosa copre**: il solo layer di autenticazione del binario `api2`
+(Bearer token via Laravel Sanctum, additivo rispetto ad `api/` esistente —
+vedi [086](refactoring/086-api2-sanctum.md)/[088](refactoring/088-api-tokens-modello-pat.md)).
+Modello Personal Access Token (088): un token è generabile per
+qualunque utente, ne eredita i permessi, e smette di funzionare se
+l'utente viene disattivato. Come `ApiExecuteTest.php`, registra in
+`setUp()` una rotta ad-hoc (stesso middleware `['api', 'auth:sanctum']`
+del gruppo reale) invece di passare da `execute_api()` — necessario per
+isolare il comportamento qui in esame da un bug scollegato trovato in
+`execute_api()` durante questo stesso intervento (vedi backlog in
+[`refactoring/README.md`](refactoring/README.md)), che altrimenti
+renderebbe questi test fragili senza aggiungere copertura.
+
+| Test | Cosa verifica |
+|---|---|
+| `test_api2_senza_token_viene_rifiutato` | nessun header `Authorization` → 401 |
+| `test_api2_con_token_valido_di_un_utente_normale_passa` | token valido, non scaduto, utente qualunque (nessun flag) → 200 |
+| `test_api2_con_token_scaduto_viene_rifiutato` | `expires_at` nel passato → 401 |
+| `test_api2_con_token_revocato_viene_rifiutato` | riga del token cancellata dopo l'emissione → 401 |
+| `test_api2_con_token_di_utente_disattivato_dopo_l_emissione_viene_rifiutato` | utente messo `status='Inactive'` dopo aver emesso il token → 401 (`Sanctum::authenticateAccessTokensUsing()` in `AppServiceProvider`) |
+
+**Dipendenze/scelte note**: non copre la generazione/revoca dei token
+dalla UI (`ApiTokensController`, `admin/api_tokens`) con un test
+automatico — verificata manualmente via curl con sessione autenticata
+reale (creazione, reveal, lista, token generato funzionante su `api2`),
+non con `assertXxx` di PHPUnit.
+
 ## `tests/Feature/StatisticBuilderCrudTest.php`
 
 **Cosa copre**: il modulo Statistic Builder (`StatisticBuilderController` —
@@ -381,9 +411,13 @@ alla semplice visualizzazione di quella pagina. Dettagli in
 | `test_getshow_con_layout_assegnato_risolve_code_layout` | layout da `dashboard_layouts` |
 | `test_getshow_senza_layout_usa_griglia_di_default` | griglia di default a 9 aree |
 | `test_getbuilder_nega_accesso_a_non_superadmin` / `test_geteditcomponent_nega_accesso_a_non_superadmin` | controlli di accesso già esistenti (non un gap) |
-| `test_caratterizzazione_postaddcomponent_e_raggiungibile_da_utente_senza_permessi` | **caratterizzazione di un gap noto, non un fix** — vedi backlog in [`refactoring/README.md`](refactoring/README.md) |
-| `test_caratterizzazione_postupdateareacomponent_e_raggiungibile_da_utente_senza_permessi` | idem |
-| `test_caratterizzazione_getlistcomponent_e_raggiungibile_da_utente_senza_permessi` | idem |
+| `test_postaddcomponent_nega_accesso_a_non_superadmin` / `test_postaddcomponent_riesce_per_un_superadmin` | regressione di [079](refactoring/079-statistic-builder-privilegi-componenti.md) (prima: caratterizzazione del gap) |
+| `test_postupdateareacomponent_nega_accesso_a_non_superadmin` / `test_postupdateareacomponent_riesce_per_un_superadmin` | idem |
+| `test_getlistcomponent_per_non_superadmin_non_espone_config` / `test_getlistcomponent_per_superadmin_include_config` | 079: `list-component` resta accessibile ma senza la query SQL dei widget per i non superadmin |
+| `test_getshow_nega_se_il_ruolo_non_ha_il_menu_verso_quella_dashboard` / `test_getshow_permette_se_il_ruolo_ha_il_menu_verso_quella_dashboard` | 091: visibilità dashboard per ruolo — negato senza un menu (`cms_menus`/`cms_menus_privileges`) verso quella dashboard specifica, permesso con |
+| `test_getshow_permette_sempre_al_superadmin_anche_senza_menu` | il superadmin bypassa il controllo di visibilità, invariato |
+| `test_getlistcomponent_nega_se_il_ruolo_non_ha_il_menu_verso_quella_dashboard` | 091: stesso controllo su `list-component`, raggiungibile direttamente per URL con l'id numerico |
+| `test_getviewcomponent_nega_se_il_ruolo_non_ha_il_menu_verso_quella_dashboard` / `test_getviewcomponent_permette_se_il_ruolo_ha_il_menu_verso_quella_dashboard` | 091: stesso controllo su `view-component` (il più sensibile: esegue davvero la query SQL del widget) |
 
 **Dipendenze/scelte note**:
 - Verificato e scartato come falso allarme: `component_name` (usato senza
@@ -432,6 +466,9 @@ injection reale, non solo un'iniezione PHP. Dettagli in
 | `test_getdelete_cancella_un_modulo_non_protetto` | nessuna regressione sul comportamento esistente |
 | `test_gettablecolumns_nega_accesso_senza_privilegio_di_visualizzazione` / `test_getcheckslug_nega_accesso_senza_privilegio_di_visualizzazione` | **regressione**: prima nessun controllo, schema di qualunque tabella esposto a chiunque loggato |
 | `test_gettablecolumns_restituisce_le_colonne_con_privilegio` / `test_getcheckslug_conta_gli_slug_esistenti_con_privilegio` | l'uso legittimo (con privilegio) continua a funzionare |
+| `test_step1_post_nega_accesso_a_non_superadmin_anche_con_pieno_accesso_al_modulo` | regressione di [080](refactoring/080-module-generator-wizard-solo-superadmin.md): nessun modulo creato |
+| `test_step4_post_nega_accesso_a_non_superadmin_anche_con_pieno_accesso_al_modulo` | 080: `postStep4()` (prima senza alcun controllo) non riscrive più il controller |
+| `test_pagine_e_ajax_del_wizard_negano_accesso_a_non_superadmin` | 080: add/step1-5 → redirect accesso negato, `table-columns`/`check-slug` → 403 |
 
 **Dipendenze/scelte note**:
 - Come `ApiCustomCrudTest.php`, i file generati/modificati finiscono
