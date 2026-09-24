@@ -20,6 +20,15 @@ class ApiController extends Controller
 {
     public $method_type;
     public $permalink;
+    // Ogni controller generato da CRUDBooster::generateAPI() la
+    // ridichiara e la valorizza nel proprio costruttore
+    // ($this->controller = new AdminXyzController()) - dichiarata anche
+    // qui come rete di sicurezza: alcuni controller generati in passato
+    // (versioni piu' vecchie del generatore) non la impostano affatto,
+    // e leggerla quando non e' mai stata scritta da nessuna parte andava
+    // in ErrorException ("Undefined property"). Vedi execute_api() sotto
+    // e docs/refactoring/092.
+    public $controller = null;
 
     private $hook_api_status;
     private $hook_api_message;
@@ -71,6 +80,17 @@ class ApiController extends Controller
 
         $debug = [];
 
+        // Deve essere valorizzata PRIMA di qualunque "goto show;" (il primo
+        // e' subito sotto, per un permalink senza riga cms_apicustom
+        // corrispondente): "show:" la legge sempre quando
+        // api_debug_mode='true', a prescindere da quale ramo ci sia
+        // arrivato. Spostata qui (prima stava dopo il controllo su
+        // $row_api) perche' un permalink non valido con debug mode attivo
+        // andava in ErrorException ("Undefined variable $debug_mode_message")
+        // invece di restituire il messaggio d'errore gia' previsto per
+        // questo caso - vedi docs/refactoring/091.
+        $debug_mode_message = 'You are in debug mode !';
+
         $posts = Request::all();
         $posts_keys = array_keys($posts);
         $posts_values = array_values($posts);
@@ -94,7 +114,43 @@ class ApiController extends Controller
         $table = $row_api->tabel;
         $pk = CRUDBooster::pk($table);
 
-        $debug_mode_message = 'You are in debug mode !';
+        // Self-healing per i controller generati da CRUDBooster::
+        // generateAPI() che non impostano $this->controller nel proprio
+        // costruttore (versioni piu' vecchie del generatore - vedi
+        // docs/refactoring/092): lo risolve qui con la stessa query usata
+        // da generateAPI() per crearlo la prima volta. Nessun effetto per
+        // chi lo imposta gia' da se' (il blocco non fa nulla in quel
+        // caso). Necessario perche' ModuleHelper::can_list()/can_view()
+        // ecc. lo usano piu' sotto per lo scoping tenant/gruppo per riga -
+        // saltarlo del tutto invece di ripararlo avrebbe tolto quel
+        // controllo invece di limitarsi a non farlo crashare.
+        if (!$this->controller) {
+            $moduleControllerName = DB::table('cms_moduls')->where('table_name', $table)->value('controller');
+            if ($moduleControllerName) {
+                foreach (["\\App\\Http\\Controllers\\System\\{$moduleControllerName}", "\\App\\Http\\Controllers\\{$moduleControllerName}"] as $candidateClass) {
+                    if (class_exists($candidateClass)) {
+                        $this->controller = new $candidateClass();
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Senza questa chiamata (la riga esisteva gia' qui sotto ma
+        // commentata, mai attiva) $this->controller non ha mai eseguito
+        // cbInit(): le sue proprieta' (global_privilege, button_detail,
+        // table) restano ai default della classe base invece dei valori
+        // veri del modulo. ModuleHelper::can_list()/can_view()/can_add()/
+        // can_edit()/can_delete() (usati piu' sotto per QUALUNQUE azione)
+        // leggono global_privilege=false sempre e CRUDBooster::isView()/
+        // isUpdate()/ecc. non trovano mai il modulo corrente (cercano il
+        // path nell'URL admin/{path}, non in api/{permalink}) - per un
+        // chiamante non superadmin il risultato era sempre "negato"/lista
+        // vuota, a prescindere da come il modulo fosse configurato.
+        // Vedi docs/refactoring/093.
+        if ($this->controller && method_exists($this->controller, 'cbInit')) {
+            $this->controller->cbInit();
+        }
 
         /*
         | ----------------------------------------------
@@ -510,7 +566,9 @@ class ApiController extends Controller
 
                         $debug[] = 'Before init';
                        // return response()->json($this, 200);
-                        //$this->controller->cbInit();
+                        // cbInit() ora gia' chiamata una volta sola piu' in
+                        // alto in execute_api(), non per ogni riga - vedi
+                        // docs/refactoring/093.
 
                         $debug[] = 'After init';
                         //return response()->json($debug, 200);

@@ -27,6 +27,14 @@ class LogsController extends CBController
         $this->button_add = false;
         $this->button_edit = false;
         $this->button_delete = false;
+        // Con lo stile azioni di default, button_edit/button_delete=false
+        // qui sopra venivano comunque ignorati per il superadmin
+        // (ModuleHelper::can_edit()/can_delete() ritornano sempre true per
+        // lui, a prescindere dal flag del modulo - vedi
+        // docs/refactoring/089/091). button_icon_strict rispetta davvero il
+        // flag, per chiunque - button_detail resta true (default, non
+        // toccato: il dettaglio di un log e' comunque consultabile).
+        $this->button_action_style = "button_icon_strict";
 
         $this->col = [];
         $this->col[] = ["label" => "Time Access", "name" => "created_at"];

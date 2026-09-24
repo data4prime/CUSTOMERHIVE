@@ -177,6 +177,47 @@ class StatisticBuilderController extends CBController
         return view('crudbooster::statistic_builder.show', compact('page_title', 'id_cms_statistics', 'layout', 'code_layout'));
     }
 
+    /**
+     * Un utente vede una dashboard (getShow/getListComponent/
+     * getViewComponent) solo se e' superadmin o se il suo ruolo ha un menu
+     * (cms_menus, type='Statistic') che punta proprio a questa dashboard -
+     * stesso meccanismo di visibilita' gia' usato per il menu stesso
+     * (cms_menus_privileges), non uno nuovo. Prima non c'era alcun
+     * controllo: qualunque utente loggato che conoscesse/indovinasse lo
+     * slug (o l'id numerico, per i due metodi sotto) vedeva i dati veri di
+     * qualunque dashboard. Vedi "Rischi e note" in
+     * docs/refactoring/079-statistic-builder-privilegi-componenti.md e
+     * docs/refactoring/091.
+     *
+     * **Comportamento visibile che cambia**: un utente non superadmin il
+     * cui ruolo non ha un menu verso una data dashboard non puo' piu'
+     * aprirla (prima poteva, se conosceva il link). I "link condivisi"
+     * restano validi SOLO se la dashboard e' effettivamente nel menu del
+     * ruolo di chi apre il link.
+     */
+    private function isDashboardVisibleToCurrentUser($idCmsStatistics)
+    {
+        if (CRUDBooster::isSuperadmin()) {
+            return true;
+        }
+
+        // Tabella letterale invece di $this->table: getListComponent()/
+        // getViewComponent() (a differenza di getShow()) non chiamano
+        // cbLoader() prima di arrivare qui, quindi $this->table (valorizzata
+        // in cbInit()) non e' ancora popolata quando si chiama da li'.
+        $slug = DB::table('cms_statistics')->where('id', $idCmsStatistics)->value('slug');
+        if (!$slug) {
+            return false;
+        }
+
+        return DB::table('cms_menus')
+            ->join('cms_menus_privileges', 'cms_menus_privileges.id_cms_menus', '=', 'cms_menus.id')
+            ->where('cms_menus_privileges.id_cms_privileges', CRUDBooster::myPrivilegeId())
+            ->where('cms_menus.type', 'Statistic')
+            ->where('cms_menus.path', 'statistic_builder/show/' . $slug)
+            ->exists();
+    }
+
     public function getShow($slug)
     {
 
@@ -185,6 +226,11 @@ class StatisticBuilderController extends CBController
 
         if (!$row) {
             return CRUDBooster::redirect(CRUDBooster::adminPath(), 'Dashboard non trovata: il link non è più valido (probabilmente la dashboard è stata rinominata o eliminata).', 'warning');
+        }
+
+        if (!$this->isDashboardVisibleToCurrentUser($row->id)) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => $row->name, 'module' => 'Statistic']));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
         }
 
         $id_cms_statistics = $row->id;
@@ -221,8 +267,28 @@ class StatisticBuilderController extends CBController
 
     public function getListComponent($id_cms_statistics, $area_name)
     {
-        $rows = DB::table('cms_statistic_components')->where('id_cms_statistics', $id_cms_statistics)->where('area_name', $area_name)
-                ->orderby('sorting', 'asc')->get();
+        // Volutamente NON limitata al superadmin (serve anche alla
+        // visualizzazione normale delle dashboard, vedi postSaveComponent()).
+        // Per i non superadmin pero' non si restituisce 'config': contiene
+        // la query SQL dei widget (Small Box/Table/Chart...), e il JS della
+        // pagina usa solo componentID per poi chiamare view-component. Vedi
+        // docs/refactoring/079-statistic-builder-privilegi-componenti.md.
+        //
+        // Raggiungibile direttamente per URL con l'id numerico della
+        // dashboard (non solo dopo aver aperto getShow()): senza questo
+        // controllo, chi indovinava/conosceva un id vedeva comunque
+        // l'elenco widget di una dashboard non sua - vedi
+        // isDashboardVisibleToCurrentUser() e docs/refactoring/091.
+        if (!$this->isDashboardVisibleToCurrentUser($id_cms_statistics)) {
+            return response()->json(['components' => []], 403);
+        }
+
+        $query = DB::table('cms_statistic_components')->where('id_cms_statistics', $id_cms_statistics)->where('area_name', $area_name)
+                ->orderby('sorting', 'asc');
+        if (!CRUDBooster::isSuperadmin()) {
+            $query->select('id', 'id_cms_statistics', 'componentID', 'component_name', 'area_name', 'sorting', 'name');
+        }
+        $rows = $query->get();
 
         return response()->json(['components' => $rows]);
     }
@@ -231,6 +297,15 @@ class StatisticBuilderController extends CBController
     {
 
         $component = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
+
+        // Raggiungibile direttamente per URL col componentID (non solo
+        // dopo aver aperto getShow()/getListComponent()): esegue davvero
+        // la query SQL del widget e ne restituisce il risultato, quindi e'
+        // il punto piu' sensibile dei tre - vedi
+        // isDashboardVisibleToCurrentUser() e docs/refactoring/091.
+        if (!$component || !$this->isDashboardVisibleToCurrentUser($component->id_cms_statistics)) {
+            return response()->json(['error' => trans('crudbooster.denied_access')], 403);
+        }
 
         $command = 'layout';
         $config = json_decode($component->config);
@@ -291,6 +366,14 @@ class StatisticBuilderController extends CBController
     public function postAddComponent()
     {
         $this->cbLoader();
+
+        // Chiamata solo dal drag&drop dell'editor, attivo solo in
+        // getBuilder() (gia' riservato al superadmin): stesso controllo.
+        if (!CRUDBooster::isSuperadmin()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'Add Component', 'module' => 'Statistic']));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $component_name = Request::get('component_name');
         $id_cms_statistics = Request::get('id_cms_statistics');
         $sorting = Request::get('sorting');
@@ -317,6 +400,12 @@ class StatisticBuilderController extends CBController
 
     public function postUpdateAreaComponent()
     {
+        // Come postAddComponent(): usata solo dal drag&drop dell'editor.
+        if (!CRUDBooster::isSuperadmin()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['name' => 'Move Component', 'module' => 'Statistic']));
+            return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         DB::table('cms_statistic_components')->where('componentID', Request::get('componentid'))->update([
             'sorting' => Request::get('sorting'),
             'area_name' => Request::get('areaname'),
