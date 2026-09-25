@@ -29,6 +29,7 @@ class LoginTest extends TestCase
     {
         $tenantId = $this->seedTenant('tenant-uno');
         $user = $this->seedUser(['tenant' => $tenantId, 'email' => 'ok@example.com']);
+        $this->trustDeviceFor($user);
 
         $response = $this->postLoginFrom('tenant-uno.thecustomerhive.com', [
             'email' => 'ok@example.com',
@@ -117,6 +118,7 @@ class LoginTest extends TestCase
             'id_cms_privileges' => $superadminPrivilegeId,
             'email' => 'super@example.com',
         ]);
+        $this->trustDeviceFor($user);
 
         $response = $this->postLoginFrom('tenant-super-altrui.thecustomerhive.com', [
             'email' => 'super@example.com',
@@ -139,7 +141,8 @@ class LoginTest extends TestCase
     public function test_dopo_il_login_si_accede_a_una_pagina_protetta(): void
     {
         $tenantId = $this->seedTenant('tenant-e2e');
-        $this->seedUser(['tenant' => $tenantId, 'email' => 'e2e@example.com']);
+        $user = $this->seedUser(['tenant' => $tenantId, 'email' => 'e2e@example.com']);
+        $this->trustDeviceFor($user);
 
         $loginResponse = $this->postLoginFrom('tenant-e2e.thecustomerhive.com', [
             'email' => 'e2e@example.com',

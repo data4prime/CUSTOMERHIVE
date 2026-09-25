@@ -2,6 +2,10 @@
 
 namespace Tests\Concerns;
 
+use App\Helpers\MfaHelper;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
 /**
  * Helper condiviso per simulare POST /admin/login nei test.
  *
@@ -21,6 +25,34 @@ namespace Tests\Concerns;
  */
 trait LogsInAdmin
 {
+    /**
+     * Simula un dispositivo gia' fidato (stesso meccanismo di
+     * MfaHelper::issueTrustedDeviceCookie(), vedi docs/refactoring/097-*)
+     * per l'utente indicato, cosi' un postLoginFrom() successivo salta lo
+     * step-up email OTP - questi test verificano il comportamento del
+     * login "di base" (sessione/guard popolati), non il gate MFA in se',
+     * che ha una copertura manuale separata (vedi docs/refactoring/097-*
+     * e 098-*).
+     */
+    protected function trustDeviceFor(array $user): void
+    {
+        $selector = Str::random(16);
+        $validator = Str::random(32);
+
+        DB::table('mfa_trusted_devices')->insert([
+            'user_id' => $user['id'],
+            'selector' => $selector,
+            'validator_hash' => hash('sha256', $validator),
+            'user_agent' => 'phpunit',
+            'trusted_until' => now()->addDays(MfaHelper::TRUSTED_DEVICE_DAYS),
+            'last_used_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $this->withCookie(MfaHelper::TRUSTED_DEVICE_COOKIE, $selector.':'.$validator);
+    }
+
     protected function postLoginFrom(?string $host, array $data)
     {
         $host = $host ?: parse_url(config('app.url'), PHP_URL_HOST) ?: 'localhost';

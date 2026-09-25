@@ -26,7 +26,8 @@ class LogoutTest extends TestCase
     public function test_logout_invalida_sia_la_sessione_legacy_che_il_guard(): void
     {
         $tenantId = $this->seedTenant('tenant-logout');
-        $this->seedUser(['tenant' => $tenantId, 'email' => 'logout@example.com']);
+        $user = $this->seedUser(['tenant' => $tenantId, 'email' => 'logout@example.com']);
+        $this->trustDeviceFor($user);
 
         $loginResponse = $this->postLoginFrom('tenant-logout.thecustomerhive.com', [
             'email' => 'logout@example.com',

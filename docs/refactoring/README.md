@@ -139,6 +139,7 @@ zero leggendo i diff di git.
 | [104](104-mfa-elenco-dispositivi-fidati.md) | MFA: elenco dei dispositivi fidati sul profilo (user agent, prima/ultima volta, scadenza) con revoca per singolo dispositivo, non solo "disconnetti tutti" | Auth | Completato | 2026-09-25 |
 | [105](105-link-clicca-qui-senza-contesto.md) | Fix: link "Clicca qui" senza contesto su `reset_password`/3 viste MFA — testo esplicativo o link autoesplicativo | Auth / UI | Completato | 2026-09-25 |
 | [106](106-restyle-template-email-auth.md) | Restyle template email auth (reset password, MFA OTP, MFA recovery) in stile app + fix `subject` mai valorizzato; wrapper condiviso `emails/header.blade.php`/`footer.blade.php` ristilizzato con logo — scoperto e corretto un commento HTML (invece di Blade) che sarebbe finito dentro ogni email reale | Email / Auth / UI | Completato | 2026-09-25 |
+| [107](107-fix-test-login-logout-rotti-da-mfa.md) | Fix: 4 test in `LoginTest`/`LogoutTest` rotti dal gate MFA (redirect a step-up email OTP invece di popolare la sessione) — nuovo helper `trustDeviceFor()` che simula un dispositivo gia' fidato, nessuna logica di produzione toccata | Auth / Test | Completato | 2026-09-25 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
