@@ -67,6 +67,7 @@
                 </form>
 
                 <p class="ch-auth-help">
+                    {{trans("crudbooster.forgot_text_try_again")}}
                     <a href='{{route("getLogin")}}'>{{trans("crudbooster.click_here")}}</a>
                 </p>
             </div>
