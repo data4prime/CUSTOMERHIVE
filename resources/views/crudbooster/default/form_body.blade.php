@@ -108,6 +108,15 @@ foreach($forms as $index => $form) {
     $header_group_class = ($header_group_class) ?: "header-group-$index";
   }
   ?>
+{{-- Box collassabile "System Information": si apre sul campo 'tenant' e si
+     aspetta di richiudersi su 'group' o 'primary_group' (nomi diversi usati
+     da moduli diversi per lo stesso concetto). Se un form ha 'tenant' ma
+     nessuno dei due, questi div restano aperti per il resto della pagina,
+     inglobando tutto cio' che segue (incluso il pulsante Save) in un
+     contenitore nascosto via CSS - bug reale scoperto e documentato in
+     docs/refactoring/103-fix-save-invisibile-profilo-utenti.md, che ha aggiunto
+     anche 'primary_group' qui sotto (mancava, causava il problema su
+     AdminCmsUsersController). --}}
 @if($name == 'tenant')
 <div class="row">
   <div class="col-sm-12 col-md-12">
@@ -136,7 +145,7 @@ foreach($forms as $index => $form) {
         @else
         <p class='text-danger'>{{$type}} is not found in type component system</p><br />
         @endif
-        @if($name == 'group')
+        @if($name == 'group' || $name == 'primary_group')
       </div>
     </div>
   </div>

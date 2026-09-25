@@ -30,7 +30,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'two_factor_secret',
+    ];
+
+    protected $casts = [
+        'two_factor_confirmed_at' => 'datetime',
     ];
 
     public function primary_group(){

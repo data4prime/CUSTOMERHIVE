@@ -97,6 +97,20 @@ Route::group(['middleware' => ['web'], 'prefix' => config('crudbooster.ADMIN_PAT
     Route::get('logout', ['uses' => 'AdminController@getLogout', 'as' => 'getLogout']);
     Route::post('login', ['uses' => 'AdminController@postLogin', 'as' => 'postLogin']);
     Route::get('login', ['uses' => 'AdminController@getLogin', 'as' => 'getLogin']);
+
+    // MFA (Fase 2, vedi docs/refactoring/097-*): fuori dal gruppo CBBackend
+    // qui sotto, stesso motivo di login/forgot - l'utente non e' ancora
+    // "loggato" (ne' sessione legacy ne' guard nativo) mentre e' su queste
+    // pagine, e' solo in stato "pending" dopo la sola password.
+    Route::get('mfa-verify', ['uses' => 'AdminController@getMfaVerify', 'as' => 'getMfaVerify']);
+    Route::post('mfa-verify', ['uses' => 'AdminController@postMfaVerify', 'as' => 'postMfaVerify']);
+    Route::post('mfa-resend-email-otp', ['uses' => 'AdminController@postMfaResendEmailOtp', 'as' => 'postMfaResendEmailOtp']);
+
+    // Recovery (Fase 3, vedi docs/refactoring/098-*): idem, fuori da CBBackend.
+    Route::get('mfa-recovery', ['uses' => 'AdminController@getMfaRecovery', 'as' => 'getMfaRecovery']);
+    Route::post('mfa-recovery', ['uses' => 'AdminController@postMfaRecovery', 'as' => 'postMfaRecovery']);
+    Route::get('mfa-recovery-status/{token}', ['uses' => 'AdminController@getMfaRecoveryStatus', 'as' => 'getMfaRecoveryStatus']);
+    Route::post('mfa-recovery-cancel/{token}', ['uses' => 'AdminController@postMfaRecoveryCancel', 'as' => 'postMfaRecoveryCancel']);
 });
 
 // ROUTER FOR OWN CONTROLLER FROM CB

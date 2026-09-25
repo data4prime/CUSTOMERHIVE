@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\GetLicense',
         'App\Console\Commands\MigrateLegacyCrudboosterExtends',
         'App\Console\Commands\Mailqueues',
+        'App\Console\Commands\MfaCleanup',
     ];
 
     /**
@@ -34,6 +35,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('user:check-expiry')->dailyAt('00:00');
         $schedule->command('user:expiry-notification')->dailyAt('00:10');
         $schedule->command('command:GetLicense')->hourly();
+        $schedule->command('mfa:cleanup')->dailyAt('03:00');
     }
 
     /**

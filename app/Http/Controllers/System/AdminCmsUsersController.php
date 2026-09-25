@@ -20,6 +20,8 @@ use \App\Helpers\MyHelper;
 use \App\Helpers\ModuleHelper;
 use App\Helpers\QlikHelper;
 use App\Helpers\LicenseHelper;
+use App\Helpers\MfaHelper;
+use Illuminate\Support\Facades\RateLimiter;
 
 class AdminCmsUsersController extends CBController
 {
@@ -84,13 +86,66 @@ class AdminCmsUsersController extends CBController
 			];
 		}
 
+		$this->form[] = array(
+			"label" => "Expiry date",
+			"type" => "date",
+			"name" => "data_scadenza",
+			'required' => false,
+			'validation' => 'date',
+			'disable' => UserHelper::isTenantAdmin() || CRUDBooster::isSuperadmin() ? false : true,
+		);
+
+
+
+		$this->form[] = [
+			"label" => "Status",
+			"name" => "status",
+			'required' => true,
+			'type' => 'select',
+			'dataenum' => ['Inactive'],
+			'default' => 'Active',
+			'disabled' => UserHelper::isTenantAdmin() || CRUDBooster::isSuperadmin() ? false : true,
+		];
+		$this->form[] = array("label" => "Photo", "name" => "photo", "type" => "upload", "help" => "Recommended resolution is 200x200px", 'required' => false, 'validation' => 'image|max:1000', 'resize_width' => 90, 'resize_height' => 90);
+		$this->form[] = array("label" => "Language", "name" => "lang", "type" => "select", "dataenum" => ['en|English', 'it|Italiano'], "value" => "en");
+
+
+
+		// Policy password in stile NIST 800-63B: lunghezza minima invece di
+		// regole di composizione, blocco password comuni/prevedibili (vedi
+		// App\Helpers\PasswordPolicy e AppServiceProvider::boot()). 'nullable'
+		// preserva il comportamento "lascia vuoto per non cambiarla" in
+		// modifica/profilo; in creazione diventa 'required' cosi' non si
+		// possono piu' creare utenti senza password.
+		// form_body.blade.php deduce da solo l'asterisco "required" cercando
+		// la sottostringa 'required' dentro 'validation', quindi non serve
+		// ripeterlo anche nella chiave 'required' dell'array.
+		$password_validation = (CRUDBooster::isAddPage() ? 'required|' : 'nullable|') . 'min:12|max:72|confirmed|not_common_password';
+		$this->form[] = array(
+			"label" => "Password",
+			"name" => "password",
+			"type" => "password",
+			"validation" => $password_validation,
+			"help" => trans('crudbooster.reset_password_policy_hint') . (CRUDBooster::isAddPage() ? '' : ' ' . trans('crudbooster.password_leave_empty_hint')),
+		);
+		$this->form[] = array("label" => "Password Confirmation", "name" => "password_confirmation", "type" => "password", "help" => trans('crudbooster.password_leave_empty_hint'));
+
+		// Tenant/Primary Group spostati qui in fondo (erano subito dopo
+		// Email/Privilege): il box collassabile "System Information" che
+		// li contiene (form_body.blade.php, si apre su 'tenant' e si
+		// chiude su 'primary_group' - vedi docs/refactoring/103-*)
+		// interrompeva il flusso dei campi principali del profilo,
+		// comparendo "in mezzo" tra Email ed Expiry date. Spostare
+		// l'intero blocco non cambia nulla nel salvataggio (l'ordine in
+		// $this->form non incide su CBController::input_assignment(), che
+		// scrive per nome, non per posizione) - solo dove appare in pagina.
 		if (CRUDBooster::isSuperadmin()) {
 			$this->form[] = [
 				'label' => 'Tenant',
 				'name' => 'tenant',
 				"type" => "select2",
 				"datatable" => "tenants,name",
-				
+
 				'required' => true,
 				'validation' => 'required|int|min:1',
 				'value' => UserHelper::current_user_tenant() //default value if new user
@@ -163,50 +218,6 @@ class AdminCmsUsersController extends CBController
 			];
 		}
 
-		$this->form[] = array(
-			"label" => "Expiry date",
-			"type" => "date",
-			"name" => "data_scadenza",
-			'required' => false,
-			'validation' => 'date',
-			'disable' => UserHelper::isTenantAdmin() || CRUDBooster::isSuperadmin() ? false : true,
-		);
-
-
-
-		$this->form[] = [
-			"label" => "Status",
-			"name" => "status",
-			'required' => true,
-			'type' => 'select',
-			'dataenum' => ['Inactive'],
-			'default' => 'Active',
-			'disabled' => UserHelper::isTenantAdmin() || CRUDBooster::isSuperadmin() ? false : true,
-		];
-		$this->form[] = array("label" => "Photo", "name" => "photo", "type" => "upload", "help" => "Recommended resolution is 200x200px", 'required' => false, 'validation' => 'image|max:1000', 'resize_width' => 90, 'resize_height' => 90);
-		$this->form[] = array("label" => "Language", "name" => "lang", "type" => "select", "dataenum" => ['en|English', 'it|Italiano'], "value" => "en");
-
-
-
-		// Policy password in stile NIST 800-63B: lunghezza minima invece di
-		// regole di composizione, blocco password comuni/prevedibili (vedi
-		// App\Helpers\PasswordPolicy e AppServiceProvider::boot()). 'nullable'
-		// preserva il comportamento "lascia vuoto per non cambiarla" in
-		// modifica/profilo; in creazione diventa 'required' cosi' non si
-		// possono piu' creare utenti senza password.
-		// form_body.blade.php deduce da solo l'asterisco "required" cercando
-		// la sottostringa 'required' dentro 'validation', quindi non serve
-		// ripeterlo anche nella chiave 'required' dell'array.
-		$password_validation = (CRUDBooster::isAddPage() ? 'required|' : 'nullable|') . 'min:12|max:72|confirmed|not_common_password';
-		$this->form[] = array(
-			"label" => "Password",
-			"name" => "password",
-			"type" => "password",
-			"validation" => $password_validation,
-			"help" => trans('crudbooster.reset_password_policy_hint') . (CRUDBooster::isAddPage() ? '' : ' ' . trans('crudbooster.password_leave_empty_hint')),
-		);
-		$this->form[] = array("label" => "Password Confirmation", "name" => "password_confirmation", "type" => "password", "help" => trans('crudbooster.password_leave_empty_hint'));
-
 		if (!CRUDBooster::isAddPage() && !CRUDBooster::isProfilePage() ) {
 		//QLIK USERS START
 		if(LicenseHelper::isActiveQlik()) {
@@ -273,8 +284,163 @@ class AdminCmsUsersController extends CBController
 
 		$data['page_title'] = trans("crudbooster.label_button_profile");
 		$data['row']        = CRUDBooster::first('cms_users', CRUDBooster::myId());
+
+		$currentUser = UserHelper::me();
+		$data['mfa_trusted_devices'] = $currentUser ? MfaHelper::listTrustedDevices($currentUser) : collect();
+
 		//dd($data);
 		$this->cbView('crudbooster::default.form', $data);
+	}
+
+	/**
+	 * Fase 1 del piano MFA (enrollment self-service), vedi
+	 * docs/refactoring/096-*. Il secret NON e' ancora persistito qui: resta
+	 * in sessione finche' l'utente non conferma il primo codice
+	 * (postMfaConfirm), per non salvare mai un secret che l'utente non ha
+	 * mai davvero collegato alla sua app authenticator.
+	 */
+	public function getMfaSetup()
+	{
+		$user = UserHelper::me();
+
+		if ($user && $user->two_factor_confirmed_at) {
+			return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_status_enabled'), 'info');
+		}
+
+		$secret = MfaHelper::generateSecret();
+		Session::put('mfa_setup_secret', $secret);
+
+		$issuer = CRUDBooster::getSetting('appname') ?: 'CustomerHive';
+		$qrSvg = MfaHelper::qrCodeSvg($issuer, $user->email, $secret);
+
+		// cbView() (non view() diretto): carica cbLoader(), che condivide con
+		// la view tutte le variabili che admin_template.blade.php si aspetta
+		// sempre (button_export, button_import, ecc.) - vedi CBController::cbLoader().
+		$this->cbView('crudbooster::mfa_setup', [
+			'page_title' => trans('crudbooster.mfa_page_title_setup'),
+			'qr_svg' => $qrSvg,
+			'secret' => $secret,
+		]);
+	}
+
+	public function postMfaConfirm()
+	{
+		$user = UserHelper::me();
+		$secret = Session::get('mfa_setup_secret');
+		$code = trim((string) Request::input('code'));
+
+		// Rate limit (Fase 4, vedi docs/refactoring/099-*): senza, un
+		// codice a 6 cifre e' forzabile a forza bruta in tempi ragionevoli
+		// (1 milione di combinazioni, OWASP raccomanda un limite ~5).
+		$rateLimitKey = 'mfa-confirm:'.$user->id;
+
+		if (RateLimiter::tooManyAttempts($rateLimitKey, 5)) {
+			return CRUDBooster::redirect(CRUDBooster::adminPath('users/mfa-setup'), trans('crudbooster.mfa_error_too_many_attempts'), 'danger');
+		}
+
+		$timeslice = $secret ? MfaHelper::verifyNewSecret($secret, $code) : false;
+
+		if ($timeslice === false) {
+			RateLimiter::hit($rateLimitKey, 900);
+
+			return CRUDBooster::redirect(CRUDBooster::adminPath('users/mfa-setup'), trans('crudbooster.mfa_error_wrong_confirm_code'), 'danger');
+		}
+
+		RateLimiter::clear($rateLimitKey);
+
+		$user->two_factor_secret = MfaHelper::encryptSecret($secret);
+		$user->two_factor_confirmed_at = now();
+		$user->two_factor_last_timeslice = $timeslice;
+		$user->save();
+
+		Session::forget('mfa_setup_secret');
+
+		$codes = MfaHelper::generateRecoveryCodes();
+		MfaHelper::storeRecoveryCodes($user, $codes);
+		Session::flash('mfa_recovery_codes_plaintext', $codes);
+
+		CRUDBooster::insertLog(trans('crudbooster.log_mfa_enabled', ['email' => $user->email, 'ip' => Request::server('REMOTE_ADDR')]));
+
+		return redirect(CRUDBooster::adminPath('users/mfa-backup-codes'));
+	}
+
+	/**
+	 * Mostra i backup codes UNA SOLA VOLTA (Session::pull li rimuove subito
+	 * dopo averli letti): un refresh o un ritorno su questa pagina non li
+	 * ri-mostra piu'.
+	 */
+	public function getMfaBackupCodes()
+	{
+		$codes = Session::pull('mfa_recovery_codes_plaintext');
+
+		if (! $codes) {
+			return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_enabled_success'), 'success');
+		}
+
+		$this->cbView('crudbooster::mfa_backup_codes', [
+			'page_title' => trans('crudbooster.mfa_backup_codes_title'),
+			'codes' => $codes,
+		]);
+	}
+
+	public function postMfaRegenerateBackupCodes()
+	{
+		$user = UserHelper::me();
+
+		if (! $user || ! $user->two_factor_confirmed_at) {
+			return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_status_disabled'), 'warning');
+		}
+
+		$codes = MfaHelper::generateRecoveryCodes();
+		MfaHelper::storeRecoveryCodes($user, $codes);
+		Session::flash('mfa_recovery_codes_plaintext', $codes);
+
+		return redirect(CRUDBooster::adminPath('users/mfa-backup-codes'));
+	}
+
+	public function postMfaDisable()
+	{
+		$user = UserHelper::me();
+		$password = (string) Request::input('password');
+
+		if (! $user || ! \Hash::check($password, $user->password)) {
+			return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_disable_wrong_password'), 'danger');
+		}
+
+		MfaHelper::disable($user);
+
+		CRUDBooster::insertLog(trans('crudbooster.log_mfa_disabled', ['email' => $user->email, 'ip' => Request::server('REMOTE_ADDR')]));
+
+		return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_disable_success'), 'success');
+	}
+
+	public function postMfaRevokeDevices()
+	{
+		$user = UserHelper::me();
+
+		if ($user) {
+			MfaHelper::revokeAllTrustedDevices($user);
+		}
+
+		return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_revoke_devices_success'), 'success');
+	}
+
+	/**
+	 * Revoca un singolo dispositivo fidato (elenco "dispositivi da cui hai
+	 * effettuato l'accesso" sul profilo) - $id arriva dal primo wildcard
+	 * della route auto-instradata per riflessione
+	 * (CRUDBooster::routeController(), stesso meccanismo di tutti gli
+	 * altri metodi Mfa* di questo controller).
+	 */
+	public function postMfaRevokeDevice($id)
+	{
+		$user = UserHelper::me();
+
+		if ($user) {
+			MfaHelper::revokeTrustedDevice($user, (int) $id);
+		}
+
+		return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_revoke_device_success'), 'success');
 	}
 
 	public function hook_before_edit(&$postdata, $user_id)

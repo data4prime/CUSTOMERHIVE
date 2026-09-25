@@ -50,14 +50,14 @@
                 <div style="text-align:center;font-size:12px;color:var(--ch-text-muted);margin-bottom:18px;">oppure</div>
                 @endif
 
-                <form autocomplete='off' action="{{ route('postLogin') }}" method="post">
+                <form action="{{ route('postLogin') }}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
                     <div class="ch-auth-field">
                         <label>Email</label>
                         <div class="ch-auth-input">
                             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg>
-                            <input autocomplete='off' type="text" name='email' required placeholder="nome.cognome@azienda.com" />
+                            <input type="text" name='email' required placeholder="nome.cognome@azienda.com" />
                         </div>
                     </div>
 
@@ -65,7 +65,7 @@
                         <label>Password</label>
                         <div class="ch-auth-input">
                             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-                            <input autocomplete='off' type="password" name='password' required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
+                            <input type="password" name='password' required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
                         </div>
                     </div>
 

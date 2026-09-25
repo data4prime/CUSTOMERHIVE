@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Log;
 use App\Services\ConnectorService;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\RateLimiter;
+use App\Helpers\MfaHelper;
 
 //use App\Classes\Custom\ChiveLicenseService;
 
@@ -380,6 +382,57 @@ $tenant_domain_name = env('APP_DOMAIN');
           \Hash::check($password, $users->password) && $users->status == "Active" &&
             ( ($tenant_domain_name == $tenant || !$tenant_domain_name) || $priv->is_superadmin == 1)
         ) {
+      // Gate MFA (piano discusso con l'utente, vedi docs/refactoring/095-*
+      // e 097-*): controllato PRIMA di popolare qualunque sessione/guard,
+      // cosi' un utente con MFA attivo non risulta mai loggato (ne' sulla
+      // sessione legacy ne' su Auth::) finche' non ha superato la verifica.
+      $userModelForMfa = \App\User::find($users->id);
+
+      if ($userModelForMfa) {
+        // Applica in modo lazy un'eventuale recovery gia' scaduta (Fase 3,
+        // vedi 098-*) anche se l'utente non ha mai riaperto il link email:
+        // nessuno scheduler/cron richiesto.
+        MfaHelper::applyDueRecoveryForUser($userModelForMfa);
+        $userModelForMfa->refresh();
+      }
+
+      if ($userModelForMfa && $userModelForMfa->two_factor_confirmed_at) {
+        // TOTP attivo: sempre richiesto, mai bypassato dal device trust.
+        Session::put('mfa_pending_user_id', $users->id);
+        Session::put('mfa_pending_method', 'totp');
+
+        return redirect()->route('getMfaVerify');
+      }
+
+      if ($userModelForMfa && ! MfaHelper::hasTrustedDevice($userModelForMfa, request())) {
+        // Step-up email OTP solo per chi non ha il TOTP attivo e solo se
+        // il dispositivo non e' gia' fidato (stile GitHub). Se l'invio
+        // fallisce (SMTP non configurato/non raggiungibile) si procede
+        // con il login normale invece di bloccare fuori l'utente -
+        // decisione esplicita dell'utente, vedi docs/refactoring/100-*.
+        if (MfaHelper::sendEmailOtp($userModelForMfa)) {
+          Session::put('mfa_pending_user_id', $users->id);
+          Session::put('mfa_pending_method', 'email');
+
+          return redirect()->route('getMfaVerify');
+        }
+      }
+
+      return $this->completeLogin($users);
+    } else {
+      return redirect()->route('getLogin')->with('message', trans('crudbooster.alert_password_wrong'));
+    }
+  }
+
+  /**
+   * Ultimo tratto del login (sessione legacy + guard nativo + log + hook +
+   * redirect finale), estratto da postLogin() cosi' com'era per essere
+   * riusato anche da postMfaVerify() dopo una verifica MFA riuscita - vedi
+   * docs/refactoring/097-*. Nessun comportamento cambiato per chi non ha
+   * l'MFA attivo.
+   */
+  private function completeLogin($users)
+  {
       $priv = DB::table("cms_privileges")
         ->where("id", $users->id_cms_privileges)
         ->first();
@@ -417,7 +470,7 @@ $tenant_domain_name = env('APP_DOMAIN');
       CRUDBooster::insertLog(trans("crudbooster.log_login", ['email' => $users->email, 'ip' => Request::server('REMOTE_ADDR')]));
 
       $cb_hook_session = new \App\Http\Controllers\CBHook;
-  
+
 
       $cb_hook_session->afterLogin();
 
@@ -434,9 +487,235 @@ $tenant_domain_name = env('APP_DOMAIN');
 
 
       return redirect(CRUDBooster::adminPath());
-    } else {
-      return redirect()->route('getLogin')->with('message', trans('crudbooster.alert_password_wrong'));
-    }
+  }
+
+  /**
+   * Fase 2 del piano MFA (login con step-up), vedi docs/refactoring/097-*.
+   * Pagina di verifica raggiungibile solo con un login "pending" (password
+   * gia' verificata, secondo fattore no): senza Session::get('mfa_pending_user_id')
+   * si torna al login normale.
+   */
+  public function getMfaVerify()
+  {
+      if (! Session::get('mfa_pending_user_id')) {
+          return redirect()->route('getLogin');
+      }
+
+      $method = Session::get('mfa_pending_method');
+
+      // Stesso setup tenant/favicon/logo delle altre pagine pre-login (vedi
+      // getLogin/getForgot).
+      $host = Request::getHost();
+      $array = $host !== '' ? explode('.', $host) : [];
+      $tenant_domain_name = isset($array[0]) ? $array[0] : '';
+      $tenant = Tenant::where('domain_name', $tenant_domain_name)->first();
+      $favicon = CRUDBooster::getFavicon($tenant);
+      $logo = CRUDBooster::getLogo($tenant);
+
+      return view('crudbooster::mfa_verify', compact('tenant', 'favicon', 'logo', 'method'));
+  }
+
+  public function postMfaVerify()
+  {
+      $pendingUserId = Session::get('mfa_pending_user_id');
+
+      if (! $pendingUserId) {
+          return redirect()->route('getLogin');
+      }
+
+      $ip = Request::server('REMOTE_ADDR');
+      $rateLimitKey = 'mfa-verify:'.$pendingUserId.':'.$ip;
+
+      if (RateLimiter::tooManyAttempts($rateLimitKey, 5)) {
+          return redirect()->route('getMfaVerify')->with(['message' => trans('crudbooster.mfa_error_too_many_attempts'), 'message_type' => 'danger']);
+      }
+
+      $method = Session::get('mfa_pending_method');
+      $code = trim((string) Request::input('code'));
+      $userModel = \App\User::find($pendingUserId);
+
+      if (! $userModel) {
+          Session::forget(['mfa_pending_user_id', 'mfa_pending_method']);
+
+          return redirect()->route('getLogin');
+      }
+
+      if ($method === 'totp') {
+          $verified = MfaHelper::verifyAndConsume($userModel, $code) || MfaHelper::consumeRecoveryCode($userModel, $code);
+      } else {
+          $verified = MfaHelper::verifyEmailOtp($userModel, $code);
+      }
+
+      if (! $verified) {
+          RateLimiter::hit($rateLimitKey, 900);
+
+          return redirect()->route('getMfaVerify')->with(['message' => trans('crudbooster.mfa_error_invalid_code'), 'message_type' => 'danger']);
+      }
+
+      RateLimiter::clear($rateLimitKey);
+
+      $users = DB::table(config('crudbooster.USER_TABLE'))->where('id', $pendingUserId)->first();
+
+      Session::forget(['mfa_pending_user_id', 'mfa_pending_method']);
+
+      CRUDBooster::insertLog(trans('crudbooster.log_mfa_verified', ['email' => $users->email, 'ip' => $ip, 'method' => $method]));
+
+      $response = $this->completeLogin($users);
+
+      if ($method === 'email') {
+          // Solo il ramo email OTP puo' far ricordare il dispositivo: un
+          // TOTP attivo resta sempre richiesto, il device trust non lo
+          // bypassa mai (vedi 095-*).
+          $response = $response->withCookie(MfaHelper::issueTrustedDeviceCookie($userModel, request()));
+      }
+
+      return $response;
+  }
+
+  public function postMfaResendEmailOtp()
+  {
+      $pendingUserId = Session::get('mfa_pending_user_id');
+      $method = Session::get('mfa_pending_method');
+
+      if (! $pendingUserId || $method !== 'email') {
+          return redirect()->route('getLogin');
+      }
+
+      $ip = Request::server('REMOTE_ADDR');
+      $rateLimitKey = 'mfa-resend:'.$pendingUserId.':'.$ip;
+
+      if (RateLimiter::tooManyAttempts($rateLimitKey, 3)) {
+          return redirect()->route('getMfaVerify')->with(['message' => trans('crudbooster.mfa_resend_throttled'), 'message_type' => 'warning']);
+      }
+
+      RateLimiter::hit($rateLimitKey, 60);
+
+      $userModel = \App\User::find($pendingUserId);
+      $sent = $userModel && MfaHelper::sendEmailOtp($userModel);
+
+      if (! $sent) {
+          return redirect()->route('getMfaVerify')->with(['message' => trans('crudbooster.mfa_resend_email_failed'), 'message_type' => 'danger']);
+      }
+
+      return redirect()->route('getMfaVerify')->with(['message' => trans('crudbooster.mfa_resend_email_sent'), 'message_type' => 'success']);
+  }
+
+  /**
+   * Fase 3 del piano MFA (recovery "ho perso il dispositivo e i backup
+   * codes"), vedi docs/refactoring/098-*. Pagina di richiesta, raggiungibile
+   * pre-login (link da mfa_verify e da qui la si linkera' anche dalla
+   * pagina di login in futuro se richiesto).
+   */
+  public function getMfaRecovery()
+  {
+      $host = Request::getHost();
+      $array = $host !== '' ? explode('.', $host) : [];
+      $tenant_domain_name = isset($array[0]) ? $array[0] : '';
+      $tenant = Tenant::where('domain_name', $tenant_domain_name)->first();
+      $favicon = CRUDBooster::getFavicon($tenant);
+      $logo = CRUDBooster::getLogo($tenant);
+
+      return view('crudbooster::mfa_recovery', compact('tenant', 'favicon', 'logo'));
+  }
+
+  public function postMfaRecovery()
+  {
+      $email = trim((string) Request::input('email'));
+      $ip = Request::server('REMOTE_ADDR');
+
+      // Rate limit (Fase 4, vedi docs/refactoring/099-*): stesso limite
+      // sia per email sia per IP, per non permettere ne' di mail-bombare
+      // un utente reale ne' di usare i tempi di risposta/il volume di
+      // richieste per enumerare account con MFA attivo.
+      $rateLimitKey = 'mfa-recovery:'.sha1($email).':'.$ip;
+
+      if (RateLimiter::tooManyAttempts($rateLimitKey, 3)) {
+          return redirect()->route('getLogin')->with('message', trans('crudbooster.mfa_recovery_sent'));
+      }
+
+      RateLimiter::hit($rateLimitKey, 3600);
+
+      $user = \App\User::where('email', $email)->first();
+
+      // Stesso messaggio generico a prescindere dal fatto che l'account
+      // esista o abbia l'MFA attivo (decisione presa in sessione): non
+      // rivela se un'email e' registrata ne' se ha il TOTP attivo.
+      if ($user && $user->two_factor_confirmed_at) {
+          $token = MfaHelper::createRecoveryRequest($user);
+          $recoveryUrl = CRUDBooster::adminPath('mfa-recovery-status/'.$token);
+
+          // A differenza dell'email OTP di login, qui un invio fallito NON
+          // deve "aprire" nulla (non ha senso un fallback: non c'e' un
+          // login da completare) - solo evitare il 500, il messaggio resta
+          // lo stesso generico sotto in ogni caso.
+          try {
+              CRUDBooster::sendEmail([
+                  'to' => $user->email,
+                  'data' => (object) ['recovery_url' => $recoveryUrl],
+                  'template' => 'mfa_recovery_request',
+              ]);
+          } catch (\Throwable $e) {
+              Log::warning('MFA: invio email di recovery fallito (SMTP non configurato o non raggiungibile).', [
+                  'user_id' => $user->id,
+                  'error' => $e->getMessage(),
+              ]);
+          }
+
+          CRUDBooster::insertLog(trans('crudbooster.log_mfa_recovery_requested', ['email' => $user->email, 'ip' => Request::server('REMOTE_ADDR')]));
+      }
+
+      return redirect()->route('getLogin')->with('message', trans('crudbooster.mfa_recovery_sent'));
+  }
+
+  public function getMfaRecoveryStatus($token)
+  {
+      $host = Request::getHost();
+      $array = $host !== '' ? explode('.', $host) : [];
+      $tenant_domain_name = isset($array[0]) ? $array[0] : '';
+      $tenant = Tenant::where('domain_name', $tenant_domain_name)->first();
+      $favicon = CRUDBooster::getFavicon($tenant);
+      $logo = CRUDBooster::getLogo($tenant);
+
+      $row = MfaHelper::findRecoveryRequestByToken($token);
+
+      if (! $row) {
+          return view('crudbooster::mfa_recovery_status', array_merge(
+              compact('tenant', 'favicon', 'logo', 'token'),
+              ['state' => 'invalid', 'row' => null]
+          ));
+      }
+
+      // Lazy: se siamo qui dopo i 30 minuti, questo touchpoint la rende
+      // effettiva anche se postLogin() non e' ancora stato invocato per
+      // quell'utente nel frattempo.
+      MfaHelper::applyDueRecovery($row);
+      $row = DB::table('mfa_recovery_requests')->where('id', $row->id)->first();
+
+      if ($row->cancelled_at) {
+          $state = 'cancelled';
+      } elseif ($row->completed_at) {
+          $state = 'completed';
+      } else {
+          $state = 'pending';
+      }
+
+      return view('crudbooster::mfa_recovery_status', compact('tenant', 'favicon', 'logo', 'token', 'state', 'row'));
+  }
+
+  public function postMfaRecoveryCancel($token)
+  {
+      $row = MfaHelper::findRecoveryRequestByToken($token);
+
+      if ($row && ! $row->cancelled_at && ! $row->completed_at) {
+          MfaHelper::cancelRecoveryRequest($row);
+
+          $user = \App\User::find($row->user_id);
+          if ($user) {
+              CRUDBooster::insertLog(trans('crudbooster.log_mfa_recovery_cancelled', ['email' => $user->email]));
+          }
+      }
+
+      return redirect()->route('getMfaRecoveryStatus', ['token' => $token]);
   }
 
   public function getForgot()
