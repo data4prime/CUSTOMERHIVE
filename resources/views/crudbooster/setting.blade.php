@@ -15,6 +15,43 @@
             });
         });
 
+        $(function () {
+            // Test invio email (solo gruppo "Email Setting"): AJAX a parte,
+            // non invia il form - i valori vengono letti dai campi cosi'
+            // come sono in quel momento, anche se non ancora salvati.
+            $('#btn-email-test').on('click', function () {
+                var $btn = $(this);
+                var $result = $('#email-test-result');
+
+                $result.removeClass('text-success text-danger').text({!! json_encode(trans('crudbooster.email_test_sending')) !!});
+                $btn.prop('disabled', true);
+
+                $.ajax({
+                    url: '{{ CRUDBooster::mainpath("test-email") }}',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        test_to: $('#email-test-to').val(),
+                        email_sender: $('[name="email_sender"]').val(),
+                        smtp_driver: $('[name="smtp_driver"]').val(),
+                        smtp_host: $('[name="smtp_host"]').val(),
+                        smtp_port: $('[name="smtp_port"]').val(),
+                        smtp_username: $('[name="smtp_username"]').val(),
+                        smtp_password: $('[name="smtp_password"]').val(),
+                        tls_ssl: $('[name="tls_ssl"]').val()
+                    }
+                }).done(function (resp) {
+                    var text = resp.message + (resp.error ? ' — ' + resp.error : '');
+                    $result.addClass(resp.success ? 'text-success' : 'text-danger').text(text);
+                }).fail(function () {
+                    $result.addClass('text-danger').text({!! json_encode(trans('crudbooster.email_test_unexpected_error')) !!});
+                }).always(function () {
+                    $btn.prop('disabled', false);
+                });
+            });
+        });
+
         var editor_config = {
             path_absolute: "{{ asset('/') }}",
             selector: ".wysiwyg",
@@ -214,6 +251,29 @@
                             <div class="help-block">{{ $s->helper }}</div>
                         </div>
                     @endforeach
+
+                    @if($page_title === 'Email Setting')
+                    {{-- Test invio email: usa i valori digitati nel form COSI'
+                         COME SONO, prima di un eventuale salvataggio - non
+                         invia il form stesso (niente submit), solo una
+                         chiamata AJAX a parte. Vedi docs/refactoring/101-*.
+                         Stessa struttura (label sopra, campo a tutta
+                         larghezza, help-block sotto) degli altri campi di
+                         questa stessa pagina, non il grid a due colonne
+                         usato altrove nel pannello. --}}
+                    <div class="mb-3 row">
+                        <label>{{ trans('crudbooster.email_test_button') }}</label>
+                        <div class="d-flex gap-2">
+                            <input type="email" id="email-test-to" class="form-control flex-grow-1"
+                                   placeholder="{{ trans('crudbooster.email_test_recipient_placeholder') }}"
+                                   value="{{ CRUDBooster::me()->email }}">
+                            <button type="button" id="btn-email-test" class="btn btn-default text-nowrap">
+                                <i class="fa fa-paper-plane"></i> {{ trans('crudbooster.email_test_button') }}
+                            </button>
+                        </div>
+                        <div id="email-test-result" class="help-block"></div>
+                    </div>
+                    @endif
                 </div><!-- /.box-body -->
 
                 <div class="box-footer">

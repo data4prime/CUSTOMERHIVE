@@ -248,6 +248,116 @@ class SettingsController extends CBController
         return redirect()->back()->with(['message' => 'Your setting has been saved !', 'message_type' => 'success']);
     }
 
+    /**
+     * Test di invio email dal gruppo "Email Setting" (solo per quel
+     * gruppo, vedi docs/refactoring/101-*): usa i valori digitati nel form
+     * COSI' COME SONO, prima di un eventuale salvataggio - non tocca
+     * cms_settings. La password, come nel form, arriva vuota se l'utente
+     * non l'ha ritoccata: in quel caso si usa quella gia' salvata (stessa
+     * convenzione di postSaveSetting()).
+     *
+     * Le chiavi legacy 'mail.driver'/'mail.host'/... (non
+     * 'mail.mailers.*'): config/mail.php di questo progetto conserva
+     * ancora la chiave top-level 'driver' (mai migrato al formato
+     * 'mailers' moderno), e Illuminate\Mail\MailManager::getConfig() ha un
+     * ramo di compatibilita' esplicito - se 'mail.driver' e' valorizzato,
+     * usa SEMPRE l'intero array 'mail' con le chiavi piatte, ignorando
+     * qualunque 'mail.mailers.<nome>' per qualsiasi mailer richiesto.
+     * Stessa tecnica gia' usata da CRUDBooster::sendEmail()/
+     * sendEmailQueue() - qui e' quella giusta, non un ripiego.
+     */
+    public function postTestEmail()
+    {
+        if (! CRUDBooster::isSuperadmin()) {
+            return response()->json(['success' => false, 'message' => trans('crudbooster.denied_access')], 403);
+        }
+
+        $to = trim((string) Request::input('test_to'));
+        if (! $to || ! filter_var($to, FILTER_VALIDATE_EMAIL)) {
+            return response()->json(['success' => false, 'message' => trans('crudbooster.email_test_invalid_recipient')]);
+        }
+
+        // Solo la password ha il fallback "vuoto = usa quella salvata"
+        // (stessa convenzione del form, che non la ripopola mai in chiaro).
+        // Tutti gli altri campi usano ESATTAMENTE quello che il form ha
+        // appena inviato, niente merge col valore salvato: il test deve
+        // riflettere quello che si vede a schermo in quel momento, non un
+        // ibrido - altrimenti un driver non selezionato (es. la select
+        // mostra "Select Mail Driver" perche' il valore salvato non
+        // corrisponde a nessuna opzione valida) darebbe un falso esito
+        // positivo usando di nascosto il valore salvato invece di quello
+        // (assente) mostrato in pagina.
+        $driver = trim((string) Request::input('smtp_driver', ''));
+        $host = trim((string) Request::input('smtp_host', ''));
+        $port = trim((string) Request::input('smtp_port', ''));
+        $username = trim((string) Request::input('smtp_username', ''));
+        $password = (string) Request::input('smtp_password', '');
+        if ($password === '') {
+            $password = (string) CRUDBooster::getSetting('smtp_password');
+        }
+        $fromEmail = trim((string) Request::input('email_sender', ''));
+        $encryption = strtoupper(trim((string) Request::input('tls_ssl', '')));
+
+        if ($driver === '') {
+            return response()->json(['success' => false, 'message' => trans('crudbooster.email_test_no_driver')]);
+        }
+
+        if ($driver === 'smtp' && $host === '') {
+            return response()->json(['success' => false, 'message' => trans('crudbooster.email_test_no_host')]);
+        }
+
+        $scheme = null;
+        if ($encryption === 'SSL') {
+            $scheme = 'smtps';
+        } elseif ($encryption === 'TLS') {
+            $scheme = 'smtp';
+        }
+
+        config([
+            'mail.driver' => $driver,
+            'mail.host' => $host,
+            'mail.port' => $port ?: 587,
+            'mail.username' => $username,
+            'mail.password' => $password,
+            'mail.scheme' => $scheme,
+            'mail.from.address' => $fromEmail ?: 'no-reply@example.com',
+            'mail.from.name' => CRUDBooster::getSetting('appname') ?: 'CustomerHive',
+        ]);
+
+        // MailManager nuovo (non il singleton nel container, che potrebbe
+        // avere gia' risolto e messo in cache un mailer con la config
+        // precedente): garantisce che questo test usi sempre e solo i
+        // valori appena impostati sopra.
+        $manager = new \Illuminate\Mail\MailManager(app());
+
+        try {
+            $manager->mailer()->raw(
+                trans('crudbooster.email_test_body'),
+                function ($message) use ($to) {
+                    $message->to($to)->subject(trans('crudbooster.email_test_subject'));
+                }
+            );
+        } catch (\Throwable $e) {
+            Log::warning('Test invio email (Settings > Email Setting) fallito.', [
+                'to' => $to,
+                'driver' => $driver,
+                'host' => $host,
+                'port' => $port,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => trans('crudbooster.email_test_failed'),
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        Log::info('Test invio email (Settings > Email Setting) riuscito.', ['to' => $to, 'driver' => $driver, 'host' => $host]);
+
+        return response()->json(['success' => true, 'message' => trans('crudbooster.email_test_success', ['to' => $to])]);
+    }
+
     function hook_before_add(&$arr)
     {
         $arr['name'] = str_slug($arr['label'], '_');

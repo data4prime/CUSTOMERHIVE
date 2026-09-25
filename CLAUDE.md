@@ -212,6 +212,19 @@ controller custom dei clienti.
   del pannello si blocca senza una modifica di codice apparente, controllare
   prima se la tabella `license` ha una riga valida prima di sospettare un
   bug — dettagli in `docs/login-e-licensing.md`.
+- **`config/mail.php` conserva ancora la chiave top-level legacy `driver`**
+  (formato Laravel <= 6.x, mai migrato al formato moderno `mailers`).
+  `Illuminate\Mail\MailManager::getConfig()` ha un ramo di compatibilità
+  esplicito: se `mail.driver` è valorizzato, usa **sempre** l'intero array
+  `mail` (le chiavi piatte `host`/`port`/`username`/`password`/...) per
+  **qualunque** mailer richiesto, ignorando silenziosamente
+  `mail.mailers.<nome>` — impostare `config(['mail.mailers.foo' => ...])`
+  per personalizzare l'invio in questo progetto non ha alcun effetto.
+  Per controllare davvero il transport usato bisogna impostare le chiavi
+  piatte legacy (`mail.driver`/`mail.host`/`mail.port`/...), esattamente
+  come già fa `CRUDBooster::sendEmail()`/`sendEmailQueue()` e come fa
+  `SettingsController::postTestEmail()` (vedi
+  `docs/refactoring/101-settings-email-test-invio.md`).
 
 ## Dove guardare per saperne di più
 
