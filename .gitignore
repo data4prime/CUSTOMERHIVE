@@ -43,3 +43,6 @@ app/Http/Controllers/*
 
 # Note/todo personali di lavoro, non pensate per il repo condiviso.
 /todo/
+
+# Note personali dell'utente, non pensate per il repo condiviso.
+/howto.txt
