@@ -126,6 +126,19 @@ zero leggendo i diff di git.
 | [085](085-pulizia-file-morti-e-branch-obsoleti.md) | Rimossi 3 file inutilizzati (`phpunit.xml.bak`, `5.0` vuoto, duplicazione 15MB `public/vendor/crudbooster/assets/assets/`); cancellati 8 branch remoti obsoleti, tutti confermati senza commit unici rispetto a main/dev | Housekeeping | Completato | 2026-09-24 |
 | [084](084-host-request-path-e-chatai-cms-moduls.md) | `$_SERVER['HTTP_HOST']`/`REQUEST_URI` residui sostituiti con `Request`/`request()` in 4 metodi di `AdminController` e 3 di `CRUDBooster` (pattern segnalato in 081); aggiunta la riga mancante in `cms_moduls` per `AdminChatAIController` (stesso bug di 009/050, modulo ChatAI senza rotte) | Bug fix / robustezza / dati | Completato | 2026-09-24 |
 | [083](083-firebase-php-jwt-7.md) | **`firebase/php-jwt` 6→7** (CVE-2025-45769): la 7.x rifiuta passphrase HS256 < 32 byte e chiavi RSA < 2048 bit — aggiunti try/catch con log e messaggio (niente più 500, anche per chiavi Qlik vuote), validazione `min:32` sulla Passphrase Chat AI. **Verificare passphrase e chiavi dei clienti prima del deploy** (query nel documento) | Dipendenze / Sicurezza | Completato | 2026-09-24 |
+| [094](094-pulizia-librerie-js-morte-public-vendor.md) | Censimento delle librerie JS/CSS vendorizzate a mano in `public/vendor/crudbooster/` (punto cieco Dependabot segnalato in 082) — rimosse ~2.5MB confermate morte (edit_area, fancy, datetimepicker-master, bootstrap-datetimepicker, bootstrap, unslider, 4 CSS non importati, dateformat.js, font DroidNaskh, bg_blur*.jpg, jquery.numberformatter, laravel-filemanager duplicato) | Housekeeping | Completato | 2026-09-25 |
+| [095](095-mfa-fase-0-fondamenta-dati.md) | MFA (TOTP + Email OTP): Fase 0, schema dati (`two_factor_secret`/`two_factor_confirmed_at` su `cms_users`, `mfa_recovery_codes`, `mfa_trusted_devices`, template email), librerie `pragmarx/google2fa`+`bacon/bacon-qr-code` — nessun controller/route toccato, login invariato | Auth | Completato | 2026-09-25 |
+| [096](096-mfa-fase-1-enrollment-totp.md) | MFA: Fase 1, enrollment TOTP self-service dal profilo (QR, conferma primo codice, backup codes monouso, disable/regenerate/revoke devices) — `MfaHelper` nuovo, bug migration mancante trovato e risolto durante il test end-to-end | Auth | Completato | 2026-09-25 |
+| [097](097-mfa-fase-2-login-step-up.md) | MFA: Fase 2, gate MFA in `postLogin()` (TOTP sempre richiesto se attivo, email OTP come step-up solo senza TOTP e dispositivo non fidato), rate limiting nativo, anti-replay verificato manualmente | Auth | Completato | 2026-09-25 |
+| [098](098-mfa-fase-3-recovery.md) | MFA: Fase 3, recovery "ho perso il dispositivo e i backup codes" — link email con finestra di attesa 30 min + annulla, completamento lazy (nessun cron) sia da link sia da tentativo di login | Auth | Completato | 2026-09-25 |
+| [099](099-mfa-fase-4-hardening.md) | MFA: Fase 4 (chiusura piano), rate limiting su enrollment/recovery, comando `mfa:cleanup` schedulato — bug reale (500 su `\RateLimiter` non aliasato) trovato e risolto durante il test | Auth | Completato | 2026-09-25 |
+| [100](100-mfa-email-otp-fail-open-senza-smtp.md) | MFA: se l'invio dell'email OTP fallisce (SMTP non configurato/raggiungibile) il login procede normalmente invece di dare 500 — fail-open deliberato, solo sul ramo email, mai sul TOTP | Auth | Completato | 2026-09-25 |
+| [101](101-settings-email-test-invio.md) | Settings "Email Setting": pulsante per testare l'invio email prima di salvare, con esito e log — scoperta tecnica: `config/mail.php` legacy fa ignorare `mail.mailers.*` a `MailManager` in questo progetto | Settings / Email | Completato | 2026-09-25 |
+| [102](102-mfa-badge-bootstrap3-vs-bootstrap5.md) | MFA: badge di stato sul profilo senza forma/colore (Bootstrap 3 su tema Bootstrap 5), poi sovrapposizione con "System Information" — causa radice: bug preesistente in `form_body.blade.php` (div mai chiusi se manca il campo `group`), che rivela anche il pulsante "Save" del profilo gia' oggi invisibile | Auth / UI | Completato | 2026-09-25 |
+| [103](103-fix-save-invisibile-profilo-utenti.md) | Fix: pulsante Save invisibile su `admin/users/profile` — `form_body.blade.php` ora chiude il box "System Information" anche su `primary_group` (non solo `group`); due approcci piu' invasivi scartati dopo aver causato corruzione dati reale in test | Users / UI | Completato | 2026-09-25 |
+| [104](104-mfa-elenco-dispositivi-fidati.md) | MFA: elenco dei dispositivi fidati sul profilo (user agent, prima/ultima volta, scadenza) con revoca per singolo dispositivo, non solo "disconnetti tutti" | Auth | Completato | 2026-09-25 |
+| [105](105-link-clicca-qui-senza-contesto.md) | Fix: link "Clicca qui" senza contesto su `reset_password`/3 viste MFA — testo esplicativo o link autoesplicativo | Auth / UI | Completato | 2026-09-25 |
+| [106](106-restyle-template-email-auth.md) | Restyle template email auth (reset password, MFA OTP, MFA recovery) in stile app + fix `subject` mai valorizzato; wrapper condiviso `emails/header.blade.php`/`footer.blade.php` ristilizzato con logo — scoperto e corretto un commento HTML (invece di Blade) che sarebbe finito dentro ogni email reale | Email / Auth / UI | Completato | 2026-09-25 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
@@ -266,9 +279,13 @@ trasformate in un intervento vero e proprio:
   agosto, era Laravel 9) — **rivalutato il 2026-09-24**: lato PHP ne
   restava 1 (`firebase/php-jwt`, aggiornata in [083](083-firebase-php-jwt-7.md),
   `composer audit` ora pulito); il resto veniva dai `package.json` della build morta,
-  rimossi in [082](082-rimossa-build-gulp-e-package-json.md). Punto cieco
+  rimossi in [082](082-rimossa-build-gulp-e-package-json.md). ~~Punto cieco
   rimasto: librerie JS copiate a mano in `public/vendor/` (nessun manifest,
-  Dependabot non le vede) — serve un censimento dedicato.
+  Dependabot non le vede) — serve un censimento dedicato~~ — **censimento
+  fatto e parte morta rimossa in
+  [094](094-pulizia-librerie-js-morte-public-vendor.md)** (2026-09-25).
+  Resta fuori scope `assets/adminlte/plugins/` (11 MB, non auditata
+  internamente).
 - ~~`ApiCustomController`: nessun controllo di privilegio~~ — **risolto in
   [078](078-api-generator-privilegi.md)** (2026-09-24).
 - ~~`StatisticBuilderController`: nessun controllo di privilegio su
@@ -373,6 +390,16 @@ trasformate in un intervento vero e proprio:
   [084](084-host-request-path-e-chatai-cms-moduls.md)** (2026-09-24): non
   era solo il DB locale, mancava la riga anche nel seeder (si sarebbe
   ripresentato su ogni installazione pulita), stesso pattern di 009/050.
+
+- ~~**`form_body.blade.php`: il box collassabile "System Information" non si
+  chiude mai per moduli con campo `tenant` ma senza campo `group`**~~
+  (scoperto il 2026-09-25 lavorando su [102](102-mfa-badge-bootstrap3-vs-bootstrap5.md))
+  — **risolto in [103](103-fix-save-invisibile-profilo-utenti.md)**
+  (2026-09-25): il modulo Users usa `primary_group`, non `group` - la
+  condizione di chiusura ora riconosce anche quel nome. Nessun campo tolto
+  dal form (due tentativi precedenti che rimuovevano campi sono stati
+  scartati dopo aver causato una corruzione dati reale, verificata e
+  corretta a mano sull'ambiente locale - vedi 103, sezione dedicata).
 
 ## Documenti correlati
 
