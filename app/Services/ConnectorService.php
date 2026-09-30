@@ -123,7 +123,12 @@ class ConnectorService
 
 
                 if ($license && isset($license['id'])) {
-                    Storage::disk('license')->put('license.json', json_encode($license));
+                    if (!Storage::disk('license')->put('license.json', json_encode($license))) {
+                        // put() non lancia eccezioni: senza questo log un
+                        // file non scrivibile (es. owner root) lascia la
+                        // licenza locale stale senza alcun segnale.
+                        Log::error('License cache file not writable: ' . Storage::disk('license')->path('license.json'));
+                    }
                     Log::info(json_encode($license));
                     return $license;
                 }
@@ -159,7 +164,7 @@ class ConnectorService
     {
 
         Log::info(json_encode("getLicenseFromFile"));
-        $path = storage_path('app/license.json');
+        $path = Storage::disk('license')->path('license.json');
 
         if (!file_exists($path)) {
             Log::warning("License fallback file not found at: {$path}");

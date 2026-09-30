@@ -45,7 +45,13 @@ return [
 
         'license' => [
             'driver' => 'local',
-            'root' => storage_path('app/'),
+            // In testing il file di licenza vive in una cartella separata:
+            // i test di ConnectorService lo cancellano/ricreano, e girando
+            // come root (docker compose exec) lo lasciavano root:root,
+            // impedendo a www-data di aggiornare la licenza vera.
+            'root' => env('APP_ENV') === 'testing'
+                ? storage_path('framework/testing/license')
+                : storage_path('app/'),
         ],
 
         /*

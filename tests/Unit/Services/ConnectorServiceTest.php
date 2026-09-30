@@ -9,6 +9,7 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 /**
@@ -38,7 +39,12 @@ class ConnectorServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->licenseFilePath = storage_path('app/license.json');
+        // Disco 'license' = cartella isolata in testing (config/filesystems.php):
+        // non tocca il license.json vero usato da www-data.
+        $this->licenseFilePath = Storage::disk('license')->path('license.json');
+        if (!is_dir(dirname($this->licenseFilePath))) {
+            mkdir(dirname($this->licenseFilePath), 0777, true);
+        }
 
         if (file_exists($this->licenseFilePath)) {
             $this->originalLicenseFileContents = file_get_contents($this->licenseFilePath);
