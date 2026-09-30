@@ -18,6 +18,7 @@
     <!-- Font Awesome Icons -->
     <link href="{{asset('vendor/crudbooster/assets/adminlte/font-awesome/css')}}/font-awesome.min.css" rel="stylesheet"
         type="text/css" />
+    <link href="{{asset('css/icons-lucide.css')}}" rel="stylesheet" type="text/css" />
     <!-- Ionicons -->
     <link href="{{asset('vendor/crudbooster/ionic/css/ionicons.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- Theme style -->
@@ -124,9 +125,14 @@
 @endphp
 <body style="font-size: 14px;"
     @if($role_accent) data-role-accent="{{ $role_accent }}" @endif
-    class="ch-shell @php echo config('crudbooster.ADMIN_LAYOUT'); @endphp {{isset($sidebar_mode) ?: ''}}">
+    class="ch-shell @php echo config('crudbooster.ADMIN_LAYOUT'); @endphp {{isset($sidebar_mode) ?: ''}} {{ !empty($ch_embed) ? 'ch-embed' : '' }}">
     <div id='app' class="wrapper">
 
+        {{-- Modalita' embed (?embed=1, vedi CBBackend e docs/refactoring/162-*):
+             la pagina vive dentro l'iframe del widget "Modulo incorporato",
+             quindi niente guscio dell'app (header, chat, licenza, sidebar,
+             footer) - restano titolo e pulsanti d'azione del modulo. --}}
+        @if(empty($ch_embed))
         <!-- Header -->
         @include('crudbooster::header')
 
@@ -138,6 +144,7 @@
 
         <!-- Sidebar -->
         @include('crudbooster::sidebar')
+        @endif
 
         
 
@@ -308,7 +315,9 @@
         </div><!-- /.content-wrapper -->
 
         <!-- Footer -->
+        @if(empty($ch_embed))
         @include('crudbooster::footer')
+        @endif
 
     </div><!-- ./wrapper -->
     @endif
@@ -325,6 +334,74 @@
 
         var site_url = "{{ url('/') }}";
     </script>
+
+    @if(!empty($ch_embed))
+    {{-- Modalita' embed: mantiene ?embed=1 su link, form e chiamate ajax
+         dello stesso sito, cosi' navigare/salvare dentro il widget non
+         porta mai alla pagina completa (i redirect lato server li copre
+         CBBackend). target="_blank"/"_top" e link esterni restano invariati. --}}
+    <script type="text/javascript">
+        (function () {
+            function addEmbed(u) {
+                try {
+                    var a = new URL(u, location.href);
+                    if (a.origin !== location.origin) { return u; }
+                    if (a.searchParams.get('embed') === '1') { return u; }
+                    a.searchParams.set('embed', '1');
+                    return a.pathname + a.search + a.hash;
+                } catch (e) { return u; }
+            }
+
+            function decorateLink(a) {
+                var h = a.getAttribute('href');
+                if (!h || h.charAt(0) === '#' || /^(javascript|mailto|tel|data):/i.test(h)) { return; }
+                if (a.target && a.target !== '_self') { return; }
+                a.setAttribute('href', addEmbed(h));
+            }
+
+            function decorateForm(f) {
+                var method = (f.getAttribute('method') || 'get').toLowerCase();
+                if (method === 'get') {
+                    if (!f.querySelector('input[name="embed"]')) {
+                        var i = document.createElement('input');
+                        i.type = 'hidden'; i.name = 'embed'; i.value = '1';
+                        f.appendChild(i);
+                    }
+                } else {
+                    f.setAttribute('action', addEmbed(f.getAttribute('action') || location.href));
+                }
+            }
+
+            function decorateAll() {
+                document.querySelectorAll('a[href]').forEach(decorateLink);
+                document.querySelectorAll('form').forEach(decorateForm);
+            }
+
+            document.addEventListener('DOMContentLoaded', decorateAll);
+
+            // Contenuti aggiunti dopo il caricamento (ajax, modali): al click/submit.
+            document.addEventListener('click', function (e) {
+                var a = e.target.closest ? e.target.closest('a[href]') : null;
+                if (a) { decorateLink(a); }
+            }, true);
+            document.addEventListener('submit', function (e) {
+                if (e.target && e.target.tagName === 'FORM') { decorateForm(e.target); }
+            }, true);
+
+            if (window.jQuery) {
+                jQuery.ajaxPrefilter(function (options) {
+                    if (options.url) { options.url = addEmbed(options.url); }
+                });
+                // Sessione scaduta durante una chiamata ajax: login a pagina intera.
+                jQuery(document).ajaxSuccess(function (event, xhr, settings, data) {
+                    if (data && data.break_frame && data.redirect_url) {
+                        window.top.location.href = data.redirect_url;
+                    }
+                });
+            }
+        })();
+    </script>
+    @endif
 
 
 
