@@ -32,6 +32,44 @@
                 @endif
                 <div class="box-body" id="parent-form-area">
 
+                    {{-- Relazione con l'app Qlik (facoltativa): si mostra solo per gli item sincronizzati da Qlik --}}
+                    @if(isset($row) && !empty($row->qlik_app_id))
+                    @php $qsApp = \Illuminate\Support\Facades\DB::table('qlik_apps')->where('id', $row->qlik_app_id)->first(); @endphp
+                    @if( isset($command) && $command == 'detail')
+                    {{-- In detail il resto è una tabella a righe: stesso layout per restare allineati --}}
+                    <div class='table-responsive'>
+                        <table class='table table-striped' style="margin-bottom:0">
+                            <tr>
+                                <td style="font-weight:bold;width:25%">{{ trans('crudbooster.qlik_item_app_label') }}</td>
+                                <td>
+                                    {{ $qsApp->appname ?? ('#' . $row->qlik_app_id) }}
+                                    @if(!empty($qsApp->appid)) <small class="text-muted">({{ $qsApp->appid }})</small> @endif
+                                    @if(!empty($row->is_missing)) &nbsp; <span class="label label-warning" style="background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px">{{ trans('crudbooster.qlik_sync_missing_badge') }}</span> @endif
+                                </td>
+                            </tr>
+                            @if(!empty($row->external_id))
+                            <tr>
+                                <td style="font-weight:bold;width:25%">{{ trans('crudbooster.qlik_item_sheet_label') }}</td>
+                                <td>{{ $row->external_id }}</td>
+                            </tr>
+                            @endif
+                        </table>
+                    </div>
+                    @else
+                    <div class="mb-3 row">
+                        <label class="col-form-label col-sm-2">{{ trans('crudbooster.qlik_item_app_label') }}</label>
+                        <div class="col-sm-10">
+                            <p class="form-control-plaintext">
+                                {{ $qsApp->appname ?? ('#' . $row->qlik_app_id) }}
+                                @if(!empty($qsApp->appid)) <small class="text-muted">({{ $qsApp->appid }})</small> @endif
+                                @if(!empty($row->external_id)) &nbsp;·&nbsp; {{ trans('crudbooster.qlik_item_sheet_label') }}: <small class="text-muted">{{ $row->external_id }}</small> @endif
+                                @if(!empty($row->is_missing)) &nbsp; <span class="label label-warning" style="background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px">{{ trans('crudbooster.qlik_sync_missing_badge') }}</span> @endif
+                            </p>
+                        </div>
+                    </div>
+                    @endif
+                    @endif
+
                     @if( isset($command) && isset($command) && $command == 'detail')
                     @include("qlik_items.form_detail")
                     @else

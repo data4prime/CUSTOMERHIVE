@@ -64,7 +64,7 @@ class QlikConfController extends CBController
         $this->form[] = ['label' => 'Key ID', 'name' => 'keyid', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Key ID'];
         $this->form[] = ['label' => 'Issuer', 'name' => 'issuer', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Issuer'];
         $this->form[] = ['label' => 'Web Int ID', 'name' => 'web_int_id', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter Web Int ID'];
-        $this->form[] = ['label' => 'Private Key', 'name' => 'private_key', 'type' => 'upload', 'validation' => 'mimes:pem', 'width' => 'col-sm-10', 'placeholder' => 'Enter Private Key'];
+        $this->form[] = ['label' => 'Private Key', 'name' => 'private_key', 'type' => 'upload', 'validation' => 'extensions:pem','width' => 'col-sm-10', 'placeholder' => 'Enter Private Key'];
 
         $this->form[] = ['label' => 'Debug', 'name' => 'debug', 'type' => 'select', 'width' => 'col-sm-10', 'dataenum' => 'Inactive;Active'];
 	$this->form[] = ['label' => 'Tenant Path', 'name' => 'tenant_path', 'type' => 'hidden', 'width' => 'col-sm-10', 'value' => env('APP_URL')];
@@ -300,6 +300,227 @@ class QlikConfController extends CBController
             
             ";
 
+		// Pulsante "Prova connessione" (form add/edit/detail). Testi passati gia'
+		// tradotti da Blade/PHP, mai scritti in chiaro nel JS.
+		// L'utente corrente deve avere un utente Qlik associato a QUESTA
+		// configurazione (qlik_users): il token del test e' costruito su
+		// quell'identita'. Nel form di creazione non esiste ancora id, quindi
+		// il pulsante e' disattivato con un suggerimento.
+		$canTestConnection = false;
+		$testBlockHint = trans('crudbooster.qlik_test_add_hint');
+		$testConfId = in_array(Request::segment(3), ['edit', 'detail']) ? (int) Request::segment(4) : 0;
+		if ($testConfId > 0) {
+			$canTestConnection = DB::table('qlik_users')->where('user_id', CRUDBooster::myId())->where('qlik_conf_id', $testConfId)->exists();
+			$testBlockHint = trans('crudbooster.qlik_test_no_user_hint');
+		}
+
+		$testConnectionJs = <<<'JS'
+        document.addEventListener('DOMContentLoaded', function () {
+            var form = document.getElementById('form');
+            if (!form) { return; }
+            var footerCol = form.querySelector('.box-footer .col-sm-10');
+            if (!footerCol) { return; }
+
+            var I18N = __I18N__;
+            var TEST_URL = __URL__;
+            var CAN_TEST = __CAN_TEST__;
+            var BLOCK_HINT = __BLOCK_HINT__;
+            var COLORS = { ok: '#198754', warn: '#b58105', fail: '#dc3545', skip: '#6c757d' };
+            var m = (form.getAttribute('action') || '').match(/edit-save\/(\d+)/);
+            var confId = m ? m[1] : '';
+            var lastReport = '';
+
+            function el(tag, text, style) {
+                var e = document.createElement(tag);
+                if (text !== undefined && text !== null) { e.textContent = text; }
+                if (style) { e.style.cssText = style; }
+                return e;
+            }
+
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-info';
+            var icon = document.createElement('i');
+            icon.className = 'fa fa-plug';
+            btn.appendChild(icon);
+            btn.appendChild(document.createTextNode(' ' + I18N.button));
+            footerCol.appendChild(document.createTextNode(' '));
+            footerCol.appendChild(btn);
+
+            if (!CAN_TEST) {
+                btn.disabled = true;
+                footerCol.appendChild(el('p', BLOCK_HINT, 'margin:8px 0 0;color:#6c757d;font-size:13px'));
+                return;
+            }
+
+            function setLoading(on) {
+                btn.disabled = on;
+                icon.className = on ? 'fa fa-spinner fa-spin' : 'fa fa-plug';
+            }
+
+            // ---- popup (overlay autonomo: non dipende dal modal di Bootstrap) ----
+            var overlay = null;
+
+            function closePopup() {
+                if (overlay && overlay.parentNode) { overlay.parentNode.removeChild(overlay); }
+                overlay = null;
+                document.removeEventListener('keydown', onKey);
+            }
+
+            function onKey(e) { if (e.key === 'Escape') { closePopup(); } }
+
+            function openPopup(headBg, headText, bodyBuilder, withCopy) {
+                closePopup();
+                overlay = el('div', null, 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:100000;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:16px');
+                overlay.addEventListener('click', function (e) { if (e.target === overlay) { closePopup(); } });
+
+                var dlg = el('div', null, 'background:#fff;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.35);width:100%;max-width:900px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden');
+                dlg.setAttribute('role', 'dialog');
+                dlg.setAttribute('aria-modal', 'true');
+
+                var head = el('div', null, 'padding:12px 16px;color:#fff;display:flex;align-items:center;justify-content:space-between;background:' + headBg);
+                var titles = el('div', null, 'min-width:0');
+                titles.appendChild(el('div', I18N.title, 'font-size:12px;opacity:.85'));
+                titles.appendChild(el('div', headText, 'font-weight:600;font-size:15px'));
+                head.appendChild(titles);
+                var x = el('button', '×', 'background:none;border:0;color:#fff;font-size:26px;line-height:1;cursor:pointer;padding:0 4px');
+                x.type = 'button';
+                x.setAttribute('aria-label', I18N.close);
+                x.addEventListener('click', closePopup);
+                head.appendChild(x);
+                dlg.appendChild(head);
+
+                var body = el('div', null, 'padding:12px 16px;overflow-y:auto;flex:1 1 auto');
+                bodyBuilder(body);
+                dlg.appendChild(body);
+
+                var foot = el('div', null, 'padding:10px 16px;border-top:1px solid #ddd;text-align:right;background:#f5f5f5');
+                if (withCopy) {
+                    var copy = el('button', I18N.copy, 'margin-right:8px');
+                    copy.type = 'button';
+                    copy.className = 'btn btn-default btn-sm';
+                    copy.addEventListener('click', function () {
+                        var done = function () { copy.textContent = I18N.copied; };
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            navigator.clipboard.writeText(lastReport).then(done);
+                        } else {
+                            var ta = document.createElement('textarea');
+                            ta.value = lastReport;
+                            document.body.appendChild(ta);
+                            ta.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(ta);
+                            done();
+                        }
+                    });
+                    foot.appendChild(copy);
+                }
+                var close = el('button', I18N.close);
+                close.type = 'button';
+                close.className = 'btn btn-default btn-sm';
+                close.addEventListener('click', closePopup);
+                foot.appendChild(close);
+                dlg.appendChild(foot);
+
+                overlay.appendChild(dlg);
+                document.body.appendChild(overlay);
+                document.addEventListener('keydown', onKey);
+                close.focus();
+            }
+
+            function showReport(data) {
+                var text = [data.summary];
+                openPopup(data.ok ? COLORS.ok : COLORS.fail, data.summary, function (body) {
+                    (data.steps || []).forEach(function (s) {
+                        var color = COLORS[s.status] || COLORS.skip;
+                        var box = el('details', null, 'border:1px solid #ddd;border-left:4px solid ' + color + ';border-radius:3px;background:#fff;margin-bottom:8px;padding:6px 10px');
+                        if (s.status !== 'ok') { box.open = true; }
+
+                        var sum = el('summary', null, 'cursor:pointer;font-weight:600');
+                        sum.appendChild(el('span', I18N['status_' + s.status] || s.status, 'display:inline-block;min-width:80px;color:' + color));
+                        sum.appendChild(document.createTextNode(s.title));
+                        sum.appendChild(el('span', ' — ' + s.duration_ms + ' ms', 'font-weight:400;color:#6c757d'));
+                        box.appendChild(sum);
+
+                        text.push('', '[' + (I18N['status_' + s.status] || s.status) + '] ' + s.title + ' (' + s.duration_ms + ' ms)');
+
+                        (s.hints || []).forEach(function (h) {
+                            box.appendChild(el('div', h, 'margin:6px 0;padding:6px 8px;background:#fff8e1;border-radius:3px'));
+                            text.push('  > ' + h);
+                        });
+
+                        var details = s.details || {};
+                        Object.keys(details).forEach(function (k) {
+                            var row = el('div', null, 'margin-top:6px');
+                            row.appendChild(el('div', k, 'font-size:12px;color:#6c757d'));
+                            row.appendChild(el('pre', details[k], 'margin:0;white-space:pre-wrap;word-break:break-all;background:#f7f7f9;border:0;padding:6px 8px;font-size:12px'));
+                            box.appendChild(row);
+                            text.push('  ' + k + ': ' + String(details[k]).replace(/\n/g, '\n    '));
+                        });
+
+                        body.appendChild(box);
+                    });
+                    lastReport = text.join('\n');
+                }, true);
+            }
+
+            function showError(message, raw) {
+                openPopup(COLORS.fail, message, function (body) {
+                    if (raw) {
+                        body.appendChild(el('pre', raw.substring(0, 2000), 'white-space:pre-wrap;font-size:12px;margin:0'));
+                    }
+                }, false);
+            }
+
+            btn.addEventListener('click', function () {
+                var fd = new FormData(form);
+                fd.set('conf_id', confId);
+                setLoading(true);
+
+                fetch(TEST_URL, {
+                    method: 'POST',
+                    body: fd,
+                    credentials: 'same-origin',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                }).then(function (r) {
+                    return r.text().then(function (t) { return { status: r.status, text: t }; });
+                }).then(function (res) {
+                    var data = null;
+                    try { data = JSON.parse(res.text); } catch (e) { data = null; }
+                    if (data && data.steps && data.steps.length) {
+                        showReport(data);
+                    } else if (data && data.summary) {
+                        showError(data.summary);
+                    } else {
+                        showError(I18N.bad_response + ' (HTTP ' + res.status + ')', res.text);
+                    }
+                }).catch(function (err) {
+                    showError(I18N.network_error + ': ' + err.message);
+                }).then(function () {
+                    setLoading(false);
+                });
+            });
+        });
+JS;
+		$this->script_js .= strtr($testConnectionJs, [
+			'__I18N__' => json_encode([
+				'button' => trans('crudbooster.qlik_test_button'),
+				'title' => trans('crudbooster.qlik_test_modal_title'),
+				'close' => trans('crudbooster.qlik_test_close'),
+				'copy' => trans('crudbooster.qlik_test_copy'),
+				'copied' => trans('crudbooster.qlik_test_copied'),
+				'bad_response' => trans('crudbooster.qlik_test_bad_response'),
+				'network_error' => trans('crudbooster.qlik_test_network_error'),
+				'status_ok' => trans('crudbooster.qlik_test_status_ok'),
+				'status_warn' => trans('crudbooster.qlik_test_status_warn'),
+				'status_fail' => trans('crudbooster.qlik_test_status_fail'),
+				'status_skip' => trans('crudbooster.qlik_test_status_skip'),
+			]),
+			'__URL__' => json_encode(CRUDBooster::mainpath('test-connection')),
+			'__CAN_TEST__' => $canTestConnection ? 'true' : 'false',
+			'__BLOCK_HINT__' => json_encode($testBlockHint),
+		]);
+
 
 		/*
         | ----------------------------------------------------------------------
@@ -360,6 +581,57 @@ class QlikConfController extends CBController
 		$this->load_css = array();
 	}
 
+
+	/**
+	 * "Prova connessione" nel form della configurazione Qlik: risposta JSON con
+	 * il rapporto passo-passo di App\Services\QlikConnectionTester. Funziona sia
+	 * sui valori del form non ancora salvati sia su una configurazione gia'
+	 * salvata (campo conf_id: la chiave privata gia' caricata si legge dal DB,
+	 * mai da un path inviato dal client). Route auto-instradata per
+	 * riflessione: POST admin/qlik_confs/test-connection.
+	 */
+	public function postTestConnection()
+	{
+		$this->cbLoader();
+
+		if (!CRUDBooster::isRead() && !CRUDBooster::isCreate() && !CRUDBooster::isUpdate() && $this->global_privilege == false) {
+			return response()->json(['ok' => false, 'summary' => trans('crudbooster.denied_access'), 'steps' => []], 403);
+		}
+
+		$savedConf = null;
+		$confId = (int) Request::input('conf_id');
+		if ($confId > 0) {
+			$savedConf = DB::table('qlik_confs')->where('id', $confId)->first();
+			if (!$savedConf) {
+				return response()->json(['ok' => false, 'summary' => trans('crudbooster.qlik_test_conf_not_found'), 'steps' => []], 404);
+			}
+			if (!CRUDBooster::isSuperadmin()
+				&& !DB::table('qlikconfs_tenants')->where('qlik_confs_id', $confId)->where('tenant_id', UserHelper::current_user_tenant())->exists()) {
+				return response()->json(['ok' => false, 'summary' => trans('crudbooster.denied_access'), 'steps' => []], 403);
+			}
+		}
+
+		// Serve un utente Qlik associato all'utente corrente per questa
+		// configurazione: il token del test e' costruito su quell'identita'.
+		if (!$savedConf) {
+			return response()->json(['ok' => false, 'summary' => trans('crudbooster.qlik_test_add_hint'), 'steps' => []], 422);
+		}
+		if (!DB::table('qlik_users')->where('user_id', CRUDBooster::myId())->where('qlik_conf_id', $confId)->exists()) {
+			return response()->json(['ok' => false, 'summary' => trans('crudbooster.qlik_test_no_user_hint'), 'steps' => []], 422);
+		}
+
+		$uploadedKey = null;
+		$file = Request::file('private_key');
+		if ($file && $file->isValid()) {
+			$uploadedKey = (string) file_get_contents($file->getRealPath());
+		}
+
+		$input = Request::only(['type', 'auth', 'url', 'port', 'endpoint', 'keyid', 'issuer', 'web_int_id']);
+
+		$report = (new \App\Services\QlikConnectionTester())->run($input, $uploadedKey, $savedConf, \App\User::find(CRUDBooster::myId()));
+
+		return response()->json($report);
+	}
 
 	/*
 	    | ----------------------------------------------------------------------

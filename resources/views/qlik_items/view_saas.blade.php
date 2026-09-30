@@ -79,22 +79,23 @@ $debug_url = $item_url;
 <script>
   //const TENANT = '{{ $tenant }}/{{$prefix}}';
 
-  const TENANT = '{{ $tenant }}';
+  const TENANT = {!! json_encode((string) $tenant) !!};
 
-  const PREFIX = '{{ $prefix }}';
+  const PREFIX = {!! json_encode((string) $prefix) !!};
 
-  const WEBINTEGRATIONID = '{{ $web_int_id }}';
+  const WEBINTEGRATIONID = {!! json_encode((string) $web_int_id) !!};
   const APPID = '##APP##';
-  const JWTTOKEN = "{{ $token}}";
+  const JWTTOKEN = {!! json_encode((string) $token) !!};
+  const QLIK_I18N = {!! json_encode(['login_failed' => trans('crudbooster.qlik_login_failed')]) !!};
 </script>
 <script src="@php echo asset($js_login) @endphp"></script>
 @push('head')
 <style>
   /*set iframe size*/
   .qi_iframe {
-    width: @php echo $row->frame_width @endphp !important;
+    width: {{ \App\Helpers\QlikHelper::safeCssSize($row->frame_width) }} !important;
 
-    height: @php echo $row->frame_height @endphp !important;
+    height: {{ \App\Helpers\QlikHelper::safeCssSize($row->frame_height) }} !important;
   }
 </style>
 @endpush

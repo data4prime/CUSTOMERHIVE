@@ -46,7 +46,8 @@ class QlikItem extends Model
       if(!$this->isPublic()){
         //enable
         //create token
-        $token = md5(config('app.salt').$this->url.$this->title);
+        //token casuale: non deducibile da url/titolo e diverso a ogni riabilitazione
+        $token = bin2hex(random_bytes(20));
         //save token
         $this->proxy_token = $token;
         //save proxy enabled at

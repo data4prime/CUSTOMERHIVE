@@ -13,9 +13,9 @@ $debug_url = $item_url;
 <style>
   /*set iframe size*/
   .qi_iframe {
-    width: @php echo $row->frame_width @endphp !important;
+    width: {{ \App\Helpers\QlikHelper::safeCssSize($row->frame_width) }} !important;
 
-    height: @php echo $row->frame_height @endphp !important;
+    height: {{ \App\Helpers\QlikHelper::safeCssSize($row->frame_height) }} !important;
     border: none;
     @if($row->target_layout ==1) margin-left: auto;
     margin-right: auto;

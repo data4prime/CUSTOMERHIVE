@@ -23,9 +23,13 @@ use Illuminate\Support\Facades\Log;
 
 use App\Helpers\ModuleHelperHelper;
 use App\Helpers\LicenseHelper;
+use App\Http\Controllers\System\Concerns\HandlesQlikSyncStart;
+use App\QlikSyncRun;
+use App\Services\QlikSync\QlikSyncUi;
 
 class AdminQlikItemsController extends CBController
 {
+	use HandlesQlikSyncStart;
 
 	public function cbInit()
 	{
@@ -54,6 +58,12 @@ class AdminQlikItemsController extends CBController
 		$this->col[] = ["label" => "Subtitle", "name" => "subtitle"];
 		//$this->col[] = ["label" => "Help", "name" => "description"];
 $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "qlik_confs,confname");
+		// Badge "non piu' presente su Qlik" (solo per gli item sincronizzati)
+		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_status'), "name" => "is_missing", "callback" => function ($row) {
+			return !empty($row->is_missing)
+				? "<span class='label label-warning' style='background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>"
+				: '';
+		}];
 
 		//STAND BY
 		//$this->col[] = ["label" => "Public", "name" => "proxy_token"];
@@ -72,7 +82,8 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		$this->form[] = ['label' => 'URL Help', 'name' => 'url_help', 'type' => 'text', 'validation' => 'string|min:1|max:200', 'width' => 'col-sm-10', 'placeholder' => 'Item helper'];
 		//STAND BY
 		//$this->form[] = ['label' => 'Enable public access', 'name' => 'public_access', 'type' => 'checkbox', 'width' => 'col-sm-1'];
-		$this->form[] = ['label' => 'Qlik Configuration', 'name' => 'qlik_conf', "type" => "select", "datatable" => "qlik_confs,confname", 'width' => 'col-sm-10'];
+		// select2: ricercabile e ordinata alfabeticamente per confname
+		$this->form[] = ['label' => 'Qlik Configuration', 'name' => 'qlik_conf', "type" => "select2", "datatable" => "qlik_confs,confname", 'width' => 'col-sm-10'];
 		# END FORM DO NOT REMOVE THIS LINE
 
 		# OLD START FORM
@@ -304,6 +315,27 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	        |
 	        */
 		$this->load_css = array();
+
+		// Pulsanti "Sincronizza da Qlik" / "Sincronizzazioni" nella lista.
+		QlikSyncUi::boot($this, 'items');
+	}
+
+	/**
+	 * Avvia la sincronizzazione degli item (fogli) di una app, o di tutte le
+	 * app di una configurazione. Route auto-instradata: POST admin/qlik_items/sync-start.
+	 */
+	public function postSyncStart()
+	{
+		return $this->qlikSyncStart(QlikSyncRun::TYPE_ITEMS);
+	}
+
+	/**
+	 * App di una configurazione per la modale (ordine alfabetico).
+	 * Route auto-instradata: GET admin/qlik_items/sync-apps?conf_id=
+	 */
+	public function getSyncApps()
+	{
+		return $this->qlikSyncAppsForConf();
 	}
 
 
@@ -430,6 +462,28 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		//Delete items allowed on cascade
 		$result = ItemsAllowed::where('item_id', $id)
 			->delete();
+		TenantsAllowed::where('item_id', $id)
+			->delete();
+	}
+
+	/**
+	 * Accetta solo URL relativi o dello stesso host (evita open redirect
+	 * dal return_url/ref_mainpath arrivati via POST); altrimenti $fallback.
+	 */
+	private function safeRedirectTarget($url, $fallback)
+	{
+		$url = trim((string) $url);
+		if ($url === '' || str_starts_with($url, '//') || str_contains($url, '\\')) {
+			return $fallback;
+		}
+		$host = parse_url($url, PHP_URL_HOST);
+		if ($host !== null && $host !== false && $host !== request()->getHost()) {
+			return $fallback;
+		}
+		if ($host === null && parse_url($url, PHP_URL_SCHEME) !== null) {
+			return $fallback;
+		}
+		return $url;
 	}
 
 	/*
@@ -539,7 +593,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 				//Log::debug('Token: ' . $token);
 				if (empty($token)) {
 					//Log::debug('Token generation failed');
-					$data['error'] = 'JWT Token generation failed!';
+					$data['error'] = trans('crudbooster.qlik_jwt_generation_failed');
 					CRUDBooster::redirectBack($data['error'], 'error');
 				}
 				$data['token'] = $token;
@@ -638,11 +692,15 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		if (!CRUDBooster::isSuperadmin()) {
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
-		$tenant_id = $_POST['name'];
-		$return_url = $_POST['return_url'];
-		$ref_mainpath = $_POST['ref_mainpath'];
+		$tenant_id = request()->input('name');
+		$ref_mainpath = $this->safeRedirectTarget(request()->input('ref_mainpath'), CRUDBooster::mainpath());
+		$return_url = $this->safeRedirectTarget(request()->input('return_url'), '');
 
-		if (empty($tenant_id)) {
+		if (!MyHelper::is_int($item_id) || !QlikItem::find($item_id)) {
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+		}
+
+		if (empty($tenant_id) || !MyHelper::is_int($tenant_id) || !DB::table('tenants')->where('id', $tenant_id)->exists()) {
 			return redirect($return_url . '/alert/1');
 		}
 		//check if tenant is already allowed
@@ -689,11 +747,15 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
-		$group_id = $_POST['name'];
-		$return_url = $_POST['return_url'];
-		$ref_mainpath = $_POST['ref_mainpath'];
+		$group_id = request()->input('name');
+		$ref_mainpath = $this->safeRedirectTarget(request()->input('ref_mainpath'), CRUDBooster::mainpath());
+		$return_url = $this->safeRedirectTarget(request()->input('return_url'), '');
 
-		if (empty($group_id)) {
+		if (!MyHelper::is_int($item_id) || !QlikItem::find($item_id)) {
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+		}
+
+		if (empty($group_id) || !MyHelper::is_int($group_id) || !DB::table('groups')->where('id', $group_id)->exists()) {
 			return redirect($return_url . '/alert/1');
 		}
 		//check if item is already in group
@@ -828,7 +890,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 
 
 			if (empty($token)) {
-				$data['error'] = 'JWT Token generation failed!';
+				$data['error'] = trans('crudbooster.qlik_jwt_generation_failed');
 				return CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
 			}
 			$data['token'] = $token;
@@ -912,7 +974,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 			}
 
 			if (empty($token)) {
-				$data['error'] = 'JWT Token generation failed!';
+				$data['error'] = trans('crudbooster.qlik_jwt_generation_failed');
 				return CRUDBooster::redirect(CRUDBooster::adminPath(), $data['error']);
 			}
 			$data['token'] = $token;

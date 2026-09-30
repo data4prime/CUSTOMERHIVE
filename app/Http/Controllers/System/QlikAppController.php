@@ -10,10 +10,17 @@ use DB;
 use CRUDBooster;
 use \App\Helpers\UserHelper;
 use \App\Helpers\QlikHelper;
+use App\Helpers\LicenseHelper;
+use App\Http\Controllers\System\Concerns\HandlesQlikSyncStart;
+use App\QlikSyncRun;
+use App\Services\QlikSync\QlikSyncRollback;
+use App\Services\QlikSync\QlikSyncService;
+use App\Services\QlikSync\QlikSyncUi;
 
 
 class QlikAppController extends CBController
 {
+	use HandlesQlikSyncStart;
 
 	public function cbInit()
 	{
@@ -43,6 +50,12 @@ class QlikAppController extends CBController
         $this->col[] = ["label" => "App ID", "name" => "appid"];
 		//$this->col[] = ["label" => "Conf", "name" => "conf"];
 		$this->col[] = array("label" => "Qlik Conf", "name" => "conf", "join" => "qlik_confs,confname");
+		// Badge "non piu' presente su Qlik" (solo per le app sincronizzate)
+		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_status'), "name" => "is_missing", "callback" => function ($row) {
+			return !empty($row->is_missing)
+				? "<span class='label label-warning' style='background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>"
+				: '';
+		}];
 
 
 		# END COLUMNS DO NOT REMOVE THIS LINE
@@ -52,9 +65,10 @@ class QlikAppController extends CBController
 		$this->form = [];
 		$this->form[] = ['label' => 'App Name', 'name' => 'appname', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter App Name'];
         $this->form[] = ['label' => 'App ID', 'name' => 'appid', 'type' => 'text', 'width' => 'col-sm-10', 'placeholder' => 'Enter App ID'];
-        $this->form[] = ['label' => 'Conf', 'name' => 'conf', 'type' => 'select', 'width' => 'col-sm-10',
+        // select2 (ricercabile, ordinata per confname) al posto di select; niente
+        // relationship_table: la conf e' un valore singolo, non una relazione N-N.
+        $this->form[] = ['label' => 'Conf', 'name' => 'conf', 'type' => 'select2', 'width' => 'col-sm-10',
                             "datatable" => "qlik_confs,confname",
-                            "relationship_table" => "qlik_confs",
                             'required' => true,
                         ];
 
@@ -284,6 +298,138 @@ class QlikAppController extends CBController
         |
         */
 		$this->load_css = array();
+
+		// Pulsanti "Sincronizza da Qlik" / "Sincronizzazioni" nella lista.
+		QlikSyncUi::boot($this, 'apps');
+	}
+
+	// ------------------------------------------------------------------
+	// Sincronizzazione app da Qlik (docs/piano-qlik-sync-app-items.md)
+	// ------------------------------------------------------------------
+
+	/**
+	 * Avvia la sincronizzazione delle app di una configurazione.
+	 * Route auto-instradata: POST admin/qlik_apps/sync-start.
+	 */
+	public function postSyncStart()
+	{
+		return $this->qlikSyncStart(QlikSyncRun::TYPE_APPS);
+	}
+
+	/** Solo superadmin e modulo Qlik in licenza; altrimenti torna alla home. */
+	private function qlikSyncDenied()
+	{
+		if (!CRUDBooster::isSuperadmin() || !LicenseHelper::isActiveQlik()) {
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+		}
+
+		return null;
+	}
+
+	private function qlikSyncRunsQuery()
+	{
+		return DB::table('qlik_sync_runs as r')
+			->leftJoin('qlik_confs as c', 'c.id', '=', 'r.qlik_conf_id')
+			->leftJoin('cms_users as u', 'u.id', '=', 'r.user_id')
+			->leftJoin('qlik_apps as a', 'a.id', '=', 'r.qlik_app_id')
+			->select('r.*', 'c.confname', 'u.name as user_name', 'a.appname');
+	}
+
+	/** Elenco delle sincronizzazioni: GET admin/qlik_apps/sync-runs */
+	public function syncRuns()
+	{
+		if ($denied = $this->qlikSyncDenied()) {
+			return $denied;
+		}
+
+		$data['runs'] = $this->qlikSyncRunsQuery()->orderByDesc('r.id')->limit(100)->get();
+		$data['has_active'] = $data['runs']->contains(function ($r) {
+			return in_array($r->status, QlikSyncRun::activeStatuses(), true);
+		});
+		$data['stuck'] = QlikSyncService::hasStuckQueuedRuns();
+		$data['page_title'] = trans('crudbooster.qlik_sync_runs_title');
+		$data['page_icon'] = 'fa fa-tasks';
+
+		$this->cbView('qlik_sync.runs', $data);
+	}
+
+	/** Dettaglio di una sincronizzazione: GET admin/qlik_apps/sync-runs/{id} */
+	public function syncRunDetail($id)
+	{
+		if ($denied = $this->qlikSyncDenied()) {
+			return $denied;
+		}
+
+		$run = $this->qlikSyncRunsQuery()->where('r.id', (int) $id)->first();
+		if (!$run) {
+			return CRUDBooster::redirect(QlikSyncUi::runsUrl(), trans('crudbooster.qlik_sync_run_not_found'), 'warning');
+		}
+
+		$records = DB::table('qlik_sync_run_records as rr')
+			->leftJoin('qlik_apps as a', function ($join) {
+				$join->on('a.id', '=', 'rr.record_id')->where('rr.record_type', '=', 'app');
+			})
+			->leftJoin('qlik_items as i', function ($join) {
+				$join->on('i.id', '=', 'rr.record_id')->where('rr.record_type', '=', 'item');
+			})
+			->where('rr.run_id', (int) $id)
+			->select('rr.*', DB::raw('COALESCE(a.appname, i.title) as record_name'))
+			->orderByDesc('rr.id')
+			->limit(500)
+			->get();
+
+		$data['run'] = $run;
+		$data['records'] = $records;
+		$data['records_total'] = DB::table('qlik_sync_run_records')->where('run_id', (int) $id)->count();
+		$data['is_active'] = in_array($run->status, QlikSyncRun::activeStatuses(), true);
+		$data['can_rollback'] = !$data['is_active'] && $run->rolled_back_at === null
+			&& DB::table('qlik_sync_run_records')->where('run_id', (int) $id)->whereIn('action', ['created', 'linked'])->exists();
+		$data['stuck'] = QlikSyncService::hasStuckQueuedRuns();
+		$data['page_title'] = trans('crudbooster.qlik_sync_run_title', ['id' => $run->id]);
+		$data['page_icon'] = 'fa fa-tasks';
+
+		$this->cbView('qlik_sync.run', $data);
+	}
+
+	/** Annulla un run attivo: POST admin/qlik_apps/sync-runs/{id}/cancel (mode = keep | delete) */
+	public function syncRunCancel($id)
+	{
+		if ($denied = $this->qlikSyncDenied()) {
+			return $denied;
+		}
+
+		$run = QlikSyncRun::find((int) $id);
+		if (!$run) {
+			return CRUDBooster::redirect(QlikSyncUi::runsUrl(), trans('crudbooster.qlik_sync_run_not_found'), 'warning');
+		}
+
+		QlikSyncService::requestCancel($run, Request::input('mode') === 'delete');
+
+		return CRUDBooster::redirect(QlikSyncUi::runsUrl() . '/' . $run->id, trans('crudbooster.qlik_sync_cancel_requested'), 'info');
+	}
+
+	/** Annulla gli effetti di un run concluso: POST admin/qlik_apps/sync-runs/{id}/rollback */
+	public function syncRunRollback($id)
+	{
+		if ($denied = $this->qlikSyncDenied()) {
+			return $denied;
+		}
+
+		$run = QlikSyncRun::find((int) $id);
+		if (!$run) {
+			return CRUDBooster::redirect(QlikSyncUi::runsUrl(), trans('crudbooster.qlik_sync_run_not_found'), 'warning');
+		}
+		if ($run->isActive() || $run->rolled_back_at !== null) {
+			return CRUDBooster::redirect(QlikSyncUi::runsUrl() . '/' . $run->id, trans('crudbooster.qlik_sync_rollback_not_allowed'), 'warning');
+		}
+
+		$result = QlikSyncRollback::rollback($run);
+
+		return CRUDBooster::redirect(
+			QlikSyncUi::runsUrl() . '/' . $run->id,
+			trans('crudbooster.qlik_sync_rollback_done', $result),
+			$result['kept'] > 0 ? 'warning' : 'success'
+		);
 	}
 
 	public static function getMashupFromCompID($compID) {

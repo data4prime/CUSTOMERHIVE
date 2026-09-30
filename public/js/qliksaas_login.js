@@ -1,94 +1,70 @@
 
+// Timeout (ms) per le chiamate di login verso Qlik
+const QLIK_FETCH_TIMEOUT = 15000;
 
 (async function main() {
 
-    const isLoggedIn = await qlikLogin();
+    let ok = false;
+    try {
+        ok = await qlikLogin();
+    } catch (e) {
+        ok = false;
+    }
 
-    const check = await checkLoggedIn();
+    if (!ok) {
+        showQlikLoginError();
+    }
 
-    //console.log(check.text());
-
+    // L'iframe viene comunque caricato: se il login non e' riuscito sara'
+    // Qlik stesso a chiedere le credenziali.
     renderSingleIframe();
 })();
 
 async function qlikLogin() {
-    const tokenRes = await (await getJWTToken());
-    const loginRes = await jwtLogin(tokenRes);
-    //console.log(loginRes.text());
-
-    return true;
+    const loginRes = await jwtLogin();
+    return loginRes.ok;
 }
 
-async function checkLoggedIn() {
-    return await fetch(`${TENANT}/api/v1/users/me`, {
-        mode: 'cors',
-        credentials: 'include',
-        headers: {
-            'qlik-web-integration-id': WEBINTEGRATIONID,
-            'Authorization': 'Bearer ' + JWTTOKEN
-        },
-    })
+// fetch con timeout, cosi' un Qlik non raggiungibile non blocca la pagina
+async function fetchWithTimeout(url, options) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), QLIK_FETCH_TIMEOUT);
+    try {
+        return await fetch(url, Object.assign({}, options, { signal: controller.signal }));
+    } finally {
+        clearTimeout(timer);
+    }
 }
 
-//    Get the JWT and use it to obtain Qlik Cloud session cookie.
-
-async function getJWTToken() {
-
-    return "##JWTTOKEN##";
-}
-
-async function jwtLogin(token) {
-    const authHeader = `Bearer ${JWTTOKEN}`;
-    //console.log(authHeader);
-    //console.log(WEBINTEGRATIONID);
-    return await fetch(`${TENANT}/login/jwt-session`, {
+// Ottiene il cookie di sessione Qlik Cloud a partire dal JWT.
+async function jwtLogin() {
+    return await fetchWithTimeout(`${TENANT}/login/jwt-session`, {
         credentials: 'include',
         mode: 'cors',
         method: 'POST',
         headers: {
-            'Authorization': authHeader,
+            'Authorization': `Bearer ${JWTTOKEN}`,
             'qlik-web-integration-id': WEBINTEGRATIONID
         },
-    })
+    });
 }
 
-async function getQCSHeaders() {
-
-    const response = await fetch(`${TENANT}/api/v1/csrf-token`, {
-        mode: 'cors',
-        credentials: 'include',
-        headers: {
-            'qlik-web-integration-id': WEBINTEGRATIONID
-        },
-    })
-
-    const csrfToken = new Map(response.headers).get('qlik-csrf-token');
-    return {
-        'qlik-web-integration-id': WEBINTEGRATIONID,
-        'qlik-csrf-token': csrfToken,
-    };
+function showQlikLoginError() {
+    const iframe_ = document.querySelector('.qi_iframe');
+    if (!iframe_ || typeof QLIK_I18N === 'undefined' || !QLIK_I18N.login_failed) {
+        return;
+    }
+    const msg = document.createElement('div');
+    msg.className = 'text-danger qi_login_error';
+    msg.setAttribute('role', 'alert');
+    msg.textContent = QLIK_I18N.login_failed;
+    iframe_.parentNode.insertBefore(msg, iframe_);
 }
-
 
 //    HELPER FUNCTION TO GENERATE IFRAME
-
 
 function renderSingleIframe() {
 
     var iframe_ = document.querySelector('.qi_iframe');
     iframe_.src = iframe_.getAttribute('data-src');
-
-/*
-    var iframe_ = document.querySelector('.qi_iframe');
-    iframe_.src = iframe_.getAttribute('data-src');
-*/
-
-
-    //var url = "{{ $item_url }}";
-    //console.log(url);
-    //document.querySelector('.qi_iframe').src = url;
-    //document.getElementById('qlik_frame').src = url;
-
-    //window.location.href = url;
 }
-

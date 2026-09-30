@@ -30,12 +30,6 @@ $licensed_module_middleware = [\App\Http\Middleware\CBBackend::class, \App\Http\
 
 Route::middleware($licensed_module_middleware)->group(function () use ($controllers_base_path) {
 
-//create qlik user
-
-    Route::get('admin/qlik/user/creare/{id}', $controllers_base_path . 'AdminCmsUsersController@create_qlik_user');
-
-
-
 //qlik items
 
     Route::get('admin/qlik_items/content/{qlik_item_id}', $controllers_base_path . 'AdminQlikItemsController@content_view');
@@ -47,6 +41,18 @@ Route::middleware($licensed_module_middleware)->group(function () use ($controll
     Route::get('admin/qlik_items/tenant/{qlik_item_id}', $controllers_base_path . 'AdminQlikItemsController@tenant');
     Route::post('admin/qlik_items/{qlik_item_id}/add_tenant', $controllers_base_path . 'AdminQlikItemsController@add_tenant');
     Route::get('admin/qlik_items/{qlik_item_id}/remove_tenant/{tenant_id}', $controllers_base_path . 'AdminQlikItemsController@remove_tenant');
+
+// Widget Qlik in modalita' "foglio": pagina che incorpora l'item scelto (login obbligatorio)
+    Route::get('mashup-sheet/{componentID}', $controllers_base_path . 'StatisticBuilderController@mashupSheet');
+
+//qlik sync: monitoraggio delle sincronizzazioni di app/item (solo superadmin, controllato nel controller)
+// Vedi docs/piano-qlik-sync-app-items.md. Le rotte di avvio (sync-start, sync-apps)
+// sono auto-instradate dai controller delle liste (POST/GET admin/qlik_apps|qlik_items/...).
+
+    Route::get('admin/qlik_apps/sync-runs', $controllers_base_path . 'QlikAppController@syncRuns');
+    Route::get('admin/qlik_apps/sync-runs/{id}', $controllers_base_path . 'QlikAppController@syncRunDetail')->where('id', '[0-9]+');
+    Route::post('admin/qlik_apps/sync-runs/{id}/cancel', $controllers_base_path . 'QlikAppController@syncRunCancel')->where('id', '[0-9]+');
+    Route::post('admin/qlik_apps/sync-runs/{id}/rollback', $controllers_base_path . 'QlikAppController@syncRunRollback')->where('id', '[0-9]+');
 
 //Qlik Server Routes
 

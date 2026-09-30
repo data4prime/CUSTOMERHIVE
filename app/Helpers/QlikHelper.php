@@ -23,7 +23,11 @@ class QlikHelper
 
   public static function getConfFromItem($id_item) {
 
-    $conf_id = DB::table('qlik_items')->where('id', $id_item)->first()->qlik_conf;
+    $conf_id = DB::table('qlik_items')->where('id', $id_item)->value('qlik_conf');
+
+    if (empty($conf_id)) {
+      return null;
+    }
 
     return DB::table('qlik_confs')->where('id', $conf_id)->first();
 
@@ -32,13 +36,13 @@ class QlikHelper
 
   public static function getTypeConf($id) {
 
-    return DB::table('qlik_confs')->where('id', $id)->first()->type;
+    return DB::table('qlik_confs')->where('id', $id)->value('type');
 
   }
 
   public static function confIsSAAS($id) {
 
-    return DB::table('qlik_confs')->where('id', $id)->first()->type == 'SAAS';
+    return DB::table('qlik_confs')->where('id', $id)->value('type') == 'SAAS';
 
   }
 
@@ -63,14 +67,15 @@ class QlikHelper
       return true;
     }
 
+    if (!MyHelper::is_int($qlik_item_id)) {
+      add_log_ch('can see item', 'qlik item id is not int: ' . $qlik_item_id);
+      return false;
+    }
+
     $qlik_item = \App\QlikItem::find($qlik_item_id);
 
     if (empty($qlik_item)) {
       add_log_ch('can see item', 'qlik item not found id: ' . $qlik_item_id);
-      return false;
-    }
-    if (!MyHelper::is_int($qlik_item_id)) {
-      add_log_ch('can see item', 'qlik item id is not int: ' . $qlik_item_id);
       return false;
     }
 
@@ -84,13 +89,6 @@ class QlikHelper
     $current_user_tenant = UserHelper::current_user_tenant();
     //get item allowed tenants
     $allowed_tenants = $qlik_item->allowedTenants();
-    // var_dump($qlik_item_id);
-    // var_dump($qlik_item->isPublic());
-    // var_dump(CRUDBooster::isSuperadmin());
-    // var_dump(UserHelper::isTenantAdmin());
-    // var_dump($allowed_tenants);
-    // var_dump($current_user_tenant);
-    // exit;
     if (in_array($current_user_tenant, $allowed_tenants)) {
       //tenant abilitato
       if (UserHelper::isTenantAdmin()) {
@@ -127,7 +125,7 @@ class QlikHelper
    */
   public static function buildPublicUrl($proxy_token)
   {
-    return env('APP_URL') . '/qi/' . $proxy_token;
+    return config('app.url') . '/qi/' . $proxy_token;
   }
   /**
    *	Enable/Disable a public page which grant access to the qlik item content anonymously
@@ -149,6 +147,21 @@ class QlikHelper
     }
   }
 
+  /**
+   * Legge il contenuto della chiave privata salvata in qlik_confs.private_key.
+   * CRUDBooster::uploadFile() salva un path relativo alla public root
+   * ("/storage/uploads/..."), che file_get_contents() non risolve da solo;
+   * i valori legacy (URL assoluto o path di filesystem) restano invariati.
+   */
+  public static function readPrivateKey($path)
+  {
+    if (strpos($path, '/storage/') === 0 && is_file(public_path($path))) {
+      $path = public_path($path);
+    }
+
+    return file_get_contents($path);
+  }
+
   public static function getJWTTokenOP($id, $conf_id)
   {
 
@@ -161,7 +174,7 @@ class QlikHelper
 
 
     if (!empty($privateKey)) {
-      $privateKey = file_get_contents($privateKey);
+      $privateKey = self::readPrivateKey($privateKey);
     } else {
       $privateKey = "";
     }
@@ -198,68 +211,6 @@ class QlikHelper
     return $myToken;
   }
 
-  public static function getJWTTokenOP2($id, $conf_id)
-  {
-
-    $current_user = \App\User::find($id);
-
-    $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
-
-
-    $privateKey = $qlik_conf->private_key;
-
-    //if provateKey is not empty, get the content of the file
-    if (!empty($privateKey)) {
-      $privateKey = file_get_contents($privateKey);
-    } else {
-      $privateKey = "";
-    }
-
-    $qlik_user = DB::table('qlik_users')->where('user_id', $id)->where('qlik_conf_id', $conf_id)->first();
-    if (!$qlik_user) {
-      $data['error'] = 'User not found!';
-      CRUDBooster::redirectBack($data['error'], 'error');
-      exit;
-    }
-
-    $qlik_login = $qlik_user->qlik_login;
-    $user_directory = $qlik_user->user_directory;
-
-    $header = json_encode([
-        'typ' => 'JWT',
-        'alg' => 'RS256',
-    ]);
-
-    $payload = json_encode([
-      'iss'   => '12345678-1234-1234-1234-123456123456',
-      'sub'   => '12345678-1234-1234-1234-123456123456',
-      'aud'   => $qlik_conf->url,
-      'iat'   => 1663792210,
-      'exp'   => 1979411410,
-      'scope' => 'everything',
-      'userId' => $qlik_login,
-      'userDirectory' => $user_directory,
-    ]);
-
-    $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
-
-    $base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
-
-    $data = $base64UrlHeader . "." . $base64UrlPayload;
-
-    openssl_sign($data, $signature, $privateKey, OPENSSL_ALGO_SHA256);
-
-
-
-    $base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
-
-    // Your JWT signed with the supplied private key
-    $myToken = $data . "." . $base64UrlSignature;
-
-
-    return $myToken;
-  }
-
   public static function getJWTToken($id, $conf_id)
   {
 
@@ -276,7 +227,7 @@ class QlikHelper
 
     //if provateKey is not empty, get the content of the file
     if (!empty($privateKey)) {
-      $privateKey = file_get_contents($privateKey);
+      $privateKey = self::readPrivateKey($privateKey);
     } else {
       $privateKey = "";
     }
@@ -349,69 +300,84 @@ class QlikHelper
   public static function createUser($id, $conf_id)
   {
 
-    $current_user = \App\User::find($id);
-
-
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
+    if (!$qlik_conf) {
+      return null;
+    }
 
     $token = QlikHelper::getJWTToken($id, $conf_id);
 
+    $headers = array(
+      "qlik-web-integration-id: " . $qlik_conf->web_int_id,
+      "Authorization: Bearer {$token}"
+    );
 
     $curl = curl_init();
 
+    // COOKIEFILE '' abilita il cookie engine solo in memoria: il cookie di
+    // sessione ottenuto dal login serve alla chiamata users/me sullo stesso
+    // handle, senza file condivisi su disco.
     curl_setopt_array($curl, array(
       CURLOPT_URL => $qlik_conf->url . '/login/jwt-session',
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 0,
+      CURLOPT_MAXREDIRS => 5,
+      CURLOPT_CONNECTTIMEOUT => 5,
+      CURLOPT_TIMEOUT => 15,
       CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
       CURLOPT_CUSTOMREQUEST => 'POST',
-      CURLOPT_COOKIESESSION => true,
-      CURLOPT_COOKIEJAR => 'cookie-name',
-      CURLOPT_COOKIEFILE => __DIR__ . "/cookie.txt",
-
-      CURLOPT_HTTPHEADER => array(
-        "qlik-web-integration-id: " . $qlik_conf->web_int_id,
-        "Authorization: Bearer {$token}"
-      ),
+      CURLOPT_COOKIEFILE => '',
+      CURLOPT_SSL_VERIFYPEER => true,
+      CURLOPT_SSL_VERIFYHOST => 2,
+      CURLOPT_HTTPHEADER => $headers,
     ));
 
     $response = curl_exec($curl);
 
-
-    if ($response == "OK") {
-
-      curl_setopt_array($curl, array(
-        CURLOPT_URL => $qlik_conf->url . "/api/v1/users/me",
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-          "qlik-web-integration-id: " . $qlik_conf->web_int_id,
-          "Authorization: Bearer {$token}"
-        ),
-      ));
-
-      $response = curl_exec($curl);
-
-
-      $response = json_decode($response);
-
-      $sub = $response->subject;
-
+    if ($response === false) {
+      \Log::warning('Qlik createUser: login fallito (conf ' . $conf_id . '): ' . curl_error($curl));
       curl_close($curl);
-      return $sub;
-
-
+      return null;
     }
 
+    if ($response != "OK") {
+      \Log::warning('Qlik createUser: login rifiutato (conf ' . $conf_id . ', HTTP ' . curl_getinfo($curl, CURLINFO_HTTP_CODE) . ')');
+      curl_close($curl);
+      return null;
+    }
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => $qlik_conf->url . "/api/v1/users/me",
+      CURLOPT_CUSTOMREQUEST => 'GET',
+      CURLOPT_HTTPHEADER => $headers,
+    ));
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+
+    $user = ($response === false) ? null : json_decode($response);
+
+    if (!is_object($user) || !isset($user->subject)) {
+      \Log::warning('Qlik createUser: risposta users/me priva di subject (conf ' . $conf_id . ')');
+      return null;
+    }
+
+    return $user->subject;
+  }
+
+  /**
+   * Valore CSS di larghezza/altezza sicuro da stampare in un <style>:
+   * solo numero + unita' (px, %, vh, vw); altrimenti il default.
+   * (Menus lo salva gia' come numero + px/%, questo protegge da valori
+   * anomali presenti nel DB.)
+   */
+  public static function safeCssSize($value, $default = '100%')
+  {
+    $value = trim((string) $value);
+    return preg_match('/^\d+(\.\d+)?(px|%|vh|vw)$/', $value) ? $value : $default;
   }
 
   public static function randString($length, $charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')
@@ -419,7 +385,7 @@ class QlikHelper
     $str = '';
     $count = strlen($charset);
     while ($length--) {
-      $str .= $charset[mt_rand(0, $count - 1)];
+      $str .= $charset[random_int(0, $count - 1)];
     }
     return $str;
   }

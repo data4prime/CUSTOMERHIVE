@@ -41,6 +41,17 @@ return [
             'retry_after' => 90,
         ],
 
+        // Connessione dedicata alla sincronizzazione app/item Qlik (vedi
+        // docs/piano-qlik-sync-app-items.md). retry_after molto piu' alto del
+        // default: un import lungo non deve essere rimesso in coda mentre gira.
+        // Il default globale resta 'sync': nient'altro usa le code.
+        'qlik_sync' => [
+            'driver' => 'database',
+            'table' => 'jobs',
+            'queue' => 'qlik_sync',
+            'retry_after' => 3900,
+        ],
+
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host' => 'localhost',

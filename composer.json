@@ -21,6 +21,7 @@
         "nunomaduro/collision": "^8.0",
         "pragmarx/google2fa": "^9.1",
         "ramsey/uuid": "^4.7",
+        "textalk/websocket": "^1.5",
         "tremby/laravel-git-version": "^1.2.2",
         "unisharp/laravel-filemanager": "^2.15"
     },

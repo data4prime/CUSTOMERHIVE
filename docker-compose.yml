@@ -49,6 +49,37 @@ services:
     networks:
       - laravel
 
+  # Worker della coda "qlik_sync" (sincronizzazione app/item Qlik). Stessa
+  # immagine e stessi volumi dell'app; gira come www-data per non creare in
+  # storage/ file di proprieta' di root che Apache poi non potrebbe scrivere.
+  # Dopo ogni aggiornamento del codice: docker compose restart worker
+  # (equivalente di "php artisan queue:restart" sui server).
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: customerhive_worker
+    restart: unless-stopped
+    command: >
+      su -s /bin/sh www-data -c
+      "php artisan queue:work qlik_sync --queue=qlik_sync --sleep=3 --tries=1 --timeout=3600"
+    volumes:
+      - .:/var/www/html
+      - customerhive-vendor:/var/www/html/vendor
+      - customerhive-storage-framework:/var/www/html/storage/framework
+      - customerhive-bootstrap-cache:/var/www/html/bootstrap/cache
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+    depends_on:
+      db:
+        condition: service_healthy
+      app:
+        condition: service_started
+    networks:
+      - laravel
+
   # Database MySQL
   db:
     image: mysql:8.0

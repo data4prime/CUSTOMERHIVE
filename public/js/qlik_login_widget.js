@@ -10,36 +10,37 @@ async function loadScript(url) {
     });
 }
 
+// Mostra un errore nel contenitore del widget invece di restare su "Loading..."
+function showWidgetError(message) {
+    console.error(message);
+    var title = document.getElementById('title');
+    if (title) {
+        title.textContent = message;
+    }
+}
+
 async function main() {
+    try {
+        await mainInner();
+    } catch (e) {
+        showWidgetError((e && e.message) || String(e));
+    }
+}
 
-    //console.log('main');
-
-    //check if webIntegrationId variable exists 
-
-    /*if (typeof webIntegrationId === 'undefined') {
-        var webIntegrationId = '';
-    }*/
-
-
-
-
-    //console.log(webIntegrationId);
+async function mainInner() {
 
     if (webIntegrationId && webIntegrationId !== '') {
-        //console.log('yes web int');
         const check = await checkLoggedIn();
 
         if (check.status === 401) {
-            const isLoggedIn = await jwtLogin();
-
+            await jwtLogin();
         }
     } else {
-
-        //console.log('no web int');
-
         const authHeader = `Bearer ${qlik_token}`;
 
-        const response = await fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
+        // Il login On-Premise avviene tramite questa chiamata (cookie di sessione):
+        // la risposta non serve, ma va atteso il completamento.
+        await fetch(`${host}/${prefix}/qrs/about?xrfkey=0123456789abcdef`, {
             credentials: 'include',
             mode: 'cors',
             method: 'GET',
@@ -48,11 +49,6 @@ async function main() {
                 'Authorization': authHeader,
             },
         });
-
-        const data = await response.json();
-
-        
-
     }
 
     if (webIntegrationId && webIntegrationId !== '') {
@@ -60,14 +56,6 @@ async function main() {
     } else {
         await loadScript(`${host}/${prefix}/${src}`);
     }
-
-
-    
-    
-
-    var selState;
-    var query;
-    var filters;
 
     var host_q = '';
     if (host.includes("https://") || host.includes("http://")) {
@@ -113,16 +101,14 @@ async function main() {
         
         qlik.setOnError(function (error) {
             var appdoc = document.getElementById(appId);
-            var text_danger = appdoc.getElementsByClassName('text-danger');
-            
+            var text_danger = appdoc ? appdoc.getElementsByClassName('text-danger') : [];
+
             if (text_danger.length > 0) {
                 text_danger[0].append(error.message);
             } else {
                 console.error(error.message);
             }
         });
-
-        var x = document.cookie;
 
         var app = qlik.openApp(appId, config);
         objectDisplay(app);
@@ -134,7 +120,7 @@ async function main() {
 }
 function objectDisplay(app) {
     var title = document.getElementById('title');
-        title.innerHTML = "Loading Object. Please wait...";
+        title.textContent = (typeof QLIK_I18N !== "undefined" && QLIK_I18N.object_loading) || "Loading Object. Please wait...";
     if (objectid == 'CurrentSelections') {
         navbar(app);
     } else {
@@ -147,34 +133,6 @@ function navbar(app) {
 
     app.getObject($('#CurrentSelections'), 'CurrentSelections');
     app.getObject($(parent.document).find('#CurrentSelections'), 'CurrentSelections');
-}
-
-function objectsOptions(app) {
-    app.getAppObjectList('masterobject', function (reply) {
-        var str = "";
-
-        $.each(reply.qAppObjectList.qItems, function (key, value) {
-            var sheetId = value.qInfo.qId;
-            var sheetTitle = value.qData.title;
-            var name = value.qData.name;
-            
-            var sheetDiv = document.createElement('option');
-            sheetDiv.className = 'masterobject-option';
-            sheetDiv.value = sheetId;
-            sheetDiv.innerHTML = name + ' (' + sheetId + ')';
-
-            parent.document.getElementById('mashup_object').appendChild(sheetDiv);
-
-            app.visualization.get(value.qInfo.qId).then(function (vis) {
-                vis.show(value.qInfo.qId);
-            });
-
-            str += value.qData.title + ' ';
-            $.each(value.qData.cells, function (k, v) {
-                str += v.name + ' ';
-            });
-        });
-    });
 }
 
 async function jwtLogin() {

@@ -9,7 +9,7 @@ function objectsOptions(app) {
     var option_cs = document.createElement('option');
     option_cs.className = 'masterobject-option';
     option_cs.value =  "CurrentSelections";
-    option_cs.innerHTML = "Current Selections";
+    option_cs.textContent = (typeof QLIK_I18N !== "undefined" && QLIK_I18N.current_selections) || "Current Selections";
 
 
     if (hidden_object && (hidden_object.value == "CurrentSelections"  && hidden_app.value == mashupId)) {
@@ -23,7 +23,7 @@ parent.document.getElementById('mashup_object').appendChild(option_cs);
     //console.log(app.getAppObjectList('masterobject'));
     app.getAppObjectList('masterobject', function (reply) {
 
-        $.each(reply.qAppObjectList.qItems, function () {
+        $.each(reply.qAppObjectList.qItems, function (key, value) {
             var sheetId = value.qInfo.qId;
 
             var name = value.qData.name;
