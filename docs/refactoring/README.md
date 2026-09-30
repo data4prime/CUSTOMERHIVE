@@ -9,6 +9,11 @@ Obiettivo: chiunque (oggi o tra un anno) deve poter capire **cosa è cambiato,
 perché, e come funzionava prima**, senza dover ricostruire il contesto da
 zero leggendo i diff di git.
 
+**Questi file servono solo a documentare**: non vanno letti per eseguire una
+richiesta normale (bug fix, feature, domanda su come funziona qualcosa) — per
+quello usa il codice/tokensave. Leggili solo quando il compito è
+esplicitamente documentare un intervento o consultarne la storia passata.
+
 ## Struttura
 
 - **`glossario.md`** — termini/concetti ricorrenti nel progetto (CRUDBooster,
@@ -17,90 +22,37 @@ zero leggendo i diff di git.
 - **`_template.md`** — modello da copiare per ogni intervento di refactoring.
 - **`NNN-titolo-breve.md`** — un file per ogni intervento, con la situazione
   prima/dopo. Numerati in ordine cronologico (`001-`, `002-`, ...).
+- **`archivio-NNN-MMM.md`** — voci più vecchie tolte dall'indice qui sotto per
+  tenerlo leggero (vedi [`archivio-001-068.md`](archivio-001-068.md)).
+- **`backlog-risolto.md`** — voci del backlog già chiuse, tolte da qui sotto.
 
 ## Come aggiungere un intervento
 
-1. Copia `_template.md` in un nuovo file `NNN-titolo-breve.md` (`NNN` = numero
-   progressivo successivo, `titolo-breve` in kebab-case).
+1. Copia `_template.md` in un nuovo file `NNN-titolo-breve.md` (`NNN` =
+   prossimo numero libero: leggi la riga "Prossimo numero libero" qui sotto,
+   non serve scorrere l'indice; `titolo-breve` in kebab-case).
 2. Compila le sezioni **prima di iniziare a modificare il codice** (situazione
    "prima" e motivazione) e completa il resto a lavoro fatto.
 3. Se introduci un termine nuovo o non ovvio, aggiungilo a `glossario.md`.
-4. Aggiungi una riga nell'indice qui sotto.
+4. Aggiungi una riga nell'indice qui sotto e aggiorna "Prossimo numero
+   libero". Se l'indice supera ~60 righe, sposta le voci più vecchie in un
+   nuovo `archivio-NNN-MMM.md` (stesso formato di
+   [`archivio-001-068.md`](archivio-001-068.md)) e aggiorna il link nella
+   sezione "Struttura" sopra.
 5. Se l'intervento richiede di riattivare/rimuovere qualcosa prima del prossimo
    push, aggiungilo anche a [`../pre-push-checklist.md`](../pre-push-checklist.md).
 
 ## Indice degli interventi
 
+**Prossimo numero libero: 184**
+
+Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
+`packages/` + prime correzioni UI/bug) archiviate in
+[`archivio-001-068.md`](archivio-001-068.md).
+
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
-| [001](001-auth-guard-additivo-fase-1.md) | Refactoring auth: guard Laravel additivo (Fase 1) | Auth | Completato | 2026-08-26 |
-| [002](002-cbbackend-guard-fase-3.md) | Refactoring auth: primo file migrato al guard (Fase 3), fix logout | Auth | Completato | 2026-08-26 |
-| [003](003-licensing-hardening.md) | Licensing: env configurabile, registerLicense() sicuro, opzione "ho già una licenza", riattivazione controlli | Licensing | Completato | 2026-08-26 |
-| [004](004-licensing-envelope-success-data.md) | Licensing: adeguamento alla busta {success, data} del license server, fix import mancanti, fix precompilazione dominio | Licensing | Completato | 2026-08-26 |
-| [005](005-connectorservice-cleanup.md) | ConnectorService: cleanup, fix crash su login irraggiungibile, test di caratterizzazione | Licensing | Completato | 2026-08-27 |
-| [006](006-controller-sistema-app-http-controllers-system.md) | Controller "di sistema" spostati da packages/ ad App\Http\Controllers\System | Architettura / CRUDBooster | Completato | 2026-08-27 |
-| [007](007-upload-path-relativo.md) | Upload file: salvato path relativo invece di URL assoluto, fix controllo "file rotto", migration di bonifica dati | Upload/File | Completato | 2026-08-27 |
-| [008](008-privileges-theme-color-bug.md) | PrivilegesController: creare un nuovo privilegio non deve cambiare il tema di chi lo crea | Bug fix | Completato | 2026-08-27 |
-| [009](009-module-helpers-cms-moduls-mancante.md) | Modulo "Module Helpers" senza riga in cms_moduls (404), seeder aggiornato | Bug fix / dati | Completato | 2026-08-27 |
-| [010](010-popup-select-non-si-chiude.md) | Popup "Browse data" non si chiudeva dopo Select (bug sistemico sui 7 componenti relazione) | Bug fix | Completato | 2026-08-27 |
-| [011](011-settings-hardening.md) | Sezione Settings: autorizzazione mancante su delete-file, upload con path relativo, rimozione gruppo Qlik dai seeder, unique su name (senza deduplica automatica), campo password, email_sender svuotato | Hardening / Dati | Completato | 2026-08-27 |
-| [012](012-controller-motore-shim-class-alias.md) | Prima classe "motore" spostata in App\Http\Controllers\System: Controller, con shim class_alias() | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [013](013-importdata-exportdata-shim-class-alias.md) | ImportData/ExportData spostate in App\Http\Controllers\System, con shim class_alias() | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [014](014-apicontroller-shim-class-alias.md) | ApiController spostata in App\Http\Controllers\System, con shim class_alias() | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [015](015-cbcontroller-shim-class-alias.md) | CBController spostata in App\Http\Controllers\System, con shim class_alias() — ultima classe motore | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [016](016-comando-migrazione-extends-legacy-clienti.md) | Comando artisan `crudbooster:migrate-legacy-extends` per riscrivere l'extends dei controller custom dei clienti | Architettura / CRUDBooster / Tooling | Completato | 2026-08-28 |
-| [017](017-rimozione-cartella-controllers-legacy.md) | Rimossa packages/.../controllers/: alias consolidati in app/Support/legacy_crudbooster_aliases.php (composer autoload.files) | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [018](018-commands-middlewares-validations-cleanup.md) | Mailqueues spostato in App\Console\Commands, comandi installer CRUDBooster eliminati, validation.php spostato in AppServiceProvider, CBBackend__.php eliminato | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [019](019-rimozione-localization-legacy.md) | Rimossa packages/.../localization/ — mai caricata a runtime, resources/lang già la fonte viva e tracciata su git | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [020](020-rimozione-userfiles-legacy.md) | Rimossa packages/.../userfiles/ — copie ridondanti di CBHook.php/readme.txt già tracciati, stub AdminCmsUsersController obsoleto | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [021](021-rimozione-configs-legacy.md) | Rimossa packages/.../configs/ — mergeConfigFrom() e publishes() rimossi, unica chiave differente (API_PATH) confermata mai usata | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [022](022-rimozione-database-legacy.md) | Rimossa packages/.../database/ — 0 migration e 1 solo seeder (già morto) esistevano solo nel pacchetto | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [023](023-helpers-nnhelper-moduleHelperhelper-myhelper.md) | Helpers (1/N): NNHelper eliminato (morto), ModuleHelperHelper e MyHelper spostati in App\Helpers | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [024](024-helpers-grouphelper-tenanthelper-cb.md) | Helpers (2/N): GroupHelper, TenantHelper, CB spostati in App\Helpers | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [025](025-helpers-chatai-license-menu.md) | Helpers (3/N): ChatAIHelper, LicenseHelper, MenuHelper spostati in App\Helpers (incl. 7 FQCN inline nelle view) | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [026](026-helpers-qlikhelper-modulehelper.md) | Helpers (4/N): QlikHelper e ModuleHelper spostati in App\Helpers | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [027](027-helpers-userhelper.md) | Helpers (5/N): UserHelper spostato in App\Helpers | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [028](028-helpers-functions-globali.md) | Helpers (6/N): funzioni globali (Helper.php) spostate in app/Helpers/functions.php | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [029](029-helpers-crudbooster-ultimo-pezzo.md) | Helpers (7/7): CRUDBooster.php spostato, packages/.../helpers/ non esiste più, corretto bug latente su MyHelper | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [030](030-middlewares-cbbackend-cbauthapi.md) | CBBackend/CBAuthAPI spostati in App\Http\Middleware, middlewares/ non esiste più (incl. riferimento in config/lfm.php) | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [031](031-routes-standard-laravel.md) | routes.php spostato in routes/crudbooster.php, caricato da RouteServiceProvider invece che dal service provider del pacchetto | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [032](032-crudboosterserviceprovider-pulizia-e-spostamento.md) | CRUDBoosterServiceProvider ripulito (3 registrazioni provider ridondanti + singleton morto rimossi) e spostato in App\Providers | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [033](033-crudbooster-docs-spostati.md) | Documentazione originale CRUDBooster (49 file) spostata da packages/.../docs/en/ a docs/crudbooster/ | Documentazione | Completato | 2026-08-28 |
-| [034](034-rimozione-file-vestigiali-pacchetto.md) | Rimossi .codeclimate.yml, .gitignore, composer.json, README.md — ultimi file vestigiali del pacchetto | Documentazione / Housekeeping | Completato | 2026-08-28 |
-| [035](035-fontawesome-spostato.md) | Fontawesome.php spostato in App\Helpers, fonts/ non esiste più | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [036](036-rimozione-assets-legacy.md) | Rimossa packages/.../src/assets/ (32 MB) — già pubblicata e tracciata in public/vendor/crudbooster/, zero contenuto mancante | Housekeeping | Completato | 2026-08-28 |
-| [037](037-views-spostate-resources.md) | views/ spostata in resources/views/crudbooster/, corretti 16 path assoluti hardcoded, 2 file morti eliminati — packages/.../src/ ora vuota | Architettura / CRUDBooster | Completato | 2026-08-28 |
-| [038](038-fix-open-redirect-return-url.md) | Fix: open redirect su CRUDBooster::redirect() — return_url non validato | Sicurezza | Completato | 2026-08-28 |
-| [039](039-fix-type-components-non-trovati.md) | Fix: "tipo di componente non trovato" — 9 file fuori da packages/ dimenticati in 037 | Bug fix | Completato | 2026-08-28 |
-| [040](040-fix-preview-immagini-mancante.md) | Fix: anteprima immagine mancante su colonne Logo/Favicon (Tenants) e un modulo custom | Bug fix | Completato | 2026-08-28 |
-| [041](041-color-picker-tenants.md) | Background Color/Font Color (Tenants): da testo libero a color picker nativo HTML5 | UI/UX | Completato | 2026-08-28 |
-| [042](042-tipo-color-lista-dettaglio.md) | Nuovo tipo di campo "color" riusabile: swatch anche in lista e dettaglio, non solo nel form | UI/UX | Completato | 2026-08-28 |
-| [043](043-privileges-form-come-standard.md) | Vista privileges: markup del form (card, label a due colonne, footer) allineato allo standard `crudbooster::default.form` | UI/UX | Completato | 2026-08-28 |
-| [044](044-privileges-delete-bloccato-e-messaggio-perso.md) | Bug: eliminazione privilegio bloccata da una regola sbagliata (`id < 4`) e messaggio di errore perso nel redirect verso la dashboard | Bug fix | Completato | 2026-08-28 |
-| [045](045-messaggio-cancellazione-gruppo-piu-specifico.md) | Messaggio di blocco cancellazione gruppo più specifico (distingue membri e tenant assegnati), chiude anche un rischio di errore SQL non gestito sui gruppi con soli tenant | UI/UX / Bug fix | Completato | 2026-08-28 |
-| [046](046-groups-members-leftjoin-privilegio-orfano.md) | Members del gruppo: un utente con privilegio cancellato (orfano) non deve sparire dalla lista (INNER JOIN → LEFT JOIN) | Bug fix | Completato | 2026-08-28 |
-| [047](047-user-isSuperAdmin-crash-privilegio-orfano.md) | Crash "is_superadmin on null" per un utente con privilegio orfano: `User::isSuperAdmin()`/`isTenantAdmin()` ora tollerano `Role::find()` che non trova nulla | Bug fix | Completato | 2026-08-28 |
-| [048](048-tenant-soft-deleted-non-deve-bloccare-cancellazione-gruppo.md) | Un tenant soft-deleted associato a un gruppo non deve più bloccarne la cancellazione (conteggio allineato al filtro già usato dalla pagina tenant del gruppo) | Bug fix | Completato | 2026-08-28 |
-| [049](049-select-detail-crash-fk-orfana.md) | Crash sul dettaglio di un modulo per un campo "select" con FK orfana (componente condiviso, non solo Users) | Bug fix | Completato | 2026-08-28 |
-| [050](050-dashboard-layouts-cms-moduls-mancante.md) | Modulo "Dashboard Layouts" senza riga in cms_moduls → 404 nonostante controller/tabella/link nel menu esistessero già (stesso pattern di 009) | Bug fix / dati | Completato | 2026-08-28 |
-| [051](051-dashboard-layouts-builder-visuale.md) | Dashboard Layouts: builder visuale a righe/colonne al posto di TinyMCE, stesso formato HTML salvato (zero modifiche allo Statistic Builder); corretto anche un bug pre-esistente nel regex di assegnazione id | UI/UX | Completato | 2026-08-28 |
-| [052](052-dashboard-layouts-rimossa-modalita-avanzata-preview-dettaglio.md) | Dashboard Layouts: rimossa la modalità "Avanzato (HTML)", aggiunto un preview visivo del layout nella pagina di dettaglio | UI/UX | Completato | 2026-08-28 |
-| [053](053-smallbox-icon-searchable-color-picker.md) | Widget "Small Box": select ricercabile per l'icona (733 icone lette dal font vendorizzato) e color picker nativo al posto dei 4 colori fissi | UI/UX | Completato | 2026-08-28 |
-| [054](054-smallbox-errore-sql-validazione-required-testo-link.md) | Widget "Small Box": mostra il vero errore SQL invece di "ERROR", corretto un bug di selettore jQuery che rendeva invisibile la validazione dei campi obbligatori (bug condiviso da tutti i widget), testo pulsante cambiato | Bug fix / UI-UX | Completato | 2026-08-28 |
-| [055](055-statistic-builder-bordi-aree-layout.md) | Statistic Builder: bordo tratteggiato visibile per le aree del layout in modalità builder (drag&drop widget) | UI/UX | Completato | 2026-08-28 |
-| [056](056-statistic-builder-max-un-widget-per-area.md) | Statistic Builder: ogni area del layout può contenere un solo widget (drop rifiutato via jQuery UI sortable('cancel') se già occupata) | UI/UX | Completato | 2026-08-28 |
-| [057](057-table-widget-die-rimuove-widget-query-sbagliata.md) | Widget "Table": una query SQL sbagliata faceva sparire il widget (`die('ERROR')` rompeva l'intera risposta AJAX) — ora mostra l'errore reale, corretto anche un bug nella sostituzione dei placeholder di sessione | Bug fix | Completato | 2026-08-28 |
-| [058](058-getshow-non-caricava-il-layout-assegnato.md) | `StatisticBuilderController::getShow()` non caricava il layout assegnato alla dashboard, ricadendo sempre sulla griglia di default a 9 aree — widget in posizione diversa tra builder e dashboard reale | Bug fix | Completato | 2026-08-28 |
-| [059](059-table-widget-datatable-selettore-troppo-generico.md) | Widget "Table": selettore DataTable globale (`table.table`) poteva confliggere con altri widget Table sulla stessa dashboard ("tabella tagliata") — scoped al singolo widget con controllo anti-doppia-inizializzazione | Bug fix | Completato | 2026-08-28 |
-| [060](060-groups-can-view-crash-standard-e-tenants-list-vuota.md) | `ModuleHelper::can_view()`: un utente Standard che lista `/admin/groups` con gruppi di piu' tenant otteneva un 500 (query/null-check sbagliati in `get_group_id()`/`get_tenant_id()`); documentato anche che un tenantadmin non vede nessun tenant in lista Tenants (nessun fix, solo caratterizzazione) | Bug fix / caratterizzazione | Parzialmente completato | 2026-09-01 |
-| [061](061-icona-modulo-privileges-incoerente.md) | Icona del modulo Privileges incoerente tra testata pagina (`fa fa-cog`, da `cms_moduls`) e sidebar (`fa fa-key`, hardcoded) — allineata la testata alla sidebar via migration dati | Bug fix (UI) | Completato | 2026-09-01 |
-| [062](062-pulsante-add-member-in-tenants-group.md) | `/admin/tenants/group/{id}`: il pulsante diceva "Add member" (copiato dalla view analoga di Groups) invece di "Add group" | Bug fix (UI) | Completato | 2026-09-01 |
-| [063](063-menu-management-bug-e-test-crud.md) | Menu Management: 3 bug reali corretti (UrlGenerationException su ogni voce modificabile, crash creando la prima voce su tabella vuota, `CBController::getDelete()` crashava su qualunque cancellazione bloccata in QUALUNQUE modulo) + 14 test CRUD | Bug fix + test | Completato | 2026-09-01 |
-| [064](064-settings-bug-e-test-crud.md) | Settings: 3 bug reali corretti (`CRUDBooster::valid()` chiamava `exit()` invece di tornare una Response, bloccando la testabilita' degli upload non validi; cancellare una riga di setting non invalidava la cache ne' cancellava il file associato) + 27 test CRUD | Bug fix + test | Completato | 2026-09-02 |
-| [065](065-api-generator-rce-e-test.md) | **API Generator: RCE autenticata corretta** (`generateAPI()`/`postSaveApiCustom()` incollavano input utente grezzo dentro sorgente PHP scritto su disco come controller live - risolto con `var_export()`) + path traversal nel nome file + 2 bug null-safety + 19 test. Nota: nessun controllo di privilegio su gran parte del controller (punto A) resta deliberatamente non corretto, rimandato | Sicurezza + Bug fix + test | Completato (parziale) | 2026-09-02 |
-| [066](066-api-execute-null-safety-e-test.md) | API Generator: `ApiController::execute_api()` crashava con 500 su un permalink senza riga `cms_apicustom` corrispondente (dereferenziato prima del controllo esistenza) + 6 test sul comportamento a runtime (parametri/risposte su list/detail) | Bug fix + test | Completato | 2026-09-02 |
-| [067](067-statistic-builder-sql-arbitrario-e-test.md) | **Statistic Builder: SQL arbitrario corretto** (`postSaveComponent()` - unico punto di scrittura di `config`, incluso il campo "SQL Query" che alcuni widget eseguono via `DB::select()` in fase di rendering - non aveva alcun controllo di privilegio) + 14 test. Nota: stesso pattern di 065, gap generico di autorizzazione su altri 3 endpoint del controller resta deliberatamente non corretto, rimandato | Sicurezza + Bug fix + test | Completato (parziale) | 2026-09-02 |
-| [068](068-module-generator-rce-e-test.md) | **Module Generator: 3 RCE + 1 SQL injection corretti** (`CRUDBooster::generateController()`, `postStep3()`, `postStep5()` incollavano input utente grezzo dentro sorgente PHP scritto su disco come controller live - risolto con `var_export()`/whitelist; `Schema::getIndexes()` con lo stesso valore era SQL injection vera per una `quoteString()` di Laravel non parametrizzata - risolto con `sql_name_encode()`) + path traversal nel nome file + `getDelete()` non ricontrollava `is_protected` + 2 endpoint senza alcun controllo di privilegio + 1 bug (flag "download" mai scritto) + 15 test | Sicurezza + Bug fix + test | Completato | 2026-09-03 |
+| [183](183-widget-qlik-campo-app-div-non-chiuso.md) | **Widget Qlik, campo "App Qlik"**: rimosso un `<div class="mb-3 row">` orfano mai chiuso in `qlikwidget.blade.php` e reso sicuro il test `isset($config->mashups)` (prima `Undefined property` con config senza `mashups`) | Frontend | Completato | 2026-09-30 |
 | [069](069-uiux-revamp-fase0-fase1-guscio-e-auth.md) | **Revamp UI/UX, Fase 0+1**: token di design + font Plus Jakarta Sans self-hosted (variable font, un solo file), guscio condiviso (`admin_template`/`header`, zero modifiche a `sidebar`/`footer`) e pagine login/lockscreen/forgot riscritte, branding per-tenant preservato, `theme_color` (skin AdminLTE per ruolo) rimappato su un accento colore. Nota: scoperto (non introdotto) che il toggle sidebar/dropdown header non rispondono al click, probabile conflitto Bootstrap 3(AdminLTE)/5 preesistente, non risolto in questo intervento | UI/UX | Completato | 2026-09-03 |
 | [070](070-datamodal-leak-cross-tenant.md) | **Popup "datamodal": un tenant admin vedeva record di altri tenant** — `AdminGroupsController::members()` (aggiungi membro, tabella `cms_users`) e `AdminCmsUsersController::groups()` (aggiungi a gruppo, tabella `groups`) lasciavano `datamodal_where` vuoto, senza lo scoping per tenant già applicato alle liste equivalenti. Corretto valorizzando `datamodal_where` in base a `UserHelper::isTenantAdmin()`. Verificati e scartati come falso allarme gli altri usi analoghi, tutti dietro `isSuperadmin()` | Sicurezza + Bug fix | Completato | 2026-09-16 |
 | [071](071-privileges-modulo-logs-non-assegnabile.md) | Privileges: il modulo Logs (`cms_logs`, `is_protected=1`) non compariva mai nell'elenco moduli assegnabili di `getAdd()`/`getEdit()` (whitelist limitata a moduli Module Generator + `groups`/`cms_users`/`cms_menus`) — nessun ruolo, incluso Tenant Admin, poteva riceverne il permesso nonostante `LogsController` avesse già lo scoping per tenant pronto. Corretto aggiungendo `cms_logs` alla whitelist | Bug fix | Completato | 2026-09-16 |
@@ -115,17 +67,17 @@ zero leggendo i diff di git.
 | [080](080-module-generator-wizard-solo-superadmin.md) | **Module Generator: tutto il wizard riservato al superadmin** — step 1/2/4 richiedevano solo il permesso di visualizzazione (`postStep1` creava moduli con controller, permessi e menu), `postStep4` nessun controllo | Sicurezza + test | Completato | 2026-09-24 |
 | [081](081-fix-robustezza-helper-e-login.md) | Fix di robustezza: `getTableStructure()` size `"int"` su MySQL 8, deprecation `sendFCM()`, `getLang()`/`SetUserPreferredLanguage` null-safe, `postLogin()` con `Request::getHost()`, ciclo di redirect `/admin`↔`/admin/login` con sessione legacy orfana | Bug fix | Completato | 2026-09-24 |
 | [082](082-rimossa-build-gulp-e-package-json.md) | Rimossi build gulp/elixir morta (`package.json`, `gulpfile.js`, servizio Docker `node`) e 2 `package.json` del plugin datetimepicker vendorizzato: fonte della maggior parte degli avvisi Dependabot, nulla girava in produzione | Dipendenze | Completato | 2026-09-24 |
-| [093](093-execute-api-cbinit-privilegi.md) | `execute_api()`: chiamato `cbInit()` sul controller collegato (mai fatto prima) - risolve i privilegi per i moduli Module Generator (`mg_*`, tenant admin) e `cms_users`/`groups`; trovato un secondo gap in `ModuleHelper::can_list()`/simili (nessun ramo generico per `global_privilege=true` sulle altre tabelle), non corretto perché tocca l'autorizzazione di ogni pagina CRUD admin | Sicurezza / Bug fix | Completato (parziale) | 2026-09-24 |
-| [092](092-execute-api-controller-self-healing.md) | `execute_api()`: risolto a runtime il `$this->controller` mancante nelle API generate da versioni vecchie del generatore (7 dei 14 controller già presenti in locale) - trovato un gap più ampio, non corretto: l'azione `list` sembra restituire sempre zero righe per un chiamante non superadmin | Bug fix | Completato | 2026-09-24 |
-| [091](091-bug-noti-execute-api-logscontroller-visibilita-dashboard.md) | Tre bug noti chiusi in un giro: `execute_api()` (`$debug_mode_message` assegnata dopo un `goto`), `LogsController` (Edit/Delete visibili al superadmin, stesso bug di 089), visibilità dashboard implementata (menu-based, `StatisticBuilderController`) | Bug fix / Sicurezza | Completato | 2026-09-24 |
-| [090](090-doc-api-generator-menziona-api2.md) | Documentazione API Generator (admin e pubblica): aggiunta la sezione "come usare api2" (Bearer token) accanto a quella esistente di `api/` | Documentazione / UI | Completato | 2026-09-24 |
-| [089](089-button-edit-detail-visibili-a-superadmin.md) | `button_edit`/`button_detail=false` ignorati per il superadmin quando un modulo usa lo stile azioni di default (`ModuleHelper::can_edit()`/`can_view()` bypassano sempre per il superadmin) - aggiunto uno stile opt-in (`button_icon_strict`) che li rispetta davvero, usato da `api_tokens`; stile di default non toccato altrove (es. `LogsController`, stesso bug, non corretto di proposito) | Bug fix / UI | Completato | 2026-09-24 |
-| [088](088-api-tokens-modello-pat.md) | `api_tokens`: rimosso il flag dedicato "client API" (creava confusione col conteggio licenza) - un token è ora un Personal Access Token generabile per qualunque utente esistente, invalidato automaticamente se l'utente viene disattivato | Sicurezza / API | Completato | 2026-09-24 |
-| [087](087-dataenum-detail-view-valore-grezzo.md) | Pagine di dettaglio: campi `select`/`radio` con `dataenum` "valore\|Etichetta" mostravano il valore grezzo (es. "1"/"0") invece dell'etichetta (Users/Menu Management/Module Generator) - corretto nel componente condiviso; corretto anche un crash 500 preesistente e scollegato sul campo Target Layout | Bug fix | Completato | 2026-09-24 |
-| [086](086-api2-sanctum.md) | Nuovo binario `api2` (Bearer token via Laravel Sanctum, scadenza scelta alla generazione) parallelo e additivo ad `api/` esistente (invariato); modulo admin superadmin-only per generare/revocare token; utenti "client API" bloccati dal login web | Sicurezza / API | Completato | 2026-09-24 |
-| [085](085-pulizia-file-morti-e-branch-obsoleti.md) | Rimossi 3 file inutilizzati (`phpunit.xml.bak`, `5.0` vuoto, duplicazione 15MB `public/vendor/crudbooster/assets/assets/`); cancellati 8 branch remoti obsoleti, tutti confermati senza commit unici rispetto a main/dev | Housekeeping | Completato | 2026-09-24 |
-| [084](084-host-request-path-e-chatai-cms-moduls.md) | `$_SERVER['HTTP_HOST']`/`REQUEST_URI` residui sostituiti con `Request`/`request()` in 4 metodi di `AdminController` e 3 di `CRUDBooster` (pattern segnalato in 081); aggiunta la riga mancante in `cms_moduls` per `AdminChatAIController` (stesso bug di 009/050, modulo ChatAI senza rotte) | Bug fix / robustezza / dati | Completato | 2026-09-24 |
 | [083](083-firebase-php-jwt-7.md) | **`firebase/php-jwt` 6→7** (CVE-2025-45769): la 7.x rifiuta passphrase HS256 < 32 byte e chiavi RSA < 2048 bit — aggiunti try/catch con log e messaggio (niente più 500, anche per chiavi Qlik vuote), validazione `min:32` sulla Passphrase Chat AI. **Verificare passphrase e chiavi dei clienti prima del deploy** (query nel documento) | Dipendenze / Sicurezza | Completato | 2026-09-24 |
+| [084](084-host-request-path-e-chatai-cms-moduls.md) | `$_SERVER['HTTP_HOST']`/`REQUEST_URI` residui sostituiti con `Request`/`request()` in 4 metodi di `AdminController` e 3 di `CRUDBooster` (pattern segnalato in 081); aggiunta la riga mancante in `cms_moduls` per `AdminChatAIController` (stesso bug di 009/050, modulo ChatAI senza rotte) | Bug fix / robustezza / dati | Completato | 2026-09-24 |
+| [085](085-pulizia-file-morti-e-branch-obsoleti.md) | Rimossi 3 file inutilizzati (`phpunit.xml.bak`, `5.0` vuoto, duplicazione 15MB `public/vendor/crudbooster/assets/assets/`); cancellati 8 branch remoti obsoleti, tutti confermati senza commit unici rispetto a main/dev | Housekeeping | Completato | 2026-09-24 |
+| [086](086-api2-sanctum.md) | Nuovo binario `api2` (Bearer token via Laravel Sanctum, scadenza scelta alla generazione) parallelo e additivo ad `api/` esistente (invariato); modulo admin superadmin-only per generare/revocare token; utenti "client API" bloccati dal login web | Sicurezza / API | Completato | 2026-09-24 |
+| [087](087-dataenum-detail-view-valore-grezzo.md) | Pagine di dettaglio: campi `select`/`radio` con `dataenum` "valore\|Etichetta" mostravano il valore grezzo (es. "1"/"0") invece dell'etichetta (Users/Menu Management/Module Generator) - corretto nel componente condiviso; corretto anche un crash 500 preesistente e scollegato sul campo Target Layout | Bug fix | Completato | 2026-09-24 |
+| [088](088-api-tokens-modello-pat.md) | `api_tokens`: rimosso il flag dedicato "client API" (creava confusione col conteggio licenza) - un token è ora un Personal Access Token generabile per qualunque utente esistente, invalidato automaticamente se l'utente viene disattivato | Sicurezza / API | Completato | 2026-09-24 |
+| [089](089-button-edit-detail-visibili-a-superadmin.md) | `button_edit`/`button_detail=false` ignorati per il superadmin quando un modulo usa lo stile azioni di default (`ModuleHelper::can_edit()`/`can_view()` bypassano sempre per il superadmin) - aggiunto uno stile opt-in (`button_icon_strict`) che li rispetta davvero, usato da `api_tokens`; stile di default non toccato altrove (es. `LogsController`, stesso bug, non corretto di proposito) | Bug fix / UI | Completato | 2026-09-24 |
+| [090](090-doc-api-generator-menziona-api2.md) | Documentazione API Generator (admin e pubblica): aggiunta la sezione "come usare api2" (Bearer token) accanto a quella esistente di `api/` | Documentazione / UI | Completato | 2026-09-24 |
+| [091](091-bug-noti-execute-api-logscontroller-visibilita-dashboard.md) | Tre bug noti chiusi in un giro: `execute_api()` (`$debug_mode_message` assegnata dopo un `goto`), `LogsController` (Edit/Delete visibili al superadmin, stesso bug di 089), visibilità dashboard implementata (menu-based, `StatisticBuilderController`) | Bug fix / Sicurezza | Completato | 2026-09-24 |
+| [092](092-execute-api-controller-self-healing.md) | `execute_api()`: risolto a runtime il `$this->controller` mancante nelle API generate da versioni vecchie del generatore (7 dei 14 controller già presenti in locale) - trovato un gap più ampio, non corretto: l'azione `list` sembra restituire sempre zero righe per un chiamante non superadmin | Bug fix | Completato | 2026-09-24 |
+| [093](093-execute-api-cbinit-privilegi.md) | `execute_api()`: chiamato `cbInit()` sul controller collegato (mai fatto prima) - risolve i privilegi per i moduli Module Generator (`mg_*`, tenant admin) e `cms_users`/`groups`; trovato un secondo gap in `ModuleHelper::can_list()`/simili (nessun ramo generico per `global_privilege=true` sulle altre tabelle), non corretto perché tocca l'autorizzazione di ogni pagina CRUD admin | Sicurezza / Bug fix | Completato (parziale) | 2026-09-24 |
 | [094](094-pulizia-librerie-js-morte-public-vendor.md) | Censimento delle librerie JS/CSS vendorizzate a mano in `public/vendor/crudbooster/` (punto cieco Dependabot segnalato in 082) — rimosse ~2.5MB confermate morte (edit_area, fancy, datetimepicker-master, bootstrap-datetimepicker, bootstrap, unslider, 4 CSS non importati, dateformat.js, font DroidNaskh, bg_blur*.jpg, jquery.numberformatter, laravel-filemanager duplicato) | Housekeeping | Completato | 2026-09-25 |
 | [095](095-mfa-fase-0-fondamenta-dati.md) | MFA (TOTP + Email OTP): Fase 0, schema dati (`two_factor_secret`/`two_factor_confirmed_at` su `cms_users`, `mfa_recovery_codes`, `mfa_trusted_devices`, template email), librerie `pragmarx/google2fa`+`bacon/bacon-qr-code` — nessun controller/route toccato, login invariato | Auth | Completato | 2026-09-25 |
 | [096](096-mfa-fase-1-enrollment-totp.md) | MFA: Fase 1, enrollment TOTP self-service dal profilo (QR, conferma primo codice, backup codes monouso, disable/regenerate/revoke devices) — `MfaHelper` nuovo, bug migration mancante trovato e risolto durante il test end-to-end | Auth | Completato | 2026-09-25 |
@@ -140,6 +92,81 @@ zero leggendo i diff di git.
 | [105](105-link-clicca-qui-senza-contesto.md) | Fix: link "Clicca qui" senza contesto su `reset_password`/3 viste MFA — testo esplicativo o link autoesplicativo | Auth / UI | Completato | 2026-09-25 |
 | [106](106-restyle-template-email-auth.md) | Restyle template email auth (reset password, MFA OTP, MFA recovery) in stile app + fix `subject` mai valorizzato; wrapper condiviso `emails/header.blade.php`/`footer.blade.php` ristilizzato con logo — scoperto e corretto un commento HTML (invece di Blade) che sarebbe finito dentro ogni email reale | Email / Auth / UI | Completato | 2026-09-25 |
 | [107](107-fix-test-login-logout-rotti-da-mfa.md) | Fix: 4 test in `LoginTest`/`LogoutTest` rotti dal gate MFA (redirect a step-up email OTP invece di popolare la sessione) — nuovo helper `trustDeviceFor()` che simula un dispositivo gia' fidato, nessuna logica di produzione toccata | Auth / Test | Completato | 2026-09-25 |
+| [108](108-dashboard-griglia-fase0-dati-dataset.md) | Dashboard a griglia libera, Fase 0: colonne additive `layout_mode`/`pos_x`/`pos_y`/`width`/`height`, `DashboardDatasetRegistry` (query builder guidato, dataset curati a codice) | Statistic Builder | Completato | 2026-09-28 |
+| [109](109-dashboard-griglia-fase1-conversione-legacy.md) | Dashboard a griglia libera, Fase 1: conversione automatica euristica di una dashboard `legacy_areas` a `grid` (bin-packing a 12 colonne dai `col-sm-N` del layout attuale), non distruttiva | Statistic Builder | Completato | 2026-09-28 |
+| [110](110-dashboard-griglia-fase2-backend.md) | Dashboard a griglia libera, Fase 2: endpoint bulk/posizione/dataset per il nuovo editor, additivi rispetto a quelli legacy (`getViewComponent()` invariato per i widget in modalita' SQL) | Statistic Builder | Completato | 2026-09-28 |
+| [111](111-dashboard-griglia-fase3-editor-frontend.md) | Dashboard a griglia libera, Fase 3: editor a griglia (gridstack.js), sidebar di configurazione sempre inline (mai modale), toggle SQL libera/query guidata — 3 bug reali trovati e corretti durante il test manuale (`reset()` per riferimento, escaping `json_encode` in uno script inline, handle di drag vs click di gridstack) | Statistic Builder / Frontend | Completato | 2026-09-28 |
+| [112](112-dashboard-griglia-fase4-widget-apexcharts.md) | Dashboard a griglia libera, Fase 4: nuovi widget grafico linee/barre su ApexCharts (`chartline_v2`/`chartbar_v2`), solo per la nuova griglia — widget legacy Morris.js invariati | Statistic Builder | Completato (grafico non verificato in browser) | 2026-09-28 |
+| [113](113-dashboard-griglia-fase5-vista-pubblica.md) | Dashboard a griglia libera, Fase 5: vista di sola lettura (`show_grid.blade.php`, CSS Grid puro, niente gridstack) per le dashboard `grid` viste da utenti non-superadmin, una sola query invece degli N+1 round-trip di oggi | Statistic Builder | Completato | 2026-09-28 |
+| [114](114-dashboard-griglia-fix-accesso-ui.md) | Fix: la nuova griglia (108-113) non era raggiungibile da nessuna parte dell'interfaccia — nuove dashboard ora nascono direttamente `grid`, aggiunto bottone "Griglia libera" per convertire quelle esistenti | Statistic Builder / UI | Completato | 2026-09-28 |
+| [115](115-dashboard-griglia-fix-drop-area-vuota.md) | Fix: trascinare un widget dalla libreria non faceva nulla — `.grid-stack` collassava a 0px di altezza su una griglia vuota, l'area di drop reale non copriva la zona visibile | Statistic Builder / Frontend | Completato (drag reale non riconfermato, vedi note) | 2026-09-28 |
+| [116](116-dashboard-griglia-fix-aggiunta-widget-click.md) | Fix: il drag esterno (`GridStack.setupDragIn`) per aggiungere widget è risultato inaffidabile anche dopo 115 — sostituito con un click sulla libreria; lo spostamento/ridimensionamento interno (drag vero e proprio) resta invariato e verificato funzionante | Statistic Builder / Frontend | Completato e verificato con click reale | 2026-09-28 |
+| [117](117-dashboard-griglia-fix-select2-icona-crash.md) | Fix: select2 sull'icona dello Small Box andava in crash nella sidebar del builder a griglia — `dropdownParent` era agganciato a `#modal-statistic`, che lì non esiste | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [118](118-dashboard-griglia-icona-preview-select-ionicons.md) | Aggiunta anteprima icona nella select "Icon By Ionicons" (icona+nome, stesso standard già usato in `list_icon.blade.php`/`module_generator`) — scoperta collaterale: le icone del picker (v2) non corrispondono al set che il widget finito mostra davvero (`<ion-icon>`, v7), da valutare separatamente | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [119](119-dashboard-griglia-fix-posizione-pulsanti-widget.md) | Fix: pulsanti elimina/ridimensiona un widget in posizioni scomode — elimina spostato dentro il bordo della card (prima veniva tagliato dallo scroll), ridimensionamento limitato alla sola maniglia in basso a destra (prima più maniglie ammassate nello stesso angolo) | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [120](120-dashboard-griglia-placeholder-widget-non-configurato.md) | Un widget appena aggiunto mostra "Widget non configurato" + un suggerimento invece dei segnaposto grezzi `[sql]`/`[name]`, ed è selezionato automaticamente (sidebar già aperta) invece di richiedere un secondo click | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [121](121-dashboard-griglia-fix-vista-pubblica-pulsanti-e-stile.md) | Fix: pulsanti modifica/elimina legacy (rotti, mai intercettati da nessun handler) rimossi da builder e vista pubblica; ogni cella della vista pubblica ha ora lo stesso stile card del builder, anche i widget non configurati | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [122](122-dashboard-griglia-link-configura-vista-pubblica.md) | Il placeholder "widget non configurato" mostra, solo nella vista pubblica (solo per il superadmin), un link "Clicca qui per configurare" verso il builder di quella dashboard, al posto del testo "Seleziona..." che lì non ha senso | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [123](123-dashboard-griglia-widget-panel-modulo-area.md) | Aggiunti alla palette della nuova griglia i widget mancanti rispetto al builder legacy: Chart Area (nuovo `chartarea_v2` su ApexCharts), Panel Area e Module Panel (riusati as-is, solo placeholder "non configurato" aggiunto) — Qlik Widget rimandato su richiesta | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [124](124-dashboard-griglia-rifinitura-builder-e-vista-pubblica.md) | Rifinitura builder a griglia: 2 bug reali corretti (grafici ApexCharts che non si disegnavano al reload, widget KPI illeggibili per CSS mancante), licenza Qlik/ChatAI + esclusione Token API in "Modulo incorporato", popup di conferma eliminazione + spinner elimina/salva, campi form uniformati, rimossa (su richiesta) la modalità "Query guidata", vista pubblica restilizzata in stile mockup | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [125](125-dashboard-griglia-link-opzionale-e-fix-dimensione-widget.md) | Link dell'Indicatore KPI reso opzionale (nascosto se vuoto) con etichetta configurabile (default "Dettagli"); bug reale corretto - `.border-box` (wrapper comune a tutti i widget) senza altezza esplicita faceva sì che ogni widget restasse più piccolo della sua cella, non solo l'Indicatore KPI | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [126](126-kpi-indicator-restyle-e-descrizione.md) | Indicatore KPI ristilizzato in card chiara (riuso token `--ch-*` di Fase 6a, icona con pastiglia `color-mix()` sul colore configurato) al posto del blocco pieno colorato; nuovo campo opzionale "Descrizione" (didascalia sotto il valore) | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [127](127-dashboard-griglia-fix-script-ionicons-mancante.md) | Bug reale trovato verificando 126 in browser ("non mostra l'icona"): lo script runtime di Ionicons v7 (`<ion-icon>`) non era mai caricato né dal builder a griglia né dalla vista pubblica a griglia - aggiunto in entrambe le pagine. Causa distinta e non risolta che resta: i nomi icona salvati dal picker (v2) non sono validi per v7, gap già noto da [118](118-dashboard-griglia-icona-preview-select-ionicons.md) | Statistic Builder / Frontend | Completato e verificato in browser (fix parziale, vedi Rischi) | 2026-09-28 |
+| [128](128-icone-lucide-reskin-font-awesome.md) | **Reskin di tutte le icone Font Awesome (82 nomi, ~124 file) in stile Lucide/sidebar**, senza toccare un solo file blade: CSS mask sulle classi `fa-*` esistenti (`icons-lucide.css` + SVG vendorizzati), collegato nei 10 punti che caricano Font Awesome. Zero rischio sul JS che manipola classi `fa-*` (es. toggle collapse sidebar) e zero migrazione dati per le icone di modulo/menu salvate per cliente, che ereditano lo stile automaticamente | Frontend / UI-UX | Completato e verificato in browser (fase 1 di 2, vedi Rischi) | 2026-09-28 |
+| [129](129-widget-kpi-icona-lucide.md) | Widget Indicatore KPI: icona passata da Ionicons v7 (CDN esterno `unpkg.com`) a Lucide vendorizzato, stessa tecnica di 128 adattata a un'icona dinamica per componente. Rimossi gli script Ionicons v7 (nessun altro uso rimasto) e risolto come effetto collaterale il disallineamento picker/anteprima/widget gia' noto da [118](118-dashboard-griglia-icona-preview-select-ionicons.md) (tre formati icona diversi e incompatibili, ora unificati sulla stessa fonte vendorizzata). Trovato ma non corretto un bug scollegato preesistente (pulsanti azione visibili in vista pubblica per `$ is not defined`) | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [130](130-dashboard-griglia-rimosso-padding-cella.md) | Dashboard a griglia (vista pubblica): rimosso il padding della cella che creava un margine/doppio bordo visibile tra ogni widget (in particolare l'Indicatore KPI) e il proprio contenitore | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [131](131-query-guidata-dataset-da-schema-reale.md) | **"Query guidata" per il widget KPI**: `DashboardDatasetRegistry` genera ora un dataset per ogni tabella reale del DB (non solo le 2 scritte a mano), con metriche/dimensioni/filtri dedotti dal tipo delle colonne e una whitelist basata su regole (tabelle/colonne di sistema o sicurezza escluse, solo `BASE TABLE`) invece di un elenco manuale. Reintrodotto il toggle SQL libera/Query guidata in `smallbox.blade.php` (tolto in 124 in attesa di dataset utili). Corretto un bug di ordine in `renderComponentPayload()` che lasciava il vecchio valore SQL quando si passava a modalità builder | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [132](132-widget-kpi-sezioni-apribili-e-popup-sorgente.md) | Widget KPI: pulsanti Bootstrap non stilizzati (pagina senza Bootstrap/Font Awesome) sostituiti con lo stile `.ch-btn` della pagina; form di configurazione diviso in 4 sezioni apribili/chiudibili (`<details>`); "Sorgente dati" spostata in un popup dedicato (toggle SQL libera/Query guidata, pulsante "Prova", riepilogo live nella sidebar) invece che inline | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [133](133-rifinitura-sorgente-dati-widget-kpi.md) | Rifinitura del popup "Sorgente dati": elenco Dataset alfabetico e ricercabile (select2, helper di caricamento condiviso con l'icona), Metrica ridotta a solo "Conteggio righe", "Raggruppa per" tolto dalla UI, pulsante "Prova" aggiunto anche alla SQL libera (nuovo endpoint `postSqlPreview()`), campo rinominato "Query" senza testo di aiuto, riepilogo su due righe in grassetto, pulsante "Configura sorgente" centrato | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-28 |
+| [134](134-widget-kpi-fix-query-non-salvata-e-placeholder-sql.md) | **Bug reale**: il popup "Sorgente dati" (introdotto in 132) era dichiarato fuori dal `<form>` del pannello di configurazione - lo script che sposta i campi veri (`config[sql]`/`config[mode]`/`config[dataset]`/...) al suo interno li toglieva quindi dal sottoalbero raccolto da `.serialize()` al Salva, azzerando silenziosamente sia la SQL libera sia la query guidata ad ogni salvataggio. Corretto spostando il popup dentro il form. Migliorato anche il placeholder "[sql]" grezzo mostrato quando nessuna query e' configurata, sostituito da un messaggio tradotto | Statistic Builder / Frontend | Completato e verificato in browser | 2026-09-29 |
+| [135](135-widget-kpi-fix-filtro-query-guidata-non-salvato.md) | **Bug reale**: il filtro della Query guidata (select colonna + valore) non aveva mai avuto un `name=` nel form (a differenza di Dataset/Metrica), quindi non veniva mai raccolto da `.serialize()` fin da quando fu introdotto in 131 - bug indipendente da 134. Corretto assegnando dinamicamente `name="config[filters][<colonna>]"` in base al filtro scelto | Statistic Builder / Frontend | Completato (non verificato in browser, su richiesta esplicita dell'utente) | 2026-09-29 |
+| [136](136-widget-kpi-fix-crash-filtro-query-guidata-in-show.md) | **Bug reale, scoperto usando 135**: `renderComponentPayload()` tratta ogni chiave di `$config` come placeholder testuale `[chiave]` - `filters` (mappa colonna/valore, mai popolata fino a 135) decodifica a `stdClass`, non scalare, e finiva comunque in `echo $value` nel layout causando `Object of class stdClass could not be converted to string` appena un widget aveva davvero un filtro salvato. Corretto saltando le chiavi non scalari dal ciclo generico (nessun layout usa `[filters]`); il filtro resta funzionante nel blocco dedicato piu' sotto | Statistic Builder / Backend | Completato (non verificato in browser, su richiesta esplicita dell'utente) | 2026-09-29 |
+| [137](137-dashboard-griglia-fix-spaziatura-widget-vista-pubblica.md) | **Bug reale**: la vista pubblica a griglia (`show_grid.blade.php`, CSS Grid con `gap`) e il builder (`builder_grid.blade.php`, GridStack con `margin`) calcolavano l'area di contenuto di un widget con formule diverse per la stessa altezza in righe (gap incluso nella cella vs margine di inset) - un widget alto 2 righe aveva quasi il doppio dello spazio disponibile in pubblico, scaricato come spazio vuoto dal `margin-top: auto` del footer dell'Indicatore KPI. Corretto allineando la geometria di `show_grid.blade.php` a quella di GridStack (margin+padding per cella invece di gap sul contenitore) | Statistic Builder / Frontend | Completato (non verificato in browser, su richiesta esplicita dell'utente) | 2026-09-29 |
+| [138](138-query-guidata-aggregazioni-operatori-filtri-multipli.md) | **Query guidata del widget KPI estesa** (richiesta utente, chiarita con domande prima di implementare): metriche Somma/Media/Minimo/Massimo per ogni colonna numerica (oltre al solo "Conteggio righe" di 133), operatori di filtro adattivi al tipo colonna (`= != > < >= <=` numerici, `contains` testo, `last_days` date), filtri multipli in AND senza limite - `DashboardDatasetRegistry` riscritta di conseguenza (whitelist operatori server-side, `normalizeFilters()` retrocompatibile col vecchio formato a filtro singolo) | Statistic Builder / Backend + Frontend | Completato (verificato con script PHP isolato contro il DB reale, non in browser su richiesta esplicita dell'utente) | 2026-09-29 |
+| [139](139-widget-kpi-icona-colore-opzionali-e-popup-piu-chiaro.md) | Widget KPI: Icona resa opzionale (tolto `required`, gestita come `[sql]` in 134 se assente), Colore etichettato esplicitamente come opzionale (aveva gia' un default); popup "Sorgente dati" allargato (420px → 560px) e reso piu' chiaro sul fatto che non salva da solo - bottone rinominato "Salva" → "Fatto", avviso esplicito, pulse visivo sul vero pulsante "Salva" della sidebar alla chiusura | Statistic Builder / Frontend | Completato (non verificato in browser, su richiesta esplicita dell'utente) | 2026-09-29 |
+| [140](140-query-guidata-metrica-funzione-e-colonna-separate.md) | Query guidata: select "Metrica" (fino a 36 voci gia' composte tipo "Somma Importo") separata in "Funzione" (max 5 voci) + "Colonna" (solo colonne numeriche, nascosta se Funzione="Conteggio righe") - proposta discussa con l'utente prima di implementare. Formato di salvataggio (`config[metric]`) invariato, ricomposto lato JS dalle due select: zero cambi a `DashboardDatasetRegistry::execute()`, zero rischio sui widget gia' configurati | Statistic Builder / Backend + Frontend | Completato (verificato con script PHP isolato, non in browser su richiesta esplicita dell'utente) | 2026-09-29 |
+| [141](141-widget-kpi-colore-default-bianco.md) | Widget KPI: colore di default del campo "Colore (opzionale)" cambiato da azzurro (`#00c0ef`) a bianco (`#ffffff`), richiesta diretta dell'utente - segnalato (non corretto, e' il comportamento voluto) che con l'accent bianco un'icona eventualmente scelta rischia di risultare invisibile (icona e sfondo della pastiglia diventano entrambi bianchi) | Statistic Builder / Frontend | Completato (non verificato in browser, su richiesta esplicita dell'utente) | 2026-09-29 |
+| [142](142-dashboard-griglia-rimosso-padding-interno-builder-e-vista-pubblica.md) | Rimosso il padding interno (4px) tra il bordo di un widget e quello della card generica che lo contiene, sia nel builder (`.grid-stack-item-content`) sia nella dashboard pubblica (`.ch-grid-view-cell`) - richiesta diretta dell'utente, il padding pubblico era stato reintrodotto proprio oggi in 137 per allinearsi al builder (mai toccato prima): tolto in entrambe contemporaneamente, restano allineate | Statistic Builder / Frontend | Completato (non verificato in browser, su richiesta esplicita dell'utente) | 2026-09-29 |
+| [143](143-widget-kpi-fix-doppio-bordo-dopo-142.md) | **Bug reale, scoperto usando 142**: tolto il padding tra widget e contenitore, i due bordi/sfondi ora combacianti (`.kpi-indicator-card` proprio + contenitore esterno) diventavano visibili come doppio bordo. Corretto togliendo bordo/sfondo propri dalla card dell'Indicatore KPI (resta solo quello del contenitore esterno, gia' condiviso da tutti i widget) | Statistic Builder / Frontend | Completato (non verificato in browser, su richiesta esplicita dell'utente) | 2026-09-29 |
+| [144](144-widget-kpi-fix-commento-blade-non-chiuso-da-143.md) | **Bug mio, introdotto da 143**: un commento Blade aperto con `{{--` e chiuso per errore con `*/` (chiusura CSS) invece di `--}}` faceva "sparire" dalla vista compilata ~180 righe di codice successive (incluso l'intero ramo `@elseif('configuration')` e la definizione di `$lucideIconNames`), causando `Undefined variable $lucideIconNames` a runtime. Corretto e verificato ricompilando la vista - lezione aggiunta ai Gotcha noti di CLAUDE.md | Statistic Builder / Frontend | Completato e verificato con render diretto della vista | 2026-09-29 |
+| [145](145-widget-kpi-popup-sorgente-dati-piu-largo-e-colonna-operatore-fissa.md) | Popup "Sorgente dati" allargato ancora (560px → 640px) e colonna "Operatore" del filtro passata a larghezza fissa (160px, era `flex:1`) - opzioni lunghe come "negli ultimi N giorni" restavano tagliate. Verificato stavolta con render diretto della vista (non solo `php -l`, insufficiente nel precedente intervento 144) | Statistic Builder / Frontend | Completato e verificato con render diretto della vista | 2026-09-29 |
+| [146](146-widget-kpi-layout-icona-condizionale-e-valore-centrato.md) | Widget KPI: pastiglia icona non piu' riservata quando l'icona non e' impostata (prima occupava comunque spazio, spesso invisibile per via del default bianco di 141); valore (+descrizione) raggruppati in un contenitore `flex:1` centrato nello spazio libero tra intestazione e link invece di restare ancorati in alto con vuoto sproporzionato sotto - discusso prima con un mockup (Artifact) sulla dashboard reale. Altezza/larghezza della card restano quelle scelte nel builder, nessun valore fisso introdotto | Statistic Builder / Frontend | Completato e verificato con render diretto della vista | 2026-09-29 |
+| [147](147-grafico-a-linee-query-guidata-e-raggruppamento.md) | **Grafico a linee** portato alla pari dell'Indicatore KPI: Query guidata completa (Dataset/Funzione+Colonna/Filtri/Prova, riusando `_query_builder_fields.blade.php` - fin qui incluso solo da `smallbox` nonostante fosse gia' pensato come condiviso) piu' una novita' reale, il **raggruppamento** (`$groupBySupported`, select "Raggruppa per" - gia' supportato lato server da 108/110, mai avuto una UI), e un colore linea opzionale. Nessun cambio lato controller: `renderComponentPayload()`/`DashboardDatasetRegistry` erano gia' generici | Statistic Builder / Frontend | Completato e verificato ispezionando il sorgente compilato, non in browser su richiesta esplicita dell'utente | 2026-09-29 |
+| [148](148-sorgente-dati-popup-condiviso.md) | Sezione "Sorgente dati" (popup con toggle SQL libera/Query guidata, gia' introdotto per l'Indicatore KPI in 132/133/139) estratta in un partial condiviso (`_source_config.blade.php`, parametrizzato su etichette SQL e `groupBySupported`) e applicata anche al Grafico a linee (147, che l'aveva inline) - richiesta diretta dell'utente. `smallbox.blade.php` perde ~130 righe duplicate | Statistic Builder / Frontend | Completato e verificato ispezionando il sorgente compilato, non in browser su richiesta esplicita dell'utente | 2026-09-29 |
+| [149](149-fix-dataset-select2-css-mancante-grafico-a-linee.md) | **Bug reale, scoperto usando 148**: il CSS di select2 era caricato solo da `smallbox.blade.php` (per il picker icona, un dettaglio KPI-specifico) - `chartline_v2` inizializzava comunque select2 sul campo Dataset senza mai caricarne il CSS, risultando non stilizzato ("si vede due volte e non è ricercabile", segnalato dall'utente). Spostato il `<link>` dentro `_query_builder_fields.blade.php`, dove il select2 del Dataset viene davvero creato - ogni widget che lo include lo carica automaticamente una volta sola | Statistic Builder / Frontend | Completato e verificato ispezionando il sorgente compilato, non in browser su richiesta esplicita dell'utente | 2026-09-29 |
+| [150](150-pulse-salva-infinito-fino-al-click.md) | Pulse sul pulsante "Salva" (introdotto in 139) passato da durata fissa (1.6s, 2 ripetizioni) a `infinite`: continua finche' il pulsante non viene davvero cliccato invece di fermarsi da solo e rischiare di passare inosservato - richiesta diretta dell'utente | Statistic Builder / Frontend | Completato e verificato ispezionando il sorgente compilato, non in browser su richiesta esplicita dell'utente | 2026-09-29 |
+| [151](151-raggruppa-per-colonna-e-formato-separate-piu-anno.md) | "Raggruppa per" (147) separato in "Colonna" + "Formato" (visibile solo per colonne data), stessa idea di Funzione+Colonna in 140 - proposta discussa con l'utente prima di implementare. Aggiunta "Anno" come nuova granularita' (prima solo mese/giorno). Formato di salvataggio (`config[group_by]`) invariato: zero rischio sui widget gia' configurati | Statistic Builder / Backend + Frontend | Completato e verificato con script PHP isolato + ispezione del sorgente compilato, non in browser su richiesta esplicita dell'utente | 2026-09-29 |
+| [152](152-grafico-a-linee-piu-linee.md) | **Grafico a linee**: supporto a piu' linee sullo stesso grafico (Caso B, discusso con l'utente prima di implementare), ciascuna con sorgente dati indipendente - sezione "Altre linee" (fino a 4 extra, `config[lines][N]`), partial di configurazione parametrizzati (`$fieldPrefix`/`$scopeId`) per riuso per-linea, nuovo `resolveSourceRows()` nel controller, algoritmo di unione label (dal widget legacy) per il pivot multi-serie in ApexCharts. Bug trovato in verifica: il ciclo generico dei placeholder consumava gia' `[sql]` per la prima linea in modalita' sql libera, corretto | Statistic Builder / Backend + Frontend | Completato e verificato con script PHP isolato (incl. caso di errore su una linea) + ispezione del sorgente compilato, non in browser su richiesta esplicita dell'utente | 2026-09-29 |
+| [153](153-filtri-operatori-data-e-validazione-tipo-valore.md) | Filtri Query guidata: aggiunti `>`/`<`/`>=`/`<=` per colonne data (prima solo `=`/`!=`/"ultimi N giorni"), e nuova validazione del valore contro il tipo colonna (`validateFilterValue()`) - segnalato dall'utente un filtro "sparito" su un Grafico a linee, causa reale: colonna numerica sbagliata (`created_by` invece di `created_at`) con un valore data, confronto che MySQL eseguiva silenziosamente senza errore. Ora lancia un'eccezione col nome colonna/valore, gia' visibile sia in "Prova" sia nel widget renderizzato (nessun cambio ai due try/catch esistenti). Campo valore diventato `type="date"` per le colonne data | Statistic Builder / Backend + Frontend | Completato e verificato con script PHP isolato (incl. rigenerazione di tutti i widget reali gia' salvati con filtri, nessuna regressione) + ispezione del sorgente compilato, non in browser su richiesta esplicita dell'utente | 2026-09-29 |
+| [154](154-query-guidata-formato-mese-dell-anno.md) | Query guidata: nuovo formato di raggruppamento date "Mese dell'anno" (label `01..12` senza anno) per sovrapporre anni diversi su un Grafico a linee (una linea per anno con filtro data ciascuna) - prima "Mese" produceva `Y-m` e le linee non si allineavano. "Mese" rinominato "Anno-mese" (solo etichetta), etichette formato ora via `trans()` EN/IT, aggiunto anche ai dataset curati | Statistic Builder / Backend | Completato e verificato con script PHP isolato sul DB locale (`mg_fatture` 2025 vs 2026), non in browser | 2026-09-29 |
+| [155](155-grafico-linee-slot-vuoti-in-configurazione.md) | Grafico a linee: nel pannello di configurazione riapparivano tutti e 4 i blocchi "Altre linee" anche se vuoti (i blocchi nascosti vengono inviati dal form, quindi `config[lines]` salvato contiene 4 slot). Ora il pannello conta solo le linee davvero compilate. Solo vista, il salvataggio e il rendering del grafico non cambiano | Statistic Builder / Frontend | Completato, non verificato in browser | 2026-09-29 |
+| [156](156-grafico-a-barre-query-guidata-serie-multiple-impilate.md) | **Grafico a barre come il Grafico a linee**: `chartbar_v2` aveva solo SQL libera e una serie. Ora Query guidata (popup `_source_config`, widget SQL-only gia' salvati si riaprono invariati), colore, fino a 4 serie extra affiancate e opzione "Barre impilate". Estratti e condivisi con `chartline_v2`: partial `_multi_series_config` (blocco serie extra, testi via `trans()` EN/IT) e classe `ChartSeriesBuilder` (unione label/serie). Snapshot dell'HTML di tutti i grafici salvati identico prima/dopo | Statistic Builder / Backend + Frontend | Completato e verificato con script PHP isolato (rendering barre 2025 vs 2026 affiancate/impilate, pannelli config IT/EN), non in browser | 2026-09-29 |
+| [157](157-grafico-ad-area-query-guidata-serie-multiple-impilate.md) | **Grafico ad area come linee e barre**: `chartarea_v2` aveva solo SQL libera e una serie. Ora Query guidata, colore, fino a 4 serie extra (aree sovrapposte di default, oppure "Aree impilate"), riusando partial `_multi_series_config` e `ChartSeriesBuilder` di 156, nessun codice condiviso nuovo | Statistic Builder / Frontend | Completato e verificato con script PHP isolato (widget sintetici 2025 vs 2026 sovrapposti/impilati, pannelli config IT/EN), non in browser | 2026-09-29 |
+| [158](158-dataset-access-scope-fase-1-widget-elenco-record.md) | **`DatasetAccessScope` (Fase 1 widget "Elenco record")**: `canRead($table)` (solo `mg_*`, modulo attivo con `is_read` per il ruolo) e `applyRowScope()` estratto da `getModalData()` (070), SQL generato identico (25 confronti utente×tabella). Nessuna UI ancora | Sicurezza / Dashboard | Completato (verifica manuale, suite non lanciata) | 2026-09-30 |
+| [159](159-dataset-registry-execute-rows-fase-2-widget-elenco-record.md) | **`DashboardDatasetRegistry::executeRows()` (Fase 2 widget "Elenco record")**: righe vere di tabelle `mg_*` con modulo, accesso + scoping utente (158) prima dei filtri, colonne/`order_by`/filtri riverificati a whitelist, tetto 500 righe. Provato su 5 ruoli con dati di prova in transazione annullata. Ancora nessuna UI/route | Sicurezza / Dashboard | Completato (verifica manuale, suite non lanciata) | 2026-09-30 |
+| [160](160-widget-tabella-elenco-record-ui-e-visibilita.md) | **Widget Tabella "Elenco record" (Fasi 3-4)**: popup "Sorgente dati" anche sulla Tabella, nuova modalità con tabella `mg_*`/colonne/ordinamento/record per pagina/filtri, anteprima solo superadmin, render via `executeRows()`; il widget sparisce del tutto a chi non può leggere la tabella. Una `sql` scalare residua non viene più eseguita in modalità `records`. Verificato lato server e di rendering, **JS non provato in browser** | Statistic Builder / Sicurezza | Completato (non provato in browser) | 2026-09-30 |
+| [161](161-modulo-incorporato-robustezza-e-traduzioni.md) | **Modulo incorporato, Fase 0**: testi del widget su `trans()` (en/it) e modulo con route inesistente non manda più in errore l'intera dashboard (messaggio "Modulo non disponibile"). Prima fase del piano per passare a iframe con layout ridotto | Statistic Builder / Frontend | Completato e verificato in locale | 2026-09-30 |
+| [162](162-modulo-incorporato-modalita-embed-fasi-1-3.md) | **Modulo incorporato, Fasi 1-3**: modalità `?embed=1` lato server — layout senza header/sidebar/footer (titolo e pulsanti d'azione restano), `CBBackend` riscrive i redirect (anche JSON ajax) mantenendo l'embed, login/lock-screen portano la finestra intera al login. Il widget non usa ancora l'iframe (Fase 4); senza `embed=1` nessun cambiamento | Statistic Builder / Middleware | Completato e verificato in locale | 2026-09-30 |
+| [163](163-modulo-incorporato-iframe-e-apri-pagina-intera.md) | **Modulo incorporato, Fase 4**: il widget carica il modulo in un iframe `?embed=1` (niente più scraping di `#content_section`) che riempie la card con le dimensioni decise nel builder, pulsante "Apri a pagina intera", `pointer-events: none` nei builder per non bloccare drag/selezione. Cambia il comportamento visibile (le azioni restano nel widget); da verificare che i server non mandino `X-Frame-Options` | Statistic Builder / Frontend | Completato e verificato in locale (rendering lato server) | 2026-09-30 |
+| [164](164-qlik-hardening-e-pulizia.md) | **Qlik: hardening e pulizia** — rimosso `create_qlik_user` (rotto, senza controllo di ruolo) e `getJWTTokenOP2` (claim fissi, exp 2032); token pubblico casuale; `createUser` con timeout/cookie in memoria/controllo errori; `QlikItemsController::show` con 404; validazione POST e anti open-redirect in `add_tenant`/`add_authorization`; JS inline con `json_encode` e larghezze CSS validate; login JS con errori/timeout/xrfkey casuale; fix ReferenceError in `objopticket.js`; 3 JS morti eliminati; traduzioni en+it. Restano fuori: filtro tenant `QlikApp`/`QlikConf`, `menu_groups`, label `cbInit` | Sicurezza + Bug fix | Completato (parziale) | 2026-09-30 |
+| [165](165-license-json-isolato-nei-test.md) | **`license.json` isolato nei test** — `ConnectorServiceTest` (lanciato come root) ricreava il vero `storage/app/license.json` come `root:root`, e `www-data` non riusciva più ad aggiornarlo: la licenza locale restava stale (modulo Qlik assente) senza errori. Ora il disco `license` in `testing` punta a `storage/framework/testing/license`, `getLicenseFromFile()` usa il path del disco, `writeLicense()` logga se `put()` fallisce | Licensing + Test | Completato (test non rieseguiti) | 2026-09-30 |
+| [166](166-qlik-prova-connessione.md) | **Qlik: pulsante "Prova connessione"** nel form della configurazione — test passo-passo (chiave privata, JWT, DNS, TCP, certificato TLS, login/QRS) su valori salvati o non ancora salvati, con rapporto dettagliato e suggerimenti en/it, "Copia rapporto". Nuovo `QlikConnectionTester` + `postTestConnection()`; nessuna modifica a `QlikHelper`. Non provato contro un vero Qlik | Qlik / Feature | Completato | 2026-09-30 |
+| [167](167-seed-modulo-qlik-apps.md) | Seed del modulo "Qlik Apps" in `cms_moduls`: nessuna migrazione/seeder lo creava (era creato a mano da Module Generator), quindi su un DB nuovo `/admin/qlik_apps` dava 404. Aggiunta la riga a `CmsModulsSeeder` (idempotente per nome) e inserita nel DB locale | Bug fix | Completato | 2026-09-30 |
+| [168](168-widget-qlik-pulizia-e-robustezza-fase-0.md) | **Widget Qlik, Fase 0**: rimosso codice morto/commentato dai JS `qlik_login_widget*` e dalle blade mashup, `try/catch` in `main()` con errore visibile invece di "Loading..." perenne, `alert()` → `console.error`, null-check su elementi del padre, `</div>` chiuso; ramo Ticket (non più supportato) reso non fatale. `xrfkey` resta statico. Nessun cambio di contratto (nomi file/globali). JS non testati nel browser | Qlik / Frontend | Completato | 2026-09-30 |
+| [169](169-builder-griglia-widget-qlik-mancante.md) | **Builder a griglia: widget Qlik mancante**: la palette di `builder_grid.blade.php` non includeva `qlikwidget` (presente solo nel builder legacy). Aggiunta la voce, gated da `isActiveQlik()`, e classe `ch-module-frame` sull'iframe perché non catturi il mouse nella griglia. Non verificato nel browser. Seguito: stato "non configurato" uniformato agli altri widget (partial `_empty_widget_state`, testi EN+IT) | Statistic Builder / Qlik | Completato | 2026-09-30 |
+| [170](170-profilo-utente-a-sezioni-con-verifica-otp.md) | **Profilo utente a sezioni + verifica OTP**: `/admin/users/profile` riscritta (Generale / MFA / Sistema / Password, menu a destra, cambio sezione senza reload, salvataggio AJAX indipendente per sezione con lista campi esplicita). Cambio email (codice al nuovo indirizzo) e password (tre campi) richiedono password attuale + OTP (TOTP o email) e chiudono le altre sessioni (`cms_users.session_version`, controllata da `CBBackend`); password altrui non più impostabile in modifica (solo in creazione) ma link di reset dalla scheda utente. Richiede `migrate` su ogni cliente; test scritti, non ancora eseguiti | Auth / UI/UX | Completato | 2026-09-30 |
+| [171](171-pulsanti-stile-unico-globale.md) | **Pulsanti: stile unico in tutta l'app**: lo stile del mockup del profilo (accent pieno / ghost / rosso / ambra / accent tenue, angoli 10px, testo 600) ora vale per ogni `.btn` dentro `body.ch-shell`, con un blocco a specificità bassa in fondo a `theme.css` (le regole di contesto, es. pulsanti-icona della lista, restano più specifiche e non cambiano). `btn-success` è sempre accent (prima verde in `#box_main`). Solo CSS, non verificato a occhio nel browser | UI/UX | Completato | 2026-09-30 |
+| [172](172-widget-dashboard-stile-card-come-kpi.md) | **Widget dashboard: stessa impostazione a card dell'Indicatore KPI**: partial `_widget_card_style` incluso in `show_grid`/`builder_grid`/`index` legacy; Tabella, Grafici, Pannello e Modulo ricevono padding 18px, titolo come l'etichetta del KPI (13px/600, senza riga di separazione) e ombra al hover. Nessun markup modificato; icona/colore per widget del KPI non replicati (servirebbero nuovi campi nel builder). Non verificato a occhio nel browser | UI/UX | Completato | 2026-09-30 |
+| [173](173-importa-widget-da-altra-dashboard.md) | **Builder a griglia: "Importa" un widget da un'altra dashboard**: riquadro "Importa" sotto la palette, modale "Copia da" con due select ricercabili (dashboard, poi widget) in ordine alfabetico; crea una copia indipendente (stesso tipo/nome/config, `componentID` nuovo) nella dashboard corrente. Solo superadmin, nessuna migration. Test scritti, non eseguiti; non verificato nel browser | Statistic Builder | Completato | 2026-09-30 |
+| [174](174-griglia-widget-legacy-morris-e-try-catch.md) | **Griglia libera: widget grafici legacy (Morris) non visibili dopo la conversione**: `builder_grid`/`show_grid` non caricavano Morris/Raphael, `new Morris.*` lanciava ReferenceError e interrompeva il `forEach` del builder (solo 3 widget su 9). Caricate le librerie + `try/catch` per widget. Non verificato nel browser | Statistic Builder | Completato | 2026-09-30 |
+| [176](176-qlik-sync-coda-e-modello-dati.md) | **Sincronizzazione Qlik, Fasi 1-2 (coda e dati)**: connessione di coda dedicata `qlik_sync` (il default globale resta `sync`), migrazioni `jobs`/`failed_jobs`, colonne additive su `qlik_apps`/`qlik_items` (relazione item→app facoltativa, `is_missing`, `external_id`), tabelle `qlik_sync_runs`/`qlik_sync_run_records`, servizio `worker` nel compose, dipendenza `textalk/websocket`. Verificata la coda end-to-end col worker Docker. **Ogni installazione cliente: `composer install`, `migrate` e un worker attivo** | Qlik / Infrastruttura | Completato | 2026-09-30 |
+| [177](177-qlik-sync-app-e-item.md) | **Sincronizzazione Qlik, Fasi 3/5/6/8 (app e item)**: pulsanti + modale sulle liste `qlik_apps`/`qlik_items` (solo superadmin), run in coda con monitoraggio, annulla con mantieni/elimina e rollback anche a run concluso, record che ereditano tenant e gruppo primario di chi importa, riuso senza duplicati, `is_missing` invece di cancellare; driver SaaS (REST + Engine WebSocket) e On-Premise (QRS). Logica verificata con driver finto; **driver non provati contro un Qlik reale** (spike su tenant di test) | Qlik | Completato (parziale) | 2026-09-30 |
+| [178](178-widget-qlik-modalita-foglio-e-select-ricercabili.md) | **Widget Qlik: modalità "foglio" aggiuntiva** (i widget esistenti non cambiano) con app da `qlik_apps` e fogli dagli item collegati, nuova pagina `/mashup-sheet/{id}`; campo "conf" di app/item su `select2` (ricercabile, alfabetico), app del widget in ordine alfabetico e filtrabili | Qlik / Widget / UI | Completato | 2026-09-30 |
+| [175](175-statistic-builder-layout-dashboard-nascosto.md) | **Statistic Builder: "Layout Dashboard" nascosto dal menu, campo Layout facoltativo e nascosto (creazione e modifica)** (`hide_form`, anche in modifica); il modulo resta raggiungibile via URL. Non verificato nel browser | Statistic Builder / UI | Completato | 2026-09-30 |
+| [179](179-profilo-sezione-qlik.md) | **Profilo utente: sezione "Qlik"** nel menu di destra (solo con `isActiveQlik()`): elenco/aggiunta/rimozione delle associazioni `qlik_users` (conf, login, user directory, IDP) con salvataggio AJAX `postProfileQlik`; modificabile solo da superadmin/tenant admin, sola lettura per gli altri; IDP SaaS generato se vuoto come in `prepare_qlik_users()`. Non verificato nel browser | Qlik / UI | Completato | 2026-09-30 |
+| [180](180-qlik-conf-upload-pem-validazione.md) | **Qlik conf: upload `.pem` rifiutato** — la regola `mimes:pem` deduce l'estensione dal contenuto (un PEM è `text/plain` → `txt`) e scartava sempre il file; sostituita con `extensions:pem`. Non verificato nel browser | Qlik / Bug fix | Completato | 2026-09-30 |
+| [181](181-qlik-sync-modale-nuovo-stile.md) | **Modale "Sincronizza da Qlik" nel nuovo stile** — stili inline AdminLTE (header azzurro, footer grigio) sostituiti da classi `.ch-sync-*` in `theme.css` con i token `--ch-*` (card, icona a badge, focus indaco, bottoni come gli altri popup); nessun cambio di logica. Non verificato nel browser | Qlik / UI | Completato | 2026-09-30 |
+| [182](182-qlik-sync-saas-sort-items-400.md) | **Sync app Qlik Cloud: HTTP 400 su `api/v1/items`** — `sort=name` non è accettato da Qlik Cloud (`COLLECTIONS-2-0`), serve il segno (`sort=%2Bname`); corretto in `SaasQlikDriver::listApps()`. Verificato con la chiamata reale dal container (200); sync completa non rilanciata | Qlik / Bug fix | Completato | 2026-09-30 |
 
 **Stato**: `Pianificato` → `In corso` → `Completato` (o `Annullato` se si
 decide di non procedere, motivando il perché nel file stesso).
@@ -165,32 +192,14 @@ dettaglio della strategia):
 ## Roadmap uscita da CRUDBooster (packages/)
 
 Percorso per portare `packages/crocodicstudio/crudbooster` a standard
-Laravel, tenendo separati i controller "di sistema" (versionati, nessun
-contratto esterno) dai controller creati da interfaccia in produzione
-(mai in questo repo, hanno un contratto esterno reale — vedi
-[006](006-controller-sistema-app-http-controllers-system.md) per l'analisi
-completa):
+Laravel. Dettaglio completo passo-passo (già concluso, salvo il punto
+aperto sotto) in [`archivio-001-068.md`](archivio-001-068.md#roadmap-uscita-da-crudbooster-packages--dettaglio-completo).
 
-- ✅ 21 controller "schermata" spostati in `App\Http\Controllers\System`
-  — [006](006-controller-sistema-app-http-controllers-system.md).
-- ✅ Le 5 classi "motore" (`CBController`, `ApiController`, `Controller`,
-  `ExportData`, `ImportData`) — la base che i controller generati da
-  interfaccia estendono per FQCN letterale
-  (`extends \crocodicstudio\crudbooster\controllers\CBController`) — sono
-  state spostate una alla volta in `App\Http\Controllers\System`, con uno
-  shim `class_alias()` nel vecchio path che mantiene risolvibile il
-  vecchio FQCN:
-  - ✅ `Controller` spostata — [012](012-controller-motore-shim-class-alias.md).
-  - ✅ `ImportData`/`ExportData` spostate — [013](013-importdata-exportdata-shim-class-alias.md).
-  - ✅ `ApiController` spostata — [014](014-apicontroller-shim-class-alias.md).
-  - ✅ `CBController` spostata — [015](015-cbcontroller-shim-class-alias.md).
-- ✅ **La cartella `packages/.../controllers/` non esiste più** — i 5
-  `class_alias()` sono stati consolidati in un unico bootstrap,
-  `app/Support/legacy_crudbooster_aliases.php`, caricato via
-  `composer.json` → `autoload.files` — [017](017-rimozione-cartella-controllers-legacy.md).
-  Il vecchio FQCN resta comunque risolvibile per chi lo estende da fuori:
-  questo intervento ha spostato *dove* vive la compatibilità, non l'ha
-  eliminata.
+- ✅ Controller "di sistema", le 5 classi "motore", i 14 helper, i
+  middleware, le route, il service provider, le view, gli assets, il
+  database e le config del pacchetto — tutti spostati fuori da
+  `packages/crocodicstudio/crudbooster/src/`, che oggi contiene solo
+  `assets/`, `fonts/`, `views/`.
 - ⬜ **Rimozione definitiva degli alias** (`app/Support/legacy_crudbooster_aliases.php`
   e l'entry in `composer.json`): possibile solo dopo che *ogni* cliente
   attivo è stato aggiornato almeno una volta con
@@ -199,111 +208,13 @@ completa):
   [016](016-comando-migrazione-extends-legacy-clienti.md) — ma mai ancora
   eseguito su un ambiente reale). Finché anche un solo cliente non è
   passato da questo comando, gli alias restano necessari.
-- ✅ `commands/`, `middlewares/CBBackend__.php` (morto), `validations/` —
-  ripuliti: `Mailqueues` spostato in `App\Console\Commands`, i 3 comandi
-  installer storici (`crudbooster:install`/`:update`/`:version`, zero
-  riferimenti nel repo) eliminati, `validation.php` spostato in
-  `AppServiceProvider::boot()` — [018](018-commands-middlewares-validations-cleanup.md).
-- ✅ **`middlewares/` non esiste più** — `CBBackend`/`CBAuthAPI` spostati
-  in `App\Http\Middleware`, aggiornati anche i 3 riferimenti in
-  `routes.php` e 1 in `config/lfm.php` (unisharp/laravel-filemanager) —
-  [030](030-middlewares-cbbackend-cbauthapi.md).
-- ✅ **`routes.php` spostato in `routes/crudbooster.php`**, caricato da
-  `App\Providers\RouteServiceProvider::map()` (nuovo metodo
-  `mapCrudboosterRoutes()`, registrato per ultimo per preservare l'ordine
-  di prima) invece che da un `require` dentro il service provider del
-  pacchetto — [031](031-routes-standard-laravel.md).
-- ✅ **`CRUDBoosterServiceProvider` ripulito e spostato in
-  `App\Providers`** — rimosse 3 registrazioni di provider terze parti
-  ridondanti (già coperte dall'auto-discovery di Laravel, verificato nei
-  `composer.json` dei pacchetti) e un singleton morto; gli 8 alias custom
-  spostati in `config/app.php` → `aliases` (standard Laravel, invece di
-  `AliasLoader` programmatico) — [032](032-crudboosterserviceprovider-pulizia-e-spostamento.md).
-  **`packages/crocodicstudio/crudbooster/src/` ora contiene solo
-  `assets/`, `fonts/`, `views/`** — nessuna logica applicativa residua.
-- ✅ **`helpers/` non esiste più** — le 14 file spostate in `App\Helpers`,
-  un file (o pochi) alla volta dal più piccolo al più grande, nessuno
-  shim necessario (nessun controller custom cliente referenzia un helper
-  per FQCN, diversamente da `controllers/`):
-  - ✅ `NNHelper` eliminato (morto), `ModuleHelperHelper`/`MyHelper`
-    spostati — [023](023-helpers-nnhelper-moduleHelperhelper-myhelper.md).
-  - ✅ `GroupHelper`, `TenantHelper`, `CB` spostati —
-    [024](024-helpers-grouphelper-tenanthelper-cb.md).
-  - ✅ `ChatAIHelper`, `LicenseHelper`, `MenuHelper` spostati —
-    [025](025-helpers-chatai-license-menu.md).
-  - ✅ `QlikHelper`, `ModuleHelper` spostati —
-    [026](026-helpers-qlikhelper-modulehelper.md).
-  - ✅ `UserHelper` spostato — [027](027-helpers-userhelper.md).
-  - ✅ `Helper.php` (funzioni globali) spostato in
-    `app/Helpers/functions.php` — [028](028-helpers-functions-globali.md).
-  - ✅ `CRUDBooster.php` spostato per ultimo (80 KB, 101 metodi) —
-    [029](029-helpers-crudbooster-ultimo-pezzo.md).
-- ✅ `localization/` rimossa interamente — mai caricata a runtime
-  (nessun `loadTranslationsFrom()`, `resources/lang/*/crudbooster.php` già
-  la fonte viva e tracciata su git) — [019](019-rimozione-localization-legacy.md).
-- ✅ `userfiles/` rimossa interamente — le sue 3 copie erano ridondanti
-  (identiche a `app/Http/Controllers/CBHook.php` e
-  `resources/views/vendor/crudbooster/type_components/readme.txt`, già
-  tracciati) o uno stub obsoleto (`AdminCmsUsersController`, superato da
-  [006](006-controller-sistema-app-http-controllers-system.md)) —
-  [020](020-rimozione-userfiles-legacy.md).
-- ✅ `configs/` rimossa interamente — a differenza degli altri due, era
-  referenziata anche da `mergeConfigFrom()` (attivo ad ogni richiesta, non
-  solo un `publishes()` pigro); rimossa anche quella riga. Unica chiave
-  differente (`API_PATH`) confermata mai letta da nessuna parte —
-  [021](021-rimozione-configs-legacy.md).
-- ✅ `database/` rimossa interamente — 0 migration e 1 solo seeder
-  (`Qlik_Sett`, già rimosso esplicitamente dal `DatabaseSeeder.php` reale)
-  esistevano solo nel pacchetto — [022](022-rimozione-database-legacy.md).
-- ✅ `assets/` (32 MB) rimossa — già pubblicata e tracciata in
-  `public/vendor/crudbooster/`, zero contenuto mancante una volta
-  scartata una duplicazione ricorsiva interna al pacchetto (non
-  referenziata) — [036](036-rimozione-assets-legacy.md). **Nota**:
-  la stessa duplicazione esiste anche dentro
-  `public/vendor/crudbooster/assets/assets/` (15 MB, file live/tracciati
-  su git) — non toccata, possibile pulizia futura separata.
-- ✅ `views/` spostata in `resources/views/crudbooster/` (non
-  `resources/views/vendor/crudbooster/` — scelta esplicita dell'utente).
-  Trovati e corretti 16 path assoluti hardcoded (`base_path('packages/.../views/default/type_components/...')`
-  dentro un `file_exists()` a guardia di un `@include` — senza
-  correzione, ogni asset/component per tipo di campo form sarebbe
-  sparito silenziosamente da tutti i form dell'app) e 2 file morti
-  eliminati — [037](037-views-spostate-resources.md).
-  **`packages/crocodicstudio/crudbooster/src/` è ora vuota.**
 
 ## Backlog — emerso ma non ancora assegnato a un intervento numerato
 
-Cose notate durante altri lavori (setup Docker, CI/CD), non ancora
-trasformate in un intervento vero e proprio:
+Cose notate durante altri lavori, non ancora trasformate in un intervento
+vero e proprio. Le voci già risolte sono in
+[`backlog-risolto.md`](backlog-risolto.md).
 
-- ~~70 vulnerabilità segnalate da GitHub Dependabot~~ (conteggio di
-  agosto, era Laravel 9) — **rivalutato il 2026-09-24**: lato PHP ne
-  restava 1 (`firebase/php-jwt`, aggiornata in [083](083-firebase-php-jwt-7.md),
-  `composer audit` ora pulito); il resto veniva dai `package.json` della build morta,
-  rimossi in [082](082-rimossa-build-gulp-e-package-json.md). ~~Punto cieco
-  rimasto: librerie JS copiate a mano in `public/vendor/` (nessun manifest,
-  Dependabot non le vede) — serve un censimento dedicato~~ — **censimento
-  fatto e parte morta rimossa in
-  [094](094-pulizia-librerie-js-morte-public-vendor.md)** (2026-09-25).
-  Resta fuori scope `assets/adminlte/plugins/` (11 MB, non auditata
-  internamente).
-- ~~`ApiCustomController`: nessun controllo di privilegio~~ — **risolto in
-  [078](078-api-generator-privilegi.md)** (2026-09-24).
-- ~~`StatisticBuilderController`: nessun controllo di privilegio su
-  add/update/list component~~ — **risolto in
-  [079](079-statistic-builder-privilegi-componenti.md)** (2026-09-24).
-  ~~**Resta aperto**: la visibilità delle dashboard per ruolo non è mai
-  verificata lato server~~ — **implementato in
-  [091](091-bug-noti-execute-api-logscontroller-visibilita-dashboard.md)**
-  (2026-09-24): visibile solo a superadmin o a chi ha un menu (stesso
-  meccanismo di `cms_menus_privileges` già in uso) verso quella specifica
-  dashboard. **Comportamento visibile cambiato**: un link condiviso
-  funziona solo se la dashboard è davvero nel menu del ruolo di chi lo
-  apre.
-- ~~`ModulsController`: privilegio debole sul wizard~~ — **risolto in
-  [080](080-module-generator-wizard-solo-superadmin.md)** (2026-09-24).
-  Prima del deploy verificare sui clienti che nessun ruolo non superadmin
-  usi il wizard.
 - **Autenticazione delle API custom (`CRUDBooster::authAPI()`, modulo API
   Generator)**: schema "fatto in casa" (chiave condivisa in `cms_apikey` +
   timestamp + user agent → `md5()`, confrontato con l'header
@@ -320,57 +231,40 @@ trasformate in un intervento vero e proprio:
   passa a `api2`. **Deciso 2026-09-24**: si accetta così per ora; quando
   i client saranno migrati su `api2`, `api/` verrà disattivato del
   tutto (nessuna data ancora).
-- ~~**Bug scollegato trovato lavorando su 086, priorità alta**:
-  `ApiController::execute_api()` va in `ErrorException` ("Undefined
-  variable $debug_mode_message")~~ — **risolto in
-  [091](091-bug-noti-execute-api-logscontroller-visibilita-dashboard.md)**
-  (2026-09-24): la variabile veniva assegnata dopo il primo `goto show;`
-  del metodo (permalink senza riga `cms_apicustom`), non prima come gli
-  altri 7 punti che leggono `show:`. ~~**Nuovo bug trovato verificando il
-  fix con un permalink reale**: i controller generati già presenti in
-  locale (es. `ApiHiveController.php`) non impostano
-  `$this->controller`~~ — **risolto in
-  [092](092-execute-api-controller-self-healing.md)** (2026-09-24), a
-  runtime, senza toccare i file generati esistenti.
-- ~~**Trovato risolvendo 092, priorità da valutare**: l'azione `list` del
-  modulo API Generator sembra restituire **sempre zero righe** per
-  qualunque chiamante non superadmin~~ — **`cbInit()` ora chiamato in
-  [093](093-execute-api-cbinit-privilegi.md)** (2026-09-24): risolve i
-  moduli Module Generator (`mg_*`, tenant admin) e `cms_users`/`groups`.
-  **Resta aperto**: `ModuleHelper::can_list()`/`can_view()`/`can_edit()`/
-  `can_delete()`/`can_add()` non hanno un ramo generico per
-  `global_privilege=true` su altre tabelle (a differenza delle pagine
-  CRUD admin normali, dove basta da solo) — un modulo di sistema con
-  `global_privilege=true` ma senza scoping tenant/gruppo resta comunque
-  negato per un non superadmin. Non corretto: tocca `ModuleHelper`,
-  usato da ogni pagina CRUD admin, non solo dall'API Generator — serve
+- **`ModuleHelper` non ha un ramo generico per `global_privilege=true`** su
+  tabelle diverse da quelle già coperte (Module Generator, `cms_users`/
+  `groups`) — un modulo di sistema con `global_privilege=true` ma senza
+  scoping tenant/gruppo resta comunque negato per un non superadmin
+  (trovato risolvendo [093](093-execute-api-cbinit-privilegi.md)). Non
+  corretto: tocca `ModuleHelper`, usato da ogni pagina CRUD admin — serve
   una valutazione a parte.
-- ~~`app/Http/Controllers/` nel `.gitignore`~~ — **voluto, non un rischio**:
-  da interfaccia si possono creare moduli custom (controller generati), che
-  devono restare specifici dell'ambiente in cui vengono creati e non
-  finire nel repo condiviso. I 52 controller già tracciati lo erano prima
-  che la regola venisse introdotta. **Aggiornato in
-  [006](006-controller-sistema-app-http-controllers-system.md)**: la regola
-  ora esclude `app/Http/Controllers/*` con un'eccezione esplicita per
-  `System/` (i controller "di sistema" spostati lì sono codice vero e
-  proprio del progetto, vanno tracciati) — il resto della cartella
-  (controller generati da interfaccia) resta ignorato come prima.
-- ~~Compatibilità delle migration con SQLite non verificata~~ — risolto
-  passando i test a MySQL vero (stesso motore della produzione), vedi
-  [`../test-coverage.md`](../test-coverage.md).
-- ~~**Branch remoti obsoleti da ripulire**: `main_backup`, `main_backup2`,
-  `sapienza`, `qlikdashboard`, `bootstrapupdate`, `ckeditor`,
-  `license-local`~~ — **risolto in
-  [085](085-pulizia-file-morti-e-branch-obsoleti.md)** (2026-09-24):
-  verificato che tutti (+ `master`) sono ancestor completo di `main`/`dev`
-  (zero commit unici), cancellati da origin.
-- ~~`AdminController::postLogin()` legge `$_SERVER['HTTP_HOST']`~~ —
-  **risolto in [081](081-fix-robustezza-helper-e-login.md)** (2026-09-24).
-  ~~Stesso pattern ancora presente in `getLogin()`/`getForgot()`/
-  `getResetPassword()`/`getLicensescreen()` e in
-  `CRUDBooster::isEditPage()`/`isAddPage()`/`isProfilePage()`~~ —
-  **risolto in [084](084-host-request-path-e-chatai-cms-moduls.md)**
-  (2026-09-24).
+- `assets/adminlte/plugins/` (11 MB) non ancora sottoposto al censimento
+  JS fatto in [094](094-pulizia-librerie-js-morte-public-vendor.md) —
+  fuori scope in quell'intervento.
+- **Ionicons v2 morto** (`vendor/crudbooster/ionic/css/ionicons.min.css`),
+  caricato globalmente in `admin_template.blade.php`/`chat_ai/public.blade.php`
+  per un solo uso reale (`home.blade.php`) — notato in
+  [128](128-icone-lucide-reskin-font-awesome.md), non ancora rimosso.
+- ~~Ionicons v7 (`<ion-icon>`, widget dashboard a griglia) caricato da CDN
+  esterno `unpkg.com`~~ — **risolto in
+  [129](129-widget-kpi-icona-lucide.md)** (2026-09-28): portato sullo
+  stesso set Lucide vendorizzato del resto dell'interfaccia, script CDN
+  rimossi.
+- **Pulsanti Modifica/Elimina di ogni widget visibili anche in vista
+  pubblica della dashboard a griglia** — lo script che dovrebbe
+  nasconderli lancia `ReferenceError: $ is not defined` (jQuery non
+  caricato in quel contesto), trovato verificando
+  [129](129-widget-kpi-icona-lucide.md), preesistente e scollegato,
+  non corretto.
+- Font Awesome non ancora rimosso dopo il reskin [128](128-icone-lucide-reskin-font-awesome.md):
+  resta vendorizzato/caricato perché i controller custom dei singoli
+  clienti (fuori da questo repo) possono referenziare icone FA non
+  presenti nella mappatura. Rimozione possibile solo dopo aver verificato
+  per ogni cliente attivo (stesso vincolo già noto per gli alias
+  CRUDBooster).
+- **Duplicazione residua in `public/vendor/crudbooster/assets/assets/`**
+  (15 MB, file live/tracciati su git) — notata in
+  [036](036-rimozione-assets-legacy.md), non ancora ripulita.
 
 - **Bug lato server di licenza remoto** (`license.thecustomerhive.com`,
   progetto separato gestito dall'utente): il trial di attivazione
@@ -379,29 +273,6 @@ trasformate in un intervento vero e proprio:
   [003](003-licensing-hardening.md#rischi-e-note). Da correggere in
   quel progetto, non qui.
 
-- ~~`GET /testapi` pubblico con `dd()`~~ — **rimossa in
-  [077](077-rimossa-route-debug-testapi.md)** (2026-09-24).
-- ~~`getTableStructure()` size `"int"`~~, ~~deprecation `sendFCM()`~~,
-  ~~`SetUserPreferredLanguage` senza null-check~~ — **risolti in
-  [081](081-fix-robustezza-helper-e-login.md)** (2026-09-24).
-- ~~**Ambiente locale: modulo ChatAI non registrato in `cms_moduls`**~~ →
-  ~~`chat_ai/access|tenant/{id}` danno 500 (`Route
-  [AdminChatAIControllerGetIndex] not defined`) anche con licenza ChatAI
-  attiva.~~ — **risolto in
-  [084](084-host-request-path-e-chatai-cms-moduls.md)** (2026-09-24): non
-  era solo il DB locale, mancava la riga anche nel seeder (si sarebbe
-  ripresentato su ogni installazione pulita), stesso pattern di 009/050.
-
-- ~~**`form_body.blade.php`: il box collassabile "System Information" non si
-  chiude mai per moduli con campo `tenant` ma senza campo `group`**~~
-  (scoperto il 2026-09-25 lavorando su [102](102-mfa-badge-bootstrap3-vs-bootstrap5.md))
-  — **risolto in [103](103-fix-save-invisibile-profilo-utenti.md)**
-  (2026-09-25): il modulo Users usa `primary_group`, non `group` - la
-  condizione di chiusura ora riconosce anche quel nome. Nessun campo tolto
-  dal form (due tentativi precedenti che rimuovevano campi sono stati
-  scartati dopo aver causato una corruzione dati reale, verificata e
-  corretta a mano sull'ambiente locale - vedi 103, sezione dedicata).
-
 ## Documenti correlati
 
 - [`../docker-local-dev.md`](../docker-local-dev.md) — ambiente di sviluppo locale
@@ -409,3 +280,5 @@ trasformate in un intervento vero e proprio:
 - [`../pre-push-checklist.md`](../pre-push-checklist.md) — cose da ripristinare/verificare prima di un push
 - [`../test-coverage.md`](../test-coverage.md) — catalogo dei test automatici esistenti
 - [`../ui-ux-annotazioni.md`](../ui-ux-annotazioni.md) — cose notate sull'interfaccia da tenere a mente per il rinnovo UI/UX
+- [`archivio-001-068.md`](archivio-001-068.md) — interventi 001–068 archiviati
+- [`backlog-risolto.md`](backlog-risolto.md) — voci di backlog già risolte

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" role="img" aria-label="Struttura delle cartelle sull'host: /opt/customerhive/ con caddy, instances per dev/staging/istanze cliente, e backups separati che sopravvivono all'eliminazione">
+<style>
+:root{
+  --paper:#EEF2F5; --paper-card:#FFFFFF;
+  --ink:#16232E; --ink-soft:#4B5C6B; --ink-faint:#8C9AA6;
+  --line:#C7D2DA; --line-soft:#E2E8EC;
+  --font-display:'IBM Plex Sans Condensed',"Segoe UI",sans-serif;
+  --font-mono:'IBM Plex Mono',"Consolas",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#0F1720; --paper-card:#16212B;
+    --ink:#DCE6EE; --ink-soft:#93A5B4; --ink-faint:#5B6C7A;
+    --line:#2A3B4A; --line-soft:#1C2A36;
+  }
+}
+.bg{fill:var(--paper);}
+.sheet{fill:var(--paper-card);stroke:var(--line);stroke-width:1;}
+.divider{stroke:var(--line-soft);stroke-width:1;}
+.tag{font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;fill:var(--ink-faint);}
+.tree-line{font-family:var(--font-mono);font-size:13px;fill:var(--ink-soft);}
+.tree-folder{font-family:var(--font-mono);font-size:13px;font-weight:600;fill:var(--ink);}
+.tree-note{font-family:var(--font-mono);font-size:13px;font-style:italic;fill:var(--ink-faint);}
+</style>
+<rect class="bg" x="0" y="0" width="960" height="560"/>
+<rect class="sheet" x="20" y="20" width="920" height="520" rx="14"/>
+<text class="tag" x="45" y="48">schema · struttura cartelle sull'host</text>
+<text class="tag" x="895" y="48" text-anchor="end">rev. 2026-09-16</text>
+<line class="divider" x1="45" y1="66" x2="895" y2="66"/>
+
+<text x="50" y="98"><tspan class="tree-folder">/opt/customerhive/</tspan></text>
+<text x="50" y="122"><tspan class="tree-line">├── </tspan><tspan class="tree-folder">caddy/</tspan><tspan class="tree-line">                              </tspan><tspan class="tree-note">proxy Docker — persistente tra i redeploy</tspan></text>
+<text x="50" y="146"><tspan class="tree-line">│   ├── docker-compose.yml</tspan></text>
+<text x="50" y="170"><tspan class="tree-line">│   ├── </tspan><tspan class="tree-folder">data/</tspan><tspan class="tree-line">                           </tspan><tspan class="tree-note">certificati TLS</tspan></text>
+<text x="50" y="194"><tspan class="tree-line">│   └── </tspan><tspan class="tree-folder">config/</tspan><tspan class="tree-line">                         </tspan><tspan class="tree-note">configurazione dinamica (Admin API)</tspan></text>
+<text x="50" y="218"><tspan class="tree-line">├── </tspan><tspan class="tree-folder">instances/</tspan></text>
+<text x="50" y="242"><tspan class="tree-line">│   ├── </tspan><tspan class="tree-folder">dev/</tspan><tspan class="tree-line">                            </tspan><tspan class="tree-note">stesso meccanismo di un'istanza cliente</tspan></text>
+<text x="50" y="266"><tspan class="tree-line">│   │   ├── docker-compose.yml</tspan></text>
+<text x="50" y="290"><tspan class="tree-line">│   │   ├── .env</tspan></text>
+<text x="50" y="314"><tspan class="tree-line">│   │   ├── </tspan><tspan class="tree-folder">storage/</tspan><tspan class="tree-line">                    </tspan><tspan class="tree-note">upload dell'app</tspan></text>
+<text x="50" y="338"><tspan class="tree-line">│   │   └── </tspan><tspan class="tree-folder">db-data/</tspan><tspan class="tree-line">                    </tspan><tspan class="tree-note">dati MySQL</tspan></text>
+<text x="50" y="362"><tspan class="tree-line">│   ├── </tspan><tspan class="tree-folder">staging/</tspan><tspan class="tree-line">                        </tspan><tspan class="tree-note">stessa struttura di dev/</tspan></text>
+<text x="50" y="386"><tspan class="tree-line">│   └── </tspan><tspan class="tree-folder">novaraenergia/</tspan><tspan class="tree-line">                  </tspan><tspan class="tree-note">istanza cliente/demo — stessa struttura</tspan></text>
+<text x="50" y="410"><tspan class="tree-line">└── </tspan><tspan class="tree-folder">backups/</tspan></text>
+<text x="50" y="434"><tspan class="tree-line">    └── </tspan><tspan class="tree-folder">novaraenergia/</tspan></text>
+<text x="50" y="458"><tspan class="tree-line">        └── novaraenergia_2026-09-16.sql.gz   </tspan><tspan class="tree-note">dump fatto alla chiusura</tspan></text>
+
+<line class="divider" x1="45" y1="482" x2="895" y2="482"/>
+<text class="tree-note" x="50" y="506">Chiusura (reversibile): instances/&lt;slug&gt;/ resta intatta. Eliminazione definitiva: viene rimossa, backups/&lt;slug&gt;/ resta.</text>
+</svg>

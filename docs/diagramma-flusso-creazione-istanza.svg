@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1010" role="img" aria-label="Flusso di creazione di un'istanza in 10 passaggi: dal click dell'amministratore fino all'istanza attiva, con i tre passaggi che possono fallire segnalati">
+<style>
+:root{
+  --paper:#EEF2F5; --paper-card:#FFFFFF;
+  --ink:#16232E; --ink-soft:#4B5C6B; --ink-faint:#8C9AA6;
+  --line:#C7D2DA; --line-soft:#E2E8EC;
+  --control:#5B4E8C; --control-bg:#ECE9F5;
+  --proxy:#1B7A67; --proxy-bg:#E1F3EE;
+  --workload:#C1502E; --workload-bg:#FBEAE3;
+  --font-display:'IBM Plex Sans Condensed',"Segoe UI",sans-serif;
+  --font-body:'IBM Plex Sans',"Segoe UI",sans-serif;
+  --font-mono:'IBM Plex Mono',"Consolas",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#0F1720; --paper-card:#16212B;
+    --ink:#DCE6EE; --ink-soft:#93A5B4; --ink-faint:#5B6C7A;
+    --line:#2A3B4A; --line-soft:#1C2A36;
+    --control:#B6A9E6; --control-bg:#241F3D;
+    --proxy:#6FD9C4; --proxy-bg:#0E2E29;
+    --workload:#F0916B; --workload-bg:#3A2016;
+  }
+}
+.bg{fill:var(--paper);}
+.sheet{fill:var(--paper-card);stroke:var(--line);stroke-width:1;}
+.divider{stroke:var(--line-soft);stroke-width:1;}
+.tag{font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;fill:var(--ink-faint);}
+.spine{stroke:var(--line);stroke-width:2;fill:none;}
+.circle{stroke-width:1.5;}
+.c-neutral{fill:var(--paper-card);stroke:var(--line);}
+.c-control{fill:var(--control-bg);stroke:var(--control);}
+.c-proxy{fill:var(--proxy-bg);stroke:var(--proxy);}
+.c-workload{fill:var(--workload-bg);stroke:var(--workload);}
+.num{font-family:var(--font-mono);font-weight:600;font-size:15px;text-anchor:middle;}
+.num.neutral{fill:var(--ink-soft);}
+.num.control{fill:var(--control);}
+.num.proxy{fill:var(--proxy);}
+.num.workload{fill:var(--workload);}
+.title{font-family:var(--font-display);font-weight:600;font-size:17px;fill:var(--ink);}
+.desc{font-family:var(--font-body);font-size:13px;fill:var(--ink-soft);}
+.fail{font-family:var(--font-body);font-size:12px;font-style:italic;fill:var(--ink-faint);}
+</style>
+<rect class="bg" x="0" y="0" width="960" height="1010"/>
+<rect class="sheet" x="20" y="30" width="920" height="935" rx="14"/>
+<text class="tag" x="45" y="58">schema · flusso di creazione istanza</text>
+<text class="tag" x="895" y="58" text-anchor="end">rev. 2026-09-16</text>
+<line class="divider" x1="45" y1="76" x2="895" y2="76"/>
+
+<line class="spine" x1="60" y1="130" x2="60" y2="910"/>
+
+<circle class="circle c-neutral" cx="60" cy="130" r="22"/>
+<text class="num neutral" x="60" y="130" dominant-baseline="central">1</text>
+<text class="title" x="110" y="123">Amministratore clicca «Crea istanza»</text>
+<text class="desc" x="110" y="145">Form in LICENSES: slug, dominio, tipo istanza</text>
+
+<circle class="circle c-control" cx="60" cy="210" r="22"/>
+<text class="num control" x="60" y="210" dominant-baseline="central">2</text>
+<text class="title" x="110" y="203">Valida l'input</text>
+<text class="desc" x="110" y="225">Slug libero, formato valido per un sottodominio</text>
+
+<circle class="circle c-control" cx="60" cy="290" r="22"/>
+<text class="num control" x="60" y="290" dominant-baseline="central">3</text>
+<text class="title" x="110" y="283">Registra nell'inventario</text>
+<text class="desc" x="110" y="305">Stato iniziale: provisioning</text>
+
+<circle class="circle c-control" cx="60" cy="370" r="22"/>
+<text class="num control" x="60" y="370" dominant-baseline="central">4</text>
+<text class="title" x="110" y="363">Genera i file fisici</text>
+<text class="desc" x="110" y="385">docker-compose.&lt;slug&gt;.yml, container, volumi</text>
+
+<circle class="circle c-workload" cx="60" cy="450" r="22"/>
+<text class="num workload" x="60" y="450" dominant-baseline="central">5</text>
+<text class="title" x="110" y="443">Avvia i container</text>
+<text class="desc" x="110" y="465">docker compose up -d: app + DB dedicato</text>
+<text class="fail" x="110" y="486">può fallire — il job si ferma qui, stato segnalato</text>
+
+<circle class="circle c-workload" cx="60" cy="550" r="22"/>
+<text class="num workload" x="60" y="550" dominant-baseline="central">6</text>
+<text class="title" x="110" y="543">Attende che siano pronti</text>
+<text class="desc" x="110" y="565">Health check sul container app</text>
+
+<circle class="circle c-workload" cx="60" cy="630" r="22"/>
+<text class="num workload" x="60" y="630" dominant-baseline="central">7</text>
+<text class="title" x="110" y="623">Esegue le migration</text>
+<text class="desc" x="110" y="645">php artisan migrate --force</text>
+<text class="fail" x="110" y="666">può fallire — il job si ferma qui, stato segnalato</text>
+
+<circle class="circle c-control" cx="60" cy="730" r="22"/>
+<text class="num control" x="60" y="730" dominant-baseline="central">8</text>
+<text class="title" x="110" y="723">Genera la licenza demo</text>
+<text class="desc" x="110" y="745">Scritta nel DB della nuova istanza</text>
+
+<circle class="circle c-proxy" cx="60" cy="810" r="22"/>
+<text class="num proxy" x="60" y="810" dominant-baseline="central">9</text>
+<text class="title" x="110" y="803">Registra la rotta su Caddy</text>
+<text class="desc" x="110" y="825">Admin API: dominio instradato, TLS automatico</text>
+<text class="fail" x="110" y="846">può fallire — il job si ferma qui, stato segnalato</text>
+
+<circle class="circle c-workload" cx="60" cy="910" r="22"/>
+<text class="num workload" x="60" y="910" dominant-baseline="central">10</text>
+<text class="title" x="110" y="903">Istanza attiva</text>
+<text class="desc" x="110" y="925">https://&lt;slug&gt;.thecustomerhive.com pronto</text>
+</svg>

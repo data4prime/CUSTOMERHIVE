@@ -36,4 +36,47 @@ licenza si rompono immediatamente in produzione. Dettaglio in
 
 ---
 
+## ⚠️ Verificare che nessun ruolo non superadmin usi il wizard di Module Generator
+
+Il wizard (`ModulsController`, step 1/2/4) è ora riservato al superadmin
+— [`refactoring/080-module-generator-wizard-solo-superadmin.md`](refactoring/080-module-generator-wizard-solo-superadmin.md).
+Prima di aggiornare un cliente in produzione, verificare che nessun suo
+ruolo non-superadmin avesse in uso quel wizard (in tal caso va reintrodotto
+un permesso dedicato per quel cliente, non tolto il controllo globale).
+
+---
+
+## ⚠️ Profilo a sezioni: migration `session_version` + email configurata + test
+
+Il profilo utente ora cambia email/password con password attuale + codice
+OTP e chiude le altre sessioni tramite la nuova colonna
+`cms_users.session_version` — [`refactoring/170-profilo-utente-a-sezioni-con-verifica-otp.md`](refactoring/170-profilo-utente-a-sezioni-con-verifica-otp.md).
+Prima di aggiornare un cliente: eseguire `php artisan migrate`; verificare
+che la posta (SMTP) sia configurata, perché senza SMTP (e senza TOTP) email e
+password non sono modificabili dal profilo; avvisare chi usa integrazioni API
+con header `X-User` (è l'email dell'utente). I test in
+`tests/Feature/UserProfileSectionsTest.php` sono scritti ma non ancora
+eseguiti: lanciarli prima del push.
+
+---
+
 <!-- Aggiungere qui le prossime voci della checklist -->
+
+---
+
+## ⚠️ Sincronizzazione Qlik: `composer install`, `migrate` e worker della coda su ogni installazione
+
+Nuova funzionalità "Sincronizza da Qlik" (app e item, vedi
+[`piano-qlik-sync-app-items.md`](piano-qlik-sync-app-items.md) e
+[`refactoring/176-qlik-sync-coda-e-modello-dati.md`](refactoring/176-qlik-sync-coda-e-modello-dati.md)):
+
+- **`composer install`**: nuova dipendenza `textalk/websocket` (fogli SaaS).
+- **`php artisan migrate`**: tabelle `jobs`/`failed_jobs`, colonne additive su
+  `qlik_apps`/`qlik_items`, tabelle `qlik_sync_runs`/`qlik_sync_run_records`.
+- **Worker della coda** sempre attivo (supervisor/systemd):
+  `php artisan queue:work qlik_sync --queue=qlik_sync --sleep=3 --tries=1 --timeout=3600`.
+  Senza worker le sincronizzazioni restano "in coda" (la pagina di monitoraggio
+  mostra un avviso). Dopo ogni aggiornamento del codice: `php artisan queue:restart`.
+- **Non provato contro un Qlik reale** (SaaS/on-premise): fare lo spike su un
+  tenant di test prima di proporlo ai clienti (elenco fogli SaaS via WebSocket
+  e QRS on-premise, formato URL degli item).

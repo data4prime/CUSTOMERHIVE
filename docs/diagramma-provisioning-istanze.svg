@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 790" role="img" aria-label="Diagramma degli attori: amministratore e utenti finali esterni, LICENSES come control-plane con le sue funzionalità, Caddy e le istanze dentro Docker, CI/CD e un esempio reale di istanza">
+<style>
+:root{
+  --paper:#EEF2F5; --paper-card:#FFFFFF;
+  --ink:#16232E; --ink-soft:#4B5C6B; --ink-faint:#8C9AA6;
+  --line:#C7D2DA; --line-soft:#E2E8EC;
+  --control:#5B4E8C; --control-bg:#ECE9F5;
+  --proxy:#1B7A67; --proxy-bg:#E1F3EE;
+  --workload:#C1502E; --workload-bg:#FBEAE3;
+  --font-display:'IBM Plex Sans Condensed',"Segoe UI",sans-serif;
+  --font-body:'IBM Plex Sans',"Segoe UI",sans-serif;
+  --font-mono:'IBM Plex Mono',"Consolas",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#0F1720; --paper-card:#16212B;
+    --ink:#DCE6EE; --ink-soft:#93A5B4; --ink-faint:#5B6C7A;
+    --line:#2A3B4A; --line-soft:#1C2A36;
+    --control:#B6A9E6; --control-bg:#241F3D;
+    --proxy:#6FD9C4; --proxy-bg:#0E2E29;
+    --workload:#F0916B; --workload-bg:#3A2016;
+  }
+}
+.bg{fill:var(--paper);}
+.grid-line{stroke:var(--line-soft);stroke-width:1;}
+.outer-box{fill:var(--paper-card);stroke:var(--line);stroke-width:1;}
+.ext-box{fill:var(--paper);stroke:var(--line);stroke-width:1;}
+.docker-group{fill:none;stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:6 5;}
+.control-card{fill:var(--control-bg);stroke:var(--control);stroke-width:1;}
+.proxy-card{fill:var(--proxy-bg);stroke:var(--proxy);stroke-width:1;}
+.workload-card{fill:var(--workload-bg);stroke:var(--workload);stroke-width:1;}
+.arrow{stroke:var(--ink-faint);stroke-width:1.5;fill:none;}
+.arrow-head{stroke:var(--ink-faint);}
+text{font-family:var(--font-body);fill:var(--ink);}
+.t-title{font-family:var(--font-display);font-weight:700;font-size:20px;}
+.t-region{font-family:var(--font-display);font-weight:600;font-size:18px;}
+.t-sub{font-size:13px;fill:var(--ink-soft);}
+.t-label{font-size:12px;fill:var(--ink-soft);}
+.t-mono{font-family:var(--font-mono);font-size:12px;fill:var(--ink-soft);}
+.t-mono-strong{font-family:var(--font-mono);font-size:13px;fill:var(--ink);}
+.c-control{fill:var(--control);}
+.c-proxy{fill:var(--proxy);}
+.c-workload{fill:var(--workload);}
+</style>
+<defs>
+  <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+    <path class="grid-line" d="M24 0H0V24"/>
+  </pattern>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path class="arrow-head" d="M2 1L8 5L2 9" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+<rect class="bg" x="0" y="0" width="960" height="790"/>
+<rect x="0" y="0" width="960" height="790" fill="url(#grid)"/>
+
+<rect class="ext-box" x="180" y="40" width="220" height="52" rx="8"/>
+<text class="t-region" x="290" y="66" text-anchor="middle" dominant-baseline="central">Amministratore</text>
+
+<rect class="ext-box" x="620" y="40" width="200" height="52" rx="8"/>
+<text class="t-region" x="720" y="66" text-anchor="middle" dominant-baseline="central">Utenti finali</text>
+
+<line class="arrow" x1="290" y1="92" x2="290" y2="250" marker-end="url(#arrow)"/>
+<text class="t-label" x="305" y="132">comandi</text>
+
+<line class="arrow" x1="720" y1="92" x2="720" y2="310" marker-end="url(#arrow)"/>
+<text class="t-label" x="733" y="132">richieste https</text>
+
+<rect class="outer-box" x="120" y="170" width="720" height="430" rx="20"/>
+<text class="t-title" x="155" y="205">Server condiviso</text>
+<text class="t-sub" x="155" y="228">Infrastruttura fisica, un solo host</text>
+
+<rect class="control-card" x="155" y="250" width="280" height="320" rx="14"/>
+<text class="t-region c-control" x="295" y="282" text-anchor="middle" dominant-baseline="central">LICENSES</text>
+<text class="t-sub" x="295" y="304" text-anchor="middle" dominant-baseline="central">Control-plane · Apache</text>
+<text class="t-sub" x="180" y="340">· Gestione licenze</text>
+<text class="t-sub" x="180" y="368">· Gestione istanze</text>
+<text class="t-sub" x="180" y="396">· Creazione istanze</text>
+
+<rect class="docker-group" x="485" y="250" width="320" height="320" rx="14"/>
+<text class="t-sub" x="510" y="280">Docker</text>
+
+<rect class="proxy-card" x="520" y="310" width="250" height="90" rx="10"/>
+<text class="t-region c-proxy" x="645" y="345" text-anchor="middle" dominant-baseline="central">Caddy</text>
+<text class="t-sub" x="645" y="368" text-anchor="middle" dominant-baseline="central">Reverse proxy + TLS</text>
+
+<line class="arrow" x1="645" y1="400" x2="645" y2="430" marker-end="url(#arrow)"/>
+
+<rect class="workload-card" x="520" y="430" width="250" height="120" rx="10"/>
+<text class="t-region c-workload" x="645" y="468" text-anchor="middle" dominant-baseline="central">Istanze</text>
+<text class="t-sub" x="645" y="492" text-anchor="middle" dominant-baseline="central">App + DB dedicati</text>
+<text class="t-mono" x="645" y="514" text-anchor="middle" dominant-baseline="central">dev · staging · cliente</text>
+
+<line class="arrow" x1="435" y1="355" x2="520" y2="355" marker-end="url(#arrow)"/>
+<line class="arrow" x1="435" y1="490" x2="520" y2="490" marker-end="url(#arrow)"/>
+
+<line class="arrow" x1="645" y1="630" x2="645" y2="550" marker-end="url(#arrow)"/>
+<text class="t-label" x="658" y="612">pull immagine</text>
+
+<rect class="ext-box" x="525" y="630" width="240" height="60" rx="10"/>
+<text class="t-region" x="645" y="660" text-anchor="middle" dominant-baseline="central">CI/CD + registry</text>
+
+<path class="arrow" d="M560 550 L560 600 L310 600 L310 630"/>
+
+<rect class="workload-card" x="155" y="630" width="310" height="120" rx="10"/>
+<text class="t-region c-workload" x="310" y="662" text-anchor="middle" dominant-baseline="central">Esempio istanza</text>
+<text class="t-mono-strong" x="310" y="688" text-anchor="middle" dominant-baseline="central">novaraenergia.thecustomerhive.com</text>
+<text class="t-mono" x="310" y="710" text-anchor="middle" dominant-baseline="central">novaraenergia_app</text>
+<text class="t-mono" x="310" y="730" text-anchor="middle" dominant-baseline="central">novaraenergia_db</text>
+</svg>

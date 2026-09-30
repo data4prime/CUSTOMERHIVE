@@ -39,15 +39,27 @@ comportamentali prima, contesto tecnico dopo.
 
 ## Documentare sempre il lavoro fatto
 
+- **`docs/` serve solo a documentare, non a rispondere a una richiesta.**
+  Per eseguire un compito normale (bug fix, feature, domanda su come
+  funziona qualcosa) non leggere `docs/refactoring/`, `docs/riassunti-
+  giornalieri/` o gli altri file di `docs/` — usa il codice/tokensave.
+  Leggili solo quando il compito è esplicitamente documentare un
+  intervento o consultare la storia di uno passato (e in quel caso solo i
+  file effettivamente rilevanti, non l'intera cartella).
 - **Ogni intervento** (bug fix, refactor, hardening, nuova feature — non
   solo le riscritture grosse) va documentato **in automatico**, senza
   bisogno che venga chiesto: copiare `docs/refactoring/_template.md` in
-  `docs/refactoring/NNN-titolo-breve.md` (NNN = prossimo numero libero,
-  vedi l'ultimo usato in `docs/refactoring/README.md`), compilare le
-  sezioni (Contesto, Situazione prima/dopo, Motivazione, Test, Rischi e
-  note, Rollback) e aggiungere la riga corrispondente nella tabella di
-  `docs/refactoring/README.md`. Le sezioni "Contesto" e "Situazione prima"
-  vanno scritte prima di modificare il codice quando possibile.
+  `docs/refactoring/NNN-titolo-breve.md` (NNN = prossimo numero libero:
+  leggi la riga "Prossimo numero libero" in cima a
+  `docs/refactoring/README.md`, non serve leggere l'intera tabella),
+  compilare le sezioni (Contesto, Situazione prima/dopo, Motivazione, Test,
+  Rischi e note, Rollback) e aggiungere la riga corrispondente
+  nell'indice di `docs/refactoring/README.md`, aggiornando anche il numero
+  libero. Le sezioni "Contesto" e "Situazione prima" vanno scritte prima
+  di modificare il codice quando possibile. L'indice tiene solo gli
+  interventi più recenti: le voci più vecchie vengono spostate negli
+  archivi linkati in cima all'indice, per non far crescere il file da
+  rileggere ad ogni intervento.
 - **A fine giornata di lavoro** (o comunque a fine sessione, quando il
   lavoro su un certo giorno si può considerare concluso), scrivere/aggiornare
   `docs/riassunti-giornalieri/YYYY-MM-DD.md` con un riassunto di tutto
@@ -225,6 +237,21 @@ controller custom dei clienti.
   come già fa `CRUDBooster::sendEmail()`/`sendEmailQueue()` e come fa
   `SettingsController::postTestEmail()` (vedi
   `docs/refactoring/101-settings-email-test-invio.md`).
+- **Un commento Blade `{{-- ... --}}` va sempre chiuso con `--}}`, mai
+  con la chiusura di un commento CSS (`*/`)** — capita facile per
+  disattenzione quando il commento sta appena sopra una regola CSS
+  dentro un `<style>` in un file `.blade.php`. Se non trova subito un
+  `--}}`, Blade continua a cercarlo in avanti nel file e "mangia"
+  (rimuove dalla vista compilata) tutto il codice di mezzo — inclusi
+  eventuali `@endif`/`@elseif` — senza dare alcun errore di sintassi,
+  solo un comportamento sbagliato a runtime spesso lontano dal punto
+  vero del problema (es. `Undefined variable` su una riga che sembra
+  corretta). Capitato una volta in `smallbox.blade.php`, vedi
+  `docs/refactoring/144-widget-kpi-fix-commento-blade-non-chiuso-da-143.md`.
+  Dopo aver toccato un commento vicino a un `@if`/`@elseif`/`@foreach`,
+  ricompilare (`php artisan view:clear` + un render di prova) prima di
+  fidarsi che `php -l` basti: controlla solo i blocchi `<?php ?>` reali,
+  non la sintassi Blade.
 
 ## Dove guardare per saperne di più
 
