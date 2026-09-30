@@ -446,6 +446,7 @@ $tenant_domain_name = env('APP_DOMAIN');
 
       $photo = UserHelper::icon($users->id);
       Session::put('admin_id', $users->id);
+      Session::put('admin_session_version', (int) ($users->session_version ?? 0));
       Session::put('admin_is_superadmin', $priv->is_superadmin);
       Session::put('admin_name', $users->name);
       Session::put('admin_photo', $photo);
@@ -829,6 +830,9 @@ $tenant_domain_name = env('APP_DOMAIN');
       function ($user, $password) {
         $user->password = \Hash::make($password);
         $user->save();
+        // Un reset password chiude anche le sessioni gia' aperte (es. un
+        // accesso non autorizzato che il reset deve interrompere).
+        MfaHelper::bumpSessionVersion($user->id);
       }
     );
 

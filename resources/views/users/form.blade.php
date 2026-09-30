@@ -28,6 +28,40 @@
                 $action = (@$row) ? CRUDBooster::mainpath("edit-save/$row->id") : CRUDBooster::mainpath("add-save");
                 $return_url = isset($return_url) ? $return_url: g('return_url');
                 ?>
+            {{-- Reset password di un altro utente: la password altrui non si
+                 imposta ne' si vede mai, si manda all'utente un link per
+                 sceglierla (AdminCmsUsersController::postUserResetPassword). --}}
+            @if(@$row && isset($command) && $command == 'edit' && (int) $row->id !== (int) CRUDBooster::myId() && \App\Helpers\UserHelper::can_do_on_user('edit', $row->id))
+            <div style="padding:0 20px 16px 20px;">
+                <div class="alert" id="ch-reset-alert" role="alert" hidden></div>
+                <button type="button" class="btn btn-default" id="ch-reset-btn">
+                    <i class="fa fa-envelope"></i> {{ trans('crudbooster.user_reset_password_button') }}
+                </button>
+                <span class="help-block" style="display:inline-block;margin:0 0 0 10px;">{{ trans('crudbooster.user_reset_password_hint') }}</span>
+            </div>
+            <script>
+            (function () {
+                var btn = document.getElementById('ch-reset-btn');
+                var box = document.getElementById('ch-reset-alert');
+                btn.addEventListener('click', function () {
+                    if (!confirm({!! json_encode(trans('crudbooster.user_reset_password_confirm')) !!})) { return; }
+                    btn.disabled = true;
+                    fetch({!! json_encode(CRUDBooster::adminPath('users/user-reset-password/' . $row->id)) !!}, {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'X-CSRF-TOKEN': {!! json_encode(csrf_token()) !!}, 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+                    }).then(function (r) { return r.json(); }).catch(function () {
+                        return { ok: false, message: {!! json_encode(trans('crudbooster.profile_generic_error')) !!} };
+                    }).then(function (res) {
+                        btn.disabled = false;
+                        box.textContent = res.message;
+                        box.className = 'alert ' + (res.ok ? 'alert-success' : 'alert-danger');
+                        box.hidden = false;
+                    });
+                });
+            })();
+            </script>
+            @endif
             <form class='form-horizontal' method='post' id="form" enctype="multipart/form-data" action='{{$action}}'>
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type='hidden' name='return_url' value='{{ @$return_url }}' />

@@ -288,7 +288,7 @@ class MfaHelper
      * che in quel caso fa proseguire il login senza step-up invece di
      * bloccare l'utente fuori - decisione esplicita dell'utente).
      */
-    public static function sendEmailOtp(User $user): bool
+    public static function sendEmailOtp(User $user, ?string $to = null): bool
     {
         $code = (string) random_int(100000, 999999);
 
@@ -303,7 +303,9 @@ class MfaHelper
 
         try {
             CRUDBooster::sendEmail([
-                'to' => $user->email,
+                // $to != null solo per il cambio email dal profilo: il codice
+                // va al NUOVO indirizzo, cosi' si prova che l'utente lo controlla.
+                'to' => $to ?: $user->email,
                 'data' => (object) ['otp_code' => $code],
                 'template' => 'mfa_email_otp',
             ]);
@@ -338,6 +340,35 @@ class MfaHelper
         }
 
         return false;
+    }
+
+    /**
+     * Rende inutilizzabili i codici email OTP ancora validi dell'utente:
+     * prima di inviarne uno nuovo per un'azione sensibile (profilo), cosi'
+     * solo quello appena inviato e' accettato - non uno generato per il
+     * login e ancora nella casella.
+     */
+    public static function invalidateEmailOtpCodes(User $user): void
+    {
+        DB::table('mfa_email_otp_codes')
+            ->where('user_id', $user->id)
+            ->whereNull('used_at')
+            ->update(['used_at' => now()]);
+    }
+
+    // --- Sessioni: chiusura delle altre sessioni dopo un cambio credenziali ---
+
+    /**
+     * Incrementa cms_users.session_version: ogni sessione che non ha il
+     * valore aggiornato viene chiusa da CBBackend alla richiesta successiva.
+     * Ritorna il nuovo valore, da salvare nella sessione corrente se deve
+     * restare attiva (Session::put('admin_session_version', ...)).
+     */
+    public static function bumpSessionVersion(int $userId): int
+    {
+        DB::table('cms_users')->where('id', $userId)->increment('session_version');
+
+        return (int) DB::table('cms_users')->where('id', $userId)->value('session_version');
     }
 
     // --- Recovery: "ho perso il dispositivo e i backup codes" (Fase 3) ---

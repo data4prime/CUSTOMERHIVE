@@ -22,6 +22,8 @@ use App\Helpers\QlikHelper;
 use App\Helpers\LicenseHelper;
 use App\Helpers\MfaHelper;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Validator;
 
 class AdminCmsUsersController extends CBController
 {
@@ -120,15 +122,24 @@ class AdminCmsUsersController extends CBController
 		// form_body.blade.php deduce da solo l'asterisco "required" cercando
 		// la sottostringa 'required' dentro 'validation', quindi non serve
 		// ripeterlo anche nella chiave 'required' dell'array.
-		$password_validation = (CRUDBooster::isAddPage() ? 'required|' : 'nullable|') . 'min:12|max:72|confirmed|not_common_password';
-		$this->form[] = array(
-			"label" => "Password",
-			"name" => "password",
-			"type" => "password",
-			"validation" => $password_validation,
-			"help" => trans('crudbooster.reset_password_policy_hint') . (CRUDBooster::isAddPage() ? '' : ' ' . trans('crudbooster.password_leave_empty_hint')),
-		);
-		$this->form[] = array("label" => "Password Confirmation", "name" => "password_confirmation", "type" => "password", "help" => trans('crudbooster.password_leave_empty_hint'));
+		// La password si sceglie solo in creazione: in modifica (e dal
+		// profilo) la cambia l'utente stesso con password attuale + codice
+		// di verifica (postProfilePasswordStart/Confirm), oppure un
+		// superadmin/tenant admin gli manda un link di reset
+		// (postUserResetPassword). Senza questi campi in $this->form,
+		// CBController::input_assignment() non tocca mai la colonna password
+		// in modifica, nemmeno con una POST costruita a mano.
+		if (CRUDBooster::isAddPage()) {
+			$password_validation = 'required|min:12|max:72|confirmed|not_common_password';
+			$this->form[] = array(
+				"label" => "Password",
+				"name" => "password",
+				"type" => "password",
+				"validation" => $password_validation,
+				"help" => trans('crudbooster.reset_password_policy_hint'),
+			);
+			$this->form[] = array("label" => "Password Confirmation", "name" => "password_confirmation", "type" => "password", "help" => trans('crudbooster.password_leave_empty_hint'));
+		}
 
 		// Tenant/Primary Group spostati qui in fondo (erano subito dopo
 		// Email/Privilege): il box collassabile "System Information" che
@@ -264,12 +275,6 @@ class AdminCmsUsersController extends CBController
 		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('groups/[id]'), 'icon' => 'fa fa-users', 'color' => 'info', 'title' => 'View groups'];
 	}
 
-	public function create_qlik_user($id)
-	{
-		$ret = QlikHelper::createUser($id);
-		return CRUDBooster::redirect(url()->previous(),  trans($ret['mex']), $ret['style']);
-	}
-
 	public function getProfile()
 	{
 
@@ -288,8 +293,545 @@ class AdminCmsUsersController extends CBController
 		$currentUser = UserHelper::me();
 		$data['mfa_trusted_devices'] = $currentUser ? MfaHelper::listTrustedDevices($currentUser) : collect();
 
-		//dd($data);
-		$this->cbView('crudbooster::default.form', $data);
+		// Pagina a sezioni (Generale / MFA / Sistema / Password), ciascuna
+		// con il suo endpoint di salvataggio JSON - vedi i metodi
+		// postProfile* qui sotto. Non passa piu' dal form generico
+		// CBController (default.form) ne' da edit-save.
+		$isSuperadmin = UserHelper::isSuperAdmin();
+		$isTenantAdmin = UserHelper::isTenantAdmin();
+		$data['canManage'] = $isSuperadmin || $isTenantAdmin;
+		$data['canEditTenant'] = $isSuperadmin;
+		$data['tenants'] = $isSuperadmin
+			? DB::table('tenants')->orderBy('name')->get(['id', 'name'])
+			: DB::table('tenants')->where('id', $data['row']->tenant)->get(['id', 'name']);
+		// Gruppi raggruppati per tenant (tabella pivot group_tenants), per il
+		// menu a cascata Tenant -> Primary Group che il form vecchio faceva
+		// con la select2 'parent_select'. Un tenant admin vede solo i gruppi
+		// del proprio tenant.
+		$groupsQuery = DB::table('group_tenants')
+			->join('groups', 'groups.id', '=', 'group_tenants.group_id')
+			->whereNull('groups.deleted_at')
+			->orderBy('groups.name');
+		if (! $isSuperadmin) {
+			$groupsQuery->where('group_tenants.tenant_id', $data['row']->tenant);
+		}
+		$data['groupsByTenant'] = $groupsQuery
+			->get(['group_tenants.tenant_id', 'groups.id', 'groups.name'])
+			->groupBy('tenant_id')
+			->map(function ($rows) {
+				return $rows->map(function ($r) {
+					return ['id' => (int) $r->id, 'name' => $r->name];
+				})->values();
+			});
+
+		// Sezione Qlik: solo se la licenza include il modulo.
+		$data['qlikEnabled'] = LicenseHelper::isActiveQlik();
+		if ($data['qlikEnabled']) {
+			$data['qlikConfs'] = DB::table('qlik_confs')->orderBy('confname')->get(['id', 'confname', 'type']);
+			$data['qlikUsers'] = DB::table('qlik_users')
+				->where('user_id', $data['row']->id)
+				->orderBy('id')
+				->get(['qlik_conf_id', 'qlik_login', 'user_directory', 'idp_qlik']);
+		}
+
+		$this->cbView('users.profile', $data);
+	}
+
+	/**
+	 * Sezione "Qlik": associazioni utente -> configurazione Qlik (tabella
+	 * qlik_users). Solo superadmin/tenant admin: login e user directory
+	 * decidono con quale identita' Qlik entra l'utente, quindi un utente base
+	 * non deve poterli scegliere da solo. Stessa logica di
+	 * prepare_qlik_users() (IDP generato per le conf SaaS se vuoto), ma sul
+	 * solo utente del profilo e senza passare dal form generico.
+	 */
+	public function postProfileQlik()
+	{
+		$user = UserHelper::me();
+
+		if (! $user || (! UserHelper::isSuperAdmin() && ! UserHelper::isTenantAdmin()) || ! LicenseHelper::isActiveQlik()) {
+			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
+		}
+
+		$validator = Validator::make(Request::all(), [
+			'rows' => 'nullable|array',
+			'rows.*.qlik_conf_id' => 'required|integer|distinct|exists:qlik_confs,id',
+			'rows.*.qlik_login' => 'nullable|string|max:255',
+			'rows.*.user_directory' => 'nullable|string|max:255',
+		]);
+		if ($validator->fails()) {
+			return $this->profileValidationError($validator);
+		}
+
+		// L'IDP non e' modificabile dall'utente: si ignora quello ricevuto e
+		// si tiene quello gia' salvato per la stessa configurazione.
+		$existingIdp = DB::table('qlik_users')->where('user_id', $user->id)->pluck('idp_qlik', 'qlik_conf_id');
+
+		$rows = [];
+		foreach ((array) Request::input('rows', []) as $r) {
+			$confId = (int) $r['qlik_conf_id'];
+			$idp = trim((string) ($existingIdp[$confId] ?? ''));
+			$login = trim((string) ($r['qlik_login'] ?? ''));
+			$directory = trim((string) ($r['user_directory'] ?? ''));
+
+			// Come nella UI: SaaS usa solo l'IDP, On-Premise solo login +
+			// user directory. I campi dell'altro tipo vengono scartati.
+			if (QlikHelper::confIsSAAS($confId)) {
+				$login = $directory = '';
+				if ($idp === '') {
+					$idp = (string) QlikHelper::createUser($user->id, $confId);
+					if ($idp === '') {
+						return $this->profileResponse(false, trans('crudbooster.profile_qlik_idp_failed'), [], 422);
+					}
+				}
+			} else {
+				$idp = '';
+			}
+
+			$rows[] = [
+				'user_id' => $user->id,
+				'qlik_conf_id' => $confId,
+				'qlik_login' => $login ?: null,
+				'user_directory' => $directory ?: null,
+				'idp_qlik' => $idp ?: null,
+				'created_at' => now(),
+				'updated_at' => now(),
+			];
+		}
+
+		DB::transaction(function () use ($user, $rows) {
+			DB::table('qlik_users')->where('user_id', $user->id)->delete();
+			if ($rows) {
+				DB::table('qlik_users')->insert($rows);
+			}
+		});
+
+		return $this->profileResponse(true, trans('crudbooster.profile_qlik_saved'), ['reload' => true]);
+	}
+
+	private function profileResponse($ok, $message, array $extra = [], $status = 200)
+	{
+		return response()->json(array_merge(['ok' => $ok, 'message' => $message], $extra), $status);
+	}
+
+	private function profileValidationError($validator)
+	{
+		return $this->profileResponse(false, $validator->errors()->first(), ['errors' => $validator->errors()], 422);
+	}
+
+	/**
+	 * Rate limit condiviso dai passi "invio codice"/"verifica codice" del
+	 * profilo (stesso criterio di postMfaConfirm: senza, un codice a 6 cifre
+	 * e' forzabile a forza bruta). $hit = true registra un tentativo.
+	 */
+	private function profileTooManyAttempts($name, $userId, $hit = false)
+	{
+		$key = 'profile-' . $name . ':' . $userId;
+
+		if (RateLimiter::tooManyAttempts($key, 5)) {
+			return true;
+		}
+
+		if ($hit) {
+			RateLimiter::hit($key, 900);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Sezione "Generale": solo nome, lingua, foto e - se l'utente e'
+	 * superadmin/tenant admin - stato e data di scadenza. L'email ha il
+	 * suo flusso (postProfileEmail*) e la password il suo: nessuno dei due
+	 * passa da qui, anche se arrivano nella richiesta.
+	 */
+	public function postProfileGeneral()
+	{
+		$user = UserHelper::me();
+		if (! $user) {
+			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
+		}
+
+		$canManage = UserHelper::isSuperAdmin() || UserHelper::isTenantAdmin();
+
+		$rules = [
+			'name' => 'required|alpha_spaces|min:3',
+			'lang' => 'required|in:en,it',
+			'photo' => 'nullable|image|max:1000',
+		];
+		if ($canManage) {
+			$rules['status'] = 'required|in:Active,Inactive';
+			$rules['data_scadenza'] = 'nullable|date';
+		}
+
+		$validator = Validator::make(Request::all(), $rules);
+		if ($validator->fails()) {
+			return $this->profileValidationError($validator);
+		}
+
+		$update = [
+			'name' => Request::input('name'),
+			'lang' => Request::input('lang'),
+		];
+		if ($canManage) {
+			$update['status'] = Request::input('status');
+			$update['data_scadenza'] = Request::input('data_scadenza') ?: null;
+		}
+
+		$photo = CRUDBooster::uploadFile('photo', false, 90, 90, $user->id);
+		if ($photo) {
+			$update['photo'] = $photo;
+		}
+
+		if (\Illuminate\Support\Facades\Schema::hasColumn('cms_users', 'updated_at')) {
+			$update['updated_at'] = date('Y-m-d H:i:s');
+		}
+		if (\Illuminate\Support\Facades\Schema::hasColumn('cms_users', 'updated_by')) {
+			$update['updated_by'] = $user->id;
+		}
+
+		$langChanged = $user->lang !== $update['lang'];
+
+		DB::table('cms_users')->where('id', $user->id)->update($update);
+
+		// Nome e foto nell'header/sidebar vengono dalla sessione (popolata al
+		// login), non dal DB: senza questo restano quelli vecchi fino al
+		// prossimo login.
+		Session::put('admin_name', $update['name']);
+		if ($photo) {
+			Session::put('admin_photo', UserHelper::icon($user->id));
+		}
+
+		return $this->profileResponse(true, trans('crudbooster.profile_saved'), [
+			'reload' => $langChanged,
+			'photo_url' => $photo ? asset($photo) : null,
+		]);
+	}
+
+	/**
+	 * Cambio email, passo 1: controlla password attuale e unicita', poi
+	 * invia un codice al NUOVO indirizzo (prova che l'utente lo controlla).
+	 * Nulla viene salvato finche' il passo 2 non riesce. Se l'invio fallisce
+	 * (SMTP non configurato) l'operazione si ferma: a differenza del login,
+	 * qui non si prosegue mai senza verifica.
+	 */
+	public function postProfileEmailStart()
+	{
+		$user = UserHelper::me();
+		if (! $user) {
+			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
+		}
+
+		if ($this->profileTooManyAttempts('email-start', $user->id)) {
+			return $this->profileResponse(false, trans('crudbooster.profile_too_many_attempts'), [], 429);
+		}
+
+		$validator = Validator::make(Request::all(), [
+			'new_email' => 'required|email|max:255|unique:cms_users,email,' . $user->id,
+			'current_password' => 'required',
+		]);
+		if ($validator->fails()) {
+			return $this->profileValidationError($validator);
+		}
+
+		$newEmail = trim((string) Request::input('new_email'));
+
+		if (strcasecmp($newEmail, (string) $user->email) === 0) {
+			return $this->profileResponse(false, trans('crudbooster.profile_email_same'), [], 422);
+		}
+
+		if (! \Hash::check((string) Request::input('current_password'), $user->password)) {
+			$this->profileTooManyAttempts('email-start', $user->id, true);
+
+			return $this->profileResponse(false, trans('crudbooster.profile_password_wrong_current'), [], 422);
+		}
+
+		$this->profileTooManyAttempts('email-start', $user->id, true);
+
+		MfaHelper::invalidateEmailOtpCodes($user);
+		if (! MfaHelper::sendEmailOtp($user, $newEmail)) {
+			return $this->profileResponse(false, trans('crudbooster.profile_otp_send_failed'), [], 503);
+		}
+
+		Session::put('profile_pending_email', [
+			'email' => $newEmail,
+			'expires' => now()->addMinutes(MfaHelper::EMAIL_OTP_MINUTES)->timestamp,
+			'email_ok' => false,
+			'totp_ok' => ! MfaHelper::hasActiveTotp($user),
+		]);
+
+		return $this->profileResponse(true, trans('crudbooster.profile_email_code_sent', ['minutes' => MfaHelper::EMAIL_OTP_MINUTES]), [
+			'needs_totp' => MfaHelper::hasActiveTotp($user),
+		]);
+	}
+
+	/**
+	 * Cambio email, passo 2: codice email (nuovo indirizzo) e, se l'utente ha
+	 * il TOTP attivo, anche il codice dell'app authenticator. Ogni codice
+	 * giusto viene ricordato in sessione, cosi' se l'altro e' sbagliato non
+	 * va reinserito quello gia' consumato (monouso).
+	 */
+	public function postProfileEmailConfirm()
+	{
+		$user = UserHelper::me();
+		if (! $user) {
+			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
+		}
+
+		$pending = Session::get('profile_pending_email');
+		if (! $pending || $pending['expires'] < time()) {
+			Session::forget('profile_pending_email');
+
+			return $this->profileResponse(false, trans('crudbooster.profile_otp_expired'), ['expired' => true], 422);
+		}
+
+		if ($this->profileTooManyAttempts('email-verify', $user->id)) {
+			return $this->profileResponse(false, trans('crudbooster.profile_too_many_attempts'), [], 429);
+		}
+
+		if (! $pending['email_ok']) {
+			if (! MfaHelper::verifyEmailOtp($user, trim((string) Request::input('code')))) {
+				$this->profileTooManyAttempts('email-verify', $user->id, true);
+
+				return $this->profileResponse(false, trans('crudbooster.profile_otp_wrong'), [], 422);
+			}
+			$pending['email_ok'] = true;
+			Session::put('profile_pending_email', $pending);
+		}
+
+		if (! $pending['totp_ok']) {
+			if (! MfaHelper::verifyAndConsume($user, trim((string) Request::input('totp_code')))) {
+				$this->profileTooManyAttempts('email-verify', $user->id, true);
+
+				return $this->profileResponse(false, trans('crudbooster.profile_otp_wrong'), ['email_ok' => true], 422);
+			}
+			$pending['totp_ok'] = true;
+			Session::put('profile_pending_email', $pending);
+		}
+
+		// Un altro utente puo' aver preso l'indirizzo tra il passo 1 e il 2.
+		$taken = DB::table('cms_users')->where('email', $pending['email'])->where('id', '!=', $user->id)->exists();
+		if ($taken) {
+			Session::forget('profile_pending_email');
+
+			return $this->profileResponse(false, trans('crudbooster.profile_email_taken'), ['expired' => true], 422);
+		}
+
+		$oldEmail = $user->email;
+		DB::table('cms_users')->where('id', $user->id)->update(['email' => $pending['email']]);
+
+		MfaHelper::revokeAllTrustedDevices($user);
+		Session::put('admin_session_version', MfaHelper::bumpSessionVersion($user->id));
+		Session::forget('profile_pending_email');
+		RateLimiter::clear('profile-email-verify:' . $user->id);
+
+		CRUDBooster::insertLog(trans('crudbooster.log_profile_email_changed', ['old' => $oldEmail, 'new' => $pending['email'], 'ip' => Request::server('REMOTE_ADDR')]));
+
+		return $this->profileResponse(true, trans('crudbooster.profile_email_changed'), ['email' => $pending['email']]);
+	}
+
+	/**
+	 * Sezione "Sistema": Tenant (solo superadmin) e Primary Group
+	 * (superadmin e tenant admin, solo gruppi del proprio tenant). Stessa
+	 * logica di appartenenza ai gruppi di hook_before_edit(): se il tenant
+	 * cambia si tolgono tutti i gruppi, se cambia il primary group si
+	 * aggiunge il nuovo e si toglie il vecchio.
+	 */
+	public function postProfileSystem()
+	{
+		$user = UserHelper::me();
+		$isSuperadmin = UserHelper::isSuperAdmin();
+
+		if (! $user || (! $isSuperadmin && ! UserHelper::isTenantAdmin())) {
+			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
+		}
+
+		$validator = Validator::make(Request::all(), [
+			'tenant' => 'nullable|integer|exists:tenants,id',
+			'primary_group' => 'required|integer|exists:groups,id',
+		]);
+		if ($validator->fails()) {
+			return $this->profileValidationError($validator);
+		}
+
+		$oldTenant = (int) $user->tenant;
+		$oldGroup = (int) $user->primary_group;
+		// Il tenant lo cambia solo il superadmin: per gli altri si ignora
+		// il valore ricevuto.
+		$newTenant = ($isSuperadmin && Request::input('tenant')) ? (int) Request::input('tenant') : $oldTenant;
+		$newGroup = (int) Request::input('primary_group');
+
+		$tenantChanged = $newTenant !== $oldTenant;
+		$groupChanged = $newGroup !== $oldGroup;
+
+		if (($tenantChanged || $groupChanged)
+			&& ! DB::table('group_tenants')->where('tenant_id', $newTenant)->where('group_id', $newGroup)->exists()) {
+			return $this->profileResponse(false, trans('crudbooster.profile_system_invalid_group'), [], 422);
+		}
+
+		if ($tenantChanged) {
+			UserHelper::remove_all_groups($user->id);
+		}
+
+		DB::table('cms_users')->where('id', $user->id)->update(['tenant' => $newTenant, 'primary_group' => $newGroup]);
+
+		if ($tenantChanged || $groupChanged) {
+			GroupHelper::add($newGroup, $user->id);
+		}
+		if ($groupChanged && ! $tenantChanged) {
+			GroupHelper::remove($oldGroup, $user->id);
+		}
+
+		return $this->profileResponse(true, trans('crudbooster.profile_system_saved'), ['reload' => $tenantChanged || $groupChanged]);
+	}
+
+	/**
+	 * Cambio password, passo 1: password attuale + nuova (policy NIST, vedi
+	 * not_common_password in AppServiceProvider). Poi codice di verifica: il
+	 * TOTP se l'utente ce l'ha attivo, altrimenti email OTP al suo indirizzo.
+	 * In sessione resta solo l'hash della nuova password, mai il testo.
+	 */
+	public function postProfilePasswordStart()
+	{
+		$user = UserHelper::me();
+		if (! $user) {
+			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
+		}
+
+		if ($this->profileTooManyAttempts('password-start', $user->id)) {
+			return $this->profileResponse(false, trans('crudbooster.profile_too_many_attempts'), [], 429);
+		}
+
+		// email/name nei dati validati servono a not_common_password, che
+		// rifiuta password contenenti email o nome dell'utente.
+		$validator = Validator::make(array_merge(Request::all(), ['email' => $user->email, 'name' => $user->name]), [
+			'current_password' => 'required',
+			'password' => 'required|min:12|max:72|confirmed|not_common_password',
+		]);
+		if ($validator->fails()) {
+			return $this->profileValidationError($validator);
+		}
+
+		if (! \Hash::check((string) Request::input('current_password'), $user->password)) {
+			$this->profileTooManyAttempts('password-start', $user->id, true);
+
+			return $this->profileResponse(false, trans('crudbooster.profile_password_wrong_current'), [], 422);
+		}
+
+		if (\Hash::check((string) Request::input('password'), $user->password)) {
+			return $this->profileResponse(false, trans('crudbooster.profile_password_same_as_current'), [], 422);
+		}
+
+		$this->profileTooManyAttempts('password-start', $user->id, true);
+
+		$method = MfaHelper::hasActiveTotp($user) ? 'totp' : 'email';
+
+		if ($method === 'email') {
+			MfaHelper::invalidateEmailOtpCodes($user);
+			if (! MfaHelper::sendEmailOtp($user)) {
+				return $this->profileResponse(false, trans('crudbooster.profile_otp_send_failed'), [], 503);
+			}
+		}
+
+		Session::put('profile_pending_password', [
+			'hash' => \Hash::make((string) Request::input('password')),
+			'method' => $method,
+			'expires' => now()->addMinutes(MfaHelper::EMAIL_OTP_MINUTES)->timestamp,
+		]);
+
+		$message = $method === 'totp'
+			? trans('crudbooster.profile_password_code_sent_totp')
+			: trans('crudbooster.profile_password_code_sent_email', ['minutes' => MfaHelper::EMAIL_OTP_MINUTES]);
+
+		return $this->profileResponse(true, $message, ['method' => $method]);
+	}
+
+	/**
+	 * Cambio password, passo 2: verifica il codice, salva l'hash e chiude le
+	 * altre sessioni (MfaHelper::bumpSessionVersion); quella corrente resta.
+	 */
+	public function postProfilePasswordConfirm()
+	{
+		$user = UserHelper::me();
+		if (! $user) {
+			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
+		}
+
+		$pending = Session::get('profile_pending_password');
+		if (! $pending || $pending['expires'] < time()) {
+			Session::forget('profile_pending_password');
+
+			return $this->profileResponse(false, trans('crudbooster.profile_otp_expired'), ['expired' => true], 422);
+		}
+
+		if ($this->profileTooManyAttempts('password-verify', $user->id)) {
+			return $this->profileResponse(false, trans('crudbooster.profile_too_many_attempts'), [], 429);
+		}
+
+		$code = trim((string) Request::input('code'));
+		$valid = $pending['method'] === 'totp'
+			? MfaHelper::verifyAndConsume($user, $code)
+			: MfaHelper::verifyEmailOtp($user, $code);
+
+		if (! $valid) {
+			$this->profileTooManyAttempts('password-verify', $user->id, true);
+
+			return $this->profileResponse(false, trans('crudbooster.profile_otp_wrong'), [], 422);
+		}
+
+		DB::table('cms_users')->where('id', $user->id)->update(['password' => $pending['hash']]);
+
+		Session::put('admin_session_version', MfaHelper::bumpSessionVersion($user->id));
+		Session::forget('profile_pending_password');
+		RateLimiter::clear('profile-password-verify:' . $user->id);
+
+		CRUDBooster::insertLog(trans('crudbooster.log_profile_password_changed', ['email' => $user->email, 'ip' => Request::server('REMOTE_ADDR')]));
+
+		return $this->profileResponse(true, trans('crudbooster.profile_password_changed'));
+	}
+
+	/**
+	 * Pulsante "Resetta password" sulla scheda di un altro utente: manda a
+	 * quell'utente il link di reset (stesso flusso e stessa email di "Password
+	 * dimenticata", vedi AdminController::postForgot()). Superadmin su tutti;
+	 * tenant admin solo sugli utenti del proprio tenant che non sono
+	 * superadmin/tenant admin (UserHelper::can_do_on_user). Chi modifica NON
+	 * vede ne' imposta mai la password altrui.
+	 */
+	public function postUserResetPassword($id)
+	{
+		$target = \App\User::find($id);
+
+		if (! $target || (int) $target->id === (int) CRUDBooster::myId() || ! UserHelper::can_do_on_user('edit', $target->id)) {
+			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
+		}
+
+		$email = $target->email;
+
+		try {
+			$status = Password::sendResetLink(['email' => $email], function ($user, $token) use ($email) {
+				$data = CRUDBooster::first(config('crudbooster.USER_TABLE'), ['email' => $email]);
+				$data->reset_url = CRUDBooster::adminPath('reset-password/' . $token) . '?email=' . urlencode($email);
+
+				CRUDBooster::sendEmail(['to' => $email, 'data' => $data, 'template' => 'forgot_password_backend']);
+			});
+		} catch (\Throwable $e) {
+			\Log::warning('Reset password da admin: invio email fallito.', ['user_id' => $target->id, 'error' => $e->getMessage()]);
+
+			return $this->profileResponse(false, trans('crudbooster.user_reset_password_failed'), [], 503);
+		}
+
+		if ($status === Password::RESET_THROTTLED) {
+			return $this->profileResponse(false, trans('crudbooster.user_reset_password_throttled'), [], 429);
+		}
+
+		if ($status !== Password::RESET_LINK_SENT) {
+			return $this->profileResponse(false, trans('crudbooster.user_reset_password_failed'), [], 422);
+		}
+
+		CRUDBooster::insertLog(trans('crudbooster.log_user_reset_password_link', ['email' => $email, 'by' => CRUDBooster::me()->email, 'ip' => Request::server('REMOTE_ADDR')]));
+
+		return $this->profileResponse(true, trans('crudbooster.user_reset_password_sent'));
 	}
 
 	/**
@@ -304,7 +846,7 @@ class AdminCmsUsersController extends CBController
 		$user = UserHelper::me();
 
 		if ($user && $user->two_factor_confirmed_at) {
-			return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_status_enabled'), 'info');
+			return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile') . '#mfa', trans('crudbooster.mfa_status_enabled'), 'info');
 		}
 
 		$secret = MfaHelper::generateSecret();
@@ -374,7 +916,7 @@ class AdminCmsUsersController extends CBController
 		$codes = Session::pull('mfa_recovery_codes_plaintext');
 
 		if (! $codes) {
-			return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_enabled_success'), 'success');
+			return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile') . '#mfa', trans('crudbooster.mfa_enabled_success'), 'success');
 		}
 
 		$this->cbView('crudbooster::mfa_backup_codes', [
@@ -388,7 +930,7 @@ class AdminCmsUsersController extends CBController
 		$user = UserHelper::me();
 
 		if (! $user || ! $user->two_factor_confirmed_at) {
-			return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_status_disabled'), 'warning');
+			return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile') . '#mfa', trans('crudbooster.mfa_status_disabled'), 'warning');
 		}
 
 		$codes = MfaHelper::generateRecoveryCodes();
@@ -404,14 +946,14 @@ class AdminCmsUsersController extends CBController
 		$password = (string) Request::input('password');
 
 		if (! $user || ! \Hash::check($password, $user->password)) {
-			return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_disable_wrong_password'), 'danger');
+			return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile') . '#mfa', trans('crudbooster.mfa_disable_wrong_password'), 'danger');
 		}
 
 		MfaHelper::disable($user);
 
 		CRUDBooster::insertLog(trans('crudbooster.log_mfa_disabled', ['email' => $user->email, 'ip' => Request::server('REMOTE_ADDR')]));
 
-		return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_disable_success'), 'success');
+		return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile') . '#mfa', trans('crudbooster.mfa_disable_success'), 'success');
 	}
 
 	public function postMfaRevokeDevices()
@@ -422,7 +964,7 @@ class AdminCmsUsersController extends CBController
 			MfaHelper::revokeAllTrustedDevices($user);
 		}
 
-		return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_revoke_devices_success'), 'success');
+		return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile') . '#mfa', trans('crudbooster.mfa_revoke_devices_success'), 'success');
 	}
 
 	/**
@@ -440,7 +982,7 @@ class AdminCmsUsersController extends CBController
 			MfaHelper::revokeTrustedDevice($user, (int) $id);
 		}
 
-		return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile'), trans('crudbooster.mfa_revoke_device_success'), 'success');
+		return CRUDBooster::redirect(CRUDBooster::adminPath('users/profile') . '#mfa', trans('crudbooster.mfa_revoke_device_success'), 'success');
 	}
 
 	public function hook_before_edit(&$postdata, $user_id)
@@ -449,6 +991,27 @@ class AdminCmsUsersController extends CBController
 
 		
 		unset($postdata['password_confirmation']);
+
+		// Email e password di se' stessi si cambiano solo dal profilo (con
+		// password attuale + codice di verifica): una modifica di se' stessi
+		// passata da questo form non le deve toccare.
+		if ((int) $user_id === (int) CRUDBooster::myId()) {
+			unset($postdata['email'], $postdata['password']);
+		} elseif (isset($postdata['email'])) {
+			// Email di un ALTRO utente cambiata da superadmin/tenant admin:
+			// si chiudono le sessioni di quell'utente e si revocano i suoi
+			// dispositivi MFA attendibili (le credenziali di accesso sono
+			// cambiate sotto i suoi piedi).
+			$old_email = DB::table('cms_users')->where('id', $user_id)->value('email');
+			if ($old_email !== null && strcasecmp((string) $old_email, (string) $postdata['email']) !== 0) {
+				$target = \App\User::find($user_id);
+				if ($target) {
+					MfaHelper::revokeAllTrustedDevices($target);
+					MfaHelper::bumpSessionVersion($target->id);
+				}
+			}
+		}
+
 		//se il tenant è cambiato
 		$old_tenant_id = UserHelper::tenant($user_id);
 		if ($old_tenant_id !== $postdata['tenant']) {
@@ -574,6 +1137,12 @@ class AdminCmsUsersController extends CBController
 
 	public function getEdit($id)
 	{
+		//il proprio profilo si modifica dalla pagina Profilo (sezioni con
+		//verifica per email/password), non da questo form
+		if ((int) $id === (int) CRUDBooster::myId()) {
+			return redirect(CRUDBooster::adminPath('users/profile'));
+		}
+
 		//load edit page
 		$this->cbLoader();
 		$user = DB::table($this->table)->where($this->primary_key, $id)->first();
