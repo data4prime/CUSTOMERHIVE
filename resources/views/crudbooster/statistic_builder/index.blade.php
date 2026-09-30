@@ -141,6 +141,7 @@ foreach($routeCollection as $key => $value) {
 
 
 @push('head')
+@include('crudbooster::statistic_builder.components._widget_card_style')
 <!-- jQuery UI 1.11.4 -->
 <style type="text/css">
     .sort-highlight {

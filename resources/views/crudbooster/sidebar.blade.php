@@ -279,15 +279,12 @@
                 href='{{Route("StatisticBuilderControllerGetIndex")}}'><i class='fa fa-bars'></i>
                 <span>{{ trans('crudbooster.List_Statistic') }}</span></a></li>
           </ul>
-          <ul  class='treeview-menu'>
-<li data-collapse="3" class='treeview'>
-          <a href='{{url("admin/dashboard_layouts")}}'>
-            <svg class="ch-nav-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
-            <span>{{ trans('crudbooster.Dashboard_Layouts') }}</span> <svg class="ch-nav-chevron pull-{{ trans('crudbooster.right') }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,6 15,12 9,18"/></svg>
-          </a>
-
-        </li>
-</ul>
+          {{-- Voce "Layout Dashboard" nascosta: le nuove dashboard usano la
+               griglia libera e non servono layout ad aree fisse. Il modulo
+               (admin/dashboard_layouts) resta raggiungibile via URL per chi
+               ha ancora dashboard 'legacy_areas'. Per riattivarla, rimettere
+               qui un <ul class='treeview-menu'> con il link a
+               url("admin/dashboard_layouts"). --}}
         </li>
 
         <li data-collapse="3" class='treeview'>

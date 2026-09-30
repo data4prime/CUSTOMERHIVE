@@ -867,28 +867,11 @@ class CBController extends Controller
         // tenant/gruppo. Applicato qui una sola volta cosi' copre ogni
         // modulo, presente e futuro, senza dover intervenire modulo per
         // modulo in ogni ambiente.
-        if (ModuleHelper::is_manually_generated($table) && !CRUDBooster::isSuperadmin()) {
-            if (Schema::hasColumn($table, 'tenant')) {
-                $result->where($table . '.tenant', UserHelper::current_user_tenant());
-            }
-            if (!UserHelper::isTenantAdmin()) {
-                if (Schema::hasColumn($table, 'group')) {
-                    $result->whereIn($table . '.group', UserHelper::current_user_groups());
-                }
-                // Stessa regola di ModuleHelper::can_view() (riga "se row e'
-                // di tenant admin e current user non e' tenant admin"):
-                // qui replicata a livello di query perche' questo endpoint,
-                // a differenza di getIndex(), non chiama can_view() per riga.
-                if (Schema::hasColumn($table, 'created_by')) {
-                    $result->whereNotIn($table . '.created_by', function ($q) {
-                        $q->select('cms_users.id')
-                            ->from('cms_users')
-                            ->join('cms_privileges', 'cms_privileges.id', '=', 'cms_users.id_cms_privileges')
-                            ->where('cms_privileges.is_tenantadmin', 1);
-                    });
-                }
-            }
-        }
+        // (Il blocco vive ora in DatasetAccessScope::applyRowScope(), condiviso
+        // col widget Tabella "Elenco record"; le query generate sono invariate.
+        // Qui la regola e' replicata a livello di query perche' questo
+        // endpoint, a differenza di getIndex(), non chiama can_view() per riga.)
+        \App\Dashboards\DatasetAccessScope::applyRowScope($result, $table);
 
         if ($where) {
             $result->whereraw($where);

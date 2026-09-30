@@ -139,6 +139,31 @@ body.ch-shell .content-header {
   padding-top: 18px;
 }
 
+/*
+ * Modalita' embed (?embed=1, docs/refactoring/162-*): la pagina del modulo
+ * vive dentro l'iframe del widget "Modulo incorporato". admin_template non
+ * include header/sidebar/footer; qui si toglie lo spazio riservato alla
+ * sidebar, lo sfondo di pagina e il breadcrumb (titolo e pulsanti d'azione
+ * restano: servono per lavorare dentro il widget).
+ */
+body.ch-shell.ch-embed {
+  background: transparent;
+}
+
+body.ch-shell.ch-embed .content-wrapper {
+  margin-left: 0;
+  min-height: 0;
+  background: transparent;
+}
+
+body.ch-shell.ch-embed .content-header {
+  padding-top: 10px;
+}
+
+body.ch-shell.ch-embed .content-header .breadcrumb {
+  display: none;
+}
+
 /* --- Header ---
  * Sfondo pieno nell'accento di ruolo (indaco di brand se il privilegio
  * non ne ha uno mappato - vedi --ch-role-accent in :root) invece di
@@ -3423,3 +3448,302 @@ body.ch-shell #myModal .mg-opt-seg-option:has(input:checked) {
   background: var(--ch-accent);
   color: #fff;
 }
+
+/* ==========================================================================
+ * Pulsanti: stile unico, ovunque dentro body.ch-shell
+ * --------------------------------------------------------------------------
+ * Stile del mockup approvato per il profilo (docs/refactoring/171-*): pieno
+ * accent per l'azione principale, "ghost" (bianco con bordo) per le
+ * secondarie, angoli --ch-radius-md, testo 600. Prima questo aspetto esisteva
+ * solo in contesti specifici (toolbar, footer form, modali, #box_main, vedi
+ * le regole piu' sopra); ovunque altro restavano i pulsanti Bootstrap/AdminLTE.
+ *
+ * Specificita' volutamente BASSA (body.ch-shell .btn = 0,2,1): le regole di
+ * contesto qui sopra (es. ".box-footer .btn", ".button_action .btn", i
+ * pulsanti dentro .input-group-btn) restano piu' specifiche e quindi vincono -
+ * i pulsanti-icona della lista, ad esempio, non cambiano. Nessun :not() per
+ * lo stesso motivo: ogni :not(.x) alzerebbe la specificita' e farebbe vincere
+ * questo blocco sulle regole di contesto.
+ *
+ * Mappatura varianti: btn-primary/btn-success -> accent pieno (prima
+ * btn-success era verde in #box_main e accent nei footer: ora sempre
+ * accent); btn-default/secondary/outline/light -> ghost; btn-danger -> rosso
+ * pieno; btn-warning -> ambra piena; btn-info -> accent tenue; btn-link
+ * resta un link.
+ * ========================================================================== */
+body.ch-shell .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border: 1px solid transparent;
+  border-radius: var(--ch-radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  box-shadow: none;
+  text-shadow: none;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+
+body.ch-shell .btn-sm { padding: 6px 12px; font-size: 12.5px; }
+body.ch-shell .btn-xs { padding: 3px 8px; font-size: 12px; border-radius: 8px; }
+body.ch-shell .btn-lg { padding: 12px 22px; font-size: 15px; }
+body.ch-shell .btn-block { display: flex; width: 100%; }
+
+body.ch-shell .btn:focus,
+body.ch-shell .btn:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--ch-accent-soft);
+}
+
+body.ch-shell .btn:disabled,
+body.ch-shell .btn.disabled,
+body.ch-shell .btn[disabled] {
+  opacity: .55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Azione principale: accent pieno */
+body.ch-shell .btn-primary,
+body.ch-shell .btn-success {
+  background: var(--ch-accent);
+  border-color: var(--ch-accent);
+  color: #fff;
+}
+
+body.ch-shell .btn-primary:hover, body.ch-shell .btn-primary:focus, body.ch-shell .btn-primary:active, body.ch-shell .btn-primary.active,
+body.ch-shell .btn-success:hover, body.ch-shell .btn-success:focus, body.ch-shell .btn-success:active, body.ch-shell .btn-success.active {
+  background: var(--ch-accent-dark);
+  border-color: var(--ch-accent-dark);
+  color: #fff;
+}
+
+/* Azioni secondarie: ghost */
+body.ch-shell .btn-default,
+body.ch-shell .btn-secondary,
+body.ch-shell .btn-outline,
+body.ch-shell .btn-light {
+  background: var(--ch-surface);
+  border-color: var(--ch-border-strong);
+  color: var(--ch-text);
+}
+
+body.ch-shell .btn-default:hover, body.ch-shell .btn-default:focus, body.ch-shell .btn-default:active, body.ch-shell .btn-default.active,
+body.ch-shell .btn-secondary:hover, body.ch-shell .btn-secondary:focus, body.ch-shell .btn-secondary:active, body.ch-shell .btn-secondary.active,
+body.ch-shell .btn-outline:hover, body.ch-shell .btn-outline:focus, body.ch-shell .btn-outline:active,
+body.ch-shell .btn-light:hover, body.ch-shell .btn-light:focus, body.ch-shell .btn-light:active {
+  background: var(--ch-bg);
+  border-color: var(--ch-border-strong);
+  color: var(--ch-text);
+}
+
+/* Azioni distruttive / di attenzione / informative: stessa forma, colore semantico */
+body.ch-shell .btn-danger {
+  background: var(--ch-danger);
+  border-color: var(--ch-danger);
+  color: #fff;
+}
+
+body.ch-shell .btn-danger:hover, body.ch-shell .btn-danger:focus, body.ch-shell .btn-danger:active, body.ch-shell .btn-danger.active {
+  background: color-mix(in srgb, var(--ch-danger) 85%, #000);
+  border-color: color-mix(in srgb, var(--ch-danger) 85%, #000);
+  color: #fff;
+}
+
+body.ch-shell .btn-warning {
+  background: var(--ch-warning);
+  border-color: var(--ch-warning);
+  color: #fff;
+}
+
+body.ch-shell .btn-warning:hover, body.ch-shell .btn-warning:focus, body.ch-shell .btn-warning:active, body.ch-shell .btn-warning.active {
+  background: color-mix(in srgb, var(--ch-warning) 85%, #000);
+  border-color: color-mix(in srgb, var(--ch-warning) 85%, #000);
+  color: #fff;
+}
+
+body.ch-shell .btn-info {
+  background: var(--ch-accent-soft);
+  border-color: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+}
+
+body.ch-shell .btn-info:hover, body.ch-shell .btn-info:focus, body.ch-shell .btn-info:active, body.ch-shell .btn-info.active {
+  background: color-mix(in srgb, var(--ch-accent-soft) 80%, var(--ch-accent));
+  border-color: color-mix(in srgb, var(--ch-accent-soft) 80%, var(--ch-accent));
+  color: var(--ch-accent-dark);
+}
+
+/* Pulsanti-link e "strumenti" dei box (collassa/chiudi): non sono azioni a pieno stile */
+body.ch-shell .btn-link {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ch-accent);
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+body.ch-shell .btn-link:hover { background: transparent; color: var(--ch-accent-dark); text-decoration: underline; }
+
+body.ch-shell .btn-box-tool {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ch-text-muted);
+  padding: 4px 8px;
+  font-size: 13px;
+}
+
+body.ch-shell .btn-box-tool:hover { background: var(--ch-bg); color: var(--ch-text); }
+
+/* ==========================================================================
+   Modale "Sincronizza da Qlik" (public/js/qlik_sync_modal.js, liste
+   app/item Qlik) - stessa card arrotondata, header con icona a badge
+   tinto e bottoni footer dei popup di table.blade.php (filtro, export).
+   Overlay autonomo (non usa il modal di Bootstrap): le classi .ch-sync-*
+   sono aggiunte dal JS; il footer riusa .modal-footer per ereditare lo
+   stile dei bottoni ghost/primario definito sopra.
+   ========================================================================== */
+
+.ch-sync-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(22, 22, 29, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.ch-sync-dialog {
+  background: var(--ch-surface, #fff);
+  border: 1px solid var(--ch-border, #e6e6ea);
+  border-radius: var(--ch-radius-lg, 14px);
+  box-shadow: var(--ch-shadow-md, 0 4px 12px rgba(16, 16, 24, 0.08));
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--ch-text, #16161d);
+}
+
+.ch-sync-head {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--ch-border, #e6e6ea);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ch-sync-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ch-text, #16161d);
+}
+
+.ch-sync-title .fa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
+  background: var(--ch-accent-soft, #eef0fd);
+  color: var(--ch-accent-dark, #3730a3);
+  border-radius: var(--ch-radius-md, 10px);
+}
+
+.ch-sync-x {
+  background: none;
+  border: 0;
+  color: var(--ch-text-muted, #8b8b96);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 6px;
+}
+
+.ch-sync-x:hover { color: var(--ch-text, #16161d); }
+
+.ch-sync-body {
+  padding: 18px 22px 12px;
+  overflow-y: auto;
+  flex: 1 1 auto;
+}
+
+.ch-sync-field { margin-bottom: 14px; }
+
+.ch-sync-field > label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ch-text-secondary, #55555f);
+}
+
+.ch-sync-dialog .form-control {
+  width: 100%;
+  border: 1px solid var(--ch-border-strong, #d8d8de);
+  border-radius: var(--ch-radius-md, 10px);
+  box-shadow: none;
+  font-size: 13px;
+  color: var(--ch-text, #16161d);
+  background: var(--ch-surface, #fff);
+}
+
+.ch-sync-dialog .form-control:focus {
+  border-color: var(--ch-accent, #4f46e5);
+  box-shadow: 0 0 0 3px var(--ch-accent-soft, #eef0fd);
+  outline: 0;
+}
+
+.ch-sync-dialog select.form-control { height: 36px; padding: 0 10px; }
+
+.ch-sync-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ch-text-muted, #8b8b96);
+}
+
+.ch-sync-msg {
+  display: none;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: var(--ch-radius-md, 10px);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.ch-sync-msg.is-error {
+  display: block;
+  background: var(--ch-danger-soft, #fbeaeb);
+  color: var(--ch-danger, #d1373f);
+}
+
+.ch-sync-msg.is-ok {
+  display: block;
+  background: var(--ch-success-soft, #e7f7ee);
+  color: var(--ch-success, #0f9d58);
+}
+
+.ch-sync-msg a { color: inherit; font-weight: 700; text-decoration: underline; }
+
+.ch-sync-dialog .modal-footer {
+  padding: 14px 22px;
+  border-top: 1px solid var(--ch-border, #e6e6ea);
+  text-align: right;
+}
+
+.ch-sync-dialog .modal-footer .btn + .btn { margin-left: 8px; }

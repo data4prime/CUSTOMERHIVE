@@ -5,6 +5,14 @@
 
 <div id='{{$componentID}}' class='border-box'>
 
+    @if(empty($config->name))
+    @include('crudbooster::statistic_builder.components._empty_widget_state', [
+        'icon' => '▤',
+        'title' => 'Tabella non configurata',
+        'subtitle' => 'Seleziona per collegare una query o un dataset',
+        'link' => $editUrl ?? null,
+    ])
+    @else
     <div class="card card-default">
         <div class="card-header">
             [name]
@@ -13,6 +21,7 @@
             [sql]
         </div>
     </div>
+    @endif
 
     <div class='action pull-right'>
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Table'
@@ -31,17 +40,19 @@
         <input class="form-control" required name='config[name]' type='text' value='{{@$config->name}}' />
     </div>
 
-    <div class="mb-3 row">
-        <label>SQL Query</label>
-        <textarea name='config[sql]' rows="5" placeholder="E.g : select column_id,column_name from view_table_name"
-            class='form-control'>{{@$config->sql}}</textarea>
-        <div class='help-block'>
-            Make sure the sql query are correct unless the widget will be broken. Mak sure give the alias name each
-            column. You may use alias [SESSION_NAME]
-            to get the session. We strongly recommend that you use a <a href='http://www.w3schools.com/sql/sql_view.asp'
-                target='_blank'>view table</a>
-        </div>
-    </div>
+    {{-- Sorgente dati in popup: SQL libera (come prima) oppure "Elenco
+         record" (colonne/ordinamento/filtri su una tabella mg_*, con
+         scoping per ruolo/tenant/gruppi - DashboardDatasetRegistry::
+         executeRows()). Query guidata a due colonne non offerta qui. --}}
+    @include('crudbooster::statistic_builder.components._source_config', [
+        'componentID' => $componentID,
+        'config' => $config,
+        'sqlLabel' => 'SQL Query',
+        'sqlPlaceholder' => 'E.g : select column_id,column_name from view_table_name',
+        'sqlHelp' => "Make sure the sql query are correct unless the widget will be broken. Mak sure give the alias name each column. You may use alias [SESSION_NAME] to get the session. We strongly recommend that you use a view table.",
+        'builderSupported' => false,
+        'recordsSupported' => true,
+    ])
 
 </form>
 @elseif($command=='showFunction')
@@ -49,6 +60,22 @@
     if($key == 'sql') {
     $sql = null;
     $sqlError = null;
+    $recordsColumns = null;
+    $pageLength = 10;
+    if (is_array($value) && isset($value['columns'])) {
+        // Modalita' 'records' ("Elenco record"): $value = ['columns' =>
+        // [nome => etichetta], 'rows' => [...]] da
+        // DashboardDatasetRegistry::executeRows(), gia' scopato sull'utente.
+        $recordsColumns = $value['columns'];
+        $sql = array_map(fn ($row) => (object) $row, $value['rows']);
+        $requestedLength = (int) ($config->page_length ?? 10);
+        $pageLength = in_array($requestedLength, \App\Dashboards\DashboardDatasetRegistry::ROWS_PAGE_LENGTHS, true) ? $requestedLength : 10;
+    } elseif (is_array($value)) {
+        // Modalita' 'builder' (query guidata): $value e' gia' l'elenco di
+        // righe {label, value} risolto da DashboardDatasetRegistry::execute(),
+        // non SQL da eseguire - vedi StatisticBuilderController.
+        $sql = array_map(fn ($row) => (object) $row, $value);
+    } else {
     try {
         $sessions = Session::all();
 
@@ -69,31 +96,58 @@
         //il widget dall'area invece di mostrare l'errore
         $sqlError = $e->getMessage();
     }
+    }
     ?>
 
 @if($sqlError)
 <div class="alert alert-danger table-widget-sql-error" style="margin:15px;">{{ $sqlError }}</div>
-@elseif($sql)
+@elseif($sql || $recordsColumns)
 <table id="table-widget-{{ $componentID }}" class='table table-striped'>
     <thead>
         <tr>
+            @if($recordsColumns)
+            @foreach($recordsColumns as $columnLabel)
+            <th>{{ $columnLabel }}</th>
+            @endforeach
+            @else
             @foreach($sql[0] as $key=>$val)
             <th>{{$key}}</th>
             @endforeach
+            @endif
         </tr>
     </thead>
     <tbody>
         @foreach($sql as $row)
         <tr>
+            @if($recordsColumns)
+            @foreach(array_keys($recordsColumns) as $columnKey)
+            <td>{{ $row->$columnKey }}</td>
+            @endforeach
+            @else
             @foreach($row as $key=>$val)
             <td>{{$val}}</td>
             @endforeach
+            @endif
         </tr>
         @endforeach
     </tbody>
 </table>
 <script type="text/javascript">
-    (function () {
+    (function initTableWidget(attempt) {
+        // Nella vista di sola lettura (show_grid, dentro admin_template) il
+        // markup del widget e' nel contenuto, mentre jQuery e DataTables
+        // sono caricati DOPO, in fondo alla pagina (admin_template_plugins):
+        // questo script girava prima e `$` non esisteva ancora, quindi la
+        // tabella restava senza paginazione/ricerca. Si riprova finche' non
+        // sono disponibili (tetto ~5s); nel builder, dove sono gia' caricati,
+        // parte subito.
+        if (!window.jQuery || !jQuery.fn.DataTable) {
+            if ((attempt || 0) < 100) {
+                setTimeout(function () { initTableWidget((attempt || 0) + 1); }, 50);
+            }
+            return;
+        }
+        var $ = jQuery;
         // Selettore generico "table.table" (prima) inizializzava TUTTE le
         // tabelle nella pagina, comprese quelle di altri widget Table gia'
         // presenti sulla stessa dashboard: DataTables lancia un errore
@@ -108,7 +162,12 @@
         }
         $table.DataTable({
             dom: "<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+            @if($recordsColumns)
+            pageLength: {{ $pageLength }},
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
+            @else
             lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
+            @endif
         });
     })();
 </script>

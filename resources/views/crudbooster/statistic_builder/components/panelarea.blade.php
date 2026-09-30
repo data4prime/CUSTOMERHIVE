@@ -1,6 +1,14 @@
 @if($command=='layout')
 <div id='{{$componentID}}' class='border-box'>
 
+    @if(empty($config->name))
+    @include('crudbooster::statistic_builder.components._empty_widget_state', [
+        'icon' => '¶',
+        'title' => 'Pannello non configurato',
+        'subtitle' => 'Seleziona per impostare titolo e testo',
+        'link' => $editUrl ?? null,
+    ])
+    @else
     <div class="card card-default">
         <div class="card-header">
             [name]
@@ -9,6 +17,7 @@
             <p>[content]</p>
         </div>
     </div>
+    @endif
 
     <div class='action pull-right'>
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Panel Area'

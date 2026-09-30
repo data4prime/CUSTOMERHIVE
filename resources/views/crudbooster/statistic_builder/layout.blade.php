@@ -49,13 +49,14 @@
     <script src="{{asset('vendor/crudbooster/assets/sweetalert/dist/sweetalert.min.js')}}"></script>
     <link rel="stylesheet" type="text/css" href="{{asset('vendor/crudbooster/assets/sweetalert/dist/sweetalert.css')}}">
 
-
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
     @stack('head')
 
     <style>
+
+        /* Widget "Modulo incorporato" (panelcustom): nel builder legacy
+           e' solo un'anteprima, non deve catturare il mouse (drag&drop
+           dei widget, pulsanti modifica/elimina). */
+        .ch-module-frame, .ch-module-open { pointer-events: none; }
 
         .skin-red .main-header .navbar .nav>li>a {
             text-decoration: none;
