@@ -55,7 +55,10 @@ il job `tests` è passato (`needs: tests`).
    composer install --no-dev --optimize-autoloader --no-interaction
    php artisan migrate --force
    php artisan optimize:clear
+   php artisan queue:restart
    ```
+   L'ultimo comando fa uscire i worker della coda dopo il job in corso, così
+   il supervisor li rilancia con il codice appena deployato.
 3. **Smoke test**: il runner GitHub (non il server) fa una `curl` su
    `http://<DEV_SSH_HOST>/admin`, con qualche tentativo/retry. Se non
    risponde, il job fallisce.

@@ -79,6 +79,7 @@ jobs:
             composer install --no-dev --optimize-autoloader --no-interaction
             php artisan migrate --force
             php artisan optimize:clear
+            php artisan queue:restart
 
       - name: Verifica post-deploy (smoke test)
         run: |

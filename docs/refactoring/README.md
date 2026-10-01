@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 184**
+**Prossimo numero libero: 185**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,7 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [184](184-ci-queue-restart-dopo-deploy-dev.md) | **CI, `queue:restart` dopo il deploy su dev**: il job `deploy-dev` termina con `php artisan queue:restart`, così i worker della coda (Qlik sync) ripartono con il codice nuovo senza intervento manuale | CI | Completato | 2026-10-01 |
 | [183](183-widget-qlik-campo-app-div-non-chiuso.md) | **Widget Qlik, campo "App Qlik"**: rimosso un `<div class="mb-3 row">` orfano mai chiuso in `qlikwidget.blade.php` e reso sicuro il test `isset($config->mashups)` (prima `Undefined property` con config senza `mashups`) | Frontend | Completato | 2026-09-30 |
 | [069](069-uiux-revamp-fase0-fase1-guscio-e-auth.md) | **Revamp UI/UX, Fase 0+1**: token di design + font Plus Jakarta Sans self-hosted (variable font, un solo file), guscio condiviso (`admin_template`/`header`, zero modifiche a `sidebar`/`footer`) e pagine login/lockscreen/forgot riscritte, branding per-tenant preservato, `theme_color` (skin AdminLTE per ruolo) rimappato su un accento colore. Nota: scoperto (non introdotto) che il toggle sidebar/dropdown header non rispondono al click, probabile conflitto Bootstrap 3(AdminLTE)/5 preesistente, non risolto in questo intervento | UI/UX | Completato | 2026-09-03 |
 | [070](070-datamodal-leak-cross-tenant.md) | **Popup "datamodal": un tenant admin vedeva record di altri tenant** — `AdminGroupsController::members()` (aggiungi membro, tabella `cms_users`) e `AdminCmsUsersController::groups()` (aggiungi a gruppo, tabella `groups`) lasciavano `datamodal_where` vuoto, senza lo scoping per tenant già applicato alle liste equivalenti. Corretto valorizzando `datamodal_where` in base a `UserHelper::isTenantAdmin()`. Verificati e scartati come falso allarme gli altri usi analoghi, tutti dietro `isSuperadmin()` | Sicurezza + Bug fix | Completato | 2026-09-16 |
