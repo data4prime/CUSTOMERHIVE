@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Tests\Concerns\SeedsCmsData;
 use Tests\TestCase;
 
@@ -63,6 +65,9 @@ class UserProfileSectionsTest extends TestCase
 
     protected function tearDown(): void
     {
+        Cache::forget('setting_smtp_driver');
+        Cache::forget('setting_smtp_host');
+
         foreach ($this->previousServerValues as $key => $previousValue) {
             if ($previousValue === null) {
                 unset($_SERVER[$key]);
@@ -86,6 +91,17 @@ class UserProfileSectionsTest extends TestCase
         DB::table('mfa_email_otp_codes')->where('id', $id)->update(['code_hash' => Hash::make($code)]);
 
         return $code;
+    }
+
+    /**
+     * Simula SMTP configurato (getSetting() legge dalla cache) e intercetta
+     * l'invio: senza SMTP il cambio email non chiede nessun codice.
+     */
+    private function smtpConfigurato(): void
+    {
+        Cache::forever('setting_smtp_driver', 'smtp');
+        Cache::forever('setting_smtp_host', 'smtp.test');
+        Mail::fake();
     }
 
     public function test_la_pagina_profilo_mostra_le_quattro_sezioni(): void
@@ -178,8 +194,27 @@ class UserProfileSectionsTest extends TestCase
         $response->assertStatus(422)->assertJson(['ok' => false]);
     }
 
+    public function test_cambio_email_senza_totp_e_senza_smtp_salva_subito_con_la_sola_password(): void
+    {
+        $actor = $this->actingAsSuperadmin();
+
+        $this->postJson($this->url('profile-email-start'), [
+            'new_email' => 'senza.smtp@example.com',
+            'current_password' => 'password-sbagliata',
+        ])->assertStatus(422)->assertJson(['ok' => false]);
+
+        $this->postJson($this->url('profile-email-start'), [
+            'new_email' => 'senza.smtp@example.com',
+            'current_password' => 'password-corretta-123',
+        ])->assertStatus(200)->assertJson(['ok' => true, 'email' => 'senza.smtp@example.com']);
+
+        $this->assertSame('senza.smtp@example.com', DB::table('cms_users')->where('id', $actor['userId'])->value('email'));
+        $this->assertSame(0, DB::table('mfa_email_otp_codes')->where('user_id', $actor['userId'])->count());
+    }
+
     public function test_cambio_email_completo_con_codice_inviato_al_nuovo_indirizzo(): void
     {
+        $this->smtpConfigurato();
         $actor = $this->actingAsSuperadmin();
         DB::table('mfa_trusted_devices')->insert([
             'user_id' => $actor['userId'],
@@ -212,6 +247,7 @@ class UserProfileSectionsTest extends TestCase
 
     public function test_cambio_email_con_codice_sbagliato_non_cambia_nulla(): void
     {
+        $this->smtpConfigurato();
         $actor = $this->actingAsSuperadmin();
         $emailPrima = DB::table('cms_users')->where('id', $actor['userId'])->value('email');
 
