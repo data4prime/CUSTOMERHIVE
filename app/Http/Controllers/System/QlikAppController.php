@@ -12,7 +12,9 @@ use \App\Helpers\UserHelper;
 use \App\Helpers\QlikHelper;
 use App\Helpers\LicenseHelper;
 use App\Http\Controllers\System\Concerns\HandlesQlikSyncStart;
+use App\ItemsAllowed;
 use App\QlikSyncRun;
+use App\TenantsAllowed;
 use App\Services\QlikSync\QlikSyncRollback;
 use App\Services\QlikSync\QlikSyncService;
 use App\Services\QlikSync\QlikSyncUi;
@@ -51,9 +53,19 @@ class QlikAppController extends CBController
 		//$this->col[] = ["label" => "Conf", "name" => "conf"];
 		$this->col[] = array("label" => "Qlik Conf", "name" => "conf", "join" => "qlik_confs,confname");
 		// Badge "non piu' presente su Qlik" (solo per le app sincronizzate)
+		// Oltre al "non piu' presente", badge "presente" (verde) per quelle sincronizzate almeno una volta; le app create
+		// a mano (last_synced_at null) non hanno badge.
 		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_status'), "name" => "is_missing", "callback" => function ($row) {
-			return !empty($row->is_missing)
-				? "<span class='label label-warning' style='background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>"
+			if (!empty($row->is_missing)) {
+				return "<span class='label label-warning' style='background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>";
+			}
+			return !empty($row->last_synced_at)
+				? "<span class='label label-success' style='background:#5cb85c;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_present_badge')) . "</span>"
+				: '';
+		}];
+		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_last_synced'), "name" => "last_synced_at", "callback" => function ($row) {
+			return !empty($row->last_synced_at)
+				? e(\Carbon\Carbon::parse($row->last_synced_at)->format('d/m/Y H:i'))
 				: '';
 		}];
 
@@ -301,6 +313,30 @@ class QlikAppController extends CBController
 
 		// Pulsanti "Sincronizza da Qlik" / "Sincronizzazioni" nella lista.
 		QlikSyncUi::boot($this, 'apps');
+
+		// Modale di conferma eliminazione (stile CustomerHive) con la casella
+		// "elimina anche gli item collegati" (solo superadmin).
+		if (CRUDBooster::getCurrentMethod() === 'getIndex') {
+			$deleteConfig = [
+				'itemsOption' => CRUDBooster::isSuperadmin(),
+				'urls' => ['linked' => CRUDBooster::mainpath('linked-items')],
+				'i18n' => [
+					'title' => trans('crudbooster.qlik_app_delete_title'),
+					'text_one' => trans('crudbooster.qlik_app_delete_text_one'),
+					'text_many' => trans('crudbooster.qlik_app_delete_text_many'),
+					'items_label' => trans('crudbooster.qlik_app_delete_items_label'),
+					'items_count' => trans('crudbooster.qlik_app_delete_items_count'),
+					'items_none' => trans('crudbooster.qlik_app_delete_items_none'),
+					'items_hint' => trans('crudbooster.qlik_app_delete_items_hint'),
+					'confirm' => trans('crudbooster.action_delete_data'),
+					'cancel' => trans('crudbooster.button_cancel'),
+					'close' => trans('crudbooster.qlik_test_close'),
+				],
+			];
+			$this->load_js[] = asset('js/qlik_app_delete.js') . '?v=' . (is_file(public_path('js/qlik_app_delete.js')) ? filemtime(public_path('js/qlik_app_delete.js')) : 1);
+			$this->script_js = ($this->script_js ?? '')
+				. 'window.QLIK_APP_DELETE = ' . json_encode($deleteConfig, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';';
+		}
 	}
 
 	// ------------------------------------------------------------------
@@ -314,6 +350,38 @@ class QlikAppController extends CBController
 	public function postSyncStart()
 	{
 		return $this->qlikSyncStart(QlikSyncRun::TYPE_APPS);
+	}
+
+	/**
+	 * Quanti item Qlik (non eliminati) sono collegati alle app indicate, per la
+	 * modale di eliminazione. Solo superadmin (e' l'unico a poter eliminarli).
+	 * Route auto-instradata: GET admin/qlik_apps/linked-items?ids=1,2.
+	 */
+	public function getLinkedItems()
+	{
+		if (!CRUDBooster::isSuperadmin()) {
+			return response()->json(['counts' => [], 'total' => 0], 403);
+		}
+
+		$ids = array_filter(array_map('intval', explode(',', (string) Request::input('ids'))));
+		$counts = $ids ? DB::table('qlik_items')
+			->whereIn('qlik_app_id', $ids)
+			->whereNull('deleted_at')
+			->selectRaw('qlik_app_id, COUNT(*) as n')
+			->groupBy('qlik_app_id')
+			->pluck('n', 'qlik_app_id')
+			->all() : [];
+
+		return response()->json(['counts' => $counts, 'total' => (int) array_sum($counts)]);
+	}
+
+	/**
+	 * Anteprima delle app di una configurazione per l'import selettivo.
+	 * Route auto-instradata: GET admin/qlik_apps/sync-preview.
+	 */
+	public function getSyncPreview()
+	{
+		return $this->qlikSyncPreviewApps();
 	}
 
 	/** Solo superadmin e modulo Qlik in licenza; altrimenti torna alla home. */
@@ -607,7 +675,34 @@ class QlikAppController extends CBController
 	    */
 	public function hook_before_delete($id)
 	{
+		// Casella "elimina anche gli item collegati" della modale di conferma
+		// (public/js/qlik_app_delete.js). Solo superadmin: gli item di un'app
+		// possono appartenere ad altri tenant. Senza la casella gli item restano.
+		if (!Request::input('delete_items') || !CRUDBooster::isSuperadmin()) {
+			return;
+		}
 
+		$appIds = array_map('intval', (array) $id);
+		$itemIds = DB::table('qlik_items')
+			->whereIn('qlik_app_id', $appIds)
+			->whereNull('deleted_at')
+			->pluck('id')
+			->all();
+		if (!$itemIds) {
+			return;
+		}
+
+		// Stessa cascata di AdminQlikItemsController::hook_before_delete + soft delete come CBController::getDelete.
+		ItemsAllowed::whereIn('item_id', $itemIds)->delete();
+		TenantsAllowed::whereIn('item_id', $itemIds)->delete();
+
+		$update = ['deleted_at' => date('Y-m-d H:i:s')];
+		if (CRUDBooster::isColumnExists('qlik_items', 'deleted_by')) {
+			$update['deleted_by'] = CRUDBooster::myId();
+		}
+		DB::table('qlik_items')->whereIn('id', $itemIds)->update($update);
+
+		CRUDBooster::insertLog(trans('crudbooster.log_delete', ['name' => implode(',', $itemIds), 'module' => 'qlik_items']));
 	}
 
 	/*

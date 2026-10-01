@@ -55,14 +55,13 @@
                             @endif
                         </table>
                     </div>
-                    @else
+                    @elseif(!empty($row->external_id) || !empty($row->is_missing))
+                    {{-- In modifica l'app si sceglie dal campo "App Qlik" del form: qui restano solo id foglio e badge --}}
                     <div class="mb-3 row">
-                        <label class="col-form-label col-sm-2">{{ trans('crudbooster.qlik_item_app_label') }}</label>
+                        <label class="col-form-label col-sm-2">{{ trans('crudbooster.qlik_item_sheet_label') }}</label>
                         <div class="col-sm-10">
                             <p class="form-control-plaintext">
-                                {{ $qsApp->appname ?? ('#' . $row->qlik_app_id) }}
-                                @if(!empty($qsApp->appid)) <small class="text-muted">({{ $qsApp->appid }})</small> @endif
-                                @if(!empty($row->external_id)) &nbsp;·&nbsp; {{ trans('crudbooster.qlik_item_sheet_label') }}: <small class="text-muted">{{ $row->external_id }}</small> @endif
+                                @if(!empty($row->external_id)) <small class="text-muted">{{ $row->external_id }}</small> @endif
                                 @if(!empty($row->is_missing)) &nbsp; <span class="label label-warning" style="background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px">{{ trans('crudbooster.qlik_sync_missing_badge') }}</span> @endif
                             </p>
                         </div>

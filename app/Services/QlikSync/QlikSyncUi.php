@@ -93,6 +93,7 @@ class QlikSyncUi
             'urls' => [
                 'start' => CRUDBooster::mainpath('sync-start'),
                 'apps' => CRUDBooster::mainpath('sync-apps'),
+                'preview' => CRUDBooster::mainpath('sync-preview'),
                 'runs' => self::runsUrl(),
             ],
             'i18n' => [
@@ -107,6 +108,17 @@ class QlikSyncUi
                 'no_qlik_user' => trans('crudbooster.qlik_sync_conf_no_qlik_user'),
                 'choose_conf' => trans('crudbooster.qlik_sync_choose_conf'),
                 'start' => trans('crudbooster.qlik_sync_start'),
+                'import_all' => trans('crudbooster.qlik_sync_import_all'),
+                'import_selected' => trans('crudbooster.qlik_sync_import_selected'),
+                'select_visible' => trans('crudbooster.qlik_sync_select_visible'),
+                'deselect_visible' => trans('crudbooster.qlik_sync_deselect_visible'),
+                'selected_count' => trans('crudbooster.qlik_sync_selected_count'),
+                'already_imported' => trans('crudbooster.qlik_sync_already_imported'),
+                'loading_apps' => trans('crudbooster.qlik_sync_loading_apps'),
+                'no_apps_found' => trans('crudbooster.qlik_sync_no_apps_found'),
+                'pick_apps_hint' => trans('crudbooster.qlik_sync_pick_apps_hint'),
+                'already_imported_item' => trans('crudbooster.qlik_sync_already_imported_item'),
+                'pick_sheets_hint' => trans('crudbooster.qlik_sync_pick_sheets_hint'),
                 'close' => trans('crudbooster.qlik_test_close'),
                 'started' => trans('crudbooster.qlik_sync_started'),
                 'go_to_runs' => trans('crudbooster.qlik_sync_go_to_runs'),
@@ -115,7 +127,9 @@ class QlikSyncUi
             ],
         ];
 
-        $controller->load_js[] = asset('js/qlik_sync_modal.js');
+        // ?v=mtime: senza, il browser tiene la versione vecchia del JS dopo un aggiornamento.
+        $jsFile = public_path('js/qlik_sync_modal.js');
+        $controller->load_js[] = asset('js/qlik_sync_modal.js').'?v='.(is_file($jsFile) ? filemtime($jsFile) : 1);
         $controller->script_js = ($controller->script_js ?? '')
             .'window.QLIK_SYNC = '.json_encode($config, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT).';';
     }

@@ -16,6 +16,8 @@ class QlikSyncRun extends Model
     protected $casts = [
         'cancel_requested' => 'boolean',
         'cancel_delete' => 'boolean',
+        'selected_app_ids' => 'array',
+        'selected_sheet_ids' => 'array',
     ];
 
     const TYPE_APPS = 'apps';

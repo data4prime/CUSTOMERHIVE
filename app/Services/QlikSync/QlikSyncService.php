@@ -42,7 +42,7 @@ class QlikSyncService
      *
      * @throws QlikSyncException con messaggio gia' tradotto
      */
-    public static function start(string $type, int $confId, ?int $appId, int $userId): QlikSyncRun
+    public static function start(string $type, int $confId, ?int $appId, int $userId, ?array $selectedAppIds = null, ?array $selectedSheetIds = null): QlikSyncRun
     {
         if (! in_array($type, [QlikSyncRun::TYPE_APPS, QlikSyncRun::TYPE_ITEMS], true)) {
             throw new QlikSyncException(trans('crudbooster.qlik_sync_err_bad_type'));
@@ -77,6 +77,30 @@ class QlikSyncService
             $appId = null;
         }
 
+        // Selezione di app da importare: solo per il tipo "apps"; null = tutte.
+        if ($type !== QlikSyncRun::TYPE_APPS) {
+            $selectedAppIds = null;
+        } elseif ($selectedAppIds !== null) {
+            $selectedAppIds = array_values(array_unique(array_filter(array_map('strval', $selectedAppIds), function ($id) {
+                return $id !== '';
+            })));
+            if (! $selectedAppIds) {
+                throw new QlikSyncException(trans('crudbooster.qlik_sync_err_no_selection'));
+            }
+        }
+
+        // Selezione di fogli: solo per i run item su una singola app; null = tutti.
+        if ($type !== QlikSyncRun::TYPE_ITEMS || $appId === null) {
+            $selectedSheetIds = null;
+        } elseif ($selectedSheetIds !== null) {
+            $selectedSheetIds = array_values(array_unique(array_filter(array_map('strval', $selectedSheetIds), function ($id) {
+                return $id !== '';
+            })));
+            if (! $selectedSheetIds) {
+                throw new QlikSyncException(trans('crudbooster.qlik_sync_err_no_selection_items'));
+            }
+        }
+
         $active = QlikSyncRun::where('type', $type)
             ->where('qlik_conf_id', $confId)
             ->whereIn('status', QlikSyncRun::activeStatuses())
@@ -93,6 +117,8 @@ class QlikSyncService
             'tenant_id' => $tenantId,
             'group_id' => $groupId,
             'status' => QlikSyncRun::STATUS_QUEUED,
+            'selected_app_ids' => $selectedAppIds,
+            'selected_sheet_ids' => $selectedSheetIds,
         ]);
 
         self::dispatchStep($run->id, $type === QlikSyncRun::TYPE_APPS ? self::STAGE_APPS : self::STAGE_ITEMS_INIT, 0);
@@ -246,7 +272,17 @@ class QlikSyncService
 
     private static function stageApps(QlikSyncRun $run, QlikDriver $driver): ?array
     {
-        $apps = $driver->listApps();
+        $allApps = $driver->listApps();
+
+        // Import selettivo: si elaborano solo le app scelte (ancora presenti su Qlik).
+        $selected = $run->selected_app_ids;
+        $apps = $allApps;
+        if (is_array($selected) && $selected) {
+            $wanted = array_flip(array_map('strval', $selected));
+            $apps = array_values(array_filter($allApps, function ($app) use ($wanted) {
+                return isset($wanted[(string) $app['id']]);
+            }));
+        }
         DB::table('qlik_sync_runs')->where('id', $run->id)->update(['total' => count($apps)]);
 
         foreach ($apps as $i => $app) {
@@ -259,7 +295,9 @@ class QlikSyncService
             DB::table('qlik_sync_runs')->where('id', $run->id)->increment('processed');
         }
 
-        self::markMissingApps($run);
+        // Con una selezione parziale "mancante" si decide sull'elenco completo di Qlik,
+        // non sulle sole app elaborate (altrimenti le non selezionate risulterebbero mancanti).
+        self::markMissingApps($run, $apps === $allApps ? null : array_map('strval', array_column($allApps, 'id')));
         self::complete($run->fresh());
 
         return null;
@@ -331,16 +369,23 @@ class QlikSyncService
      * App presenti in DB per questa conf, gia' sincronizzate in passato ma
      * non piu' elencate da Qlik. Solo a fine run completo.
      */
-    private static function markMissingApps(QlikSyncRun $run): void
+    private static function markMissingApps(QlikSyncRun $run, ?array $qlikAppIds = null): void
     {
-        $seen = QlikSyncRunRecord::where('run_id', $run->id)->where('record_type', 'app')->pluck('record_id')->filter()->all();
-
         $query = DB::table('qlik_apps')
             ->where('conf', (string) $run->qlik_conf_id)
             ->whereNotNull('last_synced_at')
             ->where('is_missing', 0);
-        if ($seen) {
-            $query->whereNotIn('id', $seen);
+
+        if ($qlikAppIds !== null) {
+            // Elenco completo di Qlik noto (import selettivo): mancante = non piu' in elenco.
+            if ($qlikAppIds) {
+                $query->whereNotIn('appid', $qlikAppIds);
+            }
+        } else {
+            $seen = QlikSyncRunRecord::where('run_id', $run->id)->where('record_type', 'app')->pluck('record_id')->filter()->all();
+            if ($seen) {
+                $query->whereNotIn('id', $seen);
+            }
         }
 
         $count = $query->update(['is_missing' => 1]);
@@ -402,7 +447,18 @@ class QlikSyncService
 
         if ($app) {
             try {
-                $sheets = $driver->listSheets($app->appid);
+                $allSheets = $driver->listSheets($app->appid);
+
+                // Import selettivo: solo i fogli scelti (ancora presenti su Qlik).
+                $sheets = $allSheets;
+                $selected = $run->selected_sheet_ids;
+                if (is_array($selected) && $selected) {
+                    $wanted = array_flip(array_map('strval', $selected));
+                    $sheets = array_values(array_filter($allSheets, function ($sheet) use ($wanted) {
+                        return isset($wanted[(string) $sheet['id']]);
+                    }));
+                }
+
                 foreach ($sheets as $i => $sheet) {
                     if ($i > 0 && $i % self::CANCEL_CHECK_EVERY === 0 && self::cancelRequested($run->id)) {
                         self::finishCancelled($run->fresh());
@@ -410,6 +466,12 @@ class QlikSyncService
                         return null;
                     }
                     self::upsertItem($run, $driver, $app, $sheet);
+                }
+
+                // Con una selezione parziale "mancante" si decide ora sull'elenco completo dei fogli
+                // dell'app (markMissingItems a fine run e' disattivato per questi run).
+                if (is_array($selected) && $selected) {
+                    self::markMissingSheetsOfApp($run, $app, array_map('strval', array_column($allSheets, 'id')));
                 }
             } catch (QlikSyncException $e) {
                 // L'errore su una app non ferma il run: si registra e si prosegue.
@@ -456,7 +518,7 @@ class QlikSyncService
         if (! $existing) {
             $id = DB::table('qlik_items')->insertGetId([
                 'title' => mb_substr($sheet['title'] !== '' ? $sheet['title'] : $sheet['id'], 0, 255),
-                'subtitle' => $sheet['description'] !== '' ? mb_substr($sheet['description'], 0, 255) : null,
+                'subtitle' => $sheet['description'] !== '' ? $sheet['description'] : null,
                 'url' => $driver->sheetUrl($app->appid, $sheet['id']),
                 'qlik_conf' => $confKey,
                 'qlik_app_id' => $app->id,
@@ -513,8 +575,30 @@ class QlikSyncService
      * Item gia' sincronizzati di un'app elaborata con successo, non piu'
      * elencati da Qlik. Solo a fine run completo.
      */
+    private static function markMissingSheetsOfApp(QlikSyncRun $run, $app, array $qlikSheetIds): void
+    {
+        $query = DB::table('qlik_items')
+            ->whereNull('deleted_at')
+            ->where('qlik_app_id', $app->id)
+            ->whereNotNull('external_id')
+            ->where('is_missing', 0);
+        if ($qlikSheetIds) {
+            $query->whereNotIn('external_id', $qlikSheetIds);
+        }
+
+        $count = $query->update(['is_missing' => 1]);
+        if ($count > 0) {
+            DB::table('qlik_sync_runs')->where('id', $run->id)->increment('missing', $count);
+        }
+    }
+
     private static function markMissingItems(QlikSyncRun $run): void
     {
+        // Import selettivo di fogli: i mancanti sono gia' stati segnati per l'app in stageItemsApp.
+        if (! empty($run->selected_sheet_ids)) {
+            return;
+        }
+
         $failedApps = QlikSyncRunRecord::where('run_id', $run->id)
             ->where('record_type', 'app')
             ->where('action', QlikSyncRunRecord::ACTION_FAILED)

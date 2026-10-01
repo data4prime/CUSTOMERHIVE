@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 185**
+**Prossimo numero libero: 192**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,13 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [191](191-menu-superadmin-gruppo-qlik-unico.md) | **Menu SUPERADMIN, un solo gruppo Qlik**: "Elementi Qlik" e "Qlik Settings" unificati in Qlik > Configurazioni / App / Elementi / Sincronizzazioni, voci attive corrette, etichette tradotte | Frontend | Completato | 2026-10-01 |
+| [190](190-qlik-items-lista-descrizione-stato-data.md) | **Qlik items, lista**: "Subtitle" diventa "Descrizione" (troncata a 80 in lista, limite form 255), badge "Presente su Qlik" e colonna "Ultimo import" come per le app | Frontend | Completato | 2026-10-01 |
+| [189](189-qlik-items-import-selettivo.md) | **Qlik items, import selettivo**: scelta di una app, anteprima dei fogli da Qlik con checkbox/ricerca (gia' importati spuntati), "Importa selezionati" o "Importa tutto"; `selected_sheet_ids` sul run, mancanti calcolati sull'elenco completo | Frontend/Backend | Completato | 2026-10-01 |
+| [188](188-qlik-apps-elimina-con-item-collegati.md) | **Qlik apps, eliminazione con item collegati**: modale di conferma in stile CustomerHive (riga e gruppo) con casella "elimina anche gli item collegati" per il superadmin; cascata in `hook_before_delete`, conteggio via `linked-items` | Frontend/Backend | Completato | 2026-10-01 |
+| [187](187-qlik-apps-import-selettivo.md) | **Qlik apps, import selettivo**: la modale di sync elenca le app di Qlik con checkbox e ricerca (gia' importate preselezionate), "Importa selezionate" o "Importa tutto"; nuova colonna `selected_app_ids` sul run, `markMissingApps` sull'elenco completo | Frontend/Backend | Completato | 2026-10-01 |
+| [186](186-qlik-apps-stato-presente-e-ultimo-import.md) | **Qlik apps, badge "Presente su Qlik" e colonna "Ultimo import"**: badge verde per le app sincronizzate non mancanti e nuova colonna con `last_synced_at`, per capire se conviene rilanciare la sync; chiavi en/it | Frontend | Completato | 2026-10-01 |
+| [185](185-qlik-confs-tooltip-hub-qmc-per-tipo.md) | **Qlik confs, tooltip Hub/QMC per tipo**: quattro bottoni con `showIf` su `type` (On-Premise: Qlik Sense Hub/QMC; SaaS: Qlik Cloud Hub/Management Console), titoli via `trans()` en/it; URL di destinazione invariate | Frontend | Completato | 2026-10-01 |
 | [184](184-ci-queue-restart-dopo-deploy-dev.md) | **CI, `queue:restart` dopo il deploy su dev**: il job `deploy-dev` termina con `php artisan queue:restart`, così i worker della coda (Qlik sync) ripartono con il codice nuovo senza intervento manuale | CI | Completato | 2026-10-01 |
 | [183](183-widget-qlik-campo-app-div-non-chiuso.md) | **Widget Qlik, campo "App Qlik"**: rimosso un `<div class="mb-3 row">` orfano mai chiuso in `qlikwidget.blade.php` e reso sicuro il test `isset($config->mashups)` (prima `Undefined property` con config senza `mashups`) | Frontend | Completato | 2026-09-30 |
 | [069](069-uiux-revamp-fase0-fase1-guscio-e-auth.md) | **Revamp UI/UX, Fase 0+1**: token di design + font Plus Jakarta Sans self-hosted (variable font, un solo file), guscio condiviso (`admin_template`/`header`, zero modifiche a `sidebar`/`footer`) e pagine login/lockscreen/forgot riscritte, branding per-tenant preservato, `theme_color` (skin AdminLTE per ruolo) rimappato su un accento colore. Nota: scoperto (non introdotto) che il toggle sidebar/dropdown header non rispondono al click, probabile conflitto Bootstrap 3(AdminLTE)/5 preesistente, non risolto in questo intervento | UI/UX | Completato | 2026-09-03 |

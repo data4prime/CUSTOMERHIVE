@@ -3693,6 +3693,9 @@ body.ch-shell .btn-box-tool:hover { background: var(--ch-bg); color: var(--ch-te
   color: var(--ch-text-secondary, #55555f);
 }
 
+/* Modale import app: piu' larga, con elenco alto */
+.ch-sync-dialog--wide { max-width: 860px; }
+
 .ch-sync-dialog .form-control {
   width: 100%;
   border: 1px solid var(--ch-border-strong, #d8d8de);
@@ -3747,3 +3750,44 @@ body.ch-shell .btn-box-tool:hover { background: var(--ch-bg); color: var(--ch-te
 }
 
 .ch-sync-dialog .modal-footer .btn + .btn { margin-left: 8px; }
+
+/* Variante conferma eliminazione (public/js/qlik_app_delete.js): icona a badge
+   rosso tinto, testo, riga opzione con casella e bottone di conferma rosso. */
+.ch-sync-dialog--danger { max-width: 460px; }
+
+.ch-sync-dialog--danger .ch-sync-title .fa {
+  background: var(--ch-danger-soft, #fbeaeb);
+  color: var(--ch-danger, #d1373f);
+}
+
+.ch-confirm-text {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: var(--ch-text, #16161d);
+}
+
+.ch-confirm-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--ch-border, #e6e6ea);
+  border-radius: var(--ch-radius-md, 10px);
+  background: var(--ch-bg, #f7f7f9);
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.ch-confirm-option input { margin: 3px 0 0; cursor: pointer; }
+.ch-confirm-option input:disabled { cursor: not-allowed; }
+
+.ch-confirm-option-text { display: flex; flex-direction: column; gap: 2px; font-size: 13px; }
+
+.ch-confirm-option-count { font-size: 12px; color: var(--ch-text-muted, #8b8b96); }
+
+.ch-sync-dialog--danger .modal-footer .btn-danger {
+  background: var(--ch-danger, #d1373f);
+  border-color: var(--ch-danger, #d1373f);
+  color: #fff;
+}

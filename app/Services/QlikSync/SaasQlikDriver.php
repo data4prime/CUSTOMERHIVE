@@ -159,14 +159,30 @@ class SaasQlikDriver extends AbstractQlikDriver
             if (! is_string($sheetId) || $sheetId === '') {
                 continue;
             }
+            // Qlik Cloud: titolo e descrizione veri stanno in qMeta, mentre qData arriva con
+            // stringhe vuote (verificato sul tenant D4P): si prende il primo valore non vuoto.
             $sheets[] = [
                 'id' => $sheetId,
-                'title' => (string) ($item['qData']['title'] ?? ($item['qMeta']['title'] ?? $sheetId)),
-                'description' => (string) ($item['qData']['description'] ?? ($item['qMeta']['description'] ?? '')),
+                'title' => self::firstFilled([$item['qMeta']['title'] ?? null, $item['qData']['title'] ?? null], $sheetId),
+                'description' => self::firstFilled([$item['qMeta']['description'] ?? null, $item['qData']['description'] ?? null], ''),
             ];
         }
 
         return $sheets;
+    }
+
+    /**
+     * Primo valore stringa non vuoto (dopo trim) tra i candidati, altrimenti $default.
+     */
+    private static function firstFilled(array $candidates, string $default): string
+    {
+        foreach ($candidates as $value) {
+            if (is_string($value) && trim($value) !== '') {
+                return $value;
+            }
+        }
+
+        return $default;
     }
 
     /**

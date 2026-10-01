@@ -141,47 +141,39 @@
             <span>{{ trans('crudbooster.Menu_Management') }}</span></a>
         </li>
 @if(App\Helpers\LicenseHelper::isActiveQlik())
+        {{-- Un solo gruppo Qlik, in ordine di gerarchia: configurazione > app > elementi (fogli) --}}
+        @php
+          $qlikAdmin = config('crudbooster.ADMIN_PATH');
+          $qlikOnSyncs = Request::is($qlikAdmin.'/qlik_apps/sync-runs*');
+          $qlikOnApps = Request::is($qlikAdmin.'/qlik_apps*') && ! $qlikOnSyncs;
+        @endphp
         <li data-collapse="3" class='treeview'>
           <a href='#'>
             <svg class="ch-nav-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="20" x2="5" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="19" y1="20" x2="19" y2="14"/></svg>
-            <span>{{ trans('crudbooster.Qlik_Items') }}</span> <svg class="ch-nav-chevron pull-{{ trans('crudbooster.right') }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,6 15,12 9,18"/></svg></a>
+            <span>{{ trans('crudbooster.qlik_menu_group') }}</span> <svg class="ch-nav-chevron pull-{{ trans('crudbooster.right') }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,6 15,12 9,18"/></svg>
+          </a>
           <ul class='treeview-menu'>
-            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items/add')) ? 'active' : '' }}"><a
-                href='{{Route("AdminQlikItemsControllerGetAdd")}}'><i class='fa fa-plus'></i>
-                <span>{{ trans('crudbooster.Add_New_Qlikitem') }}</span></a></li>
-            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items')) ? 'active' : '' }}"><a
-                href='{{Route("AdminQlikItemsControllerGetIndex")}}'><i class='fa fa-bars'></i>
-                <span>{{ trans('crudbooster.List_Qlikitem') }}</span></a></li>
+            <li class="{{ Request::is($qlikAdmin.'/qlik_confs*') ? 'active' : '' }}">
+              <a href='{{ url("admin/qlik_confs") }}'><i class='fa fa-plug'></i>
+                <span>{{ trans('crudbooster.qlik_menu_confs') }}</span></a>
+            </li>
+            <li class="{{ $qlikOnApps ? 'active' : '' }}">
+              <a href='{{ url("admin/qlik_apps") }}'><i class='fa fa-th-large'></i>
+                <span>{{ trans('crudbooster.qlik_menu_apps') }}</span></a>
+            </li>
+            <li class="{{ Request::is($qlikAdmin.'/qlik_items*') ? 'active' : '' }}">
+              <a href='{{ Route("AdminQlikItemsControllerGetIndex") }}'><i class='fa fa-bars'></i>
+                <span>{{ trans('crudbooster.qlik_menu_items') }}</span></a>
+            </li>
+            @if(CRUDBooster::isSuperadmin())
+            <li class="{{ $qlikOnSyncs ? 'active' : '' }}">
+              <a href='{{ url("admin/qlik_apps/sync-runs") }}'><i class='fa fa-refresh'></i>
+                <span>{{ trans('crudbooster.qlik_menu_syncs') }}</span></a>
+            </li>
+            @endif
           </ul>
         </li>
 @endif
-
-      @if(App\Helpers\LicenseHelper::isActiveQlik())
-
-        <li data-collapse="3" class='treeview'>
-          <a href='#'>
-            <svg class="ch-nav-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><circle cx="9" cy="6" r="2"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="15" cy="12" r="2"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="7" cy="18" r="2"/></svg>
-            <span>Qlik Settings</span> <svg class="ch-nav-chevron pull-{{ trans('crudbooster.right') }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,6 15,12 9,18"/></svg>
-          </a>
-
-          <ul class='treeview-menu'>
-            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items/add')) ? 'active' : '' }}">
-              <a href='{{url("admin/qlik_confs")}}'>
-            <span>{{ trans('crudbooster.Qlik_Configuration') }}</span> <svg class="ch-nav-chevron pull-{{ trans('crudbooster.right') }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,6 15,12 9,18"/></svg>
-          </a>
-            </li>
-            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/qlik_items')) ? 'active' : '' }}">
-
-              <a href='{{url("admin/qlik_apps")}}'>
-                <span>{{ trans('crudbooster.Qlik_Apps') }}</span> <svg class="ch-nav-chevron pull-{{ trans('crudbooster.right') }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,6 15,12 9,18"/></svg>
-              </a>
-
-            </li>
-          </ul>
-
-
-        </li>
-        @endif
 @if(App\Helpers\LicenseHelper::isActiveChatAI())
         <li data-collapse="3" class='treeview'>
           <a href='{{url("admin/chat_ai")}}'>

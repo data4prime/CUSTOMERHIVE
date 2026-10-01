@@ -167,8 +167,11 @@ class QlikConfController extends CBController
 		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'fa fa-user', 'color' => 'info', 'title' => 'Members'];
 		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'fa fa-shield', 'color' => 'info', 'title' => 'Items'];
 		if (CRUDBooster::isSuperadmin()) {
-            $this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseHub/[id]'), 'icon' => 'fa fa-desktop', 'color' => 'primary', 'title' => 'Qlik Sense Hub'];
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseQMC/[id]'), 'icon' => 'fa fa-code', 'color' => 'primary', 'title' => 'Qlik Sense QMC'];
+            // Titoli diversi per On-Premise (Qlik Sense Hub / QMC) e SaaS (Qlik Cloud Hub / Management Console); showIf valuta il campo type della riga
+            $this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseHub/[id]'), 'icon' => 'fa fa-desktop', 'color' => 'primary', 'title' => trans('crudbooster.qlik_action_hub_onpremise'), 'showIf' => '[type] != "SAAS"'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseQMC/[id]'), 'icon' => 'fa fa-code', 'color' => 'primary', 'title' => trans('crudbooster.qlik_action_qmc_onpremise'), 'showIf' => '[type] != "SAAS"'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseHub/[id]'), 'icon' => 'fa fa-desktop', 'color' => 'primary', 'title' => trans('crudbooster.qlik_action_hub_saas'), 'showIf' => '[type] == "SAAS"'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseQMC/[id]'), 'icon' => 'fa fa-code', 'color' => 'primary', 'title' => trans('crudbooster.qlik_action_console_saas'), 'showIf' => '[type] == "SAAS"'];
             //$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Tenants'];
 		}
 		/*

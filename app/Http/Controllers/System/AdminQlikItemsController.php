@@ -55,13 +55,31 @@ class AdminQlikItemsController extends CBController
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = [];
 		$this->col[] = ["label" => "Title", "name" => "title"];
-		$this->col[] = ["label" => "Subtitle", "name" => "subtitle"];
+		// Il campo DB resta "subtitle"; in UI si chiama "Descrizione". In lista e' troncata
+		// a 80 caratteri (testo completo nel tooltip): le descrizioni sincronizzate da Qlik possono essere lunghe.
+		$this->col[] = ["label" => trans('crudbooster.qlik_item_description'), "name" => "subtitle", "callback" => function ($row) {
+			$text = trim((string) $row->subtitle);
+			if ($text === '') {
+				return '';
+			}
+			$short = mb_strlen($text) > 80 ? mb_substr($text, 0, 80) . '…' : $text;
+			return "<span title='" . e($text) . "'>" . e($short) . "</span>";
+		}];
 		//$this->col[] = ["label" => "Help", "name" => "description"];
 $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "qlik_confs,confname");
-		// Badge "non piu' presente su Qlik" (solo per gli item sincronizzati)
+		// Badge "non piu' presente su Qlik" (arancione) o "presente" (verde) per gli item
+		// sincronizzati almeno una volta; vuoto per quelli creati a mano. Poi la data dell'ultimo import.
 		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_status'), "name" => "is_missing", "callback" => function ($row) {
-			return !empty($row->is_missing)
-				? "<span class='label label-warning' style='background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>"
+			if (!empty($row->is_missing)) {
+				return "<span class='label label-warning' style='background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>";
+			}
+			return !empty($row->last_synced_at)
+				? "<span class='label label-success' style='background:#5cb85c;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_present_badge')) . "</span>"
+				: '';
+		}];
+		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_last_synced'), "name" => "last_synced_at", "callback" => function ($row) {
+			return !empty($row->last_synced_at)
+				? e(\Carbon\Carbon::parse($row->last_synced_at)->format('d/m/Y H:i'))
 				: '';
 		}];
 
@@ -77,13 +95,18 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		$this->form = [];
 		$this->form[] = ['label' => 'Title', 'name' => 'title', 'type' => 'text', 'validation' => 'required|string|min:1|max:70', 'width' => 'col-sm-10', 'placeholder' => 'Item title'];
 		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'placeholder' => 'Path to embed item'];
-		$this->form[] = ['label' => 'Subtitle', 'name' => 'subtitle', 'type' => 'text', 'validation' => 'string|min:1|max:70', 'width' => 'col-sm-10', 'placeholder' => 'Item subtitle'];
+		// Textarea senza limite di validazione: la colonna e' TEXT (le descrizioni dei fogli Qlik possono essere lunghe).
+		$this->form[] = ['label' => trans('crudbooster.qlik_item_description'), 'name' => 'subtitle', 'type' => 'textarea', 'validation' => 'string', 'width' => 'col-sm-10', 'placeholder' => trans('crudbooster.qlik_item_description_placeholder')];
 		
 		$this->form[] = ['label' => 'URL Help', 'name' => 'url_help', 'type' => 'text', 'validation' => 'string|min:1|max:200', 'width' => 'col-sm-10', 'placeholder' => 'Item helper'];
 		//STAND BY
 		//$this->form[] = ['label' => 'Enable public access', 'name' => 'public_access', 'type' => 'checkbox', 'width' => 'col-sm-1'];
 		// select2: ricercabile e ordinata alfabeticamente per confname
 		$this->form[] = ['label' => 'Qlik Configuration', 'name' => 'qlik_conf', "type" => "select2", "datatable" => "qlik_confs,confname", 'width' => 'col-sm-10'];
+		// App Qlik di appartenenza (facoltativa): select2 ricercabile, opzioni in ordine alfabetico per nome app.
+		// showInDetail=false: nel dettaglio l'app la mostra gia' il blocco in qlik_items/form.blade.php (e il
+		// componente di dettaglio non regge un qlik_app_id vuoto).
+		$this->form[] = ['label' => trans('crudbooster.qlik_item_app_label'), 'name' => 'qlik_app_id', 'type' => 'select2', 'datatable' => 'qlik_apps,appname', 'width' => 'col-sm-10', 'showInDetail' => false, 'help' => trans('crudbooster.qlik_item_app_help')];
 		# END FORM DO NOT REMOVE THIS LINE
 
 		# OLD START FORM
@@ -338,6 +361,15 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		return $this->qlikSyncAppsForConf();
 	}
 
+	/**
+	 * Anteprima dei fogli di una app per l'import selettivo.
+	 * Route auto-instradata: GET admin/qlik_items/sync-preview?conf_id=&app_id=
+	 */
+	public function getSyncPreview()
+	{
+		return $this->qlikSyncPreviewSheets();
+	}
+
 
 	/*
 	    | ----------------------------------------------------------------------
@@ -396,6 +428,11 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	    */
 	public function hook_before_add(&$postdata)
 	{
+		// Select2 vuoto = 0 per CRUDBooster: l'app e' facoltativa, si salva NULL.
+		if (empty($postdata['qlik_app_id'])) {
+			$postdata['qlik_app_id'] = null;
+		}
+
 		/*if ($postdata['public_access'] == 'public_access') {
 			$token = md5(config('app.salt') . $postdata['url'] . $postdata['title']);
 			$postdata['proxy_token'] = $token;
@@ -428,6 +465,16 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 	    */
 	public function hook_before_edit(&$postdata, $id)
 	{
+		// Un item sincronizzato resta legato alla sua app (la chiave della sync e' app + id foglio):
+		// cambiarla creerebbe un duplicato alla sync successiva, quindi la scelta del form si ignora.
+		$current = DB::table('qlik_items')->where('id', $id)->first(['qlik_app_id', 'external_id']);
+		if ($current && !empty($current->external_id)) {
+			$postdata['qlik_app_id'] = $current->qlik_app_id;
+		} elseif (empty($postdata['qlik_app_id'])) {
+			// Select2 vuoto = 0 per CRUDBooster: l'app e' facoltativa, si salva NULL.
+			$postdata['qlik_app_id'] = null;
+		}
+
 		//allow deleting help text
 		if (empty($postdata['url_help'])) {
 			$postdata['url_help'] = '';
