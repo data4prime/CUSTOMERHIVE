@@ -92,13 +92,17 @@ class UserProfileSectionsTest extends TestCase
     {
         $this->actingAsSuperadmin();
 
+        // CBController::cbView() fa echo della vista invece di ritornarla:
+        // il body della risposta e' vuoto, l'HTML va catturato dall'output.
+        ob_start();
         $response = $this->get($this->url('profile'));
+        $html = ob_get_clean();
 
         $response->assertStatus(200);
-        $response->assertSee(trans('crudbooster.profile_section_general'));
-        $response->assertSee(trans('crudbooster.profile_section_mfa'));
-        $response->assertSee(trans('crudbooster.profile_section_system'));
-        $response->assertSee(trans('crudbooster.profile_section_password'));
+        $this->assertStringContainsString(trans('crudbooster.profile_section_general'), $html);
+        $this->assertStringContainsString(trans('crudbooster.profile_section_mfa'), $html);
+        $this->assertStringContainsString(trans('crudbooster.profile_section_system'), $html);
+        $this->assertStringContainsString(trans('crudbooster.profile_section_password'), $html);
     }
 
     public function test_generale_salva_solo_i_campi_generali(): void
@@ -282,6 +286,10 @@ class UserProfileSectionsTest extends TestCase
     {
         $actor = $this->actingAsSuperadmin();
         DB::table('cms_users')->where('id', $actor['userId'])->update(['session_version' => 3]);
+        // actingAs() tiene in memoria il modello caricato prima dell'update
+        // (session_version = 0): ricaricarlo, come fa il guard a ogni
+        // richiesta reale.
+        $this->actingAs(\App\User::find($actor['userId']));
 
         // La sessione del test non ha 'admin_session_version' (= 0): e'
         // rimasta indietro rispetto al DB, come un'altra sessione aperta
