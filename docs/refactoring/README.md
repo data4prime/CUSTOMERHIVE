@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 192**
+**Prossimo numero libero: 193**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,7 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [192](192-cambio-email-senza-smtp-totp-solo-totp.md) | **Cambio email dal profilo**: con TOTP basta il TOTP, senza TOTP codice email se SMTP configurato, senza ne' TOTP ne' SMTP basta la password attuale (log dedicato) | Auth/Profilo | Completato | 2026-10-01 |
 | [191](191-menu-superadmin-gruppo-qlik-unico.md) | **Menu SUPERADMIN, un solo gruppo Qlik**: "Elementi Qlik" e "Qlik Settings" unificati in Qlik > Configurazioni / App / Elementi / Sincronizzazioni, voci attive corrette, etichette tradotte | Frontend | Completato | 2026-10-01 |
 | [190](190-qlik-items-lista-descrizione-stato-data.md) | **Qlik items, lista**: "Subtitle" diventa "Descrizione" (troncata a 80 in lista, limite form 255), badge "Presente su Qlik" e colonna "Ultimo import" come per le app | Frontend | Completato | 2026-10-01 |
 | [189](189-qlik-items-import-selettivo.md) | **Qlik items, import selettivo**: scelta di una app, anteprima dei fogli da Qlik con checkbox/ricerca (gia' importati spuntati), "Importa selezionati" o "Importa tutto"; `selected_sheet_ids` sul run, mancanti calcolati sull'elenco completo | Frontend/Backend | Completato | 2026-10-01 |

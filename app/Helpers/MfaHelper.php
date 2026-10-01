@@ -280,6 +280,32 @@ class MfaHelper
     // --- Email OTP: baseline/step-up solo per chi non ha il TOTP attivo ---
 
     /**
+     * True se l'invio email e' configurato nei Settings: driver 'smtp' con un
+     * host valorizzato. E' un controllo sui setting, non una prova di
+     * raggiungibilita' (un SMTP configurato ma irraggiungibile resta "configurato").
+     */
+    public static function isSmtpConfigured(): bool
+    {
+        return trim((string) CRUDBooster::getSetting('smtp_driver')) === 'smtp'
+            && trim((string) CRUDBooster::getSetting('smtp_host')) !== '';
+    }
+
+    /**
+     * Che verifica serve per cambiare l'email dal profilo:
+     * 'totp'  = utente con TOTP attivo -> solo codice authenticator;
+     * 'email' = senza TOTP ma con SMTP configurato -> codice al nuovo indirizzo;
+     * 'none'  = ne' TOTP ne' SMTP -> basta la password attuale.
+     */
+    public static function emailChangeMode(User $user): string
+    {
+        if (self::hasActiveTotp($user)) {
+            return 'totp';
+        }
+
+        return self::isSmtpConfigured() ? 'email' : 'none';
+    }
+
+    /**
      * Ritorna true se l'email e' stata effettivamente inviata (o almeno
      * consegnata al transport senza errori), false se l'invio e' fallito
      * (es. SMTP non configurato/non raggiungibile) - in quel caso la riga

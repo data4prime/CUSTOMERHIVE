@@ -760,6 +760,9 @@ return [
     "profile_email_totp_label" => 'Code from your authenticator app',
     "profile_email_confirm_button" => 'Confirm new email',
     "profile_email_code_sent" => 'We sent a verification code to the new address. It is valid for :minutes minutes.',
+    "profile_email_totp_required" => 'Enter the code from your authenticator app to confirm the new email.',
+    "profile_email_continue" => 'Continue',
+    "profile_email_change_button" => 'Change email',
     "profile_email_changed" => 'Email changed. Use the new address the next time you log in.',
     "profile_email_same" => 'The new email is the same as the current one.',
     "profile_email_taken" => 'This email is already in use.',
@@ -815,6 +818,7 @@ return [
     "user_reset_password_throttled" => 'A reset link was sent recently. Please wait a few minutes before sending another one.',
     "user_reset_password_failed" => 'The reset email could not be sent.',
     "log_profile_email_changed" => 'Email changed from :old to :new (IP :ip)',
+    "log_profile_email_changed_unverified" => 'Email changed from :old to :new without a verification code, no TOTP and SMTP not configured (IP :ip)',
     "log_profile_password_changed" => 'Password changed by :email (IP :ip)',
     "log_user_reset_password_link" => 'Password reset link sent to :email by :by (IP :ip)',
 

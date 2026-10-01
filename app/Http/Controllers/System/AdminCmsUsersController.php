@@ -509,11 +509,14 @@ class AdminCmsUsersController extends CBController
 	}
 
 	/**
-	 * Cambio email, passo 1: controlla password attuale e unicita', poi
-	 * invia un codice al NUOVO indirizzo (prova che l'utente lo controlla).
-	 * Nulla viene salvato finche' il passo 2 non riesce. Se l'invio fallisce
-	 * (SMTP non configurato) l'operazione si ferma: a differenza del login,
-	 * qui non si prosegue mai senza verifica.
+	 * Cambio email, passo 1: controlla password attuale e unicita', poi la
+	 * verifica dipende da MfaHelper::emailChangeMode():
+	 * - 'totp': serve solo il codice dell'app authenticator (passo 2);
+	 * - 'email': codice inviato al NUOVO indirizzo (prova che l'utente lo
+	 *   controlla); se l'invio fallisce l'operazione si ferma;
+	 * - 'none' (niente TOTP e SMTP non configurato): la nuova email viene
+	 *   salvata subito, la sola password attuale e' la prova.
+	 * Nei primi due casi nulla viene salvato finche' il passo 2 non riesce.
 	 */
 	public function postProfileEmailStart()
 	{
@@ -548,20 +551,34 @@ class AdminCmsUsersController extends CBController
 
 		$this->profileTooManyAttempts('email-start', $user->id, true);
 
-		MfaHelper::invalidateEmailOtpCodes($user);
-		if (! MfaHelper::sendEmailOtp($user, $newEmail)) {
-			return $this->profileResponse(false, trans('crudbooster.profile_otp_send_failed'), [], 503);
+		$mode = MfaHelper::emailChangeMode($user);
+
+		// Ne' TOTP ne' SMTP: nessun codice possibile, basta la password attuale.
+		if ($mode === 'none') {
+			return $this->applyProfileEmailChange($user, $newEmail, false);
 		}
 
+		if ($mode === 'email') {
+			MfaHelper::invalidateEmailOtpCodes($user);
+			if (! MfaHelper::sendEmailOtp($user, $newEmail)) {
+				return $this->profileResponse(false, trans('crudbooster.profile_otp_send_failed'), [], 503);
+			}
+		}
+
+		// Con il TOTP attivo non si invia nessuna email: basta il codice
+		// dell'app (email_ok gia' true), anche se SMTP e' configurato.
 		Session::put('profile_pending_email', [
 			'email' => $newEmail,
 			'expires' => now()->addMinutes(MfaHelper::EMAIL_OTP_MINUTES)->timestamp,
-			'email_ok' => false,
-			'totp_ok' => ! MfaHelper::hasActiveTotp($user),
+			'email_ok' => $mode === 'totp',
+			'totp_ok' => $mode !== 'totp',
 		]);
 
-		return $this->profileResponse(true, trans('crudbooster.profile_email_code_sent', ['minutes' => MfaHelper::EMAIL_OTP_MINUTES]), [
-			'needs_totp' => MfaHelper::hasActiveTotp($user),
+		return $this->profileResponse(true, $mode === 'email'
+			? trans('crudbooster.profile_email_code_sent', ['minutes' => MfaHelper::EMAIL_OTP_MINUTES])
+			: trans('crudbooster.profile_email_totp_required'), [
+			'needs_totp' => $mode === 'totp',
+			'needs_email_code' => $mode === 'email',
 		]);
 	}
 
@@ -609,8 +626,18 @@ class AdminCmsUsersController extends CBController
 			Session::put('profile_pending_email', $pending);
 		}
 
+		return $this->applyProfileEmailChange($user, $pending['email'], true);
+	}
+
+	/**
+	 * Salva la nuova email e chiude sessioni/dispositivi attendibili. Usato
+	 * sia a verifica completata (passo 2) sia, senza TOTP ne' SMTP, subito
+	 * dal passo 1 ($verified = false, tracciato nel log).
+	 */
+	private function applyProfileEmailChange($user, string $newEmail, bool $verified)
+	{
 		// Un altro utente puo' aver preso l'indirizzo tra il passo 1 e il 2.
-		$taken = DB::table('cms_users')->where('email', $pending['email'])->where('id', '!=', $user->id)->exists();
+		$taken = DB::table('cms_users')->where('email', $newEmail)->where('id', '!=', $user->id)->exists();
 		if ($taken) {
 			Session::forget('profile_pending_email');
 
@@ -618,16 +645,16 @@ class AdminCmsUsersController extends CBController
 		}
 
 		$oldEmail = $user->email;
-		DB::table('cms_users')->where('id', $user->id)->update(['email' => $pending['email']]);
+		DB::table('cms_users')->where('id', $user->id)->update(['email' => $newEmail]);
 
 		MfaHelper::revokeAllTrustedDevices($user);
 		Session::put('admin_session_version', MfaHelper::bumpSessionVersion($user->id));
 		Session::forget('profile_pending_email');
 		RateLimiter::clear('profile-email-verify:' . $user->id);
 
-		CRUDBooster::insertLog(trans('crudbooster.log_profile_email_changed', ['old' => $oldEmail, 'new' => $pending['email'], 'ip' => Request::server('REMOTE_ADDR')]));
+		CRUDBooster::insertLog(trans($verified ? 'crudbooster.log_profile_email_changed' : 'crudbooster.log_profile_email_changed_unverified', ['old' => $oldEmail, 'new' => $newEmail, 'ip' => Request::server('REMOTE_ADDR')]));
 
-		return $this->profileResponse(true, trans('crudbooster.profile_email_changed'), ['email' => $pending['email']]);
+		return $this->profileResponse(true, trans('crudbooster.profile_email_changed'), ['email' => $newEmail]);
 	}
 
 	/**

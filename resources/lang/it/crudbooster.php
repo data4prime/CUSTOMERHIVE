@@ -753,6 +753,9 @@ return [
     "profile_email_totp_label" => 'Codice della tua app authenticator',
     "profile_email_confirm_button" => 'Conferma nuova email',
     "profile_email_code_sent" => 'Abbiamo inviato un codice di verifica al nuovo indirizzo. È valido per :minutes minuti.',
+    "profile_email_totp_required" => 'Inserisci il codice della tua app authenticator per confermare la nuova email.',
+    "profile_email_continue" => 'Continua',
+    "profile_email_change_button" => 'Cambia email',
     "profile_email_changed" => 'Email cambiata. Al prossimo accesso usa il nuovo indirizzo.',
     "profile_email_same" => 'La nuova email è uguale a quella attuale.',
     "profile_email_taken" => 'Questa email è già in uso.',
@@ -808,6 +811,7 @@ return [
     "user_reset_password_throttled" => 'Un link di reset è stato inviato da poco. Attendi qualche minuto prima di inviarne un altro.',
     "user_reset_password_failed" => 'Non è stato possibile inviare l\'email di reset.',
     "log_profile_email_changed" => 'Email cambiata da :old a :new (IP :ip)',
+    "log_profile_email_changed_unverified" => 'Email cambiata da :old a :new senza codice di verifica, senza TOTP e con SMTP non configurato (IP :ip)',
     "log_profile_password_changed" => 'Password cambiata da :email (IP :ip)',
     "log_user_reset_password_link" => 'Link di reset password inviato a :email da :by (IP :ip)',
 

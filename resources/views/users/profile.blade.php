@@ -138,13 +138,17 @@
             </div>
             <div class="ch-actions" style="border-top:0;padding-top:0;">
               <button type="button" class="btn btn-default" id="ch-email-cancel">{{ trans('crudbooster.profile_button_cancel') }}</button>
-              <button type="button" class="btn btn-primary" id="ch-email-send">{{ trans('crudbooster.profile_email_send_code') }}</button>
+              @php
+                $emailMode = \App\Helpers\MfaHelper::emailChangeMode(\App\Helpers\UserHelper::me());
+                $emailSendLabel = $emailMode === 'email' ? 'profile_email_send_code' : ($emailMode === 'totp' ? 'profile_email_continue' : 'profile_email_change_button');
+              @endphp
+              <button type="button" class="btn btn-primary" id="ch-email-send">{{ trans('crudbooster.' . $emailSendLabel) }}</button>
             </div>
           </div>
 
           <div id="ch-email-step2" hidden>
             <div class="ch-grid">
-              <div>
+              <div id="ch-email-code-wrap">
                 <label for="ch-email-code">{{ trans('crudbooster.profile_email_code_label') }}</label>
                 <input type="text" class="form-control" id="ch-email-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
               </div>
@@ -626,9 +630,15 @@
       post(URLS.emailStart, fd).then(function (res) {
         busy(btn, false);
         flash(emailPanel, res.ok, res.message);
-        if (res.ok) {
+        if (res.ok && res.email) {
+          // Niente TOTP e SMTP non configurato: email gia' cambiata, nessun codice.
+          document.getElementById('ch-email-current').value = res.email;
+          flash(document.getElementById('pane-general'), true, res.message);
+          emailReset(); emailPanel.hidden = true;
+        } else if (res.ok) {
           document.getElementById('ch-email-step1').hidden = true;
           document.getElementById('ch-email-step2').hidden = false;
+          document.getElementById('ch-email-code-wrap').hidden = !res.needs_email_code;
           document.getElementById('ch-email-totp-wrap').hidden = !res.needs_totp;
         }
       });
