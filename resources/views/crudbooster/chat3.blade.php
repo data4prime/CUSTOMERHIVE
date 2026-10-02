@@ -16,7 +16,7 @@ $chat_messages = Session::get('chat_messages');
             min-width: 200px;
             height: 400px;
             min-height: 200px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--ch-border-strong);
             background-color: white;
             position: fixed; /* Cambiato a fixed per posizione iniziale */
             top: 100px;
@@ -27,7 +27,7 @@ $chat_messages = Session::get('chat_messages');
         }
 
         .chat-header {
-            /*background-color: #007bff;
+            /*background-color: var(--ch-accent);
             color: white;*/
             padding: 10px;
             cursor: move; /* Cursore per il trascinamento */
@@ -41,7 +41,7 @@ $chat_messages = Session::get('chat_messages');
 
         .chat-footer {
             padding: 10px;
-            border-top: 1px solid #ccc;
+            border-top: 1px solid var(--ch-border-strong);
         }
 
         .chat-input {
@@ -52,7 +52,7 @@ $chat_messages = Session::get('chat_messages');
 
         .chat-input input {
            /* padding: 10px; */
-            border: 1px solid #ccc;
+            border: 1px solid var(--ch-border-strong);
             border-radius: 5px;
         }
 
@@ -74,8 +74,8 @@ $chat_messages = Session::get('chat_messages');
     line-height: 36px;
     text-align: center;
     border-radius: 100%;
-    background-color: #f5f6f7;
-    color: #8b95a5;
+    background-color: var(--ch-bg);
+    color: var(--ch-text-muted);
     text-transform: uppercase;
 }
 
@@ -91,8 +91,8 @@ $chat_messages = Session::get('chat_messages');
 }
 .media-chat-reverse > .media-body{
     clear: right;
-    background-color: #48b0f7;
-    color: #fff;
+    background-color: var(--ch-blue);
+    color: var(--ch-surface);
 }
 
 .media-body {
@@ -101,11 +101,11 @@ width: inherit;
     position: relative;
     padding: 6px 8px;
     /*margin: 4px 0;*/
-    background-color: #f5f6f7;
+    background-color: var(--ch-bg);
     border-radius: 3px;
     font-weight: 100;
-    /*color:#9b9b9b;*/
-    color: #000;
+    /*color:var(--ch-text-muted);*/
+    color: var(--ch-text);
     white-space: normal;
     /*display: block;*/
     margin-bottom: 10px;
@@ -115,11 +115,11 @@ width: inherit;
     position: relative;
     /*padding: 6px 8px;*/
     /*margin: 4px 0;*/
-    background-color: #f5f6f7;
+    background-color: var(--ch-bg);
     border-radius: 3px;
     font-weight: 100;
-    /*color:#9b9b9b;*/
-    color: #000;
+    /*color:var(--ch-text-muted);*/
+    color: var(--ch-text);
     white-space: normal;
     display: block;
     margin-bottom: 10px;
@@ -153,7 +153,7 @@ width: inherit;
     /*background-color: transparent;*/
     border-bottom: 1px solid rgba(77,82,89,0.07);
     /*text black color*/
-    color: #4d5259;
+    color: var(--ch-text);
 }
 
 .chat-header .chat-title {
@@ -183,15 +183,15 @@ h4.chat-title {
 
 
     clear: right;
-    /*background-color: #48b0f7;*/
-    color: #fff;
+    /*background-color: var(--ch-blue);*/
+    color: var(--ch-surface);
 }
 
 .media-chat.media-chat-reverse  p {
     /*float: right;*/
     clear: right;
-    background-color: #48b0f7;
-    color: #fff;
+    background-color: var(--ch-blue);
+    color: var(--ch-surface);
 }
 
 /*
@@ -206,10 +206,10 @@ h4.chat-title {
     justify-content: center;
     font-size: 18px;
     font-weight: bold;
-    color: #333;
-    border: 2px solid #ccc;
+    color: var(--ch-text);
+    border: 2px solid var(--ch-border-strong);
     border-radius: 50%;
-    background-color: #f9f9f9;
+    background-color: var(--ch-bg);
     cursor: pointer;
     transition: all 0.3s ease;
 }*/

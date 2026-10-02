@@ -25,8 +25,8 @@
         }
 
         .pac-input {
-            background-color: #fff;
-            font-family: Roboto;
+            background-color: var(--ch-surface);
+            font-family: var(--ch-font);
             font-size: 15px;
             font-weight: 300;
             margin-left: 12px;
@@ -36,21 +36,21 @@
         }
 
         .pac-input:focus {
-            border-color: #4d90fe;
+            border-color: var(--ch-blue);
         }
 
         .pac-container {
-            font-family: Roboto;
+            font-family: var(--ch-font);
         }
 
         .type-selector {
-            color: #fff;
-            background-color: #4d90fe;
+            color: var(--ch-surface);
+            background-color: var(--ch-blue);
             padding: 5px 11px 0px 11px;
         }
 
         .type-selector label {
-            font-family: Roboto;
+            font-family: var(--ch-font);
             font-size: 13px;
             font-weight: 300;
         }

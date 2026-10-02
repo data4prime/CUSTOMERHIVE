@@ -9,40 +9,9 @@
     <meta name='robots' content='noindex,nofollow' />
     <link rel="shortcut icon"
         href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('images/favicon.png') }}">
-    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <!-- Bootstrap 3.4.1 -->
-    <!--<link href="{{ asset('/vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"
-        type="text/css" />-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
-    <!-- Font Awesome Icons -->
-    <link href="{{asset('vendor/crudbooster/assets/adminlte/font-awesome/css')}}/font-awesome.min.css" rel="stylesheet"
-        type="text/css" />
-    <link href="{{asset('css/icons-lucide.css')}}" rel="stylesheet" type="text/css" />
-    <!-- Ionicons -->
-    <link href="{{asset('vendor/crudbooster/ionic/css/ionicons.min.css')}}" rel="stylesheet" type="text/css" />
-    <!-- Theme style -->
-    <link href="{{ asset('vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css')}}" rel="stylesheet"
-        type="text/css" />
-    <link href="{{ asset('vendor/crudbooster/assets/adminlte/dist/css/skins/_all-skins.min.css')}}" rel="stylesheet"
-        type="text/css" />
-
-    <!-- support rtl-->
-    @if (in_array(App::getLocale(), ['ar', 'fa']))
-    <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
-    <link href="{{ asset('vendor/crudbooster/assets/rtl.css')}}" rel="stylesheet" type="text/css" />
-    @endif
-
-    @php
-    $main_css = asset("vendor/crudbooster/assets/css/main.css").'?r='.time();
-    $custom_css = asset('css/custom.css').'?r='.time();
-    $theme_css = asset('css/theme.css').'?r='.time();
-    @endphp
-
-    <link rel='stylesheet' href='{{ $main_css}}' type="text/css" />
-    <link rel='stylesheet' href="{{$custom_css}}" type="text/css" />
-    <!-- Revamp UI/UX (Fase 0+1): token di design + font self-hosted, vedi docs/refactoring -->
-    <link rel='stylesheet' href="{{$theme_css}}" type="text/css" />
+    <meta content='width=device-width, initial-scale=1, viewport-fit=cover' name='viewport'>
+    {{-- Bootstrap 5 + Bootstrap Icons + layout + tema: tutto in locale, vedi partials/ch_head --}}
+    @include('crudbooster::partials.ch_head')
     <link rel='stylesheet' href="{{isset($style_css) ? $style_css : ''}}" type="text/css" />
 
 
@@ -53,25 +22,17 @@
     @endif
 
     <style type="text/css">
-        .dropdown-menu-action {
-            left: -130%;
-        }
-
-        .btn-group-action .btn-action {
-            cursor: default
-        }
-
         #box-header mb-3-module {
             box-shadow: 10px 10px 10px #dddddd;
         }
 
         .sub-module-tab li {
-            background: #F9F9F9;
+            background: var(--ch-bg);
             cursor: pointer;
         }
 
         .sub-module-tab li.active {
-            background: #ffffff;
+            background: var(--ch-surface);
             box-shadow: 0px -5px 10px #cccccc
         }
 
@@ -162,10 +123,10 @@
 
 
 
-                    <i id='title_icon' class='{!! isset($page_icon) ? $page_icon : $module->icon !!}'></i> 
+                    <i id='title_icon' class='{!! \App\Helpers\IconMap::toBi(isset($page_icon) ? $page_icon : $module->icon) !!}'></i> 
                     {!! isset($page_title) ? $page_title : '' !!} 
                     @if(isset($help)) 
-                        <a href="{{ $help }}" target="_blank"><i id="help_icon" class="fa fa-question-circle" title="{{ $help }}"></i></a>
+                        <a href="{{ $help }}" target="_blank"><i id="help_icon" class="bi bi-question-circle-fill" title="{{ $help }}"></i></a>
                          
                     @endif &nbsp;&nbsp;
 
@@ -175,7 +136,7 @@
                     @if($button_show)
                     <!--<a href="{{ CRUDBooster::mainpath().'?'.http_build_query(Request::all()) }}" id='btn_show_data'
                         class="btn btn-sm btn-primary" title="{{trans('crudbooster.action_show_data')}}">
-                        <i class="fa fa-table"></i> {{trans('crudbooster.action_show_data')}}
+                        <i class="bi bi-table"></i> {{trans('crudbooster.action_show_data')}}
                     </a>
                     -->
                     @endif
@@ -184,7 +145,7 @@
                     <a href="{{ CRUDBooster::mainpath('add').'?return_url='.urlencode(Request::fullUrl()).'&parent_id='.g('parent_id').'&parent_field='.$parent_field }}"
                         id='btn_add_new_data' class="btn btn-sm btn-success"
                         title="{{trans('crudbooster.action_add_data')}}">
-                        <i class="fa fa-plus-circle"></i> {{trans('crudbooster.action_add_data')}}
+                        <i class="bi bi-plus-circle-fill"></i> {{trans('crudbooster.action_add_data')}}
                     </a>
                     @endif
                     @endif
@@ -193,7 +154,7 @@
                     @if($button_export && CRUDBooster::getCurrentMethod() == 'getIndex')
                     <a href="javascript:void(0)" id='btn_export_data' data-url-parameter='{{$build_query}}'
                         title="{{trans('crudbooster.button_export')}}" class="btn btn-sm btn-primary btn-export-data">
-                        <i class="fa fa-upload"></i> {{trans("crudbooster.button_export")}}
+                        <i class="bi bi-upload"></i> {{trans("crudbooster.button_export")}}
                     </a>
                     @endif
 
@@ -201,7 +162,7 @@
                     <a href="{{ CRUDBooster::mainpath('import-data') }}" id='btn_import_data'
                         data-url-parameter='{{$build_query}}' title="{{trans('crudbooster.button_import')}}"
                         class="btn btn-sm btn-primary btn-import-data">
-                        <i class="fa fa-download"></i> {{trans("crudbooster.button_import")}}
+                        <i class="bi bi-download"></i> {{trans("crudbooster.button_import")}}
                     </a>
                     @endif
 
@@ -252,7 +213,7 @@
 
 
                 <ol class="breadcrumb">
-                    <li><a href="{{CRUDBooster::adminPath()}}"><i class="fa fa-dashboard"></i> {{
+                    <li><a href="{{CRUDBooster::adminPath()}}"><i class="bi bi-speedometer2"></i> {{
                             trans('crudbooster.home') }}</a></li>
                     <li class="active">{{isset($module->name) ? $module->name :$module }}</li>
                 </ol>
@@ -276,11 +237,11 @@
                  * avevano gia' in crudbooster.alert_primary/alert_info.
                  */
                 $ch_toast_icon = [
-                    'success' => 'fa-check-circle',
-                    'danger' => 'fa-times-circle',
-                    'warning' => 'fa-exclamation-triangle',
-                    'info' => 'fa-info-circle',
-                    'primary' => 'fa-info-circle',
+                    'success' => 'bi-check-circle-fill',
+                    'danger' => 'bi-x-circle-fill',
+                    'warning' => 'bi-exclamation-triangle-fill',
+                    'info' => 'bi-info-circle-fill',
+                    'primary' => 'bi-info-circle-fill',
                 ];
                 @endphp
                 <div class="ch-toast-container" aria-live="polite" aria-atomic="true">
@@ -288,7 +249,7 @@
                     @foreach(@$alerts as $alert)
                     <div class="toast ch-toast ch-toast-{{ $alert['type'] }}" role="alert" aria-live="assertive"
                         aria-atomic="true" data-bs-delay="6000">
-                        <i class="fa {{ $ch_toast_icon[$alert['type']] ?? 'fa-info-circle' }} ch-toast-icon"></i>
+                        <i class="bi {{ $ch_toast_icon[$alert['type']] ?? 'bi-info-circle-fill' }} ch-toast-icon"></i>
                         <div class="ch-toast-body">{!! $alert['message'] !!}</div>
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
@@ -298,7 +259,7 @@
                     @if (Session::get('message') != '')
                     <div class="toast ch-toast ch-toast-{{ Session::get('message_type') }}" role="alert"
                         aria-live="assertive" aria-atomic="true" data-bs-delay="6000">
-                        <i class="fa {{ $ch_toast_icon[Session::get('message_type')] ?? 'fa-info-circle' }} ch-toast-icon"></i>
+                        <i class="bi {{ $ch_toast_icon[Session::get('message_type')] ?? 'bi-info-circle-fill' }} ch-toast-icon"></i>
                         <div class="ch-toast-body">
                             <strong>{{ trans('crudbooster.alert_'.Session::get('message_type')) }}</strong>
                             {!! Session::get('message') !!}
@@ -449,12 +410,12 @@
                     //execute this after slideToggle is done
                     //change text of header based on visibility of content div
                     if ($content.is(":visible")) {
-                        icon.removeClass('fa-plus');
-                        icon.addClass('fa-minus');
+                        icon.removeClass('bi-plus-lg');
+                        icon.addClass('bi-dash-lg');
                     }
                     else {
-                        icon.removeClass('fa-minus');
-                        icon.addClass('fa-plus');
+                        icon.removeClass('bi-dash-lg');
+                        icon.addClass('bi-plus-lg');
                     }
                 });
             })

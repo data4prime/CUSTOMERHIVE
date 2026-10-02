@@ -5,7 +5,7 @@
 
   <p>
     <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
-      <i class='fa fa-chevron-circle-left '></i>&nbsp;
+      <i class='bi bi-chevron-left'></i>&nbsp;
       {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>

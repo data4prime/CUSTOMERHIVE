@@ -9,8 +9,8 @@
     <div class="{{$col_width?:'col-sm-10'}}">
         <input type='password' title="{{$form['label']}}" id="{{$name}}" {{$required}} {!!$placeholder!!} {{$readonly}}
             {{$disabled}} @php echo isset($validation['max'])?'maxlength="'.$validation['max'].'"':'' @endphp
-            class=' form-control' name="{{$name}}" />
-        <div class="text-danger">{!! $errors->first($name)?"<i class='fa fa-info-circle'></i> ".$errors->first($name):""
+            class='form-control' name="{{$name}}" />
+        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".$errors->first($name):""
             !!}</div>
         <p class='help-block'>{{ @$form['help'] }}</p>
 
@@ -100,7 +100,7 @@
                     }
                     hint.style.display = 'block';
                     hint.style.color = result.ok ? '#1a7f37' : '#c0392b';
-                    hint.innerHTML = (result.ok ? '<i class="fa fa-check-circle"></i> ' : '<i class="fa fa-exclamation-circle"></i> ') + result.text;
+                    hint.innerHTML = (result.ok ? '<i class="bi bi-check-circle-fill"></i> ' : '<i class="bi bi-exclamation-circle-fill"></i> ') + result.text;
                 });
             })();
         </script>

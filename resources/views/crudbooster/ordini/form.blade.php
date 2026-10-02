@@ -6,14 +6,14 @@
   @if(g('return_url'))
   <p>
     <a title='Return' href='{{g("return_url")}}'>
-      <i class='fa fa-chevron-circle-left '></i>&nbsp;
+      <i class='bi bi-chevron-left'></i>&nbsp;
       {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
   @else
   <p>
     <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
-      <i class='fa fa-chevron-circle-left '></i>&nbsp;
+      <i class='bi bi-chevron-left'></i>&nbsp;
       {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
@@ -29,10 +29,10 @@
               <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Testata
             </strong>
           </h3>
-          <div class="box-tools pull-right">
-            <!-- <span class="label label-info">0 righe</span> -->
+          <div class="box-tools float-end">
+            <!-- <span class="badge text-bg-info">0 righe</span> -->
             <button type="button" class="btn btn-box-tool" data-widget="collapse">
-              <i class="fa fa-plus"></i>
+              <i class="bi bi-plus-lg"></i>
             </button>
           </div>
         </div>
@@ -58,19 +58,19 @@
               @endif
             </div><!-- /.box-body -->
 
-            <div class="box-footer" style="background: #F5F5F5">
+            <div class="box-footer" style="background: var(--ch-bg)">
 
               <div class="mb-3 row">
                 <label class="col-form-label col-sm-2"></label>
                 <div class="col-sm-10">
                   @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                   @if(g('return_url'))
-                  <a href='{{g("return_url")}}' class='btn btn-default'>
-                    <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+                  <a href='{{g("return_url")}}' class='btn btn-secondary'>
+                    <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
                   </a>
                   @else
-                  <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-default'>
-                    <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+                  <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-secondary'>
+                    <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
                   </a>
                   @endif
                   @endif
@@ -105,10 +105,10 @@
               <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Aggiungi riga
             </strong>
           </h3>
-          <div class="box-tools pull-right">
+          <div class="box-tools float-end">
             <span class="label label-sucess">0 righe</span>
             <button type="button" class="btn btn-box-tool" data-widget="collapse">
-              <i class="fa fa-plus"></i>
+              <i class="bi bi-plus-lg"></i>
             </button>
           </div>
         </div>
@@ -134,19 +134,19 @@
               @endif
             </div><!-- /.box-body -->
 
-            <div class="box-footer" style="background: #F5F5F5">
+            <div class="box-footer" style="background: var(--ch-bg)">
 
               <div class="mb-3 row">
                 <label class="col-form-label col-sm-2"></label>
                 <div class="col-sm-10">
                   @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                   @if(g('return_url'))
-                  <a href='{{g("return_url")}}' class='btn btn-default'>
-                    <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+                  <a href='{{g("return_url")}}' class='btn btn-secondary'>
+                    <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
                   </a>
                   @else
-                  <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-default'>
-                    <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+                  <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-secondary'>
+                    <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
                   </a>
                   @endif
                   @endif
@@ -181,10 +181,10 @@
               <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> Righe
             </strong>
           </h3>
-          <div class="box-tools pull-right">
+          <div class="box-tools float-end">
             <span class="label label-sucess">0 righe</span>
             <button type="button" class="btn btn-box-tool" data-widget="collapse">
-              <i class="fa fa-minus"></i>
+              <i class="bi bi-dash-lg"></i>
             </button>
           </div>
         </div>
@@ -210,19 +210,19 @@
               @endif
             </div><!-- /.box-body -->
 
-            <div class="box-footer" style="background: #F5F5F5">
+            <div class="box-footer" style="background: var(--ch-bg)">
 
               <div class="mb-3 row">
                 <label class="col-form-label col-sm-2"></label>
                 <div class="col-sm-10">
                   @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                   @if(g('return_url'))
-                  <a href='{{g("return_url")}}' class='btn btn-default'>
-                    <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+                  <a href='{{g("return_url")}}' class='btn btn-secondary'>
+                    <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
                   </a>
                   @else
-                  <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-default'>
-                    <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+                  <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-secondary'>
+                    <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
                   </a>
                   @endif
                   @endif

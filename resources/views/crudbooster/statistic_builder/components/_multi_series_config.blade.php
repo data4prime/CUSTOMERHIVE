@@ -43,10 +43,10 @@
     $lineFieldPrefix = "config[lines][{$i}]";
     $lineScopeId = "{$componentID}-line-{$i}";
 ?>
-<div class="ch-chart-line-block" data-line-index="{{ $i }}" style="{{ $lineVisible ? '' : 'display:none;' }} border:1px solid #E4E7EC; border-radius:10px; padding:12px; margin-bottom:10px;">
+<div class="ch-chart-line-block" data-line-index="{{ $i }}" style="{{ $lineVisible ? '' : 'display:none;' }} border:1px solid var(--ch-border); border-radius:10px; padding:12px; margin-bottom:10px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <strong style="font-size:12.5px; color:#101828;">{{ trans('crudbooster.statistic_builder_extra_series_block_title', ['noun' => ucfirst($seriesNoun), 'number' => $i + 2]) }}</strong>
-        <button type="button" class="ch-chart-line-remove" style="border:none; background:none; color:#98A2B3; cursor:pointer; font-size:12.5px; text-decoration:underline;">{{ trans('crudbooster.statistic_builder_extra_series_remove') }}</button>
+        <strong style="font-size:12.5px; color:var(--ch-text);">{{ trans('crudbooster.statistic_builder_extra_series_block_title', ['noun' => ucfirst($seriesNoun), 'number' => $i + 2]) }}</strong>
+        <button type="button" class="ch-chart-line-remove" style="border:none; background:none; color:var(--ch-text-muted); cursor:pointer; font-size:12.5px; text-decoration:underline;">{{ trans('crudbooster.statistic_builder_extra_series_remove') }}</button>
     </div>
     <div class="mb-3 row">
         <label>{{ trans('crudbooster.statistic_builder_extra_series_name', ['noun' => $seriesNoun]) }}</label>

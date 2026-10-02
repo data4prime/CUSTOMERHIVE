@@ -21,7 +21,7 @@
                 <span>[name]</span>
                 @if($fullPageUrl)
                 <a href="{{ $fullPageUrl }}" class="ch-module-open" title="{{ trans('crudbooster.module_widget_open_full') }}">
-                    <i class="fa fa-external-link"></i> {{ trans('crudbooster.module_widget_open_full') }}
+                    <i class="bi bi-box-arrow-up-right"></i> {{ trans('crudbooster.module_widget_open_full') }}
                 </a>
                 @endif
             </div>
@@ -44,10 +44,10 @@
             .ch-grid-view .ch-module-frame, #ch-grid-canvas .ch-module-frame { height: 100%; }
         </style>
 
-        <div class='action pull-right'>
+        <div class='action float-end'>
             <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Module Panel' class='btn-edit-component'><i
-                        class='fa fa-pencil'></i></a> &nbsp;
-            <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i class='fa fa-trash'></i></a>
+                        class='bi bi-pencil-fill'></i></a> &nbsp;
+            <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i class='bi bi-trash-fill'></i></a>
         </div>
     </div>
 @elseif($command=='configuration')

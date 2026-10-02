@@ -5,14 +5,14 @@
   @if(g('return_url'))
       <p>
         <a title='Return' href='{{g("return_url")}}'>
-          <i class='fa fa-chevron-circle-left '></i>
+          <i class='bi bi-chevron-left'></i>
           &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
         </a>
       </p>
   @else
       <p>
         <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
-          <i class='fa fa-chevron-circle-left '></i>
+          <i class='bi bi-chevron-left'></i>
           &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
         </a>
       </p>
@@ -43,7 +43,7 @@
             <td>{{$member->email}}</td>
             <td><img width="40" src="{{UserHelper::icon($member->id)}}" class="user-image" alt="User Image"></td>
             <td>
-              <a title='Move' class='btn btn-success btn-sm' href='{{CRUDBooster::adminpath("users/edit/$member->id")}}'><i class="fa fa-pencil"></i></a>
+              <a title='Move' class='btn btn-success btn-sm' href='{{CRUDBooster::adminpath("users/edit/$member->id")}}'><i class="bi bi-pencil-fill"></i></a>
             </td>
           </tr>
           @endforeach

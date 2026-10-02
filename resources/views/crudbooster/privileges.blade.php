@@ -7,14 +7,14 @@
   @if(g('return_url'))
   <p>
     <a title='Return' href='{{g("return_url")}}'>
-      <i class='fa fa-chevron-circle-left '></i>&nbsp;
+      <i class='bi bi-chevron-left'></i>&nbsp;
       {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
   @else
   <p>
     <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
-      <i class='fa fa-chevron-circle-left '></i>&nbsp;
+      <i class='bi bi-chevron-left'></i>&nbsp;
       {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
@@ -39,7 +39,7 @@
             </label>
             <div class="col-sm-10">
               <input type='text' class='form-control' name='name' required value='{{ @$row->name }}' />
-              <div class="text-danger">{!! $errors->first('name')?"<i class='fa fa-info-circle'></i> ".$errors->first('name'):"" !!}</div>
+              <div class="text-danger">{!! $errors->first('name')?"<i class='bi bi-info-circle-fill'></i> ".$errors->first('name'):"" !!}</div>
             </div>
           </div>
           <div class='mb-3 row {{ $errors->first("is_superadmin")?"has-error":"" }}'>
@@ -53,7 +53,7 @@
                 <label><input {{ (@$row->is_tenantadmin==1) ? 'checked' : '' }} type='radio' name='superprivilege' value='2'/> {{trans('crudbooster.tenantadmin')}}</label> &nbsp;&nbsp;
                 <label><input {{ (@$row->is_superadmin!=1 AND @$row->is_tenantadmin!=1) ? 'checked' : '' }} type='radio' name='superprivilege' value='0'/> {{trans('crudbooster.none')}}</label>
               </div>
-              <div class="text-danger">{!! $errors->first('is_superadmin')?"<i class='fa fa-info-circle'></i> ".$errors->first('is_superadmin'):"" !!}</div>
+              <div class="text-danger">{!! $errors->first('is_superadmin')?"<i class='bi bi-info-circle-fill'></i> ".$errors->first('is_superadmin'):"" !!}</div>
             </div>
           </div>
 
@@ -86,7 +86,7 @@
                 </option>
                 <?php endforeach;?>
               </select>
-              <div class="text-danger">{!! $errors->first('theme_color')?"<i class='fa fa-info-circle'></i> ".$errors->first('theme_color'):"" !!}</div>
+              <div class="text-danger">{!! $errors->first('theme_color')?"<i class='bi bi-info-circle-fill'></i> ".$errors->first('theme_color'):"" !!}</div>
               @push('bottom')
               <script type="text/javascript">
                 $(function () {
@@ -276,17 +276,17 @@ if (empty($vertical_checked)) {
           </div>
 
         </div><!-- /.box-body -->
-        <div class="box-footer" style="background: #F5F5F5">
+        <div class="box-footer" style="background: var(--ch-bg)">
           <div class="mb-3 row">
             <label class="col-form-label col-sm-2"></label>
             <div class="col-sm-10">
               @if(g('return_url'))
-              <a href='{{g("return_url")}}' class='btn btn-default'>
-                <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+              <a href='{{g("return_url")}}' class='btn btn-secondary'>
+                <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
               </a>
               @else
-              <a href='{{CRUDBooster::mainpath()}}' class='btn btn-default'>
-                <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+              <a href='{{CRUDBooster::mainpath()}}' class='btn btn-secondary'>
+                <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
               </a>
               @endif
               <input type="submit" name="submit" value='{{trans("crudbooster.button_save")}}' class='btn btn-success'>

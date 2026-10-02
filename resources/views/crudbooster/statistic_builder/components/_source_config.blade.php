@@ -44,18 +44,18 @@
        (#modal-statistic), che non condividono un foglio di stile comune.
        Stessi colori/raggi/font gia' usati in builder_grid.blade.php, per
        coerenza visiva. */
-    .ch-config-section { border: 1px solid #E4E7EC; border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
-    .ch-config-section > summary { list-style: none; cursor: pointer; padding: 10px 12px; font-size: 12.5px; font-weight: 700; color: #101828; background: #F9FAFB; display: flex; align-items: center; justify-content: space-between; user-select: none; font-family: 'Segoe UI', system-ui, sans-serif; }
+    .ch-config-section { border: 1px solid var(--ch-border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+    .ch-config-section > summary { list-style: none; cursor: pointer; padding: 10px 12px; font-size: 12.5px; font-weight: 700; color: var(--ch-text); background: var(--ch-bg); display: flex; align-items: center; justify-content: space-between; user-select: none; font-family: var(--ch-font); }
     .ch-config-section > summary::-webkit-details-marker { display: none; }
-    .ch-config-section > summary::after { content: ''; width: 7px; height: 7px; border-right: 2px solid #667085; border-bottom: 2px solid #667085; transform: rotate(45deg); transition: transform .15s; margin-left: 8px; flex-shrink: 0; }
+    .ch-config-section > summary::after { content: ''; width: 7px; height: 7px; border-right: 2px solid var(--ch-text-secondary); border-bottom: 2px solid var(--ch-text-secondary); transform: rotate(45deg); transition: transform .15s; margin-left: 8px; flex-shrink: 0; }
     .ch-config-section[open] > summary::after { transform: rotate(-135deg); }
     .ch-config-section-body { padding: 14px 12px 2px; }
 
-    .ch-btn { border: 1px solid #D0D5DD; background: #FFFFFF; color: #344054; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; }
-    .ch-btn-active { background: #3B5BDB; border-color: #3B5BDB; color: #FFFFFF; }
-    .ch-source-summary { font-size: 12.5px; color: #667085; margin: 0 0 10px; }
+    .ch-btn { border: 1px solid var(--ch-border-strong); background: var(--ch-surface); color: var(--ch-text); border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--ch-font); }
+    .ch-btn-active { background: var(--ch-accent); border-color: var(--ch-accent); color: var(--ch-surface); }
+    .ch-source-summary { font-size: 12.5px; color: var(--ch-text-secondary); margin: 0 0 10px; }
     .ch-source-summary div { margin-bottom: 2px; }
-    .ch-source-summary strong { color: #101828; }
+    .ch-source-summary strong { color: var(--ch-text); }
     .ch-source-configure-row { text-align: center; margin-bottom: 10px; }
 
     .ch-source-modal-overlay { position: fixed; inset: 0; background: rgba(16,24,40,0.45); display: none; align-items: center; justify-content: center; z-index: 1000; }
@@ -65,14 +65,14 @@
          "negli ultimi N giorni" restavano tagliate anche a 560px - vedi
          anche la larghezza fissa data a .ch-builder-filter-operator in
          _query_builder_fields.blade.php, stesso intervento). --}}
-    .ch-source-modal { background: #FFFFFF; border-radius: 12px; box-shadow: 0 8px 24px rgba(16,24,40,0.2); width: 640px; max-width: 90vw; max-height: 88vh; overflow-y: auto; padding: 20px; font-family: 'Segoe UI', system-ui, sans-serif; }
-    .ch-source-modal-title { font-size: 15px; font-weight: 700; color: #101828; margin-bottom: 14px; }
-    .ch-source-modal-hint { font-size: 12px; color: #B54708; background: #FFFAEB; border: 1px solid #FEDF89; border-radius: 8px; padding: 8px 10px; margin-top: 16px; }
-    .ch-source-modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; border-top: 1px solid #F2F4F7; padding-top: 14px; }
-    .ch-source-modal label { display: block; font-size: 12px; font-weight: 600; color: #344054; margin-bottom: 4px; }
-    .ch-source-modal .form-control { width: 100%; border: 1px solid #D0D5DD; border-radius: 8px; padding: 8px 10px; font-size: 13px; margin-bottom: 2px; box-sizing: border-box; }
+    .ch-source-modal { background: var(--ch-surface); border-radius: 12px; box-shadow: 0 8px 24px rgba(16,24,40,0.2); width: 640px; max-width: 90vw; max-height: 88vh; overflow-y: auto; padding: 20px; font-family: var(--ch-font); }
+    .ch-source-modal-title { font-size: 15px; font-weight: 700; color: var(--ch-text); margin-bottom: 14px; }
+    .ch-source-modal-hint { font-size: 12px; color: var(--ch-warning); background: var(--ch-bg); border: 1px solid var(--ch-warning); border-radius: 8px; padding: 8px 10px; margin-top: 16px; }
+    .ch-source-modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; border-top: 1px solid var(--ch-border); padding-top: 14px; }
+    .ch-source-modal label { display: block; font-size: 12px; font-weight: 600; color: var(--ch-text); margin-bottom: 4px; }
+    .ch-source-modal .form-control { width: 100%; border: 1px solid var(--ch-border-strong); border-radius: 8px; padding: 8px 10px; font-size: 13px; margin-bottom: 2px; box-sizing: border-box; }
     .ch-source-modal .mb-3 { margin-bottom: 14px; }
-    .ch-source-modal .help-block { font-size: 11px; color: #98A2B3; margin-top: 4px; }
+    .ch-source-modal .help-block { font-size: 11px; color: var(--ch-text-muted); margin-top: 4px; }
 
     {{-- Pulse sul VERO pulsante "Salva" (.ch-sidebar-save, aggiunto da
          builder_grid.blade.php fuori da questo partial) quando si chiude

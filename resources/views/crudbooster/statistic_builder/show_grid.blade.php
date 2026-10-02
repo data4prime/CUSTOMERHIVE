@@ -16,7 +16,6 @@
 
 @section('content')
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
     /* Stile ispirato al mockup approvato (Idea 1: griglia libera) per la
        dashboard vista dal menu - qui SENZA alcuna possibilita' di
@@ -27,7 +26,7 @@
        .ch-grid-view apposta, per non toccare il resto del tema admin
        usato da tutte le altre pagine.
     */
-    .ch-grid-view, .ch-grid-view * { font-family: 'Manrope', system-ui, sans-serif; }
+    .ch-grid-view, .ch-grid-view * { font-family: var(--ch-font); }
 
     /* Card bianca per ciascun widget, stesso aspetto del builder
        (.grid-stack-item-content in builder_grid.blade.php) - senza,
@@ -63,8 +62,8 @@
        widget, non dentro uno), la geometria di 137 (altezza contenuto =
        righe*40 - 2*8) non cambia. */
     .ch-grid-view-cell {
-        background: #FFFFFF;
-        border: 1px solid #E4E7EC;
+        background: var(--ch-surface);
+        border: 1px solid var(--ch-border);
         border-radius: 12px;
         box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
         overflow: auto;
@@ -73,7 +72,7 @@
         scrollbar-width: thin;
     }
     .ch-grid-view-cell::-webkit-scrollbar { width: 6px; height: 6px; }
-    .ch-grid-view-cell::-webkit-scrollbar-thumb { background: #D0D5DD; border-radius: 999px; }
+    .ch-grid-view-cell::-webkit-scrollbar-thumb { background: var(--ch-bg); border-radius: 999px; }
     .ch-grid-view-cell::-webkit-scrollbar-button { display: none; }
     /* Pulsanti "modifica"/"elimina" (.action, dentro ogni .border-box):
        pensati per il builder legacy (che li stila/posiziona/nasconde
@@ -90,7 +89,7 @@
     /* Stessa base minima di .small-box/.card usata nel builder
        (builder_grid.blade.php) - qui con un filo di rifinitura in piu'
        (radius, peso dei numeri) per avvicinarsi alla resa del mockup. */
-    .ch-grid-view .small-box { position: relative; border-radius: 10px; overflow: hidden; color: #FFFFFF; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
+    .ch-grid-view .small-box { position: relative; border-radius: 10px; overflow: hidden; color: var(--ch-surface); height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
     .ch-grid-view .small-box .inner-box { padding: 16px 18px; }
     .ch-grid-view .small-box .inner-box h3 { font-size: 26px; font-weight: 800; margin: 0 0 2px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .ch-grid-view .small-box .inner-box p { font-size: 12.5px; margin: 0; opacity: 0.9; font-weight: 500; }
@@ -98,7 +97,7 @@
     .ch-grid-view .small-box .small-box-footer { display: block; padding: 6px; text-align: center; background: rgba(0,0,0,0.12); color: rgba(255,255,255,0.95); font-size: 11px; font-weight: 600; }
     .ch-grid-view .small-box .small-box-footer:hover { background: rgba(0,0,0,0.2); }
     .ch-grid-view .card { border: none; margin: 0; height: 100%; box-sizing: border-box; }
-    .ch-grid-view .card-header { font-size: 13px; font-weight: 700; color: #101828; padding: 10px 6px; border-bottom: 1px solid #F2F4F7; margin-bottom: 8px; }
+    .ch-grid-view .card-header { font-size: 13px; font-weight: 700; color: var(--ch-text); padding: 10px 6px; border-bottom: 1px solid var(--ch-border); margin-bottom: 8px; }
     .ch-grid-view .card-body { padding: 2px 6px; }
 </style>
 
@@ -109,8 +108,8 @@
      conversione di una dashboard legacy. Raphael (richiesto da Morris) arriva
      gia' da admin_template_plugins.blade.php, come in index.blade.php. --}}
 @push('bottom')
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<link rel="stylesheet" href="{{ asset('vendor/libs/morris/morris.css') }}">
+<script src="{{ asset('vendor/libs/morris/morris.min.js') }}"></script>
 @endpush
 
 <div class="ch-grid-view" style="display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: 40px; gap: 0; align-items: stretch;">

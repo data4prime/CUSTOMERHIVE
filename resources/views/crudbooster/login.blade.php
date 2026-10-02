@@ -11,10 +11,10 @@
 
     <!-- support rtl-->
     @if (in_array(App::getLocale(), ['ar', 'fa']))
-    <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
     <link href="{{ asset('vendor/crudbooster/assets/rtl.css')}}" rel="stylesheet" type="text/css" />
     @endif
 
+    @include('crudbooster::partials.ch_icons')
     <link rel='stylesheet' href="{{ asset('css/theme.css').'?r='.time() }}" type="text/css" />
     {{--
         Su richiesta esplicita dell'utente (2026-09-03): il pannello brand
@@ -45,7 +45,7 @@
 
                 @if(!empty(config('services.google')))
                 <a href='{{route("redirect", "google")}}' class="ch-auth-btn ch-auth-btn-secondary" style="margin-bottom:18px;">
-                    <i class='fa fa-google'></i> Google Login
+                    <i class='bi bi-google'></i> Google Login
                 </a>
                 <div style="text-align:center;font-size:12px;color:var(--ch-text-muted);margin-bottom:18px;">oppure</div>
                 @endif

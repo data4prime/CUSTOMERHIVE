@@ -8,155 +8,89 @@
     <meta name='robots' content='noindex,nofollow' />
     <link rel="shortcut icon"
         href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
-    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <!-- Bootstrap 3.3.2 -->
-    <link href="{{asset('vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet"
-        type="text/css" />
-    <!-- Font Awesome Icons -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"
-        type="text/css" />
-    <!-- Theme style -->
-    <link href="{{asset('vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css')}}" rel="stylesheet"
-        type="text/css" />
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-
-    <link rel='stylesheet' href='{{asset("vendor/crudbooster/assets/css/main.css")}}' />
-    <style type="text/css">
-        .lockscreen {
-            background: @php echo CRUDBooster::getSetting("login_background_color")?:'#dddddd'@endphp 
-            url('{{ CRUDBooster::getSetting("login_background_image")?asset(CRUDBooster::getSetting("login_background_image")):asset("/images/main-bg.jpg") }}');
-
-            color: @php CRUDBooster::getSetting("login_font_color")?:'#ffffff'@endphp !important;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
-        }
-    </style>
-
+    <meta content='width=device-width, initial-scale=1, viewport-fit=cover' name='viewport'>
+    @include('crudbooster::partials.ch_icons')
+    <link rel='stylesheet' href="{{ asset('css/theme.css').'?v='.@filemtime(public_path('css/theme.css')) }}" type="text/css" />
+    {{-- Stesso linguaggio visivo delle pagine di accesso (classi ch-auth-*, vedi login.blade.php). --}}
 </head>
 
-<body class="lockscreen">
-    <!-- Automatic element centering -->
-    <div class="lockscreen-wrapper">
-        <div class="lockscreen-logo">
+<body class="ch-auth">
+    <div class="ch-auth-shell">
+        <div class="ch-brand">
             <a href="{{url('/')}}">
                 <img title=" {!! isset($appname) ? ($appname == 'CustomerHive' ? 'CustomerHive':$appname) : ''  !!}  "
                     src='{{ CRUDBooster::getSetting("logo")?asset(CRUDBooster::getSetting("logo")):asset("/images/customerhive_trasparente.png") }}'
-                    style='max-width: 100%;max-height:170px' />
+                    style='max-width:200px;max-height:56px;' />
             </a>
         </div>
 
-        @if (\Session::has('message'))
-            <div class="alert alert-warning">
-                <ul>
-                    <li>{!! \Session::get('message') !!}</li>
-                </ul>
-            </div>
-        @endif
+        <div class="ch-auth-formpanel">
+            <div class="ch-auth-formbox">
+                <div class="ch-auth-eyebrow">LICENSE</div>
+                <h2>License</h2>
 
-        <!-- START LOCK SCREEN ITEM -->
-        <div class="login-box-body">
+                @if (\Session::has('message'))
+                <div class="ch-auth-alert ch-auth-alert-warning">{!! \Session::get('message') !!}</div>
+                @endif
 
-            <!-- /.lockscreen-image -->
+                <form method='post' action="{{url(config('crudbooster.ADMIN_PATH').'/activate-license')}}">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
-            <!-- lockscreen credentials (contains the form) -->
-            <form  method='post'
-                action="{{url(config('crudbooster.ADMIN_PATH').'/activate-license')}}">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-
-                <div class="mb-3 row has-feedback form-group">
-                    <input autocomplete='off' type="text" class="form-control" name='email' required
-                        placeholder="Email" />
-                </div>
-
-
-
-                <div class="mb-3 row has-feedback form-group">
-                    <input autocomplete='off' type="text" class="form-control" name='domain' required value="{{$tenant_domain_name}}"
-                        placeholder="Domain" />
-                </div>
-
-<!--
-                <div class="mb-3 row has-feedback">
-                    <input autocomplete='off' type="text" class="form-control" name='mac_address' required value="{{$mac_address}}"
-                        placeholder="MAC Address" />
-                </div>
--->
-
-
-<!--
-                <div class="mb-3 row has-feedback">
-                    <input autocomplete='off' type="text" class="form-control" name='path' value="{{$path}}" required
-                        placeholder="Path" />
-                </div>
--->
-
-
-                <div class="mb-3 row has-feedback form-group">
-                    <input autocomplete='off' type="number" class="form-control" name='clients_number' required
-                        placeholder="Users Number" />
-                </div> 
-                <div class="mb-3 row has-feedback form-group">
-                    <input autocomplete='off' type="number" class="form-control" name='tenants_number' required
-                        placeholder="Tenants Number" />
-                </div>
-
-
-                <div  class='row'>
-                    <div class='col-xs-12'>
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">
-                            Activate</button>
+                    <div class="ch-auth-field">
+                        <div class="ch-auth-input">
+                            <input autocomplete='off' type="text" name='email' required placeholder="Email" />
+                        </div>
                     </div>
-                </div>
 
-            </form><!-- /.lockscreen credentials -->
-
-            <div class="text-center" style="margin-top: 10px;">
-                <a href="#" onclick="document.getElementById('existing-license-form').style.display='block'; this.parentNode.style.display='none'; return false;">
-                    Ho già una licenza
-                </a>
-            </div>
-
-            <form id="existing-license-form" method='post' style="display:none; margin-top: 15px;"
-                action="{{url(config('crudbooster.ADMIN_PATH').'/activate-existing-license')}}">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-
-                <div class="mb-3 row has-feedback form-group">
-                    <input autocomplete='off' type="text" class="form-control" name='license_key' required
-                        placeholder="Chiave di licenza" />
-                </div>
-
-                <div class='row'>
-                    <div class='col-xs-12'>
-                        <button type="submit" class="btn btn-default btn-block btn-flat">
-                            Attiva licenza esistente</button>
+                    <div class="ch-auth-field">
+                        <div class="ch-auth-input">
+                            <input autocomplete='off' type="text" name='domain' required
+                                value="{{$tenant_domain_name}}" placeholder="Domain" />
+                        </div>
                     </div>
+
+                    <div class="ch-auth-field">
+                        <div class="ch-auth-input">
+                            <input autocomplete='off' type="number" name='clients_number' required
+                                placeholder="Users Number" />
+                        </div>
+                    </div>
+
+                    <div class="ch-auth-field">
+                        <div class="ch-auth-input">
+                            <input autocomplete='off' type="number" name='tenants_number' required
+                                placeholder="Tenants Number" />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="ch-auth-btn">Activate</button>
+                </form>
+
+                <div style="text-align:center;margin-top:14px;">
+                    <a href="#"
+                        onclick="document.getElementById('existing-license-form').style.display='block'; this.parentNode.style.display='none'; return false;">
+                        Ho già una licenza
+                    </a>
                 </div>
-            </form>
 
-        </div><!-- /.lockscreen-item -->
-        <div class="text-center">
+                <form id="existing-license-form" method='post' style="display:none; margin-top: 15px;"
+                    action="{{url(config('crudbooster.ADMIN_PATH').'/activate-existing-license')}}">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
+                    <div class="ch-auth-field">
+                        <div class="ch-auth-input">
+                            <input autocomplete='off' type="text" name='license_key' required
+                                placeholder="Chiave di licenza" />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="ch-auth-btn ch-auth-btn-secondary">Attiva licenza esistente</button>
+                </form>
+            </div>
         </div>
 
-        <div class='lockscreen-footer text-center'>
-            Copyright &copy; {{date("Y")}}<br>
-            All rights reserved
-        </div>
-    </div><!-- /.center -->
-
-
-    <!-- jQuery 2.2.3 -->
-    <script src="{{asset('vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
-    <!-- Bootstrap 3.4.1 JS -->
-    <script src="{{asset('vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min.js')}}"
-        type="text/javascript"></script>
+        <div class="ch-brand-footer">Copyright &copy; {{date("Y")}} &middot; All rights reserved</div>
+    </div>
 </body>
 
 </html>

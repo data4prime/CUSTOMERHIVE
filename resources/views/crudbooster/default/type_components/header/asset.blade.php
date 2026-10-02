@@ -3,7 +3,7 @@
         .form-divider {
             padding: 10px 0px 10px 0px;
             margin-bottom: 10px;
-            border-bottom: 1px solid #dddddd;
+            border-bottom: 1px solid var(--ch-border-strong);
         }
 
         .header-title {
@@ -24,12 +24,12 @@
                     var first_group = parent.find(".header-group-" + index + ":first").is(":hidden");
                     if (first_group) {
                         parent.find(".header-group-" + index).slideDown(function () {
-                            handel.find(".icon i").attr('class', 'fa fa-minus-square-o');
+                            handel.find(".icon i").attr('class', 'bi bi-dash-square');
                             handel.attr("title", "Click here to slide up");
                         });
                     } else {
                         parent.find(".header-group-" + index).slideUp(function () {
-                            handel.find(".icon i").attr('class', 'fa fa-plus-square-o');
+                            handel.find(".icon i").attr('class', 'bi bi-plus-square');
                             handel.attr("title", "Click here to expand");
                         });
                     }

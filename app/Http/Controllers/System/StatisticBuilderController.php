@@ -75,7 +75,7 @@ class StatisticBuilderController extends CBController
         $this->hide_form = ['layout'];
 
         $this->addaction = [];
-        $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('builder') . '/[id]', 'icon' => 'fa fa-wrench'];
+        $this->addaction[] = ['label' => 'Builder', 'url' => CRUDBooster::mainpath('builder') . '/[id]', 'icon' => 'bi bi-wrench'];
         // Piano "dashboard a griglia libera" (docs/piano-dashboard-griglia-libera.md,
         // docs/refactoring/114-*): unico punto da cui una dashboard
         // 'legacy_areas' esistente passa alla nuova griglia - senza
@@ -87,7 +87,7 @@ class StatisticBuilderController extends CBController
         // nell'eval interno) - il bottone resta visibile anche su una
         // dashboard gia' 'grid', dove l'endpoint si limita a riportare
         // alla stessa griglia senza riconvertire nulla (vedi getConvertToGrid()).
-        $this->addaction[] = ['label' => 'Griglia libera', 'url' => CRUDBooster::mainpath('convert-to-grid') . '/[id]', 'icon' => 'fa fa-th-large'];
+        $this->addaction[] = ['label' => 'Griglia libera', 'url' => CRUDBooster::mainpath('convert-to-grid') . '/[id]', 'icon' => 'bi bi-grid-fill'];
 
 
     }

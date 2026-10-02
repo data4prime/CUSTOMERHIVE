@@ -5,14 +5,14 @@
     @if(g('return_url'))
     <p>
         <a title='Return' href='{{g("return_url")}}'>
-            <i class='fa fa-chevron-circle-left '></i>&nbsp;
+            <i class='bi bi-chevron-left'></i>&nbsp;
             {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
         </a>
     </p>
     @else
     <p>
         <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
-            <i class='fa fa-chevron-circle-left '></i>&nbsp;
+            <i class='bi bi-chevron-left'></i>&nbsp;
             {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
         </a>
     </p>
@@ -34,8 +34,8 @@
             @if(@$row && isset($command) && $command == 'edit' && (int) $row->id !== (int) CRUDBooster::myId() && \App\Helpers\UserHelper::can_do_on_user('edit', $row->id))
             <div style="padding:0 20px 16px 20px;">
                 <div class="alert" id="ch-reset-alert" role="alert" hidden></div>
-                <button type="button" class="btn btn-default" id="ch-reset-btn">
-                    <i class="fa fa-envelope"></i> {{ trans('crudbooster.user_reset_password_button') }}
+                <button type="button" class="btn btn-secondary" id="ch-reset-btn">
+                    <i class="bi bi-envelope-fill"></i> {{ trans('crudbooster.user_reset_password_button') }}
                 </button>
                 <span class="help-block" style="display:inline-block;margin:0 0 0 10px;">{{ trans('crudbooster.user_reset_password_hint') }}</span>
             </div>
@@ -80,18 +80,18 @@
 
                 </div><!-- /.box-body -->
 
-                <div class="box-footer" style="background: #F5F5F5">
+                <div class="box-footer" style="background: var(--ch-bg)">
 
                     <div class="mb-3 row">
                         <label class="col-form-label col-sm-2"></label>
                         <div class="col-sm-10">
                             @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                             @if(g('return_url'))
-                            <a href='{{g("return_url")}}' class='btn btn-default'><i
-                                    class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}</a>
+                            <a href='{{g("return_url")}}' class='btn btn-secondary'><i
+                                    class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}</a>
                             @else
                             <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}'
-                                class='btn btn-default'><i class='fa fa-chevron-circle-left'></i>
+                                class='btn btn-secondary'><i class='bi bi-chevron-left'></i>
                                 {{trans("crudbooster.button_back")}}</a>
                             @endif
                             @endif

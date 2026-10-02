@@ -9,6 +9,7 @@
     <link rel="shortcut icon" href="{{ $favicon }}">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
+    @include('crudbooster::partials.ch_icons')
     <link rel='stylesheet' href="{{ asset('css/theme.css').'?r='.time() }}" type="text/css" />
 </head>
 

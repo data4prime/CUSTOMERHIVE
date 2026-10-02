@@ -13,14 +13,14 @@
 @section('content')
 <div>
   <p>
-    <a href="{{ url('admin/qlik_apps') }}"><i class="fa fa-chevron-circle-left"></i> &nbsp; {{ trans('crudbooster.qlik_sync_back_apps') }}</a>
+    <a href="{{ url('admin/qlik_apps') }}"><i class="bi bi-chevron-left"></i> &nbsp; {{ trans('crudbooster.qlik_sync_back_apps') }}</a>
     &nbsp;|&nbsp;
     <a href="{{ url('admin/qlik_items') }}">{{ trans('crudbooster.qlik_sync_back_items') }}</a>
   </p>
 
   @if($stuck)
   <div class="alert alert-warning" role="alert">
-    <i class="fa fa-exclamation-triangle"></i> {{ trans('crudbooster.qlik_sync_no_worker') }}
+    <i class="bi bi-exclamation-triangle-fill"></i> {{ trans('crudbooster.qlik_sync_no_worker') }}
   </div>
   @endif
 
@@ -54,13 +54,13 @@
             <td>{{ $run->qlik_app_id ? ($run->appname ?? ('#' . $run->qlik_app_id)) : ($run->type === 'items' ? trans('crudbooster.qlik_sync_all_apps') : '—') }}</td>
             <td>{{ $run->user_name ?? ('#' . $run->user_id) }}</td>
             <td>
-              <span style="display:inline-block;padding:2px 8px;border-radius:3px;color:#fff;background:{{ $stColor }}">{{ trans('crudbooster.' . $stKey) }}</span>
+              <span style="display:inline-block;padding:2px 8px;border-radius:3px;color:var(--ch-surface);background:{{ $stColor }}">{{ trans('crudbooster.' . $stKey) }}</span>
               @if($run->rolled_back_at)
-              <span style="display:inline-block;padding:2px 8px;border-radius:3px;color:#fff;background:#6c757d">{{ trans('crudbooster.qlik_sync_rolled_back') }}</span>
+              <span style="display:inline-block;padding:2px 8px;border-radius:3px;color:var(--ch-surface);background:var(--ch-text-secondary)">{{ trans('crudbooster.qlik_sync_rolled_back') }}</span>
               @endif
             </td>
             <td style="min-width:120px">
-              <div style="background:#e9ecef;border-radius:3px;height:10px;overflow:hidden" role="progressbar" aria-valuenow="{{ $pct }}" aria-valuemin="0" aria-valuemax="100">
+              <div style="background:var(--ch-bg);border-radius:3px;height:10px;overflow:hidden" role="progressbar" aria-valuenow="{{ $pct }}" aria-valuemin="0" aria-valuemax="100">
                 <div style="background:{{ $stColor }};height:10px;width:{{ $pct }}%"></div>
               </div>
               <small>{{ $run->processed }} / {{ $run->total }}</small>
@@ -71,13 +71,13 @@
                 {{ trans('crudbooster.qlik_sync_action_linked') }}: {{ $run->linked }} ·
                 {{ trans('crudbooster.qlik_sync_action_updated') }}: {{ $run->updated }} ·
                 {{ trans('crudbooster.qlik_sync_action_skipped') }}: {{ $run->skipped }}
-                @if($run->failed > 0) · <strong style="color:#dc3545">{{ trans('crudbooster.qlik_sync_action_failed') }}: {{ $run->failed }}</strong> @endif
+                @if($run->failed > 0) · <strong style="color:var(--ch-danger)">{{ trans('crudbooster.qlik_sync_action_failed') }}: {{ $run->failed }}</strong> @endif
                 @if($run->missing > 0) · {{ trans('crudbooster.qlik_sync_missing') }}: {{ $run->missing }} @endif
               </small>
             </td>
             <td>{{ $run->started_at ?? $run->created_at }}</td>
             <td>
-              <a class="btn btn-info btn-sm" title="{{ trans('crudbooster.qlik_sync_details') }}" href="{{ url('admin/qlik_apps/sync-runs/' . $run->id) }}"><i class="fa fa-search"></i></a>
+              <a class="btn btn-info btn-sm" title="{{ trans('crudbooster.qlik_sync_details') }}" href="{{ url('admin/qlik_apps/sync-runs/' . $run->id) }}"><i class="bi bi-search"></i></a>
             </td>
           </tr>
           @empty

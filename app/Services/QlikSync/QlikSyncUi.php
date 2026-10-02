@@ -65,14 +65,14 @@ class QlikSyncUi
         $controller->index_button[] = [
             'label' => trans('crudbooster.qlik_sync_button'),
             'url' => 'javascript:void(0)',
-            'icon' => 'fa fa-refresh',
+            'icon' => 'bi bi-arrow-repeat',
             'color' => 'info',
             'onClick' => 'if (window.qlikSyncOpen) { qlikSyncOpen(); } return false;',
         ];
         $controller->index_button[] = [
             'label' => trans('crudbooster.qlik_sync_runs_button'),
             'url' => self::runsUrl(),
-            'icon' => 'fa fa-tasks',
+            'icon' => 'bi bi-list-check',
             'color' => 'default',
         ];
 

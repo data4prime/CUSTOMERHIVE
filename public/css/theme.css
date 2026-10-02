@@ -65,6 +65,83 @@
   --ch-role-accent: var(--ch-accent);
   --ch-role-accent-dark: var(--ch-accent-dark);
   --ch-role-accent-soft: var(--ch-accent-soft);
+
+  /* ---- Standard UI: tipografia, spaziature, raggi, campi ----
+   * Fonte unica per tutto il progetto (admin, pagine pubbliche, popup).
+   * Le viste NON devono scrivere colori/font/raggi a mano: usano questi
+   * token o le classi Bootstrap 5 che li ereditano (vedi --bs-* sotto). */
+  --ch-font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ch-font-size: 14px;
+  --ch-font-size-sm: 12.5px;
+  --ch-font-size-lg: 16px;
+
+  --ch-space-1: 4px;
+  --ch-space-2: 8px;
+  --ch-space-3: 12px;
+  --ch-space-4: 16px;
+  --ch-space-5: 24px;
+  --ch-space-6: 32px;
+
+  --ch-radius-sm: 8px;
+  --ch-radius-pill: 999px;
+
+  --ch-field-h: 38px;
+  --ch-field-px: 12px;
+  --ch-field-border: var(--ch-border-strong);
+  --ch-field-bg: var(--ch-surface);
+  --ch-field-focus: var(--ch-accent);
+  --ch-field-focus-ring: 0 0 0 3px var(--ch-accent-soft);
+  --ch-field-disabled-bg: var(--ch-bg);
+
+  /* ---- Mappa su Bootstrap 5.3 ----
+   * Bootstrap legge queste variabili in body, link, bordi, form, card,
+   * modali, dropdown. Cambiare un token sopra cambia tutto il prodotto.
+   * (Le classi .btn-* di Bootstrap hanno i loro valori in --bs-btn-*;
+   * i pulsanti sono uniformati piu' sotto in "Bottoni".) */
+  --bs-body-font-family: var(--ch-font);
+  --bs-body-font-size: var(--ch-font-size);
+  --bs-body-color: var(--ch-text);
+  --bs-body-bg: var(--ch-bg);
+  --bs-secondary-color: var(--ch-text-secondary);
+  --bs-tertiary-color: var(--ch-text-muted);
+  --bs-border-color: var(--ch-border);
+  --bs-border-radius: var(--ch-radius-sm);
+  --bs-border-radius-sm: 6px;
+  --bs-border-radius-lg: var(--ch-radius-md);
+  --bs-link-color: var(--ch-accent);
+  --bs-link-hover-color: var(--ch-accent-dark);
+  --bs-success: var(--ch-success);
+  --bs-warning: var(--ch-warning);
+  --bs-danger: var(--ch-danger);
+  --bs-info: var(--ch-blue);
+  --bs-focus-ring-color: var(--ch-accent-soft);
+
+  /* Colori semantici: Bootstrap li legge come terne RGB (badge, bg-*, text-bg-*,
+   * text-*, border-*) e come sfumature "subtle" (alert, list-group). Stessi
+   * valori dei token --ch-* sopra (terne da tenere allineate a mano). */
+  --bs-primary: var(--ch-accent);
+  --bs-primary-rgb: 79, 70, 229;
+  --bs-secondary: var(--ch-text-muted);
+  --bs-secondary-rgb: 139, 139, 150;
+  --bs-success-rgb: 15, 157, 88;
+  --bs-warning-rgb: 183, 121, 31;
+  --bs-danger-rgb: 209, 55, 63;
+  --bs-info-rgb: 37, 99, 235;
+  --bs-primary-bg-subtle: var(--ch-accent-soft);
+  --bs-primary-text-emphasis: var(--ch-accent-dark);
+  --bs-primary-border-subtle: var(--ch-accent-soft);
+  --bs-success-bg-subtle: var(--ch-success-soft);
+  --bs-success-text-emphasis: var(--ch-success);
+  --bs-success-border-subtle: var(--ch-success-soft);
+  --bs-warning-bg-subtle: var(--ch-warning-soft);
+  --bs-warning-text-emphasis: var(--ch-warning);
+  --bs-warning-border-subtle: var(--ch-warning-soft);
+  --bs-danger-bg-subtle: var(--ch-danger-soft);
+  --bs-danger-text-emphasis: var(--ch-danger);
+  --bs-danger-border-subtle: var(--ch-danger-soft);
+  --bs-info-bg-subtle: var(--ch-blue-soft);
+  --bs-info-text-emphasis: var(--ch-blue);
+  --bs-info-border-subtle: var(--ch-blue-soft);
 }
 
 /*
@@ -183,6 +260,15 @@ body.ch-shell .main-header {
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: none;
   position: relative;
+  /*
+   * La sidebar occupa tutta l'altezza della finestra: l'header parte dal
+   * suo bordo destro (come il footer, vedi .main-footer) invece di
+   * attraversare tutta la pagina. width:auto perche' ch-layout.css
+   * imposta width:100%, che con il margin-left sforerebbe a destra.
+   */
+  width: auto;
+  margin-left: var(--ch-sidebar-width);
+  transition: margin-left .3s ease-in-out;
 }
 
 /*
@@ -195,15 +281,13 @@ body.ch-shell .main-header {
 body.ch-shell .main-header .navbar {
   background: transparent;
   margin-left: 0;
+  min-height: 52px;
 }
 
 /*
- * Il burger segue il bordo della sidebar (margin-left = larghezza
- * sidebar quando aperta, 0 quando chiusa - vedi il reset nel media
- * query .sidebar-collapse piu' sotto) invece di restare fermo
- * nell'angolo dell'header. Il margin-left sta sul bottone stesso, non
- * su .navbar: il resto della barra (notifiche, utente), gia' ancorato
- * a destra da justify-content-between, non deve muoversi insieme.
+ * Il burger sta all'inizio dell'header, che a sua volta parte dal bordo
+ * destro della sidebar (vedi .main-header): non serve piu' alcun
+ * margin-left sul bottone.
  */
 body.ch-shell .main-header .sidebar-toggle {
   color: rgba(255, 255, 255, 0.85);
@@ -213,8 +297,8 @@ body.ch-shell .main-header .sidebar-toggle {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: var(--ch-sidebar-width);
-  transition: background-color .15s ease, color .15s ease, margin-left .3s ease-in-out;
+  margin-left: 8px;
+  transition: background-color .15s ease, color .15s ease;
 }
 
 body.ch-shell .main-header .sidebar-toggle:hover {
@@ -344,6 +428,69 @@ body.ch-shell .user-header p small em {
   color: var(--ch-text-muted) !important;
 }
 
+/*
+ * Tendina notifiche: markup Bootstrap 5 (header.blade.php). Il selettore e'
+ * volutamente lungo per battere le vecchie regole AdminLTE di custom.css
+ * (".navbar-nav > .notifications-menu > .dropdown-menu", larghezza 600px,
+ * colori fissi) che restano caricate per i markup non ancora migrati.
+ */
+body.ch-shell .navbar-nav > .notifications-menu > .dropdown-menu.ch-notifications {
+  width: 360px;
+  max-width: calc(100vw - 24px);
+  padding: 0;
+  margin-top: 6px;
+}
+
+body.ch-shell .ch-notifications .dropdown-header {
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ch-text);
+}
+
+body.ch-shell .ch-notifications .menu {
+  max-height: 320px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+body.ch-shell .ch-notifications .menu > li > a.dropdown-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 16px;
+  white-space: normal;
+  color: var(--ch-text);
+  font-size: 13px;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell .ch-notifications .menu > li:last-child > a.dropdown-item {
+  border-bottom: 0;
+}
+
+body.ch-shell .ch-notifications .menu > li > a.dropdown-item > i {
+  flex: none;
+  margin-top: 2px;
+  color: var(--ch-role-accent);
+}
+
+body.ch-shell .ch-notifications .menu > li > a.dropdown-item:hover {
+  background: var(--ch-bg);
+}
+
+body.ch-shell .ch-notifications > li > a.dropdown-item.text-center {
+  padding: 10px 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ch-role-accent);
+}
+
+body.ch-shell .ch-notifications > li > a.dropdown-item.text-center:hover {
+  background: var(--ch-role-accent-soft);
+  color: var(--ch-role-accent-dark);
+}
+
 body.ch-shell .user-footer {
   display: flex;
   align-items: center;
@@ -396,18 +543,21 @@ body.ch-shell .user-footer .btn-danger:hover {
  * confina col contenuto (angoli in alto/basso a destra).
  */
 /*
- * padding-top:64px (non 0 come gli altri lati): l'header e' dentro lo
- * stesso .wrapper con z-index piu' alto (1030 contro 810 della sidebar)
- * e occupa i primi ~52px - senza questo padding il contenuto ci finiva
- * sotto/dietro, invisibile nella sua parte superiore.
+ * Sidebar a tutta altezza (position:fixed, dall'alto al basso della
+ * finestra): l'header non la copre piu', parte dal suo bordo destro, quindi
+ * niente padding-top. Fissa invece di absolute per restare a tutta altezza
+ * anche scorrendo pagine lunghe.
  */
 body.ch-shell .main-sidebar {
   background: var(--ch-surface);
   border-right: 1px solid var(--ch-border);
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-radius: 0;
   box-shadow: none;
-  padding-top: 64px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  min-height: 0;
+  padding-top: 0;
   overflow: hidden;
   width: var(--ch-sidebar-width);
 }
@@ -456,8 +606,23 @@ body.ch-shell .main-sidebar {
     margin-left: 0;
   }
 
-  body.ch-shell.sidebar-collapse .main-header .sidebar-toggle {
+  body.ch-shell.sidebar-collapse .main-header {
     margin-left: 0;
+  }
+}
+
+/* Pagine senza sidebar principale (es. Statistic Builder): header a tutta larghezza. */
+body.ch-shell.layout-top-nav .main-header {
+  margin-left: 0;
+}
+
+@media (max-width: 767px) {
+  body.ch-shell .main-header {
+    margin-left: 0;
+  }
+
+  body.ch-shell.sidebar-open .main-header {
+    transform: translate(var(--ch-sidebar-width), 0);
   }
 }
 
@@ -487,7 +652,11 @@ body.ch-shell .sidebar-logo {
   display: flex;
   align-items: center;
   flex: none;
-  padding: 20px 22px;
+  /* Stessa altezza dell'header (navbar 52px + 1px di bordo): la linea sotto
+     il logo e quella sotto l'header sono sulla stessa riga. */
+  box-sizing: border-box;
+  height: 53px;
+  padding: 0 22px;
   border-bottom: 1px solid var(--ch-border);
 }
 
@@ -1398,6 +1567,107 @@ body.ch-shell .button_action .btn:not(.btn-detail):not(.btn-edit):not(.btn-delet
   color: var(--ch-accent-dark);
 }
 
+/*
+ * Azioni riga con testo (stili "button_text", "button_icon_text" e dropdown
+ * scelti nel module generator): components/action.blade.php le avvolge in
+ * .ba-wide per sottrarle alla regola solo-icona sopra (30x30, trasparente,
+ * font-size:0 - nasconderebbe testo e bottone del dropdown).
+ */
+body.ch-shell .button_action .ba-wide {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+body.ch-shell .button_action .ba-wide .btn {
+  width: auto;
+  height: auto;
+  margin-left: 0;
+  padding: 5px 11px;
+  gap: 6px;
+  border: 1px solid var(--ch-border-strong);
+  background: var(--ch-surface);
+  color: var(--ch-text-secondary);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+body.ch-shell .button_action .ba-wide .btn i {
+  font-size: 12px;
+}
+
+body.ch-shell .button_action .ba-wide .btn.btn-detail:hover,
+body.ch-shell .button_action .ba-wide .btn.btn-edit:hover,
+body.ch-shell .button_action .ba-wide .btn-action:hover,
+body.ch-shell .button_action .ba-wide .btn-action.show {
+  background: var(--ch-accent-soft);
+  border-color: var(--ch-accent);
+  color: var(--ch-accent-dark);
+}
+
+body.ch-shell .button_action .ba-wide .btn.btn-delete:hover {
+  background: var(--ch-danger-soft);
+  border-color: var(--ch-danger);
+  color: var(--ch-danger);
+}
+
+/* Menu a tendina delle azioni */
+body.ch-shell .button_action .ba-dropdown .dropdown-menu {
+  min-width: 11rem;
+  padding: 6px;
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  background: var(--ch-surface);
+  box-shadow: var(--ch-shadow-md);
+  font-size: 13.5px;
+  text-align: left;
+}
+
+body.ch-shell .button_action .ba-dropdown .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  color: var(--ch-text);
+  font-weight: 500;
+}
+
+body.ch-shell .button_action .ba-dropdown .dropdown-item i {
+  width: 16px;
+  text-align: center;
+  color: var(--ch-text-muted);
+}
+
+body.ch-shell .button_action .ba-dropdown .dropdown-item:hover,
+body.ch-shell .button_action .ba-dropdown .dropdown-item:focus {
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+}
+
+body.ch-shell .button_action .ba-dropdown .dropdown-item:hover i,
+body.ch-shell .button_action .ba-dropdown .dropdown-item:focus i {
+  color: var(--ch-accent-dark);
+}
+
+body.ch-shell .button_action .ba-dropdown .dropdown-item.btn-delete,
+body.ch-shell .button_action .ba-dropdown .dropdown-item.btn-delete i {
+  color: var(--ch-danger);
+}
+
+body.ch-shell .button_action .ba-dropdown .dropdown-item.btn-delete:hover {
+  background: var(--ch-danger-soft);
+}
+
+body.ch-shell .button_action .ba-dropdown .dropdown-divider {
+  margin: 5px 4px;
+  border-color: var(--ch-border);
+}
+
 /* --- Paginazione (vista Bootstrap 5 di Laravel, non un file del progetto) --- */
 body.ch-shell .pagination {
   gap: 4px;
@@ -1912,14 +2182,14 @@ body.ch-shell .modal-footer .btn {
   box-shadow: none;
   text-shadow: none;
 }
-
-body.ch-shell .modal-footer .btn-default {
+body.ch-shell .modal-footer .btn-default,
+body.ch-shell .modal-footer .btn-secondary {
   background: var(--ch-surface);
   border-color: var(--ch-border);
   color: var(--ch-text-secondary);
 }
-
-body.ch-shell .modal-footer .btn-default:hover {
+body.ch-shell .modal-footer .btn-default:hover,
+body.ch-shell .modal-footer .btn-secondary:hover {
   background: var(--ch-bg);
   color: var(--ch-text);
 }
@@ -1949,20 +2219,29 @@ body.ch-shell .modal-footer .btn-primary[disabled] {
   color: var(--ch-text-muted);
   cursor: not-allowed;
 }
-
 /* ==========================================================================
-   Popup Licenza (crudbooster/license_modal.blade.php), aperto dal link
+   Popup Licenza (crudbooster/license_modal.blade.php),
+aperto dal link
    "License" nel footer - stesso guscio card/modal gia' usato per il
    popup filtro (#advanced_filter_modal): bordo/radius/ombra sul
-   .modal-content, icona del titolo come badge tinto. La tabella
+   .modal-content,
+icona del titolo come badge tinto. La tabella
    label/valore diventa lo stesso stile di #table-detail (vedi
    default/form_detail.blade.php) al posto della tabella con bordi di
    Bootstrap. Il bottone "Close" e' passato a .btn-default nel Blade
    (stessa classe usata dal Close/Annulla di tutti gli altri popup
    dell'app) cosi' eredita lo stile gia' definito sopra per
-   .modal-footer .btn-default, senza bisogno di regole dedicate qui.
+   .modal-footer .btn-default,
+senza bisogno di regole dedicate qui.
    ========================================================================== */
-body.ch-shell #licenseModal .modal-content {
+body.ch-shell #licenseModal .modal-content,
+icona del titolo come badge tinto. La tabella
+   label/valore diventa lo stesso stile di #table-detail (vedi
+   default/form_detail.blade.php) al posto della tabella con bordi di
+   Bootstrap. Il bottone "Close" e' passato a .btn-secondary nel Blade
+   (stessa classe usata dal Close/Annulla di tutti gli altri popup
+   dell'app) cosi' eredita lo stile gia' definito sopra per
+   .modal-footer .btn-secondary {
   border: 1px solid var(--ch-border);
   border-radius: var(--ch-radius-lg);
   box-shadow: var(--ch-shadow-md);
@@ -2356,14 +2635,14 @@ body.ch-shell .box-footer .btn-success:hover {
   background: var(--ch-accent-dark);
   border-color: var(--ch-accent-dark);
 }
-
-body.ch-shell .box-footer .btn-default {
+body.ch-shell .box-footer .btn-default,
+body.ch-shell .box-footer .btn-secondary {
   background: var(--ch-surface);
   border-color: var(--ch-border);
   color: var(--ch-text-secondary);
 }
-
-body.ch-shell .box-footer .btn-default:hover {
+body.ch-shell .box-footer .btn-default:hover,
+body.ch-shell .box-footer .btn-secondary:hover {
   background: var(--ch-bg);
   color: var(--ch-text);
 }
@@ -2905,14 +3184,14 @@ body.ch-shell #box_main .btn {
   align-items: center;
   gap: 7px;
 }
-
-body.ch-shell #box_main .btn-default {
+body.ch-shell #box_main .btn-default,
+body.ch-shell #box_main .btn-secondary {
   background: var(--ch-surface);
   border: 1px solid var(--ch-border);
   color: var(--ch-text-2);
 }
-
-body.ch-shell #box_main .btn-default:hover {
+body.ch-shell #box_main .btn-default:hover,
+body.ch-shell #box_main .btn-secondary:hover {
   background: var(--ch-bg);
   color: var(--ch-text);
 }
@@ -3520,7 +3799,6 @@ body.ch-shell .btn-success:hover, body.ch-shell .btn-success:focus, body.ch-shel
   border-color: var(--ch-accent-dark);
   color: #fff;
 }
-
 /* Azioni secondarie: ghost */
 body.ch-shell .btn-default,
 body.ch-shell .btn-secondary,

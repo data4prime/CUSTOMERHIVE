@@ -1,6 +1,6 @@
 @if($form['latitude'] && $form['longitude'])
     <a href='javascript:void(0)' onclick='showModalMap{{$name}}()' title="Click to view the map">
-        <i class='fa fa-map-marker'></i> {{$value}}
+        <i class='bi bi-geo-alt-fill'></i> {{$value}}
     </a>
 @else
     {{$value}}
@@ -12,7 +12,7 @@
         <div class="modal-content">
             <div class="modal-header" style="justify-content: space-between;">
                 
-                <h4 class="modal-title"><i class='fa fa-search'></i> View Map</h4>
+                <h4 class="modal-title"><i class='bi bi-search'></i> View Map</h4>
 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

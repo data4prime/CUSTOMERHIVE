@@ -68,7 +68,7 @@
 </div>
 
 <style>
-    .ch-records-columns { max-height: 180px; overflow-y: auto; border: 1px solid #D0D5DD; border-radius: 8px; padding: 6px 10px; }
+    .ch-records-columns { max-height: 180px; overflow-y: auto; border: 1px solid var(--ch-border-strong); border-radius: 8px; padding: 6px 10px; }
     .ch-records-columns label { display: flex; align-items: center; gap: 8px; font-weight: 500; margin: 3px 0; cursor: pointer; }
     .ch-records-columns input[type=checkbox] { margin: 0; }
     .ch-records-order-row { display: flex; gap: 6px; }
@@ -78,8 +78,8 @@
     .ch-records-filter-row .ch-records-filter-key { flex: 1; min-width: 0; }
     .ch-records-filter-row .ch-records-filter-operator { flex: 0 0 160px; }
     .ch-records-filter-row .ch-records-filter-value { flex: 1; min-width: 0; }
-    .ch-records-filter-remove { border: none; background: none; color: #98A2B3; cursor: pointer; font-size: 18px; line-height: 1; padding: 0 4px; flex-shrink: 0; }
-    .ch-records-filter-remove:hover { color: #D92D20; }
+    .ch-records-filter-remove { border: none; background: none; color: var(--ch-text-muted); cursor: pointer; font-size: 18px; line-height: 1; padding: 0 4px; flex-shrink: 0; }
+    .ch-records-filter-remove:hover { color: var(--ch-danger); }
 </style>
 
 <script>
@@ -295,7 +295,7 @@
                 return;
             }
             var keys = Object.keys(response.columns);
-            var $table = $('<table class="table table-condensed" style="margin:0;">');
+            var $table = $('<table class="table table-sm" style="margin:0;">');
             var $head = $('<tr>');
             keys.forEach(function (k) { $head.append($('<th>').text(response.columns[k])); });
             $table.append($('<thead>').append($head));

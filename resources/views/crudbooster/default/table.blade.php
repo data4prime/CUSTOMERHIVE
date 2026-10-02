@@ -69,7 +69,9 @@
                 $colname = $col['label'];
                 $name = $col['name'];
                 $field = $col['field_with'];
-                $width = isset($col['width']) ?: "auto";
+                // col_width (px) e' la larghezza scelta dal wizard v2; "width"
+                // resta con il comportamento di sempre (vale true -> width='1').
+                $width = isset($col['col_width']) ? (int) $col['col_width'] : (isset($col['width']) ?: "auto");
 				$style = isset($col['style']) ?: "";
                 $mainpath = trim(CRUDBooster::mainpath(), '/').$build_query;
                 // trans() invece del testo inglese letterale - stesse chiavi
@@ -82,20 +84,20 @@
                     switch ($sort_column[$field]['sorting'] ?? '') {
                         case 'asc':
                             $url = CRUDBooster::urlFilterColumn($field, 'sorting', 'desc');
-                            echo "<a href='$url' title='$sortDescTitle'>$colname &nbsp; <i class='fa fa-sort-desc'></i></a>";
+                            echo "<a href='$url' title='$sortDescTitle'>$colname &nbsp; <i class='bi bi-sort-down'></i></a>";
                             break;
                         case 'desc':
                             $url = CRUDBooster::urlFilterColumn($field, 'sorting', 'asc');
-                            echo "<a href='$url' title='$sortAscTitle'>$colname &nbsp; <i class='fa fa-sort-asc'></i></a>";
+                            echo "<a href='$url' title='$sortAscTitle'>$colname &nbsp; <i class='bi bi-sort-up'></i></a>";
                             break;
                         default:
                             $url = CRUDBooster::urlFilterColumn($field, 'sorting', 'asc');
-                            echo "<a href='$url' title='$sortAscTitle'>$colname &nbsp; <i class='fa fa-sort'></i></a>";
+                            echo "<a href='$url' title='$sortAscTitle'>$colname &nbsp; <i class='bi bi-arrow-down-up'></i></a>";
                             break;
                     }
                 } else {
                     $url = CRUDBooster::urlFilterColumn($field, 'sorting', 'asc');
-                    echo "<a href='$url' title='$sortAscTitle'>$colname &nbsp; <i class='fa fa-sort'></i></a>";
+                    echo "<a href='$url' title='$sortAscTitle'>$colname &nbsp; <i class='bi bi-arrow-down-up'></i></a>";
                 }
 
                 echo "</th>";
@@ -121,7 +123,7 @@
                 <td colspan='{{count($columns)+1}}' align="center">
                     <?php endif;?>
 
-                    <i class='fa fa-search'></i> {{trans("crudbooster.table_data_not_found")}}
+                    <i class='bi bi-search'></i> {{trans("crudbooster.table_data_not_found")}}
                 </td>
             </tr>
             @endif
@@ -200,7 +202,7 @@ $total = $result->total();
 
 <!--
 <div class="col-md-4" style="margin:30px 0;">
-    <span class="pull-right">{{ trans("crudbooster.filter_rows_total") }}
+    <span class="float-end">{{ trans("crudbooster.filter_rows_total") }}
         : {{ $from }} {{ trans("crudbooster.filter_rows_to") }} {{ $to }} {{ trans("crudbooster.filter_rows_of") }} {{
         $total }}</span>
 </div>
@@ -391,7 +393,7 @@ $total = $result->total();
         <div class="modal-content">
             <div class="modal-header" style="justify-content: space-between;">
                 <div>
-                    <h4 class="modal-title"><i class='fa fa-filter'></i> {{trans("crudbooster.filter_dialog_title")}}</h4>
+                    <h4 class="modal-title"><i class='bi bi-funnel-fill'></i> {{trans("crudbooster.filter_dialog_title")}}</h4>
                     @isset($module_name)
                     <div class="modal-subtitle">{{ $module_name }} &middot; {{ count($columns) }} {{ count($columns) == 1 ? 'colonna disponibile' : 'colonne disponibili' }}</div>
                     @endisset
@@ -534,9 +536,9 @@ $total = $result->total();
 
                 </div>
                 <div class="modal-footer" align="right">
-                    <button class="btn btn-default" type="button"
+                    <button class="btn btn-secondary" type="button"
                         data-bs-dismiss="modal">{{trans("crudbooster.button_close")}}</button>
-                    <button class="btn btn-default btn-reset" type="reset"
+                    <button class="btn btn-secondary btn-reset" type="reset"
                         onclick='location.href="{{Request::get("lasturl")}}"'>{{trans("crudbooster.button_reset")}}</button>
                     <button class="btn btn-primary btn-submit"
                         type="submit">{{trans("crudbooster.button_submit")}}</button>
@@ -566,7 +568,7 @@ $total = $result->total();
         <div class="modal-content">
             <div class="modal-header" style="justify-content: space-between;">
                 <div>
-                    <h4 class="modal-title"><i class='fa fa-download'></i> {{trans("crudbooster.export_dialog_title")}}</h4>
+                    <h4 class="modal-title"><i class='bi bi-download'></i> {{trans("crudbooster.export_dialog_title")}}</h4>
                     @isset($module_name)
                     <div class="modal-subtitle">{{ $module_name }} &middot; {{ $total }} {{ $total == 1 ? 'riga corrisponde ai filtri attivi' : 'righe corrispondono ai filtri attivi' }}</div>
                     @endisset
@@ -601,11 +603,11 @@ $total = $result->total();
                     <div class='mb-3 form-group'>
                         <div class="export-disclosure" id="export-columns-disclosure">
                             <div class="export-disclosure-head">
-                                <i class="fa fa-columns"></i>
+                                <i class="bi bi-layout-three-columns"></i>
                                 {{trans("crudbooster.export_dialog_columns")}}
                                 <span class="export-count-pill"><span class="export-columns-checked-count">{{ count($columns) }}</span> di {{ count($columns) }} selezionate</span>
                                 <span class="export-disclosure-spacer"></span>
-                                <i class="fa fa-chevron-down export-disclosure-chevron"></i>
+                                <i class="bi bi-chevron-down export-disclosure-chevron"></i>
                             </div>
                             <div class="export-disclosure-body" style="display:none">
                                 <div class="export-columns-toolbar">
@@ -627,15 +629,15 @@ $total = $result->total();
                         <div class="export-seg" role="radiogroup">
                             <label class="export-seg-option">
                                 <input type="radio" name="fileformat" value="pdf" checked>
-                                <span><i class="fa fa-file-pdf-o"></i> PDF</span>
+                                <span><i class="bi bi-file-earmark-pdf"></i> PDF</span>
                             </label>
                             <label class="export-seg-option">
                                 <input type="radio" name="fileformat" value="xls">
-                                <span><i class="fa fa-file-excel-o"></i> Microsoft Excel (xls)</span>
+                                <span><i class="bi bi-file-earmark-excel"></i> Microsoft Excel (xls)</span>
                             </label>
                             <label class="export-seg-option">
                                 <input type="radio" name="fileformat" value="csv">
-                                <span><i class="fa fa-file-text-o"></i> CSV</span>
+                                <span><i class="bi bi-file-earmark-text"></i> CSV</span>
                             </label>
                         </div>
                     </div>
@@ -661,11 +663,11 @@ $total = $result->total();
                         </div>
                     </div>
 
-                    <p><a href='javascript:void(0)' class='toggle_advanced_report'><i class='fa fa-sliders'></i>
+                    <p><a href='javascript:void(0)' class='toggle_advanced_report'><i class='bi bi-sliders'></i>
                             {{trans("crudbooster.export_dialog_show_advanced")}}
                             <span class="export-pdf-pill">Solo per PDF</span>
                             <span class="export-disclosure-spacer"></span>
-                            <i class="fa fa-chevron-down export-disclosure-chevron"></i></a></p>
+                            <i class="bi bi-chevron-down export-disclosure-chevron"></i></a></p>
 
                     <div id='advanced_export' style='display: none'>
 
@@ -717,7 +719,7 @@ $total = $result->total();
 
                 </div>
                 <div class="modal-footer" align="right">
-                    <button class="btn btn-default" type="button"
+                    <button class="btn btn-secondary" type="button"
                         data-bs-dismiss="modal">{{trans("crudbooster.button_close")}}</button>
                     <button class="btn btn-primary btn-submit"
                         type="submit">{{trans('crudbooster.button_submit')}}</button>
@@ -775,13 +777,13 @@ $('#mass_editing_button').click(function () {
             <form method="post" action="{{ CRUDBooster::mainpath('mass-edit') }}" id="form-mass-editing">
                 <div class="modal-header" style="justify-content: space-between;">
                     <div>
-                        <h4 class="modal-title" id="mass_editing_modalLabel"><i class="fa fa-pencil"></i> Modifica multipla</h4>
+                        <h4 class="modal-title" id="mass_editing_modalLabel"><i class="bi bi-pencil-fill"></i> Modifica multipla</h4>
                         <div class="modal-subtitle">@isset($module_name){{ $module_name }} &middot; @endisset<span id="mass-edit-count-label">0 righe selezionate</span></div>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="ch-mass-edit-notice">
-                    <i class="fa fa-info-circle"></i>
+                    <i class="bi bi-info-circle-fill"></i>
                     Attiva la spunta solo sui campi che vuoi aggiornare: gli altri resteranno invariati sulle righe selezionate.
                 </div>
                 <div class="modal-body">
@@ -790,7 +792,7 @@ $('#mass_editing_button').click(function () {
                     @include("crudbooster::mass_edit.form_body")
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">{{ trans("crudbooster.button_close") }}</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ trans("crudbooster.button_close") }}</button>
                     <button type="submit" class="btn btn-primary btn-submit" id="mass-edit-submit-btn" disabled>{{ trans('crudbooster.button_submit') }} <span id="mass-edit-count-suffix"></span></button>
                 </div>
             </form>

@@ -36,14 +36,14 @@ foreach($routeCollection as $key => $value) {
 @endphp
 
 @push('bottom')
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<link rel="stylesheet" href="{{ asset('vendor/libs/morris/morris.css') }}">
 {{-- Morris.js 0.5.1 richiede Raphael per disegnare (usa SVG via Raphael).
      Nella pagina "show" arriva gia' caricato da admin_template_plugins.blade.php,
      ma la pagina "builder" usa un layout standalone (statistic_builder/layout.blade.php)
      che non lo include: senza questo script i widget Chart Area/Line/Bar
      restano vuoti li' (Raphael undefined, Morris non riesce a disegnare). --}}
-<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<script src="{{ asset('vendor/libs/raphael/raphael-min.js') }}"></script>
+<script src="{{ asset('vendor/libs/morris/morris.min.js') }}"></script>
 
 
 <script type="text/javascript">
@@ -54,10 +54,10 @@ foreach($routeCollection as $key => $value) {
             }
         });
         $(document).ajaxStart(function () {
-            $('.btn-save-statistic').html("<i class='fa fa-spin fa-spinner'></i>");
+            $('.btn-save-statistic').html("<i class='bi ch-spin bi-arrow-repeat'></i>");
         })
         $(document).ajaxStop(function () {
-            $('.btn-save-statistic').html("<i class='fa fa-save'></i> Auto Save Ready");
+            $('.btn-save-statistic').html("<i class='bi bi-floppy-fill'></i> Auto Save Ready");
         })
 
         $('.btn-show-sidebar').click(function (e) {
@@ -85,16 +85,16 @@ foreach($routeCollection as $key => $value) {
     .control-sidebar ul li {
         text-align: center;
         padding: 10px;
-        border-bottom: 1px solid #555555;
+        border-bottom: 1px solid var(--ch-text-secondary);
     }
 
     .control-sidebar ul li:hover {
-        background: #555555;
+        background: var(--ch-text-secondary);
     }
 
     .control-sidebar ul li .title {
         text-align: center;
-        color: #ffffff;
+        color: var(--ch-surface);
     }
 
     .control-sidebar ul li img {
@@ -116,7 +116,7 @@ foreach($routeCollection as $key => $value) {
     function addWidget(id_cms_statistics, area, component) {
         console.log("Add Widget " + component + " to " + area);
         var id = new Date().getTime();
-        $('#' + area).append("<div id='" + id + "' class='area-loading'><i class='fa fa-spin fa-spinner'></i></div>");
+        $('#' + area).append("<div id='" + id + "' class='area-loading'><i class='bi ch-spin bi-arrow-repeat'></i></div>");
 
         var sorting = $('#' + area + ' .border-box').length;
         $.post("{{CRUDBooster::mainpath('add-component')}}", {
@@ -133,9 +133,9 @@ foreach($routeCollection as $key => $value) {
 </script>
 <!--DATATABLE-->
 <link rel="stylesheet"
-    href="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/datatables/dataTables.bootstrap.css')}}">
-<script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/datatables/jquery.dataTables.min.js')}}"></script>
-<script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/datatables/dataTables.bootstrap.min.js')}}"></script>
+    href="{{ asset ('vendor/plugins/datatables/dataTables.bootstrap5.min.css')}}">
+<script src="{{ asset ('vendor/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset ('vendor/plugins/datatables/dataTables.bootstrap5.min.js')}}"></script>
 <!--END HERE-->
 @endpush
 
@@ -145,11 +145,11 @@ foreach($routeCollection as $key => $value) {
 <!-- jQuery UI 1.11.4 -->
 <style type="text/css">
     .sort-highlight {
-        border: 3px dashed #cccccc;
+        border: 3px dashed var(--ch-border-strong);
     }
 
     .layout-grid {
-        border: 1px dashed #cccccc;
+        border: 1px dashed var(--ch-border-strong);
         min-height: 150px;
     }
 
@@ -178,8 +178,8 @@ foreach($routeCollection as $key => $value) {
         text-align: center;
         display: none;
         padding: 3px 5px 3px 5px;
-        background: #DD4B39;
-        color: #ffffff;
+        background: var(--ch-danger);
+        color: var(--ch-surface);
         width: 70px;
         -webkit-border-bottom-right-radius: 5px;
         -webkit-border-bottom-left-radius: 5px;
@@ -195,11 +195,11 @@ foreach($routeCollection as $key => $value) {
     }
 
     .border-box .action a {
-        color: #ffffff;
+        color: var(--ch-surface);
     }
 
     .border-box:hover {
-        /*border:2px dotted #BC3F30;*/
+        /*border:2px dotted var(--ch-danger);*/
     }
 
     @if(CRUDBooster::getCurrentMethod()=='getBuilder') 
@@ -223,9 +223,9 @@ foreach($routeCollection as $key => $value) {
        vista index.blade.php) non deve comparire nessun bordo tratteggiato
        intorno ai widget veri. */
     .connectedSortable {
-        border: 2px dashed #ccc;
+        border: 2px dashed var(--ch-border-strong);
         border-radius: 4px;
-        background: #fafafa;
+        background: var(--ch-bg);
         min-height: 100px;
     }
 
@@ -237,10 +237,10 @@ foreach($routeCollection as $key => $value) {
         position: relative;
         width: 100%;
         height: 130px;
-        background: #dedede;
-        border: 4px dashed #cccccc;
+        background: var(--ch-bg);
+        border: 4px dashed var(--ch-border-strong);
         font-size: 50px;
-        color: #aaaaaa;
+        color: var(--ch-text-muted);
         margin-bottom: 20px;
     }
 
@@ -256,8 +256,8 @@ foreach($routeCollection as $key => $value) {
        cosi' il widget non resta a caricare all'infinito senza che
        l'utente sappia perche'. */
     .area-loading:has(.ch-widget-error) {
-        background: #fbeaeb;
-        border-color: #d1373f;
+        background: var(--ch-danger-soft);
+        border-color: var(--ch-danger);
     }
 
     .area-loading .ch-widget-error {
@@ -270,7 +270,7 @@ foreach($routeCollection as $key => $value) {
         padding: 0 16px;
         font-size: 13px;
         font-weight: 600;
-        color: #d1373f;
+        color: var(--ch-danger);
         text-align: center;
     }
 
@@ -280,11 +280,11 @@ foreach($routeCollection as $key => $value) {
         font-size: 18px;
     }
 </style>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="{{ asset('vendor/libs/jquery-ui/jquery-ui.css') }}">
 @endpush
 
 @push('bottom')
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script src="{{ asset('vendor/libs/jquery-ui/jquery-ui.min.js') }}"></script>
 <script type="text/javascript">
     $(function () {
 
@@ -375,7 +375,7 @@ foreach($routeCollection as $key => $value) {
                 if (response.components) {
 
                     $.each(response.components, function (i, obj) {
-                        $('#' + areaname).append("<div id='area-loading-" + obj.componentID + "' class='area-loading'><i class='fa fa-spin fa-spinner'></i></div>");
+                        $('#' + areaname).append("<div id='area-loading-" + obj.componentID + "' class='area-loading'><i class='bi ch-spin bi-arrow-repeat'></i></div>");
                         $.get("{{CRUDBooster::adminpath('statistic_builder/view-component')}}/" + obj.componentID, function (view) {
                             console.log('View For CID ' + view.componentID);
                             $('#area-loading-' + obj.componentID).remove();
@@ -387,7 +387,7 @@ foreach($routeCollection as $key => $value) {
                             // .fail(), lo spinner e' l'unico stato mostrato
                             // finche' l'utente non ricarica la pagina).
                             $('#area-loading-' + obj.componentID).html(
-                                "<div class='ch-widget-error'><i class='fa fa-exclamation-triangle'></i>" +
+                                "<div class='ch-widget-error'><i class='bi bi-exclamation-triangle-fill'></i>" +
                                 "<span>Impossibile caricare questo widget (HTTP " + xhr.status + ").</span></div>"
                             );
                         })
@@ -424,7 +424,7 @@ foreach($routeCollection as $key => $value) {
             var name = $(this).data('name');
 
             $('#modal-statistic .modal-title').text(name);
-            $('#modal-statistic .modal-body').html("<i class='fa fa-spin fa-spinner'></i> Please wait loading...");
+            $('#modal-statistic .modal-body').html("<i class='bi ch-spin bi-arrow-repeat'></i> Please wait loading...");
             $('#modal-statistic-validation-alert').hide();
             $('#modal-statistic').modal('show');
 
@@ -509,7 +509,7 @@ foreach($routeCollection as $key => $value) {
                 <p>One fine body&hellip;</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn-submit btn btn-primary" data-bs-loading-text="Saving..."
                     autocomplete="off">Save changes</button>
             </div>

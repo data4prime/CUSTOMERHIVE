@@ -36,14 +36,10 @@ if ($method != 'content_view') {
 <!--navbar navbar-expand-lg navbar-light justify-content-between-->
     <!-- Header Navbar -->
     <nav style="padding: 0;" class="navbar navbar-expand-sm navbar-light justify-content-between" role="navigation">
-        <!-- Sidebar toggle button. ATTENZIONE: data-bs-toggle="offcanvas" non
-             e' markup morto di Bootstrap 5 (era stato rimosso per errore
-             durante il revamp UI/UX, rompendo il toggle) - questa copia
-             vendorizzata/personalizzata di AdminLTE dist/js/app.js usa
-             letteralmente questo attributo come selettore per agganciare il
-             click (vedi $.AdminLTE.options.sidebarToggleSelector nello
-             stesso file). Non rimuovere senza aggiornare anche quel JS. -->
-        <a href="#" class="sidebar-toggle" data-bs-toggle="offcanvas" role="button">
+        {{-- Toggle della sidebar: agganciato da public/js/ch-shell.js tramite
+             data-ch-toggle="sidebar" (il vecchio data-bs-toggle="offcanvas"
+             di AdminLTE e' ancora accettato come selettore di ripiego). --}}
+        <a href="#" class="sidebar-toggle" data-ch-toggle="sidebar" role="button">
             <span class="visually-hidden">Toggle navigation</span>
         </a>
         <!-- Navbar Right Menu -->
@@ -54,7 +50,7 @@ if ($method != 'content_view') {
         <!-- Assistance Menu Item -->
         <li class="nav-item assistance-menu">
             <a href="#" class="nav-link toggle-sidebar-btn" id="toggle-chat" title="AI Assistance" aria-expanded="false">
-                <i id="icon_assistance" class="fa fa-comments-o"></i>
+                <i id="icon_assistance" class="bi bi-chat-dots"></i>
                 <span id="assistance_count" class="badge bg-danger" style="display:none">0</span>
             </a>
         </li>
@@ -66,7 +62,7 @@ if ($method != 'content_view') {
                 @if (!empty($url))
                     <li class="nav-item assistance-menu">
                         <a class="nav-link" href="{{$url}}" target="_blank" title='Helper' >
-                            <i id='icon_assistance' class="fa fa-question-circle">
+                            <i id='icon_assistance' class="bi bi-question-circle-fill">
                             </i>
                             <span id='assistance_count' class="badge bg-danger" style="display:none">0</span>
                         </a>
@@ -77,18 +73,21 @@ if ($method != 'content_view') {
         <!-- Notifications Menu -->
         <li class="nav-item dropdown notifications-menu">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" title="Notifications" aria-expanded="false">
-                <i id="icon_notification" class="fa fa-bell-o"></i>
+                <i id="icon_notification" class="bi bi-bell"></i>
                 <span id="notification_count" class="badge bg-danger" style="display:none">0</span>
             </a>
-            <ul id="list_notifications" class="dropdown-menu">
-                <li class="dropdown-header">{{trans("crudbooster.text_no_notification")}}</li>
+            {{-- Tendina notifiche: markup Bootstrap 5 (dropdown-header / dropdown-item /
+                 dropdown-divider). Le voci sono generate da public/vendor/crudbooster/
+                 assets/js/main.js (loader_notification) dentro ".menu"; il titolo
+                 ".dropdown-header" ne mostra il conteggio. Stili: .ch-notifications in theme.css. --}}
+            <ul id="list_notifications" class="dropdown-menu dropdown-menu-end ch-notifications">
+                <li><h6 class="dropdown-header">{{trans("crudbooster.text_no_notification")}}</h6></li>
+                <li><hr class="dropdown-divider m-0"></li>
                 <li>
-                    <!-- inner menu: contains the actual data -->
-                    <div class="overflow-auto" style="height: 200px;">
-                        <ul class="menu list-unstyled" style="height: 200px;"></ul>
-                    </div>
+                    <ul class="menu list-unstyled mb-0"></ul>
                 </li>
-                <li class="dropdown-footer"><a href="{{route('NotificationsControllerGetIndex')}}">{{trans("crudbooster.text_view_all_notification")}}</a></li>
+                <li><hr class="dropdown-divider m-0"></li>
+                <li><a class="dropdown-item text-center" href="{{route('NotificationsControllerGetIndex')}}">{{trans("crudbooster.text_view_all_notification")}}</a></li>
             </ul>
         </li>
 
@@ -114,10 +113,10 @@ if ($method != 'content_view') {
                 <!-- Menu Footer-->
                 <li class="user-footer">
                     <div class="pull-{{ trans('crudbooster.left') }}">
-                        <a href="{{ route('AdminCmsUsersControllerGetProfile') }}" class="btn btn-default btn-flat"><i class="fa fa-user"></i> Profile</a>
+                        <a href="{{ route('AdminCmsUsersControllerGetProfile') }}" class="btn btn-secondary"><i class="bi bi-person-fill"></i> Profile</a>
                     </div>
                     <div class="pull-{{ trans('crudbooster.right') }}">
-                        <a title="Lock Screen" href="{{ route('getLockScreen') }}" class="btn btn-default btn-flat"><i class="fa fa-key"></i></a>
+                        <a title="Lock Screen" href="{{ route('getLockScreen') }}" class="btn btn-secondary"><i class="bi bi-key-fill"></i></a>
                         <a href="javascript:void(0)" onclick="swal({
                                 title:'{{trans('crudbooster.alert_want_to_logout')}}',
                                 type: 'info',
@@ -129,8 +128,8 @@ if ($method != 'content_view') {
                                 closeOnConfirm: false
                             }, function(){
                                 location.href = '{{ route("getLogout") }}';
-                            });" title="{{trans('crudbooster.button_logout')}}" class="btn btn-danger btn-flat">
-                            <i class="fa fa-power-off"></i></a>
+                            });" title="{{trans('crudbooster.button_logout')}}" class="btn btn-danger">
+                            <i class="bi bi-power"></i></a>
                     </div>
                     
                 </li>

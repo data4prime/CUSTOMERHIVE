@@ -46,10 +46,10 @@ dd($menu_active);
             </div>
         </div>
 
-        <div class='action pull-right'>
+        <div class='action float-end'>
             <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='card Custom' class='btn-edit-component'><i
-                        class='fa fa-pencil'></i></a> &nbsp;
-            <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i class='fa fa-trash'></i></a>
+                        class='bi bi-pencil-fill'></i></a> &nbsp;
+            <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i class='bi bi-trash-fill'></i></a>
         </div>
     </div>
 @elseif($command=='configuration')
@@ -89,7 +89,7 @@ dd($menu_active);
 
     <script>
         $(function () {
-            $('#content-{{$componentID}}').html("<i class='fa fa-spin fa-spinner'></i> Please wait loading...");
+            $('#content-{{$componentID}}').html("<i class='bi ch-spin bi-arrow-repeat'></i> Please wait loading...");
             $.get('{{$url}}', function (response) {
 
                 //from respose, we need to get the content_section id

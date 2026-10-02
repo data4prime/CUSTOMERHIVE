@@ -63,6 +63,9 @@
     ?>
 @endforeach
 @if($button_action_style == 'button_text')
+{{-- ba-wide: gli stili con testo escono dal riquadro 30x30 solo-icona di
+     theme.css (.button_action .btn), vedi docs/refactoring/205. --}}
+<div class='ba-wide ba-text'>
 
 @if(CRUDBooster::isRead() && $button_detail)
 <a class='btn btn-sm btn-primary btn-detail' title='{{trans("crudbooster.action_detail_data")}}'
@@ -72,59 +75,45 @@
 @endif
 
 @if(CRUDBooster::isUpdate() && $button_edit)
-<!--<a class='btn btn-sm btn-success btn-edit' title='{{trans("crudbooster.action_edit_data")}}'
-  href='{{CRUDBooster::mainpath("edit/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())."&parent_id=".g("parent_id")."&parent_field=".$parent_field }}'>
-  {{trans("crudbooster.action_edit_data")}}
-</a>-->
 <a class='btn btn-sm btn-success btn-edit' title='{{trans("crudbooster.action_edit_data")}}'
   href='{{CRUDBooster::mainpath("edit/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())."&parent_id=".g("parent_id")."&parent_field=".$parent_field }}'>
-
+  {{trans("crudbooster.action_edit_data")}}
+</a>
 @endif
 
 @if(CRUDBooster::isDelete() && $button_delete)
 <?php $url = CRUDBooster::mainpath("delete/".$row->$pk);?>
-<!--<a class='btn btn-sm btn-warning btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
+<a class='btn btn-sm btn-danger btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
   onclick='{{CRUDBooster::deleteConfirm($url)}}'>
   {{trans("crudbooster.action_delete_data")}}
-</a>-->
-<a class='btn btn-sm btn-warning btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
-  onclick='{{CRUDBooster::deleteConfirm($url)}}'>
-  
 </a>
 @endif
+</div>
 @elseif($button_action_style == 'button_icon_text')
+<div class='ba-wide ba-icon-text'>
 
 @if(CRUDBooster::isRead() && $button_detail)
 <a class='btn btn-sm btn-primary btn-detail' title='{{trans("crudbooster.action_detail_data")}}'
   href='{{CRUDBooster::mainpath("detail/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())}}'>
-  <i class='fa fa-eye'></i> {{trans("crudbooster.action_detail_data")}}
+  <i class='bi bi-eye-fill'></i> {{trans("crudbooster.action_detail_data")}}
 </a>
 @endif
 
 @if(CRUDBooster::isUpdate() && $button_edit)
-<!--<a class='btn btn-sm btn-success btn-edit' title='{{trans("crudbooster.action_edit_data")}}'
-  href='{{CRUDBooster::mainpath("edit/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())."&parent_id=".g("parent_id")."&parent_field=".$parent_field }}'>
-  <i class='fa fa-pencil'></i> {{trans("crudbooster.action_edit_data")}}
-</a>-->
 <a class='btn btn-sm btn-success btn-edit' title='{{trans("crudbooster.action_edit_data")}}'
   href='{{CRUDBooster::mainpath("edit/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())."&parent_id=".g("parent_id")."&parent_field=".$parent_field }}'>
-  <i class='fa fa-pencil'></i>
+  <i class='bi bi-pencil-fill'></i> {{trans("crudbooster.action_edit_data")}}
 </a>
 @endif
 
 @if(CRUDBooster::isDelete() && $button_delete)
 <?php $url = CRUDBooster::mainpath("delete/".$row->$pk);?>
-<!--
 <a class='btn btn-sm btn-danger btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
   onclick='{{CRUDBooster::deleteConfirm($url)}}'>
-  <i class='fa fa-trash'></i> {{trans("crudbooster.action_delete_data")}}
-</a>
--->
-<a class='btn btn-sm btn-danger btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
-  onclick='{{CRUDBooster::deleteConfirm($url)}}'>
-  <i class='fa fa-trash'></i>
+  <i class='bi bi-trash-fill'></i> {{trans("crudbooster.action_delete_data")}}
 </a>
 @endif
+</div>
 
 @elseif($button_action_style == 'button_icon_strict')
 {{--
@@ -142,30 +131,31 @@
 @if(CRUDBooster::isRead() && $button_detail)
 <a class='btn btn-sm btn-primary btn-detail' title='{{trans("crudbooster.action_detail_data")}}'
   href='{{CRUDBooster::mainpath("detail/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())}}'><i
-    class='fa fa-eye'></i></a>
+    class='bi bi-eye-fill'></i></a>
 @endif
 
 @if(CRUDBooster::isUpdate() && $button_edit)
 <a class='btn btn-sm btn-success btn-edit' title='{{trans("crudbooster.action_edit_data")}}'
   href='{{CRUDBooster::mainpath("edit/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())."&parent_id=".g("parent_id")."&parent_field=".$parent_field}}'><i
-    class='fa fa-pencil'></i></a>
+    class='bi bi-pencil-fill'></i></a>
 @endif
 
 @if(CRUDBooster::isDelete() && $button_delete)
 <?php $url = CRUDBooster::mainpath("delete/".$row->$pk);?>
 <a class='btn btn-sm btn-danger btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
-  onclick='{{CRUDBooster::deleteConfirm($url)}}'><i class='fa fa-trash'></i></a>
+  onclick='{{CRUDBooster::deleteConfirm($url)}}'><i class='bi bi-trash-fill'></i></a>
 @endif
 
-@elseif($button_action_style == 'dropdown')
+@elseif(in_array($button_action_style, ['dropdown', 'button_dropdown'], true))
 
-<div class='btn-group btn-group-action'>
-  <button type='button' class='btn btn-sm btn-primary btn-action'>{{trans("crudbooster.action_label")}}</button>
-  <button type='button' class='btn btn-sm btn-primary dropdown-toggle' data-bs-toggle='dropdown'>
-    <span class='caret'></span>
-    <span class='sr-only'>Toggle Dropdown</span>
+{{-- Markup Bootstrap 5: un solo bottone con la freccia, menu allineato a
+     destra e con posizione "fixed" (non tagliato dal contenitore della
+     tabella). Stile in theme.css (.ba-dropdown), docs/refactoring/205. --}}
+<div class='dropdown ba-wide ba-dropdown'>
+  <button type='button' class='btn btn-sm dropdown-toggle btn-action' data-bs-toggle='dropdown' data-bs-popper-config='{"strategy":"fixed"}' aria-expanded='false'>
+    {{trans("crudbooster.action_label")}}
   </button>
-  <ul class='dropdown-menu dropdown-menu-action' role='menu'>
+  <ul class='dropdown-menu dropdown-menu-end' role='menu'>
     @foreach($addaction as $a)
     <?php
           foreach ($row as $key => $val) {
@@ -186,46 +176,41 @@
               }
 
               @eval("if($query) {
-                  echo \"<li><a title='\$label' href='\$url'><i class='\$icon'></i> \$label</a></li>\";
+                  echo \"<li><a class='dropdown-item' title='\$label' href='\$url'><i class='\$icon'></i> \$label</a></li>\";
               }");
           } else {
-              echo "<li><a title='$label' href='$url'><i class='$icon'></i> $label</a></li>";
+              echo "<li><a class='dropdown-item' title='$label' href='$url'><i class='$icon'></i> $label</a></li>";
           }
           ?>
     @endforeach
 
     @if(CRUDBooster::isRead() && $button_detail)
     <li>
-      <a class='btn-detail' title='{{trans("crudbooster.action_detail_data")}}'
+      <a class='dropdown-item btn-detail' title='{{trans("crudbooster.action_detail_data")}}'
         href='{{CRUDBooster::mainpath("detail/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())}}'>
-        <i class='fa fa-eye'></i> {{trans("crudbooster.action_detail_data")}}
+        <i class='bi bi-eye-fill'></i> {{trans("crudbooster.action_detail_data")}}
       </a>
     </li>
     @endif
 
     @if(CRUDBooster::isUpdate() && $button_edit)
     <li>
-      <!--<a class='btn-edit' title='{{trans("crudbooster.action_edit_data")}}'
+      <a class='dropdown-item btn-edit' title='{{trans("crudbooster.action_edit_data")}}'
         href='{{CRUDBooster::mainpath("edit/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())."&parent_id=".g("parent_id")."&parent_field=".$parent_field}}'>
-        <i class='fa fa-pencil'></i> {{trans("crudbooster.action_edit_data")}}
-      </a>-->
-<a class='btn-edit' title='{{trans("crudbooster.action_edit_data")}}'
-        href='{{CRUDBooster::mainpath("edit/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())."&parent_id=".g("parent_id")."&parent_field=".$parent_field}}'>
-        <i class='fa fa-pencil'></i> 
+        <i class='bi bi-pencil-fill'></i> {{trans("crudbooster.action_edit_data")}}
       </a>
     </li>
     @endif
 
     @if(CRUDBooster::isDelete() && $button_delete)
     <?php $url = CRUDBooster::mainpath("delete/".$row->$pk); ?>
+    @if(count($addaction) || (CRUDBooster::isRead() && $button_detail) || (CRUDBooster::isUpdate() && $button_edit))
+    <li><hr class='dropdown-divider'></li>
+    @endif
     <li>
-      <!--<a class='btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
+      <a class='dropdown-item btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
         onclick='{{CRUDBooster::deleteConfirm($url)}}'>
-        <i class='fa fa-trash'></i> {{trans("crudbooster.action_delete_data")}}
-      </a>-->
-<a class='btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
-        onclick='{{CRUDBooster::deleteConfirm($url)}}'>
-        <i class='fa fa-trash'></i> 
+        <i class='bi bi-trash-fill'></i> {{trans("crudbooster.action_delete_data")}}
       </a>
 
     </li>
@@ -237,19 +222,19 @@
 @if(ModuleHelper::can_view($this_module, $row))
 <a class='btn btn-sm btn-primary btn-detail' title='{{trans("crudbooster.action_detail_data")}}'
   href='{{CRUDBooster::mainpath("detail/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())}}'><i
-    class='fa fa-eye'></i></a>
+    class='bi bi-eye-fill'></i></a>
 @endif
 
 @if(ModuleHelper::can_edit($this_module, $row))
 <a class='btn btn-sm btn-success btn-edit' title='{{trans("crudbooster.action_edit_data")}}'
   href='{{CRUDBooster::mainpath("edit/".$row->$pk)."?return_url=".urlencode(Request::fullUrl())."&parent_id=".g("parent_id")."&parent_field=".$parent_field}}'><i
-    class='fa fa-pencil'></i></a>
+    class='bi bi-pencil-fill'></i></a>
 @endif
 
 @if(ModuleHelper::can_delete($this_module, $row))
 <?php $url = CRUDBooster::mainpath("delete/".$row->$pk);?>
 <a class='btn btn-sm btn-danger btn-delete' title='{{trans("crudbooster.action_delete_data")}}' href='javascript:;'
-  onclick='{{CRUDBooster::deleteConfirm($url)}}'><i class='fa fa-trash'></i></a>
+  onclick='{{CRUDBooster::deleteConfirm($url)}}'><i class='bi bi-trash-fill'></i></a>
 @endif
 
 @endif

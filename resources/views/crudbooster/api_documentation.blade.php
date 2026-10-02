@@ -5,26 +5,26 @@
 <ul class="nav flex-row">
     <li class="nav-item">
         <a class="nav-link active" href="/admin/api_generator">
-            <i class="fa fa-file"></i> {{ trans('crudbooster.api_documentation') }}
+            <i class="bi bi-file-earmark-fill"></i> {{ trans('crudbooster.api_documentation') }}
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="/admin/api_generator/screet-key">
-            <i class="fa fa-key"></i> {{ trans('crudbooster.api_secret_key') }}
+            <i class="bi bi-key-fill"></i> {{ trans('crudbooster.api_secret_key') }}
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="/admin/api_generator/generator">
-            <i class="fa fa-cog"></i> {{ trans('crudbooster.api_generator') }}
+            <i class="bi bi-gear-fill"></i> {{ trans('crudbooster.api_generator') }}
         </a>
     </li>
 </ul>
 
 <!--
 <ul class="nav nav-tabs">
-    <li class="active"><a href="{{ CRUDBooster::mainpath() }}"><i class='fa fa-file'></i> API Documentation</a></li>
-    <li><a href="{{ CRUDBooster::mainpath('screet-key') }}"><i class='fa fa-key'></i> API Secret Key</a></li>
-    <li><a href="{{ CRUDBooster::mainpath('generator') }}"><i class='fa fa-cog'></i> API Generator</a></li>
+    <li class="active"><a href="{{ CRUDBooster::mainpath() }}"><i class='bi bi-file-earmark-fill'></i> API Documentation</a></li>
+    <li><a href="{{ CRUDBooster::mainpath('screet-key') }}"><i class='bi bi-key-fill'></i> API Secret Key</a></li>
+    <li><a href="{{ CRUDBooster::mainpath('generator') }}"><i class='bi bi-gear-fill'></i> API Generator</a></li>
 </ul>
 -->
 
@@ -44,8 +44,8 @@
         @push('head')
         <style>
             .table-api tbody tr td a {
-                color: #db0e00;
-                font-family: arial;
+                color: var(--ch-danger);
+                font-family: var(--ch-font);
             }
         </style>
         @endpush
@@ -225,10 +225,10 @@
                     <div class="d-flex justify-content-end align-items-center">
                         <div class="d-flex">
                             <a title="Delete this API" onclick="deleteApi({{ $api->id }})" href="javascript:void(0)" class="text-danger me-2">
-                                <i class="fa fa-trash"></i>
+                                <i class="bi bi-trash-fill"></i>
                             </a>
                             <a title="Edit This API" href="{{ url(config('crudbooster.ADMIN_PATH').'/api_generator/edit-api/'.$api->id) }}" class="text-warning">
-                                <i class="fa fa-pencil"></i>
+                                <i class="bi bi-pencil-fill"></i>
                             </a>
                         </div>
                     </div>
@@ -236,7 +236,7 @@
             </tr>
 
                 <td colspan="3">
-                    <div id="detail_api_{{ $api->id }}" class=" collapse mt-3"   >
+                    <div id="detail_api_{{ $api->id }}" class="collapse mt-3"   >
                         <table class="table table-bordered mt-3">
                             <tr>
                                 <td width="12%"><strong>URL</strong></td>
@@ -288,7 +288,7 @@
                                                 @endforeach
                                                 @if($i == 0)
                                                     <tr>
-                                                        <td colspan="5" class="text-center"><i class="fa fa-search"></i> There are no parameters</td>
+                                                        <td colspan="5" class="text-center"><i class="bi bi-search"></i> There are no parameters</td>
                                                     </tr>
                                                 @endif
 

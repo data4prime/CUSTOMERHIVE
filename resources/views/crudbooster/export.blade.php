@@ -13,7 +13,7 @@
                 }
             }
             $colname = $col['label'];
-            echo "<th style='background:#eeeeee'>$colname</th>";
+            echo "<th style='background:var(--ch-bg)'>$colname</th>";
         }
         ?>
         </tr>

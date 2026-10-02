@@ -93,15 +93,15 @@ class AdminModuleHelperController extends CBController
         | ----------------------------------------------------------------------
         | @label       = Label of action
         | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
-        | @icon        = Font awesome class icon. e.g : fa fa-bars
+        | @icon        = Font awesome class icon. e.g : bi bi-list
         | @color 	   = Default is primary. (primary, warning, succecss, info)
         | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
         |
         */
 		$this->addaction = array();
-		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('content/[id]'), 'icon' => 'fa fa-search', 'color' => 'info', 'title' => 'View item'];
-		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('access/[id]'), 'icon' => 'fa fa-users', 'color' => 'info', 'title' => 'Set group'];
-		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Set tenant'];
+		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('content/[id]'), 'icon' => 'bi bi-search', 'color' => 'info', 'title' => 'View item'];
+		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('access/[id]'), 'icon' => 'bi bi-people-fill', 'color' => 'info', 'title' => 'Set group'];
+		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'bi bi-buildings-fill', 'color' => 'primary', 'title' => 'Set tenant'];
 
 
 		/*

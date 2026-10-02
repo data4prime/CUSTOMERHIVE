@@ -109,15 +109,15 @@
 	        | ----------------------------------------------------------------------
 	        | @label       = Label of action
 	        | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
-	        | @icon        = Font awesome class icon. e.g : fa fa-bars
+	        | @icon        = Font awesome class icon. e.g : bi bi-list
 	        | @color 	   = Default is primary. (primary, warning, succecss, info)
 	        | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
 	        |
 	        */
 	        $this->addaction = array();
-					// $this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('[id]/righe/add'),'icon'=>'fa fa-plus','color'=>'success','title'=>'Aggiungi Riga'];
-					// $this->addaction[] = ['label'=>'','url'=>CRUDBooster::adminpath('[id]/righe/index'),'icon'=>'fa fa-list','color'=>'info','title'=>'Righe'];
-					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('print/[id]'),'icon'=>'fa fa-print','color'=>'info','title'=>'Stampa'];
+					// $this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('[id]/righe/add'),'icon'=>'bi bi-plus-lg','color'=>'success','title'=>'Aggiungi Riga'];
+					// $this->addaction[] = ['label'=>'','url'=>CRUDBooster::adminpath('[id]/righe/index'),'icon'=>'bi bi-list-task','color'=>'info','title'=>'Righe'];
+					$this->addaction[] = ['label'=>'','url'=>CRUDBooster::mainpath('print/[id]'),'icon'=>'bi bi-printer','color'=>'info','title'=>'Stampa'];
 
 	        /*
 	        | ----------------------------------------------------------------------

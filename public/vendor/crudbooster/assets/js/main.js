@@ -120,10 +120,10 @@
           }
 
           $('.notifications-menu #list_notifications .menu').empty();
-		  $('.notifications-menu .header').text(NOTIFICATION_YOU_HAVE +' '+resp.total+' '+ NOTIFICATION_NOTIFICATIONS);
+		  $('.notifications-menu #list_notifications .dropdown-header').text(NOTIFICATION_YOU_HAVE +' '+resp.total+' '+ NOTIFICATION_NOTIFICATIONS);
           var htm = '';
           $.each(resp.items,function(i,obj) {
-              htm += '<li><a href="'+ADMIN_PATH+'/notifications/read/'+obj.id+'?m=0"><i class="'+obj.icon+'"></i> '+obj.content+'</a></li>';
+              htm += '<li><a class="dropdown-item" href="'+ADMIN_PATH+'/notifications/read/'+obj.id+'?m=0"><i class="'+obj.icon+'"></i> <span>'+obj.content+'</span></a></li>';
           })
           $('.notifications-menu #list_notifications .menu').html(htm);
 
@@ -137,38 +137,4 @@
       },10000);
     });
 
-		function rama_fix_sidebar() {
-      // Remove overflow from .wrapper if layout-boxed exists
-      $(".layout-boxed > .wrapper").css('overflow', 'hidden');
-      //Get window height and the wrapper height
-      var footer_height = $('.main-footer').outerHeight() || 0;
-      var neg = $('.main-header').outerHeight() + footer_height;
-      var window_height = $(window).height();
-      var sidebar_height = $(".main-sidebar").height() || 0;
-      //Set the min-height of the content and sidebar based on the
-      //the height of the document.
-      if ($("body").hasClass("fixed")) {
-        $(".content-wrapper, .right-side").css('min-height', window_height - footer_height);
-      }
-      else {
-        var postSetWidth;
-        if (window_height >= sidebar_height) {
-          $(".content-wrapper, .right-side").css('min-height', window_height - neg);
-          postSetWidth = window_height - neg;
-        } else {
-          $(".content-wrapper, .right-side").css('min-height', sidebar_height);
-          postSetWidth = sidebar_height;
-        }
-
-        //Fix for the control sidebar height
-        var controlSidebar = $($.AdminLTE.options.controlSidebarOptions.selector);
-        if (typeof controlSidebar !== "undefined") {
-          if (controlSidebar.height() > postSetWidth)
-            $(".content-wrapper, .right-side").css('min-height', controlSidebar.height());
-        }
-
-      }
-    };
-		$( document ).ready(function() {
-			rama_fix_sidebar();
-		});
+		// Altezza minima del contenuto: ora gestita da public/js/ch-shell.js (CHShell.layout.fix).

@@ -98,17 +98,17 @@ class AdminChatAIController extends CBController
         | ----------------------------------------------------------------------
         | @label       = Label of action
         | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
-        | @icon        = Font awesome class icon. e.g : fa fa-bars
+        | @icon        = Font awesome class icon. e.g : bi bi-list
         | @color 	   = Default is primary. (primary, warning, succecss, info)
         | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
         |
         */
 		$this->addaction = array();
-		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('content/[id]'), 'icon' => 'fa fa-search', 'color' => 'info', 'title' => 'View item'];
+		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('content/[id]'), 'icon' => 'bi bi-search', 'color' => 'info', 'title' => 'View item'];
 		//modulo interamente ChatAI: senza il modulo in licenza niente pulsanti
 		if (LicenseHelper::isActiveChatAI()) {
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('access/[id]'), 'icon' => 'fa fa-users', 'color' => 'info', 'title' => 'Set group'];
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Set tenant'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('access/[id]'), 'icon' => 'bi bi-people-fill', 'color' => 'info', 'title' => 'Set group'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'bi bi-buildings-fill', 'color' => 'primary', 'title' => 'Set tenant'];
 		}
 
 
@@ -420,7 +420,7 @@ class AdminChatAIController extends CBController
 			//se è alert=1
 			if ($alert_id == '1') {
 				//mostra messaggio di warning per tasto add premuto senza valori required
-				$data['alerts'][] = ['message' => '<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
+				$data['alerts'][] = ['message' => '<h4><i class="icon bi bi-exclamation-triangle-fill"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
 			}
 		}
 		//add group form
@@ -454,7 +454,7 @@ class AdminChatAIController extends CBController
 			//se è alert=1
 			if ($alert_id == '1') {
 				//mostra messaggio di warning per tasto add premuto senza valori required
-				$data['alerts'][] = ['message' => '<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
+				$data['alerts'][] = ['message' => '<h4><i class="icon bi bi-exclamation-triangle-fill"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
 			}
 		}
 

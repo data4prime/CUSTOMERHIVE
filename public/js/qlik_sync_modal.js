@@ -94,10 +94,10 @@
         var bar = el('div', '', 'display:flex;gap:6px;align-items:center;flex-wrap:wrap');
         var btnSel = el('button', T.select_visible);
         btnSel.type = 'button';
-        btnSel.className = 'btn btn-default btn-xs';
+        btnSel.className = 'btn btn-secondary btn-sm';
         var btnDesel = el('button', T.deselect_visible);
         btnDesel.type = 'button';
-        btnDesel.className = 'btn btn-default btn-xs';
+        btnDesel.className = 'btn btn-secondary btn-sm';
         var counter = el('span', '', 'margin-left:auto;color:#555');
         bar.appendChild(btnSel);
         bar.appendChild(btnDesel);
@@ -159,7 +159,7 @@
                 wrapSpin.setAttribute('role', 'status');
                 wrapSpin.setAttribute('aria-label', T.loading_apps);
                 var icon = document.createElement('i');
-                icon.className = 'fa fa-spinner fa-spin fa-2x';
+                icon.className = 'bi bi-arrow-repeat ch-spin ch-icon-2x';
                 icon.setAttribute('aria-hidden', 'true');
                 wrapSpin.appendChild(icon);
                 status.appendChild(wrapSpin);
@@ -225,7 +225,7 @@
         var title = el('h4');
         title.className = 'ch-sync-title';
         var titleIcon = document.createElement('i');
-        titleIcon.className = 'fa fa-refresh';
+        titleIcon.className = 'bi bi-arrow-repeat';
         title.appendChild(titleIcon);
         title.appendChild(document.createTextNode(CFG.mode === 'items' ? T.title_items : T.title_apps));
         head.appendChild(title);
@@ -343,7 +343,7 @@
         foot.className = 'modal-footer';
         var cancel = el('button', T.close);
         cancel.type = 'button';
-        cancel.className = 'btn btn-default';
+        cancel.className = 'btn btn-secondary';
         cancel.addEventListener('click', close);
         var start = el('button', T.import_selected.replace(':n', '0'));
         start.type = 'button';
@@ -351,7 +351,7 @@
         foot.appendChild(cancel);
         var importAll = el('button', T.import_all);
         importAll.type = 'button';
-        importAll.className = 'btn btn-default';
+        importAll.className = 'btn btn-secondary';
         foot.appendChild(importAll);
         foot.appendChild(start);
         dlg.appendChild(foot);

@@ -3,10 +3,10 @@
 @section('content')
 
 @push('head')
-<link href="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
+<link href="{{ asset('vendor/crudbooster/assets/summernote/summernote.css') }}" rel="stylesheet">
 @endpush
 @push('bottom')
-<script src="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
+<script src="{{ asset('vendor/crudbooster/assets/summernote/summernote.min.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('.wysiwyg').summernote();
@@ -24,17 +24,17 @@
         <ul class="nav flex-row">
             <li class="nav-item">
                 <a class="nav-link active" href="/admin/api_generator">
-                    <i class="fa fa-file"></i> {{ trans('crudbooster.api_documentation') }}
+                    <i class="bi bi-file-earmark-fill"></i> {{ trans('crudbooster.api_documentation') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/admin/api_generator/screet-key">
-                    <i class="fa fa-key"></i> {{ trans('crudbooster.api_secret_key') }}
+                    <i class="bi bi-key-fill"></i> {{ trans('crudbooster.api_secret_key') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/admin/api_generator/generator">
-                    <i class="fa fa-cog"></i> {{ trans('crudbooster.api_generator') }}
+                    <i class="bi bi-gear-fill"></i> {{ trans('crudbooster.api_generator') }}
                 </a>
             </li>
         </ul>
@@ -179,7 +179,7 @@
                         }
 
                         no_params += 1;
-                        $('#table-response tbody').append("<tr class='success tr-response'><td>" + no_params + "</td><td>&nbsp;&nbsp;- " + obj.name + "<input type='hidden' name='responses_name[]' value='" + obj.name + "'/></td><td>" + obj_type + "<input type='hidden' name='responses_type[]' value='" + obj_type + "'/></td><td>-<input type='hidden' name='responses_subquery[]' value=''/></td><td><select class='form-control responses_used' name='responses_used[]'><option value='1'>YES</option><option value='0'>NO</option></select></td><td><a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='fa fa-ban'></i></a></td></tr>");
+                        $('#table-response tbody').append("<tr class='success tr-response'><td>" + no_params + "</td><td>&nbsp;&nbsp;- " + obj.name + "<input type='hidden' name='responses_name[]' value='" + obj.name + "'/></td><td>" + obj_type + "<input type='hidden' name='responses_type[]' value='" + obj_type + "'/></td><td>-<input type='hidden' name='responses_subquery[]' value=''/></td><td><select class='form-control responses_used' name='responses_used[]'><option value='1'>YES</option><option value='0'>NO</option></select></td><td><a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='bi bi-slash-circle'></i></a></td></tr>");
                     })
                 })
 
@@ -297,7 +297,7 @@
                         }
 
 
-                        $(this).find('.col-delete').html("<a class='btn btn-danger' href='javascript:void(0)' onclick='deleteParam(this)'><i class='fa fa-ban'></i></a>");
+                        $(this).find('.col-delete').html("<a class='btn btn-danger' href='javascript:void(0)' onclick='deleteParam(this)'><i class='bi bi-slash-circle'></i></a>");
                         i += 1;
                     })
                 })
@@ -386,7 +386,7 @@
                 $(this).find('td:nth-child(5) select').val(required);
                 $(this).find('td:nth-child(6) select').val(used);
 
-                $(this).find('.col-delete').html("<a class='btn btn-danger' href='javascript:void(0)' onclick='deleteParam(this)'><i class='fa fa-ban'></i></a>");
+                $(this).find('.col-delete').html("<a class='btn btn-danger' href='javascript:void(0)' onclick='deleteParam(this)'><i class='bi bi-slash-circle'></i></a>");
                 i += 1;
             })
 
@@ -468,7 +468,7 @@
 
                 if (obj.subquery == '') {
                     input_subquery = "-<input type='hidden' name='responses_subquery[]' value='" + obj.subquery + "'/>";
-                    delete_btn = "<a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='fa fa-ban'></i></a>";
+                    delete_btn = "<a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='bi bi-slash-circle'></i></a>";
                 } else {
                     if (obj.subquery) {
                         var subquery = obj.subquery;
@@ -476,7 +476,7 @@
                         var subquery = '';
                     }
                     input_subquery = subquery + "<input type='hidden' name='responses_subquery[]' value='" + subquery + "'/>";
-                    delete_btn = "<a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='fa fa-ban'></i></a>";
+                    delete_btn = "<a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='bi bi-slash-circle'></i></a>";
                 }
 
                 $('#table-response tbody').append("<tr class='" + tr_success + " tr-response'><td>" + no_params + "</td><td>&nbsp;&nbsp;- " + obj.name + "<input type='hidden' name='responses_name[]' value='" + obj.name + "'/></td><td>" + obj_type + "<input type='hidden' name='responses_type[]' value='" + obj_type + "'/></td><td>" + input_subquery + "</td><td><select class='form-control responses_used' name='responses_used[]'><option " + used_yes + " value='1'>YES</option><option " + used_no + " value='0'>NO</option></select></td><td>" + delete_btn + "</td></tr>");
@@ -546,7 +546,7 @@
                 $('#table-parameters tbody tr').each(function () {
                     no_params += 1;
                     $(this).find('td:nth-child(1)').text(no_params);
-                    $(this).find('.col-delete').html("<a class='btn btn-danger' href='javascript:void(0)' onclick='deleteParam(this)'><i class='fa fa-ban'></i></a>");
+                    $(this).find('.col-delete').html("<a class='btn btn-danger' href='javascript:void(0)' onclick='deleteParam(this)'><i class='bi bi-slash-circle'></i></a>");
                 });
             }
 
@@ -571,7 +571,7 @@
                 htm += "<td>#</td>";
                 htm += "<td>&nbsp;&nbsp;- " + val + "<input type='hidden' name='responses_name[]' value='" + val + "'/></td><td>" + validation + "<input type='hidden' name='responses_type[]' value='" + validation + "'/></td><td>" + subquery + "<input type='hidden' name='responses_subquery[]' value='" + subquery + "'/></td>";
                 htm += "<td><select class='form-control responses_used' name='responses_used[]'><option " + check_yes + " value='1'>YES</option><option " + check_no + " value='0'>NO</option></select></td>";
-                htm += "<td><a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='fa fa-ban'></i></a></td></tr>";
+                htm += "<td><a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='bi bi-slash-circle'></i></a></td></tr>";
 
                 if (val == '') return false;
                 // if(subquery == '') return false;
@@ -595,7 +595,7 @@
                     }
 
                     $(this).find('td:nth-child(1)').text(no_params);
-                    $(this).find('.col-delete').html("<a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='fa fa-ban'></i></a>");
+                    $(this).find('.col-delete').html("<a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='bi bi-slash-circle'></i></a>");
                 });
             }
 
@@ -618,11 +618,11 @@
             }
 
             .selected_text:hover {
-                color: #76a400
+                color: var(--ch-warning)
             }
 
             tfoot td {
-                background: #eeeeee
+                background: var(--ch-bg)
             }
 
             .tr-response {
@@ -664,7 +664,7 @@
                         <label>API Slug</label>
                         <div class='input-group'>
                             <span class="input-group-text" id="basic-addon1"
-                                style="background:#eeeeee">{{url("api")}}/</span>
+                                style="background:var(--ch-bg)">{{url("api")}}/</span>
                             <input type='text' class='form-control'
                                 value='{{isset($row->permalink) ? $row->permalink : ''}}' required name='permalink'
                                 id='input-permalink' />
@@ -713,9 +713,9 @@
 
             <div class='mb-3 row'>
                 <div class="clearfix">
-                    <label><i class='fa fa-cog'></i> Parameters</label>
-                    <a class='pull-right btn btn-sm btn-primary' href='javascript:void(0)'
-                        onclick="load_parameters()"><i class='fa fa-refresh'></i>
+                    <label><i class='bi bi-gear-fill'></i> Parameters</label>
+                    <a class='float-end btn btn-sm btn-primary' href='javascript:void(0)'
+                        onclick="load_parameters()"><i class='bi bi-arrow-repeat'></i>
                         Reset</a>
                 </div>
 
@@ -788,7 +788,7 @@
                                     <option value='0'>NO</option>
                                 </select></td>
                             <td class='col-delete'><a class='btn btn-primary' href='javascript:void(0)'
-                                    onclick='addParam()'><i class='fa fa-plus'></i></a></td>
+                                    onclick='addParam()'><i class='bi bi-plus-lg'></i></a></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -811,9 +811,9 @@
 
             <div class='mb-3 row'>
                 <div class='clearfix'>
-                    <label><i class='fa fa-cog'></i> Response</label>
-                    <a class='pull-right btn btn-sm btn-primary' href='javascript:void(0)' onclick='load_response()'><i
-                            class='fa fa-refresh'></i> Reset</a>
+                    <label><i class='bi bi-gear-fill'></i> Response</label>
+                    <a class='float-end btn btn-sm btn-primary' href='javascript:void(0)' onclick='load_response()'><i
+                            class='bi bi-arrow-repeat'></i> Reset</a>
                 </div>
                 <div id='response'>
                     <table id='table-response' class='table table-striped table-bordered'>
@@ -866,7 +866,7 @@
                                         <option value='0'>NO</option>
                                     </select></td>
                                 <td class='col-delete'><a class='btn btn-primary' href='javascript:void(0)'
-                                        onclick='addResponse()'><i class='fa fa-plus'></i></a></td>
+                                        onclick='addResponse()'><i class='bi bi-plus-lg'></i></a></td>
                             </tr>
                         </tfoot>
                     </table>

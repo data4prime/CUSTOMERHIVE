@@ -71,10 +71,10 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		// sincronizzati almeno una volta; vuoto per quelli creati a mano. Poi la data dell'ultimo import.
 		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_status'), "name" => "is_missing", "callback" => function ($row) {
 			if (!empty($row->is_missing)) {
-				return "<span class='label label-warning' style='background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>";
+				return "<span class='badge text-bg-warning' style='background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>";
 			}
 			return !empty($row->last_synced_at)
-				? "<span class='label label-success' style='background:#5cb85c;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_present_badge')) . "</span>"
+				? "<span class='badge text-bg-success' style='background:#5cb85c;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_present_badge')) . "</span>"
 				: '';
 		}];
 		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_last_synced'), "name" => "last_synced_at", "callback" => function ($row) {
@@ -136,7 +136,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
         | ----------------------------------------------------------------------
         | @label       = Label of action
         | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
-        | @icon        = Font awesome class icon. e.g : fa fa-bars
+        | @icon        = Font awesome class icon. e.g : bi bi-list
         | @color 	   = Default is primary. (primary, warning, succecss, info)
         | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
         |
@@ -144,9 +144,9 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		$this->addaction = array();
 		//modulo interamente Qlik: senza il modulo in licenza niente pulsanti
 		if (LicenseHelper::isActiveQlik()) {
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('content/[id]'), 'icon' => 'fa fa-search', 'color' => 'info', 'title' => 'View item'];
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('access/[id]'), 'icon' => 'fa fa-users', 'color' => 'info', 'title' => 'Set group'];
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Set tenant'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('content/[id]'), 'icon' => 'bi bi-search', 'color' => 'info', 'title' => 'View item'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('access/[id]'), 'icon' => 'bi bi-people-fill', 'color' => 'info', 'title' => 'Set group'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'bi bi-buildings-fill', 'color' => 'primary', 'title' => 'Set tenant'];
 		}
 
 
@@ -683,7 +683,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 			//se è alert=1
 			if ($alert_id == '1') {
 				//mostra messaggio di warning per tasto add premuto senza valori required
-				$data['alerts'][] = ['message' => '<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
+				$data['alerts'][] = ['message' => '<h4><i class="icon bi bi-exclamation-triangle-fill"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
 			}
 		}
 		//add group form
@@ -717,7 +717,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 			//se è alert=1
 			if ($alert_id == '1') {
 				//mostra messaggio di warning per tasto add premuto senza valori required
-				$data['alerts'][] = ['message' => '<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
+				$data['alerts'][] = ['message' => '<h4><i class="icon bi bi-exclamation-triangle-fill"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
 			}
 		}
 

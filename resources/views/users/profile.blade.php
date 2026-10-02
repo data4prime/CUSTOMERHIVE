@@ -18,33 +18,33 @@
   .ch-profile h1 { font-size: 22px; margin: 0 0 20px; }
   .ch-profile-layout { display: flex; gap: 24px; align-items: flex-start; }
   .ch-profile-content { flex: 1; min-width: 0; }
-  .ch-profile-nav { width: 250px; flex: none; padding: 8px; background: var(--ch-surface, #fff); border: 1px solid var(--ch-border, #e6e6ea); border-radius: var(--ch-radius-lg, 14px); box-shadow: var(--ch-shadow-sm); }
-  .ch-profile-nav a { display: flex; gap: 12px; align-items: center; padding: 11px 14px; border-radius: var(--ch-radius-md, 10px); color: var(--ch-text-secondary, #55555f); cursor: pointer; font-weight: 500; text-decoration: none; }
-  .ch-profile-nav a:hover { background: var(--ch-bg, #f7f7f9); }
-  .ch-profile-nav a.is-active { background: var(--ch-accent-soft, #eef0fd); color: var(--ch-accent-dark, #3730a3); font-weight: 600; }
-  .ch-profile-nav .ch-nav-icon { width: 30px; height: 30px; border-radius: 8px; background: var(--ch-bg, #f7f7f9); display: grid; place-items: center; font-size: 15px; }
-  .ch-profile-nav a.is-active .ch-nav-icon { background: #fff; }
-  .ch-pane { display: none; background: var(--ch-surface, #fff); border: 1px solid var(--ch-border, #e6e6ea); border-radius: var(--ch-radius-lg, 14px); box-shadow: var(--ch-shadow-sm); padding: 24px; }
+  .ch-profile-nav { width: 250px; flex: none; padding: 8px; background: var(--ch-surface, var(--ch-surface)); border: 1px solid var(--ch-border, var(--ch-border)); border-radius: var(--ch-radius-lg, 14px); box-shadow: var(--ch-shadow-sm); }
+  .ch-profile-nav a { display: flex; gap: 12px; align-items: center; padding: 11px 14px; border-radius: var(--ch-radius-md, 10px); color: var(--ch-text-secondary, var(--ch-text-secondary)); cursor: pointer; font-weight: 500; text-decoration: none; }
+  .ch-profile-nav a:hover { background: var(--ch-bg, var(--ch-bg)); }
+  .ch-profile-nav a.is-active { background: var(--ch-accent-soft, var(--ch-accent-soft)); color: var(--ch-accent-dark, var(--ch-accent-dark)); font-weight: 600; }
+  .ch-profile-nav .ch-nav-icon { width: 30px; height: 30px; border-radius: 8px; background: var(--ch-bg, var(--ch-bg)); display: grid; place-items: center; font-size: 15px; }
+  .ch-profile-nav a.is-active .ch-nav-icon { background: var(--ch-surface); }
+  .ch-pane { display: none; background: var(--ch-surface, var(--ch-surface)); border: 1px solid var(--ch-border, var(--ch-border)); border-radius: var(--ch-radius-lg, 14px); box-shadow: var(--ch-shadow-sm); padding: 24px; }
   .ch-pane.is-active { display: block; }
   .ch-pane h2 { font-size: 16px; margin: 0 0 4px; }
-  .ch-pane .ch-sub { color: var(--ch-text-muted, #8b8b96); margin: 0 0 20px; }
+  .ch-pane .ch-sub { color: var(--ch-text-muted, var(--ch-text-muted)); margin: 0 0 20px; }
   .ch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .ch-full { grid-column: 1 / -1; }
-  .ch-pane label { display: block; font-size: 12px; font-weight: 600; color: var(--ch-text-secondary, #55555f); margin-bottom: 5px; }
-  .ch-hint { font-size: 12px; color: var(--ch-text-muted, #8b8b96); margin-top: 4px; }
+  .ch-pane label { display: block; font-size: 12px; font-weight: 600; color: var(--ch-text-secondary, var(--ch-text-secondary)); margin-bottom: 5px; }
+  .ch-hint { font-size: 12px; color: var(--ch-text-muted, var(--ch-text-muted)); margin-top: 4px; }
   .ch-photo { display: flex; gap: 16px; align-items: center; margin-bottom: 20px; }
-  .ch-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; background: linear-gradient(135deg, #6366f1, #a78bfa); color: #fff; display: grid; place-items: center; font-size: 26px; font-weight: 700; flex: none; }
-  .ch-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--ch-border, #e6e6ea); }
+  .ch-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; background: linear-gradient(135deg, var(--ch-accent), var(--ch-violet)); color: var(--ch-surface); display: grid; place-items: center; font-size: 26px; font-weight: 700; flex: none; }
+  .ch-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--ch-border, var(--ch-border)); }
   .ch-alert { border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 13px; }
-  .ch-alert.is-ok { background: var(--ch-success-soft, #e7f7ee); color: var(--ch-success, #0f9d58); }
-  .ch-alert.is-error { background: var(--ch-danger-soft, #fbeaeb); color: var(--ch-danger, #d1373f); }
-  .ch-lock { font-size: 12px; color: var(--ch-warning, #b7791f); background: var(--ch-warning-soft, #fdf3e2); border-radius: 8px; padding: 6px 10px; display: inline-block; margin-bottom: 14px; }
-  .ch-email-panel { border: 1px solid var(--ch-border, #e6e6ea); border-radius: 10px; padding: 16px; background: var(--ch-bg, #f7f7f9); margin-top: 10px; }
-  .ch-strength { height: 5px; border-radius: 3px; background: var(--ch-border, #e6e6ea); margin-top: 8px; overflow: hidden; }
+  .ch-alert.is-ok { background: var(--ch-success-soft, var(--ch-success-soft)); color: var(--ch-success, var(--ch-success)); }
+  .ch-alert.is-error { background: var(--ch-danger-soft, var(--ch-danger-soft)); color: var(--ch-danger, var(--ch-danger)); }
+  .ch-lock { font-size: 12px; color: var(--ch-warning, var(--ch-warning)); background: var(--ch-warning-soft, var(--ch-warning-soft)); border-radius: 8px; padding: 6px 10px; display: inline-block; margin-bottom: 14px; }
+  .ch-email-panel { border: 1px solid var(--ch-border, var(--ch-border)); border-radius: 10px; padding: 16px; background: var(--ch-bg, var(--ch-bg)); margin-top: 10px; }
+  .ch-strength { height: 5px; border-radius: 3px; background: var(--ch-border, var(--ch-bg)); margin-top: 8px; overflow: hidden; }
   .ch-strength i { display: block; height: 100%; width: 0; transition: width .2s, background .2s; }
-  .ch-mfa-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--ch-border, #e6e6ea); gap: 12px; flex-wrap: wrap; }
+  .ch-mfa-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--ch-border, var(--ch-border)); gap: 12px; flex-wrap: wrap; }
   .ch-mfa-row:last-child { border-bottom: 0; }
-  .ch-qlik-row { border: 1px solid var(--ch-border, #e6e6ea); border-radius: 10px; padding: 16px; background: var(--ch-bg, #f7f7f9); margin-bottom: 12px; }
+  .ch-qlik-row { border: 1px solid var(--ch-border, var(--ch-border)); border-radius: 10px; padding: 16px; background: var(--ch-bg, var(--ch-bg)); margin-bottom: 12px; }
   .ch-qlik-row .ch-qlik-remove { margin-top: 12px; }
   @media (max-width: 800px) {
     .ch-profile-layout { flex-direction: column-reverse; }
@@ -71,7 +71,7 @@
           <div class="ch-photo">
             <img class="ch-avatar" id="ch-avatar-img" src="{{ $photoUrl }}" alt="{{ $initialLetter }}">
             <div>
-              <label class="btn btn-default" style="margin:0;cursor:pointer;">
+              <label class="btn btn-secondary" style="margin:0;cursor:pointer;">
                 {{ trans('crudbooster.profile_photo_change') }}
                 <input type="file" name="photo" id="ch-photo-input" accept="image/*" hidden>
               </label>
@@ -88,7 +88,7 @@
               <label>{{ trans('crudbooster.profile_field_email') }}</label>
               <div style="display:flex;gap:8px;">
                 <input type="text" class="form-control" id="ch-email-current" value="{{ $row->email }}" disabled>
-                <button type="button" class="btn btn-default" id="ch-email-toggle" style="white-space:nowrap;">{{ trans('crudbooster.profile_email_change_button') }}</button>
+                <button type="button" class="btn btn-secondary" id="ch-email-toggle" style="white-space:nowrap;">{{ trans('crudbooster.profile_email_change_button') }}</button>
               </div>
             </div>
             <div>
@@ -137,7 +137,7 @@
               </div>
             </div>
             <div class="ch-actions" style="border-top:0;padding-top:0;">
-              <button type="button" class="btn btn-default" id="ch-email-cancel">{{ trans('crudbooster.profile_button_cancel') }}</button>
+              <button type="button" class="btn btn-secondary" id="ch-email-cancel">{{ trans('crudbooster.profile_button_cancel') }}</button>
               @php
                 $emailMode = \App\Helpers\MfaHelper::emailChangeMode(\App\Helpers\UserHelper::me());
                 $emailSendLabel = $emailMode === 'email' ? 'profile_email_send_code' : ($emailMode === 'totp' ? 'profile_email_continue' : 'profile_email_change_button');
@@ -158,7 +158,7 @@
               </div>
             </div>
             <div class="ch-actions" style="border-top:0;padding-top:0;">
-              <button type="button" class="btn btn-default" id="ch-email-cancel2">{{ trans('crudbooster.profile_button_cancel') }}</button>
+              <button type="button" class="btn btn-secondary" id="ch-email-cancel2">{{ trans('crudbooster.profile_button_cancel') }}</button>
               <button type="button" class="btn btn-primary" id="ch-email-confirm">{{ trans('crudbooster.profile_email_confirm_button') }}</button>
             </div>
           </div>
@@ -192,13 +192,13 @@
           <div class="ch-mfa-row">
             <form method="post" action="{{ CRUDBooster::adminPath('users/mfa-regenerate-backup-codes') }}">
               @csrf
-              <button type="submit" class="btn btn-default" onclick="return confirm({{ json_encode(trans('crudbooster.mfa_regenerate_codes_warning')) }});">
+              <button type="submit" class="btn btn-secondary" onclick="return confirm({{ json_encode(trans('crudbooster.mfa_regenerate_codes_warning')) }});">
                 {{ trans('crudbooster.mfa_button_regenerate_codes') }}
               </button>
             </form>
             <form method="post" action="{{ CRUDBooster::adminPath('users/mfa-revoke-devices') }}">
               @csrf
-              <button type="submit" class="btn btn-default">{{ trans('crudbooster.mfa_button_revoke_devices') }}</button>
+              <button type="submit" class="btn btn-secondary">{{ trans('crudbooster.mfa_button_revoke_devices') }}</button>
             </form>
           </div>
         @else
@@ -206,7 +206,7 @@
             <a href="{{ CRUDBooster::adminPath('users/mfa-setup') }}" class="btn btn-primary">{{ trans('crudbooster.mfa_button_setup') }}</a>
             <form method="post" action="{{ CRUDBooster::adminPath('users/mfa-revoke-devices') }}">
               @csrf
-              <button type="submit" class="btn btn-default">{{ trans('crudbooster.mfa_button_revoke_devices') }}</button>
+              <button type="submit" class="btn btn-secondary">{{ trans('crudbooster.mfa_button_revoke_devices') }}</button>
             </form>
           </div>
         @endif
@@ -236,7 +236,7 @@
                     <td>
                       <form method="post" action="{{ CRUDBooster::adminPath('users/mfa-revoke-device/' . $device->id) }}" class="d-inline">
                         @csrf
-                        <button type="submit" class="btn btn-default btn-sm">{{ trans('crudbooster.mfa_button_revoke_device') }}</button>
+                        <button type="submit" class="btn btn-secondary btn-sm">{{ trans('crudbooster.mfa_button_revoke_device') }}</button>
                       </form>
                     </td>
                   </tr>
@@ -277,7 +277,7 @@
             </div>
           </form>
         @else
-          <div class="ch-lock"><i class="fa fa-lock"></i> {{ trans('crudbooster.profile_system_locked_hint') }}</div>
+          <div class="ch-lock"><i class="bi bi-lock-fill"></i> {{ trans('crudbooster.profile_system_locked_hint') }}</div>
           <div class="ch-grid">
             <div>
               <label>{{ trans('crudbooster.profile_field_tenant') }}</label>
@@ -329,7 +329,7 @@
             </div>
           </div>
           <div class="ch-actions" style="border-top:0;padding-top:0;">
-            <button type="button" class="btn btn-default" id="ch-pwd-cancel">{{ trans('crudbooster.profile_button_cancel') }}</button>
+            <button type="button" class="btn btn-secondary" id="ch-pwd-cancel">{{ trans('crudbooster.profile_button_cancel') }}</button>
             <button type="button" class="btn btn-primary" id="ch-pwd-confirm-btn">{{ trans('crudbooster.profile_password_confirm_button') }}</button>
           </div>
         </div>
@@ -342,7 +342,7 @@
         <p class="ch-sub">{{ trans('crudbooster.profile_section_qlik_sub') }}</p>
         <div class="ch-alert" role="alert" hidden></div>
 
-        @if(!$canManage)<div class="ch-lock"><i class="fa fa-lock"></i> {{ trans('crudbooster.profile_qlik_locked_hint') }}</div>@endif
+        @if(!$canManage)<div class="ch-lock"><i class="bi bi-lock-fill"></i> {{ trans('crudbooster.profile_qlik_locked_hint') }}</div>@endif
 
         <form class="ch-ajax" method="post" action="{{ CRUDBooster::adminPath('users/profile-qlik') }}" novalidate>
           @csrf
@@ -374,7 +374,7 @@
                     <div class="ch-hint">{{ trans('crudbooster.profile_qlik_idp_hint') }}</div>
                   </div>
                 </div>
-                @if($canManage)<button type="button" class="btn btn-default btn-sm ch-qlik-remove">{{ trans('crudbooster.profile_qlik_remove') }}</button>@endif
+                @if($canManage)<button type="button" class="btn btn-secondary btn-sm ch-qlik-remove">{{ trans('crudbooster.profile_qlik_remove') }}</button>@endif
               </div>
             @endforeach
           </div>
@@ -382,7 +382,7 @@
 
           @if($canManage)
             <div class="ch-actions">
-              <button type="button" class="btn btn-default" id="ch-qlik-add">{{ trans('crudbooster.profile_qlik_add') }}</button>
+              <button type="button" class="btn btn-secondary" id="ch-qlik-add">{{ trans('crudbooster.profile_qlik_add') }}</button>
               <button type="submit" class="btn btn-primary">{{ trans('crudbooster.profile_button_save') }}</button>
             </div>
           @endif
@@ -416,7 +416,7 @@
                 <div class="ch-hint">{{ trans('crudbooster.profile_qlik_idp_hint') }}</div>
               </div>
             </div>
-            <button type="button" class="btn btn-default btn-sm ch-qlik-remove">{{ trans('crudbooster.profile_qlik_remove') }}</button>
+            <button type="button" class="btn btn-secondary btn-sm ch-qlik-remove">{{ trans('crudbooster.profile_qlik_remove') }}</button>
           </div>
         </template>
         @endif
@@ -427,13 +427,13 @@
 
     {{-- Menu sezioni: a destra (a sinistra c'e' gia' la sidebar dei moduli) --}}
     <nav class="ch-profile-nav" aria-label="{{ trans('crudbooster.label_button_profile') }}">
-      <a data-pane-link="general" class="is-active"><span class="ch-nav-icon"><i class="fa fa-user"></i></span>{{ trans('crudbooster.profile_section_general') }}</a>
-      <a data-pane-link="mfa"><span class="ch-nav-icon"><i class="fa fa-shield"></i></span>{{ trans('crudbooster.profile_section_mfa') }}</a>
-      <a data-pane-link="system"><span class="ch-nav-icon"><i class="fa fa-cogs"></i></span>{{ trans('crudbooster.profile_section_system') }}</a>
+      <a data-pane-link="general" class="is-active"><span class="ch-nav-icon"><i class="bi bi-person-fill"></i></span>{{ trans('crudbooster.profile_section_general') }}</a>
+      <a data-pane-link="mfa"><span class="ch-nav-icon"><i class="bi bi-shield-fill"></i></span>{{ trans('crudbooster.profile_section_mfa') }}</a>
+      <a data-pane-link="system"><span class="ch-nav-icon"><i class="bi bi-gear-wide-connected"></i></span>{{ trans('crudbooster.profile_section_system') }}</a>
       @if(!empty($qlikEnabled))
-      <a data-pane-link="qlik"><span class="ch-nav-icon"><i class="fa fa-bar-chart"></i></span>{{ trans('crudbooster.profile_section_qlik') }}</a>
+      <a data-pane-link="qlik"><span class="ch-nav-icon"><i class="bi bi-bar-chart-fill"></i></span>{{ trans('crudbooster.profile_section_qlik') }}</a>
       @endif
-      <a data-pane-link="password"><span class="ch-nav-icon"><i class="fa fa-key"></i></span>{{ trans('crudbooster.profile_section_password') }}</a>
+      <a data-pane-link="password"><span class="ch-nav-icon"><i class="bi bi-key-fill"></i></span>{{ trans('crudbooster.profile_section_password') }}</a>
     </nav>
   </div>
 </div>

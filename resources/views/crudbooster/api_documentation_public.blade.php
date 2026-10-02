@@ -2,22 +2,14 @@
 <html>
 <head>
     <title>API Documentation</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @include('crudbooster::partials.ch_head')
+    @include('crudbooster::partials.ch_scripts', ['ch_shell' => false])
 </head>
 <body>
 <div class="container">
-    <div class="page-header">
+    <div class="pb-2 mt-4 mb-3 border-bottom">
         <h1>API Documentation {{Session::get('appname')}}</h1>
     </div>
 
@@ -27,8 +19,8 @@
 
             <style>
                 .table-api tbody tr td a {
-                    color: #db0e00;
-                    font-family: arial;
+                    color: var(--ch-danger);
+                    font-family: var(--ch-font);
                 }
             </style>
 
@@ -86,7 +78,7 @@
                 <tr class='info'>
                     <th width='2%'>No</th>
                     <th>API Name
-                        <span class='pull-right'>
+                        <span class='float-end'>
                       <a class='btn btn-sm btn-warning' target="_blank" href='{{url("download-documentation-postman")}}'>Export For POSTMAN <sup>Beta</sup></a>
                     </span>
                     </th>
@@ -102,7 +94,7 @@
                     <tr>
                         <td><?= ++$no;?></td>
                         <td>
-                            <a href='javascript:void(0)' title='API {{$ac->nama}}' style='color:#009fe3' class='link_name_api'><?=$api->nama;?></a> &nbsp;
+                            <a href='javascript:void(0)' title='API {{$ac->nama}}' style='color:var(--ch-blue)' class='link_name_api'><?=$api->nama;?></a> &nbsp;
                             <div class='detail_api' style='display:none'>
                                 <table class='table table-bordered'>
                                     <tr>
@@ -148,13 +140,13 @@
                                                                 @endif
 
                                                             </td>
-                                                            <td>{!! ($param['required'])?"<span class='label label-primary'>REQUIRED</span>":"<span class='label label-default'>OPTIONAL</span>"!!}</td>
+                                                            <td>{!! ($param['required'])?"<span class='badge text-bg-primary'>REQUIRED</span>":"<span class='badge text-bg-secondary'>OPTIONAL</span>"!!}</td>
                                                         </tr>
                                                     @endif
                                                 @endforeach
                                                 @if($i == 0)
                                                     <tr>
-                                                        <td colspan='4' align="center"><i class='fa fa-search'></i> There is no parameter</td>
+                                                        <td colspan='4' align="center"><i class='bi bi-search'></i> There is no parameter</td>
                                                     </tr>
                                                 @endif
                                                 </tbody>

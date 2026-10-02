@@ -89,13 +89,13 @@
 <div style="width: 750px; margin: 0 auto;">
     <p align="right">
         <a title="{{ trans('crudbooster.Add_Field_Setting') }}" class="btn btn-sm btn-primary" href="{{ route('SettingsControllerGetAdd') }}?group_setting={{ urlencode($page_title) }}">
-            <i class="fa fa-plus"></i> {{ trans('crudbooster.Add_Field_Setting') }}
+            <i class="bi bi-plus-lg"></i> {{ trans('crudbooster.Add_Field_Setting') }}
         </a>
     </p>
 
     <div class="card card-default">
         <div class="card-header">
-            <i class="fa fa-cog"></i> {{ $page_title }}
+            <i class="bi bi-gear-fill"></i> {{ $page_title }}
         </div>
         <div class="card-body">
             <form method="post" id="form" enctype="multipart/form-data" action="{{ CRUDBooster::mainpath('save-setting?group_setting=' . urlencode($page_title)) }}">
@@ -113,7 +113,7 @@
                             <label class="label-setting" title="{{ $s->name }}">
                                 {{ $s->label }}
                                 <a style="visibility: hidden" href="{{ CRUDBooster::mainpath('edit/' . $s->id) }}" title="Edit This Meta Setting" class="btn btn-box-tool">
-                                    <i class="fa fa-pencil"></i>
+                                    <i class="bi bi-pencil-fill"></i>
                                 </a>
                                 <a style="visibility: hidden" href="javascript:;" title="Delete this Setting" class="btn btn-box-tool" onClick="swal({
                                     title: '{{ trans('crudbooster.delete_title_confirm') }}',
@@ -124,7 +124,7 @@
                                     confirmButtonText: '{{ trans('crudbooster.yes_delete_it') }}',
                                     closeOnConfirm: false
                                 }, function() { location.href='{{ CRUDBooster::mainpath("delete/" . $s->id) }}' });">
-                                    <i class="fa fa-trash"></i>
+                                    <i class="bi bi-trash-fill"></i>
                                 </a>
                             </label>
 
@@ -174,27 +174,27 @@
 
                                         @if ($file_missing)
                                             <p class="text-danger" style="margin-bottom: 5px">
-                                                <i class="fa fa-exclamation-triangle"></i>
+                                                <i class="bi bi-exclamation-triangle-fill"></i>
                                                 File not found on the server: <code>{{ $value }}</code>
                                             </p>
                                         @else
                                             <p style="margin-bottom: 5px">
                                                 <a href="{{ asset($value) }}" data-lightbox="roadtrip" title="{{ $s->label }}">
                                                     <img src="{{ asset($value) }}" alt="{{ $s->label }}"
-                                                         style="max-height: 120px; max-width: 100%; padding: 3px; border: 1px solid #ddd; background: #fff" />
+                                                         style="max-height: 120px; max-width: 100%; padding: 3px; border: 1px solid var(--ch-border-strong); background: var(--ch-surface)" />
                                                 </a>
                                             </p>
                                             <p>
                                                 <a href="{{ asset($value) }}" target="_blank" title="{{ trans('crudbooster.button_download_file') }} {{ $s->label }}">
-                                                    <i class="fa fa-download"></i> {{ trans('crudbooster.button_download_file') }} {{ $s->label }}
+                                                    <i class="bi bi-download"></i> {{ trans('crudbooster.button_download_file') }} {{ $s->label }}
                                                 </a>
                                             </p>
                                         @endif
 
                                         <input type="hidden" name="{{ $s->name }}" value="{{ $value }}" />
-                                        <div class="pull-right">
+                                        <div class="float-end">
                                             <a class="btn btn-danger btn-sm" onclick="if (confirm('{{ trans('crudbooster.delete_title_confirm') }}')) window.location.href='{{ CRUDBooster::mainpath('delete-file-setting?id=' . $s->id) }}';" title="Click here to delete">
-                                                <i class="fa fa-trash"></i>
+                                                <i class="bi bi-trash-fill"></i>
                                             </a>
                                         </div>
                                     @else
@@ -208,13 +208,13 @@
                                     @if ($value)
                                         <p>
                                             <a href="{{ asset($value) }}" target="_blank" title="{{ trans('crudbooster.button_download_file') }} {{ $s->label }}">
-                                                <i class="fa fa-download"></i> {{ trans('crudbooster.button_download_file') }} {{ $s->label }}
+                                                <i class="bi bi-download"></i> {{ trans('crudbooster.button_download_file') }} {{ $s->label }}
                                             </a>
                                         </p>
                                         <input type="hidden" name="{{ $s->name }}" value="{{ $value }}" />
-                                        <div class="pull-right">
+                                        <div class="float-end">
                                             <a class="btn btn-danger btn-sm" onclick="if (confirm('Are you sure want to delete?')) location.href='{{ CRUDBooster::mainpath("delete-file-setting?id=" . $s->id) }}';" title="Click here to delete">
-                                                <i class="fa fa-trash"></i>
+                                                <i class="bi bi-trash-fill"></i>
                                             </a>
                                         </div>
                                     @else
@@ -267,8 +267,8 @@
                             <input type="email" id="email-test-to" class="form-control flex-grow-1"
                                    placeholder="{{ trans('crudbooster.email_test_recipient_placeholder') }}"
                                    value="{{ CRUDBooster::me()->email }}">
-                            <button type="button" id="btn-email-test" class="btn btn-default text-nowrap">
-                                <i class="fa fa-paper-plane"></i> {{ trans('crudbooster.email_test_button') }}
+                            <button type="button" id="btn-email-test" class="btn btn-secondary text-nowrap">
+                                <i class="bi bi-send-fill"></i> {{ trans('crudbooster.email_test_button') }}
                             </button>
                         </div>
                         <div id="email-test-result" class="help-block"></div>
@@ -277,7 +277,7 @@
                 </div><!-- /.box-body -->
 
                 <div class="box-footer">
-                    <div class="pull-right">
+                    <div class="float-end">
                         <input type="submit" name="submit" value="Save" class="btn btn-success" />
                     </div>
                 </div><!-- /.box-footer-->

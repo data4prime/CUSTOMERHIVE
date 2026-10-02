@@ -5,10 +5,10 @@
 
     @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel)
     @if(g('return_url'))
-    <p><a title='Return' href='{{g("return_url")}}'><i class='fa fa-chevron-circle-left '></i>
+    <p><a title='Return' href='{{g("return_url")}}'><i class='bi bi-chevron-left'></i>
             &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
     @else
-    <p><a title='Main Module' href='{{CRUDBooster::mainpath()}}'><i class='fa fa-chevron-circle-left '></i>
+    <p><a title='Main Module' href='{{CRUDBooster::mainpath()}}'><i class='bi bi-chevron-left'></i>
             &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
     @endif
     @endif
@@ -44,7 +44,7 @@
                                 <td>
                                     {{ $qsApp->appname ?? ('#' . $row->qlik_app_id) }}
                                     @if(!empty($qsApp->appid)) <small class="text-muted">({{ $qsApp->appid }})</small> @endif
-                                    @if(!empty($row->is_missing)) &nbsp; <span class="label label-warning" style="background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px">{{ trans('crudbooster.qlik_sync_missing_badge') }}</span> @endif
+                                    @if(!empty($row->is_missing)) &nbsp; <span class="badge text-bg-warning" style="background:var(--ch-warning);color:var(--ch-surface);padding:2px 6px;border-radius:3px">{{ trans('crudbooster.qlik_sync_missing_badge') }}</span> @endif
                                 </td>
                             </tr>
                             @if(!empty($row->external_id))
@@ -62,7 +62,7 @@
                         <div class="col-sm-10">
                             <p class="form-control-plaintext">
                                 @if(!empty($row->external_id)) <small class="text-muted">{{ $row->external_id }}</small> @endif
-                                @if(!empty($row->is_missing)) &nbsp; <span class="label label-warning" style="background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px">{{ trans('crudbooster.qlik_sync_missing_badge') }}</span> @endif
+                                @if(!empty($row->is_missing)) &nbsp; <span class="badge text-bg-warning" style="background:var(--ch-warning);color:var(--ch-surface);padding:2px 6px;border-radius:3px">{{ trans('crudbooster.qlik_sync_missing_badge') }}</span> @endif
                             </p>
                         </div>
                     </div>
@@ -77,18 +77,18 @@
 
                 </div><!-- /.box-body -->
 
-                <div class="box-footer" style="background: #F5F5F5">
+                <div class="box-footer" style="background: var(--ch-bg)">
 
                     <div class="mb-3 row">
                         <label class="col-form-label col-sm-2"></label>
                         <div class="col-sm-10">
                             @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                             @if(g('return_url'))
-                            <a href='{{g("return_url")}}' class='btn btn-default'><i
-                                    class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}</a>
+                            <a href='{{g("return_url")}}' class='btn btn-secondary'><i
+                                    class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}</a>
                             @else
                             <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}'
-                                class='btn btn-default'><i class='fa fa-chevron-circle-left'></i>
+                                class='btn btn-secondary'><i class='bi bi-chevron-left'></i>
                                 {{trans("crudbooster.button_back")}}</a>
                             @endif
                             @endif

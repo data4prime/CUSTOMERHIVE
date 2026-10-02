@@ -6,14 +6,14 @@
   @if(g('return_url'))
   <p>
     <a title='Return' href='{{g("return_url")}}'>
-      <i class='fa fa-chevron-circle-left '></i>&nbsp;
+      <i class='bi bi-chevron-left'></i>&nbsp;
       {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
   @else
   <p>
     <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
-      <i class='fa fa-chevron-circle-left '></i>&nbsp;
+      <i class='bi bi-chevron-left'></i>&nbsp;
       {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
@@ -49,21 +49,21 @@
         </div>
       </div>
 
-      <div class="box-footer" style="background: #F5F5F5">
+      <div class="box-footer" style="background: var(--ch-bg)">
         <div class="mb-3 row">
           <label class="col-form-label col-sm-2"></label>
           <div class="col-sm-10">
             @if(g('return_url'))
-            <a href='{{g("return_url")}}' class='btn btn-default'>
-              <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+            <a href='{{g("return_url")}}' class='btn btn-secondary'>
+              <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
             </a>
             @else
-            <a href='{{CRUDBooster::mainpath()}}' class='btn btn-default'>
-              <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+            <a href='{{CRUDBooster::mainpath()}}' class='btn btn-secondary'>
+              <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
             </a>
             @endif
             <a href='{{CRUDBooster::mainpath("edit/".$row->id)}}' class='btn btn-success'>
-              <i class='fa fa-pencil'></i> {{trans("crudbooster.button_edit")}}
+              <i class='bi bi-pencil-fill'></i> {{trans("crudbooster.button_edit")}}
             </a>
           </div>
         </div>
@@ -79,9 +79,9 @@
     margin-bottom: 10px;
   }
   .dl-preview .connectedSortable {
-    border: 2px dashed #b0b7c3;
+    border: 2px dashed var(--ch-border-strong);
     border-radius: 4px;
-    background: #f8f9fa;
+    background: var(--ch-bg);
     min-height: 80px;
     position: relative;
     padding: 18px 6px 6px 6px;
@@ -93,7 +93,7 @@
     top: 2px;
     left: 6px;
     font-size: 11px;
-    color: #888;
+    color: var(--ch-text-muted);
   }
 </style>
 @endsection

@@ -10,7 +10,7 @@
     <div class="{{$col_width?:'col-sm-10'}}">
         {!! isset($form['html']) ? $form['html'] : '' !!}
 
-        <div class="text-danger">{!! $errors->first($name)?"<i class='fa fa-info-circle'></i> ".$errors->first($name):""
+        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".$errors->first($name):""
             !!}</div>
         <p class='help-block'>{{ @$form['help'] }}</p>
     </div>

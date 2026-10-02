@@ -144,12 +144,12 @@ $fields_to_eliminate = ['multitext', 'password', 'child'];
                     <div class="box-header mb-3 with-border">
                         <h3 class="box-title">
                             <strong>
-                                <i class='fa fa-cogs'></i> {{ trans('crudbooster.system_information') }}
+                                <i class='bi bi-gear-wide-connected'></i> {{ trans('crudbooster.system_information') }}
                             </strong>
                         </h3>
-                        <div class="box-tools pull-right">
+                        <div class="box-tools float-end">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                                <i class="fa fa-plus"></i>
+                                <i class="bi bi-plus-lg"></i>
                             </button>
                         </div>
                     </div>

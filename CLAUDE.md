@@ -253,6 +253,44 @@ controller custom dei clienti.
   fidarsi che `php -l` basti: controlla solo i blocchi `<?php ?>` reali,
   non la sintassi Blade.
 
+## Standard UI (dal 2026-10-02, interventi 206-209)
+
+Un solo sistema: **Bootstrap 5.3 + Bootstrap Icons**, tutto servito da
+`public/vendor/` (mai CDN: ci sono clienti senza Internet). AdminLTE non
+esiste più. Per codice nuovo o vecchio che si tocca:
+
+- **Head e script**: `@include('crudbooster::partials.ch_head')` e
+  `ch_scripts` (pagine standalone), mai `<link>`/`<script>` a CDN o a file
+  Bootstrap/jQuery propri. Librerie extra: scaricarle in `public/vendor/libs/`
+  con versione fissata.
+- **Icone**: `<i class="bi bi-<nome>">`. I nomi `fa fa-*` esistono solo nei dati
+  dei clienti e funzionano per compatibilità (`ch-icons-compat.css`, generato da
+  `app/Helpers/IconMap.php`); non scriverne di nuovi. Nome salvato in DB →
+  `IconMap::toBi()` quando lo si mostra.
+- **Colori, font, raggi, spaziature**: solo token `var(--ch-*)` di
+  `public/css/theme.css`; mai hex, `font-family` o `border-radius` a mano.
+  Campi, pulsanti, select2, badge sono già uniformi in
+  `public/css/ch-components.css`: usare le classi Bootstrap (`form-control`,
+  `form-select`, `btn btn-primary|secondary|danger`, `badge text-bg-*`), non
+  ridefinirle per contenitore.
+- **Classi Bootstrap 3 / AdminLTE** (`btn-default`, `pull-*`, `col-xs-*`,
+  `label`, `panel`): non più nel codice di progetto; esistono solo in
+  `ch-compat.css` (temporaneo, per i moduli dei clienti). `box`/`small-box`/
+  `callout` restano componenti del progetto (`ch-layout.css`), da sostituire con
+  `card`/`alert` in un intervento a parte.
+- **Script di supporto** (`local-scripts/`): `ui-inventory.ps1` (conta icone/
+  classi/colori legacy), `migrate-fa-to-bi.php`, `migrate-bs3-to-bs5.php`,
+  `normalize-colors.php` (anche per i file di un cliente),
+  `gen-icons-compat.php` (rigenera il CSS dopo aver toccato `IconMap`).
+- **Gotcha**: (1) i layout dei widget Statistic Builder sostituiscono i token
+  `[name]`, `[icon]`... **anche dentro gli `<script>`**: nel JS di un widget non
+  usare variabili con lo stesso nome di una chiave di config. (2) Il CSS base di
+  select2 è caricato dopo `ch-components.css`: per questo i suoi selettori sono
+  prefissati `body`. (3) Con uno `sed` i `\` di `\App\Helpers\X` si perdono
+  (sintassi valida, classe inesistente a runtime): per modifiche con namespace
+  usare Edit o uno script PHP. (4) Prima di far girare uno script che richiede
+  URL dell'app, non seguire mai link generici: contengono `/delete/...`.
+
 ## Dove guardare per saperne di più
 
 - `docs/refactoring/README.md` — indice di ogni intervento di refactoring/

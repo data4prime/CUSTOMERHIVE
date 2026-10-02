@@ -25,15 +25,15 @@
                 value="{{$datamodal_value}}" readonly>
             <span class="input-group-btn">
                 <button class="btn btn-primary" onclick="showModal{{$name}}()" type="button"><i
-                        class='fa fa-search'></i> {{trans('crudbooster.datamodal_browse_data')}}</button>
+                        class='bi bi-search'></i> {{trans('crudbooster.datamodal_browse_data')}}</button>
                 <?php if(isset($form['datamodal_module_path']) && strlen($form['datamodal_module_path']) > 1){ ?>
                 <a class="btn btn-info" href="{{CRUDBooster::adminPath()}}/{{$form['datamodal_module_path']}}"
-                    target="_blank"><i class='fa fa-edit'></i> {{$form['label']}}</a>
+                    target="_blank"><i class='bi bi-pencil-square'></i> {{$form['label']}}</a>
                 <?php } ?>
             </span>
         </div><!-- /input-group -->
 
-        <div class="text-danger">{!! $errors->first($name)?"<i class='fa fa-info-circle'></i> ".$errors->first($name):""
+        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".$errors->first($name):""
             !!}</div>
         <p class='help-block'>{{ @$form['help'] }}</p>
     </div>
@@ -88,7 +88,7 @@ $datamodal_columns_alias = $form['datamodal_columns_alias_name'] ?? '';
         <div class="modal-content">
             <div class="modal-header">
                 
-                <h4 class="modal-title" style="justify-content: space-between;"><i class='fa fa-search'></i> {{trans('crudbooster.datamodal_browse_data')}} |
+                <h4 class="modal-title" style="justify-content: space-between;"><i class='bi bi-search'></i> {{trans('crudbooster.datamodal_browse_data')}} |
                     {{$form['label']}}</h4>
 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

@@ -24,17 +24,17 @@
 
     .draggable-menu li div {
         padding: 5px;
-        border: 1px solid #cccccc;
-        background: #eeeeee;
+        border: 1px solid var(--ch-border-strong);
+        background: var(--ch-bg);
         cursor: move;
     }
 
     .draggable-menu li .is-dashboard {
-        background: #fff6e0;
+        background: var(--ch-warning-soft);
     }
 
     .draggable-menu li .icon-is-dashboard {
-        color: #ffb600;
+        color: var(--ch-warning);
     }
 
     .draggable-menu li {
@@ -45,8 +45,8 @@
 
     .draggable-menu li.placeholder {
         position: relative;
-        border: 1px dashed #b7042c;
-        background: #ffffff;
+        border: 1px dashed var(--ch-danger);
+        background: var(--ch-surface);
         /** More li styles **/
     }
 
@@ -176,8 +176,8 @@ $(function () {
         <div class="card border-success mb-3">
             <div class="card-header bg-success text-white">
                 <strong>{{ trans('crudbooster.menu_order_active') }}</strong>
-                <span id='menu-saved-info' style="display:none" class='pull-right text-success'>
-                    <i class='fa fa-check'></i> {{ trans('crudbooster.menu_saved') }}
+                <span id='menu-saved-info' style="display:none" class='float-end text-success'>
+                    <i class='bi bi-check-lg'></i> {{ trans('crudbooster.menu_saved') }}
                 </span>
             </div>
             <div class="card-body clearfix">

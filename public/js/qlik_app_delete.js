@@ -48,7 +48,7 @@
         var head = el('div', null, 'ch-sync-head');
         var title = el('h4', null, 'ch-sync-title');
         var icon = document.createElement('i');
-        icon.className = 'fa fa-trash';
+        icon.className = 'bi bi-trash-fill';
         title.appendChild(icon);
         title.appendChild(document.createTextNode(T.title));
         head.appendChild(title);
@@ -81,7 +81,7 @@
         dlg.appendChild(body);
 
         var foot = el('div', null, 'modal-footer');
-        var cancel = el('button', T.cancel, 'btn btn-default');
+        var cancel = el('button', T.cancel, 'btn btn-secondary');
         cancel.type = 'button';
         cancel.addEventListener('click', close);
         var ok = el('button', T.confirm, 'btn btn-danger');

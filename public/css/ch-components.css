@@ -1,0 +1,372 @@
+/*
+ * ch-components.css - componenti standard CustomerHive sopra Bootstrap 5.
+ *
+ * Regola: UN solo aspetto per ogni componente, ovunque (moduli generati dal
+ * Module Generator, viste custom, popup, pagine pubbliche). Qui NON si
+ * ridefinisce Bootstrap: si impostano le sue variabili e si uniformano i
+ * pezzi che Bootstrap non copre (select2, datepicker, input-group legacy).
+ * Valori solo dai token --ch-* di theme.css.
+ *
+ * Caricato dopo theme.css (vedi resources/views/crudbooster/partials/ch_head).
+ */
+
+/* ---------- Campi di testo, select, textarea ---------- */
+.form-control,
+.form-select {
+  font-family: var(--ch-font);
+  font-size: var(--ch-font-size);
+  color: var(--ch-text);
+  background-color: var(--ch-field-bg);
+  border: 1px solid var(--ch-field-border);
+  border-radius: var(--ch-radius-sm);
+  box-shadow: none;
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+/* Altezza uniforme per i campi a riga singola (non textarea, non multiple) */
+.form-control:not(textarea):not([type="file"]):not([type="color"]):not([type="range"]):not(.form-control-sm):not(.form-control-lg),
+.form-select:not([multiple]):not([size]):not(.form-select-sm):not(.form-select-lg) {
+  min-height: var(--ch-field-h);
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: var(--ch-field-px);
+}
+
+.form-control.form-control-sm,
+.form-select.form-select-sm {
+  min-height: 32px;
+  font-size: var(--ch-font-size-sm);
+  border-radius: 6px;
+}
+
+textarea.form-control {
+  padding: 9px var(--ch-field-px);
+  line-height: 1.5;
+}
+
+.form-control::placeholder {
+  color: var(--ch-text-muted);
+  opacity: 1;
+}
+
+.form-control:hover:not(:disabled):not([readonly]),
+.form-select:hover:not(:disabled) {
+  border-color: var(--ch-text-muted);
+}
+
+.form-control:focus,
+.form-select:focus {
+  color: var(--ch-text);
+  background-color: var(--ch-field-bg);
+  border-color: var(--ch-field-focus);
+  box-shadow: var(--ch-field-focus-ring);
+  outline: 0;
+}
+
+.form-control:disabled,
+.form-control[readonly],
+.form-select:disabled {
+  background-color: var(--ch-field-disabled-bg);
+  color: var(--ch-text-secondary);
+  opacity: 1;
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid,
+.has-error .form-control,
+.has-error .form-select {
+  border-color: var(--ch-danger);
+}
+
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus,
+.has-error .form-control:focus {
+  box-shadow: 0 0 0 3px var(--ch-danger-soft);
+}
+
+.form-label,
+label.control-label {
+  font-size: var(--ch-font-size-sm);
+  font-weight: 600;
+  color: var(--ch-text-secondary);
+  margin-bottom: 6px;
+}
+
+.form-text,
+.help-block {
+  font-size: var(--ch-font-size-sm);
+  color: var(--ch-text-muted);
+}
+
+/* ---------- Gruppi di input (testo/icona/pulsante attaccati al campo) ---------- */
+.input-group-text,
+.input-group-addon {
+  min-height: var(--ch-field-h);
+  font-size: var(--ch-font-size);
+  color: var(--ch-text-secondary);
+  background-color: var(--ch-bg);
+  border: 1px solid var(--ch-field-border);
+  border-radius: var(--ch-radius-sm);
+}
+
+.input-group > .form-control,
+.input-group > .form-select {
+  min-width: 0;
+}
+
+/* ---------- Checkbox, radio, switch ---------- */
+.form-check-input {
+  border-color: var(--ch-field-border);
+}
+
+.form-check-input:checked {
+  background-color: var(--ch-accent);
+  border-color: var(--ch-accent);
+}
+
+.form-check-input:focus {
+  border-color: var(--ch-field-focus);
+  box-shadow: var(--ch-field-focus-ring);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--ch-accent);
+}
+
+/* ---------- Select2 (stessi bordi, altezza e fuoco dei campi nativi) ---------- */
+body .select2-container--default .select2-selection--single,
+body .select2-container--default .select2-selection--multiple {
+  min-height: var(--ch-field-h);
+  background-color: var(--ch-field-bg);
+  border: 1px solid var(--ch-field-border);
+  border-radius: var(--ch-radius-sm);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+body .select2-container--default .select2-selection--single {
+  display: flex;
+  align-items: center;
+}
+
+body .select2-container--default .select2-selection--single .select2-selection__rendered {
+  flex: 1 1 auto;
+  padding-left: var(--ch-field-px);
+  line-height: normal;
+  color: var(--ch-text);
+}
+
+body .select2-container--default .select2-selection--single .select2-selection__arrow {
+  top: 50%;
+  height: auto;
+  transform: translateY(-50%);
+}
+
+body .select2-container--default .select2-selection--multiple {
+  padding: 2px 6px;
+}
+
+body .select2-container--default.select2-container--focus .select2-selection--single,
+body .select2-container--default.select2-container--focus .select2-selection--multiple,
+body .select2-container--default.select2-container--open .select2-selection--single,
+body .select2-container--default.select2-container--open .select2-selection--multiple {
+  border-color: var(--ch-field-focus);
+  box-shadow: var(--ch-field-focus-ring);
+}
+
+body .select2-container--default .select2-selection--multiple .select2-selection__choice {
+  margin-top: 4px;
+  color: var(--ch-accent-dark);
+  background-color: var(--ch-accent-soft);
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
+
+body .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+  color: var(--ch-accent-dark);
+}
+
+body .select2-dropdown {
+  border: 1px solid var(--ch-field-border);
+  border-radius: var(--ch-radius-sm);
+  box-shadow: var(--ch-shadow-md);
+  overflow: hidden;
+}
+
+body .select2-container--default .select2-results__option--highlighted[aria-selected],
+body .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+  background-color: var(--ch-accent);
+  color: #fff;
+}
+
+body .select2-container--default .select2-search--dropdown .select2-search__field {
+  border: 1px solid var(--ch-field-border);
+  border-radius: 6px;
+}
+
+/* ---------- Datepicker / daterangepicker / timepicker (popup dei plugin) ---------- */
+.datepicker.dropdown-menu,
+.daterangepicker,
+.bootstrap-timepicker-widget.dropdown-menu {
+  font-family: var(--ch-font);
+  font-size: var(--ch-font-size-sm);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  box-shadow: var(--ch-shadow-md);
+}
+
+.datepicker table tr td.active,
+.datepicker table tr td.active:hover,
+.datepicker table tr td.active.disabled,
+.datepicker table tr td.active:active {
+  background: var(--ch-accent);
+  color: #fff;
+  border-color: var(--ch-accent);
+}
+
+.daterangepicker td.active,
+.daterangepicker td.active:hover,
+.daterangepicker .ranges li.active {
+  background-color: var(--ch-accent);
+  color: #fff;
+}
+
+/* ---------- Badge e stati ---------- */
+.badge {
+  font-family: var(--ch-font);
+  font-weight: 600;
+  border-radius: var(--ch-radius-pill);
+}
+
+/* ---------- Modali, card, dropdown: forma unica ---------- */
+.modal-content {
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-lg);
+  box-shadow: var(--ch-shadow-md);
+}
+
+.card {
+  --bs-card-border-color: var(--ch-border);
+  --bs-card-border-radius: var(--ch-radius-md);
+  --bs-card-cap-bg: var(--ch-surface);
+  box-shadow: var(--ch-shadow-sm);
+}
+
+.dropdown-menu {
+  --bs-dropdown-border-color: var(--ch-border);
+  --bs-dropdown-border-radius: var(--ch-radius-md);
+  --bs-dropdown-link-active-bg: var(--ch-accent);
+}
+
+/* ---------- Icone: allineamento col testo ---------- */
+.bi {
+  vertical-align: -.125em;
+}
+
+/* ---------- Pulsanti (stesso aspetto di "Pulsanti" in theme.css, valido ovunque) ----------
+ * Dentro l'admin (body.ch-shell) theme.css ha regole piu' specifiche con lo
+ * stesso risultato; qui si copre il resto (popup, pagine pubbliche, anteprime).
+ * Primario = accento pieno; secondario/predefinito = bianco con bordo;
+ * pericolo/avviso = colore semantico; info = accento tenue. */
+.btn {
+  --bs-btn-padding-x: 18px;
+  --bs-btn-padding-y: 9px;
+  --bs-btn-font-family: var(--ch-font);
+  --bs-btn-font-size: var(--ch-font-size);
+  --bs-btn-font-weight: 600;
+  --bs-btn-line-height: 1.4;
+  --bs-btn-border-radius: var(--ch-radius-md);
+  --bs-btn-focus-box-shadow: 0 0 0 3px var(--ch-accent-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-sm { --bs-btn-padding-x: 12px; --bs-btn-padding-y: 6px; --bs-btn-font-size: var(--ch-font-size-sm); }
+.btn-lg { --bs-btn-padding-x: 22px; --bs-btn-padding-y: 12px; --bs-btn-font-size: 15px; }
+
+.btn-primary,
+.btn-success {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--ch-accent);
+  --bs-btn-border-color: var(--ch-accent);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--ch-accent-dark);
+  --bs-btn-hover-border-color: var(--ch-accent-dark);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--ch-accent-dark);
+  --bs-btn-active-border-color: var(--ch-accent-dark);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: var(--ch-accent);
+  --bs-btn-disabled-border-color: var(--ch-accent);
+}
+
+.btn-secondary,
+.btn-light,
+.btn-default,
+.btn-outline-secondary {
+  --bs-btn-color: var(--ch-text);
+  --bs-btn-bg: var(--ch-surface);
+  --bs-btn-border-color: var(--ch-border-strong);
+  --bs-btn-hover-color: var(--ch-text);
+  --bs-btn-hover-bg: var(--ch-bg);
+  --bs-btn-hover-border-color: var(--ch-border-strong);
+  --bs-btn-active-color: var(--ch-text);
+  --bs-btn-active-bg: var(--ch-border);
+  --bs-btn-active-border-color: var(--ch-border-strong);
+  --bs-btn-disabled-color: var(--ch-text-muted);
+  --bs-btn-disabled-bg: var(--ch-surface);
+  --bs-btn-disabled-border-color: var(--ch-border);
+}
+
+.btn-danger {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--ch-danger);
+  --bs-btn-border-color: var(--ch-danger);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: color-mix(in srgb, var(--ch-danger) 85%, #000);
+  --bs-btn-hover-border-color: color-mix(in srgb, var(--ch-danger) 85%, #000);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: color-mix(in srgb, var(--ch-danger) 85%, #000);
+  --bs-btn-active-border-color: color-mix(in srgb, var(--ch-danger) 85%, #000);
+}
+
+.btn-warning {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--ch-warning);
+  --bs-btn-border-color: var(--ch-warning);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: color-mix(in srgb, var(--ch-warning) 85%, #000);
+  --bs-btn-hover-border-color: color-mix(in srgb, var(--ch-warning) 85%, #000);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: color-mix(in srgb, var(--ch-warning) 85%, #000);
+  --bs-btn-active-border-color: color-mix(in srgb, var(--ch-warning) 85%, #000);
+}
+
+.btn-info {
+  --bs-btn-color: var(--ch-accent-dark);
+  --bs-btn-bg: var(--ch-accent-soft);
+  --bs-btn-border-color: var(--ch-accent-soft);
+  --bs-btn-hover-color: var(--ch-accent-dark);
+  --bs-btn-hover-bg: color-mix(in srgb, var(--ch-accent-soft) 80%, var(--ch-accent));
+  --bs-btn-hover-border-color: color-mix(in srgb, var(--ch-accent-soft) 80%, var(--ch-accent));
+  --bs-btn-active-color: var(--ch-accent-dark);
+  --bs-btn-active-bg: color-mix(in srgb, var(--ch-accent-soft) 80%, var(--ch-accent));
+  --bs-btn-active-border-color: color-mix(in srgb, var(--ch-accent-soft) 80%, var(--ch-accent));
+}
+
+.btn-link {
+  --bs-btn-color: var(--ch-accent);
+  --bs-btn-hover-color: var(--ch-accent-dark);
+}
+
+/* ---------- Icone: dimensioni e animazione (al posto di fa-fw / fa-spin / fa-2x) ---------- */
+.ch-icon-fw { display: inline-block; width: 1.25em; text-align: center; }
+.ch-icon-lg { font-size: 1.3333em; line-height: .75em; vertical-align: -.0667em; }
+.ch-icon-2x { font-size: 2em; }
+.ch-icon-3x { font-size: 3em; }
+.ch-icon-4x { font-size: 4em; }
+.ch-icon-5x { font-size: 5em; }
+.ch-spin { display: inline-block; animation: ch-spin 1s linear infinite; }
+@keyframes ch-spin { to { transform: rotate(360deg); } }

@@ -158,21 +158,21 @@ class QlikConfController extends CBController
         | ----------------------------------------------------------------------
         | @label       = Label of action
         | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
-        | @icon        = Font awesome class icon. e.g : fa fa-bars
+        | @icon        = Font awesome class icon. e.g : bi bi-list
         | @color 	   = Default is primary. (primary, warning, succecss, info)
         | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
         |
         */
 		$this->addaction = array();
-		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'fa fa-user', 'color' => 'info', 'title' => 'Members'];
-		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'fa fa-shield', 'color' => 'info', 'title' => 'Items'];
+		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'bi bi-person-fill', 'color' => 'info', 'title' => 'Members'];
+		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'bi bi-shield-fill', 'color' => 'info', 'title' => 'Items'];
 		if (CRUDBooster::isSuperadmin()) {
             // Titoli diversi per On-Premise (Qlik Sense Hub / QMC) e SaaS (Qlik Cloud Hub / Management Console); showIf valuta il campo type della riga
-            $this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseHub/[id]'), 'icon' => 'fa fa-desktop', 'color' => 'primary', 'title' => trans('crudbooster.qlik_action_hub_onpremise'), 'showIf' => '[type] != "SAAS"'];
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseQMC/[id]'), 'icon' => 'fa fa-code', 'color' => 'primary', 'title' => trans('crudbooster.qlik_action_qmc_onpremise'), 'showIf' => '[type] != "SAAS"'];
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseHub/[id]'), 'icon' => 'fa fa-desktop', 'color' => 'primary', 'title' => trans('crudbooster.qlik_action_hub_saas'), 'showIf' => '[type] == "SAAS"'];
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseQMC/[id]'), 'icon' => 'fa fa-code', 'color' => 'primary', 'title' => trans('crudbooster.qlik_action_console_saas'), 'showIf' => '[type] == "SAAS"'];
-            //$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'primary', 'title' => 'Tenants'];
+            $this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseHub/[id]'), 'icon' => 'bi bi-display', 'color' => 'primary', 'title' => trans('crudbooster.qlik_action_hub_onpremise'), 'showIf' => '[type] != "SAAS"'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseQMC/[id]'), 'icon' => 'bi bi-code-slash', 'color' => 'primary', 'title' => trans('crudbooster.qlik_action_qmc_onpremise'), 'showIf' => '[type] != "SAAS"'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseHub/[id]'), 'icon' => 'bi bi-display', 'color' => 'primary', 'title' => trans('crudbooster.qlik_action_hub_saas'), 'showIf' => '[type] == "SAAS"'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('QlikServerSenseQMC/[id]'), 'icon' => 'bi bi-code-slash', 'color' => 'primary', 'title' => trans('crudbooster.qlik_action_console_saas'), 'showIf' => '[type] == "SAAS"'];
+            //$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'bi bi-buildings-fill', 'color' => 'primary', 'title' => 'Tenants'];
 		}
 		/*
         | ----------------------------------------------------------------------
@@ -344,7 +344,7 @@ class QlikConfController extends CBController
             btn.type = 'button';
             btn.className = 'btn btn-info';
             var icon = document.createElement('i');
-            icon.className = 'fa fa-plug';
+            icon.className = 'bi bi-plug-fill';
             btn.appendChild(icon);
             btn.appendChild(document.createTextNode(' ' + I18N.button));
             footerCol.appendChild(document.createTextNode(' '));
@@ -358,7 +358,7 @@ class QlikConfController extends CBController
 
             function setLoading(on) {
                 btn.disabled = on;
-                icon.className = on ? 'fa fa-spinner fa-spin' : 'fa fa-plug';
+                icon.className = on ? 'bi bi-arrow-repeat ch-spin' : 'bi bi-plug-fill';
             }
 
             // ---- popup (overlay autonomo: non dipende dal modal di Bootstrap) ----
@@ -401,7 +401,7 @@ class QlikConfController extends CBController
                 if (withCopy) {
                     var copy = el('button', I18N.copy, 'margin-right:8px');
                     copy.type = 'button';
-                    copy.className = 'btn btn-default btn-sm';
+                    copy.className = 'btn btn-secondary btn-sm';
                     copy.addEventListener('click', function () {
                         var done = function () { copy.textContent = I18N.copied; };
                         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -420,7 +420,7 @@ class QlikConfController extends CBController
                 }
                 var close = el('button', I18N.close);
                 close.type = 'button';
-                close.className = 'btn btn-default btn-sm';
+                close.className = 'btn btn-secondary btn-sm';
                 close.addEventListener('click', closePopup);
                 foot.appendChild(close);
                 dlg.appendChild(foot);

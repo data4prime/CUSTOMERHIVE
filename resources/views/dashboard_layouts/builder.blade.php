@@ -6,14 +6,14 @@
   @if(g('return_url'))
   <p>
     <a title='Return' href='{{g("return_url")}}'>
-      <i class='fa fa-chevron-circle-left '></i>&nbsp;
+      <i class='bi bi-chevron-left'></i>&nbsp;
       {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
   @else
   <p>
     <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
-      <i class='fa fa-chevron-circle-left '></i>&nbsp;
+      <i class='bi bi-chevron-left'></i>&nbsp;
       {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
@@ -37,7 +37,7 @@
             </label>
             <div class="col-sm-10">
               <input type='text' class='form-control' name='layoutname' required value='{{ old("layoutname", @$row->layoutname) }}' />
-              <div class="text-danger">{!! $errors->first('layoutname')?"<i class='fa fa-info-circle'></i> ".$errors->first('layoutname'):"" !!}</div>
+              <div class="text-danger">{!! $errors->first('layoutname')?"<i class='bi bi-info-circle-fill'></i> ".$errors->first('layoutname'):"" !!}</div>
             </div>
           </div>
 
@@ -52,25 +52,25 @@
                 La larghezza di ogni colonna va da 1 a 12 (una riga piena = colonne che sommano a 12).
               </p>
               <div id="builder-rows"></div>
-              <button type="button" class="btn btn-default btn-sm" id="add-row-btn">
-                <i class="fa fa-plus"></i> Aggiungi riga
+              <button type="button" class="btn btn-secondary btn-sm" id="add-row-btn">
+                <i class="bi bi-plus-lg"></i> Aggiungi riga
               </button>
 
             </div>
           </div>
         </div>
 
-        <div class="box-footer" style="background: #F5F5F5">
+        <div class="box-footer" style="background: var(--ch-bg)">
           <div class="mb-3 row">
             <label class="col-form-label col-sm-2"></label>
             <div class="col-sm-10">
               @if(g('return_url'))
-              <a href='{{g("return_url")}}' class='btn btn-default'>
-                <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+              <a href='{{g("return_url")}}' class='btn btn-secondary'>
+                <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
               </a>
               @else
-              <a href='{{CRUDBooster::mainpath()}}' class='btn btn-default'>
-                <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+              <a href='{{CRUDBooster::mainpath()}}' class='btn btn-secondary'>
+                <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
               </a>
               @endif
               <input type="submit" name="submit" value='{{trans("crudbooster.button_save")}}' class='btn btn-success'>
@@ -90,11 +90,11 @@
     align-items: stretch;
     flex-wrap: wrap;
     gap: 8px;
-    border: 1px dashed #ccc;
+    border: 1px dashed var(--ch-border-strong);
     border-radius: 4px;
     padding: 10px;
     margin-bottom: 10px;
-    background: #fafafa;
+    background: var(--ch-bg);
   }
   .layout-builder-col {
     display: flex;
@@ -102,8 +102,8 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
-    background: #fff;
-    border: 1px solid #d0d7de;
+    background: var(--ch-surface);
+    border: 1px solid var(--ch-border-strong);
     border-radius: 4px;
     padding: 8px 4px;
     min-height: 70px;
@@ -111,7 +111,7 @@
   }
   .layout-builder-col .area-label {
     font-size: 11px;
-    color: #666;
+    color: var(--ch-text-secondary);
   }
   .layout-builder-col select {
     width: 60px;
@@ -125,10 +125,10 @@
   }
   .layout-builder-row-total {
     font-size: 12px;
-    color: #666;
+    color: var(--ch-text-secondary);
   }
   .layout-builder-row-total.warn {
-    color: #b94a48;
+    color: var(--ch-danger);
     font-weight: bold;
   }
 </style>
@@ -172,7 +172,7 @@
         $toolbar.append($total);
 
         Object.keys(PRESETS).forEach(function (label) {
-          var $btn = $("<button type='button' class='btn btn-default btn-xs'>" + label + '</button>');
+          var $btn = $("<button type='button' class='btn btn-secondary btn-sm'>" + label + '</button>');
           $btn.on('click', function () {
             rowsState[rowIndex] = PRESETS[label].slice();
             render();
@@ -180,14 +180,14 @@
           $toolbar.append($btn);
         });
 
-        var $addCol = $("<button type='button' class='btn btn-default btn-xs'><i class='fa fa-plus'></i> Colonna</button>");
+        var $addCol = $("<button type='button' class='btn btn-secondary btn-sm'><i class='bi bi-plus-lg'></i> Colonna</button>");
         $addCol.on('click', function () {
           rowsState[rowIndex].push(4);
           render();
         });
         $toolbar.append($addCol);
 
-        var $removeRow = $("<button type='button' class='btn btn-danger btn-xs'><i class='fa fa-trash'></i> Rimuovi riga</button>");
+        var $removeRow = $("<button type='button' class='btn btn-danger btn-sm'><i class='bi bi-trash-fill'></i> Rimuovi riga</button>");
         $removeRow.on('click', function () {
           rowsState.splice(rowIndex, 1);
           render();
@@ -210,7 +210,7 @@
           });
           $col.append($select);
 
-          var $removeCol = $("<button type='button' class='btn btn-default btn-xs'>&times;</button>");
+          var $removeCol = $("<button type='button' class='btn btn-secondary btn-sm'>&times;</button>");
           $removeCol.on('click', function () {
             rowsState[rowIndex].splice(colIndex, 1);
             if (!rowsState[rowIndex].length) {

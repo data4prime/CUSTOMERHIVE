@@ -26,13 +26,13 @@
             <?php endif;
             echo "<input type='hidden' name='_$name' value='$value'/>";
             else:
-                echo "<p class='text-danger'><i class='fa fa-exclamation-triangle'></i> ".trans("crudbooster.file_broken")."</p>";
+                echo "<p class='text-danger'><i class='bi bi-exclamation-triangle-fill'></i> ".trans("crudbooster.file_broken")."</p>";
             endif;
             ?>
             @if(!$readonly || !$disabled)
                 <p><a class='btn btn-danger btn-delete btn-sm' onclick="if(!confirm('{{trans("crudbooster.delete_title_confirm")}}')) return false"
                       href='{{url(CRUDBooster::mainpath("delete-image?image=".$value."&id=".$row->id."&column=".$name))}}'><i
-                                class='fa fa-ban'></i> {{trans('crudbooster.text_delete')}} </a></p>
+                                class='bi bi-slash-circle'></i> {{trans('crudbooster.text_delete')}} </a></p>
             @endif
         @endif
         @if(!$value)
@@ -41,7 +41,7 @@
         @else
             <p class='text-muted'><em>{{trans("crudbooster.notice_delete_file_upload")}}</em></p>
         @endif
-        <div class="text-danger">{!! $errors->first($name)?"<i class='fa fa-info-circle'></i> ".$errors->first($name):"" !!}</div>
+        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".$errors->first($name):"" !!}</div>
 
     </div>
 

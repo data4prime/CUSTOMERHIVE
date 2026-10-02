@@ -9,31 +9,9 @@
   <meta name='robots' content='noindex,nofollow' />
   <link rel="shortcut icon"
     href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
-  <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
-  <!-- Font Awesome Icons -->
-  <link href="{{asset('vendor/crudbooster/assets/adminlte/font-awesome/css')}}/font-awesome.min.css" rel="stylesheet"
-    type="text/css" />
-  <!-- Ionicons -->
-  <link href="{{asset('vendor/crudbooster/ionic/css/ionicons.min.css')}}" rel="stylesheet" type="text/css" />
-  <!-- Theme style -->
-  <link href="{{ asset('vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css')}}" rel="stylesheet"
-    type="text/css" />
-  <link href="{{ asset('vendor/crudbooster/assets/adminlte/dist/css/skins/_all-skins.min.css')}}" rel="stylesheet"
-    type="text/css" />
-
-  <!-- support rtl-->
-  @if (in_array(App::getLocale(), ['ar', 'fa']))
-  <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css">
-  <link href="{{ asset('vendor/crudbooster/assets/rtl.css')}}" rel="stylesheet" type="text/css" />
-  @endif
-
-<!--
-  <link rel='stylesheet' href='{{asset("vendor/crudbooster/assets/css/main.css").' ?r='.time()}}' />
-  <link rel='stylesheet' href="{{asset("css/custom.css").'?r='.time()}}" type="text/css"/>
--->
-<link rel='stylesheet' href="{{asset('css/custom.css').'?r='.time()}}" type="text/css"/>
+  <meta content='width=device-width, initial-scale=1, viewport-fit=cover' name='viewport'>
+  {{-- Bootstrap 5 + Bootstrap Icons + layout + tema, in locale (vedi partials/ch_head) --}}
+  @include('crudbooster::partials.ch_head')
     @stack(' head') </head>
 
 <body

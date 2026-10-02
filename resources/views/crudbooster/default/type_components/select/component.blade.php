@@ -244,7 +244,7 @@ $query = DB::select($form['dataquery']);
             //end if not parent select
             @endphp
         </select>
-        <div class="text-danger">{!! $errors->first($name)?"<i class='fa fa-info-circle'></i> ".$errors->first($name):""
+        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".$errors->first($name):""
             !!}</div>
         <p class='help-block'>{{ @$form['help'] }}</p>
     </div>

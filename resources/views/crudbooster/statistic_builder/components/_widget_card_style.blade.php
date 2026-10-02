@@ -40,7 +40,7 @@
         background: transparent;
         font-size: 13px;
         font-weight: 600;
-        color: var(--ch-text-secondary, #55555f);
+        color: var(--ch-text-secondary, var(--ch-text-secondary));
     }
     div.border-box > .card.card-default > .card-body {
         padding: 10px 18px 18px;

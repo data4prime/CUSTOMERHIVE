@@ -9,41 +9,11 @@
     <meta name='robots' content='noindex,nofollow' />
     <link rel="shortcut icon"
         href="{{ CRUDBooster::getSetting('favicon')?asset(CRUDBooster::getSetting('favicon')):asset('vendor/crudbooster/assets/logo_crudbooster.png') }}">
-    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <meta content='width=device-width, initial-scale=1, viewport-fit=cover' name='viewport'>
 
-    <!-- Bootstrap 3.3.2 -->
-    <!--<link href="{{ asset('vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"
-        type="text/css" />-->
- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Font Awesome Icons -->
-    <link href="{{asset('vendor/crudbooster/assets/adminlte/font-awesome/css')}}/font-awesome.min.css" rel="stylesheet"
-        type="text/css" />
-    <!-- Ionicons -->
-    <link href="https://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- REQUIRED JS SCRIPTS -->
-
-    <!-- jQuery 2.2.3 -->
-    <script src="{{ asset ('vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
-
-    <!-- Bootstrap 3.4.1 JS -->
-    <!--<script src="{{ asset ('vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min.js') }}"
-        type="text/javascript"></script>-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-    <!-- AdminLTE App -->
-    <script src="{{ asset ('vendor/crudbooster/assets/adminlte/dist/js/app.js') }}" type="text/javascript"></script>
-
-
-    <!-- Theme style -->
-    <link href="{{ asset('vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css')}}" rel="stylesheet"
-        type="text/css" />
-    <link href="{{ asset('vendor/crudbooster/assets/adminlte/dist/css/skins/_all-skins.min.css')}}" rel="stylesheet"
-        type="text/css" />
+    {{-- Bootstrap 5 + Bootstrap Icons + layout + tema e script di base, tutto in locale --}}
+    @include('crudbooster::partials.ch_head')
+    @include('crudbooster::partials.ch_scripts')
 
     <!--SWEET ALERT-->
     <script src="{{asset('vendor/crudbooster/assets/sweetalert/dist/sweetalert.min.js')}}"></script>
@@ -68,7 +38,17 @@
     </style>
 </head>
 
-<body class="<?php echo (Session::get('theme_color')) ?: 'skin-blue'?> old-transition layout-top-nav fixed">
+@php
+    // Stesso accento di ruolo del layout principale (vedi admin_template.blade.php):
+    // theme_color (skin-*) non pilota piu' una classe, ma l'attributo data-role-accent.
+    $role_accent_map = [
+        'skin-blue' => 'blue', 'skin-blue-light' => 'blue', 'skin-yellow' => 'yellow', 'skin-yellow-light' => 'yellow',
+        'skin-green' => 'green', 'skin-green-light' => 'green', 'skin-purple' => 'purple', 'skin-purple-light' => 'purple',
+        'skin-red' => 'red', 'skin-red-light' => 'red', 'skin-black' => 'black', 'skin-black-light' => 'black',
+    ];
+    $role_accent = $role_accent_map[Session::get('theme_color')] ?? null;
+@endphp
+<body class="ch-shell layout-top-nav fixed"@if($role_accent) data-role-accent="{{ $role_accent }}"@endif>
     <div id='app' class="wrapper">
 
         <header class="main-header">
@@ -79,25 +59,25 @@
                             class="navbar-brand">{{CRUDBooster::getSetting('appname')}}</a>
                         <!--<button style="background-color: transparent;" type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse"
                             data-bs-target="#navbar-collapse">
-                            <i class="fa fa-bars"></i>
+                            <i class="bi bi-list"></i>
                         </button>-->
                     </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+                    <div class="collapse navbar-collapse float-start" id="navbar-collapse">
                         <ul class="nav navbar-nav">
                             <li><a class='btn-save-statistic' href="#" title='Auto Save Status'><i
-                                        class='fa fa-save'></i> Auto Save Ready</a></li>
+                                        class='bi bi-floppy-fill'></i> Auto Save Ready</a></li>
                         </ul>
                     </div>
                     <!-- /.navbar-collapse -->
                     <!-- Navbar Right Menu -->
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
-                            <li class="nav-item"><a href="#" class='btn-show-sidebar nav-link' data-bs-toggle="control-sidebar"><i
-                                        class='fa fa-bars'></i> Add Widget</a></li>
+                            <li class="nav-item"><a href="#" class='btn-show-sidebar nav-link' data-ch-toggle="control-sidebar"><i
+                                        class='bi bi-list'></i> Add Widget</a></li>
 
-                            <li  class="nav-item"><a class='nav-link' href="{{CRUDBooster::mainpath()}}"><i class='fa fa-sign-out'></i> Exit</a></li>
+                            <li  class="nav-item"><a class='nav-link' href="{{CRUDBooster::mainpath()}}"><i class='bi bi-box-arrow-right'></i> Exit</a></li>
                         </ul>
                     </div>
                     <!-- /.navbar-custom-menu -->
@@ -199,7 +179,7 @@
         <!-- Footer -->
         <footer class="main-footer">
             <!-- To the right -->
-            <div class="pull-right hidden-xs">
+            <div class="float-end hidden-xs">
                 Powered By {{Session::get('appname')}}
             </div>
             <!-- Default to the left -->
@@ -209,12 +189,6 @@
         </footer>
 
     </div><!-- ./wrapper -->
-
-    <!-- Optionally, you can add Slimscroll and FastClick plugins.
-      Both of these plugins are recommended to enhance the
-      user experience -->
-    <!-- SlimScroll 1.3.0 -->
-    <script src="{{ asset('vendor/crudbooster/assets/adminlte/plugins/slimScroll/jquery.slimscroll.min.js')}}"></script>
 
     @stack('bottom')
 </body>

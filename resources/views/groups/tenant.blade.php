@@ -6,10 +6,10 @@
   <div>
     @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel)
     @if(g('return_url'))
-    <p><a title='Return' href='{{g("return_url")}}'><i class='fa fa-chevron-circle-left '></i>
+    <p><a title='Return' href='{{g("return_url")}}'><i class='bi bi-chevron-left'></i>
         &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
     @else
-    <p><a title='Main Module' href='{{CRUDBooster::mainpath()}}'><i class='fa fa-chevron-circle-left '></i>
+    <p><a title='Main Module' href='{{CRUDBooster::mainpath()}}'><i class='bi bi-chevron-left'></i>
         &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
     @endif
     @endif
@@ -37,18 +37,18 @@
             @endif
           </div><!-- /.box-body -->
 
-          <div class="box-footer" style="background: #F5F5F5">
+          <div class="box-footer" style="background: var(--ch-bg)">
 
             <div class="form-tenant">
               <label class="col-form-label col-sm-2"></label>
               <div class="col-sm-10">
                 @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                 @if(g('return_url'))
-                <a href='{{g("return_url")}}' class='btn btn-default'><i class='fa fa-chevron-circle-left'></i>
+                <a href='{{g("return_url")}}' class='btn btn-secondary'><i class='bi bi-chevron-left'></i>
                   {{trans("crudbooster.button_back")}}</a>
                 @else
-                <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-default'><i
-                    class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}</a>
+                <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-secondary'><i
+                    class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}</a>
                 @endif
                 @endif
                 @if(CRUDBooster::isCreate() || CRUDBooster::isUpdate())
@@ -100,7 +100,7 @@
               <td>
                 @if(CRUDBooster::isDelete() && $button_edit)
                 <a title='Remove' class='btn btn-danger btn-sm'
-                  href='{{CRUDBooster::mainpath("$group_id/remove_tenant/$tenant->id")}}'><i class="fa fa-trash"></i></a>
+                  href='{{CRUDBooster::mainpath("$group_id/remove_tenant/$tenant->id")}}'><i class="bi bi-trash-fill"></i></a>
                 @endif
 
 

@@ -85,21 +85,21 @@ class AdminGroupsController extends CBController
         | ----------------------------------------------------------------------
         | @label       = Label of action
         | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
-        | @icon        = Font awesome class icon. e.g : fa fa-bars
+        | @icon        = Font awesome class icon. e.g : bi bi-list
         | @color 	   = Default is primary. (primary, warning, succecss, info)
         | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
         |
         */
 		$this->addaction = array();
-		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'fa fa-user', 'color' => 'info', 'title' => 'Members'];
+		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'bi bi-person-fill', 'color' => 'info', 'title' => 'Members'];
 		//gli "items" del gruppo sono i qlik_items: senza il modulo Qlik in
 		//licenza la pagina non ha nulla da gestire, quindi si nasconde il pulsante
 		if (LicenseHelper::isActiveQlik()) {
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'fa fa-shield', 'color' => 'info', 'title' => 'Items'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'bi bi-shield-fill', 'color' => 'info', 'title' => 'Items'];
 		}
 		//solo superadmin gestisce i tenant
 		if (CRUDBooster::isSuperadmin()) {
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'fa fa-industry', 'color' => 'info', 'title' => 'Tenants'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'bi bi-buildings-fill', 'color' => 'info', 'title' => 'Tenants'];
 		}
 		/*
         | ----------------------------------------------------------------------
@@ -398,7 +398,7 @@ class AdminGroupsController extends CBController
 			//se è alert=1
 			if ($alert_id == '1') {
 				//mostra messaggio di warning per tasto add premuto senza valori required
-				$data['alerts'][] = ['message' => '<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
+				$data['alerts'][] = ['message' => '<h4><i class="icon bi bi-exclamation-triangle-fill"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
 			}
 		}
 
@@ -509,7 +509,7 @@ class AdminGroupsController extends CBController
 			//se è alert=1
 			if ($alert_id == '1') {
 				//mostra messaggio di warning per tasto add premuto senza valori required
-				$data['alerts'][] = ['message' => '<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
+				$data['alerts'][] = ['message' => '<h4><i class="icon bi bi-exclamation-triangle-fill"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
 			}
 		}
 		$data['page_title'] = $data['group']->name . ' Allowed Items';
@@ -612,7 +612,7 @@ class AdminGroupsController extends CBController
 			//se è alert=1
 			if ($alert_id == '1') {
 				//mostra messaggio di warning per tasto add premuto senza valori required
-				$data['alerts'][] = ['message' => '<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
+				$data['alerts'][] = ['message' => '<h4><i class="icon bi bi-exclamation-triangle-fill"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
 			}
 		}
 

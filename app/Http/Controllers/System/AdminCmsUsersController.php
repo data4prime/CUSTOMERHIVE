@@ -272,7 +272,7 @@ class AdminCmsUsersController extends CBController
 
 		$this->addaction = array();
 		//TODO tenantadmin can't update users with superadmin or tenantadmin privilege
-		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('groups/[id]'), 'icon' => 'fa fa-users', 'color' => 'info', 'title' => 'View groups'];
+		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('groups/[id]'), 'icon' => 'bi bi-people-fill', 'color' => 'info', 'title' => 'View groups'];
 	}
 
 	public function getProfile()
@@ -1223,7 +1223,7 @@ class AdminCmsUsersController extends CBController
 			//se è alert=1
 			if ($alert_id == '1') {
 				//mostra messaggio di warning per tasto add premuto senza valori required
-				$data['alerts'][] = ['message' => '<h4><i class="icon fa fa-warning"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
+				$data['alerts'][] = ['message' => '<h4><i class="icon bi bi-exclamation-triangle-fill"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
 			}
 		}
 		$data['page_title'] = $data['user']->name . ' groups';

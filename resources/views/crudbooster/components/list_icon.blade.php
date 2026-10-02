@@ -1,8 +1,12 @@
-<select id='list-icon' class="form-control" name="icon" style="font-family: 'FontAwesome', Helvetica;">
-    <option value="">** Select an Icon</option>
+@php
+    // Le icone gia' salvate come "fa fa-*" vengono tradotte nel nome
+    // equivalente di Bootstrap Icons, cosi' risultano preselezionate.
+    $currentIcon = isset($row) && isset($row->icon) ? \App\Helpers\IconMap::toBi($row->icon) : '';
+@endphp
+<select id='list-icon' class="form-control" name="icon">
+    <option value="">{{ trans('crudbooster.icon_select') }}</option>
     @foreach($fontawesome as $font)
-    <option value='fa fa-{{$font}}' data-icon="{{ isset($row) && isset($row->icon) ? $row->icon : ''}}" {{ isset($row)
-        && isset($row->icon) && ($row->icon == "fa fa-".$font)?"selected":"" }} data-label='{{$font}}'>{{$font}}
+    <option value='bi bi-{{$font}}' data-icon="{{ $currentIcon }}" {{ $currentIcon == "bi bi-".$font ? "selected" : "" }} data-label='{{$font}}'>{{$font}}
     </option>
     @endforeach
 </select>

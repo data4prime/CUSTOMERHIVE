@@ -12,7 +12,7 @@
             isset($validation['max']) ? "maxlength=" .$validation['max']:"" @endphp class='form-control'
             name="{{$name}}" id="{{$name}}" value='{{$value}}' />
 
-        <div class="text-danger">{!! $errors->first($name)?"<i class='fa fa-info-circle'></i>
+        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i>
             ".$errors->first($name):""
             !!}</div>
         <p class='help-block'>{{ @$form['help'] }}</p>

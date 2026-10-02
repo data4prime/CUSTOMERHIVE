@@ -3,7 +3,7 @@
 
         <div class="card card-default">
             <div class="card-header">
-                <i class='fa fa-bars'></i> {{$form['label']}}
+                <i class='bi bi-list'></i> {{$form['label']}}
             </div>
             <div class="card-body">
                 <table id='table-{{$name}}' class='table table-striped table-bordered'>

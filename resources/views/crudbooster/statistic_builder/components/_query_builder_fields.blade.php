@@ -121,10 +121,10 @@
     .ch-builder-filter-row .ch-builder-filter-operator { flex: 0 0 160px; }
     .ch-builder-filter-row .ch-builder-filter-value { flex: 1; min-width: 0; }
     .ch-builder-filter-remove {
-        border: none; background: none; color: #98A2B3; cursor: pointer;
+        border: none; background: none; color: var(--ch-text-muted); cursor: pointer;
         font-size: 18px; line-height: 1; padding: 0 4px; flex-shrink: 0;
     }
-    .ch-builder-filter-remove:hover { color: #D92D20; }
+    .ch-builder-filter-remove:hover { color: var(--ch-danger); }
 </style>
 
 <script>
@@ -482,7 +482,7 @@ if (!window.__chEnsureSelect2) {
                 $result.html('<em>Nessun risultato.</em>');
                 return;
             }
-            var html = '<table class="table table-condensed" style="margin:0;"><tbody>';
+            var html = '<table class="table table-sm" style="margin:0;"><tbody>';
             response.rows.forEach(function (row) {
                 html += '<tr><td>' + row.label + '</td><td style="text-align:right;font-weight:600;">' + row.value + '</td></tr>';
             });

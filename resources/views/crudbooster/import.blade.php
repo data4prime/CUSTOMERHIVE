@@ -16,12 +16,12 @@
         <div class="ch-import-stepper">
             <a class="ch-step is-done" href='javascript:;'
                 onclick="if(confirm('Are you sure want to leave ?')) location.href='{{ CRUDBooster::mainpath("import-data") }}'">
-                <span class="ch-step-circle"><i class="fa fa-check"></i></span>
+                <span class="ch-step-circle"><i class="bi bi-check-lg"></i></span>
                 <span class="ch-step-label">{{ trans('crudbooster.upload_a_file') }}</span>
             </a>
             <span class="ch-step-line is-done"></span>
             <a class="ch-step is-done" href='#'>
-                <span class="ch-step-circle"><i class="fa fa-check"></i></span>
+                <span class="ch-step-circle"><i class="bi bi-check-lg"></i></span>
                 <span class="ch-step-label">{{ trans('crudbooster.adjustment') }}</span>
             </a>
             <span class="ch-step-line is-done"></span>
@@ -34,7 +34,7 @@
         <!-- Box -->
         <div id='box_main' class="card card-primary">
             <div class="card-header mb-3 with-border">
-                <i class="ch-card-icon fa fa-cloud-download"></i>
+                <i class="ch-card-icon bi bi-cloud-download"></i>
                 <h3 class="card-title">{{ trans('crudbooster.importing') }}</h3>
                 <div class="card-tools">
                 </div>
@@ -42,7 +42,7 @@
 
             <div class="card-body">
 
-                <p id='status-import'><i class='fa fa-spin fa-spinner'></i> {{ trans('crudbooster.please_wait_importing') }}</p>
+                <p id='status-import'><i class='bi ch-spin bi-arrow-repeat'></i> {{ trans('crudbooster.please_wait_importing') }}</p>
                 <div class="progress">
                     <div id='progress-import' class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" aria-valuenow="40"
                          aria-valuemin="0" aria-valuemax="100" style="width: 0%">
@@ -60,10 +60,10 @@
                                 $.post("{{ CRUDBooster::mainpath('do-import-chunk?file='.Request::get('file')) }}", {resume: 1}, function (resp) {
                                     console.log(resp.progress);
                                     $('#progress-import').css('width', resp.progress + '%');
-                                    $('#status-import').html("<i class='fa fa-spin fa-spinner'></i> Please wait importing... (" + resp.progress + "%)");
+                                    $('#status-import').html("<i class='bi ch-spin bi-arrow-repeat'></i> Please wait importing... (" + resp.progress + "%)");
                                     $('#progress-import').attr('aria-valuenow', resp.progress);
                                     if (resp.progress >= 100) {
-                                        $('#status-import').addClass('text-success').html("<i class='fa fa-check-square-o'></i> Import Data Completed !");
+                                        $('#status-import').addClass('text-success').html("<i class='bi bi-check-square'></i> Import Data Completed !");
                                         clearInterval(int_prog);
                                     }
                                 })
@@ -75,7 +75,7 @@
                                 if (resp.status == true) {
                                     $('#progress-import').css('width', '100%');
                                     $('#progress-import').attr('aria-valuenow', 100);
-                                    $('#status-import').addClass('text-success').html("<i class='fa fa-check-square-o'></i> Import Data Completed !");
+                                    $('#status-import').addClass('text-success').html("<i class='bi bi-check-square'></i> Import Data Completed !");
                                     clearInterval(int_prog);
                                     $('#upload-footer').show();
                                     console.log('Import Success');
@@ -90,8 +90,8 @@
             </div><!-- /.card-body -->
 
             <div class="card-footer" id='upload-footer' style="display:none">
-                <!--<div class='pull-right'>-->
-                    <a href='{{ CRUDBooster::mainpath("import-data") }}' class='btn btn-default'><i class='fa fa-upload'></i> {{ trans('crudbooster.upload_other_file') }}</a>
+                <!--<div class='float-end'>-->
+                    <a href='{{ CRUDBooster::mainpath("import-data") }}' class='btn btn-secondary'><i class='bi bi-upload'></i> {{ trans('crudbooster.upload_other_file') }}</a>
                     <a href='{{CRUDBooster::mainpath()}}' class='btn btn-success'>{{ trans('crudbooster.finish') }}</a>
                 <!--</div>-->
             </div><!-- /.card-footer-->
@@ -104,7 +104,7 @@
         <div class="ch-import-stepper">
             <a class="ch-step is-done" href='javascript:;'
                 onclick="if(confirm('Are you sure want to leave ?')) location.href='{{ CRUDBooster::mainpath("import-data") }}'">
-                <span class="ch-step-circle"><i class="fa fa-check"></i></span>
+                <span class="ch-step-circle"><i class="bi bi-check-lg"></i></span>
                 <span class="ch-step-label">{{ trans('crudbooster.upload_a_file') }}</span>
             </a>
             <span class="ch-step-line is-done"></span>
@@ -122,7 +122,7 @@
         <!-- Box -->
         <div id='box_main' class="card card-primary">
             <div class="card-header mb-3 with-border">
-                <i class="ch-card-icon fa fa-sliders"></i>
+                <i class="ch-card-icon bi bi-sliders"></i>
                 <h3 class="card-title">{{ trans('crudbooster.adjustment') }}</h3>
                 <div class="card-tools">
 
@@ -143,7 +143,7 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="card-body table-responsive no-padding">
                     <div class="ch-info-panel is-warning">
-                        <i class="fa fa-exclamation-triangle"></i>
+                        <i class="bi bi-exclamation-triangle-fill"></i>
                         <ul>
                             <li>{{ trans('crudbooster.just_ignoring_the_column_where_you_are_not_sure_the_data_is_suit_with_the_column_or_not') }}</li>
                             <li>{{ trans('crudbooster.warning_cant_import') }}</li>
@@ -189,7 +189,7 @@
                         </table>
                     </div>
                     <div class="ch-map-summary">
-                        <i class="fa fa-info-circle"></i>
+                        <i class="bi bi-info-circle-fill"></i>
                         <span id="ch-map-summary-text"></span>
                     </div>
 
@@ -245,9 +245,9 @@
                 @endpush
 
                 <div class="card-footer">
-                    <!--<div class='pull-right'>-->
+                    <!--<div class='float-end'>-->
                         <a onclick="if(confirm('Are you sure want to leave ?')) location.href='{{ CRUDBooster::mainpath("import-data") }}'" href='javascript:;'
-                           class='btn btn-default'>{{ trans('crudbooster.button_cancel') }}</a>
+                           class='btn btn-secondary'>{{ trans('crudbooster.button_cancel') }}</a>
                         <input type='submit' class='btn btn-primary' name='submit' onclick='return check_selected_column()' value='{{ trans("crudbooster.button_import") }}'/>
                     <!--</div>-->
                 </div><!-- /.card-footer-->
@@ -279,7 +279,7 @@
         <!-- Box -->
         <div id='box_main' class="card card-primary">
             <div class="card-header mb-3 with-border">
-                <i class="ch-card-icon fa fa-upload"></i>
+                <i class="ch-card-icon bi bi-upload"></i>
                 <h3 class="card-title">{{ trans("crudbooster.upload_a_file") }}</h3>
                 <div class="card-tools">
 
@@ -301,7 +301,7 @@
                 <div class="card-body">
 
                     <div class="ch-info-panel">
-                        <i class="fa fa-info-circle"></i>
+                        <i class="bi bi-info-circle-fill"></i>
                         <div>
                             <p class="ch-info-title">{{ trans('crudbooster.welcome_to_data_importer_tool') }}</p>
                             <p class="ch-info-lede">{{ trans('crudbooster.before_doing_upload_a_file_its_better_to_read_this_below_instructions') }}:</p>
@@ -317,9 +317,9 @@
                     <div class='mb-3 row'>
                         <label>File XLS / CSV</label>
                         <div class="ch-dropzone" id="ch-import-dropzone">
-                            <div class="ch-dropzone-icon"><i class="fa fa-cloud-upload"></i></div>
+                            <div class="ch-dropzone-icon"><i class="bi bi-cloud-upload"></i></div>
                             <p><strong>Trascina qui il file</strong> oppure</p>
-                            <button type="button" class="btn btn-default" id="ch-choose-file-btn">Scegli file</button>
+                            <button type="button" class="btn btn-secondary" id="ch-choose-file-btn">Scegli file</button>
                             <input type='file' name='userfile' id="ch-import-file-input" class='form-control' required style="display:none" />
                             <div class="ch-dropzone-formats">
                                 <span class="ch-format-chip">XLS</span>
@@ -328,7 +328,7 @@
                             </div>
                         </div>
                         <div class="ch-file-picked" id="ch-file-picked" style="display:none">
-                            <i class="fa fa-file-text-o"></i>
+                            <i class="bi bi-file-earmark-text"></i>
                             <b id="ch-file-picked-name"></b>
                             <span id="ch-file-picked-size"></span>
                         </div>
@@ -376,8 +376,8 @@
                 @endpush
 
                 <div class="card-footer">
-                    <!--<div class='pull-right'>-->
-                        <a href='{{ CRUDBooster::mainpath() }}' class='btn btn-default'>{{ trans("crudbooster.button_cancel") }}</a>
+                    <!--<div class='float-end'>-->
+                        <a href='{{ CRUDBooster::mainpath() }}' class='btn btn-secondary'>{{ trans("crudbooster.button_cancel") }}</a>
                         <input type='submit' class='btn btn-primary' name='submit' value='{{ trans("crudbooster.upload") }}'/>
                     <!--</div>-->
                 </div><!-- /.card-footer-->

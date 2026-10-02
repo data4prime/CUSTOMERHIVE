@@ -1,0 +1,114 @@
+/*
+ * ch-compat.css - strato di compatibilita' TEMPORANEO per le classi
+ * Bootstrap 3 / AdminLTE che Bootstrap 5 non definisce piu'.
+ *
+ * Serve a due cose che il progetto non controlla:
+ *  - i controller e le viste custom dei singoli clienti (cartella
+ *    app/Http/Controllers fuori da System/, gitignored) e l'HTML salvato nel DB
+ *    (descrizioni, widget "Panel Area") scritti con la sintassi vecchia;
+ *  - il codice di progetto non ancora migrato.
+ *
+ * Le viste del progetto usano gia' le classi Bootstrap 5; questo file va
+ * eliminato quando TUTTI i clienti sono stati aggiornati (vedi
+ * docs/refactoring: "Standard UI - rimozione AdminLTE"). Non aggiungere qui
+ * nulla di nuovo: usare le classi Bootstrap 5 o i componenti ch-*.
+ */
+
+/* --- Utility --- */
+.pull-left { float: left !important; }
+.pull-right { float: right !important; }
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+.center-block { display: block; margin-left: auto; margin-right: auto; }
+.img-responsive { display: block; max-width: 100%; height: auto; }
+.img-circle { border-radius: 50%; }
+.img-rounded { border-radius: var(--ch-radius-md, 8px); }
+.hidden { display: none !important; }
+
+@media (max-width: 767.98px) { .hidden-xs { display: none !important; } .visible-xs, .visible-xs-block { display: block !important; } .visible-xs-inline { display: inline !important; } }
+@media (min-width: 768px) and (max-width: 991.98px) { .hidden-sm { display: none !important; } .visible-sm, .visible-sm-block { display: block !important; } }
+@media (min-width: 992px) and (max-width: 1199.98px) { .hidden-md { display: none !important; } }
+@media (min-width: 1200px) { .hidden-lg { display: none !important; } }
+@media (min-width: 768px) { .visible-xs, .visible-xs-block, .visible-xs-inline { display: none !important; } }
+@media (min-width: 992px) { .visible-sm, .visible-sm-block { display: none !important; } }
+
+/* --- Griglia: .col-xs-N valeva a tutte le larghezze (= .col-N di Bootstrap 5) --- */
+.col-xs-1 { flex: 0 0 auto; width: 8.33333333%; }
+.col-xs-2 { flex: 0 0 auto; width: 16.66666667%; }
+.col-xs-3 { flex: 0 0 auto; width: 25%; }
+.col-xs-4 { flex: 0 0 auto; width: 33.33333333%; }
+.col-xs-5 { flex: 0 0 auto; width: 41.66666667%; }
+.col-xs-6 { flex: 0 0 auto; width: 50%; }
+.col-xs-7 { flex: 0 0 auto; width: 58.33333333%; }
+.col-xs-8 { flex: 0 0 auto; width: 66.66666667%; }
+.col-xs-9 { flex: 0 0 auto; width: 75%; }
+.col-xs-10 { flex: 0 0 auto; width: 83.33333333%; }
+.col-xs-11 { flex: 0 0 auto; width: 91.66666667%; }
+.col-xs-12 { flex: 0 0 auto; width: 100%; }
+
+/* --- Form --- */
+.form-group { margin-bottom: 1rem; }
+.form-horizontal .form-group { display: flex; flex-wrap: wrap; margin-left: calc(var(--bs-gutter-x, 1.5rem) * -.5); margin-right: calc(var(--bs-gutter-x, 1.5rem) * -.5); }
+.control-label { margin-bottom: .5rem; font-weight: 600; }
+.help-block { display: block; margin-top: .25rem; font-size: .85em; color: var(--ch-text-muted, #6c757d); }
+.has-feedback { position: relative; }
+.has-error .form-control, .has-error .select2-selection { border-color: var(--ch-danger, #dc3545); }
+.has-error .help-block, .has-error .control-label { color: var(--ch-danger, #dc3545); }
+.has-success .form-control { border-color: var(--ch-success, #198754); }
+.has-warning .form-control { border-color: var(--ch-warning, #ffc107); }
+.input-group-addon { display: flex; align-items: center; padding: .375rem .75rem; font-size: 1rem; font-weight: 400; line-height: 1.5; color: var(--ch-text-secondary, #495057); text-align: center; white-space: nowrap; background-color: var(--ch-bg, #f8f9fa); border: 1px solid var(--ch-border-strong, #dee2e6); border-radius: var(--ch-radius-sm, .375rem); }
+.checkbox, .radio { display: block; position: relative; margin-top: 10px; margin-bottom: 10px; }
+.checkbox label, .radio label { min-height: 20px; padding-left: 0; margin-bottom: 0; font-weight: 400; cursor: pointer; }
+
+/* --- Bottoni --- */
+.btn-default {
+  --bs-btn-color: var(--ch-text, #212529);
+  --bs-btn-bg: var(--ch-surface, #fff);
+  --bs-btn-border-color: var(--ch-border-strong, #dee2e6);
+  --bs-btn-hover-color: var(--ch-text, #212529);
+  --bs-btn-hover-bg: var(--ch-bg, #f8f9fa);
+  --bs-btn-hover-border-color: var(--ch-border-strong, #dee2e6);
+  --bs-btn-active-color: var(--ch-text, #212529);
+  --bs-btn-active-bg: var(--ch-border, #e9ecef);
+  --bs-btn-active-border-color: var(--ch-border-strong, #dee2e6);
+  --bs-btn-disabled-color: var(--ch-text-muted, #6c757d);
+  --bs-btn-disabled-bg: var(--ch-surface, #fff);
+  --bs-btn-disabled-border-color: var(--ch-border, #dee2e6);
+}
+.btn-xs { --bs-btn-padding-y: .125rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .75rem; --bs-btn-border-radius: .25rem; }
+.btn-block { display: block; width: 100%; }
+.btn-flat { box-shadow: none; }
+
+/* --- Etichette (.label-*) = badge di Bootstrap 5 --- */
+.label { display: inline-block; padding: .25em .6em; font-size: 75%; font-weight: 700; line-height: 1; color: #fff; text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: .25em; background-color: var(--ch-text-muted, #6c757d); }
+.label-default { background-color: var(--ch-text-muted, #6c757d); }
+.label-primary { background-color: var(--ch-role-accent, var(--ch-accent, #4f46e5)); }
+.label-success { background-color: var(--ch-success, #198754); }
+.label-info { background-color: var(--ch-blue, #0d6efd); }
+.label-warning { background-color: var(--ch-warning, #b7791f); }
+.label-danger { background-color: var(--ch-danger, #dc3545); }
+
+/* --- Pannelli (.panel-*) = card --- */
+.panel { margin-bottom: 1.25rem; background-color: var(--ch-surface, #fff); border: 1px solid var(--ch-border, #dee2e6); border-radius: var(--ch-radius-md, .5rem); box-shadow: var(--ch-shadow-sm, none); }
+.panel-heading { padding: .75rem 1rem; border-bottom: 1px solid var(--ch-border, #dee2e6); border-top-left-radius: inherit; border-top-right-radius: inherit; }
+.panel-title { margin: 0; font-size: 1rem; font-weight: 600; }
+.panel-body { padding: 1rem; }
+.panel-footer { padding: .75rem 1rem; border-top: 1px solid var(--ch-border, #dee2e6); background: var(--ch-bg, #f8f9fa); }
+.panel-primary > .panel-heading { color: #fff; background: var(--ch-role-accent, #4f46e5); }
+.panel-success > .panel-heading { color: var(--ch-success); background: var(--ch-success-soft); }
+.panel-warning > .panel-heading { color: var(--ch-warning); background: var(--ch-warning-soft); }
+.panel-danger > .panel-heading { color: var(--ch-danger); background: var(--ch-danger-soft); }
+
+/* --- Tabelle --- */
+.table-condensed > :not(caption) > * > * { padding: .25rem .5rem; }
+
+/* --- Menu a tendina con markup <li><a> (senza .dropdown-item) --- */
+.dropdown-menu > li > a { display: block; padding: .375rem 1rem; clear: both; font-weight: 400; color: var(--bs-dropdown-link-color, #212529); text-decoration: none; white-space: nowrap; }
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus { background-color: var(--bs-dropdown-link-hover-bg, #f8f9fa); color: var(--bs-dropdown-link-hover-color, #1e2125); }
+.dropdown-menu > li.divider { height: 1px; margin: .5rem 0; overflow: hidden; background-color: var(--ch-border, #dee2e6); }
+
+/* --- Altro --- */
+.well { min-height: 20px; padding: 1rem; margin-bottom: 1.25rem; background-color: var(--ch-bg, #f8f9fa); border: 1px solid var(--ch-border, #dee2e6); border-radius: var(--ch-radius-md, .5rem); }
+.navbar-toggle { background: transparent; border: 0; padding: .25rem .5rem; }
+.close { float: right; font-size: 1.5rem; font-weight: 700; line-height: 1; color: #000; opacity: .5; background: transparent; border: 0; }
+.close:hover { opacity: .8; }

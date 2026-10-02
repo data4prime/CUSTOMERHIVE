@@ -36,26 +36,26 @@
         min-height: 48px;
         padding: 6px;
         text-align: center;
-        color: #98A2B3;
+        color: var(--ch-text-muted);
         font-family: inherit;
     }
     .ch-empty-widget-icon {
         width: 22px;
         height: 22px;
         border-radius: 999px;
-        background: #F2F4F7;
+        background: var(--ch-bg);
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 11px;
         font-weight: 700;
-        color: #667085;
+        color: var(--ch-text-secondary);
         flex-shrink: 0;
     }
     .ch-empty-widget-title {
         font-size: 11px;
         font-weight: 600;
-        color: #667085;
+        color: var(--ch-text-secondary);
         line-height: 1.2;
     }
     .ch-empty-widget-subtitle {
@@ -63,7 +63,7 @@
         line-height: 1.25;
     }
     .ch-empty-widget-link {
-        color: #3B5BDB;
+        color: var(--ch-accent);
         font-weight: 600;
         text-decoration: none;
     }

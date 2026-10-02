@@ -7,7 +7,7 @@
   <style>
     html, body { margin: 0; height: 100%; }
     .qi_iframe { display: block; width: 100%; height: 100%; border: 0; }
-    .qi_login_error, .qs_error { padding: 8px 12px; color: #b02a37; font-family: sans-serif; font-size: 14px; }
+    .qi_login_error, .qs_error { padding: 8px 12px; color: #b02a37; font-family: var(--ch-font); font-size: 14px; }
   </style>
 </head>
 <body>

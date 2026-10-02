@@ -3,7 +3,7 @@
 <div>
   <div class="card card-default">
     <div class="card-header">
-      <strong><i class="fa fa-shield"></i> {!! $page_title !!}</strong>
+      <strong><i class="bi bi-shield-fill"></i> {!! $page_title !!}</strong>
     </div>
     <div class="card-body">
 

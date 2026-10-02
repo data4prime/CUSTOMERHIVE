@@ -1,17 +1,5 @@
-<!-- Bootstrap 3.3.2 -->
-<link href="{{ asset("vendor/crudbooster/assets/adminlte/bootstrap/css/bootstrap.min.css") }}" rel="stylesheet"
-    type="text/css" />
-<!-- Font Awesome Icons -->
-<link href="{{asset("vendor/crudbooster/assets/adminlte/font-awesome/css")}}/font-awesome.min.css" rel="stylesheet"
-    type="text/css" />
-<link href="{{asset("css/icons-lucide.css")}}" rel="stylesheet" type="text/css" />
-<!-- Ionicons -->
-<link href="{{asset("vendor/crudbooster/ionic/css/ionicons.min.css")}}" rel="stylesheet" type="text/css" />
-<!-- Theme style -->
-<link href="{{ asset("vendor/crudbooster/assets/adminlte/dist/css/AdminLTE.min.css")}}" rel="stylesheet"
-    type="text/css" />
-<link href="{{ asset("vendor/crudbooster/assets/adminlte/dist/css/skins/_all-skins.min.css")}}" rel="stylesheet"
-    type="text/css" />
+{{-- Stessi fogli di stile del resto dell'admin (Bootstrap 5, Bootstrap Icons, tema), in locale --}}
+@include('crudbooster::partials.ch_head')
 
 @include('crudbooster::admin_template_plugins')
 
@@ -28,7 +16,7 @@ if (count($coloms_alias) < 2) {
         title="{{trans('crudbooster.datamodal_enter_to_search')}}" value="{{Request::get('q')}}" class="form-control">
 </form>
 
-<table id='table_dashboard' class='table table-striped table-bordered table-condensed' style="margin-bottom: 0px">
+<table id='table_dashboard' class='table table-striped table-bordered table-sm' style="margin-bottom: 0px">
     <thead>
         @foreach($coloms_alias as $col)
         <th>{{ $col }}</th>
@@ -80,7 +68,7 @@ if (count($coloms_alias) < 2) {
             ?>
             <td><a class='btn btn-primary' href='javascript:void(0)'
                     onclick='parent.selectAdditionalData{{$name}}({!! json_encode($select_data_result) !!})'><i
-                        class='fa fa-check-circle'></i> {{trans('crudbooster.datamodal_select')}}</a></td>
+                        class='bi bi-check-circle-fill'></i> {{trans('crudbooster.datamodal_select')}}</a></td>
         </tr>
         @endforeach
     </tbody>

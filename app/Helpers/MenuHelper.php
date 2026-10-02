@@ -148,16 +148,16 @@ class MenuHelper
       if ($menu->is_dashboard) {
         $class = 'is-dashboard';
         $title = 'This is set as Dashboard';
-        $icon = 'icon-is-dashboard fa fa-home';
+        $icon = 'icon-is-dashboard bi bi-house-fill';
       } else {
         $class = '';
         $title = '';
-        $icon = $menu->icon;
+        $icon = IconMap::toBi($menu->icon);
       }
       $result .= "<div class='$class' title='$title'>";
       $result .= "<i class='$icon'></i>";
       $result .= $menu->name;
-      $result .= "<span class='pull-right'>";
+      $result .= "<span class='float-end'>";
       if ($can_edit_menu) {
         // route() richiede sempre il parametro 'id' (la rotta e'
         // admin/menu_management/edit/{id}, non opzionale): la versione
@@ -166,22 +166,22 @@ class MenuHelper
         // UrlGenerationException su ogni voce di menu modificabile.
         $href = route("MenusControllerGetEdit", ["id" => $menu->id]) . "?return_url=" . $return_url;
         //dd($href);
-        $result .= "<a class='fa fa-pencil' title='Edit' href='$href'></a>";
+        $result .= "<a class='bi bi-pencil-fill' title='Edit' href='$href'></a>";
       }
       $result .= "&nbsp;&nbsp;";
       if (UserHelper::can_menu('delete', $menu->id)) {
         $onclick = CRUDBooster::deleteConfirm(route("MenusControllerGetDelete") . "/{$menu->id}", false);
-        $result .= "<a title='Delete' class='fa fa-trash' onclick='$onclick' href='javascript:void(0)'></a>";
+        $result .= "<a title='Delete' class='bi bi-trash-fill' onclick='$onclick' href='javascript:void(0)'></a>";
       }
       $result .= "</span>";
       $result .= "<br/>";
       $result .= "<em class='text-muted'>";
       $privileges_html = implode(', ', $privileges);
-      $result .= "<small><i class='fa fa-users'></i> &nbsp; $privileges_html</small>";
+      $result .= "<small><i class='bi bi-people-fill'></i> &nbsp; $privileges_html</small>";
       $result .= "</em>";
       if (CRUDBooster::isSuperadmin()) {
-        $result .= "<em class='text-muted pull-right'>";
-        $result .= "<small><i class='fa fa-industry'></i> &nbsp; $tenants_name</small>";
+        $result .= "<em class='text-muted float-end'>";
+        $result .= "<small><i class='bi bi-buildings-fill'></i> &nbsp; $tenants_name</small>";
         $result .= "</em>";
       }
       $result .= "</div>";
@@ -239,7 +239,7 @@ class MenuHelper
       $class = "text-" . $menu->color;
     }
     $result .= "<a style='text-decoration:none;' $target href='$href' class='$class'>";
-    $classes = "$menu->icon ";
+    $classes = IconMap::toBi($menu->icon) . " ";
     if ($menu->color) {
       $classes .= " text-$menu->color";
     }
@@ -253,7 +253,7 @@ class MenuHelper
 
     $result .= "<span>$menu->name</span>";
     if (!empty($menu->children) and count($menu->children) > 0) {
-      $result .= "<i class='fa fa-angle-" . trans("crudbooster.right") . " pull-" . trans("crudbooster.right") . "'></i>";
+      $result .= "<i class='bi bi-chevron-" . trans("crudbooster.right") . " pull-" . trans("crudbooster.right") . "'></i>";
     }
     $result .= "</a>";
     if (!empty($menu->children) and count($menu->children) > 0) {

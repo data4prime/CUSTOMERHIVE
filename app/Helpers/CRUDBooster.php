@@ -2109,7 +2109,7 @@ crocodicstudio\crudbooster\controllers\
 	        | ----------------------------------------------------------------------
 	        | @label       = Label of action
 	        | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
-	        | @icon        = Font awesome class icon. e.g : fa fa-bars
+	        | @icon        = Font awesome class icon. e.g : bi bi-list
 	        | @color 	   = Default is primary. (primary, warning, succecss, info)
 	        | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
 	        |

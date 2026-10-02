@@ -21,46 +21,49 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+{{-- Token di design (--ch-*) e icone: questa vista e' standalone (niente admin_template). --}}
+@include('crudbooster::partials.ch_icons')
+<link rel="stylesheet" href="{{ asset('css/theme.css') }}?v={{ @filemtime(public_path('css/theme.css')) }}">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@9/dist/gridstack.min.css">
+<link rel="stylesheet" href="{{ asset('vendor/libs/gridstack/gridstack.min.css') }}">
 <link rel="stylesheet" href="{{ asset('vendor/crudbooster/assets/select2/dist/css/select2.min.css') }}">
-<script src="{{ asset('vendor/crudbooster/assets/adminlte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
+<script src="{{ asset('vendor/jquery/jquery-3.7.1.min.js') }}"></script>
 {{-- DataTables (core, senza l'integrazione Bootstrap: qui non c'e' Bootstrap):
      il widget Tabella inizializza la sua tabella con $.fn.DataTable, senza
      il quale in questa pagina mostrava tutte le righe in un colpo solo,
      ignorando "Record per pagina". Stessa libreria/versione usata da
      admin_template_plugins nella vista di sola lettura. --}}
-<link rel="stylesheet" href="{{ asset('vendor/crudbooster/assets/adminlte/plugins/datatables/jquery.dataTables.min.css') }}">
-<script src="{{ asset('vendor/crudbooster/assets/adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/gridstack@9/dist/gridstack-all.js"></script>
+<link rel="stylesheet" href="{{ asset('vendor/plugins/datatables/jquery.dataTables.min.css') }}">
+<script src="{{ asset('vendor/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('vendor/libs/gridstack/gridstack-all.js') }}"></script>
 {{-- Morris.js + Raphael per i widget Chart Area/Line/Bar "classici" (non
      *_v2): dopo la conversione di una dashboard legacy compaiono qui, e
      senza queste librerie `new Morris.*` lancia ReferenceError (lo stesso
      caricamento di statistic_builder/index.blade.php, il builder legacy). --}}
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<link rel="stylesheet" href="{{ asset('vendor/libs/morris/morris.css') }}">
+<script src="{{ asset('vendor/libs/raphael/raphael-min.js') }}"></script>
+<script src="{{ asset('vendor/libs/morris/morris.min.js') }}"></script>
 
 <style>
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; background: #F4F5F7; color: #101828; }
+    body { margin: 0; font-family: var(--ch-font); background: var(--ch-bg); color: var(--ch-text); }
     a { text-decoration: none; color: inherit; }
 
-    .ch-topbar { height: 60px; flex-shrink: 0; background: #FFFFFF; border-bottom: 1px solid #E4E7EC; box-sizing: border-box; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+    .ch-topbar { height: 60px; flex-shrink: 0; background: var(--ch-surface); border-bottom: 1px solid var(--ch-border); box-sizing: border-box; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
     .ch-topbar-title { font-size: 16px; font-weight: 700; }
-    .ch-topbar-sub { font-size: 11px; color: #667085; }
-    .ch-autosave { font-size: 12px; font-weight: 600; color: #667085; display: flex; align-items: center; gap: 6px; }
-    .ch-autosave .dot { width: 6px; height: 6px; border-radius: 999px; background: #12897F; }
-    .ch-autosave.is-saving .dot { background: #DC6803; }
-    .ch-btn { border: 1px solid #D0D5DD; background: #FFFFFF; color: #344054; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .ch-topbar-sub { font-size: 11px; color: var(--ch-text-secondary); }
+    .ch-autosave { font-size: 12px; font-weight: 600; color: var(--ch-text-secondary); display: flex; align-items: center; gap: 6px; }
+    .ch-autosave .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--ch-success); }
+    .ch-autosave.is-saving .dot { background: var(--ch-warning); }
+    .ch-btn { border: 1px solid var(--ch-border-strong); background: var(--ch-surface); color: var(--ch-text); border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; }
 
     .ch-body { display: flex; height: calc(100vh - 60px); }
 
-    .ch-palette { width: 220px; flex-shrink: 0; background: #FFFFFF; border-right: 1px solid #E4E7EC; padding: 18px 14px; overflow-y: auto; }
-    .ch-palette h4 { font-size: 11px; text-transform: uppercase; letter-spacing: .3px; color: #101828; margin: 0 0 12px; }
-    .ch-palette-item { display: flex; align-items: center; gap: 10px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 10px; padding: 10px; margin-bottom: 10px; cursor: pointer; }
-    .ch-palette-item:hover { border-color: #3B5BDB; background: #F8F9FF; }
-    .ch-palette-item .icon { width: 32px; height: 32px; border-radius: 8px; background: #EEF2FF; color: #3B5BDB; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+    .ch-palette { width: 220px; flex-shrink: 0; background: var(--ch-surface); border-right: 1px solid var(--ch-border); padding: 18px 14px; overflow-y: auto; }
+    .ch-palette h4 { font-size: 11px; text-transform: uppercase; letter-spacing: .3px; color: var(--ch-text); margin: 0 0 12px; }
+    .ch-palette-item { display: flex; align-items: center; gap: 10px; background: var(--ch-surface); border: 1px solid var(--ch-border); border-radius: 10px; padding: 10px; margin-bottom: 10px; cursor: pointer; }
+    .ch-palette-item:hover { border-color: var(--ch-accent); background: var(--ch-bg); }
+    .ch-palette-item .icon { width: 32px; height: 32px; border-radius: 8px; background: var(--ch-bg); color: var(--ch-accent); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; }
     .ch-palette-item .label { font-size: 12.5px; font-weight: 600; }
 
     .ch-canvas { flex-grow: 1; overflow: auto; padding: 20px; }
@@ -81,15 +84,15 @@
          geometria di 137 (altezza contenuto = righe*cellHeight -
          2*margin, invariata: qui si toglie solo il padding interno, non
          il margin esterno tra un widget e l'altro). --}}
-    .grid-stack-item-content { background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.04); overflow: auto; padding: 0; scrollbar-width: thin; }
+    .grid-stack-item-content { background: var(--ch-surface); border: 1px solid var(--ch-border); border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.04); overflow: auto; padding: 0; scrollbar-width: thin; }
     /* Scrollbar sottile (Windows/Chrome disegna di default quella
        classica con le freccette su/giu', che da lontano si confondeva
        con un secondo controllo di ridimensionamento accanto a quello
        vero in basso a destra). */
     .grid-stack-item-content::-webkit-scrollbar { width: 6px; height: 6px; }
-    .grid-stack-item-content::-webkit-scrollbar-thumb { background: #D0D5DD; border-radius: 999px; }
+    .grid-stack-item-content::-webkit-scrollbar-thumb { background: var(--ch-bg); border-radius: 999px; }
     .grid-stack-item-content::-webkit-scrollbar-button { display: none; }
-    .grid-stack-item.ch-selected > .grid-stack-item-content { outline: 2px solid #3B5BDB; outline-offset: 2px; }
+    .grid-stack-item.ch-selected > .grid-stack-item-content { outline: 2px solid var(--ch-accent); outline-offset: 2px; }
     /* Pulsanti "modifica"/"elimina" legacy (.action, dentro ogni
        .border-box): puntano a #btn-edit-component/#btn-delete-component,
        handler mai definiti in questa pagina (esistono solo in
@@ -114,17 +117,17 @@
        .ch-canvas per i widget vicini al margine superiore, ed era troppo
        vicino alla maniglia di resize in basso a destra della card sopra
        nella stessa colonna. */
-    .ch-widget-toolbar { position: absolute; top: 6px; right: 6px; background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 999px; box-shadow: 0 1px 3px rgba(16,24,40,0.1); display: none; gap: 2px; padding: 3px; z-index: 5; }
+    .ch-widget-toolbar { position: absolute; top: 6px; right: 6px; background: var(--ch-surface); border: 1px solid var(--ch-border); border-radius: 999px; box-shadow: 0 1px 3px rgba(16,24,40,0.1); display: none; gap: 2px; padding: 3px; z-index: 5; }
     .grid-stack-item:hover .ch-widget-toolbar, .grid-stack-item.ch-selected .ch-widget-toolbar { display: flex; }
-    .ch-widget-toolbar button { border: none; background: none; width: 24px; height: 24px; border-radius: 999px; cursor: pointer; color: #667085; font-size: 14px; line-height: 1; }
-    .ch-widget-toolbar button:hover { background: #FEF3F2; color: #B42318; }
+    .ch-widget-toolbar button { border: none; background: none; width: 24px; height: 24px; border-radius: 999px; cursor: pointer; color: var(--ch-text-secondary); font-size: 14px; line-height: 1; }
+    .ch-widget-toolbar button:hover { background: var(--ch-bg); color: var(--ch-danger); }
     /* Maniglia di resize di gridstack (angolo in basso a destra): un po'
        piu' grande e con un indizio visivo permanente, invece della sola
        piccola freccetta di default - piu' facile da individuare e da
        afferrare con precisione. */
     .grid-stack-item > .ui-resizable-se { width: 18px !important; height: 18px !important; right: 2px !important; bottom: 2px !important; }
-    .ch-widget-toolbar button:hover { background: #F2F4F7; }
-    .ch-drop-placeholder { display: flex; align-items: center; justify-content: center; height: 100%; color: #98A2B3; font-size: 20px; }
+    .ch-widget-toolbar button:hover { background: var(--ch-bg); }
+    .ch-drop-placeholder { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--ch-text-muted); font-size: 20px; }
 
     /* Stile minimo per i componenti dei widget (.small-box, .card) che
        nel builder legacy arrivavano gratis da AdminLTE (mai caricato
@@ -132,7 +135,7 @@
        risultava illeggibile (nessun contenimento del colore di sfondo,
        niente spaziatura). Non e' un porting di AdminLTE, solo l'essenziale
        per rendere leggibile l'anteprima reale di un widget configurato. */
-    .small-box { position: relative; border-radius: 10px; overflow: hidden; color: #FFFFFF; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
+    .small-box { position: relative; border-radius: 10px; overflow: hidden; color: var(--ch-surface); height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
     .small-box .inner-box { padding: 12px 14px; }
     .small-box .inner-box h3 { font-size: 24px; font-weight: 700; margin: 0 0 2px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .small-box .inner-box p { font-size: 12px; margin: 0; opacity: 0.9; }
@@ -140,16 +143,16 @@
     .small-box .small-box-footer { display: block; padding: 5px; text-align: center; background: rgba(0,0,0,0.12); color: rgba(255,255,255,0.95); font-size: 11px; }
     .small-box .small-box-footer:hover { background: rgba(0,0,0,0.2); }
     .card { border: none; margin: 0; height: 100%; box-sizing: border-box; }
-    .card-header { font-size: 12.5px; font-weight: 600; color: #101828; padding: 8px 4px; border-bottom: 1px solid #F2F4F7; margin-bottom: 6px; }
+    .card-header { font-size: 12.5px; font-weight: 600; color: var(--ch-text); padding: 8px 4px; border-bottom: 1px solid var(--ch-border); margin-bottom: 6px; }
     .card-body { padding: 2px 4px; }
 
-    .ch-sidebar { width: 340px; flex-shrink: 0; background: #FFFFFF; border-left: 1px solid #E4E7EC; padding: 20px; overflow-y: auto; }
-    .ch-sidebar-empty { font-size: 13px; color: #98A2B3; text-align: center; margin-top: 40px; }
-    .ch-sidebar form label { display: block; font-size: 12px; font-weight: 600; color: #344054; margin-bottom: 4px; }
-    .ch-sidebar form .form-control { width: 100%; border: 1px solid #D0D5DD; border-radius: 8px; padding: 8px 10px; font-size: 13px; margin-bottom: 2px; }
+    .ch-sidebar { width: 340px; flex-shrink: 0; background: var(--ch-surface); border-left: 1px solid var(--ch-border); padding: 20px; overflow-y: auto; }
+    .ch-sidebar-empty { font-size: 13px; color: var(--ch-text-muted); text-align: center; margin-top: 40px; }
+    .ch-sidebar form label { display: block; font-size: 12px; font-weight: 600; color: var(--ch-text); margin-bottom: 4px; }
+    .ch-sidebar form .form-control { width: 100%; border: 1px solid var(--ch-border-strong); border-radius: 8px; padding: 8px 10px; font-size: 13px; margin-bottom: 2px; }
     .ch-sidebar form .mb-3 { margin-bottom: 14px; }
-    .ch-sidebar form .help-block { font-size: 11px; color: #98A2B3; margin-top: 4px; }
-    .ch-sidebar-save { width: 100%; margin-top: 10px; background: #3B5BDB; color: #FFFFFF; border: none; border-radius: 8px; padding: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .ch-sidebar form .help-block { font-size: 11px; color: var(--ch-text-muted); margin-top: 4px; }
+    .ch-sidebar-save { width: 100%; margin-top: 10px; background: var(--ch-accent); color: var(--ch-surface); border: none; border-radius: 8px; padding: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .ch-sidebar-save:disabled { opacity: 0.7; cursor: default; }
     /* Uniforma i controlli che il browser/select2 renderizzano con un
        loro stile proprio (niente classe "form-control" applicabile) a
@@ -160,44 +163,44 @@
     .ch-sidebar .select2-container { width: 100% !important; }
     .ch-sidebar .select2-container--default .select2-selection--single {
         height: 36px;
-        border: 1px solid #D0D5DD;
+        border: 1px solid var(--ch-border-strong);
         border-radius: 8px;
         display: flex;
         align-items: center;
         padding: 0 10px;
     }
-    .ch-sidebar .select2-container--default .select2-selection--single .select2-selection__rendered { padding: 0; font-size: 13px; color: #101828; line-height: normal; }
+    .ch-sidebar .select2-container--default .select2-selection--single .select2-selection__rendered { padding: 0; font-size: 13px; color: var(--ch-text); line-height: normal; }
     .ch-sidebar .select2-container--default .select2-selection--single .select2-selection__arrow { height: 34px; }
 
     /* Spinner generico (bottone "Salva", toolbar in eliminazione) - un
        cerchio che ruota, niente immagine/icona esterna da caricare. */
-    .ch-spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #FFFFFF; border-radius: 50%; animation: ch-spin 0.6s linear infinite; flex-shrink: 0; }
-    .ch-spinner.ch-spinner-dark { border-color: #E4E7EC; border-top-color: #3B5BDB; }
+    .ch-spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.4); border-top-color: var(--ch-border); border-radius: 50%; animation: ch-spin 0.6s linear infinite; flex-shrink: 0; }
+    .ch-spinner.ch-spinner-dark { border-color: var(--ch-border); border-top-color: var(--ch-accent); }
     @keyframes ch-spin { to { transform: rotate(360deg); } }
 
     /* Popup di conferma (elimina widget) al posto del confirm() nativo
        del browser. */
     .ch-modal-overlay { position: fixed; inset: 0; background: rgba(16,24,40,0.45); display: none; align-items: center; justify-content: center; z-index: 1000; }
     .ch-modal-overlay.is-open { display: flex; }
-    .ch-modal { background: #FFFFFF; border-radius: 12px; box-shadow: 0 8px 24px rgba(16,24,40,0.2); width: 320px; padding: 20px; }
-    .ch-modal-title { font-size: 15px; font-weight: 700; color: #101828; margin-bottom: 8px; }
-    .ch-modal-body { font-size: 13px; color: #667085; margin-bottom: 18px; line-height: 1.4; }
+    .ch-modal { background: var(--ch-surface); border-radius: 12px; box-shadow: 0 8px 24px rgba(16,24,40,0.2); width: 320px; padding: 20px; }
+    .ch-modal-title { font-size: 15px; font-weight: 700; color: var(--ch-text); margin-bottom: 8px; }
+    .ch-modal-body { font-size: 13px; color: var(--ch-text-secondary); margin-bottom: 18px; line-height: 1.4; }
     .ch-modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
-    .ch-modal-actions .ch-btn-danger { background: #D92D20; color: #FFFFFF; border-color: #D92D20; }
-    .ch-btn-primary { background: #3B5BDB; color: #FFFFFF; border-color: #3B5BDB; }
-    .ch-btn-primary:hover { background: #324ec0; border-color: #324ec0; }
+    .ch-modal-actions .ch-btn-danger { background: var(--ch-danger); color: var(--ch-surface); border-color: var(--ch-danger); }
+    .ch-btn-primary { background: var(--ch-accent); color: var(--ch-surface); border-color: var(--ch-accent); }
+    .ch-btn-primary:hover { background: var(--ch-accent); border-color: var(--ch-accent); }
     .ch-btn:disabled { opacity: .5; cursor: not-allowed; }
     /* Modale "Copia da" (Importa widget) */
     .ch-palette-import { margin-top: 18px; border-style: dashed; }
     .ch-import-modal { width: 420px; max-width: calc(100vw - 32px); }
     .ch-import-field { margin-bottom: 14px; }
-    .ch-import-field label { display: block; font-size: 12px; font-weight: 600; color: #344054; margin-bottom: 5px; }
-    .ch-import-message { font-size: 12.5px; color: #B42318; margin-bottom: 14px; }
+    .ch-import-field label { display: block; font-size: 12px; font-weight: 600; color: var(--ch-text); margin-bottom: 5px; }
+    .ch-import-message { font-size: 12.5px; color: var(--ch-danger); margin-bottom: 14px; }
     .ch-import-modal .select2-container { width: 100% !important; }
-    .ch-import-modal .select2-container--default .select2-selection--single { height: 38px; border: 1px solid #D0D5DD; border-radius: 8px; }
-    .ch-import-modal .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 36px; padding-left: 12px; font-size: 13px; color: #101828; }
+    .ch-import-modal .select2-container--default .select2-selection--single { height: 38px; border: 1px solid var(--ch-border-strong); border-radius: 8px; }
+    .ch-import-modal .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 36px; padding-left: 12px; font-size: 13px; color: var(--ch-text); }
     .ch-import-modal .select2-container--default .select2-selection--single .select2-selection__arrow { height: 36px; }
-    .ch-import-modal .select2-container--default.select2-container--disabled .select2-selection--single { background: #F2F4F7; }
+    .ch-import-modal .select2-container--default.select2-container--disabled .select2-selection--single { background: var(--ch-bg); }
 </style>
 @include('crudbooster::statistic_builder.components._widget_card_style')
 </head>
@@ -403,7 +406,7 @@
 
         var componentID = $item.attr('data-component-id');
         var $panel = $('#ch-widget-config-panel');
-        $panel.html('<i class="fa fa-spin fa-spinner"></i> Caricamento...');
+        $panel.html('<i class="bi ch-spin bi-arrow-repeat"></i> Caricamento...');
 
         $.get(basePath + '/edit-component/' + componentID, function (response) {
             // Iniettato cosi' com'e' (stesso HTML che il builder legacy
@@ -500,7 +503,7 @@
 
         var el = grid.addWidget({
             w: w, h: h,
-            content: '<div class="ch-drop-placeholder"><i class="fa fa-spin fa-spinner"></i></div>',
+            content: '<div class="ch-drop-placeholder"><i class="bi ch-spin bi-arrow-repeat"></i></div>',
         });
         var node = el.gridstackNode;
 
@@ -647,7 +650,7 @@
 
         var el = grid.addWidget({
             w: meta.width, h: meta.height,
-            content: '<div class="ch-drop-placeholder"><i class="fa fa-spin fa-spinner"></i></div>',
+            content: '<div class="ch-drop-placeholder"><i class="bi ch-spin bi-arrow-repeat"></i></div>',
         });
         var node = el.gridstackNode;
 

@@ -5,17 +5,17 @@
 <ul class="nav flex-row">
     <li class="nav-item">
         <a class="nav-link active" href="/admin/api_generator">
-            <i class="fa fa-file"></i> {{ trans('crudbooster.api_documentation') }}
+            <i class="bi bi-file-earmark-fill"></i> {{ trans('crudbooster.api_documentation') }}
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="/admin/api_generator/screet-key">
-            <i class="fa fa-key"></i> {{ trans('crudbooster.api_secret_key') }}
+            <i class="bi bi-key-fill"></i> {{ trans('crudbooster.api_secret_key') }}
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="/admin/api_generator/generator">
-            <i class="fa fa-cog"></i> {{ trans('crudbooster.api_generator') }}
+            <i class="bi bi-gear-fill"></i> {{ trans('crudbooster.api_generator') }}
         </a>
     </li>
 </ul>
@@ -27,7 +27,7 @@
 
 
             <p><a title='Generate API Key' class='btn btn-primary' href='javascript:void(0)' onclick='generate_screet_key()'>
-                <i class='fa fa-key'></i>{{ trans('crudbooster.Generate_Screet_Key') }}</a></p>
+                <i class='bi bi-key-fill'></i>{{ trans('crudbooster.Generate_Screet_Key') }}</a></p>
 
             <table id='table-apikey' class='table table-striped table-bordered'>
                 <thead>
@@ -46,12 +46,12 @@
                         <td>{{ ++$no }}</td>
                         <td>{{ $row->screetkey }}</td>
                         <td>{{ $row->hit }}</td>
-                        <td>{!! ($row->status=='active')?"<span class='label label-success'>Active</span>":"<span class='label label-default'>Non Active</span>" !!}</td>
+                        <td>{!! ($row->status=='active')?"<span class='badge text-bg-success'>Active</span>":"<span class='badge text-bg-secondary'>Non Active</span>" !!}</td>
                         <td>
                             @if($row->status == 'active')
-                                <a class='btn btn-sm btn-default' href='{{ CRUDBooster::mainpath("status-apikey?id=$row->id&status=0") }}'>Non Active</a>
+                                <a class='btn btn-sm btn-secondary' href='{{ CRUDBooster::mainpath("status-apikey?id=$row->id&status=0") }}'>Non Active</a>
                             @else
-                                <a class='btn btn-sm btn-default' href='{{ CRUDBooster::mainpath("status-apikey?id=$row->id&status=1") }}'>Active</a>
+                                <a class='btn btn-sm btn-secondary' href='{{ CRUDBooster::mainpath("status-apikey?id=$row->id&status=1") }}'>Active</a>
                             @endif
 
                             <a class='btn btn-sm btn-danger' href='javascript:void(0)' onclick='deleteApi({{$row->id}})'>
@@ -76,8 +76,8 @@
                     function generate_screet_key() {
                         $.get("<?php echo route('ApiCustomControllerGetGenerateScreetKey')?>", function (resp) {
                             lastno += 1;
-                            $('#table-apikey').append("<tr><td>" + lastno + "</td><td>" + resp.key + "</td><td>0</td><td><span class='label label-success'>Active</span></td><td>" +
-                                "<a class='btn btn-sm btn-default' href='{{CRUDBooster::mainpath("status-apikey")}}?id=" + resp.id + "&status=0'>Non Active</a> <a class='btn btn-sm btn-danger' href='javascript:void(0)' onclick='deleteApi(" + resp.id + ")'>Delete</a> </td></tr>"
+                            $('#table-apikey').append("<tr><td>" + lastno + "</td><td>" + resp.key + "</td><td>0</td><td><span class='badge text-bg-success'>Active</span></td><td>" +
+                                "<a class='btn btn-sm btn-secondary' href='{{CRUDBooster::mainpath("status-apikey")}}?id=" + resp.id + "&status=0'>Non Active</a> <a class='btn btn-sm btn-danger' href='javascript:void(0)' onclick='deleteApi(" + resp.id + ")'>Delete</a> </td></tr>"
                             );
                             $('.no-screetkey').remove();
                             swal("Success!", "Your new Secret Key has been generated successfully", "success");

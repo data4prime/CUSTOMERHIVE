@@ -23,7 +23,7 @@
         <div class="kpi-indicator-head">
             @if(!empty($config->icon))
             <div class="kpi-indicator-icon">
-                <span class="lucide-icon" data-lucide-icon="[icon]"></span>
+                <i class="kpi-icon bi" data-icon="[icon]"></i>
             </div>
             @endif
             <span class="kpi-indicator-label">[name]</span>
@@ -70,12 +70,12 @@
     </div>
     @endif
 
-    <div class='action pull-right'>
+    <div class='action float-end'>
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Small Box'
-            class='btn-edit-component'><i class='fa fa-pencil'></i></a>
+            class='btn-edit-component'><i class='bi bi-pencil-fill'></i></a>
         &nbsp;
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i
-                class='fa fa-trash'></i></a>
+                class='bi bi-trash-fill'></i></a>
     </div>
 </div>
 
@@ -133,35 +133,24 @@
         width: 34px;
         height: 34px;
         border-radius: var(--ch-radius-md, 10px);
-        background: color-mix(in srgb, var(--kpi-accent, var(--ch-accent, #4f46e5)) 14%, white);
-        color: var(--kpi-accent, var(--ch-accent, #4f46e5));
+        background: color-mix(in srgb, var(--kpi-accent, var(--ch-accent, var(--ch-accent))) 14%, white);
+        color: var(--kpi-accent, var(--ch-accent, var(--ch-accent)));
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
         font-size: 17px;
     }
-    /* Icona Lucide (docs/refactoring/129-*): stessa tecnica a CSS mask del
-       reskin Font Awesome (128), ma qui la URL della singola icona e'
-       impostata via JS (vedi script sotto) perche' e' dinamica per
-       componente - CSS puro non puo' interpolare un attributo dentro
-       url(). */
-    .kpi-indicator-icon .lucide-icon {
-        display: inline-block;
-        width: 18px;
-        height: 18px;
-        background-color: currentColor;
-        -webkit-mask-repeat: no-repeat;
-        mask-repeat: no-repeat;
-        -webkit-mask-position: center;
-        mask-position: center;
-        -webkit-mask-size: contain;
-        mask-size: contain;
+    /* Icona del widget: Bootstrap Icons (font), la classe bi-<nome> viene
+       impostata via JS dal nome salvato nel config (vedi script sotto). */
+    .kpi-indicator-icon .kpi-icon {
+        font-size: 18px;
+        line-height: 1;
     }
     .kpi-indicator-label {
         font-size: 13px;
         font-weight: 600;
-        color: var(--ch-text-secondary, #55555f);
+        color: var(--ch-text-secondary);
     }
     /* Raggruppa valore (+ descrizione) e li centra nello spazio libero tra
        intestazione e link (docs/refactoring/146) - flex: 1 sul contenitore
@@ -181,18 +170,18 @@
     .kpi-indicator-value {
         font-size: 30px;
         font-weight: 600;
-        color: var(--ch-text, #16161d);
+        color: var(--ch-text);
         line-height: 1.15;
     }
     .kpi-indicator-description {
         margin: 0;
         font-size: 12.5px;
         line-height: 1.4;
-        color: var(--ch-text-muted, #8b8b96);
+        color: var(--ch-text-muted);
     }
     .kpi-indicator-footer {
         padding-top: 10px;
-        border-top: 1px solid var(--ch-border, #e6e6ea);
+        border-top: 1px solid var(--ch-border);
     }
     .kpi-indicator-link {
         display: inline-flex;
@@ -200,11 +189,11 @@
         gap: 4px;
         font-size: 12.5px;
         font-weight: 600;
-        color: var(--ch-accent, #4f46e5);
+        color: var(--ch-accent);
         text-decoration: none;
     }
     .kpi-indicator-link:hover {
-        color: var(--ch-accent-dark, #3730a3);
+        color: var(--ch-accent-dark);
         text-decoration: underline;
     }
     .kpi-indicator-link-icon {
@@ -216,24 +205,24 @@
 
 <script defer>
 (function () {
-    // Icona Lucide: il nome arriva dal config salvato (stessi nomi file di
-    // public/vendor/lucide/icons/, popolati dalla select in modalita'
-    // 'configuration' qui sotto) - whitelist sul pattern prima di comporre
-    // la URL, per difesa in profondita' anche se il valore arriva sempre
-    // dalla nostra select, mai da input libero.
+    // Icona: il nome arriva dal config salvato. I dashboard creati prima del
+    // passaggio a Bootstrap Icons hanno un nome Lucide (es. "shopping-cart"):
+    // la mappa lo traduce, un nome Bootstrap Icons passa invariato. Whitelist
+    // sul pattern prima di comporre la classe (il valore arriva sempre dalla
+    // nostra select, mai da input libero).
     // getElementById invece di un selettore CSS #id: componentID e' un
     // md5 esadecimale, spesso inizia con una cifra - un selettore CSS
-    // "#3fe1..." non e' valido (le regole CSS non ammettono un ID che
-    // comincia per cifra senza escaping) e querySelector lo rifiuta con
-    // una SyntaxError.
+    // "#3fe1..." non e' valido e querySelector lo rifiuta con SyntaxError.
+    var iconMap = {!! json_encode(\App\Helpers\IconMap::lucideMap()) !!};
     var componentContainer = document.getElementById('{{$componentID}}');
-    var iconEl = componentContainer ? componentContainer.querySelector('.lucide-icon[data-lucide-icon]') : null;
+    var iconEl = componentContainer ? componentContainer.querySelector('.kpi-icon[data-icon]') : null;
     if (iconEl) {
-        var name = iconEl.getAttribute('data-lucide-icon') || '';
-        if (/^[a-z0-9-]+$/.test(name)) {
-            var url = "{{ asset('vendor/lucide/icons') }}/" + name + '.svg';
-            iconEl.style.webkitMaskImage = 'url("' + url + '")';
-            iconEl.style.maskImage = 'url("' + url + '")';
+        // NB: il nome della variabile NON deve coincidere con una chiave di config
+        // (name, icon, color...): il motore dei widget sostituisce i token [chiave]
+        // anche dentro questo script.
+        var glyph = iconEl.getAttribute('data-icon') || '';
+        if (/^[a-z0-9-]+$/.test(glyph)) {
+            iconEl.className = 'kpi-icon bi bi-' + (iconMap[glyph] || glyph);
         }
     }
 })();
@@ -252,16 +241,12 @@ if (!window.location.href.includes('statistic_builder/builder')) {
 
 @elseif($command=='configuration')
 <?php
-    //elenco delle icone Lucide davvero disponibili, letto dagli SVG gia'
-    //vendorizzati (public/vendor/lucide/icons/, vedi docs/refactoring/128 e
-    //129), cosi' l'elenco nella select coincide sempre con quello che il
-    //widget puo' effettivamente mostrare - niente lista statica da tenere
-    //allineata a mano. Prima di 129 leggeva ionicons.min.css (Ionicons v2)
-    //ma il widget renderizzava con Ionicons v7 (<ion-icon>): nomi
-    //incompatibili tra loro, icona scelta mai quella mostrata (vedi 118).
-    $lucideIconFiles = glob(public_path('vendor/lucide/icons/*.svg')) ?: [];
-    $lucideIconNames = array_map(fn ($path) => basename($path, '.svg'), $lucideIconFiles);
-    sort($lucideIconNames);
+    // Elenco icone: tutte quelle di Bootstrap Icons. L'icona gia' salvata puo'
+    // essere un nome Lucide (dashboard precedenti): viene tradotta per
+    // risultare preselezionata.
+    $biIconNames = \App\Helpers\Fontawesome::getIcons();
+    $lucideToBi = \App\Helpers\IconMap::lucideMap();
+    $currentIcon = !empty($config->icon) ? ($lucideToBi[$config->icon] ?? $config->icon) : '';
     // Query guidata (docs/refactoring/131-*): toggle + pannello reintrodotti
     // qui, erano stati tolti in 124 in attesa di dataset utili da offrire -
     // ora DashboardDatasetRegistry genera un dataset per ogni tabella reale
@@ -295,12 +280,12 @@ if (!window.location.href.includes('statistic_builder/builder')) {
                 <label>Icona (opzionale)</label>
                 <select class="form-control" id="smallbox-icon-select" name='config[icon]' style="width:100%">
                     <option value="">-- nessuna icona --</option>
-                    @foreach($lucideIconNames as $lucideIconName)
-                    <option value="{{ $lucideIconName }}" {{ (@$config->icon == $lucideIconName) ? 'selected' : '' }}>{{ $lucideIconName }}</option>
+                    @foreach($biIconNames as $biIconName)
+                    <option value="{{ $biIconName }}" {{ ($currentIcon == $biIconName) ? 'selected' : '' }}>{{ $biIconName }}</option>
                     @endforeach
                 </select>
-                <div class="help-block">Cerca digitando, es. "trash". Anteprima su <a target='_blank'
-                    href='https://lucide.dev/icons/'>lucide.dev</a></div>
+                <div class="help-block">{{ trans('crudbooster.statistic_builder_smallbox_icon_help') }} <a target='_blank'
+                    href='https://icons.getbootstrap.com/'>icons.getbootstrap.com</a></div>
             </div>
 
             <div class="mb-3 row">
@@ -341,40 +326,17 @@ if (!window.location.href.includes('statistic_builder/builder')) {
      serve ripeterlo qui, la pagina ne ha gia' una copia. --}}
 <script>
     (function () {
-        // Stesso standard gia' usato altrove in questo progetto per un
-        // picker icona+nome (list_icon.blade.php, module_generator/
-        // step1.blade.php): icona a sinistra, nome a destra, stessa
-        // spaziatura - qui con la stessa tecnica a CSS mask del widget
-        // vero (vedi sopra), cosi' l'anteprima nella tendina e' sempre
-        // identica a quello che il widget mostrera' davvero (prima
-        // dell'intervento 129 usava un font Ionicons v2 diverso da quello
-        // renderizzato dal widget: anteprima e risultato non coincidevano
-        // mai, vedi 118).
+        // Picker icona+nome: stesso standard di list_icon.blade.php (menu/moduli),
+        // icona di Bootstrap Icons a sinistra e nome a destra.
         function formatIcon(icon) {
             var originalOption = icon.element;
             var value = originalOption ? $(originalOption).val() : '';
             if (!value) {
                 return icon.text;
             }
-            var url = '{{ asset("vendor/lucide/icons") }}/' + value + '.svg';
             var label = $(originalOption).text();
             var $preview = $('<span></span>');
-            var $icon = $('<i></i>').css({
-                width: '18px',
-                height: '18px',
-                display: 'inline-block',
-                verticalAlign: 'middle',
-                marginRight: '6px',
-                backgroundColor: 'currentColor',
-                webkitMaskImage: 'url("' + url + '")',
-                maskImage: 'url("' + url + '")',
-                webkitMaskRepeat: 'no-repeat',
-                maskRepeat: 'no-repeat',
-                webkitMaskPosition: 'center',
-                maskPosition: 'center',
-                webkitMaskSize: 'contain',
-                maskSize: 'contain',
-            });
+            var $icon = $('<i></i>').addClass('bi bi-' + value).css({ marginRight: '6px', fontSize: '18px', verticalAlign: 'middle' });
             return $preview.append($icon).append(label);
         }
         // Questa form viene iniettata via $.html() dentro #modal-statistic

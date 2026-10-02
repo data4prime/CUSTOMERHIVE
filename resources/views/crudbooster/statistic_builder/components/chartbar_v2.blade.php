@@ -30,12 +30,12 @@
     </div>
     @endif
 
-    <div class='action pull-right'>
+    <div class='action float-end'>
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' data-name='Grafico a barre'
-            class='btn-edit-component'><i class='fa fa-pencil'></i></a>
+            class='btn-edit-component'><i class='bi bi-pencil-fill'></i></a>
         &nbsp;
         <a href='javascript:void(0)' data-componentid='{{$componentID}}' class='btn-delete-component'><i
-                class='fa fa-trash'></i></a>
+                class='bi bi-trash-fill'></i></a>
     </div>
 </div>
 @elseif($command=='configuration')
@@ -112,7 +112,7 @@
     var existing = document.querySelector('script[data-ch-apexcharts-cdn]');
     if (existing) { existing.addEventListener('load', render); return; }
     var script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/apexcharts';
+    script.src = '{{ asset('vendor/libs/apexcharts/apexcharts.min.js') }}';
     script.setAttribute('data-ch-apexcharts-cdn', '1');
     script.onload = render;
     document.body.appendChild(script);

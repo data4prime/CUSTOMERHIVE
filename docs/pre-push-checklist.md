@@ -80,3 +80,30 @@ Nuova funzionalità "Sincronizza da Qlik" (app e item, vedi
 - **Non provato contro un Qlik reale** (SaaS/on-premise): fare lo spike su un
   tenant di test prima di proporlo ai clienti (elenco fogli SaaS via WebSocket
   e QRS on-premise, formato URL degli item).
+
+---
+
+## ⚠️ Standard UI (Bootstrap 5 + Bootstrap Icons, senza AdminLTE): giro manuale prima del rilascio
+
+Interventi [206](refactoring/206-ui-standard-librerie-locali-bootstrap-5-3-8.md)–[209](refactoring/209-ui-standard-token-componenti-compatibilita.md).
+Il lavoro è stato verificato solo da codice, server e jsdom: **nessuno l'ha visto nel
+browser**.
+
+- **Giro manuale con 3 ruoli diversi** (accento): lista/form/dettaglio di 2 moduli,
+  filtro avanzato, esportazione/importazione, wizard del module generator (tutti i
+  passi), dashboard (builder + visualizzazione + Qlik), utenti/profilo/MFA,
+  impostazioni, privilegi, login/licenza/404, pagine pubbliche Qlik e Chat AI,
+  popup datamodal. Sidebar aperta/chiusa e albero del menu, notifiche, barra di
+  controllo del builder legacy.
+- **Rilascio dei file statici**: `public/vendor/{bootstrap,bootstrap-icons,jquery,
+  plugins,libs}/`, `public/css/ch-*.css`, `public/js/ch-shell.js` devono arrivare su
+  ogni installazione; la cartella `public/vendor/crudbooster/assets/adminlte/`,
+  `public/vendor/lucide/` e `public/vendor/crudbooster/ionic/` non esistono più
+  (cancellarle dalle installazioni se il deploy non le rimuove).
+- **Cache dei browser/CDN**: i CSS/JS nuovi hanno `?v=<filemtime>`; verificare che il
+  web server non serva copie vecchie di `theme.css`/`main.js`.
+- **Clienti**: confronto dei loro moduli custom dopo l'aggiornamento (`ch-compat.css`
+  copre le classi Bootstrap 3; `local-scripts/migrate-*.php` migrano i loro file).
+  Aggiornare i test che asserissero classi/testi HTML cambiati (nessuno trovato nel
+  repo).
+- **Test automatici**: non lanciati dopo questo intervento.

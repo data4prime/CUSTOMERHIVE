@@ -26,7 +26,7 @@
 @if(g('return_url'))
 <p>
     <a href='{{g("return_url")}}'>
-        <i class='fa fa-chevron-circle-{{ trans(' crudbooster.left') }}'></i>&nbsp;
+        <i class='bi bi-chevron-{{ trans('crudbooster.left') }}'></i>&nbsp;
         {{trans('crudbooster.form_back_to_list',['module'=>urldecode(g('label'))])}}
     </a>
 </p>
@@ -38,7 +38,7 @@
         <table class='table table-bordered'>
             <tbody>
                 <tr class='active'>
-                    <td colspan="2"><strong><i class='fa fa-bars'></i> {{ ucwords(urldecode(g('label'))) }}</strong>
+                    <td colspan="2"><strong><i class='bi bi-list'></i> {{ ucwords(urldecode(g('label'))) }}</strong>
                     </td>
                 </tr>
                 <?php
@@ -67,8 +67,8 @@
         @if($button_bulk_action && ( ($button_delete && CRUDBooster::isDelete()) || $button_selected) )
         <div class="pull-{{ trans('crudbooster.left') }}">
             <div class="selected-action" style="display:inline-block;position:relative;">
-                <button type="button" class="btn btn-sm btn-default  dropdown-toggle" data-bs-toggle="dropdown"
-                    aria-expanded="false"><i class='fa fa-check-square-o'></i>
+                <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                    aria-expanded="false"><i class='bi bi-check-square'></i>
                     {{trans("crudbooster.button_selected_action")}}
                     </button>
                 <ul class="dropdown-menu">
@@ -86,7 +86,7 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
 
                     <a  style="display: block; width: 100%; padding: 8px 16px;" href="javascript:void(0)" id='mass_editing_button'
                                     data-url-parameter='{{$build_query}}' title='Mass Edit' >
-                                    <i class="fa fa-pencil"></i> Mass Edit
+                                    <i class="bi bi-pencil-fill"></i> Mass Edit
                                 </a>
                     </li>
 
@@ -100,7 +100,7 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
                     @if($button_delete && CRUDBooster::isDelete())
                     <li  class="dropdown-item" style="padding: 0px" >
                         <a style="display: block; width: 100%; padding: 8px 16px;" href="javascript:void(0)" data-name='delete' title="{{trans('crudbooster.action_delete_selected')}}">
-                            <i class="fa fa-trash"></i> {{trans('crudbooster.action_delete_selected')}}
+                            <i class="bi bi-trash-fill"></i> {{trans('crudbooster.action_delete_selected')}}
                         </a>
                     </li>
                     @endif
@@ -109,7 +109,7 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
                     @foreach($button_selected as $button)
                     <li  class="dropdown-item">
                         <a href="javascript:void(0)" data-name='{{$button["name"]}}' title='{{$button["label"]}}'>
-                            <i class="fa fa-{{$button['icon']}}"></i> {{$button['label']}}
+                            <i class="{{ \App\Helpers\IconMap::biClass($button['icon']) }}"></i> {{$button['label']}}
                         </a>
                     </li>
                     @endforeach
@@ -132,8 +132,8 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
             @if($button_filter)
             <a  href="javascript:void(0)" id='btn_advanced_filter'
                 data-url-parameter='{{$build_query}}' title='{{trans('crudbooster.filter_dialog_title')}}'
-                class="btn btn-sm btn-default {{(Request::get('filter_column'))?'active':''}}">
-                <i class="fa fa-filter"></i> {{trans("crudbooster.button_filter")}}
+                class="btn btn-sm btn-secondary {{(Request::get('filter_column'))?'active':''}}">
+                <i class="bi bi-funnel-fill"></i> {{trans("crudbooster.button_filter")}}
             </a>
             @endif
 
@@ -144,7 +144,7 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
                         placeholder="{{trans('crudbooster.filter_search')}}" />
                     {!! CRUDBooster::getUrlParameters(['q']) !!}
                     <div class="input-group-btn">
-                        <button type='submit' class="btn  btn-default"><i class="fa fa-search"></i></button>
+                        <button type='submit' class="btn btn-secondary"><i class="bi bi-search"></i></button>
                     </div>
                 </div>
             </form>

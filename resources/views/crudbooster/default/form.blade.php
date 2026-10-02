@@ -6,14 +6,14 @@
   @if(g('return_url'))
   <p>
     <a title='Return' href='{{g("return_url")}}'>
-      <i class='fa fa-chevron-circle-left '></i>&nbsp;
+      <i class='bi bi-chevron-left'></i>&nbsp;
       {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
   @else
   <p>
     <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
-      <i class='fa fa-chevron-circle-left '></i>&nbsp;
+      <i class='bi bi-chevron-left'></i>&nbsp;
       {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
@@ -48,26 +48,26 @@
           @endif
         </div><!-- /.box-body -->
 
-        <div class="box-footer" style="background: #F5F5F5">
+        <div class="box-footer" style="background: var(--ch-bg)">
 
           <div class="mb-3 row">
             <label class="col-form-label col-sm-2"></label>
             <div class="col-sm-10">
               @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
               @if(g('return_url'))
-              <a href='{{g("return_url")}}' class='btn btn-default'>
-                <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+              <a href='{{g("return_url")}}' class='btn btn-secondary'>
+                <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
               </a>
               @else
-              <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-default'>
-                <i class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}
+              <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-secondary'>
+                <i class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}
               </a>
               @endif
               @endif
               @if(isset($command) && $command == 'detail' && CRUDBooster::isUpdate() && $button_edit && @$row)
               <a href='{{ CRUDBooster::mainpath("edit/".$row->id)."?return_url=".urlencode(Request::fullUrl())."&parent_id=".g("parent_id")."&parent_field=".$parent_field }}'
                 class='btn btn-success'>
-                <i class='fa fa-pencil'></i> {{trans("crudbooster.action_edit_data")}}
+                <i class='bi bi-pencil-fill'></i> {{trans("crudbooster.action_edit_data")}}
               </a>
               @endif
 
@@ -102,7 +102,7 @@
        quel senso ha causato una corruzione dati reale, scartato. --}}
   <div class="card card-default">
     <div class="card-header">
-      <strong><i class="fa fa-shield"></i> {{ trans('crudbooster.mfa_page_title_setup') }}</strong>
+      <strong><i class="bi bi-shield-fill"></i> {{ trans('crudbooster.mfa_page_title_setup') }}</strong>
     </div>
     <div class="card-body">
 
@@ -139,13 +139,13 @@
           <div class="col-sm-10">
             <form method="post" action="{{ CRUDBooster::adminPath('users/mfa-regenerate-backup-codes') }}" class="d-inline">
               @csrf
-              <button type="submit" class="btn btn-default me-2" onclick="return confirm({{ json_encode(trans('crudbooster.mfa_regenerate_codes_warning')) }});">
+              <button type="submit" class="btn btn-secondary me-2" onclick="return confirm({{ json_encode(trans('crudbooster.mfa_regenerate_codes_warning')) }});">
                 {{ trans('crudbooster.mfa_button_regenerate_codes') }}
               </button>
             </form>
             <form method="post" action="{{ CRUDBooster::adminPath('users/mfa-revoke-devices') }}" class="d-inline">
               @csrf
-              <button type="submit" class="btn btn-default">{{ trans('crudbooster.mfa_button_revoke_devices') }}</button>
+              <button type="submit" class="btn btn-secondary">{{ trans('crudbooster.mfa_button_revoke_devices') }}</button>
             </form>
           </div>
         </div>
@@ -158,7 +158,7 @@
             </a>
             <form method="post" action="{{ CRUDBooster::adminPath('users/mfa-revoke-devices') }}" class="d-inline">
               @csrf
-              <button type="submit" class="btn btn-default">{{ trans('crudbooster.mfa_button_revoke_devices') }}</button>
+              <button type="submit" class="btn btn-secondary">{{ trans('crudbooster.mfa_button_revoke_devices') }}</button>
             </form>
           </div>
         </div>
@@ -192,7 +192,7 @@
                   <td>
                     <form method="post" action="{{ CRUDBooster::adminPath('users/mfa-revoke-device/' . $device->id) }}" class="d-inline">
                       @csrf
-                      <button type="submit" class="btn btn-default btn-sm">{{ trans('crudbooster.mfa_button_revoke_device') }}</button>
+                      <button type="submit" class="btn btn-secondary btn-sm">{{ trans('crudbooster.mfa_button_revoke_device') }}</button>
                     </form>
                   </td>
                 </tr>

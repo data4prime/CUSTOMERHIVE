@@ -7,14 +7,14 @@
   @if(g('return_url'))
   <p>
     <a title='Return' href='{{g("return_url")}}'>
-      <i class='fa fa-chevron-circle-left '></i>&nbsp;
+      <i class='bi bi-chevron-left'></i>&nbsp;
       {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
   @else
   <p>
     <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
-      <i class='fa fa-chevron-circle-left '></i>&nbsp;
+      <i class='bi bi-chevron-left'></i>&nbsp;
       {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
@@ -22,9 +22,9 @@
   @endif
 
   <div class="row">
-    <div class="col-xs-2">
+    <div class="col-2">
     </div>
-    <div class="col-xs-8">
+    <div class="col-8">
       <div class="box box-primary">
         <div class="box-header mb-3 mb-3 with-border">
           <h3 class="box-title">
@@ -56,7 +56,7 @@
             <?php
               $loginURI = TenantHelper::loginPath($row->id);
             ?>
-            <div class="mb-3 row header-group-0 " id="form-group-domain_name" style="">
+            <div class="mb-3 row header-group-0" id="form-group-domain_name" style="">
               <label class="col-form-label col-sm-2">
                 Login URI
               </label>
@@ -67,18 +67,18 @@
             </div>
           </div><!-- /.box-body -->
 
-          <div class="box-footer" style="background: #F5F5F5">
+          <div class="box-footer" style="background: var(--ch-bg)">
 
             <div class="mb-3 row">
               <label class="col-form-label col-sm-2"></label>
               <div class="col-sm-10">
                 @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
                 @if(g('return_url'))
-                <a href='{{g("return_url")}}' class='btn btn-default'><i class='fa fa-chevron-circle-left'></i>
+                <a href='{{g("return_url")}}' class='btn btn-secondary'><i class='bi bi-chevron-left'></i>
                   {{trans("crudbooster.button_back")}}</a>
                 @else
-                <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-default'><i
-                    class='fa fa-chevron-circle-left'></i> {{trans("crudbooster.button_back")}}</a>
+                <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-secondary'><i
+                    class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}</a>
                 @endif
                 @endif
                 @if(CRUDBooster::isCreate() || CRUDBooster::isUpdate())

@@ -11,7 +11,7 @@
     </div>
     <div class="card-body">
       <div class="alert alert-warning">
-        <i class="fa fa-exclamation-triangle"></i>
+        <i class="bi bi-exclamation-triangle-fill"></i>
         {{ trans('crudbooster.api_tokens_reveal_warning') }}
       </div>
 
@@ -29,7 +29,7 @@
 
       <p>
         <a title='Main Module' href='{{CRUDBooster::mainpath()}}' class="btn btn-primary">
-          <i class='fa fa-chevron-circle-left '></i>&nbsp;
+          <i class='bi bi-chevron-left'></i>&nbsp;
           {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
         </a>
       </p>

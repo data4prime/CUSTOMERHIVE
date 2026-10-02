@@ -10,13 +10,13 @@
         <div class="input-group">
 
             <span class="input-group-text"><a href='javascript:void(0)' onclick='$("#{{$name}}").data("daterangepicker").toggle();'><i
-                            class='fa fa-calendar'></i></a></span>
+                            class='bi bi-calendar3'></i></a></span>
 
             <input type='text' title="{{$form['label']}}" readonly
                    {{$required}} {{$readonly}} {!!$placeholder!!} {{$disabled}} class='form-control notfocus input_datetime' name="{{$name}}" id="{{$name}}"
                    value='{{$value}}' />
         </div>
-        <div class="text-danger">{!! $errors->first($name)?"<i class='fa fa-info-circle'></i> ".$errors->first($name):"" !!}</div>
+        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".$errors->first($name):"" !!}</div>
         <p class='help-block'>{{ @$form['help'] }}</p>
     </div>
 </div>

@@ -57,10 +57,10 @@ class QlikAppController extends CBController
 		// a mano (last_synced_at null) non hanno badge.
 		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_status'), "name" => "is_missing", "callback" => function ($row) {
 			if (!empty($row->is_missing)) {
-				return "<span class='label label-warning' style='background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>";
+				return "<span class='badge text-bg-warning' style='background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>";
 			}
 			return !empty($row->last_synced_at)
-				? "<span class='label label-success' style='background:#5cb85c;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_present_badge')) . "</span>"
+				? "<span class='badge text-bg-success' style='background:#5cb85c;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_present_badge')) . "</span>"
 				: '';
 		}];
 		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_last_synced'), "name" => "last_synced_at", "callback" => function ($row) {
@@ -174,14 +174,14 @@ class QlikAppController extends CBController
         | ----------------------------------------------------------------------
         | @label       = Label of action
         | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
-        | @icon        = Font awesome class icon. e.g : fa fa-bars
+        | @icon        = Font awesome class icon. e.g : bi bi-list
         | @color 	   = Default is primary. (primary, warning, succecss, info)
         | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
         |
         */
 		$this->addaction = array();
-		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'fa fa-user', 'color' => 'info', 'title' => 'Members'];
-		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'fa fa-shield', 'color' => 'info', 'title' => 'Items'];
+		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'bi bi-person-fill', 'color' => 'info', 'title' => 'Members'];
+		//$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'bi bi-shield-fill', 'color' => 'info', 'title' => 'Items'];
 
 		/*
         | ----------------------------------------------------------------------
@@ -416,7 +416,7 @@ class QlikAppController extends CBController
 		});
 		$data['stuck'] = QlikSyncService::hasStuckQueuedRuns();
 		$data['page_title'] = trans('crudbooster.qlik_sync_runs_title');
-		$data['page_icon'] = 'fa fa-tasks';
+		$data['page_icon'] = 'bi bi-list-check';
 
 		$this->cbView('qlik_sync.runs', $data);
 	}
@@ -454,7 +454,7 @@ class QlikAppController extends CBController
 			&& DB::table('qlik_sync_run_records')->where('run_id', (int) $id)->whereIn('action', ['created', 'linked'])->exists();
 		$data['stuck'] = QlikSyncService::hasStuckQueuedRuns();
 		$data['page_title'] = trans('crudbooster.qlik_sync_run_title', ['id' => $run->id]);
-		$data['page_icon'] = 'fa fa-tasks';
+		$data['page_icon'] = 'bi bi-list-check';
 
 		$this->cbView('qlik_sync.run', $data);
 	}

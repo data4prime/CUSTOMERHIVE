@@ -36,10 +36,10 @@ class PrivilegesController extends CBController
             "label" => "Privilege",
             "name" => "is_superadmin",
             'callback_php' => '($row->is_superadmin==1)?
-                          "<span class=\"label label-success\">Superadmin</span>":
+                          "<span class=\"badge text-bg-success\">Superadmin</span>":
                           (($row->is_tenantadmin==1)?
-                          "<span class=\"label label-warning\">Tenantadmin</span>":
-                          "<span class=\"label label-default\">Standard</span>")',
+                          "<span class=\"badge text-bg-warning\">Tenantadmin</span>":
+                          "<span class=\"badge text-bg-secondary\">Standard</span>")',
         ];
 
         $this->form = [];

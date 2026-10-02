@@ -58,7 +58,7 @@ $debug_url = $item_url;
         icon = '';
       }
     }
-    $('#title_icon').addClass('fa ' + icon);
+    $('#title_icon').addClass(icon);
 
     if ($('#title_icon').hasClass('qlik_icon')) {
       //prendi icona dal child

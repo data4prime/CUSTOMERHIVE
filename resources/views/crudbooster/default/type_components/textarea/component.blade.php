@@ -9,7 +9,7 @@
         <textarea name="{{$form['name']}}" id="{{$name}}" {{$required}} {{$readonly}} {!!$placeholder!!} {{$disabled}}
             {{isset($validation['max'])?"maxlength=".$validation['max']:""}} class='form-control'
                   rows='5'>{{ $value}}</textarea>
-        <div class=" text-danger">{!! $errors->first($name)?"<i class='fa fa-info-circle'></i> ".$errors->first($name):"" !!}</div>
+        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".$errors->first($name):"" !!}</div>
         <p class='help-block'>{{ @$form['help'] }}</p>
     </div>
 </div>
