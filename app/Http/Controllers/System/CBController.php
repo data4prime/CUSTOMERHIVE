@@ -132,6 +132,13 @@ class CBController extends Controller
 
     public $hide_form = [];
 
+    /**
+     * Layout del form a blocchi/schede scritto dal module generator (blocco
+     * "FORM LAYOUT" del controller del modulo). null = form piatto come sempre.
+     * Vedi docs/refactoring/197.
+     */
+    public $form_layout = null;
+
     public $index_return = false; //for export
 
     public $sidebar_mode = 'normal';
@@ -143,6 +150,7 @@ class CBController extends Controller
 
 
         $this->checkHideForm();
+        $this->checkFormLayout();
 
         $this->primary_key = CB::pk($this->table);
         $this->columns_table = $this->col;
@@ -150,6 +158,7 @@ class CBController extends Controller
         $this->data['pk'] = $this->primary_key;
         $this->data['forms'] = $this->data_inputan;
         $this->data['hide_form'] = $this->hide_form;
+        $this->data['form_layout'] = $this->form_layout;
         $this->data['addaction'] = ($this->show_addaction) ? $this->addaction : null;
         $this->data['table'] = $this->table;
         $this->data['title_field'] = $this->title_field;
@@ -207,6 +216,22 @@ class CBController extends Controller
         header("Content-Type: text/html");
         $this->cbLoader();
         echo view($template, $data);
+    }
+
+    // Con un layout a blocchi i campi non posizionati si comportano come
+    // hide_form: non sono disegnati ne' assegnati al salvataggio (un campo non
+    // inviato dal browser verrebbe altrimenti salvato vuoto). Restano sempre:
+    // tenant/group (blocco di sistema), campi hidden e campo del sotto-modulo.
+    private function checkFormLayout()
+    {
+        if (!\App\Helpers\ModuleGeneratorLayout::isActive($this->form_layout)) {
+            return;
+        }
+        $this->form = \App\Helpers\ModuleGeneratorLayout::filterForm(
+            (array) $this->form,
+            $this->form_layout,
+            (g('parent_field')) ?: $this->parent_field
+        );
     }
 
     private function checkHideForm()
@@ -627,10 +652,16 @@ class CBController extends Controller
                 if (@$col['download']) {
                     $url = '/storage'. (strpos($value, 'http://') !== false) ? $value : asset($value) . '?download=1';
                     if ($value) {
-                        $value = "<a class='btn btn-sm btn-primary' href='$url' target='_blank' title='Download File'><i class='fa fa-download'></i> Download</a>";
+                        $value = "<a class='btn btn-sm btn-primary' href='$url' target='_blank' title='Download File'><i class='bi bi-download'></i> Download</a>";
                     } else {
                         $value = " - ";
                     }
+                }
+
+                // Formato scelto dal wizard v2 (data, importo, badge colorato):
+                // chiave opzionale, assente nei moduli esistenti.
+                if (isset($col['format'])) {
+                    $value = \App\Helpers\ModuleGeneratorList::formatValue($value, $col);
                 }
 
                 if (isset($col['str_limit']) && $col['str_limit']) {
@@ -889,39 +920,22 @@ class CBController extends Controller
 
         // #RAMA filtro le richieste con questo attributo per richiamare custom modal
         $data['q'] = Request::get('q');
-        switch (Request::get('type')) {
-            case 'group_members_datamodal':
-                return view('crudbooster::default.type_components.group_members_datamodal.browser', $data);
-                break;
-            case 'group_items_datamodal':
-                return view('crudbooster::default.type_components.group_items_datamodal.browser', $data);
-                break;
-            case 'item_access_datamodal':
-                return view('crudbooster::default.type_components.item_access_datamodal.browser', $data);
-                break;
-            case 'user_groups_datamodal':
-                return view('crudbooster::default.type_components.user_groups_datamodal.browser', $data);
-                break;
-            // Mancavano questi 3: senza un case dedicato finivano nel
-            // default (il componente generico "datamodal"), che ignora il
-            // campo "Description" del form (compilato via datamodal_description,
-            // mai valorizzato dal componente generico) e non esclude dalla
-            // lista le righe gia' collegate (whereNotExists nei rispettivi
-            // browser.blade.php dedicati).
-            case 'tenant_group_datamodal':
-                return view('crudbooster::default.type_components.tenant_group_datamodal.browser', $data);
-                break;
-            case 'group_tenant_datamodal':
-                return view('crudbooster::default.type_components.group_tenant_datamodal.browser', $data);
-                break;
-            case 'item_tenant_datamodal':
-                return view('crudbooster::default.type_components.item_tenant_datamodal.browser', $data);
-                break;
-
-            default:
-                return view('crudbooster::default.type_components.datamodal.browser', $data);
-                break;
+        // Tipi con un popup dedicato (type_components/<tipo>/browser.blade.php):
+        // escludono dalla lista le righe gia' collegate e/o passano al form
+        // padre un campo in piu' (description/email/subtitle). Qualunque altro
+        // valore finisce nel componente generico "datamodal", che ignora quei
+        // campi. Whitelist: il nome del tipo arriva dalla query string.
+        $relationBrowsers = [
+            'group_members_datamodal', 'group_items_datamodal', 'item_access_datamodal',
+            'user_groups_datamodal', 'tenant_group_datamodal', 'group_tenant_datamodal',
+            'item_tenant_datamodal',
+        ];
+        $type = Request::get('type');
+        if (in_array($type, $relationBrowsers, true)) {
+            return view('crudbooster::default.type_components.' . $type . '.browser', $data);
         }
+
+        return view('crudbooster::default.type_components.datamodal.browser', $data);
     }
 
     public function getUpdateSingle()
