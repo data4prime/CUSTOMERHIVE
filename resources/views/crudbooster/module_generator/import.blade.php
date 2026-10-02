@@ -26,8 +26,8 @@
             </div>
         </div>
         <div class="card-footer">
-            <div class="pull-right">
-                <a class="btn btn-default" href="{{Route('ModulsControllerGetIndex')}}">{{trans('crudbooster.button_back')}}</a>
+            <div class="float-end">
+                <a class="btn btn-secondary" href="{{Route('ModulsControllerGetIndex')}}">{{trans('crudbooster.button_back')}}</a>
                 <input type="submit" class="btn btn-primary" value="Import">
             </div>
         </div>

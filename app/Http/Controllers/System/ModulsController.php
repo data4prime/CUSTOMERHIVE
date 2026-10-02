@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\PDF;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use App\Helpers\Fontawesome;
+use App\Helpers\ModuleGeneratorList;
+use App\Helpers\ModuleGeneratorFields;
+use App\Helpers\ModuleGeneratorLayout;
 // #RAMA
 use ModuleHelper;
 use UserHelper;
@@ -94,7 +97,7 @@ class ModulsController extends CBController
   	                  var label = $(originalOption).text();
   	                  var val = $(originalOption).val();
   	                  if(!val) return label;
-  	                  var \$resp = $('<span><i style=\"margin-top:5px\" class=\"pull-right ' + $(originalOption).val() + '\"></i> ' + $(originalOption).data('label') + '</span>');
+  	                  var \$resp = $('<span><i style=\"margin-top:5px\" class=\"float-end ' + $(originalOption).val() + '\"></i> ' + $(originalOption).data('label') + '</span>');
   	                  return \$resp;
   	              }
             $('#list-icon').select2({
@@ -222,7 +225,7 @@ class ModulsController extends CBController
 
     $this->addaction[] = [
       'label' => 'Module Wizard',
-      'icon' => 'fa fa-wrench',
+      'icon' => 'bi bi-wrench',
       'url' => CRUDBooster::mainpath('step1') . '/[id]',
       "showIf" => "[is_protected] == 0",
       'color' => 'primary',
@@ -230,14 +233,14 @@ class ModulsController extends CBController
 
     $this->addaction[] = [
       'label' => 'Export',
-      'icon' => 'fa fa-download',
+      'icon' => 'bi bi-download',
       'url' => CRUDBooster::mainpath('export') . '/[id]',
       "showIf" => "[is_protected] == 0",
       'color' => 'default',
     ];
 
-    $this->index_button[] = ['label' => 'Generate New Module', 'icon' => 'fa fa-plus', 'url' => CRUDBooster::mainpath('step1'), 'color' => 'success'];
-    $this->index_button[] = ['label' => 'Import Module', 'icon' => 'fa fa-upload', 'url' => CRUDBooster::mainpath('import'), 'color' => 'info'];
+    $this->index_button[] = ['label' => 'Generate New Module', 'icon' => 'bi bi-plus-lg', 'url' => CRUDBooster::mainpath('step1'), 'color' => 'success'];
+    $this->index_button[] = ['label' => 'Import Module', 'icon' => 'bi bi-upload', 'url' => CRUDBooster::mainpath('import'), 'color' => 'info'];
   }
 
   public function getEdit($id)
@@ -343,6 +346,9 @@ class ModulsController extends CBController
     //insert log
     CRUDBooster::insertLog(trans("crudbooster.log_delete", ['name' => $module->{$this->title_field}, 'module' => CRUDBooster::getCurrentModule()->name]));
 
+    // inizializzata: piu' sotto viene solo concatenata (.=), e in PHP 8 una
+    // variabile non definita diventa un'eccezione in Laravel
+    $alert = '';
     $drop_table = true;
     $drop_module = true;
     //if table name start with mg_
@@ -412,6 +418,27 @@ class ModulsController extends CBController
       add_log_ch('delete module', 'Delete module ' . $module->name, 'log');
     }
 
+    // Prima la parte su DB (menu, permessi, tenant, riga cms_moduls) in
+    // un'unica transazione, poi - fuori, perche' il DDL in MySQL fa commit
+    // implicito - il drop della tabella e l'unlink del controller. Se un
+    // passo su DB fallisce non si perde ne' la tabella ne' il controller;
+    // se fallisce il drop, il modulo e' gia' sparito ma i dati restano
+    // recuperabili. Prima il drop veniva per primo e non c'era transazione.
+    // Vedi docs/refactoring/202.
+    DB::transaction(function () use ($id, $module) {
+      $this->cleanupModuleRecords($module);
+
+      if (CRUDBooster::isColumnExists($this->table, 'deleted_at')) {
+        DB::table($this->table)
+          ->where($this->primary_key, $id)
+          ->update(['deleted_at' => date('Y-m-d H:i:s')]);
+      } else {
+        DB::table($this->table)
+          ->where($this->primary_key, $id)
+          ->delete();
+      }
+    });
+
     if (isset($drop_table) && !empty($drop_table)) {
       //Drop table
       if (isset($module->table_name)  && !empty($module->table_name)) {
@@ -427,17 +454,9 @@ class ModulsController extends CBController
       add_log_ch('delete module', 'Didn\'t drop table ' . $module->table_name, 'log');
     }
 
-    $this->hook_before_delete($id);
+    $this->removeModuleController($module);
 
-    if (CRUDBooster::isColumnExists($this->table, 'deleted_at')) {
-      DB::table($this->table)
-        ->where($this->primary_key, $id)
-        ->update(['deleted_at' => date('Y-m-d H:i:s')]);
-    } else {
-      DB::table($this->table)
-        ->where($this->primary_key, $id)
-        ->delete();
-    }
+    $this->refreshSessionPrivilegesRoles();
 
     $this->hook_after_delete($id);
 
@@ -449,24 +468,109 @@ class ModulsController extends CBController
     return CRUDBooster::redirect($url, $message, $message_type);
   }
 
+  /**
+   * Usato dall'azione di massa di CBController::postActionSelected()
+   * (riceve un array di id); getDelete() usa direttamente
+   * cleanupModuleRecords() + removeModuleController() nell'ordine giusto.
+   */
   function hook_before_delete($id)
   {
-    //get module
-    $module = DB::table('cms_moduls')
-      ->where('id', $id)
-      ->first();
+    foreach ((array) $id as $single_id) {
+      $module = DB::table('cms_moduls')
+        ->where('id', $single_id)
+        ->first();
 
-    //On Cascade Delete Menu
-    $menus = DB::table('cms_menus')
-      ->where('path', 'like', '%' . $module->controller . '%')
-      ->delete();
+      if (!$module) {
+        continue;
+      }
 
-    
+      DB::transaction(function () use ($module) {
+        $this->cleanupModuleRecords($module);
+      });
+      $this->removeModuleController($module);
+    }
+  }
 
-    //On Cascade Delete Controller
-    @unlink(app_path('Http/Controllers/' . $module->controller . '.php'));
+  /**
+   * Righe collegate a un modulo che sta per essere eliminato: menu (e i loro
+   * pivot privilegi/tenant/gruppi), permessi per ruolo e abilitazione tenant.
+   * La riga cms_moduls resta (soft delete) e il suo id non viene riusato
+   * (vedi postStep1), ma senza questa pulizia i residui restavano nel DB.
+   * Vedi docs/refactoring/202.
+   */
+  private function cleanupModuleRecords($module)
+  {
+    $menu_ids = $this->moduleMenuIds($module);
 
-    //$module->delete();
+    if (!empty($menu_ids)) {
+      DB::table('cms_menus_privileges')->whereIn('id_cms_menus', $menu_ids)->delete();
+      DB::table('menu_tenants')->whereIn('menu_id', $menu_ids)->delete();
+      DB::table('menu_groups')->whereIn('menu_id', $menu_ids)->delete();
+      // un eventuale sottomenu non va perso ne' lasciato appeso a un padre
+      // inesistente: passa al livello principale
+      DB::table('cms_menus')->whereIn('parent_id', $menu_ids)->update(['parent_id' => 0]);
+      DB::table('cms_menus')->whereIn('id', $menu_ids)->delete();
+    }
+
+    DB::table('cms_privileges_roles')->where('id_cms_moduls', $module->id)->delete();
+    DB::table('module_tenants')->where('module_id', $module->id)->delete();
+  }
+
+  /**
+   * Id dei menu che puntano a questo modulo: voce "Route"/"Controller &
+   * Method" (path = nome controller + GetIndex/@metodo...) o voce "Module"
+   * (path = path del modulo + ?m=<id>). Il match sul controller e' esatto
+   * sul nome (seguito da Get/Post/@), non per sottostringa: prima
+   * `LIKE '%AdminOrdini%'` cancellava anche i menu di AdminOrdiniArchivio.
+   */
+  private function moduleMenuIds($module)
+  {
+    $ids = [];
+    $controller = (string) $module->controller;
+
+    if ($controller !== '') {
+      $pattern = '/^' . preg_quote($controller, '/') . '(@|Get|Post|Put|Delete|$)/';
+      $candidates = DB::table('cms_menus')
+        ->where('path', 'like', $controller . '%')
+        ->get(['id', 'path']);
+      foreach ($candidates as $menu) {
+        if (preg_match($pattern, $menu->path)) {
+          $ids[] = $menu->id;
+        }
+      }
+    }
+
+    if (!empty($module->path)) {
+      $module_menus = DB::table('cms_menus')
+        ->where('type', 'Module')
+        ->where('path', $module->path . '?m=' . $module->id)
+        ->pluck('id')
+        ->all();
+      $ids = array_merge($ids, $module_menus);
+    }
+
+    return array_values(array_unique($ids));
+  }
+
+  private function removeModuleController($module)
+  {
+    if (empty($module->controller)) {
+      return;
+    }
+    // basename(): il nome arriva dal DB ma finisce in un unlink
+    @unlink(app_path('Http/Controllers/' . basename($module->controller) . '.php'));
+  }
+
+  private function refreshSessionPrivilegesRoles()
+  {
+    $roles = DB::table('cms_privileges_roles')
+      ->where('id_cms_privileges', CRUDBooster::myPrivilegeId())
+      ->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')
+      ->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')
+      ->where('cms_moduls.deleted_at', null)
+      ->get();
+
+    Session::put('admin_privileges_roles', $roles);
   }
 
   /**
@@ -526,6 +630,74 @@ class ModulsController extends CBController
     $lastId = DB::table('cms_moduls')->max('id') + 1;
 
     return response()->json(['total' => $check, 'lastid' => $lastId]);
+  }
+
+  /**
+   * Bozza di un passo del wizard (flag wizard_v2): i campi del form non ancora
+   * salvati, tenuti in sessione per modulo e passo. Si scrive cambiando passo o
+   * uscendo dalla pagina e si cancella quando il passo viene salvato davvero o
+   * l'utente la scarta. Vedi docs/refactoring/201.
+   */
+  public function postDraft($id = 0)
+  {
+    if ($denied = $this->denyWizardUnlessSuperadmin('Module Generator', true)) {
+      return $denied;
+    }
+    $step = (int) Request::input('step');
+    $fields = json_decode((string) Request::input('fields'), true);
+    if (!config('module_generator.wizard_v2') || $step < 1 || $step > 5 || !is_array($fields)) {
+      return response()->json([], 422);
+    }
+
+    $clean = [];
+    foreach ($fields as $name => $values) {
+      if (!is_string($name)) {
+        continue;
+      }
+      $values = array_values(array_filter((array) $values, 'is_string'));
+      $clean[$name] = count($values) === 1 ? $values[0] : $values;
+    }
+    if (strlen(json_encode($clean)) > 1048576) {
+      return response()->json([], 413);
+    }
+
+    Session::put($this->wizardDraftKey($id, $step), $clean);
+
+    return response()->json(['ok' => true]);
+  }
+
+  public function postDraftDiscard($id = 0)
+  {
+    if ($denied = $this->denyWizardUnlessSuperadmin('Module Generator', true)) {
+      return $denied;
+    }
+    $step = (int) Request::input('step');
+    if ($step < 1 || $step > 5) {
+      return response()->json([], 422);
+    }
+    $this->forgetWizardDraft($id, $step);
+
+    return response()->json(['ok' => true]);
+  }
+
+  private function wizardDraftKey($id, $step)
+  {
+    return 'mg_draft.' . (int) $id . '.' . (int) $step;
+  }
+
+  private function forgetWizardDraft($id, $step)
+  {
+    Session::forget($this->wizardDraftKey($id, $step));
+  }
+
+  // Per i passi che si ridisegnano da old('payload'): se c'e' una bozza e non c'e'
+  // gia' un input di ritorno da un errore di validazione, la bozza fa da old input.
+  private function applyWizardDraft($id, $step)
+  {
+    $draft = Session::get($this->wizardDraftKey($id, $step));
+    if (config('module_generator.wizard_v2') && is_array($draft) && !Session::hasOldInput()) {
+      Session::now('_old_input', $draft);
+    }
   }
 
   public function getAdd()
@@ -698,7 +870,7 @@ class ModulsController extends CBController
 
       Session::put('admin_privileges_roles', $roles);
 
-
+      $this->forgetWizardDraft(0, 1);
       //return redirect(Route("ModulsControllerGetStep2", ["id" => $id]));
       return redirect(Route("ModulsControllerGetStep2") . "/{$id}");
     } else {
@@ -726,6 +898,7 @@ class ModulsController extends CBController
       if (strpos($response, "# START COLUMNS") !== true) {
         // return redirect()->back()->with(['message'=>'Sorry, is not possible to edit the module with Module Generator Tool. Prefix and or Suffix tag is missing !','message_type'=>'warning']);
       }
+      $this->forgetWizardDraft($id, 1);
       //return redirect(Route("ModulsControllerGetStep2", ["id" => $id]));
       return redirect(Route("ModulsControllerGetStep2") . "/{$id}");
     }
@@ -766,6 +939,12 @@ class ModulsController extends CBController
       $cb_form = $columns;
     }
 
+    // Nuova interfaccia del passo Campi (flag, spento di default): vedi
+    // docs/refactoring/196.
+    if (config('module_generator.wizard_v2')) {
+      return $this->getStep2V2($id, $module);
+    }
+
     //column data types
     //TODO add more types
     $types = config('app.mg_valid_data_types');
@@ -800,6 +979,11 @@ class ModulsController extends CBController
     if ($denied = $this->denyWizardUnlessSuperadmin($module->name ?? 'Module Generator')) {
       return $denied;
     }
+    // Nuova interfaccia: un solo campo "payload" (JSON) al posto degli array.
+    if (isset($request['payload'])) {
+      return $this->postStep2V2($module);
+    }
+
     $messages = $this->save_table($request);
 
     $data = array();
@@ -808,6 +992,344 @@ class ModulsController extends CBController
 
     //return redirect(Route("ModulsControllerGetStep3", $data));
     return redirect(Route("ModulsControllerGetStep3") . "/{$id}")->with($messages);
+  }
+
+  /**
+   * Passo Campi, nuova interfaccia (flag module_generator.wizard_v2): fonde
+   * struttura della tabella e definizione dei campi del form. Non modifica,
+   * rinomina ne' elimina colonne esistenti: puo' solo aggiungerne.
+   * Vedi docs/refactoring/196.
+   */
+  private function getStep2V2($id, $module)
+  {
+    $this->applyWizardDraft($id, 2);
+    $table = $module['table_name'];
+    $structure = ($table == 'new') ? [] : CRUDBooster::getTableStructure($table);
+    $tableColumns = ($table == 'new') ? [] : CRUDBooster::getTableColumns($table);
+
+    $path = app_path('Http/Controllers/' . $module->controller . '.php');
+    $contents = file_exists($path) ? file_get_contents($path) : '';
+    $form = ModuleGeneratorList::readBlock($contents, 'FORM');
+
+    $rows = ModuleGeneratorFields::describeFields($structure, $form, $tableColumns, [
+      trans('crudbooster.confirmButtonText'),
+      trans('crudbooster.confirmation_no'),
+    ]);
+
+    // dopo un errore di validazione si riparte da cio' che l'utente aveva inviato
+    $old = json_decode((string) old('payload'), true);
+    if (is_array($old) && isset($old['rows']) && is_array($old['rows'])) {
+      $rows = $old['rows'];
+    }
+
+    $tables = [];
+    foreach (CRUDBooster::listTables() as $tab) {
+      foreach ($tab as $value) {
+        $tables[] = $value;
+      }
+    }
+
+    return view('crudbooster::module_generator.step2_v2', [
+      'id' => $id,
+      'active_tab' => 2,
+      'rows' => $rows,
+      'table_list' => $tables,
+      'table_name' => $table,
+      'table_exists' => !empty($tableColumns),
+      'type_names' => $this->componentTypeNames(),
+    ]);
+  }
+
+  private function componentTypeNames()
+  {
+    $types = [];
+    foreach (glob(resource_path('views/crudbooster/default/type_components') . '/*', GLOB_ONLYDIR) as $dir) {
+      $types[] = basename($dir);
+    }
+
+    return $types;
+  }
+
+  private function postStep2V2($module)
+  {
+    if (!config('module_generator.wizard_v2') || !CRUDBooster::isSuperadmin()) {
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+
+    $id = $module->id;
+    $payload = json_decode((string) Request::input('payload'), true);
+    if (!is_array($payload) || !isset($payload['rows']) || !is_array($payload['rows'])) {
+      return redirect()->back()->with(['message' => trans('crudbooster.mg_list_err_payload'), 'message_type' => 'warning']);
+    }
+
+    $path = app_path('Http/Controllers/' . $module->controller . '.php');
+    if (!file_exists($path)) {
+      return redirect()->back();
+    }
+
+    // stesse regole di save_table(): tabelle riservate (cms_) mai modificabili
+    if (substr($module->table_name, 0, strlen(config('app.reserved_tables_prefix'))) === config('app.reserved_tables_prefix')) {
+      add_log_ch('mg save table', 'editing reserved tables is forbidden ' . $module->table_name, 'error');
+
+      return redirect()->back()->withInput()->with(['message' => 'editing reserved tables is forbidden', 'message_type' => 'warning']);
+    }
+    $tableName = ModuleHelper::sql_name_encode($module->table_name);
+    $tableExists = $module->table_name != 'new' && Schema::hasTable($tableName);
+    $tableColumns = $tableExists ? CRUDBooster::getTableColumns($tableName) : [];
+
+    $knownTables = [];
+    foreach (CRUDBooster::listTables() as $tab) {
+      foreach ($tab as $value) {
+        $knownTables[] = $value;
+      }
+    }
+
+    $contents = file_get_contents($path);
+    $existingForm = ModuleGeneratorList::readBlock($contents, 'FORM');
+
+    try {
+      $built = ModuleGeneratorFields::build($payload['rows'], $existingForm, $tableColumns, $this->componentTypeNames(), $knownTables, (array) config('app.reserved_column_names'), $tableName);
+    } catch (\InvalidArgumentException $e) {
+      list($key, $param) = array_pad(explode('|', $e->getMessage(), 2), 2, '');
+
+      return redirect()->back()->withInput()->with([
+        'message' => trans('crudbooster.' . $key, ['name' => $param]),
+        'message_type' => 'warning',
+      ]);
+    }
+
+    $newContents = ModuleGeneratorFields::replaceFormBlock($contents, $built['entries']);
+
+    // Se il modulo ha gia' un layout a blocchi: un campo nuovo non resterebbe
+    // invisibile (i campi non posizionati non si disegnano), quindi si aggiunge in
+    // coda al primo blocco; i campi tolti dal modulo escono dal layout.
+    $currentLayout = ModuleGeneratorList::readBlock($contents, 'FORM LAYOUT');
+    if (ModuleGeneratorLayout::isActive($currentLayout)) {
+      $after = $this->layoutPlaceableFields($built['entries']);
+      $before = $this->layoutPlaceableFields($existingForm);
+      $currentLayout = ModuleGeneratorLayout::dropFields($currentLayout, array_values(array_diff(array_keys($before), array_keys($after))));
+      $added = array_values(array_diff(array_keys($after), array_keys($before), ModuleGeneratorLayout::placedNames($currentLayout)));
+      $currentLayout = ModuleGeneratorLayout::appendFields($currentLayout, $added, trans('crudbooster.mg_lay_default_title'));
+      $newContents = ModuleGeneratorLayout::replaceLayoutBlock($newContents, $currentLayout);
+    }
+
+    $this->backupControllerFile($path);
+
+    // Struttura: solo se ci sono colonne nuove. Tabella nuova -> save_table()
+    // (ramo di creazione, invariato); tabella esistente -> solo aggiunta di
+    // colonne (mai modifica/eliminazione).
+    if ($built['new_columns']) {
+      if (!$tableExists) {
+        $request = ['id' => $id, 'name' => [], 'type' => [], 'size' => []];
+        foreach ($built['new_columns'] as $col) {
+          $request['name'][] = $col['name'];
+          $request['type'][] = $col['type'];
+          $request['size'][] = $col['size'];
+        }
+        $result = $this->save_table($request);
+        $failed = is_string($result) && strpos($result, 'danger,') === 0;
+        $message = is_string($result) ? explode(',', $result)[1] ?? '' : '';
+      } else {
+        $message = $this->addTableColumns($tableName, $built['new_columns']);
+        $failed = $message !== null;
+      }
+      if ($failed) {
+        return redirect()->back()->withInput()->with(['message' => $message, 'message_type' => 'warning']);
+      }
+    }
+
+    file_put_contents($path, $newContents);
+
+    $this->forgetWizardDraft($id, 2);
+    return redirect(Route('ModulsControllerGetStep3') . "/{$id}");
+  }
+
+  // Aggiunge colonne nuove a una tabella esistente: stesse chiamate di
+  // schema e stesso log del ramo "add column" di save_table(), che qui non
+  // si usa perche' sullo stesso ramo elimina le colonne mancanti dalla richiesta.
+  private function addTableColumns($table_name, array $columns)
+  {
+    if (substr($table_name, 0, strlen(config('app.reserved_tables_prefix'))) === config('app.reserved_tables_prefix')) {
+      return 'editing reserved tables is forbidden';
+    }
+    foreach ($columns as $column) {
+      $name = ModuleHelper::sql_name_encode($column['name']);
+      if (ctype_digit($name)) {
+        add_log_ch('mg edit table add column', 'digit only column name is invalid ' . $table_name . ' column ' . $name, 'error');
+
+        return 'Digit only column name is not accepted';
+      }
+      if (in_array($name, config('app.reserved_column_names')) || Schema::hasColumn($table_name, $name)) {
+        add_log_ch('mg edit table add column', 'Duplicate column name ' . $name, 'error');
+
+        return 'Duplicate column name';
+      }
+      $existing = CRUDBooster::getTableStructure($table_name);
+      $last = $existing ? end($existing) : null;
+      $after = $last && isset($last['name']) ? $last['name'] : 'id';
+      $kind = $column['type'];
+      $size = (string) $column['size'];
+      Schema::table($table_name, function (Blueprint $table) use ($name, $size, $kind, $after) {
+        switch ($kind) {
+          case 'number':
+            $table->integer($name)->length((int) $size)->nullable()->after($after);
+            break;
+          case 'plaintext':
+            $table->text($name)->nullable()->after($after);
+            break;
+          case 'longtext':
+            $table->longText($name)->nullable()->after($after);
+            break;
+          case 'decimal':
+            list($precision, $scale) = array_map('intval', explode(',', $size . ',0'));
+            $table->decimal($name, $precision, $scale)->nullable()->after($after);
+            break;
+          case 'date':
+            $table->date($name)->nullable()->after($after);
+            break;
+          case 'datetime':
+            $table->dateTime($name)->nullable()->after($after);
+            break;
+          case 'time':
+            $table->time($name)->nullable()->after($after);
+            break;
+          default:
+            $table->string($name, (int) $size)->nullable()->after($after);
+            break;
+        }
+      });
+      add_log_ch('mg edit table add column', 'add column ' . $name . ' after ' . $after);
+    }
+
+    return null;
+  }
+
+  // Campi del form che si possono posizionare nel layout: tutti tranne quelli
+  // di tipo hidden e quelli gestiti dal sistema (tenant/group/primary_group).
+  private function layoutPlaceableFields(array $form)
+  {
+    $fields = [];
+    foreach ($form as $e) {
+      $name = (string) ($e['name'] ?? '');
+      $type = $e['type'] ?? 'text';
+      if ($name === '' || $type === 'hidden' || in_array($name, ModuleGeneratorLayout::ALWAYS_NAMES, true) || isset($fields[$name])) {
+        continue;
+      }
+      $required = !empty($e['required']) || in_array('required', explode('|', (string) ($e['validation'] ?? '')), true);
+      $fields[$name] = ['name' => $name, 'label' => (string) ($e['label'] ?? $name), 'type' => $type, 'required' => $required, 'help' => (string) ($e['help'] ?? '')];
+    }
+
+    return $fields;
+  }
+
+  /**
+   * Passo Form, nuova interfaccia (flag module_generator.wizard_v2): layout a
+   * blocchi e schede su griglia a 12 colonne. Vedi docs/refactoring/197.
+   */
+  private function getStep4V2($id, $row)
+  {
+    $this->applyWizardDraft($id, 4);
+    $path = app_path('Http/Controllers/' . $row->controller . '.php');
+    $contents = file_exists($path) ? file_get_contents($path) : '';
+    $form = ModuleGeneratorList::readBlock($contents, 'FORM');
+    $layout = ModuleGeneratorList::readBlock($contents, 'FORM LAYOUT');
+    $fields = $this->layoutPlaceableFields($form);
+
+    if (ModuleGeneratorLayout::isActive($layout)) {
+      // campi non piu' nel modulo: fuori dal layout
+      $layout = ModuleGeneratorLayout::dropFields($layout, array_values(array_diff(ModuleGeneratorLayout::placedNames($layout), array_keys($fields))));
+      $hasLayout = true;
+    } else {
+      $layout = ModuleGeneratorLayout::defaultLayout(array_keys($fields), trans('crudbooster.mg_lay_default_title'));
+      $hasLayout = false;
+    }
+
+    // dopo un errore di validazione si riparte da cio' che l'utente aveva inviato
+    $old = json_decode((string) old('payload'), true);
+    if (is_array($old) && isset($old['blocks']) && is_array($old['blocks'])) {
+      $layout = ['v' => 1, 'blocks' => $old['blocks']];
+      foreach ((array) ($old['help'] ?? []) as $n => $h) {
+        if (isset($fields[$n]) && is_string($h)) {
+          $fields[$n]['help'] = $h;
+        }
+      }
+    }
+
+    return view('crudbooster::module_generator.step4_v2', [
+      'id' => $id,
+      'active_tab' => 4,
+      'fields' => array_values($fields),
+      'layout' => $layout,
+      'has_layout' => $hasLayout,
+      'system_fields' => ModuleGeneratorLayout::SYSTEM_FIELDS,
+      'type_texts' => trans('crudbooster.mg_field_types'),
+    ]);
+  }
+
+  private function postStep4V2(array $post)
+  {
+    if (!config('module_generator.wizard_v2') || !CRUDBooster::isSuperadmin()) {
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+
+    $id = $post['id'];
+    $row = DB::table('cms_moduls')->where('id', $id)->first();
+    if (!$row) {
+      return redirect()->back();
+    }
+    $path = app_path('Http/Controllers/' . $row->controller . '.php');
+    if (!file_exists($path)) {
+      return redirect()->back();
+    }
+    $payload = json_decode((string) $post['payload'], true);
+    if (!is_array($payload)) {
+      return redirect()->back()->with(['message' => trans('crudbooster.mg_list_err_payload'), 'message_type' => 'warning']);
+    }
+
+    $contents = file_get_contents($path);
+    $form = ModuleGeneratorList::readBlock($contents, 'FORM');
+    $fields = $this->layoutPlaceableFields($form);
+
+    try {
+      $layout = ModuleGeneratorLayout::build($payload, $fields);
+    } catch (\InvalidArgumentException $e) {
+      list($key, $param) = array_pad(explode('|', $e->getMessage(), 2), 2, '');
+
+      return redirect()->back()->withInput()->with([
+        'message' => trans('crudbooster.' . $key, ['name' => $param]),
+        'message_type' => 'warning',
+      ]);
+    }
+
+    // testi di aiuto: chiave "help" della voce del form (solo se cambiano)
+    $newContents = $contents;
+    $helps = is_array($payload['help'] ?? null) ? $payload['help'] : [];
+    $changed = false;
+    foreach ($form as $i => $entry) {
+      $n = (string) ($entry['name'] ?? '');
+      if ($n === '' || !isset($fields[$n]) || !array_key_exists($n, $helps) || !is_string($helps[$n])) {
+        continue;
+      }
+      $h = mb_substr(trim($helps[$n]), 0, 500);
+      if ($h !== (string) ($entry['help'] ?? '')) {
+        if ($h === '') {
+          unset($form[$i]['help']);
+        } else {
+          $form[$i]['help'] = $h;
+        }
+        $changed = true;
+      }
+    }
+    if ($changed) {
+      $newContents = ModuleGeneratorFields::replaceFormBlock($newContents, array_values($form));
+    }
+    $newContents = ModuleGeneratorLayout::replaceLayoutBlock($newContents, $layout);
+
+    $this->backupControllerFile($path);
+    file_put_contents($path, $newContents);
+
+    $this->forgetWizardDraft($id, 4);
+    return redirect(Route('ModulsControllerGetStep5') . "/{$id}");
   }
 
   public function getStep3($id, $messages = '')
@@ -863,6 +1385,12 @@ class ModulsController extends CBController
     $data = [];
     $data['id'] = $id;
     $data['columns'] = $columns;
+    // Nuova interfaccia del passo Lista (flag, spento di default): vedi
+    // docs/refactoring/194. Salva sullo stesso blocco COLUMNS.
+    if (config('module_generator.wizard_v2')) {
+      return $this->getStep3V2($id, $row, $columns, $table_list);
+    }
+
     $data['columns_human_readable'] = $columns_human_readable;
     $data['table_list'] = $table_list;
     $data['cb_col'] = isset($cb_col) ? $cb_col : [];
@@ -897,6 +1425,11 @@ class ModulsController extends CBController
     if (!CRUDBooster::isSuperadmin()) {
       CRUDBooster::insertLog(trans('crudbooster.log_try_view', ['module' => $module->name]));
       return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+
+  // Nuova interfaccia: un solo campo "payload" (JSON) al posto degli array.
+    if (Request::has('payload')) {
+      return $this->postStep3V2();
     }
 
   /**Prende i campi di input*/
@@ -985,6 +1518,128 @@ class ModulsController extends CBController
     return redirect(Route("ModulsControllerGetStep4") . "/{$id}");
   }
 
+  /**
+   * Passo Lista, nuova interfaccia (flag module_generator.wizard_v2).
+   * Parte dalle colonne reali della tabella e da cio' che il modulo ha gia'
+   * nel blocco COLUMNS. Vedi docs/refactoring/194.
+   */
+  private function getStep3V2($id, $row, array $columns, array $table_list)
+  {
+    $this->applyWizardDraft($id, 3);
+    $path = app_path('Http/Controllers/' . $row->controller . '.php');
+    $contents = file_exists($path) ? file_get_contents($path) : '';
+    $table = $row->table_name;
+
+    $existing = ModuleGeneratorList::readBlock($contents, 'COLUMNS');
+    $form = ModuleGeneratorList::readBlock($contents, 'FORM');
+    $rows = ModuleGeneratorList::describeRows($columns, $existing, $form, function ($column) use ($table) {
+      return CRUDBooster::getFieldType($table, $column);
+    });
+    $limit = ModuleGeneratorList::readConfigValue($contents, 'limit');
+    $orderby = ModuleGeneratorList::orderbyToString(ModuleGeneratorList::readConfigValue($contents, 'orderby'));
+
+    // dopo un errore di validazione si riparte da cio' che l'utente aveva inviato
+    $old = json_decode((string) old('payload'), true);
+    if (is_array($old) && isset($old['rows']) && is_array($old['rows'])) {
+      $rows = $old['rows'];
+      $limit = $old['limit'] ?? $limit;
+      $orderby = isset($old['orderby']) && is_string($old['orderby']) ? $old['orderby'] : $orderby;
+    }
+
+    return view('crudbooster::module_generator.step3_v2', [
+      'id' => $id,
+      'active_tab' => 3,
+      'rows' => $rows,
+      'table_columns' => $columns,
+      'table_list' => $table_list,
+      'limit' => $limit,
+      'orderby' => $orderby,
+    ]);
+  }
+
+  private function postStep3V2()
+  {
+    if (!config('module_generator.wizard_v2')) {
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+
+    $id = Request::input('id');
+    $row = DB::table('cms_moduls')->where('id', $id)->first();
+    if (!$row) {
+      return redirect()->back();
+    }
+    $path = app_path('Http/Controllers/' . $row->controller . '.php');
+    if (!file_exists($path)) {
+      return redirect()->back();
+    }
+
+    $payload = json_decode((string) Request::input('payload'), true);
+    if (!is_array($payload) || !isset($payload['rows']) || !is_array($payload['rows'])) {
+      return redirect()->back()->with(['message' => trans('crudbooster.mg_list_err_payload'), 'message_type' => 'warning']);
+    }
+
+    $contents = file_get_contents($path);
+    $existing = ModuleGeneratorList::readBlock($contents, 'COLUMNS');
+    $tableColumns = CRUDBooster::getTableColumns($row->table_name);
+    $knownTables = [];
+    foreach (CRUDBooster::listTables() as $tab) {
+      foreach ($tab as $value) {
+        $knownTables[] = $value;
+      }
+    }
+
+    try {
+      $cols = ModuleGeneratorList::buildColumns($payload['rows'], $existing, $tableColumns, $knownTables);
+    } catch (\InvalidArgumentException $e) {
+      list($key, $param) = array_pad(explode('|', $e->getMessage(), 2), 2, '');
+
+      return redirect()->back()->withInput()->with([
+        'message' => trans('crudbooster.' . $key, ['name' => $param]),
+        'message_type' => 'warning',
+      ]);
+    }
+
+    $new = ModuleGeneratorList::replaceColumnsBlock($contents, $cols);
+
+    // Limit e Order By (prima nel passo Configurazione): stesse proprieta'
+    // del blocco CONFIGURATION, aggiornate senza toccare le altre.
+    $config = [];
+    $limit = $payload['limit'] ?? '';
+    if ($limit !== '' && ctype_digit((string) $limit) && (int) $limit >= 1 && (int) $limit <= 1000) {
+      $config['limit'] = (string) (int) $limit;
+    }
+    $orderby = $payload['orderby'] ?? null;
+    if (is_string($orderby) && preg_match('/^([A-Za-z0-9_.]+,(asc|desc)(;[A-Za-z0-9_.]+,(asc|desc))*)?$/', $orderby)) {
+      $config['orderby'] = $orderby;
+    }
+    if ($config) {
+      $new = ModuleGeneratorList::mergeConfig($new, $config);
+    }
+
+    $this->backupControllerFile($path);
+    file_put_contents($path, $new);
+
+    $this->forgetWizardDraft($id, 3);
+    return redirect(Route('ModulsControllerGetStep4') . "/{$id}");
+  }
+
+  // Copia di sicurezza del controller prima di riscriverlo (ultime 20 per
+  // controller, in storage/app/module_generator_backups).
+  private function backupControllerFile($path)
+  {
+    $dir = storage_path('app/module_generator_backups');
+    if (!is_dir($dir)) {
+      @mkdir($dir, 0775, true);
+    }
+    $base = basename($path, '.php');
+    @copy($path, $dir . '/' . $base . '-' . date('Ymd-His') . '.php.bak');
+    $files = glob($dir . '/' . $base . '-*.php.bak') ?: [];
+    sort($files);
+    foreach (array_slice($files, 0, max(0, count($files) - 20)) as $oldFile) {
+      @unlink($oldFile);
+    }
+  }
+
   public function getStep4($id)
   {
     $this->cbLoader();
@@ -1028,6 +1683,12 @@ class ModulsController extends CBController
     }
     $active_tab = 4;
 
+    // Nuova interfaccia del passo Form (layout a blocchi, flag): vedi
+    // docs/refactoring/197.
+    if (config('module_generator.wizard_v2')) {
+      return $this->getStep4V2($id, $row);
+    }
+
     return view('crudbooster::module_generator.step4', compact('columns', 'cb_form', 'types', 'id', 'active_tab'));
   }
 
@@ -1049,6 +1710,11 @@ class ModulsController extends CBController
 
     $post = Request::all();
     $id = $post['id'];
+
+    // Nuova interfaccia: un solo campo "payload" (JSON) al posto degli array.
+    if (isset($post['payload'])) {
+      return $this->postStep4V2($post);
+    }
 
     $label = $post['label'];
     $name = $post['name'];
@@ -1167,6 +1833,7 @@ class ModulsController extends CBController
       eval($column_datas);
     }
     $data['active_tab'] = 5;
+    $data['wizard_v2'] = (bool) config('module_generator.wizard_v2');
 
     return view('crudbooster::module_generator.step5', $data);
   }
@@ -1242,6 +1909,8 @@ class ModulsController extends CBController
 
     // #RAMA sposta creazione tabella qui?
 
+    $this->forgetWizardDraft($id, 5);
+
     return redirect()->route('ModulsControllerGetIndex')->with(['message' => trans('crudbooster.alert_update_data_success'), 'message_type' => 'success']);
   }
 
@@ -1302,6 +1971,10 @@ class ModulsController extends CBController
       'col' => $instance->col,
       'form' => $instance->form,
     ];
+    // layout a blocchi del form (docs/refactoring/197): chiave opzionale, assente nei moduli senza layout
+    if (ModuleGeneratorLayout::isActive($instance->form_layout)) {
+      $export['form_layout'] = $instance->form_layout;
+    }
 
     $filename = ModuleHelper::sql_name_encode($row->table_name) . '_module_export.json';
 
@@ -1361,7 +2034,7 @@ class ModulsController extends CBController
     }
 
     $name = $data['module']['name'];
-    $icon = $data['module']['icon'] ?? 'fa fa-cube';
+    $icon = $data['module']['icon'] ?? 'bi bi-box';
     $table_name = ModuleHelper::sql_name_encode($data['table']['name']);
 
     if (DB::table('cms_moduls')->where('name', $name)->whereNull('deleted_at')->count()) {
@@ -1404,6 +2077,7 @@ class ModulsController extends CBController
 
     $this->writeImportedColumns($controller, $data['col'] ?? []);
     $this->writeImportedForm($controller, $data['form'] ?? []);
+    $this->writeImportedLayout($controller, $data['form_layout'] ?? null, $data['form'] ?? []);
     $this->writeImportedConfig($controller, $table_name, $data['config'] ?? []);
 
     return CRUDBooster::redirect(CRUDBooster::mainpath(), "Modulo \"{$name}\" importato con successo", 'success');
@@ -1521,6 +2195,24 @@ class ModulsController extends CBController
     );
   }
 
+  // Scrive il blocco FORM LAYOUT di un modulo importato (se il JSON lo
+  // contiene), dopo averlo ripulito con la stessa validazione del wizard:
+  // nomi che esistono nel form importato, posizioni nella griglia. Un layout
+  // non valido si scarta (il modulo resta con il form piatto).
+  private function writeImportedLayout($controller, $layout, array $form)
+  {
+    if (!is_array($layout)) {
+      return;
+    }
+    try {
+      $clean = ModuleGeneratorLayout::build($layout, $this->layoutPlaceableFields($form));
+    } catch (\InvalidArgumentException $e) {
+      return;
+    }
+    $path = app_path('Http/Controllers/' . $controller . '.php');
+    file_put_contents($path, ModuleGeneratorLayout::replaceLayoutBlock(file_get_contents($path), $clean));
+  }
+
   // Scrive il blocco configurazione, stessa whitelist di chiavi di
   // postStep5() (l'unica differenza: qui non c'e' un $post da cui leggere,
   // i valori arrivano gia' pronti dal JSON importato).
@@ -1601,7 +2293,7 @@ class ModulsController extends CBController
         'id' => DB::table('cms_menus')->max('id') + 1,
         'created_at' => date('Y-m-d H:i:s'),
         'name' => trans("crudbooster.text_default_add_new_module", ['module' => $this->arr['name']]),
-        'icon' => 'fa fa-plus',
+        'icon' => 'bi bi-plus-lg',
         'path' => $this->arr['controller'] . 'GetAdd',
         'type' => 'Route',
         'is_active' => 1,
@@ -1613,7 +2305,7 @@ class ModulsController extends CBController
         'id' => DB::table('cms_menus')->max('id') + 1,
         'created_at' => date('Y-m-d H:i:s'),
         'name' => trans("crudbooster.text_default_list_module", ['module' => $this->arr['name']]),
-        'icon' => 'fa fa-bars',
+        'icon' => 'bi bi-list',
         'path' => $this->arr['controller'] . 'GetIndex',
         'type' => 'Route',
         'is_active' => 1,
@@ -1775,6 +2467,25 @@ class ModulsController extends CBController
           case 'boolean':
             $column->type = 'boolean';
             break;
+          // tipi aggiuntivi, inviati solo dal passo Campi del wizard v2
+          case 'plaintext':
+            $column->type = 'text';
+            break;
+          case 'longtext':
+            $column->type = 'longText';
+            break;
+          case 'decimal':
+            $column->type = 'decimal';
+            break;
+          case 'date':
+            $column->type = 'date';
+            break;
+          case 'datetime':
+            $column->type = 'dateTime';
+            break;
+          case 'time':
+            $column->type = 'time';
+            break;
 
           default:
             $column->type = 'string';
@@ -1824,6 +2535,11 @@ class ModulsController extends CBController
           if ($type == 'integer') {
             //integer defaults to autoincrement without second parameter set to false if length is set as third attribute of the integer method
             $table->integer("{$columnname}")->length($dynamic_column->size)->nullable();
+          } elseif (in_array($type, ['text', 'longText', 'date', 'dateTime', 'time'], true)) {
+            $table->$type("{$columnname}")->nullable();
+          } elseif ($type == 'decimal') {
+            list($precision, $scale) = array_map('intval', explode(',', $dynamic_column->size . ',0'));
+            $table->decimal("{$columnname}", $precision, $scale)->nullable();
           } else {
             $table->$type("{$columnname}", "{$dynamic_column->size}")->nullable();
           }

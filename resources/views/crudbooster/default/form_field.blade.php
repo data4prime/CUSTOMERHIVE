@@ -1,0 +1,128 @@
+<?php
+
+// Disegna UN campo del form: calcola le variabili che i componenti dei tipi
+// si aspettano e include il componente. Corpo del loop che stava in
+// form_body.blade.php, estratto senza modifiche di comportamento (vedi
+// docs/refactoring/195).
+//
+// Riceve $form (la definizione del campo) e $index (la sua posizione); usa
+// dalle variabili condivise della vista: $row, $parent_field, $parent_id,
+// $forms. $header_group_class e' lo stato cumulativo tra un campo e il
+// successivo, calcolato dal chiamante (form_body) prima di includere questo
+// partial: qui si legge soltanto.
+
+  unset($value);
+  /*
+  * #RAMA add default value for group on mg_ for edit form
+  */
+  if($form['name']=='group' AND isset($row) AND isset($row->group)){
+    $form['default']=\App\Group::find($row->group)->name;
+  }
+
+  $name = $form['name'];
+  @$join = $form['join'];
+
+
+
+  if(isset($row->{$name})){
+    @$value = $row->{$name};
+  }
+  elseif(isset($form['value'])){
+    @$value = $form['value'];
+  }
+  else{
+    @$value = '';
+  }
+
+  $old = old($name);
+  $value = (! empty($old)) ? $old : $value;
+
+  $validation = array();
+  $validation_raw = isset($form['validation']) ? explode('|', $form['validation']) : array();
+  if ($validation_raw) {
+    foreach ($validation_raw as $vr) {
+      $vr_a = explode(':', $vr);
+      if (isset($vr_a[1]) && $vr_a[1]) {
+        $key = $vr_a[0];
+        $validation[$key] = $vr_a[1];
+      } else {
+        $validation[$vr] = TRUE;
+      }
+    }
+  }
+
+  if (isset($form['callback_php'])) {
+    @eval("\$value = ".$form['callback_php'].";");
+  }
+
+
+  if (isset($form['callback'])) {
+    $value = call_user_func($form['callback'], $row);
+  }
+
+  if ($join && @$row) {
+    $join_arr = explode(',', $join);
+    array_walk($join_arr, 'trim');
+    $join_table = $join_arr[0];
+    $join_title = $join_arr[1];
+    ${"join_query_".$join_table} = DB::table($join_table)->select($join_title)->where("id", $row->{'id_'.$join_table})->first();
+    //${"join_query_".$join_table} = DB::table($join_table)->select($join_title)->where("id", $row->{'id_'.$join_table})->first();
+    $value = @${"join_query_".$join_table}->{$join_title};
+  }
+  $form['type'] = (isset($form['type'])) ? $form['type']: 'text';
+  $type = isset($form['type']) ? $form['type'] : 'text';
+  $required = (isset($form['required']) && $form['required'] == true ) ? "required" : "";
+  $required = (@strpos($form['validation'], 'required') !== FALSE) ? "required" : $required;
+  $readonly = (@$form['readonly']) ? "readonly" : "";
+  $disabled = (@$form['disabled']) ? "disabled" : "";
+  $placeholder = (@$form['placeholder']) ? "placeholder='".$form['placeholder']."'" : "";
+  $col_width = @$form['width'] ?: "col-sm-9";
+
+  if ($parent_field == $name) {
+    $type = 'hidden';
+    $value = $parent_id;
+  }
+  ?>
+{{-- Box collassabile "System Information": si apre sul campo 'tenant' e si
+     aspetta di richiudersi su 'group' o 'primary_group' (nomi diversi usati
+     da moduli diversi per lo stesso concetto). Se un form ha 'tenant' ma
+     nessuno dei due, questi div restano aperti per il resto della pagina,
+     inglobando tutto cio' che segue (incluso il pulsante Save) in un
+     contenitore nascosto via CSS - bug reale scoperto e documentato in
+     docs/refactoring/103-fix-save-invisibile-profilo-utenti.md, che ha aggiunto
+     anche 'primary_group' qui sotto (mancava, causava il problema su
+     AdminCmsUsersController). --}}
+@if($name == 'tenant' && empty($no_system_box))
+<div class="row">
+  <div class="col-sm-12 col-md-12">
+    <div class="box box-info collapsed-box">
+      <div class="box-header mb-3 with-border">
+        <h3 class="box-title">
+          <strong>
+            <i class='bi bi-gear-wide-connected'></i> {{ trans('crudbooster.system_information') }}
+          </strong>
+        </h3>
+        <div class="box-tools float-end">
+          <!-- <span class="badge text-bg-info">0 righe</span> -->
+          <button type="button" class="btn btn-box-tool" data-widget="collapse">
+            <i class="bi bi-plus-lg"></i>
+          </button>
+        </div>
+      </div>
+      <div class="box-body no-padding">
+        @endif
+
+        @if(file_exists(resource_path('views/crudbooster/default/type_components/'.$type.'/component.blade.php')))
+
+        @include('crudbooster::default.type_components.'.$type.'.component')
+        @elseif(file_exists(resource_path('views/vendor/crudbooster/type_components/'.$type.'/component.blade.php')))
+        @include('vendor.crudbooster.type_components.'.$type.'.component')
+        @else
+        <p class='text-danger'>{{$type}} is not found in type component system</p><br />
+        @endif
+        @if(($name == 'group' || $name == 'primary_group') && empty($no_system_box))
+      </div>
+    </div>
+  </div>
+</div>
+@endif

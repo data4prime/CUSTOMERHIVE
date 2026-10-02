@@ -18,13 +18,13 @@
             }
             .sub li {
                 padding: 5px;
-                background: #eae9e8;
+                background: var(--ch-bg);
                 cursor: pointer;
                 display: block;
                 width: 180px;
             }
             .sub li:hover {
-                background: #ECF0F5;
+                background: var(--ch-bg);
             }
             .btn-drag {
                 cursor: move;
@@ -115,7 +115,7 @@
                 t.next("ul").remove();
                 if (!table) return false;
                 if (!v) return false;
-                t.after("<ul class='sub'><li><i class='fa fa-spin fa-spinner'></i> Loading...</li></ul>");
+                t.after("<ul class='sub'><li><i class='bi ch-spin bi-arrow-repeat'></i> Loading...</li></ul>");
                 $.get("{{CRUDBooster::mainpath('table-columns')}}/" + table, function (response) {
                     t.next("ul").remove();
                     var list = '';
@@ -132,7 +132,7 @@
                 var table = t.parent().parent().find('.join_table').val();
                 var v = t.val();
                 if (!table) return false;
-                t.after("<ul class='sub'><li><i class='fa fa-spin fa-spinner'></i> Loading...</li></ul>");
+                t.after("<ul class='sub'><li><i class='bi ch-spin bi-arrow-repeat'></i> Loading...</li></ul>");
                 $.get("{{CRUDBooster::mainpath('table-columns')}}/" + table, function (response) {
                     t.next("ul").remove();
                     var list = '';
@@ -199,7 +199,7 @@
         </script>
     @endpush
 
-    <div class="card  card-default">
+    <div class="card card-default">
         <div class="card-header mb-3 with-border">
             <h5 class="card-title">List settings</h5>
         </div>
@@ -269,10 +269,10 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='fa fa-plus'></i></a>
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='fa fa-trash'></i></a>
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='bi bi-plus-lg'></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='bi bi-trash-fill'></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-success btn-up"><i class='bi bi-arrow-up'></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-success btn-down"><i class='bi bi-arrow-down'></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -313,10 +313,10 @@
                             </select>
                         </td>
                         <td>
-                            <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='fa fa-plus'></i></a>
-                            <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='fa fa-trash'></i></a>
-                            <a href="javascript:void(0)" class="btn btn-sm btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
-                            <a href="javascript:void(0)" class="btn btn-sm btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='bi bi-plus-lg'></i></a>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='bi bi-trash-fill'></i></a>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-success btn-up"><i class='bi bi-arrow-up'></i></a>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-success btn-down"><i class='bi bi-arrow-down'></i></a>
                         </td>
                     </tr>
 
@@ -326,7 +326,7 @@
         </div>
         <div class="card-footer">
             <div align="right">
-                <button type="button" onclick="location.href='{{CRUDBooster::mainpath('step2').'/'.$id}}'" class="btn btn-default">&laquo; Back</button>
+                <button type="button" onclick="location.href='{{CRUDBooster::mainpath('step2').'/'.$id}}'" class="btn btn-secondary">&laquo; Back</button>
                 <input type="submit" class="btn btn-primary" value="Step 4 &raquo;">
             </div>
         </div>

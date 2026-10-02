@@ -136,14 +136,14 @@ $(function () {
     <div class="modal-content">
       <div class="modal-header" style="justify-content: space-between;">
         
-        <h4 class="modal-title"><i class='fa fa-cog'></i> Options</h4>
+        <h4 class="modal-title"><i class='bi bi-gear-fill'></i> Options</h4>
 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p>One fine body&hellip;</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn-save-option btn btn-primary">Save changes</button>
       </div>
     </div><!-- /.modal-content -->
@@ -193,10 +193,10 @@ $(function () {
               <input data-index="{{ $index }}" {{ ($form['type']=='boolean') ? 'disabled' : '' }} type='text' value='{{$form["size"]}}' placeholder="Number of characters for text or number of digits for numbers" class='form-control size' name='size[]' autocomplete="off"/>
             </td>
             <td>
-              <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='fa fa-plus'></i></a>
-              <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='fa fa-trash'></i></a>
-              <!-- <a href="javascript:void(0)" class="btn btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
-              <a href="javascript:void(0)" class="btn btn-success btn-down"><i class='fa fa-arrow-down'></i></a> -->
+              <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='bi bi-plus-lg'></i></a>
+              <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='bi bi-trash-fill'></i></a>
+              <!-- <a href="javascript:void(0)" class="btn btn-success btn-up"><i class='bi bi-arrow-up'></i></a>
+              <a href="javascript:void(0)" class="btn btn-success btn-down"><i class='bi bi-arrow-down'></i></a> -->
             </td>
           </tr>
           <?php $index++;?>
@@ -222,10 +222,10 @@ $(function () {
               <input data-index="{{ $index }}" type='text' placeholder="Number of characters for text or number of digits for numbers" class='form-control size' name='size[]' autocomplete="off"/>
             </td>
             <td>
-              <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='fa fa-plus'></i></a>
-              <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='fa fa-trash'></i></a>
-              <!-- <a href="javascript:void(0)" class="btn btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
-              <a href="javascript:void(0)" class="btn btn-success btn-down"><i class='fa fa-arrow-down'></i></a> -->
+              <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='bi bi-plus-lg'></i></a>
+              <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='bi bi-trash-fill'></i></a>
+              <!-- <a href="javascript:void(0)" class="btn btn-success btn-up"><i class='bi bi-arrow-up'></i></a>
+              <a href="javascript:void(0)" class="btn btn-success btn-down"><i class='bi bi-arrow-down'></i></a> -->
             </td>
           </tr>
 
@@ -234,8 +234,8 @@ $(function () {
     </div>
     <div class="card-footer">
 
-      <div class='pull-right'>
-        <button type="button" onclick="location.href='{{CRUDBooster::mainpath('step1').'/'.$id}}'" class="btn btn-default">&laquo; Back</button>
+      <div class='float-end'>
+        <button type="button" onclick="location.href='{{CRUDBooster::mainpath('step1').'/'.$id}}'" class="btn btn-secondary">&laquo; Back</button>
         <input type="submit" class="btn btn-primary" value="Step 3 &raquo;">
       </div>
     </div>

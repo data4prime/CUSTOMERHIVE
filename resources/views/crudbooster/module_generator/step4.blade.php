@@ -18,13 +18,13 @@
 }
 .sub li {
   padding: 5px;
-  background: #eae9e8;
+  background: var(--ch-bg);
   cursor: pointer;
   display: block;
   width: 180px;
 }
 .sub li:hover {
-  background: #ECF0F5;
+  background: var(--ch-bg);
 }
 </style>
 @endpush
@@ -160,7 +160,7 @@ $(function () {
       t.parent('tr').find('.option_area').empty();
       $.getJSON("{{CRUDBooster::mainpath('type-info')}}/" + v, function (data) {
         if (data.alert) {
-          t.parent('tr').find('.option_area').prepend("<div class='mg-opt-alert'><i class='fa fa-exclamation-triangle'></i><span>" + data.alert + "</span></div>");
+          t.parent('tr').find('.option_area').prepend("<div class='mg-opt-alert'><i class='bi bi-exclamation-triangle-fill'></i><span>" + data.alert + "</span></div>");
         }
         if (data.attribute.required) {
           $.each(data.attribute.required, function (key, val) {
@@ -310,14 +310,14 @@ $(function () {
     <div class="modal-content">
       <div class="modal-header" style="justify-content: space-between;">
         
-        <h4 class="modal-title"><i class='fa fa-cog'></i> Options</h4>
+        <h4 class="modal-title"><i class='bi bi-gear-fill'></i> Options</h4>
 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p>One fine body&hellip;</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn-save-option btn btn-primary">Save changes</button>
       </div>
     </div><!-- /.modal-content -->
@@ -369,7 +369,7 @@ $(function () {
               </select>
             </td>
             <td>
-              <a class='btn btn-sm btn-primary btn-options' href='javascript:;'><i class='fa fa-cog'></i> Options</a>
+              <a class='btn btn-sm btn-primary btn-options' href='javascript:;'><i class='bi bi-gear-fill'></i> Options</a>
               <div class='option_area' style="display: none">
                 <?php
                 $type = isset($form["type"]) ? $form["type"] : "text";
@@ -381,7 +381,7 @@ $(function () {
 
                   @if(isset($types->alert))
                   <div class="mg-opt-alert">
-                    <i class="fa fa-exclamation-triangle"></i>
+                    <i class="bi bi-exclamation-triangle-fill"></i>
                     <span>{!! $types->alert !!}</span>
                   </div>
                   @endif
@@ -458,10 +458,10 @@ $(function () {
                       </div>
                     </td>
                     <td>
-                      <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='fa fa-plus'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='fa fa-trash'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='bi bi-plus-lg'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='bi bi-trash-fill'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-up"><i class='bi bi-arrow-up'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-down"><i class='bi bi-arrow-down'></i></a>
                     </td>
                   </tr>
                   <?php $index++;?>
@@ -488,16 +488,16 @@ $(function () {
                       </select>
                     </td>
                     <td>
-                      <a class='btn btn-sm btn-primary btn-options' href='#'><i class='fa fa-cog'></i> Options</a>
+                      <a class='btn btn-sm btn-primary btn-options' href='#'><i class='bi bi-gear-fill'></i> Options</a>
                       <div class='option_area' style="display: none">
 
                       </div>
                     </td>
                     <td>
-                      <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='fa fa-plus'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='fa fa-trash'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-up"><i class='fa fa-arrow-up'></i></a>
-                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-down"><i class='fa fa-arrow-down'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-info btn-plus"><i class='bi bi-plus-lg'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-danger btn-delete"><i class='bi bi-trash-fill'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-up"><i class='bi bi-arrow-up'></i></a>
+                      <a href="javascript:void(0)" class="btn btn-sm btn-success btn-down"><i class='bi bi-arrow-down'></i></a>
                     </td>
                   </tr>
                 </tbody>
@@ -505,7 +505,7 @@ $(function () {
             </div>
             <div class="card-footer">
               <div align="right">
-                <button type="button" onclick="location.href='{{CRUDBooster::mainpath('step3').'/'.$id}}'" class="btn btn-default">&laquo; Back</button>
+                <button type="button" onclick="location.href='{{CRUDBooster::mainpath('step3').'/'.$id}}'" class="btn btn-secondary">&laquo; Back</button>
                 <input type="submit" class="btn btn-primary" value="Step 5 &raquo;">
               </div>
             </div>

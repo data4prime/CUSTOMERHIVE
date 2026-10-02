@@ -82,8 +82,7 @@
                 <label for="">Icon</label>
                 <select name="icon" id="icon" required class="select2 form-control">
                     @foreach($fontawesome as $f)
-                    <option {{(isset($row->icon) && $row->icon == 'fa fa-'.$f)?"selected":""}} value="fa
-                        fa-{{$f}}">{{$f}}</option>
+                    <option {{ (isset($row->icon) && \App\Helpers\IconMap::toBi($row->icon) == 'bi bi-'.$f) ? 'selected' : '' }} value="bi bi-{{$f}}">{{$f}}</option>
                     @endforeach
                 </select>
             </div>-->
@@ -119,8 +118,7 @@
 
                 <select name="icon" id="icon" required class="select2-icon form-control">
                     @foreach($fontawesome as $f)
-                    <option {{(isset($row->icon) && $row->icon == 'fa fa-'.$f)?"selected":""}} value="fa
-                        fa-{{$f}}">{{$f}}</option>
+                    <option {{ (isset($row->icon) && \App\Helpers\IconMap::toBi($row->icon) == 'bi bi-'.$f) ? 'selected' : '' }} value="bi bi-{{$f}}">{{$f}}</option>
                     @endforeach
                 </select>
                 </div>
@@ -149,8 +147,8 @@
     <div class="card-footer">
 
 
-        <div class='pull-right'>
-            <a class='btn btn-default' href='{{Route("ModulsControllerGetIndex")}}'>
+        <div class='float-end'>
+            <a class='btn btn-secondary' href='{{Route("ModulsControllerGetIndex")}}'>
                 {{trans('crudbooster.button_back')}}</a>
             <input type="submit" class="btn btn-primary" value="Step 2 &raquo;">
         </div>
