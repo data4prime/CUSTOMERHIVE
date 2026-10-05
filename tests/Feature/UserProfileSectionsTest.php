@@ -293,8 +293,25 @@ class UserProfileSectionsTest extends TestCase
         $this->assertSame(0, DB::table('mfa_email_otp_codes')->where('user_id', $actor['userId'])->count());
     }
 
+    public function test_cambio_password_senza_totp_e_senza_smtp_salva_subito_con_la_sola_password(): void
+    {
+        $actor = $this->actingAsSuperadmin();
+
+        $this->postJson($this->url('profile-password-start'), [
+            'current_password' => 'password-corretta-123',
+            'password' => self::NEW_PASSWORD,
+            'password_confirmation' => self::NEW_PASSWORD,
+        ])->assertStatus(200)->assertJson(['ok' => true, 'changed' => true]);
+
+        $after = DB::table('cms_users')->where('id', $actor['userId'])->first();
+        $this->assertTrue(Hash::check(self::NEW_PASSWORD, $after->password));
+        $this->assertSame(1, (int) $after->session_version);
+        $this->assertSame(0, DB::table('mfa_email_otp_codes')->where('user_id', $actor['userId'])->count());
+    }
+
     public function test_cambio_password_completo_salva_hash_e_chiude_le_altre_sessioni(): void
     {
+        $this->smtpConfigurato();
         $actor = $this->actingAsSuperadmin();
 
         $this->postJson($this->url('profile-password-start'), [
