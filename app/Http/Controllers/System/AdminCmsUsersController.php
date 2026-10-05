@@ -714,8 +714,10 @@ class AdminCmsUsersController extends CBController
 
 	/**
 	 * Cambio password, passo 1: password attuale + nuova (policy NIST, vedi
-	 * not_common_password in AppServiceProvider). Poi codice di verifica: il
-	 * TOTP se l'utente ce l'ha attivo, altrimenti email OTP al suo indirizzo.
+	 * not_common_password in AppServiceProvider). Poi la verifica dipende da
+	 * MfaHelper::emailChangeMode(): 'totp' (codice dell'app), 'email' (codice
+	 * al suo indirizzo attuale) oppure 'none' (niente TOTP e SMTP non
+	 * configurato: la password viene salvata subito, basta quella attuale).
 	 * In sessione resta solo l'hash della nuova password, mai il testo.
 	 */
 	public function postProfilePasswordStart()
@@ -751,7 +753,13 @@ class AdminCmsUsersController extends CBController
 
 		$this->profileTooManyAttempts('password-start', $user->id, true);
 
-		$method = MfaHelper::hasActiveTotp($user) ? 'totp' : 'email';
+		// Stessa logica del cambio email: TOTP se attivo, altrimenti email OTP
+		// se SMTP e' configurato, altrimenti basta la password attuale.
+		$method = MfaHelper::emailChangeMode($user);
+
+		if ($method === 'none') {
+			return $this->applyProfilePasswordChange($user, \Hash::make((string) Request::input('password')), false);
+		}
 
 		if ($method === 'email') {
 			MfaHelper::invalidateEmailOtpCodes($user);
@@ -806,15 +814,25 @@ class AdminCmsUsersController extends CBController
 			return $this->profileResponse(false, trans('crudbooster.profile_otp_wrong'), [], 422);
 		}
 
-		DB::table('cms_users')->where('id', $user->id)->update(['password' => $pending['hash']]);
+		return $this->applyProfilePasswordChange($user, $pending['hash'], true);
+	}
+
+	/**
+	 * Salva l'hash e chiude le altre sessioni. Usato sia a verifica completata
+	 * (passo 2) sia, senza TOTP ne' SMTP, subito dal passo 1 ($verified =
+	 * false, tracciato nel log).
+	 */
+	private function applyProfilePasswordChange($user, string $hash, bool $verified)
+	{
+		DB::table('cms_users')->where('id', $user->id)->update(['password' => $hash]);
 
 		Session::put('admin_session_version', MfaHelper::bumpSessionVersion($user->id));
 		Session::forget('profile_pending_password');
 		RateLimiter::clear('profile-password-verify:' . $user->id);
 
-		CRUDBooster::insertLog(trans('crudbooster.log_profile_password_changed', ['email' => $user->email, 'ip' => Request::server('REMOTE_ADDR')]));
+		CRUDBooster::insertLog(trans($verified ? 'crudbooster.log_profile_password_changed' : 'crudbooster.log_profile_password_changed_unverified', ['email' => $user->email, 'ip' => Request::server('REMOTE_ADDR')]));
 
-		return $this->profileResponse(true, trans('crudbooster.profile_password_changed'));
+		return $this->profileResponse(true, trans('crudbooster.profile_password_changed'), ['changed' => true]);
 	}
 
 	/**

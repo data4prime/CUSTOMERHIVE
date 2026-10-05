@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 217**
+**Prossimo numero libero: 219**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,7 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [218](218-cambio-password-modalita-totp-email-none.md) | **Cambio password con le stesse modalità del cambio email** (totp / email / none): senza TOTP e senza SMTP basta la password attuale | Auth / Profilo | Completato | 2026-10-05 |
 | [216](216-select2-info-json-datatable-orig.md) | **`select2/info.json`: documentato `datatable_orig`**, rimosso il residuo `info_.json` (con `datatable_exception`, che nessun file legge); il passo 4 del module generator mostra un'opzione in più | Module generator | Completato | 2026-10-02 |
 | [215](215-datamodal-relazioni-consolidamento.md) | **Consolidamento dei sette `*_datamodal` delle relazioni**: campo+modale e tabella del popup in `default/datamodal_relation/`, i tipi tengono solo la propria query; `getModalData` con whitelist al posto dello `switch`; ~1000 righe in meno | Frontend | Completato | 2026-10-02 |
 | [214](214-datamodal-relazioni-select-to-intero.md) | **SQL injection in `select_to` dei popup `*_datamodal`**: il valore finiva concatenato in `whereRaw` nei sette `browser.blade.php`, ora `(int)` | Sicurezza | Completato | 2026-10-02 |

@@ -822,6 +822,7 @@ return [
     "log_profile_email_changed" => 'Email changed from :old to :new (IP :ip)',
     "log_profile_email_changed_unverified" => 'Email changed from :old to :new without a verification code, no TOTP and SMTP not configured (IP :ip)',
     "log_profile_password_changed" => 'Password changed by :email (IP :ip)',
+    "log_profile_password_changed_unverified" => 'Password changed by :email without a verification code, no TOTP and SMTP not configured (IP :ip)',
     "log_user_reset_password_link" => 'Password reset link sent to :email by :by (IP :ip)',
 
     // Statistic builder: import (copy) a widget from another dashboard

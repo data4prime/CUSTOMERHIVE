@@ -317,7 +317,7 @@
             </div>
           </div>
           <div class="ch-actions" id="ch-pwd-step1-actions">
-            <button type="submit" class="btn btn-primary">{{ trans('crudbooster.profile_password_send_code') }}</button>
+            <button type="submit" class="btn btn-primary">{{ trans('crudbooster.' . (\App\Helpers\MfaHelper::emailChangeMode(\App\Helpers\UserHelper::me()) === 'none' ? 'profile_password_confirm_button' : 'profile_password_send_code')) }}</button>
           </div>
         </form>
 
@@ -709,7 +709,10 @@
     post(pwdForm.action, new FormData(pwdForm)).then(function (res) {
       busy(btn, false);
       flash(pwdPane, res.ok, res.message);
-      if (res.ok) {
+      if (res.ok && res.changed) {
+        // Niente TOTP e SMTP non configurato: password gia' cambiata, nessun codice.
+        pwdReset();
+      } else if (res.ok) {
         document.getElementById('ch-pwd-code-label').textContent = res.method === 'totp' ? T.codeLabelTotp : T.codeLabelEmail;
         pwdLock(true);
       }
