@@ -3,19 +3,27 @@
 namespace App\Helpers;
 
 /**
- * Logica pura del layout del form a blocchi e schede (docs/refactoring/197).
+ * Logica pura del layout del form a schede, blocchi e campi (docs/refactoring/197,
+ * riorganizzato in schede -> blocchi -> campi dall'intervento 219).
  *
  * Il layout e' un array scritto nel controller del modulo, in un blocco
  * separato da quello dei campi:
  *
  *   # START FORM LAYOUT DO NOT REMOVE THIS LINE
- *   $this->form_layout = ['v' => 1, 'blocks' => [
- *       ['id' => 'b1', 'kind' => 'block', 'title' => '...', 'x' => 0, 'y' => 0, 'w' => 8, 'h' => 5,
- *        'fields' => [['name' => 'nome', 'w' => 6], ['name' => 'created_at', 'w' => 6, 'sys' => 1]]],
- *       ['id' => 'b2', 'kind' => 'tabs', 'x' => 0, 'y' => 5, 'w' => 12, 'h' => 4,
- *        'tabs' => [['id' => 't1', 'title' => '...', 'fields' => [...]]]],
+ *   $this->form_layout = ['v' => 2, 'tabs' => [
+ *       ['id' => 't1', 'title' => 'Dati', 'blocks' => [
+ *           ['id' => 'b1', 'title' => '...', 'x' => 0, 'y' => 0, 'w' => 8, 'h' => 5,
+ *            'fields' => [['name' => 'nome', 'w' => 6], ['name' => 'created_at', 'w' => 6, 'sys' => 1]]],
+ *       ]],
  *   ]];
  *   # END FORM LAYOUT DO NOT REMOVE THIS LINE
+ *
+ * Le schede stanno in alto (navigazione orizzontale), i blocchi sono su una
+ * griglia a 12 colonne dentro la scheda, i campi dentro i blocchi.
+ *
+ * Il vecchio formato v1 (['v' => 1, 'blocks' => [...]], con blocchi di tipo
+ * 'tabs') resta leggibile: normalize() lo converte al volo, senza riscrivere
+ * i controller gia' generati.
  *
  * Senza questo blocco il form e' disegnato come sempre (elenco piatto).
  */
@@ -37,37 +45,107 @@ class ModuleGeneratorLayout
     /*  Lettura                                                             */
     /* ------------------------------------------------------------------ */
 
-    public static function isActive($layout): bool
+    /**
+     * Layout nel formato corrente (schede -> blocchi). Il formato v1 viene
+     * convertito: i blocchi semplici finiscono in un'unica scheda, ogni scheda
+     * di un vecchio blocco "schede" diventa un blocco a se' impilato in fondo.
+     */
+    public static function normalize($layout): array
     {
-        return is_array($layout) && !empty($layout['blocks']) && is_array($layout['blocks']);
-    }
-
-    /** Tutti gli elementi campo di un blocco (o di una scheda) nell'ordine del layout. */
-    public static function blockItems(array $block): array
-    {
-        if (($block['kind'] ?? 'block') === 'tabs') {
-            $items = [];
-            foreach ((array) ($block['tabs'] ?? []) as $tab) {
-                foreach ((array) ($tab['fields'] ?? []) as $it) {
-                    $items[] = $it;
+        if (!is_array($layout)) {
+            return ['v' => 2, 'tabs' => []];
+        }
+        if (isset($layout['tabs']) && is_array($layout['tabs'])) {
+            $tabs = [];
+            foreach ($layout['tabs'] as $t) {
+                if (is_array($t)) {
+                    $t['blocks'] = array_values(array_filter((array) ($t['blocks'] ?? []), 'is_array'));
+                    $tabs[] = $t;
                 }
             }
 
-            return $items;
+            return ['v' => 2, 'tabs' => $tabs];
+        }
+        if (empty($layout['blocks']) || !is_array($layout['blocks'])) {
+            return ['v' => 2, 'tabs' => []];
         }
 
-        return (array) ($block['fields'] ?? []);
+        $blocks = [];
+        $bottom = 0;
+        foreach ($layout['blocks'] as $b) {
+            if (is_array($b)) {
+                $bottom = max($bottom, (int) ($b['y'] ?? 0) + max(1, (int) ($b['h'] ?? 1)));
+            }
+        }
+        foreach ($layout['blocks'] as $b) {
+            if (!is_array($b)) {
+                continue;
+            }
+            if (($b['kind'] ?? 'block') === 'tabs') {
+                foreach ((array) ($b['tabs'] ?? []) as $t) {
+                    $h = max(1, (int) ($b['h'] ?? 3));
+                    $blocks[] = ['title' => (string) ($t['title'] ?? ''), 'x' => 0, 'y' => $bottom, 'w' => 12, 'h' => $h, 'fields' => array_values((array) ($t['fields'] ?? []))];
+                    $bottom += $h;
+                }
+            } else {
+                $blocks[] = ['title' => (string) ($b['title'] ?? ''), 'x' => (int) ($b['x'] ?? 0), 'y' => (int) ($b['y'] ?? 0), 'w' => (int) ($b['w'] ?? 12), 'h' => (int) ($b['h'] ?? 3), 'fields' => array_values((array) ($b['fields'] ?? []))];
+            }
+        }
+        foreach ($blocks as $i => &$blk) {
+            $blk['id'] = 'b' . ($i + 1);
+        }
+        unset($blk);
+
+        return ['v' => 2, 'tabs' => $blocks ? [['id' => 't1', 'title' => '', 'blocks' => $blocks]] : []];
+    }
+
+    public static function isActive($layout): bool
+    {
+        return (bool) self::normalize($layout)['tabs'];
+    }
+
+    /** Schede del layout, ciascuna con i propri blocchi. */
+    public static function tabs($layout): array
+    {
+        return self::normalize($layout)['tabs'];
+    }
+
+    /**
+     * Posizione della scheda "Sistema" gia' presente nel layout (titolo "Sistema"
+     * o "System", senza distinzione di maiuscole), o null. Tenant e gruppo non
+     * posizionati vanno li' (intervento 238) invece che in un riquadro in fondo.
+     */
+    public static function systemTabIndex(array $tabs): ?int
+    {
+        foreach (array_values($tabs) as $i => $t) {
+            $title = mb_strtolower(trim((string) ($t['title'] ?? '')));
+            if ($title === 'sistema' || $title === 'system') {
+                return $i;
+            }
+        }
+
+        return null;
+    }
+
+    /** Tutti i blocchi di tutte le schede, nell'ordine del layout. */
+    public static function allBlocks($layout): array
+    {
+        $out = [];
+        foreach (self::tabs($layout) as $t) {
+            foreach ((array) ($t['blocks'] ?? []) as $b) {
+                $out[] = $b;
+            }
+        }
+
+        return $out;
     }
 
     /** Nomi dei campi del form posizionati nel layout (esclusi gli elementi di sistema in sola lettura). */
     public static function placedNames($layout): array
     {
         $names = [];
-        if (!self::isActive($layout)) {
-            return $names;
-        }
-        foreach ($layout['blocks'] as $b) {
-            foreach (self::blockItems($b) as $it) {
+        foreach (self::allBlocks($layout) as $b) {
+            foreach ((array) ($b['fields'] ?? []) as $it) {
                 if (empty($it['sys']) && isset($it['name'])) {
                     $names[] = (string) $it['name'];
                 }
@@ -78,16 +156,14 @@ class ModuleGeneratorLayout
     }
 
     /**
-     * Blocchi ordinati per posizione (y, poi x), ciascuno con 'row_start' e
-     * 'row_span' per la griglia CSS: le righe sono i valori distinti di y;
-     * un blocco alto occupa tutte le righe che iniziano dentro la sua altezza.
+     * Blocchi di UNA scheda ordinati per posizione (y, poi x), ciascuno con
+     * 'row_start' e 'row_span' per la griglia CSS: le righe sono i valori
+     * distinti di y; un blocco alto occupa tutte le righe che iniziano dentro
+     * la sua altezza.
      */
-    public static function sortedBlocks($layout): array
+    public static function sortedBlocks(array $blocks): array
     {
-        if (!self::isActive($layout)) {
-            return [];
-        }
-        $blocks = array_values($layout['blocks']);
+        $blocks = array_values($blocks);
         usort($blocks, function ($a, $b) {
             return [(int) ($a['y'] ?? 0), (int) ($a['x'] ?? 0)] <=> [(int) ($b['y'] ?? 0), (int) ($b['x'] ?? 0)];
         });
@@ -146,9 +222,9 @@ class ModuleGeneratorLayout
 
     /**
      * Elenco ordinato per la vista dettaglio: i campi seguono il layout
-     * (blocchi per posizione), con righe di intestazione per titoli di blocco
-     * e di scheda e righe 'sys' per le colonne di sistema. In coda: i campi
-     * non posizionati rimasti (tenant/group, hidden).
+     * (schede, poi blocchi per posizione), con righe di intestazione per titoli
+     * di scheda e di blocco e righe 'sys' per le colonne di sistema. In coda: i
+     * campi non posizionati rimasti (tenant/group, hidden).
      */
     public static function detailOrder(array $forms, $layout): array
     {
@@ -176,15 +252,11 @@ class ModuleGeneratorLayout
                 }
             }
         };
-        foreach (self::sortedBlocks($layout) as $b) {
-            if (($b['kind'] ?? 'block') === 'tabs') {
-                foreach ((array) ($b['tabs'] ?? []) as $tab) {
-                    if (!empty($tab['title'])) {
-                        $out[] = ['__heading' => (string) $tab['title']];
-                    }
-                    $emit((array) ($tab['fields'] ?? []));
-                }
-            } else {
+        foreach (self::tabs($layout) as $tab) {
+            if (!empty($tab['title'])) {
+                $out[] = ['__heading' => (string) $tab['title']];
+            }
+            foreach (self::sortedBlocks((array) ($tab['blocks'] ?? [])) as $b) {
                 if (!empty($b['title'])) {
                     $out[] = ['__heading' => (string) $b['title']];
                 }
@@ -231,7 +303,7 @@ class ModuleGeneratorLayout
     /*  Costruzione e modifica                                              */
     /* ------------------------------------------------------------------ */
 
-    /** Layout iniziale: un solo blocco a tutta larghezza con tutti i campi, uno per riga. */
+    /** Layout iniziale: una scheda con un solo blocco a tutta larghezza con tutti i campi, uno per riga. */
     public static function defaultLayout(array $names, string $title): array
     {
         $fields = [];
@@ -239,34 +311,37 @@ class ModuleGeneratorLayout
             $fields[] = ['name' => $n, 'w' => 12];
         }
 
-        return ['v' => 1, 'blocks' => [['id' => 'b1', 'kind' => 'block', 'title' => $title, 'x' => 0, 'y' => 0, 'w' => 12, 'h' => max(3, 2 + count($names)), 'fields' => $fields]]];
+        return ['v' => 2, 'tabs' => [['id' => 't1', 'title' => '', 'blocks' => [
+            ['id' => 'b1', 'title' => $title, 'x' => 0, 'y' => 0, 'w' => 12, 'h' => max(3, 2 + count($names)), 'fields' => $fields],
+        ]]]];
     }
 
-    /** Aggiunge in coda al primo blocco (non a schede) i campi indicati; se manca crea un blocco. */
+    /** Aggiunge in coda al primo blocco i campi indicati; se manca crea un blocco (e una scheda). */
     public static function appendFields(array $layout, array $names, string $newTitle): array
     {
         if (!$names) {
             return $layout;
         }
-        $idx = null;
-        foreach ($layout['blocks'] as $i => $b) {
-            if (($b['kind'] ?? 'block') !== 'tabs') {
-                $idx = $i;
+        $layout = self::normalize($layout);
+        if (!$layout['tabs']) {
+            $layout['tabs'][] = ['id' => 't1', 'title' => '', 'blocks' => []];
+        }
+        $ti = 0;
+        foreach ($layout['tabs'] as $i => $t) {
+            if (!empty($t['blocks'])) {
+                $ti = $i;
                 break;
             }
         }
-        if ($idx === null) {
-            $bottom = 0;
-            foreach ($layout['blocks'] as $b) {
-                $bottom = max($bottom, (int) ($b['y'] ?? 0) + (int) ($b['h'] ?? 1));
-            }
-            $layout['blocks'][] = ['id' => self::nextId($layout, 'b'), 'kind' => 'block', 'title' => $newTitle, 'x' => 0, 'y' => $bottom, 'w' => 12, 'h' => 3, 'fields' => []];
-            $idx = count($layout['blocks']) - 1;
+        if (empty($layout['tabs'][$ti]['blocks'])) {
+            $layout['tabs'][$ti]['blocks'][] = ['id' => self::nextBlockId($layout), 'title' => $newTitle, 'x' => 0, 'y' => 0, 'w' => 12, 'h' => 3, 'fields' => []];
         }
+        $blocks = &$layout['tabs'][$ti]['blocks'];
         foreach ($names as $n) {
-            $layout['blocks'][$idx]['fields'][] = ['name' => $n, 'w' => 12];
+            $blocks[0]['fields'][] = ['name' => $n, 'w' => 12];
         }
-        $layout['blocks'][$idx]['h'] = max((int) ($layout['blocks'][$idx]['h'] ?? 3), 2 + count($layout['blocks'][$idx]['fields']));
+        $blocks[0]['h'] = max((int) ($blocks[0]['h'] ?? 3), 2 + count($blocks[0]['fields']));
+        unset($blocks);
 
         return $layout;
     }
@@ -275,43 +350,38 @@ class ModuleGeneratorLayout
     public static function dropFields(array $layout, array $names): array
     {
         $drop = array_flip($names);
-        $clean = function (array $items) use ($drop) {
-            return array_values(array_filter($items, function ($it) use ($drop) {
-                return !empty($it['sys']) || !isset($drop[$it['name'] ?? '']);
-            }));
-        };
-        foreach ($layout['blocks'] as &$b) {
-            if (($b['kind'] ?? 'block') === 'tabs') {
-                foreach ($b['tabs'] as &$t) {
-                    $t['fields'] = $clean((array) ($t['fields'] ?? []));
-                }
-                unset($t);
-            } else {
-                $b['fields'] = $clean((array) ($b['fields'] ?? []));
+        $layout = self::normalize($layout);
+        foreach ($layout['tabs'] as &$t) {
+            foreach ($t['blocks'] as &$b) {
+                $b['fields'] = array_values(array_filter((array) ($b['fields'] ?? []), function ($it) use ($drop) {
+                    return !empty($it['sys']) || !isset($drop[$it['name'] ?? '']);
+                }));
             }
+            unset($b);
         }
-        unset($b);
+        unset($t);
 
         return $layout;
     }
 
-    private static function nextId(array $layout, string $prefix): string
+    private static function nextBlockId(array $layout): string
     {
         $n = 1;
         $ids = [];
-        foreach ($layout['blocks'] as $b) {
+        foreach (self::allBlocks($layout) as $b) {
             $ids[$b['id'] ?? ''] = true;
         }
-        while (isset($ids[$prefix . $n])) {
+        while (isset($ids['b' . $n])) {
             $n++;
         }
 
-        return $prefix . $n;
+        return 'b' . $n;
     }
 
     /**
      * Valida il layout inviato dall'editor e lo restituisce pulito (id
-     * rigenerati, posizioni limitate alla griglia). Lancia
+     * rigenerati, posizioni limitate alla griglia). Accetta anche il vecchio
+     * formato a blocchi (import di export precedenti). Lancia
      * InvalidArgumentException con una chiave di traduzione ("mg_lay_err_...",
      * opzionalmente "chiave|parametro").
      *
@@ -319,13 +389,22 @@ class ModuleGeneratorLayout
      */
     public static function build(array $payload, array $fields): array
     {
-        if (!isset($payload['blocks']) || !is_array($payload['blocks']) || count($payload['blocks']) > 60) {
+        $isLegacy = !isset($payload['tabs']) && isset($payload['blocks']);
+        if (!$isLegacy && (!isset($payload['tabs']) || !is_array($payload['tabs']))) {
             throw new \InvalidArgumentException('mg_lay_err_structure');
         }
+        $source = self::normalize($payload)['tabs'];
+        if (count($source) > 12 || ($isLegacy && !is_array($payload['blocks'])) || ($isLegacy && count($payload['blocks']) > 60)) {
+            throw new \InvalidArgumentException('mg_lay_err_structure');
+        }
+        if (!$source && !$fields) {
+            return ['v' => 2, 'tabs' => []];
+        }
+
         $seen = [];
-        $blocks = [];
-        $bn = 0;
+        $tabs = [];
         $tn = 0;
+        $bn = 0;
 
         $cleanItems = function ($items) use (&$seen, $fields) {
             if (!is_array($items) || count($items) > 200) {
@@ -354,31 +433,25 @@ class ModuleGeneratorLayout
             return $out;
         };
 
-        foreach ($payload['blocks'] as $b) {
-            if (!is_array($b)) {
+        foreach ($source as $t) {
+            if (!is_array($t) || !isset($t['blocks']) || !is_array($t['blocks']) || count($t['blocks']) > 60) {
                 throw new \InvalidArgumentException('mg_lay_err_structure');
             }
-            $kind = ($b['kind'] ?? '') === 'tabs' ? 'tabs' : 'block';
-            $x = max(0, min(11, (int) ($b['x'] ?? 0)));
-            $block = [
-                'id' => 'b' . (++$bn), 'kind' => $kind,
-                'x' => $x, 'y' => max(0, min(500, (int) ($b['y'] ?? 0))),
-                'w' => max(1, min(12 - $x, (int) ($b['w'] ?? 12))), 'h' => max(1, min(100, (int) ($b['h'] ?? 3))),
-            ];
-            if ($kind === 'tabs') {
-                $tabs = [];
-                if (!isset($b['tabs']) || !is_array($b['tabs']) || !$b['tabs'] || count($b['tabs']) > 12) {
+            $blocks = [];
+            foreach ($t['blocks'] as $b) {
+                if (!is_array($b)) {
                     throw new \InvalidArgumentException('mg_lay_err_structure');
                 }
-                foreach ($b['tabs'] as $t) {
-                    $tabs[] = ['id' => 't' . (++$tn), 'title' => mb_substr(trim((string) ($t['title'] ?? '')), 0, 60), 'fields' => $cleanItems($t['fields'] ?? [])];
-                }
-                $block['tabs'] = $tabs;
-            } else {
-                $block['title'] = mb_substr(trim((string) ($b['title'] ?? '')), 0, 120);
-                $block['fields'] = $cleanItems($b['fields'] ?? []);
+                $x = max(0, min(11, (int) ($b['x'] ?? 0)));
+                $blocks[] = [
+                    'id' => 'b' . (++$bn),
+                    'title' => mb_substr(trim((string) ($b['title'] ?? '')), 0, 120),
+                    'x' => $x, 'y' => max(0, min(500, (int) ($b['y'] ?? 0))),
+                    'w' => max(1, min(12 - $x, (int) ($b['w'] ?? 12))), 'h' => max(1, min(100, (int) ($b['h'] ?? 3))),
+                    'fields' => $cleanItems($b['fields'] ?? []),
+                ];
             }
-            $blocks[] = $block;
+            $tabs[] = ['id' => 't' . (++$tn), 'title' => mb_substr(trim((string) ($t['title'] ?? '')), 0, 60), 'blocks' => $blocks];
         }
 
         $placed = [];
@@ -396,7 +469,7 @@ class ModuleGeneratorLayout
             throw new \InvalidArgumentException('mg_lay_err_empty');
         }
 
-        return ['v' => 1, 'blocks' => $blocks];
+        return ['v' => 2, 'tabs' => $tabs];
     }
 
     /* ------------------------------------------------------------------ */

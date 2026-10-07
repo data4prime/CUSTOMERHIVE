@@ -48,7 +48,7 @@ $user_location = resource_path('views/vendor/crudbooster/type_components/'.$type
 @if($containTR)
 @include('crudbooster::default.type_components.'.$type.'.component_detail')
 @else
-<tr>
+<tr data-field="{{ $name }}"{!! !empty($form['detail_half']) ? ' class="dt-half"' : '' !!}>
     <td>{{$form['label']}}</td>
     <td>@include('crudbooster::default.type_components.'.$type.'.component_detail')</td>
 </tr>
@@ -58,7 +58,7 @@ $user_location = resource_path('views/vendor/crudbooster/type_components/'.$type
 @if($containTR)
 @include('vendor.crudbooster.type_components.'.$type.'.component_detail')
 @else
-<tr>
+<tr data-field="{{ $name }}"{!! !empty($form['detail_half']) ? ' class="dt-half"' : '' !!}>
     <td>{{$form['label']}}</td>
     <td>@include('vendor.crudbooster.type_components.'.$type.'.component_detail')</td>
 </tr>

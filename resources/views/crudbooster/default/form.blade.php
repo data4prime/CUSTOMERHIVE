@@ -2,7 +2,13 @@
 @section('content')
 <div>
 
-  @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel)
+  {{-- Intestazione propria del modulo (es. utenti, intervento 232): sostituisce
+       il link "torna all'elenco" e il titolo nella card. --}}
+  @if(!empty($flat_form_header))
+  @include($flat_form_header)
+  @endif
+
+  @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel && empty($flat_form_header))
   @if(g('return_url'))
   <p>
     <a title='Return' href='{{g("return_url")}}'>
@@ -20,12 +26,14 @@
   @endif
   @endif
 
-  <div class="card card-default">
+  <div class="{{ !empty($flat_form_header) ? 'flat-form' : 'card card-default' }}">
+    @if(empty($flat_form_header))
     <div class="card-header">
       <strong>
         <i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! $page_title !!}
       </strong>
     </div>
+    @endif
 
     <div class="card-body" style="padding:20px 0px 0px 0px">
       <?php
@@ -40,7 +48,8 @@
         @if($hide_form)
         <input type="hidden" name="hide_form" value='{!! serialize($hide_form) !!}'>
         @endif
-        <div class="box-body" id="parent-form-area">
+        {{-- Con l'intestazione propria e senza schede/blocchi, i campi stanno in una card (intervento 232) --}}
+        <div class="box-body {{ (!empty($flat_form_header) && !\App\Helpers\ModuleGeneratorLayout::isActive(isset($form_layout) ? $form_layout : null)) ? 'flat-card' : '' }}" id="parent-form-area">
           @if(isset($command) && isset($command) && $command == 'detail')
           @include("crudbooster::default.form_detail")
           @else

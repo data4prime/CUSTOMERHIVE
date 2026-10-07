@@ -23,7 +23,7 @@ class ModuleGeneratorFields
 
     /** Chiavi delle opzioni dei tipi: vengono rigenerate dal passo. */
     const OPTION_KEYS = ['dataenum', 'datatable', 'datatable_where', 'dataquery', 'datamodal_table', 'datamodal_columns',
-        'datamodal_size', 'datamodal_where', 'filemanager_type', 'latitude', 'longitude', 'html'];
+        'datamodal_size', 'datamodal_where', 'filemanager_type', 'latitude', 'longitude', 'html', 'shape', 'size'];
 
     /** Chiavi generiche che si conservano anche se cambia il tipo. */
     const GENERIC_KEYS = ['help', 'style', 'readonly', 'disabled', 'placeholder', 'value'];
@@ -36,6 +36,12 @@ class ModuleGeneratorFields
     /* ------------------------------------------------------------------ */
     /*  Tipi e colonne                                                      */
     /* ------------------------------------------------------------------ */
+
+    /** Tipi che si salvano come file caricato (stessa validazione: dimensione massima in MB). */
+    public static function isFileType(string $type): bool
+    {
+        return $type === 'upload' || $type === 'image';
+    }
 
     public static function hasColumn(string $type): bool
     {
@@ -108,11 +114,11 @@ class ModuleGeneratorFields
         foreach (array_filter(explode('|', $validation), 'strlen') as $tok) {
             if ($tok === 'required') {
                 $required = true;
-            } elseif (preg_match('/^min:(-?\d+(\.\d+)?)$/', $tok, $m) && $rules['min'] === '' && $type !== 'upload') {
+            } elseif (preg_match('/^min:(-?\d+(\.\d+)?)$/', $tok, $m) && $rules['min'] === '' && !self::isFileType($type)) {
                 $rules['min'] = $m[1];
-            } elseif (preg_match('/^max:(-?\d+(\.\d+)?)$/', $tok, $m) && $type !== 'upload' && $rules['max'] === '') {
+            } elseif (preg_match('/^max:(-?\d+(\.\d+)?)$/', $tok, $m) && !self::isFileType($type) && $rules['max'] === '') {
                 $rules['max'] = $m[1];
-            } elseif (preg_match('/^max:(\d+)$/', $tok, $m) && $type === 'upload' && $rules['maxMb'] === '' && (int) $m[1] > 0 && (int) $m[1] % 1024 === 0) {
+            } elseif (preg_match('/^max:(\d+)$/', $tok, $m) && self::isFileType($type) && $rules['maxMb'] === '' && (int) $m[1] > 0 && (int) $m[1] % 1024 === 0) {
                 $rules['maxMb'] = (string) ((int) $m[1] / 1024);
             } elseif (strpos($tok, 'unique:') === 0 && !$rules['unique']) {
                 $rules['unique'] = true;
@@ -187,8 +193,8 @@ class ModuleGeneratorFields
         } elseif ($rules['alpha'] === 'alnum') {
             $p[] = 'alpha_num';
         }
-        if ($type === 'upload') {
-            if ($rules['fileKind'] === 'image') {
+        if (self::isFileType($type)) {
+            if ($type === 'image' || $rules['fileKind'] === 'image') {
                 $p[] = 'image';
             } elseif ($rules['fileKind'] === 'doc') {
                 $p[] = 'mimes:pdf,doc,docx,xls,xlsx';
@@ -223,7 +229,8 @@ class ModuleGeneratorFields
     public static function emptyOpts(): array
     {
         return ['source' => 'enum', 'enum' => [''], 'table' => '', 'column' => '', 'where' => '', 'query' => '',
-            'mtable' => '', 'mcols' => [], 'msize' => 'large', 'mwhere' => '', 'ftype' => 'file', 'lat' => '', 'lng' => '', 'html' => ''];
+            'mtable' => '', 'mcols' => [], 'msize' => 'large', 'mwhere' => '', 'ftype' => 'file', 'lat' => '', 'lng' => '', 'html' => '',
+            'shape' => 'circle', 'isize' => '96'];
     }
 
     public static function parseOpts(array $entry): array
@@ -250,6 +257,8 @@ class ModuleGeneratorFields
         $o['lat'] = (string) ($entry['latitude'] ?? '');
         $o['lng'] = (string) ($entry['longitude'] ?? '');
         $o['html'] = (string) ($entry['html'] ?? '');
+        $o['shape'] = ($entry['shape'] ?? 'circle') === 'square' ? 'square' : 'circle';
+        $o['isize'] = (string) max(48, min(240, (int) ($entry['size'] ?? 96)));
 
         return $o;
     }
@@ -344,6 +353,18 @@ class ModuleGeneratorFields
             return $out;
         }
 
+        if ($type === 'image') {
+            $out = [];
+            if ($o['shape'] === 'square') {
+                $out['shape'] = 'square';
+            }
+            $size = max(48, min(240, (int) $o['isize']));
+            if ($size !== 96) {
+                $out['size'] = $size;
+            }
+
+            return $out;
+        }
         if ($type === 'filemanager') {
             return ['filemanager_type' => $o['ftype'] === 'image' ? 'image' : 'file'];
         }
