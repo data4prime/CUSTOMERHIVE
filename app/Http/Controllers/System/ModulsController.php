@@ -1129,7 +1129,9 @@ class ModulsController extends CBController
     $existingForm = ModuleGeneratorList::readBlock($contents, 'FORM');
 
     try {
-      $built = ModuleGeneratorFields::build($payload['rows'], $existingForm, $tableColumns, $this->componentTypeNames(), $knownTables, (array) config('app.reserved_column_names'), $tableName);
+      $rows = $payload['rows'];
+      $dropNames = $this->collectColumnDrops($rows, $tableColumns, $tableExists, $contents);
+      $built = ModuleGeneratorFields::build($rows, $existingForm, $tableColumns, $this->componentTypeNames(), $knownTables, (array) config('app.reserved_column_names'), $tableName);
     } catch (\InvalidArgumentException $e) {
       list($key, $param) = array_pad(explode('|', $e->getMessage(), 2), 2, '');
 
@@ -1154,11 +1156,18 @@ class ModulsController extends CBController
       $newContents = ModuleGeneratorLayout::replaceLayoutBlock($newContents, $currentLayout);
     }
 
+    // Colonne eliminate dal database: spariscono anche dalla lista (COLUMNS) e
+    // dall'ordinamento predefinito, altrimenti la lista darebbe errore SQL.
+    if ($dropNames) {
+      $newContents = $this->removeDroppedColumnsFromList($newContents, $dropNames);
+    }
+
     $this->backupControllerFile($path);
 
     // Struttura: solo se ci sono colonne nuove. Tabella nuova -> save_table()
-    // (ramo di creazione, invariato); tabella esistente -> solo aggiunta di
-    // colonne (mai modifica/eliminazione).
+    // (ramo di creazione, invariato); tabella esistente -> aggiunta di colonne
+    // ed eliminazione di quelle esplicitamente marcate "drop" dall'utente
+    // (mai modifica/rinomina, mai eliminazione implicita).
     if ($built['new_columns']) {
       if (!$tableExists) {
         $request = ['id' => $id, 'name' => [], 'type' => [], 'size' => []];
@@ -1179,10 +1188,111 @@ class ModulsController extends CBController
       }
     }
 
+    if ($dropNames) {
+      $error = $this->dropTableColumns($tableName, array_keys($dropNames));
+      if ($error !== null) {
+        return redirect()->back()->withInput()->with(['message' => $error, 'message_type' => 'warning']);
+      }
+    }
+
     file_put_contents($path, $newContents);
 
     $this->forgetWizardDraft($id, 2);
     return redirect(Route('ModulsControllerGetStep3') . "/{$id}");
+  }
+
+  // Righe del passo Campi marcate "drop" (eliminazione definitiva della colonna).
+  // Valida e restituisce [nome => true]; le righe marcate escono dal modulo.
+  // Lancia InvalidArgumentException con chiave di traduzione, come build().
+  private function collectColumnDrops(array &$rows, array $tableColumns, bool $tableExists, string $contents): array
+  {
+    $drop = [];
+    $reserved = (array) config('app.reserved_column_names');
+    foreach ($rows as $i => $row) {
+      if (!is_array($row) || empty($row['drop'])) {
+        continue;
+      }
+      $name = (string) ($row['name'] ?? '');
+      if (!$tableExists || !in_array($name, $tableColumns, true) || in_array($name, $reserved, true)) {
+        throw new \InvalidArgumentException('mg_fld_err_drop|' . $name);
+      }
+      $drop[$name] = true;
+      $rows[$i]['in_module'] = false;
+    }
+    if (!$drop) {
+      return [];
+    }
+
+    foreach ($rows as $row) {
+      if (!is_array($row) || empty($row['in_module'])) {
+        continue;
+      }
+      foreach (['lat', 'lng'] as $k) {
+        $ref = (string) ($row['opts'][$k] ?? '');
+        if (($row['type'] ?? '') === 'googlemaps' && $ref !== '' && isset($drop[$ref])) {
+          throw new \InvalidArgumentException('mg_fld_err_drop_ref|' . $ref);
+        }
+      }
+    }
+    $title = ModuleGeneratorList::readConfigValue($contents, 'title_field');
+    if (is_string($title) && isset($drop[$title])) {
+      throw new \InvalidArgumentException('mg_fld_err_drop_title|' . $title);
+    }
+
+    return $drop;
+  }
+
+  // Toglie le colonne eliminate dal blocco COLUMNS e dall'orderby; riscrive
+  // un blocco solo se contiene davvero riferimenti alle colonne eliminate.
+  private function removeDroppedColumnsFromList(string $contents, array $dropNames): string
+  {
+    $cols = ModuleGeneratorList::readBlock($contents, 'COLUMNS');
+    $kept = array_values(array_filter($cols, function ($c) use ($dropNames) {
+      return !isset($dropNames[(string) ($c['name'] ?? '')]);
+    }));
+    if (count($kept) !== count($cols)) {
+      $contents = ModuleGeneratorList::replaceColumnsBlock($contents, $kept);
+    }
+
+    $orderby = ModuleGeneratorList::orderbyToString(ModuleGeneratorList::readConfigValue($contents, 'orderby'));
+    if ($orderby !== '') {
+      $parts = array_values(array_filter(explode(';', $orderby), function ($p) use ($dropNames) {
+        return !isset($dropNames[trim(explode(',', $p)[0])]);
+      }));
+      if (count($parts) !== count(explode(';', $orderby))) {
+        $contents = ModuleGeneratorList::mergeConfig($contents, ['orderby' => $parts ? implode(';', $parts) : 'id,desc']);
+      }
+    }
+
+    return $contents;
+  }
+
+  // Elimina definitivamente colonne (e i loro dati) da una tabella esistente.
+  // Restituisce null se ok, altrimenti il messaggio d'errore.
+  private function dropTableColumns($table_name, array $names)
+  {
+    if (substr($table_name, 0, strlen(config('app.reserved_tables_prefix'))) === config('app.reserved_tables_prefix')) {
+      return 'editing reserved tables is forbidden';
+    }
+    foreach ($names as $name) {
+      if (in_array($name, (array) config('app.reserved_column_names'), true) || !Schema::hasColumn($table_name, $name)) {
+        add_log_ch('mg edit table drop column', 'error column ' . $name . ' not found or reserved', 'error');
+
+        return 'column ' . $name . ' not found';
+      }
+      try {
+        Schema::table($table_name, function (Blueprint $table) use ($name) {
+          $table->dropColumn($name);
+        });
+      } catch (\Throwable $e) {
+        add_log_ch('mg edit table drop column', 'error dropping ' . $name . ': ' . $e->getMessage(), 'error');
+
+        return 'Cannot delete column ' . $name . ': ' . $e->getMessage();
+      }
+      add_log_ch('mg edit table drop column', 'delete column ' . $name);
+    }
+
+    return null;
   }
 
   // Aggiunge colonne nuove a una tabella esistente: stesse chiamate di

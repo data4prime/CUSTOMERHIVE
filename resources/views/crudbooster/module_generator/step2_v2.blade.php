@@ -43,6 +43,7 @@
         'rule_alpha_letters', 'rule_alpha_alnum', 'rule_unique', 'rule_unique_desc', 'rule_date', 'rule_date_any',
         'rule_date_nopast', 'rule_date_nofuture', 'rule_file', 'rule_file_any', 'rule_file_image', 'rule_file_doc',
         'rule_max_mb', 'rule_extra', 'money_title', 'currency', 'currency_none', 'decimals', 'decimals_hint', 'decimals_hint_percent',
+        'drop', 'drop_title', 'drop_body', 'drop_type', 'drop_confirm', 'dropped', 'drop_undo',
     ];
     $L = [];
     foreach ($labelKeys as $k) {
@@ -97,6 +98,21 @@
         <div class="modal-header"><h5 class="modal-title" id="fldAdvTitle"></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
         <div class="modal-body" id="fldAdvBody"></div>
         <div class="modal-footer"><button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ trans('crudbooster.mg_list_done') }}</button></div>
+    </div></div>
+</div>
+
+<div class="modal fade" id="fldDropModal" tabindex="-1">
+    <div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle-fill"></i> {{ trans('crudbooster.mg_fld_drop_title') }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+            <p>{!! trans('crudbooster.mg_fld_drop_body', ['name' => '<code id="fldDropName"></code>']) !!}</p>
+            <label class="small" for="fldDropInput">{{ trans('crudbooster.mg_fld_drop_type') }}</label>
+            <input class="form-control" id="fldDropInput" autocomplete="off">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ trans('crudbooster.confirmation_no') }}</button>
+            <button type="button" class="btn btn-danger" id="fldDropOk" disabled>{{ trans('crudbooster.mg_fld_drop_confirm') }}</button>
+        </div>
     </div></div>
 </div>
 
@@ -209,14 +225,26 @@
         if (!r.db) { return ''; }
         return r.db.type + (r.db.size ? '(' + r.db.size + ')' : '');
     }
+    // colonna reale gia' presente nel database e non di sistema: si puo' eliminare del tutto
+    function canDrop(r) { return r.exists && !r.is_new && !r.system && hasColumn(r.type); }
+    function dropBtn(r) {
+        return '<button type="button" class="btn btn-sm btn-outline-danger" data-act="drop" data-k="' + r._k + '" title="' + esc(L.drop) + '"><i class="bi bi-database-x"></i></button>';
+    }
     function rowHtml(r) {
         var k = r._k, nc = !hasColumn(r.type);
+        if (r.drop) {
+            return '<div class="fld-card off" data-k="' + k + '"><div class="d-flex align-items-center gap-2">'
+                + '<i class="bi bi-database-x text-danger"></i>'
+                + '<div class="flex-grow-1"><span class="fw-semibold text-decoration-line-through">' + esc(r.label) + '</span> <code>' + esc(r.name) + '</code> <span class="badge text-bg-danger">' + esc(L.dropped) + '</span></div>'
+                + '<button type="button" class="btn btn-sm btn-outline-secondary" data-act="undrop" data-k="' + k + '"><i class="bi bi-arrow-counterclockwise"></i> ' + esc(L.drop_undo) + '</button></div></div>';
+        }
         if (!r.in_module) {
             return '<div class="fld-card off" data-k="' + k + '"><div class="d-flex align-items-center gap-2">'
                 + '<i class="bi bi-grip-vertical handle"></i>'
                 + '<div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" data-k="' + k + '" data-f="in_module" title="' + esc(L.in_module) + '"></div>'
                 + '<div class="flex-grow-1 fld-dim"><span class="fw-semibold">' + esc(r.label) + '</span> <code>' + esc(r.name) + '</code> <span class="badge text-bg-light border">' + esc(L.not_in_module) + '</span>'
-                + (r.db ? ' <span class="small text-muted">' + esc(L.db_info.replace(':type', dbText(r))) + '</span>' : '') + '</div></div></div>';
+                + (r.db ? ' <span class="small text-muted">' + esc(L.db_info.replace(':type', dbText(r))) + '</span>' : '') + '</div>'
+                + (canDrop(r) ? dropBtn(r) : '') + '</div></div>';
         }
         var badge = nc ? '<span class="badge text-bg-light border">' + esc(L.badge_nocolumn) + '</span>'
             : (r.exists ? '<span class="badge text-bg-secondary">' + esc(r.system ? L.badge_system : L.badge_existing) + '</span>' : '<span class="badge text-bg-success">' + esc(L.badge_new) + '</span>');
@@ -240,6 +268,7 @@
         h += '<div class="col-auto pt-4">' + (r.type === 'hidden' || r.type === 'header' || nc ? '' : '<div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" id="rq' + k + '" data-k="' + k + '" data-f="required"' + (r.required ? ' checked' : '') + '><label class="form-check-label" for="rq' + k + '">' + esc(L.required) + '</label></div>') + '</div>';
         h += '<div class="col-auto ms-md-auto pt-3 text-nowrap">'
             + '<button type="button" class="btn btn-sm btn-outline-secondary" data-act="adv" data-k="' + k + '"><i class="bi bi-sliders"></i> ' + esc(L.advanced) + (hasAdv(r) ? '<span class="fld-dot"></span>' : '') + '</button> '
+            + (canDrop(r) ? dropBtn(r) + ' ' : '')
             + '<button type="button" class="btn btn-sm btn-outline-danger" data-act="del" data-k="' + k + '" title="' + esc(r.is_new ? L.remove_new : L.remove_existing) + '"><i class="bi bi-trash-fill"></i></button></div>';
         return h + '</div></div>';
     }
@@ -281,6 +310,30 @@
             if (r.is_new) { ROWS = ROWS.filter(function (x) { return x !== r; }); } else { r.in_module = false; }
             renderList();
         } else if (act === 'adv') { openAdv(r); }
+        else if (act === 'drop') { openDrop(r); }
+        else if (act === 'undrop') { r.drop = false; renderList(); }
+    });
+
+    /* ---------- eliminazione definitiva di una colonna ---------- */
+    var dropModal = new bootstrap.Modal(document.getElementById('fldDropModal'));
+    var dropRow = null;
+    var dropInput = document.getElementById('fldDropInput');
+    var dropOk = document.getElementById('fldDropOk');
+    function openDrop(r) {
+        dropRow = r;
+        document.getElementById('fldDropName').textContent = r.name;
+        dropInput.value = '';
+        dropOk.disabled = true;
+        dropModal.show();
+    }
+    // si conferma scrivendo il nome della colonna: l'eliminazione cancella anche i dati
+    dropInput.addEventListener('input', function () { dropOk.disabled = !dropRow || dropInput.value.trim() !== dropRow.name; });
+    dropOk.addEventListener('click', function () {
+        if (!dropRow || dropInput.value.trim() !== dropRow.name) { return; }
+        dropRow.drop = true;
+        dropRow.in_module = false;
+        dropModal.hide();
+        renderList();
     });
     document.getElementById('fldAdd').addEventListener('click', function () {
         var r = {_k: ++seq, name: '', label: '', type: 'text', required: false, in_module: true, exists: false, no_column: false, db: null, size: '',

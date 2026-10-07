@@ -1531,6 +1531,16 @@ return [
     "mg_fld_err_maps" => "Campo ':name': campo latitudine/longitudine non valido.",
     "mg_fld_err_html" => "Campo ':name': il codice HTML manca o è troppo lungo.",
     "mg_fld_err_rules" => "Una regola ha un valore non valido (servono numeri).",
+    "mg_fld_drop" => "Elimina la colonna dal database (con i suoi dati)",
+    "mg_fld_drop_title" => "Eliminare la colonna?",
+    "mg_fld_drop_body" => "La colonna :name e tutti i dati che contiene verranno eliminati dal database quando salvi questo passo. L'operazione non si può annullare. Se vuoi solo non mostrarla nel modulo, usa il cestino: i dati restano nel database.",
+    "mg_fld_drop_type" => "Per confermare, scrivi il nome della colonna",
+    "mg_fld_drop_confirm" => "Elimina la colonna",
+    "mg_fld_dropped" => "Sarà eliminata dal database al salvataggio",
+    "mg_fld_drop_undo" => "Annulla",
+    "mg_fld_err_drop" => "Campo ':name': la colonna non si può eliminare (non esiste o è di sistema).",
+    "mg_fld_err_drop_ref" => "La colonna ':name' è usata come latitudine/longitudine da un campo mappa: cambia prima quel campo.",
+    "mg_fld_err_drop_title" => "La colonna ':name' è il campo titolo del modulo: cambialo prima nella Configurazione.",
 
     // Module generator, passo 4 (Layout del form) e colonne di sistema in sola lettura nel form
     "mg_lay_default_title" => "Dati generali",

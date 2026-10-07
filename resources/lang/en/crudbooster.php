@@ -1538,6 +1538,16 @@ return [
     "mg_fld_err_maps" => "Field ':name': invalid latitude/longitude field.",
     "mg_fld_err_html" => "Field ':name': the HTML code is missing or too long.",
     "mg_fld_err_rules" => "A check has an invalid value (numbers expected).",
+    "mg_fld_drop" => "Delete the column from the database (with its data)",
+    "mg_fld_drop_title" => "Delete the column?",
+    "mg_fld_drop_body" => "The column :name and all the data it contains will be deleted from the database when you save this step. This cannot be undone. If you only want to hide it from the module, use the trash button: the data stays in the database.",
+    "mg_fld_drop_type" => "To confirm, type the column name",
+    "mg_fld_drop_confirm" => "Delete the column",
+    "mg_fld_dropped" => "Will be deleted from the database on save",
+    "mg_fld_drop_undo" => "Undo",
+    "mg_fld_err_drop" => "Field ':name': the column cannot be deleted (it does not exist or is a system column).",
+    "mg_fld_err_drop_ref" => "The column ':name' is used as latitude/longitude by a map field: change that field first.",
+    "mg_fld_err_drop_title" => "The column ':name' is the module's title field: change it first in the Configuration step.",
 
     // Module generator, step 4 (Form layout) and read-only system fields in the form
     "mg_lay_default_title" => "General data",
