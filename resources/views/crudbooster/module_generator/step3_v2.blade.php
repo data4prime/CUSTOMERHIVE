@@ -314,7 +314,13 @@
     var LONG = 'Testo lungo di esempio che continua per diverse righe, con abbastanza parole da mostrare dove viene tagliato nella lista.';
     function sample(r, i) {
         if (r.kind === 'calc') { return '<span class="text-muted">' + esc(L.preview_calc) + '</span>'; }
-        if (r.system) { return r.name === 'id' ? String(i + 1) : (/_at$/.test(r.name) ? '12/03/2026 09:' + (10 + i * 5) : String(1 + (i % 3))); }
+        if (r.system) {
+            // come in lista: created_by/updated_by/deleted_by, tenant e group mostrano il nome, non l'id
+            if (/_by$/.test(r.name)) { return ['Mario Rossi', 'Lucia Bianchi', 'Paolo Verdi', 'Anna Neri'][i % 4]; }
+            if (r.name === 'tenant') { return 'Acme S.r.l.'; }
+            if (r.name === 'group') { return ['Vendite', 'Acquisti', 'Amministrazione'][i % 3]; }
+            return r.name === 'id' ? String(i + 1) : (/_at$/.test(r.name) ? '12/03/2026 09:' + (10 + i * 5) : String(1 + (i % 3)));
+        }
         var f = r.format, t = String(r.type || '').toLowerCase();
         if (f === 'image') { return '<i class="bi bi-image text-secondary"></i>'; }
         if (f === 'download') { return '<span class="badge text-bg-primary"><i class="bi bi-download"></i></span>'; }

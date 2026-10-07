@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 264**
+**Prossimo numero libero: 265**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,7 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [264](264-anteprima-step3-nomi-multitext-elenco-percentuale.md) | **Anteprima step 3 con nomi utente, "Piu testi" come elenco in dettaglio, simbolo % sulle percentuali** | Module generator / Dettaglio / Liste | Completato | 2026-10-07 |
 | [263](263-select-opzioni-soft-delete.md) | **Campi select: opzioni senza record eliminati** (select a cascata, select2 multiplo, select dei campi child) | Form | Completato | 2026-10-07 |
 | [262](262-gestione-menu-traduzioni.md) | **Gestione Menu: testi tradotti en/it** (etichette, opzioni, help, placeholder, tooltip) | Menu / i18n | Completato | 2026-10-07 |
 | [261](261-menu-wizard-tipo-module-e-titolo-senza-stile-link.md) | **Voce di menu creata dal wizard di tipo Module** (non Route) con migrazione delle esistenti; colonna titolo in lista senza stile link | Module generator / Menu | Completato | 2026-10-07 |

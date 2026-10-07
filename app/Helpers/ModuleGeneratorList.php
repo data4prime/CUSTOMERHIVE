@@ -664,8 +664,9 @@ class ModuleGeneratorList
 
             return NumberFormat::money($value, $dec, $currency);
         }
-        if ($type === 'percent' && $hasDecimals) {
-            return NumberFormat::format($value, self::decimalsOf($form['decimals']));
+        if ($type === 'percent') {
+            // percentuale: con il simbolo %, come l'importo ha la valuta
+            return ($hasDecimals ? NumberFormat::format($value, self::decimalsOf($form['decimals'])) : NumberFormat::formatNatural($value)) . '%';
         }
 
         return NumberFormat::formatNatural($value);
