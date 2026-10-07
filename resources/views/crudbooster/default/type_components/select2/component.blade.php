@@ -171,6 +171,10 @@
                     if ($select_where) {
                       $result->whereraw($select_where);
                     }
+                    // niente record eliminati (soft delete) tra le opzioni
+                    if (CRUDBooster::isColumnExists($table_name, 'deleted_at')) {
+                      $result->whereNull($table_name . '.deleted_at');
+                    }
                     $result = $result->orderby($select_title, 'asc')->get();
 
                     if(isset($form['datatable_orig']) && $form['datatable_orig'] != ''){

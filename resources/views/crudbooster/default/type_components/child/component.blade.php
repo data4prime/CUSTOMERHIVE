@@ -51,9 +51,12 @@
         if ($c['datatable']) {
             $tableJoin = explode(',', $c['datatable'])[0];
             $titleField = explode(',', $c['datatable'])[1];
-            $data = $c['datatable_where']
-                ? CRUDBooster::get($tableJoin, $c['datatable_where'], "$titleField ASC")
-                : CRUDBooster::get($tableJoin, NULL, "$titleField ASC");
+            // niente record eliminati (soft delete) tra le opzioni
+            $optWhere = $c['datatable_where'] ?: null;
+            if (CRUDBooster::isColumnExists($tableJoin, 'deleted_at')) {
+                $optWhere = 'deleted_at IS NULL' . ($optWhere ? ' AND (' . $optWhere . ')' : '');
+            }
+            $data = CRUDBooster::get($tableJoin, $optWhere, "$titleField ASC");
             foreach ($data as $d) { $opts[] = [$d->id, $d->$titleField]; }
         } else {
             $dataenum = $c['dataenum'];

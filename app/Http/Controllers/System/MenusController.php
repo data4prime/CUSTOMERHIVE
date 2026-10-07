@@ -255,7 +255,7 @@ class MenusController extends CBController
             else if (n == 'URL')
             {
 
-  						$('input[name=\"path\"]').attr('placeholder','Please enter your URL');
+  						$('input[name=\"path\"]').attr('placeholder',\"" . trans('crudbooster.mm_ph_url') . "\");
 
   						$('#path').prop('required',true);
   						$('#form-group-path label .text-danger').remove();
@@ -268,7 +268,7 @@ class MenusController extends CBController
   					}
             else if (n == 'Route')
             {
-  						$('input[name=path]').attr('placeholder','Please enter the Route');
+  						$('input[name=path]').attr('placeholder',\"" . trans('crudbooster.mm_ph_route') . "\");
 
   						$('#path').prop('required',true);
   						$('#form-group-path label .text-danger').remove();
@@ -323,7 +323,7 @@ class MenusController extends CBController
 */
 
 /*
-                $('input[name=path]').attr('placeholder','Please enter the Route');
+                $('input[name=path]').attr('placeholder',\"" . trans('crudbooster.mm_ph_route') . "\");
 
                 $('#path').prop('required',true);
                 $('#form-group-path label .text-danger').remove();
@@ -371,15 +371,15 @@ class MenusController extends CBController
   			";
 
     $this->col = [];
-    $this->col[] = ["label" => "Name", "name" => "name"];
-    $this->col[] = ["label" => "Is Active", "name" => "is_active"];
-    $this->col[] = ["label" => "Privileges", "name" => "id_cms_privileges", "join" => "cms_privileges,name"];
-    $this->col[] = ["label" => "Width", "name" => "frame_width"];
-    $this->col[] = ["label" => "Height", "name" => "frame_height"];
+    $this->col[] = ["label" => trans('crudbooster.mm_name'), "name" => "name"];
+    $this->col[] = ["label" => trans('crudbooster.mm_active'), "name" => "is_active"];
+    $this->col[] = ["label" => trans('crudbooster.mm_privileges'), "name" => "id_cms_privileges", "join" => "cms_privileges,name"];
+    $this->col[] = ["label" => trans('crudbooster.mm_width'), "name" => "frame_width"];
+    $this->col[] = ["label" => trans('crudbooster.mm_height'), "name" => "frame_height"];
 
     $this->form = [];
     $this->form[] = [
-      "label" => "Privileges",
+      "label" => trans('crudbooster.mm_privileges'),
       "name" => "cms_menus_privileges",
       "type" => "select2",
       "select2_multiple" => true,
@@ -388,18 +388,18 @@ class MenusController extends CBController
       "required" => true
     ];
     $this->form[] = [
-      "label" => "Name",
+      "label" => trans('crudbooster.mm_name'),
       "name" => "name",
       "type" => "text",
       "required" => true,
       "validation" => "required|min:3|max:255"
     ];
     $this->form[] = [
-      "label" => "Type",
+      "label" => trans('crudbooster.mm_type'),
       "name" => "type",
       "type" => "radio",
       "required" => true,
-      'dataenum' => ['Module', 'Statistic','Controller & Method', 'Route', 'URL'],
+      'dataenum' => ['Module|' . trans('crudbooster.mm_type_module'), 'Statistic|' . trans('crudbooster.mm_type_statistic'), 'Controller & Method|' . trans('crudbooster.mm_type_controller'), 'Route|' . trans('crudbooster.mm_type_route'), 'URL|' . trans('crudbooster.mm_type_url')],
       'value' => 'Module'
     ];
 
@@ -415,7 +415,7 @@ class MenusController extends CBController
     //only superadmin can edit tenant
     if (CRUDBooster::isSuperadmin()) {
       $this->form[] = [
-        'label' => 'Tenant',
+        'label' => trans('crudbooster.mm_tenant'),
         'name' => 'menu_tenants',
         "type" => "select2",
         "select2_multiple" => true,
@@ -428,7 +428,7 @@ class MenusController extends CBController
       ];
       //superadmin vede i gruppi come cascading dropdown in base al tenant
       $this->form[] = [
-        "label" => "Group",
+        "label" => trans('crudbooster.mm_group'),
         "name" => "menu_groups",
         "type" => "select2",
         "select2_multiple" => true,
@@ -444,7 +444,7 @@ class MenusController extends CBController
     } elseif (UserHelper::isTenantAdmin()) {
       //Tenantadmin vede tenant in readonly (disabled) ma può modificare il group
       $this->form[] = [
-        "label" => "Tenant",
+        "label" => trans('crudbooster.mm_tenant'),
         "name" => "tenant",
         'required' => true,
         'type' => 'select',
@@ -455,7 +455,7 @@ class MenusController extends CBController
       ];
       //Tenantadmin vede solo i gruppi del proprio tenant
       $this->form[] = [
-        "label" => "Group",
+        "label" => trans('crudbooster.mm_group'),
         "name" => "menu_groups",
         "type" => "select2",
         "select2_multiple" => true,
@@ -473,7 +473,7 @@ class MenusController extends CBController
     //superadmin can see all modules
     if (CRUDBooster::isSuperadmin()) {
       $this->form[] = [
-        "label" => "Module",
+        "label" => trans('crudbooster.mm_module'),
         "name" => "module_slug",
         "type" => "select",
         "datatable" => "cms_moduls,name",
@@ -484,7 +484,7 @@ class MenusController extends CBController
     //tenantadmin can see only modules enabled for his tenant
     elseif (UserHelper::isTenantAdmin()) {
       $this->form[] = [
-        "label" => "Module",
+        "label" => trans('crudbooster.mm_module'),
         "name" => "module_slug",
         "type" => "select",
         "dataquery" => "SELECT cms_moduls.name as label, cms_moduls.id as value
@@ -497,7 +497,7 @@ class MenusController extends CBController
       ];
     }
     $this->form[] = [
-      "label" => "Statistic",
+      "label" => trans('crudbooster.mm_statistic'),
       "name" => "statistic_slug",
       "type" => "select",
       "datatable" => "cms_statistics,name",
@@ -509,7 +509,7 @@ class MenusController extends CBController
       "label" => "Qlik",
       "name" => "qlik_slug",
       "type" => "select",
-      "default" => "** Select a Qlik Item",
+      "default" => '** ' . trans('crudbooster.mm_select_qlik'),
       "dataquery" => "SELECT qlik_items.title as label, qlik_items.id as value
                             FROM qlik_items
                             LEFT JOIN tenants_allowed
@@ -524,7 +524,7 @@ class MenusController extends CBController
       "label" => "Agent AI",
       "name" => "chat_ai",
       "type" => "select",
-      "default" => "** Select a Agent AI",
+      "default" => '** ' . trans('crudbooster.mm_select_agent'),
       "dataquery" => "SELECT chatai_confs.title as label, chatai_confs.id as value
                             FROM chatai_confs
                             LEFT JOIN tenants_allowed
@@ -535,11 +535,11 @@ class MenusController extends CBController
     ];
 
     $this->form[] = [
-      "label" => "Value",
+      "label" => trans('crudbooster.mm_value'),
       "name" => "path",
       "type" => "text",
-      'help' => 'If you select type controller, you can fill this field with controller name, you may include the method also',
-      'placeholder' => 'NameController or NameController@methodName',
+      'help' => trans('crudbooster.mm_value_help'),
+      'placeholder' => trans('crudbooster.mm_value_placeholder'),
       "style" => "display:none",
     ];
 
@@ -556,28 +556,28 @@ class MenusController extends CBController
 
 
     $this->form[] = [
-      "label" => "Custom Icon",
+      "label" => trans('crudbooster.mm_custom_icon'),
       "name" => "is_custom",
       "type" => "radio",
       "required" => false,
       "validation" => "required|integer",
-      "dataenum" => ['1|Custom', '0|Font Awesome'],
+      "dataenum" => ['1|' . trans('crudbooster.mm_icon_custom'), '0|' . trans('crudbooster.mm_icon_library')],
       'value' => '0',
     ];
 
     $this->form[] = [
-      'label' => 'Icon Upload', 'name' => 'icon_upload', 
+      'label' => trans('crudbooster.mm_icon_upload'), 'name' => 'icon_upload', 
       'type' => 'upload', 'width' => 'col-sm-10',
-     'placeholder' => 'Upload your custom icon',
+     'placeholder' => trans('crudbooster.mm_icon_upload_ph'),
       'required' => false,
     ];
 
 
 
-    $this->form[] = ['label' => 'Icon', 'name' => 'icon', 'type' => 'custom', 'html' => $custom, 'required' => false];
+    $this->form[] = ['label' => trans('crudbooster.mm_icon'), 'name' => 'icon', 'type' => 'custom', 'html' => $custom, 'required' => false];
     
     $this->form[] = [
-      'label' => 'Color',
+      'label' => trans('crudbooster.mm_color'),
       'name' => 'color',
       'type' => 'select2',
       'dataenum' => ['normal', 'red', 'green', 'aqua', 'light-blue', 'red', 'yellow', 'muted'],
@@ -585,36 +585,36 @@ class MenusController extends CBController
       'value' => 'normal',
     ];
     $this->form[] = [
-      "label" => "Active",
+      "label" => trans('crudbooster.mm_active_menu'),
       "name" => "is_active",
       "type" => "radio",
       "required" => true,
       "validation" => "required|integer",
-      "dataenum" => ['1|Active', '0|InActive'],
+      "dataenum" => ['1|' . trans('crudbooster.mm_status_active'), '0|' . trans('crudbooster.mm_status_inactive')],
       'value' => '1',
     ];
     $this->form[] = [
-      "label" => "Set as Home Page",
+      "label" => trans('crudbooster.mm_home_page'),
       "name" => "is_dashboard",
       "type" => "radio",
       "required" => true,
       "validation" => "required|integer",
-      "dataenum" => ['1|Yes', '0|No'],
+      "dataenum" => ['1|' . trans('crudbooster.mm_yes'), '0|' . trans('crudbooster.mm_no')],
       'value' => '0',
     ];
     $this->form[] = [
-      "label" => "Open in a new tab",
+      "label" => trans('crudbooster.mm_new_tab'),
       "name" => "new_tab",
       "type" => "radio",
       "required" => true,
       "validation" => "required|integer",
-      "dataenum" => ['1|Yes', '0|No'],
+      "dataenum" => ['1|' . trans('crudbooster.mm_yes'), '0|' . trans('crudbooster.mm_no')],
       'value' => '0',
     ];
-    $this->form[] = ['label' => 'Target Layout', 'name' => 'target_layout', 'type' => 'radio', 'dataenum' => '0|Standard;1|Full Screen;2|Fill Content', 'width' => 'col-sm-3', 'value' => '0'];
-    $this->form[] = ['label' => 'Width', 'name' => 'frame_width', 'type' => 'number', 'validation' => 'required|int|min:1|max:10000', 'width' => 'col-sm-2', 'value' => '100'];
+    $this->form[] = ['label' => trans('crudbooster.mm_target_layout'), 'name' => 'target_layout', 'type' => 'radio', 'dataenum' => '0|' . trans('crudbooster.mm_layout_standard') . ';1|' . trans('crudbooster.mm_layout_full') . ';2|' . trans('crudbooster.mm_layout_fill'), 'width' => 'col-sm-3', 'value' => '0'];
+    $this->form[] = ['label' => trans('crudbooster.mm_width'), 'name' => 'frame_width', 'type' => 'number', 'validation' => 'required|int|min:1|max:10000', 'width' => 'col-sm-2', 'value' => '100'];
     $this->form[] = ['label' => '', 'name' => 'frame_width_unit', 'type' => 'select', 'validation' => '', 'width' => 'col-sm-2', 'dataenum' => 'px', 'default' => '%'];
-    $this->form[] = ['label' => 'Height', 'name' => 'frame_height', 'type' => 'number', 'validation' => 'required|int|min:1|max:10000', 'width' => 'col-sm-2', 'value' => '100'];
+    $this->form[] = ['label' => trans('crudbooster.mm_height'), 'name' => 'frame_height', 'type' => 'number', 'validation' => 'required|int|min:1|max:10000', 'width' => 'col-sm-2', 'value' => '100'];
     $this->form[] = ['label' => '', 'name' => 'frame_height_unit', 'type' => 'select', 'validation' => '', 'width' => 'col-sm-2', 'dataenum' => 'px', 'default' => '%'];
 		
 
@@ -646,7 +646,7 @@ class MenusController extends CBController
     //dd($menu_active);
     $menu_inactive_html = MenuHelper::menu_to_html($menu_inactive, $return_url);
 
-    $page_title = 'Menu Management';
+    $page_title = trans('crudbooster.mm_title');
 
     return view('crudbooster::menus_management', compact('menu_active_html', 'menu_active', 'menu_inactive_html',  'menu_inactive', 'privileges', 'id_cms_privileges', 'return_url', 'page_title'));
   }
@@ -668,7 +668,7 @@ class MenusController extends CBController
       ]));
       return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
-    $page_title = 'Edit Menu';
+    $page_title = trans('crudbooster.mm_title_edit');
     $command = 'add';
     $button_addmore = false;
     //$button_addmore = false;

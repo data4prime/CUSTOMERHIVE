@@ -170,7 +170,7 @@ class MenuHelper
 
       if ($menu->is_dashboard) {
         $class = 'is-dashboard';
-        $title = 'This is set as Dashboard';
+        $title = e(trans('crudbooster.mm_is_dashboard'));
         $icon = 'icon-is-dashboard bi bi-house-fill';
       } else {
         $class = '';
@@ -188,7 +188,7 @@ class MenuHelper
         // chiamata usata per l'href reale, causando un
         // UrlGenerationException su ogni voce di menu modificabile.
         $href = route("MenusControllerGetEdit", ["id" => $menu->id]) . "?return_url=" . $return_url;
-        $result .= "<a class='mm-act bi bi-pencil-fill' title='Edit' href='$href'></a>";
+        $result .= "<a class='mm-act bi bi-pencil-fill' title='" . e(trans('crudbooster.mm_edit')) . "' href='$href'></a>";
       }
       if (UserHelper::can_menu('delete', $menu->id)) {
         // Conferma sulla riga (come nel mockup) al posto del popup SweetAlert: il link
@@ -197,7 +197,7 @@ class MenuHelper
         $result .= "<span class='mm-confirm' hidden><span class='mm-confirm-q'>" . e(trans('crudbooster.adm_delete_confirm')) . "</span>"
           . "<a class='btn btn-danger btn-sm' href='$deleteUrl'>" . e(trans('crudbooster.confirmation_yes')) . "</a>"
           . "<button type='button' class='btn btn-secondary btn-sm mm-cancel' onclick='mmCancel(this)'>" . e(trans('crudbooster.button_cancel')) . "</button></span>";
-        $result .= "<a title='Delete' class='mm-act mm-del mm-ask bi bi-trash-fill' onclick='mmAsk(this)' href='javascript:void(0)'></a>";
+        $result .= "<a title='" . e(trans('crudbooster.mm_delete')) . "' class='mm-act mm-del mm-ask bi bi-trash-fill' onclick='mmAsk(this)' href='javascript:void(0)'></a>";
       }
       $result .= "</span></div>";
       $privileges_html = e(implode(', ', $privileges));

@@ -861,6 +861,10 @@ class CBController extends Controller
                 if ($datatableWhere) {
                     $query->whereRaw($datatableWhere);
                 }
+                // niente record eliminati (soft delete) tra le opzioni
+                if (CRUDBooster::isColumnExists($table, 'deleted_at')) {
+                    $query->whereNull($table . '.deleted_at');
+                }
                 $query->distinct($table . '.' . $label);
                 $query->select($table . '.' . $table_pk . ' as select_value', $table . '.' . $label . ' as select_label');
                 //se $foreign_key_value ha una virgola è un array
@@ -877,6 +881,10 @@ class CBController extends Controller
                 $query = DB::table($table);
                 if ($datatableWhere) {
                     $query->whereRaw($datatableWhere);
+                }
+                // niente record eliminati (soft delete) tra le opzioni
+                if (CRUDBooster::isColumnExists($table, 'deleted_at')) {
+                    $query->whereNull($table . '.deleted_at');
                 }
                 $query->select('id as select_value', $label . ' as select_label');
                 //se $foreign_key_value ha una virgola è un array
