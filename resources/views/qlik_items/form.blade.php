@@ -36,25 +36,7 @@
                     @if(isset($row) && !empty($row->qlik_app_id))
                     @php $qsApp = \Illuminate\Support\Facades\DB::table('qlik_apps')->where('id', $row->qlik_app_id)->first(); @endphp
                     @if( isset($command) && $command == 'detail')
-                    {{-- In detail il resto è una tabella a righe: stesso layout per restare allineati --}}
-                    <div class='table-responsive'>
-                        <table class='table table-striped' style="margin-bottom:0">
-                            <tr>
-                                <td style="font-weight:bold;width:25%">{{ trans('crudbooster.qlik_item_app_label') }}</td>
-                                <td>
-                                    {{ $qsApp->appname ?? ('#' . $row->qlik_app_id) }}
-                                    @if(!empty($qsApp->appid)) <small class="text-muted">({{ $qsApp->appid }})</small> @endif
-                                    @if(!empty($row->is_missing)) &nbsp; <span class="badge text-bg-warning" style="background:var(--ch-warning);color:var(--ch-surface);padding:2px 6px;border-radius:3px">{{ trans('crudbooster.qlik_sync_missing_badge') }}</span> @endif
-                                </td>
-                            </tr>
-                            @if(!empty($row->external_id))
-                            <tr>
-                                <td style="font-weight:bold;width:25%">{{ trans('crudbooster.qlik_item_sheet_label') }}</td>
-                                <td>{{ $row->external_id }}</td>
-                            </tr>
-                            @endif
-                        </table>
-                    </div>
+                    {{-- In detail le righe "App Qlik"/"ID foglio" le stampa qlik_items.form_detail in cima alla tabella dei campi ($qsApp) --}}
                     @elseif(!empty($row->external_id) || !empty($row->is_missing))
                     {{-- In modifica l'app si sceglie dal campo "App Qlik" del form: qui restano solo id foglio e badge --}}
                     <div class="mb-3 row">
@@ -62,7 +44,7 @@
                         <div class="col-sm-10">
                             <p class="form-control-plaintext">
                                 @if(!empty($row->external_id)) <small class="text-muted">{{ $row->external_id }}</small> @endif
-                                @if(!empty($row->is_missing)) &nbsp; <span class="badge text-bg-warning" style="background:var(--ch-warning);color:var(--ch-surface);padding:2px 6px;border-radius:3px">{{ trans('crudbooster.qlik_sync_missing_badge') }}</span> @endif
+                                @if(!empty($row->is_missing)) &nbsp; <span class="ch-pill ch-pill-warn">{{ trans('crudbooster.qlik_sync_missing_badge') }}</span> @endif
                             </p>
                         </div>
                     </div>

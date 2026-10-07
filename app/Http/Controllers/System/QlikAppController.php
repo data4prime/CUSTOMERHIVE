@@ -57,10 +57,10 @@ class QlikAppController extends CBController
 		// a mano (last_synced_at null) non hanno badge.
 		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_status'), "name" => "is_missing", "callback" => function ($row) {
 			if (!empty($row->is_missing)) {
-				return "<span class='badge text-bg-warning' style='background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>";
+				return "<span class='ch-pill ch-pill-dot ch-pill-warn'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>";
 			}
 			return !empty($row->last_synced_at)
-				? "<span class='badge text-bg-success' style='background:#5cb85c;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_present_badge')) . "</span>"
+				? "<span class='ch-pill ch-pill-dot ch-pill-ok'>" . e(trans('crudbooster.qlik_sync_present_badge')) . "</span>"
 				: '';
 		}];
 		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_last_synced'), "name" => "last_synced_at", "callback" => function ($row) {

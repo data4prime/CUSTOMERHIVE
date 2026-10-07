@@ -124,6 +124,14 @@ class QlikConfController extends CBController
       ];
     }
 
+    // Dettaglio piu' corto: questi campi stanno due per riga (solo nella vista di dettaglio,
+    // vedi form_detail_row); gli altri restano a tutta larghezza.
+    foreach ($this->form as $i => $f) {
+      if (in_array($f['name'], ['type', 'auth', 'port', 'endpoint', 'keyid', 'issuer', 'private_key', 'debug', 'qlikconfs_tenants', 'tenant', 'qlikconfs_groups', 'menu_groups'], true)) {
+        $this->form[$i]['detail_half'] = true;
+      }
+    }
+
 
 		# Users submodule
 		// #RAMA questo subform riesce ad aggiungere nuovi utenti e a mostrarli ma permette di aggiungere due volte lo stesso utente allo stesso gruppo, non riesco a mostrare un secondo campo nel form e nella tabella, non posso nascondere il tasto edit dalla tabella, fa confusione come interfaccia

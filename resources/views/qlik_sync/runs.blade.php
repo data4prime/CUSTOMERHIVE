@@ -1,13 +1,13 @@
 @extends('crudbooster::admin_template')
 @php
-    // stato -> [chiave traduzione, colore]
+    // stato -> [chiave traduzione, variante .ch-pill-*, token colore della barra]
     $qsStatus = [
-        'queued' => ['qlik_sync_status_queued', '#6c757d'],
-        'running' => ['qlik_sync_status_running', '#0d6efd'],
-        'cancelling' => ['qlik_sync_status_cancelling', '#b58105'],
-        'cancelled' => ['qlik_sync_status_cancelled', '#6c757d'],
-        'completed' => ['qlik_sync_status_completed', '#198754'],
-        'failed' => ['qlik_sync_status_failed', '#dc3545'],
+        'queued' => ['qlik_sync_status_queued', 'gray', '--ch-text-muted'],
+        'running' => ['qlik_sync_status_running', 'blue', '--ch-blue'],
+        'cancelling' => ['qlik_sync_status_cancelling', 'warn', '--ch-warning'],
+        'cancelled' => ['qlik_sync_status_cancelled', 'gray', '--ch-text-muted'],
+        'completed' => ['qlik_sync_status_completed', 'ok', '--ch-success'],
+        'failed' => ['qlik_sync_status_failed', 'bad', '--ch-danger'],
     ];
 @endphp
 @section('content')
@@ -24,9 +24,8 @@
   </div>
   @endif
 
-  <div class="box">
-    <div class="box-body table-responsive no-padding">
-      <table class="table table-striped table-bordered">
+  <div class="table-responsive rel-table">
+      <table class="table table-hover align-middle mb-0">
         <thead>
           <tr>
             <th>#</th>
@@ -44,7 +43,7 @@
         <tbody>
           @forelse($runs as $run)
           @php
-            [$stKey, $stColor] = $qsStatus[$run->status] ?? ['qlik_sync_status_failed', '#6c757d'];
+            [$stKey, $stPill, $stVar] = $qsStatus[$run->status] ?? ['qlik_sync_status_failed', 'gray', '--ch-text-muted'];
             $pct = $run->total > 0 ? min(100, (int) round($run->processed * 100 / $run->total)) : ($run->status === 'completed' ? 100 : 0);
           @endphp
           <tr>
@@ -54,19 +53,19 @@
             <td>{{ $run->qlik_app_id ? ($run->appname ?? ('#' . $run->qlik_app_id)) : ($run->type === 'items' ? trans('crudbooster.qlik_sync_all_apps') : '—') }}</td>
             <td>{{ $run->user_name ?? ('#' . $run->user_id) }}</td>
             <td>
-              <span style="display:inline-block;padding:2px 8px;border-radius:3px;color:var(--ch-surface);background:{{ $stColor }}">{{ trans('crudbooster.' . $stKey) }}</span>
+              <span class="ch-pill ch-pill-dot ch-pill-{{ $stPill }}">{{ trans('crudbooster.' . $stKey) }}</span>
               @if($run->rolled_back_at)
-              <span style="display:inline-block;padding:2px 8px;border-radius:3px;color:var(--ch-surface);background:var(--ch-text-secondary)">{{ trans('crudbooster.qlik_sync_rolled_back') }}</span>
+              <span class="ch-pill ch-pill-dot ch-pill-gray">{{ trans('crudbooster.qlik_sync_rolled_back') }}</span>
               @endif
             </td>
             <td style="min-width:120px">
-              <div style="background:var(--ch-bg);border-radius:3px;height:10px;overflow:hidden" role="progressbar" aria-valuenow="{{ $pct }}" aria-valuemin="0" aria-valuemax="100">
-                <div style="background:{{ $stColor }};height:10px;width:{{ $pct }}%"></div>
+              <div class="progress" style="height:6px;background:var(--ch-border)" role="progressbar" aria-valuenow="{{ $pct }}" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="background:var({{ $stVar }});width:{{ $pct }}%"></div>
               </div>
-              <small>{{ $run->processed }} / {{ $run->total }}</small>
+              <small class="text-secondary">{{ $run->processed }} / {{ $run->total }}</small>
             </td>
             <td>
-              <small>
+              <small class="text-secondary">
                 {{ trans('crudbooster.qlik_sync_action_created') }}: {{ $run->created }} ·
                 {{ trans('crudbooster.qlik_sync_action_linked') }}: {{ $run->linked }} ·
                 {{ trans('crudbooster.qlik_sync_action_updated') }}: {{ $run->updated }} ·
@@ -77,15 +76,14 @@
             </td>
             <td>{{ $run->started_at ?? $run->created_at }}</td>
             <td>
-              <a class="btn btn-info btn-sm" title="{{ trans('crudbooster.qlik_sync_details') }}" href="{{ url('admin/qlik_apps/sync-runs/' . $run->id) }}"><i class="bi bi-search"></i></a>
+              <a class="btn btn-sm btn-secondary" title="{{ trans('crudbooster.qlik_sync_details') }}" href="{{ url('admin/qlik_apps/sync-runs/' . $run->id) }}"><i class="bi bi-search"></i></a>
             </td>
           </tr>
           @empty
-          <tr><td colspan="10" class="text-center text-muted">{{ trans('crudbooster.qlik_sync_no_runs') }}</td></tr>
+          <tr><td colspan="10" class="text-center text-secondary">{{ trans('crudbooster.qlik_sync_no_runs') }}</td></tr>
           @endforelse
         </tbody>
       </table>
-    </div>
   </div>
 </div>
 @endsection

@@ -1,15 +1,16 @@
 @extends('crudbooster::admin_template')
 @php
+    // stato -> [chiave traduzione, variante .ch-pill-*, token colore della barra]
     $qsStatus = [
-        'queued' => ['qlik_sync_status_queued', '#6c757d'],
-        'running' => ['qlik_sync_status_running', '#0d6efd'],
-        'cancelling' => ['qlik_sync_status_cancelling', '#b58105'],
-        'cancelled' => ['qlik_sync_status_cancelled', '#6c757d'],
-        'completed' => ['qlik_sync_status_completed', '#198754'],
-        'failed' => ['qlik_sync_status_failed', '#dc3545'],
+        'queued' => ['qlik_sync_status_queued', 'gray', '--ch-text-muted'],
+        'running' => ['qlik_sync_status_running', 'blue', '--ch-blue'],
+        'cancelling' => ['qlik_sync_status_cancelling', 'warn', '--ch-warning'],
+        'cancelled' => ['qlik_sync_status_cancelled', 'gray', '--ch-text-muted'],
+        'completed' => ['qlik_sync_status_completed', 'ok', '--ch-success'],
+        'failed' => ['qlik_sync_status_failed', 'bad', '--ch-danger'],
     ];
-    $qsActionColor = ['created' => '#198754', 'linked' => '#0d6efd', 'updated' => '#b58105', 'skipped' => '#6c757d', 'failed' => '#dc3545'];
-    [$stKey, $stColor] = $qsStatus[$run->status] ?? ['qlik_sync_status_failed', '#6c757d'];
+    $qsActionColor = ['created' => 'var(--ch-success)', 'linked' => 'var(--ch-blue)', 'updated' => 'var(--ch-warning)', 'skipped' => 'var(--ch-text-muted)', 'failed' => 'var(--ch-danger)'];
+    [$stKey, $stPill, $stVar] = $qsStatus[$run->status] ?? ['qlik_sync_status_failed', 'gray', '--ch-text-muted'];
     $pct = $run->total > 0 ? min(100, (int) round($run->processed * 100 / $run->total)) : ($run->status === 'completed' ? 100 : 0);
     $qsBase = url('admin/qlik_apps/sync-runs/' . $run->id);
 @endphp
@@ -24,42 +25,53 @@
   @endif
 
   <div class="card card-default">
-    <div class="card-header">
-      <strong>
-        {{ trans('crudbooster.qlik_sync_type_' . $run->type) }} —
-        <span style="display:inline-block;padding:2px 8px;border-radius:3px;color:var(--ch-surface);background:{{ $stColor }}">{{ trans('crudbooster.' . $stKey) }}</span>
-        @if($run->rolled_back_at)
-        <span style="display:inline-block;padding:2px 8px;border-radius:3px;color:var(--ch-surface);background:var(--ch-text-secondary)">{{ trans('crudbooster.qlik_sync_rolled_back') }}</span>
-        @endif
-      </strong>
+    <div class="card-header d-flex align-items-center gap-2">
+      <strong class="fs-6">{{ trans('crudbooster.qlik_sync_type_' . $run->type) }}</strong>
+      <span class="ch-pill ch-pill-dot ch-pill-{{ $stPill }}">{{ trans('crudbooster.' . $stKey) }}</span>
+      @if($run->rolled_back_at)
+      <span class="ch-pill ch-pill-dot ch-pill-gray">{{ trans('crudbooster.qlik_sync_rolled_back') }}</span>
+      @endif
     </div>
     <div class="card-body">
-      <dl class="row" style="margin-bottom:8px">
-        <dt class="col-sm-3">{{ trans('crudbooster.qlik_sync_col_conf') }}</dt>
-        <dd class="col-sm-9">{{ $run->confname ?? ('#' . $run->qlik_conf_id) }}</dd>
-        <dt class="col-sm-3">{{ trans('crudbooster.qlik_sync_col_app') }}</dt>
-        <dd class="col-sm-9">{{ $run->qlik_app_id ? ($run->appname ?? ('#' . $run->qlik_app_id)) : ($run->type === 'items' ? trans('crudbooster.qlik_sync_all_apps') : '—') }}</dd>
-        <dt class="col-sm-3">{{ trans('crudbooster.qlik_sync_col_user') }}</dt>
-        <dd class="col-sm-9">{{ $run->user_name ?? ('#' . $run->user_id) }}</dd>
-        <dt class="col-sm-3">{{ trans('crudbooster.qlik_sync_col_started') }}</dt>
-        <dd class="col-sm-9">{{ $run->started_at ?? $run->created_at }}@if($run->finished_at) → {{ $run->finished_at }}@endif</dd>
-        <dt class="col-sm-3">{{ trans('crudbooster.qlik_sync_col_progress') }}</dt>
-        <dd class="col-sm-9">
-          <div style="background:var(--ch-bg);border-radius:3px;height:12px;overflow:hidden;max-width:360px" role="progressbar" aria-valuenow="{{ $pct }}" aria-valuemin="0" aria-valuemax="100">
-            <div style="background:{{ $stColor }};height:12px;width:{{ $pct }}%"></div>
+      @php $qsLbl = 'col-sm-3 text-secondary text-uppercase fw-semibold small'; $qsRow = 'row py-2 border-bottom align-items-center mx-0'; @endphp
+      <div class="{{ $qsRow }}">
+        <div class="{{ $qsLbl }}">{{ trans('crudbooster.qlik_sync_col_conf') }}</div>
+        <div class="col-sm-9">{{ $run->confname ?? ('#' . $run->qlik_conf_id) }}</div>
+      </div>
+      <div class="{{ $qsRow }}">
+        <div class="{{ $qsLbl }}">{{ trans('crudbooster.qlik_sync_col_app') }}</div>
+        <div class="col-sm-9">{{ $run->qlik_app_id ? ($run->appname ?? ('#' . $run->qlik_app_id)) : ($run->type === 'items' ? trans('crudbooster.qlik_sync_all_apps') : '—') }}</div>
+      </div>
+      <div class="{{ $qsRow }}">
+        <div class="{{ $qsLbl }}">{{ trans('crudbooster.qlik_sync_col_user') }}</div>
+        <div class="col-sm-9">{{ $run->user_name ?? ('#' . $run->user_id) }}</div>
+      </div>
+      <div class="{{ $qsRow }}">
+        <div class="{{ $qsLbl }}">{{ trans('crudbooster.qlik_sync_col_started') }}</div>
+        <div class="col-sm-9">{{ $run->started_at ?? $run->created_at }}@if($run->finished_at) → {{ $run->finished_at }}@endif</div>
+      </div>
+      <div class="{{ $qsRow }}">
+        <div class="{{ $qsLbl }}">{{ trans('crudbooster.qlik_sync_col_progress') }}</div>
+        <div class="col-sm-9">
+          <div class="progress" style="height:8px;max-width:360px;background:var(--ch-border)" role="progressbar" aria-valuenow="{{ $pct }}" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar" style="background:var({{ $stVar }});width:{{ $pct }}%"></div>
           </div>
-          {{ $run->processed }} / {{ $run->total }}
-        </dd>
-        <dt class="col-sm-3">{{ trans('crudbooster.qlik_sync_col_results') }}</dt>
-        <dd class="col-sm-9">
+          <small class="text-secondary">{{ $run->processed }} / {{ $run->total }}</small>
+        </div>
+      </div>
+      <div class="{{ $qsRow }} border-bottom-0">
+        <div class="{{ $qsLbl }}">{{ trans('crudbooster.qlik_sync_col_results') }}</div>
+        <div class="col-sm-9">
           {{ trans('crudbooster.qlik_sync_action_created') }}: {{ $run->created }} ·
           {{ trans('crudbooster.qlik_sync_action_linked') }}: {{ $run->linked }} ·
           {{ trans('crudbooster.qlik_sync_action_updated') }}: {{ $run->updated }} ·
           {{ trans('crudbooster.qlik_sync_action_skipped') }}: {{ $run->skipped }} ·
           <span @if($run->failed > 0) style="color:var(--ch-danger);font-weight:600" @endif>{{ trans('crudbooster.qlik_sync_action_failed') }}: {{ $run->failed }}</span> ·
           {{ trans('crudbooster.qlik_sync_missing') }}: {{ $run->missing }}
-        </dd>
-      </dl>
+        </div>
+      </div>
+
+      <div class="mt-3">
 
       @if($run->error)
       <div class="alert alert-danger" role="alert"><i class="bi bi-x-circle-fill"></i> {{ $run->error }}</div>
@@ -75,19 +87,17 @@
         <i class="bi bi-arrow-counterclockwise"></i> {{ trans('crudbooster.qlik_sync_rollback') }}
       </button>
       @endif
+      </div>
     </div>
   </div>
 
-  <div class="box">
-    <div class="box-header mb-3">
-      <h4>{{ trans('crudbooster.qlik_sync_records_title') }}
-        @if($records_total > $records->count())
-        <small>({{ trans('crudbooster.qlik_sync_records_truncated', ['shown' => $records->count(), 'total' => $records_total]) }})</small>
-        @endif
-      </h4>
-    </div>
-    <div class="box-body table-responsive no-padding">
-      <table class="table table-striped table-bordered">
+  <h4 class="mt-4 mb-3">{{ trans('crudbooster.qlik_sync_records_title') }}
+    @if($records_total > $records->count())
+    <small class="text-secondary fs-6">({{ trans('crudbooster.qlik_sync_records_truncated', ['shown' => $records->count(), 'total' => $records_total]) }})</small>
+    @endif
+  </h4>
+  <div class="table-responsive rel-table">
+      <table class="table table-hover align-middle mb-0">
         <thead>
           <tr>
             <th>{{ trans('crudbooster.qlik_sync_col_type') }}</th>
@@ -102,16 +112,15 @@
           <tr>
             <td>{{ trans('crudbooster.qlik_sync_type_' . $rec->record_type) }}</td>
             <td>{{ $rec->record_name ?? '—' }}</td>
-            <td><small>{{ $rec->external_id }}</small></td>
-            <td><span style="color:{{ $qsActionColor[$rec->action] ?? 'var(--ch-text-secondary)' }};font-weight:600">{{ trans('crudbooster.qlik_sync_action_' . $rec->action) }}</span></td>
-            <td><small>{{ $rec->message }}</small></td>
+            <td><small class="font-monospace text-secondary">{{ $rec->external_id }}</small></td>
+            <td><span style="color:{{ $qsActionColor[$rec->action] ?? 'var(--ch-text-secondary)' }};font-weight:700">{{ trans('crudbooster.qlik_sync_action_' . $rec->action) }}</span></td>
+            <td><small class="text-secondary">{{ $rec->message }}</small></td>
           </tr>
           @empty
-          <tr><td colspan="5" class="text-center text-muted">{{ trans('crudbooster.qlik_sync_no_records') }}</td></tr>
+          <tr><td colspan="5" class="text-center text-secondary">{{ trans('crudbooster.qlik_sync_no_records') }}</td></tr>
           @endforelse
         </tbody>
       </table>
-    </div>
   </div>
 </div>
 
@@ -122,8 +131,15 @@
     <div style="padding:16px">
       <h4 style="margin-top:0">{{ trans('crudbooster.qlik_sync_cancel_title') }}</h4>
       <p>{{ trans('crudbooster.qlik_sync_cancel_question') }}</p>
-      <label style="display:block;margin-bottom:6px"><input type="radio" name="mode" value="keep" checked> {{ trans('crudbooster.qlik_sync_cancel_keep') }}</label>
-      <label style="display:block"><input type="radio" name="mode" value="delete"> {{ trans('crudbooster.qlik_sync_cancel_delete') }}</label>
+      @include('crudbooster::partials.ch_radio', [
+          'name' => 'mode',
+          'disabled' => false,
+          'rd_mode' => 'list',
+          'rd_options' => [
+              ['value' => 'keep', 'label' => trans('crudbooster.qlik_sync_cancel_keep'), 'checked' => true],
+              ['value' => 'delete', 'label' => trans('crudbooster.qlik_sync_cancel_delete'), 'checked' => false],
+          ],
+      ])
     </div>
     <div style="padding:10px 16px;border-top:1px solid var(--ch-border-strong);background:var(--ch-bg);text-align:right">
       <button type="button" class="btn btn-secondary btn-sm" onclick="this.closest('dialog').close()">{{ trans('crudbooster.qlik_test_close') }}</button>

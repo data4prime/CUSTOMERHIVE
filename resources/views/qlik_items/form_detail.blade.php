@@ -29,6 +29,24 @@ $asset_already[] = $type;
 <div class='table-responsive'>
     <table id='table-detail' class='table table-striped'>
 
+        {{-- Relazione con l'app Qlik (solo item sincronizzati): prime righe, stesso stile degli altri campi --}}
+        @if(isset($row) && !empty($row->qlik_app_id) && isset($qsApp))
+        <tr>
+            <td>{{ trans('crudbooster.qlik_item_app_label') }}</td>
+            <td>
+                {{ $qsApp->appname ?? ('#' . $row->qlik_app_id) }}
+                @if(!empty($qsApp->appid)) <small class="text-muted">({{ $qsApp->appid }})</small> @endif
+                @if(!empty($row->is_missing)) &nbsp; <span class="ch-pill ch-pill-warn">{{ trans('crudbooster.qlik_sync_missing_badge') }}</span> @endif
+            </td>
+        </tr>
+        @if(!empty($row->external_id))
+        <tr>
+            <td>{{ trans('crudbooster.qlik_item_sheet_label') }}</td>
+            <td>{{ $row->external_id }}</td>
+        </tr>
+        @endif
+        @endif
+
         <?php
         foreach($forms as $index=>$form):
 

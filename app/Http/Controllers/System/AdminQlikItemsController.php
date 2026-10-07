@@ -71,10 +71,10 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		// sincronizzati almeno una volta; vuoto per quelli creati a mano. Poi la data dell'ultimo import.
 		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_status'), "name" => "is_missing", "callback" => function ($row) {
 			if (!empty($row->is_missing)) {
-				return "<span class='badge text-bg-warning' style='background:#f0ad4e;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>";
+				return "<span class='ch-pill ch-pill-dot ch-pill-warn'>" . e(trans('crudbooster.qlik_sync_missing_badge')) . "</span>";
 			}
 			return !empty($row->last_synced_at)
-				? "<span class='badge text-bg-success' style='background:#5cb85c;color:#fff;padding:2px 6px;border-radius:3px'>" . e(trans('crudbooster.qlik_sync_present_badge')) . "</span>"
+				? "<span class='ch-pill ch-pill-dot ch-pill-ok'>" . e(trans('crudbooster.qlik_sync_present_badge')) . "</span>"
 				: '';
 		}];
 		$this->col[] = ["label" => trans('crudbooster.qlik_sync_col_last_synced'), "name" => "last_synced_at", "callback" => function ($row) {
@@ -675,8 +675,18 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		$data['qlik_item'] = QlikItem::find($item_id);
 		$data['groups'] = ItemsAllowed::where('item_id', $item_id)
 			->join('groups', 'groups.id', '=', 'items_allowed.group_id')
-			->get();
-		$data['page_title'] = 'Authorize Group';
+			->get(['groups.id', 'groups.name', 'groups.description']);
+		$data['page_title'] = trans('crudbooster.qlik_item_add_group_title');
+		// Gruppi non ancora autorizzati: elenco della modale "Aggiungi gruppo"
+		$data['available_groups'] = DB::table('groups')
+			->whereNotExists(function ($query) use ($item_id) {
+				$query->select(DB::raw(1))
+					->from('items_allowed')
+					->whereRaw('items_allowed.group_id = groups.id')
+					->where('items_allowed.item_id', (int) $item_id);
+			})
+			->orderBy('name')
+			->get(['groups.id', 'groups.name', 'groups.description']);
 
 		//prendo $_GET &alert=
 		if (!empty($alert_id)) {
@@ -709,8 +719,18 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		$data['qlik_item'] = QlikItem::find($item_id);
 		$data['tenants'] = TenantsAllowed::where('item_id', $item_id)
 			->join('tenants', 'tenants.id', '=', 'tenants_allowed.tenant_id')
-			->get();
-		$data['page_title'] = 'Authorize Tenant';
+			->get(['tenants.id', 'tenants.name', 'tenants.description']);
+		$data['page_title'] = trans('crudbooster.qlik_item_add_tenant_title');
+		// Tenant non ancora autorizzati: elenco della modale "Aggiungi tenant"
+		$data['available_tenants'] = DB::table('tenants')
+			->whereNotExists(function ($query) use ($item_id) {
+				$query->select(DB::raw(1))
+					->from('tenants_allowed')
+					->whereRaw('tenants_allowed.tenant_id = tenants.id')
+					->where('tenants_allowed.item_id', (int) $item_id);
+			})
+			->orderBy('name')
+			->get(['tenants.id', 'tenants.name', 'tenants.description']);
 
 		//prendo $_GET &alert=
 		if (!empty($alert_id)) {
