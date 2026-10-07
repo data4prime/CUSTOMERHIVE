@@ -195,7 +195,7 @@ class TenantsCrudTest extends TestCase
         $response = $this->get("http://localhost/admin/tenants/delete/{$tenantId}");
 
         $response->assertStatus(302);
-        $response->assertSessionHas('message', trans('crudbooster.delete_not_empty_tenant'));
+        $response->assertSessionHas('message', trans('crudbooster.delete_not_empty_tenant_count', ['count' => 1]));
 
         $row = DB::table('tenants')->where('id', $tenantId)->first();
         $this->assertNull($row->deleted_at, 'Il tenant non deve risultare cancellato.');
