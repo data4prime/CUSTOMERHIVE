@@ -319,11 +319,17 @@ class CBController extends Controller
         $columns_table = $this->columns_table;
         
 
-        //add group and tenant columns for admins
-        $columns_table = ModuleHelper::add_default_column_headers($table, $columns_table);
+        // Le colonne Tenant/Group non si aggiungono piu' in automatico ai moduli
+        // generati: si scelgono dal module generator (passo Lista).
         foreach ($columns_table as $index => $coltab) {
 
             $join = @$coltab['join'];
+            // Colonne di sistema (created_by, tenant, ...) senza join: si collegano da sole
+            // alla tabella giusta cosi' si vede il nome e non l'id.
+            if (!$join && empty($coltab['callback']) && empty($coltab['callback_php']) && !empty($coltab['name']) && ($sysJoin = \App\Helpers\ModuleGeneratorList::systemJoin((string) $coltab['name'])) !== null
+                && in_array($coltab['name'], $table_columns, true)) {
+                $join = $sysJoin;
+            }
             $join_where = @$coltab['join_where'];
             $join_id = @$coltab['join_id'];
             $field = @$coltab['name'];
@@ -597,6 +603,14 @@ class CBController extends Controller
         $html_contents = [];
         $page = (Request::get('page')) ? Request::get('page') : 1;
         $number = ($page - 1) * $limit + 1;
+        // Campi numero/importo/percentuale del form: in lista si mostrano col separatore scelto
+        // dall'utente (profilo > Preferenze), a meno che la colonna abbia un format o un callback suo.
+        $numericForms = [];
+        foreach ((array) ($this->form ?? []) as $nf) {
+            if (!empty($nf['name']) && in_array($nf['type'] ?? '', ['money', 'percent', 'number'], true)) {
+                $numericForms[$nf['name']] = $nf;
+            }
+        }
         foreach ($data['result'] as $ind => $row) {
             if (!ModuleHelper::can_view($this, $row)) {
                 unset($data['result'][$ind]);
@@ -662,6 +676,8 @@ class CBController extends Controller
                 // chiave opzionale, assente nei moduli esistenti.
                 if (isset($col['format'])) {
                     $value = \App\Helpers\ModuleGeneratorList::formatValue($value, $col);
+                } elseif (isset($numericForms[$col['name'] ?? '']) && ($col['field'] ?? null) === $col['name'] && empty($col['callback']) && empty($col['callback_php'])) {
+                    $value = \App\Helpers\ModuleGeneratorList::formatNumericField($value, $numericForms[$col['name']]);
                 }
 
                 if (isset($col['str_limit']) && $col['str_limit']) {
@@ -1093,7 +1109,10 @@ class CBController extends Controller
             }
 
             if (isset($di['type']) && $di['type'] == 'money') {
-                $request_all[$name] = preg_replace('/[^\d-]+/', '', $request_all[$name]);
+                // con decimali configurati il valore arriva nel formato dell'utente ("1.234,56")
+                $request_all[$name] = !empty($di['decimals'])
+                    ? \App\Helpers\NumberFormat::parse($request_all[$name])
+                    : preg_replace('/[^\d-]+/', '', $request_all[$name]);
             }
 
             if (isset($di['type']) && $di['type'] == 'child') {
@@ -1223,7 +1242,9 @@ class CBController extends Controller
             $inputdata = Request::get($name);
 
             if (isset($ro['type']) && $ro['type']  == 'money') {
-                $inputdata = preg_replace('/[^\d-]+/', '', $inputdata);
+                $inputdata = !empty($ro['decimals'])
+                    ? \App\Helpers\NumberFormat::parse($inputdata)
+                    : preg_replace('/[^\d-]+/', '', $inputdata);
             }
 
             if (isset($ro['type']) && $ro['type']  == 'child') {

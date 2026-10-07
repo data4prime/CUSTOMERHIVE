@@ -26,6 +26,16 @@
     return names;
   }
 
+  /* Sinonimi: nome Bootstrap Icons -> nomi FontAwesome equivalenti (es. "person-fill" -> "user"),
+     cosi' chi cerca col vecchio nome (user, home, cog...) trova comunque l'icona. */
+  var aliases = null;
+  function allAliases() {
+    if (aliases) { return aliases; }
+    var el = document.getElementById('ch-ip-aliases');
+    try { aliases = el ? JSON.parse(el.textContent) : {}; } catch (e) { aliases = {}; }
+    return aliases;
+  }
+
   function prefixOf(root) { return root.getAttribute('data-prefix') || 'bi bi-'; }
   function isBare(root) { return root.hasAttribute('data-bare'); }
 
@@ -57,12 +67,13 @@
     var grid = root.querySelector('.ch-ip-grid');
     var more = root.querySelector('.ch-ip-more');
     var current = nameOf(root, root.querySelector('[data-ip-value]').value);
-    var q = (query || '').trim().toLowerCase();
+    var q = (query || '').trim().toLowerCase().replace(/^(bi bi-|bi-|fa fa-|fa-)/, '').replace(/\s+/g, '-');
     var list = allNames();
+    var al = allAliases();
     var out = [];
     var total = 0;
     for (var i = 0; i < list.length; i++) {
-      if (q && list[i].indexOf(q) === -1) { continue; }
+      if (q && list[i].indexOf(q) === -1 && !(al[list[i]] && al[list[i]].join(' ').indexOf(q) !== -1)) { continue; }
       total++;
       if (out.length < LIMIT) { out.push(list[i]); }
     }
@@ -133,6 +144,11 @@
   });
 
   document.addEventListener('keydown', function (e) {
+    // Invio nella ricerca non deve inviare il form del passo (wizard) che la contiene.
+    if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('ch-ip-search')) {
+      e.preventDefault();
+      return;
+    }
     if (e.key === 'Escape') { closeAll(null); }
   });
 })();

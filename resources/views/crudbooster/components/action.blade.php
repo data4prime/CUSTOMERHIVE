@@ -16,15 +16,13 @@
       $a['confirmation_closeOnConfirm'] = empty($a['confirmation_closeOnConfirm']) ? 'true' : 'false';
 
       $confirm_box = '
-      swal({
+      chConfirm({
           title: "'.$a['confirmation_title'].'",
           text: "'.$a['confirmation_text'].'",
           type: "'.$a['confirmation_type'].'",
-          showCancelButton: '.$a['confirmation_showCancelButton'].',
-          confirmButtonColor: "'.$a['confirmation_confirmButtonColor'].'",
-          confirmButtonText: "'.$a['confirmation_confirmButtonText'].'",
-          cancelButtonText: "'.$a['confirmation_cancelButtonText'].'",
-          closeOnConfirm: '.$a['confirmation_closeOnConfirm'].', },
+          showCancel: '.$a['confirmation_showCancelButton'].',
+          confirmText: "'.$a['confirmation_confirmButtonText'].'",
+          cancelText: "'.$a['confirmation_cancelButtonText'].'", },
           function(){  location.href="'.$a['url'].'"});
 
       ';

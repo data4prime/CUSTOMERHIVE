@@ -23,7 +23,8 @@ class ModuleGeneratorFields
 
     /** Chiavi delle opzioni dei tipi: vengono rigenerate dal passo. */
     const OPTION_KEYS = ['dataenum', 'datatable', 'datatable_where', 'dataquery', 'datamodal_table', 'datamodal_columns',
-        'datamodal_size', 'datamodal_where', 'filemanager_type', 'latitude', 'longitude', 'html', 'shape', 'size'];
+        'datamodal_size', 'datamodal_where', 'filemanager_type', 'latitude', 'longitude', 'html', 'shape', 'size',
+        'currency', 'decimals'];
 
     /** Chiavi generiche che si conservano anche se cambia il tipo. */
     const GENERIC_KEYS = ['help', 'style', 'readonly', 'disabled', 'placeholder', 'value'];
@@ -81,6 +82,12 @@ class ModuleGeneratorFields
     {
         if (in_array($type, self::TABLE_CHOICE, true) && ($opts['source'] ?? '') === 'table') {
             return ['number', '11'];
+        }
+        // importo/percentuale con cifre decimali scelte: la colonna nuova ha la scala giusta
+        if (($type === 'money' || $type === 'percent') && isset($opts['decimals']) && $opts['decimals'] !== '' && is_numeric($opts['decimals'])) {
+            $d = max(0, min(6, (int) $opts['decimals']));
+
+            return ['decimal', ($type === 'money' ? max(12, $d + 8) : max(5, $d + 3)) . ',' . $d];
         }
 
         return self::SQL_BY_TYPE[$type] ?? ['text', '255'];
@@ -230,7 +237,7 @@ class ModuleGeneratorFields
     {
         return ['source' => 'enum', 'enum' => [''], 'table' => '', 'column' => '', 'where' => '', 'query' => '',
             'mtable' => '', 'mcols' => [], 'msize' => 'large', 'mwhere' => '', 'ftype' => 'file', 'lat' => '', 'lng' => '', 'html' => '',
-            'shape' => 'circle', 'isize' => '96'];
+            'shape' => 'circle', 'isize' => '96', 'currency' => 'EUR', 'decimals' => '2'];
     }
 
     public static function parseOpts(array $entry): array
@@ -259,6 +266,11 @@ class ModuleGeneratorFields
         $o['html'] = (string) ($entry['html'] ?? '');
         $o['shape'] = ($entry['shape'] ?? 'circle') === 'square' ? 'square' : 'circle';
         $o['isize'] = (string) max(48, min(240, (int) ($entry['size'] ?? 96)));
+        // importo: senza chiavi nel file vale il comportamento di sempre (euro, nessun decimale);
+        // percentuale: senza 'decimals' = numero "naturale" (vuoto)
+        $o['currency'] = array_key_exists('currency', $entry) ? (string) $entry['currency'] : (array_key_exists('prefix', $entry) ? '' : 'EUR');
+        $isPercent = self::type($entry) === 'percent';
+        $o['decimals'] = isset($entry['decimals']) && $entry['decimals'] !== '' ? (string) max(0, min(6, (int) $entry['decimals'])) : ($isPercent ? '' : '0');
 
         return $o;
     }
@@ -353,6 +365,30 @@ class ModuleGeneratorFields
             return $out;
         }
 
+        if ($type === 'money' || $type === 'percent') {
+            $dec = trim((string) $o['decimals']);
+            if ($dec !== '' && (!ctype_digit($dec) || (int) $dec > 6)) {
+                throw new \InvalidArgumentException('mg_fld_err_decimals|' . $label);
+            }
+            $out = [];
+            if ($type === 'money') {
+                $currency = strtoupper(trim((string) $o['currency']));
+                if ($currency !== '' && !isset(NumberFormat::CURRENCIES[$currency])) {
+                    throw new \InvalidArgumentException('mg_fld_err_currency|' . $label);
+                }
+                $out['currency'] = $currency;
+            }
+            if ($dec !== '') {
+                $out['decimals'] = (int) $dec;
+            }
+            // scelte uguali al comportamento di sempre (euro, nessun decimale) su una voce che non ha le chiavi: non si scrivono
+            if ($base !== null && !isset($base['currency']) && !isset($base['decimals'])
+                && ($type === 'percent' ? $dec === '' : ($out['currency'] === (array_key_exists('prefix', $base) ? '' : 'EUR') && $dec === '0'))) {
+                return [];
+            }
+
+            return $out;
+        }
         if ($type === 'image') {
             $out = [];
             if ($o['shape'] === 'square') {

@@ -1,1 +1,1 @@
-{{$value}}
+{{ \App\Helpers\NumberFormat::formatNatural($value) }}

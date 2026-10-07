@@ -17,7 +17,13 @@ use Illuminate\Support\Str;
 class ModuleGeneratorList
 {
     /** Formati selezionabili dal wizard (stringa vuota = valore grezzo). */
-    const FORMATS = ['', 'date_short', 'date_long', 'datetime_short', 'money_eur', 'money_plain', 'badge', 'trunc', 'image', 'download'];
+    const FORMATS = ['', 'date_short', 'date_long', 'datetime_short', 'money', 'money_eur', 'money_plain', 'badge', 'trunc', 'image', 'download'];
+
+    /** Join automatico delle colonne di sistema (nome colonna => "tabella,colonna da mostrare"). */
+    const SYSTEM_JOINS = [
+        'created_by' => 'cms_users,name', 'updated_by' => 'cms_users,name', 'deleted_by' => 'cms_users,name',
+        'tenant' => 'tenants,name', 'group' => 'groups,name',
+    ];
 
     /** Larghezze predefinite in px; 'auto' = nessuna chiave. */
     const WIDTHS = ['narrow' => 80, 'medium' => 140, 'wide' => 240];
@@ -29,6 +35,12 @@ class ModuleGeneratorList
     const PRESERVED_KEYS = ['join_where', 'join_id', 'nl2br', 'color', 'callback', 'style', 'callback_php', 'query'];
 
     const DEFAULT_BADGE_COLOR = '#6c757d';
+
+    /** Join da usare per una colonna di sistema senza join esplicito; null per le altre. */
+    public static function systemJoin(string $column): ?string
+    {
+        return self::SYSTEM_JOINS[$column] ?? null;
+    }
 
     /* ------------------------------------------------------------------ */
     /*  Lettura dei blocchi del controller                                  */
@@ -178,10 +190,22 @@ class ModuleGeneratorList
                     $row['join_suggested'] = true;
                 }
             }
+            // created_by/tenant/group...: si propone da soli il collegamento alla tabella giusta
+            if ($row['join'] === null && ($sj = self::systemJoin($name)) !== null) {
+                $p = explode(',', $sj);
+                $row['join'] = ['table' => $p[0], 'column' => $p[1]];
+                $row['join_suggested'] = true;
+            }
             $rows[] = $row;
         }
 
         foreach ($rows as &$r) {
+            // valuta e decimali di partenza = quelli del campo importo del form, se ce l'ha
+            $ff = $formByName[$r['name']] ?? null;
+            if ($ff && ($ff['type'] ?? '') === 'money' && $r['format'] !== 'money') {
+                $r['currency'] = array_key_exists('currency', $ff) ? (string) $ff['currency'] : $r['currency'];
+                $r['decimals'] = isset($ff['decimals']) ? self::decimalsOf($ff['decimals']) : $r['decimals'];
+            }
             $r['enum'] = null;
             if (isset($formByName[$r['name']]['dataenum']) && $formByName[$r['name']]['dataenum'] !== '') {
                 $r['enum'] = array_values(array_filter(array_map('trim', explode(';', $formByName[$r['name']]['dataenum'])), 'strlen'));
@@ -197,7 +221,7 @@ class ModuleGeneratorList
         return [
             'src' => $src, 'kind' => 'col', 'name' => $name, 'label' => $label, 'show' => $show,
             'type' => 'varchar', 'system' => false, 'format' => '', 'trunc' => 60, 'width' => 'auto',
-            'join' => null, 'join_suggested' => false, 'advanced' => false, 'enum' => null,
+            'join' => null, 'join_suggested' => false, 'advanced' => false, 'enum' => null, 'currency' => 'EUR', 'decimals' => 2,
             'badge' => ['colors' => new \stdClass(), 'default' => self::DEFAULT_BADGE_COLOR],
             'calc' => null,
         ];
@@ -214,6 +238,13 @@ class ModuleGeneratorList
             $row['trunc'] = (int) $col['str_limit'];
         } elseif (!empty($col['format']) && in_array($col['format'], self::FORMATS, true)) {
             $row['format'] = $col['format'];
+            if ($col['format'] === 'money_eur') {
+                // vecchio formato fisso in euro: nell'editor e' un "importo" con valuta EUR e 2 decimali
+                $row['format'] = 'money';
+            } elseif ($col['format'] === 'money') {
+                $row['currency'] = (string) ($col['currency'] ?? '');
+                $row['decimals'] = self::decimalsOf($col['decimals'] ?? 2);
+            }
             if ($col['format'] === 'badge' && isset($col['badge']) && is_array($col['badge'])) {
                 $colors = [];
                 foreach (($col['badge']['colors'] ?? []) as $k => $v) {
@@ -401,13 +432,22 @@ class ModuleGeneratorList
                         $entry['format'] = 'badge';
                         $entry['badge'] = self::cleanBadge($row['badge'] ?? []);
                         break;
+                    case 'money':
+                        $currency = strtoupper(trim((string) ($row['currency'] ?? '')));
+                        if ($currency !== '' && !isset(NumberFormat::CURRENCIES[$currency])) {
+                            throw new \InvalidArgumentException('mg_list_err_currency|' . $label);
+                        }
+                        $entry['format'] = 'money';
+                        $entry['currency'] = $currency;
+                        $entry['decimals'] = self::decimalsOf($row['decimals'] ?? 2);
+                        break;
                     case '':
                         break;
                     default:
                         $entry['format'] = $format;
                 }
             } else {
-                foreach (['image', 'download', 'str_limit', 'format', 'badge'] as $k) {
+                foreach (['image', 'download', 'str_limit', 'format', 'badge', 'currency', 'decimals'] as $k) {
                     if (isset($base[$k])) {
                         $entry[$k] = $base[$k];
                     }
@@ -579,7 +619,9 @@ class ModuleGeneratorList
                 case 'datetime_short':
                     return Carbon::parse($value)->format('d/m/Y H:i');
                 case 'money_eur':
-                    return is_numeric($value) ? '€ ' . number_format((float) $value, 2, ',', '.') : $value;
+                    return is_numeric($value) ? NumberFormat::money($value, 2, 'EUR') : $value;
+                case 'money':
+                    return is_numeric($value) ? NumberFormat::money($value, self::decimalsOf($col['decimals'] ?? 2), (string) ($col['currency'] ?? '')) : $value;
                 case 'money_plain':
                     return is_numeric($value) ? number_format((float) $value, 2, '.', '') : $value;
                 case 'badge':
@@ -596,6 +638,37 @@ class ModuleGeneratorList
         }
 
         return $value;
+    }
+
+    /** Cifre decimali valide (0-6) da un valore qualunque. */
+    public static function decimalsOf($value): int
+    {
+        return max(0, min(6, (int) $value));
+    }
+
+    /**
+     * Valore di un campo numero/importo/percentuale del form mostrato in lista
+     * col separatore decimale dell'utente. $form = voce del campo (type,
+     * decimals, currency). Un valore non numerico resta com'e'.
+     */
+    public static function formatNumericField($value, array $form)
+    {
+        if ($value === null || $value === '' || !is_numeric($value)) {
+            return $value;
+        }
+        $type = $form['type'] ?? '';
+        $hasDecimals = isset($form['decimals']) && $form['decimals'] !== '';
+        if ($type === 'money') {
+            $dec = $hasDecimals ? self::decimalsOf($form['decimals']) : (floor((float) $value) == (float) $value ? 0 : 2);
+            $currency = array_key_exists('currency', $form) ? (string) $form['currency'] : '';
+
+            return NumberFormat::money($value, $dec, $currency);
+        }
+        if ($type === 'percent' && $hasDecimals) {
+            return NumberFormat::format($value, self::decimalsOf($form['decimals']));
+        }
+
+        return NumberFormat::formatNatural($value);
     }
 
     public static function textColor(string $hex): string

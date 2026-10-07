@@ -829,6 +829,35 @@ class AdminCmsUsersController extends CBController
 	}
 
 	/**
+	 * Sezione "Preferenze": scelte personali di visualizzazione. Per ora il
+	 * separatore decimale con cui l'utente vede numeri, importi e percentuali
+	 * (',' italiano - default - oppure '.'). Vale per qualunque ruolo, ma solo
+	 * sul proprio profilo.
+	 */
+	public function postProfilePreferences()
+	{
+		$user = UserHelper::me();
+		if (! $user) {
+			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
+		}
+
+		$validator = Validator::make(Request::all(), [
+			'decimal_separator' => 'required|in:comma,dot',
+		]);
+		if ($validator->fails()) {
+			return $this->profileValidationError($validator);
+		}
+
+		$separator = Request::input('decimal_separator') === 'dot' ? '.' : ',';
+		$changed = ($user->decimal_separator ?? ',') !== $separator;
+
+		DB::table('cms_users')->where('id', $user->id)->update(['decimal_separator' => $separator]);
+		\App\Helpers\NumberFormat::flush();
+
+		return $this->profileResponse(true, trans('crudbooster.profile_preferences_saved'), ['reload' => $changed]);
+	}
+
+	/**
 	 * Cambio password, passo 1: password attuale + nuova (policy NIST, vedi
 	 * not_common_password in AppServiceProvider). Poi la verifica dipende da
 	 * MfaHelper::emailChangeMode(): 'totp' (codice dell'app), 'email' (codice

@@ -235,7 +235,7 @@
                                 if (n) total_selected_column = total_selected_column + 1;
                             })
                             if (total_selected_column == 0) {
-                                swal("Oops...", "Please at least 1 column that should adjusted...", "error");
+                                chAlert({ title: {!! json_encode(trans('crudbooster.import_select_one_column_title')) !!}, text: {!! json_encode(trans('crudbooster.import_select_one_column')) !!}, type: "error" });
                                 return false;
                             } else {
                                 return true;

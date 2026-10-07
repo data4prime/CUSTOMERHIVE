@@ -33,6 +33,14 @@
 {{-- Stile caricato qui (e non da ch-components.css) perche' il partial finisce anche in pagine che non lo caricano. --}}
 <link href="{{ asset('css/ch-icon-picker.css') }}?v={{ @filemtime(public_path('css/ch-icon-picker.css')) }}" rel="stylesheet" type="text/css" />
 <script type="application/json" id="ch-ip-data">{!! json_encode(array_values($icons ?? [])) !!}</script>
+@php
+    // nome Bootstrap Icons => [nomi FontAwesome equivalenti], per la ricerca
+    $ip_aliases = [];
+    foreach (\App\Helpers\IconMap::map() as $faName => $biName) {
+        $ip_aliases[$biName][] = $faName;
+    }
+@endphp
+<script type="application/json" id="ch-ip-aliases">{!! json_encode($ip_aliases ?: new \stdClass) !!}</script>
 {{-- Script inline e non @push('bottom'): il partial viene spesso reso a parte (view()->render()
      dentro un controller, come in list_icon) e in quel caso gli stack di Blade si perdono. --}}
 <script src="{{ asset('js/ch-icon-picker.js') }}?v={{ @filemtime(public_path('js/ch-icon-picker.js')) }}"></script>

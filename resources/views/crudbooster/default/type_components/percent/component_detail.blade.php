@@ -1,1 +1,1 @@
-{{$value}}
+{{ isset($form['decimals']) ? \App\Helpers\NumberFormat::format($value, (int) $form['decimals']) : \App\Helpers\NumberFormat::formatNatural($value) }}

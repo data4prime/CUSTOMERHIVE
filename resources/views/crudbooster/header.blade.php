@@ -127,15 +127,11 @@ if ($method != 'content_view') {
                     </div>
                     <div class="pull-{{ trans('crudbooster.right') }}">
                         <a title="Lock Screen" href="{{ route('getLockScreen') }}" class="btn btn-secondary"><i class="bi bi-key-fill"></i></a>
-                        <a href="javascript:void(0)" onclick="swal({
-                                title:'{{trans('crudbooster.alert_want_to_logout')}}',
+                        <a href="javascript:void(0)" onclick="chConfirm({
+                                title: '{{trans('crudbooster.alert_want_to_logout')}}',
                                 type: 'info',
-                                showCancelButton: true,
-                                allowOutsideClick: true,
-                                confirmButtonColor: '#DD6B55',
-                                confirmButtonText: '{{trans('crudbooster.button_logout')}}',
-                                cancelButtonText: '{{trans('crudbooster.button_cancel')}}',
-                                closeOnConfirm: false
+                                confirmText: '{{trans('crudbooster.button_logout')}}',
+                                cancelText: '{{trans('crudbooster.button_cancel')}}'
                             }, function(){
                                 location.href = '{{ route("getLogout") }}';
                             });" title="{{trans('crudbooster.button_logout')}}" class="btn btn-danger">

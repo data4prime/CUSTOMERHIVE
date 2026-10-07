@@ -14,7 +14,7 @@
             'ch_label' => $form['label'],
             'placeholder' => $form['placeholder'] ?? '',
             'required' => !empty($required), 'readonly' => !empty($readonly), 'disabled' => !empty($disabled),
-            'input_attrs' => ['step' => $form['step'] ?? '1', 'min' => $validation['min'] ?? null, 'max' => $validation['max'] ?? null],
+            'input_attrs' => ['step' => $form['step'] ?? (!empty($form['decimals']) ? number_format(1 / pow(10, min(6, (int) $form['decimals'])), min(6, (int) $form['decimals']), '.', '') : '1'), 'min' => $validation['min'] ?? null, 'max' => $validation['max'] ?? null],
             'suffix' => '%',
         ])
         <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".e($errors->first($name)):"" !!}</div>

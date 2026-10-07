@@ -42,7 +42,7 @@
         'rules_none', 'rule_min_len', 'rule_max_len', 'rule_min_val', 'rule_max_val', 'rule_alpha', 'rule_alpha_any',
         'rule_alpha_letters', 'rule_alpha_alnum', 'rule_unique', 'rule_unique_desc', 'rule_date', 'rule_date_any',
         'rule_date_nopast', 'rule_date_nofuture', 'rule_file', 'rule_file_any', 'rule_file_image', 'rule_file_doc',
-        'rule_max_mb', 'rule_extra',
+        'rule_max_mb', 'rule_extra', 'money_title', 'currency', 'currency_none', 'decimals', 'decimals_hint', 'decimals_hint_percent',
     ];
     $L = [];
     foreach ($labelKeys as $k) {
@@ -110,6 +110,7 @@
     var RESERVED = {!! json_encode(array_values((array) config('app.reserved_column_names')), $jf) !!};
     var COLUMNS_URL = {!! json_encode(CRUDBooster::mainpath('table-columns'), $jf) !!};
     var L = {!! json_encode($L, $jf) !!};
+    var CURRENCIES = {!! json_encode(\App\Helpers\NumberFormat::currencyOptions(), $jf) !!};
 
     var NOCOL = ['header', 'child', 'custom', 'googlemaps', 'group_items_datamodal', 'group_members_datamodal', 'group_tenant_datamodal', 'item_access_datamodal', 'item_tenant_datamodal', 'tenant_group_datamodal', 'user_groups_datamodal'];
     var CHOICE = ['select', 'select2', 'radio', 'checkbox'];
@@ -140,6 +141,10 @@
     // colonna creata per un campo nuovo: [tipo, dimensione di default] (stessa logica di ModuleGeneratorFields)
     function sqlSpec(r) {
         if (TABLE_CHOICE.indexOf(r.type) >= 0 && r.opts && r.opts.source === 'table') { return ['number', '11']; }
+        if ((r.type === 'money' || r.type === 'percent') && r.opts && r.opts.decimals !== '' && /^\d+$/.test(String(r.opts.decimals))) {
+            var d = Math.min(6, parseInt(r.opts.decimals, 10));
+            return ['decimal', (r.type === 'money' ? Math.max(12, d + 8) : Math.max(5, d + 3)) + ',' + d];
+        }
         return SQL_BY_TYPE[r.type] || ['text', '255'];
     }
     function hasSize(r) { var k = sqlSpec(r)[0]; return k === 'text' || k === 'number'; }
@@ -149,7 +154,7 @@
             date: 'DATE', datetime: 'DATETIME', time: 'TIME'}[s[0]];
     }
     function emptyOpts() {
-        return {source: 'enum', enum: [''], table: '', column: '', where: '', query: '', mtable: '', mcols: [], msize: 'large', mwhere: '', ftype: 'file', lat: '', lng: '', html: '', shape: 'circle', isize: '96'};
+        return {source: 'enum', enum: [''], table: '', column: '', where: '', query: '', mtable: '', mcols: [], msize: 'large', mwhere: '', ftype: 'file', lat: '', lng: '', html: '', shape: 'circle', isize: '96', currency: 'EUR', decimals: '2'};
     }
     function emptyRules() {
         return {min: '', max: '', unique: false, unique_raw: '', alpha: '', datePolicy: '', fileKind: 'any', maxMb: '', extra: []};
@@ -352,6 +357,18 @@
                 + '<input type="radio" class="btn-check" name="ishape" id="is-c" data-o="shape" value="circle"' + (o.shape !== 'square' ? ' checked' : '') + '><label class="btn btn-outline-secondary" for="is-c">' + esc(L.img_circle) + '</label>'
                 + '<input type="radio" class="btn-check" name="ishape" id="is-s" data-o="shape" value="square"' + (o.shape === 'square' ? ' checked' : '') + '><label class="btn btn-outline-secondary" for="is-s">' + esc(L.img_square) + '</label></div></div>'
                 + '<div class="col-md-6"><label class="small">' + esc(L.img_size) + '</label><input type="number" min="48" max="240" class="form-control form-control-sm" data-o="isize" value="' + esc(o.isize) + '"></div></div></div>';
+        }
+        if (t === 'money' || t === 'percent') {
+            var cur = '';
+            if (t === 'money') {
+                cur = '<div class="col-md-8"><label class="small">' + esc(L.currency) + '</label><select class="form-select form-select-sm" data-o="currency">'
+                    + '<option value=""' + (o.currency === '' ? ' selected' : '') + '>' + esc(L.currency_none) + '</option>'
+                    + Object.keys(CURRENCIES).map(function (c) { return '<option value="' + c + '"' + (o.currency === c ? ' selected' : '') + '>' + esc(CURRENCIES[c]) + '</option>'; }).join('')
+                    + '</select></div>';
+            }
+            return '<div class="fld-panel"><div class="small fw-semibold mb-1">' + esc(L.money_title) + '</div><div class="row g-2">' + cur
+                + '<div class="col-md-4"><label class="small">' + esc(L.decimals) + '</label><input type="number" min="0" max="6" class="form-control form-control-sm" data-o="decimals" value="' + esc(o.decimals) + '"></div></div>'
+                + '<div class="small text-muted mt-1">' + esc(t === 'money' ? L.decimals_hint : L.decimals_hint_percent) + '</div></div>';
         }
         if (t === 'googlemaps') {
             var sel = function (key) {

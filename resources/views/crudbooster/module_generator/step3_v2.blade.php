@@ -5,7 +5,8 @@
     // Testi per il JavaScript: tutti da trans(), mai scritti in chiaro nel JS.
     $labelKeys = [
         'title_ph', 'w_auto', 'w_narrow', 'w_medium', 'w_wide', 'w_custom', 'label_format', 'label_width',
-        'fmt_raw', 'fmt_date_short', 'fmt_date_long', 'fmt_datetime_short', 'fmt_money_eur', 'fmt_money_plain',
+        'fmt_raw', 'fmt_date_short', 'fmt_date_long', 'fmt_datetime_short', 'fmt_money', 'fmt_money_eur', 'fmt_money_plain',
+        'label_currency', 'label_decimals', 'currency_none',
         'fmt_badge', 'fmt_trunc', 'fmt_image', 'fmt_download', 'trunc_first', 'trunc_chars',
         'btn_colors', 'btn_join', 'btn_expr', 'badge_calc', 'badge_system', 'badge_advanced', 'system_note',
         'legacy_note', 'join_set', 'expr_missing', 'join_none', 'join_suggested', 'choose',
@@ -24,6 +25,8 @@
     $L['edit'] = trans('crudbooster.action_edit_data');
     $L['delete'] = trans('crudbooster.action_delete_data');
     $jf = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+    $currencyOptions = \App\Helpers\NumberFormat::currencyOptions();
+    $currencySymbols = \App\Helpers\NumberFormat::CURRENCIES;
 @endphp
 
 @push('head')
@@ -152,6 +155,8 @@
     var ORDERBY_RAW = {!! json_encode((string) $orderby, $jf) !!};
     var LIMIT = {!! json_encode($limit, $jf) !!};
     var L = {!! json_encode($L, $jf) !!};
+    var CURRENCIES = {!! json_encode($currencyOptions, $jf) !!};
+    var CURRENCY_SYMBOLS = {!! json_encode($currencySymbols, $jf) !!};
 
     var PALETTE = ['#198754', '#ffc107', '#dc3545', '#0d6efd', '#0dcaf0', '#6c757d', '#212529'];
     var AUTO = ['#198754', '#ffc107', '#6c757d', '#dc3545', '#0dcaf0', '#0d6efd'];
@@ -195,6 +200,8 @@
         r._k = ++seq;
         if (r.trunc == null) { r.trunc = 60; }
         if (r.format == null) { r.format = ''; }
+        if (r.currency == null) { r.currency = 'EUR'; }
+        if (r.decimals == null) { r.decimals = 2; }
         if (!r.width) { r.width = 'auto'; }
         colorsOf(r);
         if (r.kind === 'calc') { r.show = true; r.calc = r.calc || {lang: 'sql', expr: '', alias: ''}; calcSeq++; }
@@ -204,7 +211,7 @@
         var t = String(r.type || '').toLowerCase();
         if (t === 'date') { return ['', 'date_short', 'date_long']; }
         if (t === 'datetime' || t === 'timestamp') { return ['', 'datetime_short', 'date_short', 'date_long']; }
-        if (['decimal', 'float', 'double', 'numeric'].indexOf(t) >= 0) { return ['', 'money_eur', 'money_plain']; }
+        if (['decimal', 'float', 'double', 'numeric'].indexOf(t) >= 0) { return ['', 'money', 'money_plain']; }
         if (['tinyint', 'int', 'bigint', 'smallint', 'mediumint'].indexOf(t) >= 0) { return ['', 'badge']; }
         return ['', 'trunc', 'badge', 'image', 'download'];
     }
@@ -261,6 +268,12 @@
                 if (r.format === 'trunc') {
                     h += '<div class="input-group input-group-sm mt-1"><span class="input-group-text">' + esc(L.trunc_first) + '</span><input type="number" min="1" max="1000" class="form-control" data-k="' + k + '" data-f="trunc" value="' + esc(r.trunc) + '"><span class="input-group-text">' + esc(L.trunc_chars) + '</span></div>';
                 }
+                if (r.format === 'money') {
+                    h += '<div class="row g-1 mt-1"><div class="col-8"><span class="cfg-wl">' + esc(L.label_currency) + '</span><select class="form-select form-select-sm" data-k="' + k + '" data-f="currency">'
+                        + '<option value=""' + (r.currency === '' ? ' selected' : '') + '>' + esc(L.currency_none) + '</option>'
+                        + Object.keys(CURRENCIES).map(function (c) { return '<option value="' + c + '"' + (r.currency === c ? ' selected' : '') + '>' + esc(CURRENCIES[c]) + '</option>'; }).join('')
+                        + '</select></div><div class="col-4"><span class="cfg-wl">' + esc(L.label_decimals) + '</span><input type="number" min="0" max="6" class="form-control form-control-sm" data-k="' + k + '" data-f="decimals" value="' + esc(r.decimals) + '"></div></div>';
+                }
                 if (r.format === 'badge') {
                     h += '<button type="button" class="btn btn-sm btn-outline-secondary mt-1" data-act="colors" data-k="' + k + '"><i class="bi bi-brush-fill"></i> ' + esc(L.btn_colors) + ' ' + dots(r) + '</button>';
                 }
@@ -307,7 +320,11 @@
         if (f === 'date_short') { return ['12/03/2026', '03/04/2026', '21/05/2026', '08/06/2026'][i % 4]; }
         if (f === 'date_long') { return ['12 marzo 2026', '3 aprile 2026', '21 maggio 2026', '8 giugno 2026'][i % 4]; }
         if (f === 'datetime_short') { return '12/03/2026 09:' + (10 + i * 5); }
-        if (f === 'money_eur') { return '€ ' + (125400 + i * 8300).toLocaleString('it-IT') + ',00'; }
+        if (f === 'money' || f === 'money_eur') {
+            var dec = f === 'money_eur' ? 2 : Math.max(0, Math.min(6, parseInt(r.decimals, 10) || 0));
+            var sym = f === 'money_eur' ? '€' : (CURRENCY_SYMBOLS[r.currency] || '');
+            return (sym ? sym + ' ' : '') + (125400 + i * 8300).toLocaleString('it-IT', {minimumFractionDigits: dec, maximumFractionDigits: dec});
+        }
         if (f === 'money_plain') { return (125400 + i * 8300) + '.00'; }
         if (r.join && r.join.table) { return ['Mario Rossi', 'Lucia Bianchi', 'Paolo Verdi', 'Anna Neri'][i % 4]; }
         if (t === 'date') { return ['2026-03-12', '2026-04-03', '2026-05-21', '2026-06-08'][i % 4]; }
@@ -381,12 +398,14 @@
         if (f === 'format') { r.format = t.value; renderList(); return; }
         if (f === 'width') { r.width = t.value; renderList(); return; }
         if (f === 'label') { r.label = t.value; renderPreview(); return; }
+        if (f === 'currency') { r.currency = t.value; renderPreview(); return; }
+        if (f === 'decimals') { r.decimals = Math.max(0, Math.min(6, parseInt(t.value, 10) || 0)); renderPreview(); return; }
         if (f === 'trunc') { r.trunc = parseInt(t.value, 10) || 60; renderPreview(); }
     }
     listEl.addEventListener('change', onChange);
     listEl.addEventListener('input', function (e) {
         var f = e.target.getAttribute('data-f');
-        if (f === 'label' || f === 'trunc') { onChange(e); }
+        if (f === 'label' || f === 'trunc' || f === 'decimals') { onChange(e); }
     });
 
     var current = null;

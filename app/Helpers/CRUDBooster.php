@@ -741,15 +741,13 @@ public static function isProfilePage() {
 
     public static function deleteConfirm($redirectTo, $print = true)
     {
-        $result = "swal({
+        $result = "chConfirm({
 				title: \"" . trans('crudbooster.delete_title_confirm') . "\",
 				text: \"" . trans('crudbooster.delete_description_confirm') . "\",
-				type: \"warning\",
-				showCancelButton: true,
-				confirmButtonColor: \"#ff0000\",
-				confirmButtonText: \"" . trans('crudbooster.confirmation_yes') . "\",
-				cancelButtonText: \"" . trans('crudbooster.confirmation_no') . "\",
-				closeOnConfirm: false },
+				danger: true,
+												confirmText: \"" . trans('crudbooster.confirmation_yes') . "\",
+				cancelText: \"" . trans('crudbooster.confirmation_no') . "\",
+				},
 				function(){  location.href=\"$redirectTo\" });";
 
         if ($print) {

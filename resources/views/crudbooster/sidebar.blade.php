@@ -231,18 +231,26 @@
             <svg class="ch-nav-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h4v3.4a1.8 1.8 0 0 0 3.2 1.1H20v4h-3.4a1.8 1.8 0 0 0 0 3.2V19h-4v-3.4a1.8 1.8 0 0 0-3.2-1.1H6v-4h3.4A1.8 1.8 0 0 0 9 6.4V3z"/></svg>
             <span>{{ trans('crudbooster.Module_Generator') }}</span> <svg class="ch-nav-chevron pull-{{ trans('crudbooster.right') }}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,6 15,12 9,18"/></svg>
           </a>
+          @php
+            // Una sola voce attiva: "Aggiungi" (step1 senza id), "Abilita/disabilita", altrimenti la lista
+            // (che copre anche dettaglio, modifica e gli altri passi del wizard).
+            $mgAdmin = config('crudbooster.ADMIN_PATH').'/module_generator';
+            $mgOnAdd = Request::is($mgAdmin.'/step1');
+            $mgOnEnable = Request::is($mgAdmin.'/enable*');
+            $mgOnList = Request::is($mgAdmin.'*') && ! $mgOnAdd && ! $mgOnEnable;
+          @endphp
           <ul class='treeview-menu'>
-            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/module_generator/step1')) ? 'active' : '' }}">
+            <li class="{{ $mgOnAdd ? 'active' : '' }}">
               <a href='{{Route("ModulsControllerGetStep1")}}'><i class='bi bi-plus-lg'></i>
                 <span>{{ trans('crudbooster.Add_New_Module') }}</span>
               </a>
             </li>
-            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/module_generator')) ? 'active' : '' }}">
+            <li class="{{ $mgOnList ? 'active' : '' }}">
               <a href='{{Route("ModulsControllerGetIndex")}}'><i class='bi bi-list'></i>
                 <span>{{ trans('crudbooster.List_Module') }}</span>
               </a>
             </li>
-            <li class="{{ (Request::is(config('crudbooster.ADMIN_PATH').'/module_generator')) ? 'active' : '' }}">
+            <li class="{{ $mgOnEnable ? 'active' : '' }}">
               <a href="/{{ config('crudbooster.ADMIN_PATH')}}/module_generator/enable">
                 <i class='bi bi-wrench'></i>
                 <span>{{ trans('crudbooster.enable_disable') }} {{ trans('crudbooster.modules') }}</span>

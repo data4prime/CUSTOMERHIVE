@@ -23,15 +23,10 @@
             var title = $(this).attr('title');
 
             if (title != 'Mass Edit') {
-            swal({
-                title: "{{trans("crudbooster.confirmation_title")}}",
-                text: "{{trans("crudbooster.alert_bulk_action_button")}} " + title + " ?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#008D4C",
-                confirmButtonText: "{{trans('crudbooster.confirmation_yes')}}",
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true
+            chConfirm({
+                title: {!! json_encode(trans("crudbooster.confirmation_title")) !!},
+                text: {!! json_encode(trans("crudbooster.alert_bulk_action_button")) !!} + " " + title + " ?",
+                confirmText: {!! json_encode(trans('crudbooster.confirmation_yes')) !!}
             },
                 function () {
                     $('#form-table').submit();

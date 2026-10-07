@@ -293,6 +293,31 @@
         @endif
       </section>
 
+      {{-- ============ PREFERENZE ============ --}}
+      @php $decSepPref = (($row->decimal_separator ?? ',') === '.') ? 'dot' : 'comma'; @endphp
+      <section class="ch-pane" id="pane-preferences" data-pane="preferences">
+        <h2>{{ trans('crudbooster.profile_section_preferences') }}</h2>
+        <p class="ch-sub">{{ trans('crudbooster.profile_section_preferences_sub') }}</p>
+        <div class="ch-alert" role="alert" hidden></div>
+
+        <form class="ch-ajax" method="post" action="{{ CRUDBooster::adminPath('users/profile-preferences') }}" novalidate>
+          @csrf
+          <div class="ch-grid">
+            <div>
+              <label for="ch-decsep">{{ trans('crudbooster.profile_pref_decimal_separator') }}</label>
+              <select class="form-select" id="ch-decsep" name="decimal_separator">
+                <option value="comma" @if($decSepPref === 'comma') selected @endif>{{ trans('crudbooster.profile_pref_decimal_comma') }}</option>
+                <option value="dot" @if($decSepPref === 'dot') selected @endif>{{ trans('crudbooster.profile_pref_decimal_dot') }}</option>
+              </select>
+              <div class="ch-hint">{{ trans('crudbooster.profile_pref_decimal_hint') }}</div>
+            </div>
+          </div>
+          <div class="ch-actions">
+            <button type="submit" class="btn btn-primary">{{ trans('crudbooster.profile_button_save') }}</button>
+          </div>
+        </form>
+      </section>
+
       {{-- ============ PASSWORD ============ --}}
       <section class="ch-pane" id="pane-password" data-pane="password">
         <h2>{{ trans('crudbooster.profile_section_password') }}</h2>
@@ -435,6 +460,7 @@
       @if(!empty($qlikEnabled))
       <a data-pane-link="qlik"><span class="ch-nav-icon"><i class="bi bi-bar-chart-fill"></i></span>{{ trans('crudbooster.profile_section_qlik') }}</a>
       @endif
+      <a data-pane-link="preferences"><span class="ch-nav-icon"><i class="bi bi-sliders"></i></span>{{ trans('crudbooster.profile_section_preferences') }}</a>
       <a data-pane-link="password"><span class="ch-nav-icon"><i class="bi bi-key-fill"></i></span>{{ trans('crudbooster.profile_section_password') }}</a>
     </nav>
   </div>

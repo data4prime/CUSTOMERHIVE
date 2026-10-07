@@ -3814,7 +3814,8 @@ body.ch-shell .btn-box-tool:hover { background: var(--ch-bg); color: var(--ch-te
   color: var(--ch-text, #16161d);
 }
 
-.ch-sync-title .fa {
+.ch-sync-title .fa,
+.ch-sync-title .bi {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -3922,7 +3923,8 @@ body > .select2-container { z-index: 100001; }
    rosso tinto, testo, riga opzione con casella e bottone di conferma rosso. */
 .ch-sync-dialog--danger { max-width: 460px; }
 
-.ch-sync-dialog--danger .ch-sync-title .fa {
+.ch-sync-dialog--danger .ch-sync-title .fa,
+.ch-sync-dialog--danger .ch-sync-title .bi {
   background: var(--ch-danger-soft, #fbeaeb);
   color: var(--ch-danger, #d1373f);
 }

@@ -15,10 +15,6 @@
     @include('crudbooster::partials.ch_head')
     @include('crudbooster::partials.ch_scripts')
 
-    <!--SWEET ALERT-->
-    <script src="{{asset('vendor/crudbooster/assets/sweetalert/dist/sweetalert.min.js')}}"></script>
-    <link rel="stylesheet" type="text/css" href="{{asset('vendor/crudbooster/assets/sweetalert/dist/sweetalert.css')}}">
-
     @stack('head')
 
     <style>

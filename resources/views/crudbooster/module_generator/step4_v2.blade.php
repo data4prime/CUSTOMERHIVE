@@ -37,7 +37,7 @@
     .lay-title-pm { font-weight: 600; padding: 8px 10px 0; }
     .lay-phone .lay-blk { height: auto; margin-bottom: 10px; }
     .lay-list { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px; min-height: 56px; align-content: flex-start; }
-    .lay-edit .lay-list { outline: 1px dashed var(--ch-border); outline-offset: -4px; }
+    .lay-edit .lay-list { outline: 1px dashed var(--ch-border); outline-offset: -4px; min-height: 140px; }
     .lay-edit .lay-list:empty::before { content: attr(data-empty); color: var(--ch-text-muted); font-size: .85rem; margin: auto; }
     .lay-fi { position: relative; border-radius: var(--ch-radius-sm); }
     .lay-edit .lay-fi:hover { outline: 1px solid var(--ch-blue); background: var(--ch-surface); }
@@ -325,7 +325,7 @@
         if (act === 'addBlk') {
             savePos();
             var bottom = t.blocks.reduce(function (m, b) { return Math.max(m, b.y + b.h); }, 0);
-            var nb = {id: 'b' + (S.nid++), title: '', x: 0, y: bottom, w: 12, h: 3, fields: []};
+            var nb = {id: 'b' + (S.nid++), title: '', x: 0, y: bottom, w: 12, h: 5, fields: []};
             nb.h = estH(nb);
             t.blocks.push(nb);
             draw();

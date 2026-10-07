@@ -171,7 +171,8 @@
                     @endif
 
                     <!--ADD ACTIon-->
-                    @if(!empty($index_button))
+                    {{-- Nei passi del wizard del module generator ($active_tab) i pulsanti della lista (Generate/Import) non servono --}}
+                    @if(!empty($index_button) && !isset($active_tab))
 
                     @foreach($index_button as $ib)
                     <!--<a href='{{$ib["url"]}}' id='{{str_slug($ib["label"])}}' class="btn 

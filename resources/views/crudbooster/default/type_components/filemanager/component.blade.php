@@ -30,7 +30,7 @@
                                                     title=' {{trans("crudbooster.button_download_file")}} {{ basename($value)}}'><b>{{ basename($value) }}</b></a>
                         <span>{{trans("crudbooster.button_download_file")}}</span></div>
                         <a class='btn btn-danger btn-delete btn-sm'
-                                 onclick='swal({   title: "{{trans("crudbooster.delete_title_confirm")}}",   text: "{{trans("crudbooster.delete_description_confirm")}}",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "{{trans("crudbooster.confirmation_yes")}}",cancelButtonText: "{{trans('crudbooster.button_cancel')}}",   closeOnConfirm: false }, function(){  location.href="{{url($mainpath."/delete-filemanager?file=".$row->{$name}."&id=".$row->id."&column=".$name)}}" });'
+                                 onclick='chConfirm({   title: "{{trans("crudbooster.delete_title_confirm")}}",   text: "{{trans("crudbooster.delete_description_confirm")}}",   danger: true,   confirmText: "{{trans("crudbooster.confirmation_yes")}}",cancelText: "{{trans('crudbooster.button_cancel')}}" }, function(){  location.href="{{url($mainpath."/delete-filemanager?file=".$row->{$name}."&id=".$row->id."&column=".$name)}}" });'
                                  href='javascript:void(0)' title='{{trans('crudbooster.text_delete')}}'><i class='bi bi-slash-circle'></i></a>
                     </div>@endif
             @else
@@ -39,7 +39,7 @@
                     <div class="ch-file-meta"><b>{{ basename($value) }}</b></div>
                     @if(!$readonly || !$disabled)
                     <a class='btn btn-danger btn-delete btn-sm'
-                      onclick='swal({   title: "{{trans("crudbooster.delete_title_confirm")}}",   text: "{{trans("crudbooster.delete_description_confirm")}}",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "{{trans("crudbooster.confirmation_yes")}}", cancelButtonText: "{{trans('crudbooster.button_cancel')}}",   closeOnConfirm: false }, function(){  location.href="{{url(CRUDBooster::mainpath("update-single?table=$table&column=$name&value=&id=$id"))}}" });'><i
+                      onclick='chConfirm({   title: "{{trans("crudbooster.delete_title_confirm")}}",   text: "{{trans("crudbooster.delete_description_confirm")}}",   danger: true,   confirmText: "{{trans("crudbooster.confirmation_yes")}}", cancelText: "{{trans('crudbooster.button_cancel')}}" }, function(){  location.href="{{url(CRUDBooster::mainpath("update-single?table=$table&column=$name&value=&id=$id"))}}" });'><i
                                 class='bi bi-slash-circle'></i> {{trans('crudbooster.text_delete')}} </a>
                     @endif
                 </div>

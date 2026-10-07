@@ -132,14 +132,11 @@
                                 <a style="visibility: hidden" href="{{ CRUDBooster::mainpath('edit/' . $s->id) }}" title="Edit This Meta Setting" class="btn btn-box-tool">
                                     <i class="bi bi-pencil-fill"></i>
                                 </a>
-                                <a style="visibility: hidden" href="javascript:;" title="Delete this Setting" class="btn btn-box-tool" onClick="swal({
+                                <a style="visibility: hidden" href="javascript:;" title="Delete this Setting" class="btn btn-box-tool" onClick="chConfirm({
                                     title: '{{ trans('crudbooster.delete_title_confirm') }}',
                                     text: '{{ trans('crudbooster.delete_description_confirm') }} {{ $s->label }} {{ trans('crudbooster.and_may_be_can_cause_some_errors_on_your_system') }}',
-                                    type: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#DD6B55',
-                                    confirmButtonText: '{{ trans('crudbooster.yes_delete_it') }}',
-                                    closeOnConfirm: false
+                                    danger: true,
+                                    confirmText: '{{ trans('crudbooster.yes_delete_it') }}'
                                 }, function() { location.href='{{ CRUDBooster::mainpath("delete/" . $s->id) }}' });">
                                     <i class="bi bi-trash-fill"></i>
                                 </a>
