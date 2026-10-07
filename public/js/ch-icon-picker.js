@@ -23,6 +23,8 @@
     if (names) { return names; }
     var el = document.getElementById('ch-ip-data');
     try { names = el ? JSON.parse(el.textContent) : []; } catch (e) { names = []; }
+    // alcuni nomi (es. l'icona "123") escono dal JSON come numeri
+    names = names.map(String);
     return names;
   }
 

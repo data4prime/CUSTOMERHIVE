@@ -38,6 +38,9 @@
     .lay-phone .lay-blk { height: auto; margin-bottom: 10px; }
     .lay-list { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px; min-height: 56px; align-content: flex-start; }
     .lay-edit .lay-list { outline: 1px dashed var(--ch-border); outline-offset: -4px; min-height: 140px; }
+    /* in modifica l'area di rilascio occupa tutto il blocco, non solo lo spazio sotto l'ultimo campo */
+    .lay-edit .lay-body { display: flex; flex-direction: column; min-height: 0; }
+    .lay-edit .lay-body > .lay-list { flex: 1 1 auto; }
     .lay-edit .lay-list:empty::before { content: attr(data-empty); color: var(--ch-text-muted); font-size: .85rem; margin: auto; }
     .lay-fi { position: relative; border-radius: var(--ch-radius-sm); }
     .lay-edit .lay-fi:hover { outline: 1px solid var(--ch-blue); background: var(--ch-surface); }

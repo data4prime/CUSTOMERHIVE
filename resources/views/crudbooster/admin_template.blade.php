@@ -117,7 +117,7 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
 
-            <section class="content-header">
+            <section class="content-header{{ isset($active_tab) ? ' ch-header-compact' : '' }}">
                 @php
                 $module = CRUDBooster::getCurrentModule();
                 @endphp

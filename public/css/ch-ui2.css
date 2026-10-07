@@ -360,6 +360,17 @@ body.ch-shell.ch-ui2 .content-wrapper > .content-header {
   margin-bottom: 22px;
 }
 
+/* Passi del wizard del module generator: niente pulsanti nel titolo, intestazione piu' compatta */
+body.ch-shell.ch-ui2 .content-wrapper > .content-header.ch-header-compact {
+  margin-bottom: 6px;
+}
+body.ch-shell.ch-ui2 .content-header.ch-header-compact .breadcrumb {
+  margin-bottom: 4px;
+}
+body.ch-shell.ch-ui2 .content-header.ch-header-compact > h1 {
+  line-height: 1.2;
+}
+
 body.ch-shell.ch-ui2 .content-header .breadcrumb {
   order: -1;
   position: static;

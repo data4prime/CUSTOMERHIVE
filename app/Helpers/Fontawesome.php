@@ -13,7 +13,7 @@ namespace App\Helpers;
 class Fontawesome {
 	public static function getIcons() {
 		$file = public_path('vendor/bootstrap-icons/bootstrap-icons.json');
-		$names = is_file($file) ? array_keys(json_decode(file_get_contents($file), true) ?: []) : [];
+		$names = is_file($file) ? array_map('strval', array_keys(json_decode(file_get_contents($file), true) ?: [])) : [];
 		sort($names);
 
 		return $names;

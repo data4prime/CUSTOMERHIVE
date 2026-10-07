@@ -676,8 +676,10 @@ class CBController extends Controller
                 // chiave opzionale, assente nei moduli esistenti.
                 if (isset($col['format'])) {
                     $value = \App\Helpers\ModuleGeneratorList::formatValue($value, $col);
-                } elseif (isset($numericForms[$col['name'] ?? '']) && ($col['field'] ?? null) === $col['name'] && empty($col['callback']) && empty($col['callback_php'])) {
-                    $value = \App\Helpers\ModuleGeneratorList::formatNumericField($value, $numericForms[$col['name']]);
+                } elseif (empty($col['join']) && empty($col['is_subquery']) && empty($col['callback']) && empty($col['callback_php']) && empty($col['query'])
+                    && isset($numericForms[$numName = substr(strrchr('.' . ($col['name'] ?? ''), '.'), 1)])) {
+                    // $numName: nome della colonna senza l'eventuale prefisso "tabella."
+                    $value = \App\Helpers\ModuleGeneratorList::formatNumericField($value, $numericForms[$numName]);
                 }
 
                 if (isset($col['str_limit']) && $col['str_limit']) {

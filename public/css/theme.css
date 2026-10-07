@@ -754,7 +754,9 @@ body.ch-shell .sidebar-menu li > a > img {
  * transizione della versione SVG statica, per la rotazione qui sotto.
  */
 body.ch-shell .sidebar-menu li > a > .fa-angle-right,
-body.ch-shell .sidebar-menu li > a > .fa-angle-left {
+body.ch-shell .sidebar-menu li > a > .fa-angle-left,
+body.ch-shell .sidebar-menu li > a > .bi-chevron-right,
+body.ch-shell .sidebar-menu li > a > .bi-chevron-left {
   transition: transform .15s ease;
 }
 
@@ -771,7 +773,9 @@ body.ch-shell .sidebar-menu li > a > .fa-angle-left {
  */
 body.ch-shell .sidebar-menu li:has(> ul.treeview-menu.menu-open) > a > .ch-nav-chevron,
 body.ch-shell .sidebar-menu li:has(> ul.treeview-menu.menu-open) > a > .fa-angle-right,
-body.ch-shell .sidebar-menu li:has(> ul.treeview-menu.menu-open) > a > .fa-angle-left {
+body.ch-shell .sidebar-menu li:has(> ul.treeview-menu.menu-open) > a > .fa-angle-left,
+body.ch-shell .sidebar-menu li:has(> ul.treeview-menu.menu-open) > a > .bi-chevron-right,
+body.ch-shell .sidebar-menu li:has(> ul.treeview-menu.menu-open) > a > .bi-chevron-left {
   transform: rotate(90deg);
 }
 

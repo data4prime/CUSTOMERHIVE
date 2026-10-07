@@ -5,7 +5,9 @@ if (isset($datatable) && ! isset($form['relationship_table'])) {
     if (!empty($datatable)) {
         $table = $datatable[0];
     $field = $datatable[1];
-    echo CRUDBooster::first($table, ['id' => $value])->$field;
+    // campo non obbligatorio senza valore: niente record collegato
+    $linked = ($value !== null && $value !== '') ? CRUDBooster::first($table, ['id' => $value]) : null;
+    echo $linked ? e($linked->$field) : '';
     }
     
 }
