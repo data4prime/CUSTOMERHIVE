@@ -42,9 +42,35 @@ class AdminCmsUsersController extends CBController
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = array();
-		$this->col[] = array("label" => "Name", "name" => "name");
-		$this->col[] = array("label" => "Email", "name" => "email");
-		$this->col[] = array("label" => "Privilege", "name" => "id_cms_privileges", "join" => "cms_privileges,name");
+		// Lista utenti (intervento 232): avatar + nome + email in una cella
+		// (via la colonna Photo), ruolo/scadenza/stato come etichette colorate.
+		$this->col[] = array("label" => "Name", "name" => "name", "callback" => function ($row) {
+			// Con foto: la foto. Senza: cerchio con le iniziali (prime due parole del nome).
+			if (!empty($row->photo)) {
+				$avatar = '<img width="32" height="32" style="border-radius:50%;object-fit:cover;flex:none" src="' . e(UserHelper::icon($row->id)) . '" alt="">';
+			} else {
+				$initials = '';
+				foreach (array_slice(preg_split('/\s+/u', trim((string) $row->name), -1, PREG_SPLIT_NO_EMPTY), 0, 2) as $w) {
+					$initials .= mb_strtoupper(mb_substr($w, 0, 1));
+				}
+				$avatar = '<span style="display:inline-grid;place-items:center;flex:none;width:32px;height:32px;border-radius:50%;font-weight:700;font-size:12px;background:var(--ch-accent-soft);color:var(--ch-accent)">' . e($initials ?: '?') . '</span>';
+			}
+			return '<div class="d-flex align-items-center gap-2">'
+				. $avatar
+				. '<div>' . e($row->name) . '<div class="small text-secondary">' . e($row->email) . '</div></div>'
+				. '</div>';
+		});
+		$this->col[] = array("label" => "Email", "name" => "email", "visible" => false);
+		$this->col[] = array("label" => "Privilege", "name" => "id_cms_privileges", "join" => "cms_privileges,name", "callback" => function ($row) {
+			if ($row->cms_privileges_is_superadmin == 1) {
+				$class = 'ok';
+			} elseif ($row->cms_privileges_is_tenantadmin == 1) {
+				$class = 'warn';
+			} else {
+				$class = 'gray';
+			}
+			return $row->cms_privileges_name === null ? '' : '<span class="ch-pill ch-pill-' . $class . '">' . e($row->cms_privileges_name) . '</span>';
+		});
 		if (CRUDBooster::isSuperadmin()) {
 			$this->col[] = array("label" => "Tenant", "name" => "tenant", "join" => "tenants,name");
 		}
@@ -53,9 +79,29 @@ class AdminCmsUsersController extends CBController
 
 		// Senza il controllo su vuoto, strtotime(null) ritorna 0 e date() lo
 		// formatta come 01/01/1970 (epoca Unix) invece di non mostrare nulla.
-		$this->col[] = array("label" => "Expiry date", "name" => "data_scadenza", "callback_php" => "empty(\$row->data_scadenza) ? '' : date('d/m/Y',strtotime(\$row->data_scadenza))");
-		$this->col[] = array("label" => "Status", "name" => "status");
-		$this->col[] = array("label" => "Photo", "name" => "photo", "image" => 1);
+		// Scaduto = rosso, entro 14 giorni = arancio, altrimenti solo la data.
+		$this->col[] = array("label" => "Expiry date", "name" => "data_scadenza", "callback" => function ($row) {
+			if (empty($row->data_scadenza)) {
+				return '';
+			}
+			$ts = strtotime($row->data_scadenza);
+			$date = date('d/m/Y', $ts);
+			$days = (int) floor(($ts - strtotime('today')) / 86400);
+			if ($days < 0) {
+				return '<span class="ch-pill ch-pill-bad">' . e(trans('crudbooster.adm_expired')) . '</span> ' . $date;
+			}
+			if ($days <= 14) {
+				return '<span class="ch-pill ch-pill-warn">' . e(trans_choice('crudbooster.adm_expires_in_days', $days, ['count' => $days])) . '</span> ' . $date;
+			}
+			return $date;
+		});
+		$this->col[] = array("label" => "Status", "name" => "status", "callback" => function ($row) {
+			return $row->status == 'Inactive'
+				? '<span class="ch-pill ch-pill-bad">' . e(trans('crudbooster.adm_status_inactive')) . '</span>'
+				: '<span class="ch-pill ch-pill-ok">' . e(trans('crudbooster.adm_status_active')) . '</span>';
+		});
+		// La foto resta nel form; qui serve solo per l'avatar della cella Name.
+		$this->col[] = array("label" => "Photo", "name" => "photo", "visible" => false);
 
 
 
@@ -103,13 +149,16 @@ class AdminCmsUsersController extends CBController
 			"label" => "Status",
 			"name" => "status",
 			'required' => true,
-			'type' => 'select',
-			'dataenum' => ['Inactive'],
-			'default' => 'Active',
+			// Controllo a due stati (intervento 232): prima era una select con
+			// la sola voce 'Inactive' piu' 'Active' come default. I valori
+			// salvati restano 'Active' / 'Inactive'.
+			'type' => 'radio',
+			'value' => 'Active',
+			'dataenum' => ['Active|' . trans('crudbooster.adm_status_active'), 'Inactive|' . trans('crudbooster.adm_status_inactive')],
 			'disabled' => UserHelper::isTenantAdmin() || CRUDBooster::isSuperadmin() ? false : true,
 		];
-		$this->form[] = array("label" => "Photo", "name" => "photo", "type" => "upload", "help" => "Recommended resolution is 200x200px", 'required' => false, 'validation' => 'image|max:1000', 'resize_width' => 90, 'resize_height' => 90);
-		$this->form[] = array("label" => "Language", "name" => "lang", "type" => "select", "dataenum" => ['en|English', 'it|Italiano'], "value" => "en");
+		$this->form[] = array("label" => "Photo", "name" => "photo", "type" => "image", "shape" => "circle", "icon" => "bi-person-fill", "help" => "Recommended resolution is 200x200px", 'required' => false, 'validation' => 'image|max:1000', 'resize_width' => 90, 'resize_height' => 90);
+		$this->form[] = array("label" => "Language", "name" => "lang", "type" => "radio", "dataenum" => ['en|English', 'it|Italiano'], "value" => "en");
 
 
 
@@ -245,6 +294,25 @@ class AdminCmsUsersController extends CBController
 				
 
 # END FORM DO NOT REMOVE THIS LINE
+
+		// Form a schede (stesso motore del layout dei moduli generati, vedi
+		// ModuleGeneratorLayout): Generale / Sistema / Qlik. Con un layout
+		// attivo i campi non posizionati non vengono disegnati ne' salvati
+		// (CBController::checkFormLayout), quindi ogni campo del form va messo
+		// in una scheda; la scheda Qlik c'e' solo se il campo esiste (licenza
+		// Qlik attiva, pagina di modifica).
+		$this->form_layout = $this->buildTabsLayout();
+
+		// Modifica/nuovo/dettaglio utente con intestazione propria (briciole,
+		// titolo, reset password in alto a destra): default.form la include al
+		// posto di link "torna all'elenco" + titolo nella card (intervento 232).
+		// Il profilo (getProfile) ha la sua pagina e resta fuori.
+		\App\Helpers\FlatForm::share([
+			trans('crudbooster.adm_user_new'),
+			trans('crudbooster.adm_user_edit'),
+			trans('crudbooster.adm_user_view'),
+		], 'users.form_actions');
+
 		$user_id = CRUDBooster::myId();
 		$this->script_js = "
 			/*
@@ -273,6 +341,54 @@ class AdminCmsUsersController extends CBController
 		$this->addaction = array();
 		//TODO tenantadmin can't update users with superadmin or tenantadmin privilege
 		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('groups/[id]'), 'icon' => 'bi bi-people-fill', 'color' => 'info', 'title' => 'View groups'];
+	}
+
+	/**
+	 * Layout a schede del form utenti. Solo i campi presenti in $this->form
+	 * entrano nel layout (dipendono da ruolo, pagina e licenza).
+	 */
+	private function buildTabsLayout()
+	{
+		$present = [];
+		foreach ($this->form as $f) {
+			$present[$f['name']] = true;
+		}
+		$block = function ($id, array $names) use ($present) {
+			$fields = [];
+			foreach ($names as $name => $w) {
+				if (isset($present[$name])) {
+					$fields[] = ['name' => $name, 'w' => $w];
+				}
+			}
+
+			return ['id' => $id, 'title' => '', 'x' => 0, 'y' => 0, 'w' => 12, 'h' => max(3, 2 + count($fields)), 'fields' => $fields];
+		};
+
+		// Scheda Generale in due blocchi (mockup, intervento 232): dati a sinistra, foto a destra.
+		$general = $block('b1', ['name' => 6, 'email' => 6, 'id_cms_privileges' => 6, 'lang' => 6, 'status' => 6, 'data_scadenza' => 6, 'password' => 6, 'password_confirmation' => 6]);
+		$general['w'] = 8;
+		$photo = $block('b1p', ['photo' => 12]);
+		$photo['x'] = 8;
+		$photo['w'] = 4;
+
+		$tabs = [
+			['id' => 't1', 'title' => trans('crudbooster.profile_section_general'), 'blocks' => [
+				$general,
+				$photo,
+			]],
+			['id' => 't2', 'title' => trans('crudbooster.profile_section_system'), 'blocks' => [
+				$block('b2', ['tenant' => 6, 'primary_group' => 6]),
+			]],
+		];
+		if (isset($present['qlik_users'])) {
+			$tabs[] = ['id' => 't3', 'title' => trans('crudbooster.profile_section_qlik'), 'blocks' => [
+				$block('b3', ['qlik_users' => 12]),
+			]];
+		}
+		// Il reset password di un altro utente e' nel pulsante in alto a destra della
+		// pagina (users/form_header.blade.php), non piu' in una scheda.
+
+		return ['v' => 2, 'tabs' => $tabs];
 	}
 
 	public function getProfile()
@@ -851,6 +967,10 @@ class AdminCmsUsersController extends CBController
 			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
 		}
 
+		if (! CRUDBooster::isEmailEnabled()) {
+			return $this->profileResponse(false, trans('crudbooster.email_disabled_notice'), [], 409);
+		}
+
 		$email = $target->email;
 
 		try {
@@ -1235,6 +1355,25 @@ class AdminCmsUsersController extends CBController
 
 		$data['user'] = \App\User::find($user_id);
 		$data['user_id'] = $user_id;
+
+		// Gruppi non ancora assegnati all'utente: elenco della modale "Aggiungi gruppo".
+		// Stesso scoping del vecchio popup di ricerca: un tenant admin vede solo
+		// i gruppi del proprio tenant.
+		$available = DB::table('groups')
+			->whereNotExists(function ($query) use ($user_id) {
+				$query->select(DB::raw(1))
+					->from('users_groups')
+					->whereRaw('users_groups.group_id = groups.id')
+					->whereNull('users_groups.deleted_at')
+					->where('users_groups.user_id', (int) $user_id);
+			});
+		if (UserHelper::isTenantAdmin()) {
+			$available->whereIn('groups.id', function ($query) {
+				$query->select('group_id')->from('group_tenants')->where('tenant_id', (int) UserHelper::current_user_tenant());
+			});
+		}
+		$data['available_groups'] = $available->orderBy('groups.name')->get(['groups.id', 'groups.name', 'groups.description']);
+		$data['modal_title'] = trans('crudbooster.adm_user_add_group_title');
 
 		//prendo $_GET &alert=
 		if (!empty($alert_id)) {

@@ -22,6 +22,9 @@ class AdminTenantsController extends CBController
 	public function cbInit()
 	{
 
+		// Pagine nuovo/modifica/dettaglio in stile mockup (intervento 232)
+		\App\Helpers\FlatForm::share([trans('crudbooster.adm_tenant_new'), trans('crudbooster.adm_tenant_edit'), trans('crudbooster.adm_tenant_view')]);
+
 		# START CONFIGURATION DO NOT REMOVE THIS LINE
 		$this->title_field = "name";
 		$this->limit = "20";
@@ -43,29 +46,109 @@ class AdminTenantsController extends CBController
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = [];
-		$this->col[] = ["label" => "Id", "name" => "id"];
+		// Lista snella (intervento 232): via Id, Favicon e i due colori di
+		// login (si vedono nell'anteprima del form di modifica); dentro
+		// ci sono dominio e conteggi utenti/gruppi. I conteggi sono colonne
+		// con callback su "id" (non subquery: il filtro avanzato lavora su
+		// colonne vere e con una subquery darebbe errore SQL).
+		$this->col = [];
+		// Logo: se manca, un quadrato con le iniziali del tenant (colore
+		// scelto dal nome, sempre lo stesso per lo stesso tenant).
+		$this->col[] = ["label" => "Logo", "name" => "logo", "callback" => function ($row) {
+			if (!empty($row->logo)) {
+				$pic = (strpos($row->logo, 'http') === 0) ? $row->logo : asset($row->logo);
+				return "<a data-lightbox='roadtrip' title='" . e($row->name) . "' href='" . e($pic) . "'><img width='40' height='40' style='border-radius:8px;object-fit:cover' src='" . e($pic) . "' alt=''></a>";
+			}
+			$tones = ['blue', 'violet', 'success', 'warning', 'danger'];
+			$tone = $tones[crc32((string) $row->name) % count($tones)];
+			$words = preg_split('/\s+/u', trim((string) $row->name), -1, PREG_SPLIT_NO_EMPTY);
+			$initials = '';
+			foreach (array_slice($words, 0, 2) as $w) {
+				$initials .= mb_strtoupper(mb_substr($w, 0, 1));
+			}
+			return "<span style='display:inline-grid;place-items:center;width:40px;height:40px;border-radius:8px;font-weight:700;font-size:13px;background:var(--ch-{$tone}-soft, var(--ch-accent-soft));color:var(--ch-{$tone})'>" . e($initials ?: '?') . "</span>";
+		}];
 		$this->col[] = ["label" => "Name", "name" => "name"];
 		$this->col[] = ["label" => "Description", "name" => "description"];
-		$this->col[] = ["label" => "Logo", "name" => "logo", "image" => true];
-		$this->col[] = ["label" => "Favicon", "name" => "favicon", "image" => true];
-		$this->col[] = ["label" => "Login Background Color", "name" => "login_background_color", "color" => true];
-		// $this->col[] = ["label"=>"Login Background Image","name"=>"login_background_image"];
-		$this->col[] = ["label" => "Login Font Color", "name" => "login_font_color", "color" => true];
-		$this->col[] = ["label" => "Created At", "name" => "created_at"];
+		$this->col[] = ["label" => trans('crudbooster.adm_domain'), "name" => "domain_name"];
+		$this->col[] = [
+			"label" => trans('crudbooster.adm_users'),
+			"align" => "center",
+			"name" => "id",
+			"callback" => function ($row) {
+				return '<div class="text-center" style="font-variant-numeric:tabular-nums">' . (int) User::where('tenant', $row->id)->count() . '</div>';
+			},
+		];
+		$this->col[] = [
+			"label" => trans('crudbooster.adm_groups'),
+			"align" => "center",
+			"name" => "id",
+			"callback" => function ($row) {
+				return '<div class="text-center" style="font-variant-numeric:tabular-nums">' . (int) GroupTenants::where('tenant_id', $row->id)->count() . '</div>';
+			},
+		];
+		// Data di sistema in formato italiano (gg/mm/aaaa hh:mm), come il registro accessi
+		$this->col[] = ["label" => "Created At", "name" => "created_at", "callback" => function ($row) {
+			return $row->created_at ? '<span style="white-space:nowrap">' . e(date('d/m/Y H:i', strtotime($row->created_at))) . '</span>' : '';
+		}];
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
 		# START FORM DO NOT REMOVE THIS LINE
 		$this->form = [];
 		$this->form[] = ['label' => 'Name', 'name' => 'name', 'type' => 'text', 'validation' => 'required', 'width' => 'col-sm-9'];
 		$this->form[] = ['label' => 'Description', 'name' => 'description', 'type' => 'text', 'width' => 'col-sm-9'];
-		$this->form[] = ['label' => 'Logo', 'name' => 'logo', 'type' => 'upload', 'width' => 'col-sm-9', 'validation' => 'image|max:10000', 'help' => 'Supported types: jpg, png, gif. Max 10 MB'];
-		$this->form[] = ['label' => 'Favicon', 'name' => 'favicon', 'type' => 'upload', 'width' => 'col-sm-9', 'validation' => 'image|max:10000', 'help' => 'Supported types: jpg, png, gif. Max 10 MB'];
+		$this->form[] = ['label' => 'Logo', 'name' => 'logo', 'type' => 'image', 'shape' => 'square', 'icon' => 'bi-image', 'width' => 'col-sm-9', 'validation' => 'image|max:10000', 'help' => 'Supported types: jpg, png, gif. Max 10 MB'];
+		$this->form[] = ['label' => 'Favicon', 'name' => 'favicon', 'type' => 'image', 'shape' => 'square', 'icon' => 'bi-star', 'width' => 'col-sm-9', 'validation' => 'image|max:10000', 'help' => 'Supported types: jpg, png, gif. Max 10 MB'];
 		$this->form[] = ['label' => 'Background Color', 'name' => 'login_background_color', 'type' => 'color', 'width' => 'col-sm-9'];
-		$this->form[] = ['label' => 'Background Image', 'name' => 'login_background_image', 'type' => 'upload', 'width' => 'col-sm-9', 'validation' => 'image|max:10000', 'help' => 'Supported types: jpg, png, gif. Max 10 MB'];
+		$this->form[] = ['label' => 'Background Image', 'name' => 'login_background_image', 'type' => 'image', 'shape' => 'square', 'icon' => 'bi-card-image', 'width' => 'col-sm-9', 'validation' => 'image|max:10000', 'help' => 'Supported types: jpg, png, gif. Max 10 MB'];
 		$this->form[] = ['label' => 'Font Color', 'name' => 'login_font_color', 'type' => 'color', 'width' => 'col-sm-9'];
 		$this->form[] = ['label' => 'Domain name', 'name' => 'domain_name', 'type' => 'text', 'width' => 'col-sm-9', 'help' => 'use only letters and numbers', 'validation' => 'required|min:1|max:20|regex:/^[a-zA-Z0-9]+$/u'];
 	$this->form[] = ['label' => 'Tenant Path', 'name' => 'tenant_path', 'type' => 'hidden', 'width' => 'col-sm-10', 'value' => env('APP_URL')];
-		
+
+		// Pagina a schede come nel mockup (intervento 232): Identita' / Pagina di
+		// login (campi + anteprima) / Dominio. "login_preview" e "login_uri" sono
+		// campi 'custom' di sola visualizzazione ('exception': non si salvano).
+		$tenantRow = ($tid = CRUDBooster::getCurrentId()) ? Tenant::find($tid) : null;
+		$this->form[] = [
+			'label' => trans('crudbooster.adm_login_preview'),
+			'name' => 'login_preview',
+			'type' => 'custom',
+			'exception' => true,
+			'html' => ($previewHtml = view('tenants.login_preview', ['row' => $tenantRow])->render()),
+			'value' => $previewHtml,
+		];
+		if ($tenantRow) {
+			$loginURI = TenantHelper::loginPath($tenantRow->id);
+			$loginLink = '<a target="_blank" href="' . e($loginURI) . '">' . e($loginURI) . '</a>';
+			$this->form[] = [
+				'label' => trans('crudbooster.adm_tenant_login_uri'),
+				'name' => 'login_uri',
+				'type' => 'custom',
+				'exception' => true,
+				'html' => '<div class="form-control" style="height:auto">' . $loginLink . '</div>',
+				'value' => $loginLink,
+			];
+		}
+		$layoutBlock = function ($id, $x, $w, array $names) {
+			$fields = [];
+			foreach ($names as $name => $fw) {
+				$fields[] = ['name' => $name, 'w' => $fw];
+			}
+			return ['id' => $id, 'title' => '', 'x' => $x, 'y' => 0, 'w' => $w, 'h' => max(3, 2 + count($fields)), 'fields' => $fields];
+		};
+		$this->form_layout = ['v' => 2, 'tabs' => [
+			['id' => 't1', 'title' => trans('crudbooster.adm_tenant_tab_identity'), 'blocks' => [
+				$layoutBlock('b1', 0, 12, ['name' => 6, 'description' => 6, 'logo' => 6, 'favicon' => 6]),
+			]],
+			['id' => 't2', 'title' => trans('crudbooster.adm_tenant_tab_login'), 'blocks' => [
+				$layoutBlock('b2', 0, 8, ['login_background_color' => 6, 'login_font_color' => 6, 'login_background_image' => 12]),
+				$layoutBlock('b3', 8, 4, ['login_preview' => 12]),
+			]],
+			['id' => 't3', 'title' => trans('crudbooster.adm_tenant_tab_domain'), 'blocks' => [
+				$layoutBlock('b4', 0, 12, $tenantRow ? ['domain_name' => 6, 'login_uri' => 12] : ['domain_name' => 6]),
+			]],
+		]];
+
 # END FORM DO NOT REMOVE THIS LINE
 
 		# OLD START FORM
@@ -106,8 +189,8 @@ class AdminTenantsController extends CBController
 	        |
 	        */
 		$this->addaction = array();
-		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'bi bi-person-fill', 'color' => 'info', 'title' => 'Members'];
-		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('group/[id]'), 'icon' => 'bi bi-people-fill', 'color' => 'info', 'title' => 'Groups'];
+		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'bi bi-person-fill', 'color' => 'info', 'title' => trans('crudbooster.adm_tenant_users_action')];
+		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('group/[id]'), 'icon' => 'bi bi-people-fill', 'color' => 'info', 'title' => trans('crudbooster.adm_tenant_groups_action')];
 
 		/*
 	        | ----------------------------------------------------------------------
@@ -354,7 +437,7 @@ class AdminTenantsController extends CBController
 	{
 		$members_count = User::where('tenant', $id)->count();
 		if ($members_count > 0) {
-			return CRUDBooster::redirect(CRUDBooster::adminPath('tenants'), trans('crudbooster.delete_not_empty_tenant'));
+			return CRUDBooster::redirect(CRUDBooster::adminPath('tenants'), trans('crudbooster.delete_not_empty_tenant_count', ['count' => $members_count]));
 		}
 	}
 
@@ -388,7 +471,7 @@ class AdminTenantsController extends CBController
 		$command = 'edit';
 		Session::put('current_row_id', $id);
 
-		return view('tenants.form', compact('id', 'row', 'page_menu', 'page_title', 'command'));
+		return view('crudbooster::default.form', compact('id', 'row', 'page_menu', 'page_title', 'command'));
 	}
 
 	public function members($tenant_id)
@@ -401,7 +484,9 @@ class AdminTenantsController extends CBController
 		$data = [];
 		$data['members'] = DB::table('cms_users')
 			->where('cms_users.tenant', $tenant_id)
-			->select('cms_users.id', 'cms_users.name', 'cms_users.email', 'cms_users.photo')
+			->leftJoin('cms_privileges', 'cms_privileges.id', '=', 'cms_users.id_cms_privileges')
+			->leftJoin('groups', 'groups.id', '=', 'cms_users.primary_group')
+			->select('cms_users.id', 'cms_users.name', 'cms_users.email', 'cms_users.photo', 'cms_users.status', 'cms_users.id_cms_privileges', 'cms_privileges.name as privilege', 'cms_privileges.is_superadmin', 'cms_privileges.is_tenantadmin', 'groups.name as primary_group_name')
 			->get();
 
 		$data['tenant'] = Tenant::find($tenant_id);
@@ -424,7 +509,17 @@ class AdminTenantsController extends CBController
 		$data['groups'] = GroupTenants::where('tenant_id', $tenant_id)
 			->join('groups', 'groups.id', '=', 'group_tenants.group_id')
 			->get();
-		$data['page_title'] = 'Tenant Groups';
+		$data['page_title'] = trans('crudbooster.adm_tenant_add_group_title');
+		// Gruppi ancora non associati al tenant: elenco della modale "Aggiungi gruppo"
+		$data['available_groups'] = DB::table('groups')
+			->whereNotExists(function ($query) use ($tenant_id) {
+				$query->select(DB::raw(1))
+					->from('group_tenants')
+					->whereRaw('group_tenants.group_id = groups.id')
+					->where('group_tenants.tenant_id', (int) $tenant_id);
+			})
+			->orderBy('name')
+			->get(['groups.id', 'groups.name', 'groups.description']);
 
 		//prendo $_GET &alert=
 		if (!empty($alert_id)) {
@@ -437,8 +532,8 @@ class AdminTenantsController extends CBController
 
 		//add tenant form
 		$data['forms'] = [];
-		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'tenant_group_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'groups', 'datamodal_where' => '', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $tenant_id, 'required' => true];
-		$data['forms'][] = ['label' => 'Description', 'name' => 'description', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-6', 'placeholder' => 'Group description', 'readonly' => true];
+		$data['forms'][] = ['label' => trans('crudbooster.adm_group_label'), 'name' => 'name', 'type' => 'tenant_group_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'groups', 'datamodal_where' => '', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $tenant_id, 'required' => true];
+		$data['forms'][] = ['label' => trans('crudbooster.description'), 'name' => 'description', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-6', 'placeholder' => '', 'readonly' => true];
 		$data['action'] = CRUDBooster::mainpath($tenant_id . "/add_group");
 		$data['return_url'] = CRUDBooster::mainpath('group/' . $tenant_id);
 

@@ -17,6 +17,9 @@ class PrivilegesController extends CBController
 {
     public function cbInit()
     {
+        // Pagine nuovo/modifica in stile mockup (intervento 232)
+        \App\Helpers\FlatForm::share([trans('crudbooster.adm_role_new'), trans('crudbooster.adm_role_edit'), trans('crudbooster.adm_role_detail')]);
+
         $this->module_name = "Privilege";
         $this->table = 'cms_privileges';
         $this->primary_key = 'id';
@@ -29,17 +32,73 @@ class PrivilegesController extends CBController
 
         $this->col = [];
         $this->col[] = ["label" => "ID", "name" => "id"];
-        $this->col[] = ["label" => "Name", "name" => "name"];
+        // Nome preceduto dal pallino del colore del ruolo (theme_color, vedi
+        // admin_template: sei accenti). Etichette "pill" tenui (.ch-pill in
+        // ch-components.css) come nel mockup, al posto dei badge pieni.
+        $this->col[] = ["label" => "Name", "name" => "name", "callback" => function ($row) {
+            $accents = [
+                'blue' => 'var(--ch-blue)', 'yellow' => 'var(--ch-warning)', 'green' => 'var(--ch-success)',
+                'purple' => 'var(--ch-violet)', 'red' => 'var(--ch-danger)', 'black' => 'var(--ch-text)',
+            ];
+            $key = preg_replace('/^skin-|-light$/', '', (string) $row->theme_color);
+            $color = $accents[$key] ?? 'var(--ch-border-strong)';
+            return '<span style="display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px;vertical-align:middle;background:' . $color . '"></span>'
+                . '<b>' . e($row->name) . '</b>';
+        }];
+        $this->col[] = ["label" => "theme_color", "name" => "theme_color", "visible" => false];
         //serve solo per far caricare il valore e usarlo nella colonna superadmin
         $this->col[] = ["label" => "is_tenantadmin", "name" => "is_tenantadmin", /*"style" => "hidden",*/ "visible" => false];
         $this->col[] = [
             "label" => "Privilege",
             "name" => "is_superadmin",
-            'callback_php' => '($row->is_superadmin==1)?
-                          "<span class=\"badge text-bg-success\">Superadmin</span>":
-                          (($row->is_tenantadmin==1)?
-                          "<span class=\"badge text-bg-warning\">Tenantadmin</span>":
-                          "<span class=\"badge text-bg-secondary\">Standard</span>")',
+            "callback" => function ($row) {
+                if ($row->is_superadmin == 1) {
+                    return '<span class="ch-pill ch-pill-ok">Superadmin</span>';
+                }
+                if ($row->is_tenantadmin == 1) {
+                    return '<span class="ch-pill ch-pill-warn">Tenantadmin</span>';
+                }
+                return '<span class="ch-pill ch-pill-gray">Standard</span>';
+            },
+        ];
+        // Conteggi (intervento 232): colonne con callback su "is_superadmin"/"id"
+        // al posto di subquery, cosi' il filtro avanzato resta su colonne vere.
+        $this->col[] = [
+            "label" => trans('crudbooster.adm_users'),
+            "name" => "id",
+            "align" => "right",
+            "callback" => function ($row) {
+                return '<div class="text-end" style="font-variant-numeric:tabular-nums">' . (int) DB::table('cms_users')->where('id_cms_privileges', $row->id)->count() . '</div>';
+            },
+        ];
+        // "9 / 14": moduli visibili sul totale di quelli mostrati nella matrice
+        // dei permessi (stesso criterio di getEdit()).
+        $this->col[] = [
+            "label" => trans('crudbooster.adm_role_modules'),
+            "name" => "is_superadmin",
+            "align" => "right",
+            "callback" => function ($row) {
+                static $total = null;
+                if ($row->is_superadmin == 1) {
+                    return '<div class="text-end text-secondary">' . e(trans('crudbooster.adm_all')) . '</div>';
+                }
+                if ($total === null) {
+                    $total = (int) DB::table('cms_moduls')
+                        ->where('is_protected', 0)
+                        ->where('deleted_at', null)
+                        ->where('table_name', 'like', config('app.module_generator_prefix') . '%')
+                        ->orWhere('table_name', 'groups')
+                        ->orWhere('table_name', 'cms_users')
+                        ->orWhere('table_name', 'cms_menus')
+                        ->orWhere('table_name', 'cms_logs')
+                        ->count();
+                }
+                $visible = (int) DB::table('cms_privileges_roles')
+                    ->where('id_cms_privileges', $row->id)
+                    ->where('is_visible', 1)
+                    ->count();
+                return '<div class="text-end" style="font-variant-numeric:tabular-nums">' . $visible . ' <span class="text-secondary">/ ' . $total . '</span></div>';
+            },
         ];
 
         $this->form = [];
@@ -181,7 +240,17 @@ class PrivilegesController extends CBController
         unset($postdata['superprivilege']);
     }
 
-    public function getEdit($id)
+    /**
+     * Dettaglio in sola lettura: stessa vista di modifica (dati del ruolo +
+     * matrice permessi) con $readonly, al posto del dettaglio generico che
+     * mostrava solo tre campi senza i permessi.
+     */
+    public function getDetail($id)
+    {
+        return $this->getEdit($id, true);
+    }
+
+    public function getEdit($id, $readonly = false)
     {
         $this->cbLoader();
 
@@ -211,7 +280,7 @@ class PrivilegesController extends CBController
 
         $page_menu = Route::getCurrentRoute()->getActionName();
 
-        return view('crudbooster::privileges', compact('row', 'page_title', 'moduls', 'page_menu'));
+        return view('crudbooster::privileges', compact('row', 'page_title', 'moduls', 'page_menu', 'readonly'));
     }
 
     public function postEditSave($id, $validate = null)

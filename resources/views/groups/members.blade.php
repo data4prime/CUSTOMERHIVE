@@ -1,124 +1,84 @@
 @extends('crudbooster::admin_template')
 
 @section('content')
-<!-- Add member -->
-<div class="box-body table-responsive">
+<div>
   <div>
-    @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel)
-    @if(g('return_url'))
-    <p><a title='Return' href='{{g("return_url")}}'><i class='bi bi-chevron-left'></i>
-        &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
-    @else
-    <p><a title='Main Module' href='{{CRUDBooster::mainpath()}}'><i class='bi bi-chevron-left'></i>
-        &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
+    @include('groups._page_head', [
+      'crumb_name' => $group->name,
+      'title' => __('crudbooster.members'),
+      'count' => count($members),
+      'opener_label' => (CRUDBooster::isCreate() || CRUDBooster::isUpdate()) ? trans('crudbooster.button_add_member') : null,
+    ])
+
+    @if(CRUDBooster::isCreate() || CRUDBooster::isUpdate())
+    @include('groups._add_card', [
+      'card_title' => __('crudbooster.add_member'),
+      'submit_label' => trans('crudbooster.button_add_member'),
+    ])
     @endif
-    @endif
-
-    <div class="card card-default">
-      <div class="card-header">
-        <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! __('crudbooster.add_member') !!}</strong>
-      </div>
-
-      <div class="card-body" style="padding:20px 0px 0px 0px">
-        <form class='form-horizontal' method='post' id="form" enctype="multipart/form-data" action='{{$action}}'>
-          <input type="hidden" name="_token" value="{{ csrf_token() }}">
-          <input type='hidden' name='return_url' value='{{ @$return_url }}' />
-          <input type='hidden' name='ref_mainpath' value='{{ CRUDBooster::mainpath() }}' />
-          <input type='hidden' name='ref_parameter' value='{{urldecode(http_build_query(@$_GET))}}' />
-          @if($hide_form)
-          <input type="hidden" name="hide_form" value='{!! serialize($hide_form) !!}'>
-          @endif
-          <div class="box-body" id="parent-form-area">
-
-            @if( isset($command) && isset($command) && $command == 'detail')
-            @include("crudbooster::default.form_detail")
-            @else
-            @include("crudbooster::default.form_body")
-            @endif
-          </div><!-- /.box-body -->
-
-          <div class="box-footer" style="background: var(--ch-bg)">
-
-            <div class="mb-3 row">
-              <label class="col-form-label col-sm-2"></label>
-              <div class="col-sm-10">
-                @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
-                @if(g('return_url'))
-                <a href='{{g("return_url")}}' class='btn btn-secondary'><i class='bi bi-chevron-left'></i>
-                  {{trans("crudbooster.button_back")}}</a>
-                @else
-                <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-secondary'><i
-                    class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}</a>
-                @endif
-                @endif
-                @if(CRUDBooster::isCreate() || CRUDBooster::isUpdate())
-
-                @if(CRUDBooster::isCreate() && $button_addmore==TRUE && isset($command) && $command == 'add')
-                <input type="submit" name="submit" value='{{trans("crudbooster.button_save_more")}}'
-                  class='btn btn-success'>
-                @endif
-                
-                @if($button_save && isset($command) && $command != 'detail')
-                <input type="submit" name="submit" value='{{trans("crudbooster.button_add_member")}}'
-                  class='btn btn-success'>
-                @endif
-
-                @endif
-              </div>
-            </div>
-
-
-          </div><!-- /.box-footer-->
-
-        </form>
-
-      </div>
-    </div>
   </div><!--END AUTO MARGIN-->
+
   <!-- List members -->
-  <div class="box">
-    <div class="box-header mb-3 mb-3">
-      <h4>{{ $group->name }} {!! __('crudbooster.members') !!}</h4>
+  <div>
+    <div class="mb-3">
+      <input type="search" id="members-filter" class="form-control" style="max-width:320px"
+        placeholder="{{ trans('crudbooster.adm_search_name_email') }}" autocomplete="off">
     </div>
-    <div class="box-body table-responsive no-padding">
-      <form id='form-table' method='post' action='{{CRUDBooster::mainpath("action-selected")}}'>
-        <input type='hidden' name='button_name' value='' />
-        <input type='hidden' name='_token' value='{{csrf_token()}}' />
-        <table class='table table-striped table-bordered'>
-          <thead>
-            <tr>
-              <th style="width:25px;"><!-- primary --></th>
-              <th>{!! __('crudbooster.name') !!}</th>
-              <th>Email</th>
-              <th>{!! __('crudbooster.photo') !!}</th>
-              <th>{!! __('crudbooster.privilege') !!}</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($members as $member)
-            <tr>
-              <td style="text-align:center;">
-                @if($group->id == $member->primary_group)
-                <i class="bi bi-trophy-fill success-icon" title="primary group"></i>
-                @endif
-              </td>
-              <td>{{$member->name}}</td>
-              <td>{{$member->email}}</td>
-              <td><img width="40" src="{{UserHelper::icon($member->id)}}" class="user-image" alt="User Image"></td>
-              <td>{{$member->privilege}}</td>
-              <td>
-                @if(CRUDBooster::isDelete() && $button_edit && $group->id !== $member->primary_group)
-                <a title='Remove' class='btn btn-danger btn-sm'
-                  href='{{CRUDBooster::mainpath("$group_id/remove_member/$member->id")}}'><i
-                    class="bi bi-trash-fill"></i></a>
-                @endif
-              </td>
-            </tr>
-            @endforeach
-          </tbody>
-        </table>
-      </form>
+    <div class="table-responsive rel-table">
+      <table class='table table-hover align-middle mb-0' id="members-table">
+        <thead>
+          <tr>
+            <th>{!! __('crudbooster.name') !!}</th>
+            <th>{!! __('crudbooster.privilege') !!}</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @forelse($members as $member)
+          <tr data-search="{{ strtolower($member->name.' '.$member->email) }}">
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <img width="32" height="32" style="border-radius:50%;object-fit:cover" src="{{UserHelper::icon($member->id)}}" alt="">
+                <div>{{$member->name}}<div class="small text-secondary">{{$member->email}}</div></div>
+              </div>
+            </td>
+            <td>{{$member->privilege}}</td>
+            <td>
+              @if($group->id == $member->primary_group)
+              <span class="ch-pill ch-pill-vio" title="{{ trans('crudbooster.adm_primary_group') }}">
+                <i class="bi bi-trophy-fill"></i> {{ trans('crudbooster.adm_primary_group') }}
+              </span>
+              @endif
+            </td>
+            <td class="text-end">
+              @if(CRUDBooster::isDelete() && $button_edit && $group->id !== $member->primary_group)
+              @include('groups._remove', ['url' => CRUDBooster::mainpath("$group_id/remove_member/$member->id")])
+              @elseif($group->id == $member->primary_group)
+              @include('groups._remove', ['disabled_hint' => trans('crudbooster.adm_not_removable')])
+              @endif
+            </td>
+          </tr>
+          @empty
+          <tr><td colspan="4" class="text-center text-secondary">{{ trans('crudbooster.adm_no_members') }}</td></tr>
+          @endforelse
+        </tbody>
+      </table>
     </div>
   </div>
-  @endsection
+</div>
+
+@push('bottom')
+@include('groups._remove_script')
+<script>
+  $(function () {
+    $('#members-filter').on('input', function () {
+      var q = $(this).val().toLowerCase().trim();
+      $('#members-table tbody tr[data-search]').each(function () {
+        $(this).toggle(q === '' || $(this).data('search').indexOf(q) !== -1);
+      });
+    });
+  });
+</script>
+@endpush
+@endsection

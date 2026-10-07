@@ -21,6 +21,9 @@ class AdminGroupsController extends CBController
 	public function cbInit()
 	{
 
+		// Pagine nuovo/modifica/dettaglio in stile mockup (intervento 232)
+		\App\Helpers\FlatForm::share([trans('crudbooster.adm_group_new'), trans('crudbooster.adm_group_edit'), trans('crudbooster.adm_group_view')]);
+
 		# START CONFIGURATION DO NOT REMOVE THIS LINE
 		$this->title_field = "name";
 		$this->limit = "20";
@@ -43,14 +46,47 @@ class AdminGroupsController extends CBController
 		# START COLUMNS DO NOT REMOVE THIS LINE
 		$this->col = [];
 		$this->col[] = ["label" => "Name", "name" => "name"];
-		$this->col[] = ["label" => "Help", "name" => "description"];
+		// "Help" -> "Description" (e' il campo description); conteggi membri/
+		// tenant/item come colonne con callback su "id" (intervento 232), con
+		// gli stessi criteri di hook_before_delete (tenant soft-deleted esclusi).
+		$this->col[] = ["label" => trans('crudbooster.description'), "name" => "description"];
+		$this->col[] = [
+			"label" => trans('crudbooster.members'),
+			"align" => "right",
+			"name" => "id",
+			"callback" => function ($row) {
+				return '<div class="text-end" style="font-variant-numeric:tabular-nums">' . (int) UsersGroup::where('group_id', $row->id)->count() . '</div>';
+			},
+		];
+		$this->col[] = [
+			"label" => trans('crudbooster.Tenants'),
+			"align" => "right",
+			"name" => "id",
+			"callback" => function ($row) {
+				$n = GroupTenants::where('group_id', $row->id)
+					->join('tenants', 'tenants.id', '=', 'group_tenants.tenant_id')
+					->where('tenants.deleted_at', null)
+					->count();
+				return '<div class="text-end" style="font-variant-numeric:tabular-nums">' . (int) $n . '</div>';
+			},
+		];
+		if (LicenseHelper::isActiveQlik()) {
+			$this->col[] = [
+				"label" => trans('crudbooster.adm_items'),
+				"align" => "right",
+				"name" => "id",
+				"callback" => function ($row) {
+					return '<div class="text-end" style="font-variant-numeric:tabular-nums">' . (int) DB::table('items_allowed')->join('qlik_items', 'qlik_items.id', '=', 'items_allowed.item_id')->whereNull('qlik_items.deleted_at')->where('items_allowed.group_id', $row->id)->count() . '</div>';
+				},
+			];
+		}
 		# END COLUMNS DO NOT REMOVE THIS LINE
 
 
 		# START FORM DO NOT REMOVE THIS LINE
 		$this->form = [];
-		$this->form[] = ['label' => 'Name', 'name' => 'name', 'type' => 'text', 'validation' => 'required|string|min:1|max:70', 'width' => 'col-sm-10', 'placeholder' => 'You can only enter the letter only'];
-		$this->form[] = ['label' => 'Help', 'name' => 'description', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-10'];
+		$this->form[] = ['label' => 'Name', 'name' => 'name', 'type' => 'text', 'validation' => 'required|string|min:1|max:70', 'width' => 'col-sm-10'];
+		$this->form[] = ['label' => trans('crudbooster.description'), 'name' => 'description', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-10'];
 
 		# Users submodule
 		// #RAMA questo subform riesce ad aggiungere nuovi utenti e a mostrarli ma permette di aggiungere due volte lo stesso utente allo stesso gruppo, non riesco a mostrare un secondo campo nel form e nella tabella, non posso nascondere il tasto edit dalla tabella, fa confusione come interfaccia
@@ -91,15 +127,15 @@ class AdminGroupsController extends CBController
         |
         */
 		$this->addaction = array();
-		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'bi bi-person-fill', 'color' => 'info', 'title' => 'Members'];
+		$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('members/[id]'), 'icon' => 'bi bi-person-fill', 'color' => 'info', 'title' => trans('crudbooster.members')];
 		//gli "items" del gruppo sono i qlik_items: senza il modulo Qlik in
 		//licenza la pagina non ha nulla da gestire, quindi si nasconde il pulsante
 		if (LicenseHelper::isActiveQlik()) {
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'bi bi-shield-fill', 'color' => 'info', 'title' => 'Items'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('items/[id]'), 'icon' => 'bi bi-shield-fill', 'color' => 'info', 'title' => trans('crudbooster.adm_items')];
 		}
 		//solo superadmin gestisce i tenant
 		if (CRUDBooster::isSuperadmin()) {
-			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'bi bi-buildings-fill', 'color' => 'info', 'title' => 'Tenants'];
+			$this->addaction[] = ['label' => '', 'url' => CRUDBooster::mainpath('tenant/[id]'), 'icon' => 'bi bi-buildings-fill', 'color' => 'info', 'title' => trans('crudbooster.Tenants')];
 		}
 		/*
         | ----------------------------------------------------------------------
@@ -499,6 +535,9 @@ class AdminGroupsController extends CBController
 		$data['items'] = DB::table('items_allowed')
 			->where('items_allowed.group_id', $group_id)
 			->join('qlik_items', 'qlik_items.id', '=', 'items_allowed.item_id')
+			//gli item eliminati (soft delete) restano in items_allowed ma non
+			//esistono piu' nella lista di Qlik Items: non vanno mostrati qui
+			->whereNull('qlik_items.deleted_at')
 			->get();
 
 		$data['group'] = \App\Group::find($group_id);
@@ -605,7 +644,7 @@ class AdminGroupsController extends CBController
 			->join('tenants', 'tenants.id', '=', 'group_tenants.tenant_id')
 			->where('tenants.deleted_at', null)
 			->get();
-		$data['page_title'] = 'Group Tenants';
+		$data['page_title'] = trans('crudbooster.adm_group_add_tenant_title');
 
 		//prendo $_GET &alert=
 		if (!empty($alert_id)) {
@@ -618,8 +657,8 @@ class AdminGroupsController extends CBController
 
 		//add tenant form
 		$data['forms'] = [];
-		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'group_tenant_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'tenants', 'datamodal_where' => 'deleted_at is null', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $group_id, 'required' => true];
-		$data['forms'][] = ['label' => 'Description', 'name' => 'description', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-6', 'placeholder' => 'Tenant description', 'readonly' => true];
+		$data['forms'][] = ['label' => trans('crudbooster.adm_tenant_label'), 'name' => 'name', 'type' => 'group_tenant_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'tenants', 'datamodal_where' => 'deleted_at is null', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $group_id, 'required' => true];
+		$data['forms'][] = ['label' => trans('crudbooster.description'), 'name' => 'description', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-6', 'placeholder' => '', 'readonly' => true];
 		$data['action'] = CRUDBooster::mainpath($group_id . "/add_tenant");
 		$data['return_url'] = CRUDBooster::mainpath('tenant/' . $group_id);
 

@@ -2,112 +2,106 @@
 
 @section('content')
 <!-- Allow group to tenant -->
-<div class="box-body table-responsive">
+<div>
   <div>
-    @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel)
-    @if(g('return_url'))
-    <p><a title='Return' href='{{g("return_url")}}'><i class='bi bi-chevron-left'></i>
-        &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
-    @else
-    <p><a title='Main Module' href='{{CRUDBooster::mainpath()}}'><i class='bi bi-chevron-left'></i>
-        &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
-    @endif
-    @endif
-
-    <div class="card card-default">
-      <div class="card-header">
-        <strong><i class='{{CRUDBooster::getCurrentModule()->icon}}'></i> {!! $page_title !!}</strong>
-      </div>
-
-      <div class="card-body" style="padding:20px 0px 0px 0px">
-        <form class='form-horizontal' method='post' id="form" enctype="multipart/form-data" action='{{$action}}'>
-          <input type="hidden" name="_token" value="{{ csrf_token() }}">
-          <input type='hidden' name='return_url' value='{{ @$return_url }}' />
-          <input type='hidden' name='ref_mainpath' value='{{ CRUDBooster::mainpath() }}' />
-          <input type='hidden' name='ref_parameter' value='{{urldecode(http_build_query(@$_GET))}}' />
-          @if($hide_form)
-          <input type="hidden" name="hide_form" value='{!! serialize($hide_form) !!}'>
-          @endif
-          <div class="box-body" id="parent-form-area">
-
-            @if( isset($command) && isset($command) && $command == 'detail')
-            @include("crudbooster::default.form_detail")
-            @else
-            @include("crudbooster::default.form_body")
-            @endif
-          </div><!-- /.box-body -->
-
-          <div class="box-footer" style="background: var(--ch-bg)">
-
-            <div class="form-tenant">
-              <label class="col-form-label col-sm-2"></label>
-              <div class="col-sm-10">
-                @if($button_cancel && CRUDBooster::getCurrentMethod() != 'getDetail')
-                @if(g('return_url'))
-                <a href='{{g("return_url")}}' class='btn btn-secondary'><i class='bi bi-chevron-left'></i>
-                  {{trans("crudbooster.button_back")}}</a>
-                @else
-                <a href='{{CRUDBooster::mainpath("?".http_build_query(@$_GET)) }}' class='btn btn-secondary'><i
-                    class='bi bi-chevron-left'></i> {{trans("crudbooster.button_back")}}</a>
-                @endif
-                @endif
-                @if(CRUDBooster::isCreate() || CRUDBooster::isUpdate())
-
-                @if(CRUDBooster::isCreate() && $button_addmore==TRUE && isset($command) && $command == 'add')
-                <input type="submit" name="submit" value='{{trans("crudbooster.button_save_more")}}'
-                  class='btn btn-success'>
-                @endif
-
-                @if($button_save && isset($command) && $command != 'detail')
-                <input type="submit" name="submit" value='{{trans("crudbooster.button_add_group")}}'
-                  class='btn btn-success'>
-                @endif
-
-                @endif
-              </div>
-            </div>
-
-
-          </div><!-- /.box-footer-->
-
-        </form>
-
-      </div>
-    </div>
+    @include('groups._page_head', [
+      'crumb_name' => $tenant->name,
+      'title' => trans('crudbooster.adm_groups'),
+      'count' => count($groups),
+      'opener_label' => trans('crudbooster.button_add_group'),
+      'opener_modal' => '#add-group-modal',
+    ])
   </div><!--END AUTO MARGIN-->
-  <!-- List groups -->
-  <div class="box">
-    <div class="box-header mb-3 mb-3">
-      <h4>{!! __('crudbooster.tenants_groups') !!}</h4>
-    </div>
-    <div class="box-body table-responsive no-padding">
-      <form id='form-table' method='post' action='{{CRUDBooster::mainpath("action-selected")}}'>
-        <input type='hidden' name='button_name' value='' />
-        <input type='hidden' name='_token' value='{{csrf_token()}}' />
-        <table class='table table-striped table-bordered'>
-          <thead>
-            <tr>
-              <th>{!! __('crudbooster.name') !!}</th>
-              <th>{!! __('crudbooster.description') !!}</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($groups as $group)
-            <tr>
-              <td>{{$group->name}}</td>
-              <td>{{$group->description}}</td>
-              <td>
-                @if(CRUDBooster::isDelete() && $button_edit)
-                <a title='Remove' class='btn btn-danger btn-sm'
-                  href='{{CRUDBooster::mainpath("$tenant_id/remove_group/$group->id")}}'><i class="bi bi-trash-fill"></i></a>
-                @endif
-              </td>
-            </tr>
+
+  {{-- Modale di scelta: un clic su un gruppo lo aggiunge (stesso POST di prima a add_group) --}}
+  @if(CRUDBooster::isCreate() || CRUDBooster::isUpdate())
+  <form id="add-group-form" method="post" action="{{ $action }}">
+    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="return_url" value="{{ $return_url }}">
+    <input type="hidden" name="ref_mainpath" value="{{ CRUDBooster::mainpath() }}">
+    <input type="hidden" name="name" id="add-group-id" value="">
+  </form>
+  <div class="modal fade" id="add-group-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ $page_title }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="search" id="add-group-search" class="form-control mb-3" placeholder="{{ trans('crudbooster.filter_search') }}" autocomplete="off">
+          <div class="list-group" id="add-group-list">
+            @foreach($available_groups as $g)
+            <button type="button" class="list-group-item list-group-item-action" data-id="{{ $g->id }}" data-text="{{ mb_strtolower($g->name . ' ' . $g->description) }}">
+              <div class="fw-semibold">{{ $g->name }}</div>
+              @if($g->description)<div class="small text-secondary">{{ $g->description }}</div>@endif
+            </button>
             @endforeach
-          </tbody>
-        </table>
-      </form>
+          </div>
+          <div class="text-center text-secondary py-3 {{ count($available_groups) ? 'd-none' : '' }}" id="add-group-empty">{{ trans('crudbooster.adm_no_groups_available') }}</div>
+        </div>
+      </div>
     </div>
   </div>
-  @endsection
+  @push('bottom')
+  <script>
+    (function () {
+      var list = document.getElementById('add-group-list');
+      var empty = document.getElementById('add-group-empty');
+      list.addEventListener('click', function (e) {
+        var item = e.target.closest('[data-id]');
+        if (!item) { return; }
+        document.getElementById('add-group-id').value = item.getAttribute('data-id');
+        document.getElementById('add-group-form').submit();
+      });
+      document.getElementById('add-group-search').addEventListener('input', function () {
+        var q = this.value.toLowerCase().trim(), shown = 0;
+        list.querySelectorAll('[data-id]').forEach(function (el) {
+          var ok = el.getAttribute('data-text').indexOf(q) !== -1;
+          el.classList.toggle('d-none', !ok);
+          if (ok) { shown++; }
+        });
+        empty.classList.toggle('d-none', shown > 0);
+      });
+      document.getElementById('add-group-modal').addEventListener('shown.bs.modal', function () {
+        document.getElementById('add-group-search').focus();
+      });
+    })();
+  </script>
+  @endpush
+  @endif
+
+  <!-- List groups -->
+  <div>
+    <div class="table-responsive rel-table">
+      <table class='table table-hover align-middle mb-0'>
+        <thead>
+          <tr>
+            <th>{!! __('crudbooster.name') !!}</th>
+            <th>{!! __('crudbooster.description') !!}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @forelse($groups as $group)
+          <tr>
+            <td>{{$group->name}}</td>
+            <td>{{$group->description}}</td>
+            <td class="text-end">
+              @if(CRUDBooster::isDelete() && $button_edit)
+              @include('groups._remove', ['url' => CRUDBooster::mainpath("$tenant_id/remove_group/$group->id")])
+              @endif
+            </td>
+          </tr>
+          @empty
+          <tr><td colspan="3" class="text-center text-secondary">{{ trans('crudbooster.adm_no_rows') }}</td></tr>
+          @endforelse
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+@push('bottom')
+@include('groups._remove_script')
+@endpush
+@endsection

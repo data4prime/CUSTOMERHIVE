@@ -20,6 +20,14 @@ foreach($forms as $form) {
 }
 
 //Loading input components
+// Con un layout a schede (AdminCmsUsersController::cbInit) il disegno e' in
+// form_layout.blade.php, come per gli altri moduli; senza, l'elenco piatto.
+$use_layout = \App\Helpers\ModuleGeneratorLayout::isActive(isset($form_layout) ? $form_layout : null);
+if ($use_layout) {
+  ?>
+@include('crudbooster::default.form_layout')
+<?php
+} else {
 $header_group_class = "";
 foreach($forms as $index=>$form) {
   unset($value);
@@ -101,4 +109,5 @@ foreach($forms as $index=>$form) {
 <p class='text-danger'>{{$type}} {!! __('crudbooster.not_found_type_component') !!}</p><br />
 @endif
 <?php
+}
 }

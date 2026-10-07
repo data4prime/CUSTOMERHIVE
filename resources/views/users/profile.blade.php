@@ -1,12 +1,17 @@
 @extends('crudbooster::admin_template')
 @section('content')
 @php
+    // Senza foto: niente avatar di default, le iniziali del nome (come in Utenti).
     $photoUrl = empty($row->photo)
-        ? \App\Helpers\UserHelper::icon($row->id)
+        ? ''
         : (preg_match('#^https?://#', $row->photo) ? $row->photo : asset($row->photo));
+    $photoInitials = '';
+    foreach (array_slice(preg_split('/\s+/u', trim((string) $row->name), -1, PREG_SPLIT_NO_EMPTY), 0, 2) as $w) {
+        $photoInitials .= mb_strtoupper(mb_substr($w, 0, 1));
+    }
+    $photoInitials = $photoInitials ?: '?';
     $currentTenant = \App\Tenant::find($row->tenant);
     $currentGroup = \App\Group::find($row->primary_group);
-    $initialLetter = mb_strtoupper(mb_substr((string) $row->name, 0, 1));
     $hasTotp = !empty($row->two_factor_confirmed_at);
 @endphp
 
@@ -32,8 +37,6 @@
   .ch-full { grid-column: 1 / -1; }
   .ch-pane label { display: block; font-size: 12px; font-weight: 600; color: var(--ch-text-secondary, var(--ch-text-secondary)); margin-bottom: 5px; }
   .ch-hint { font-size: 12px; color: var(--ch-text-muted, var(--ch-text-muted)); margin-top: 4px; }
-  .ch-photo { display: flex; gap: 16px; align-items: center; margin-bottom: 20px; }
-  .ch-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; background: linear-gradient(135deg, var(--ch-accent), var(--ch-violet)); color: var(--ch-surface); display: grid; place-items: center; font-size: 26px; font-weight: 700; flex: none; }
   .ch-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--ch-border, var(--ch-border)); }
   .ch-alert { border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 13px; }
   .ch-alert.is-ok { background: var(--ch-success-soft, var(--ch-success-soft)); color: var(--ch-success, var(--ch-success)); }
@@ -68,15 +71,14 @@
 
         <form class="ch-ajax" method="post" action="{{ CRUDBooster::adminPath('users/profile-general') }}" enctype="multipart/form-data" novalidate>
           @csrf
-          <div class="ch-photo">
-            <img class="ch-avatar" id="ch-avatar-img" src="{{ $photoUrl }}" alt="{{ $initialLetter }}">
-            <div>
-              <label class="btn btn-secondary" style="margin:0;cursor:pointer;">
-                {{ trans('crudbooster.profile_photo_change') }}
-                <input type="file" name="photo" id="ch-photo-input" accept="image/*" hidden>
-              </label>
-              <div class="ch-hint">{{ trans('crudbooster.profile_photo_hint') }}</div>
-            </div>
+          {{-- Stesso componente del campo "image" (foto in Utenti): senza foto caricata mostra l'avatar di default per ruolo. --}}
+          <div class="mb-4">
+            @include('crudbooster::partials.ch_image', [
+              'name' => 'photo', 'ch_label' => trans('crudbooster.profile_photo_change'), 'src' => $photoUrl,
+              'has_file' => !empty($row->photo), 'shape' => 'circle', 'size' => 96, 'initials' => $photoInitials,
+              'change_label' => trans('crudbooster.profile_photo_change'), 'help' => trans('crudbooster.profile_photo_hint'),
+            ])
+            @include('crudbooster::default.type_components.image.asset')
           </div>
 
           <div class="ch-grid">
@@ -572,20 +574,14 @@
       post(form.action, new FormData(form)).then(function (res) {
         busy(btn, false);
         flash(pane, res.ok, res.message);
-        if (res.ok && res.photo_url) { document.getElementById('ch-avatar-img').src = res.photo_url; }
+        if (res.ok && res.photo_url) {
+          var avatar = form.querySelector('[data-ch-image-img]');
+          if (avatar) { avatar.src = res.photo_url; avatar.hidden = false; }
+        }
         if (res.ok && res.reload) { setTimeout(function () { location.reload(); }, 700); }
       });
     });
   });
-
-  var photoInput = document.getElementById('ch-photo-input');
-  if (photoInput) {
-    photoInput.addEventListener('change', function () {
-      if (photoInput.files && photoInput.files[0]) {
-        document.getElementById('ch-avatar-img').src = URL.createObjectURL(photoInput.files[0]);
-      }
-    });
-  }
 
   // Sistema: menu a cascata Tenant -> Primary Group.
   var tenantSel = document.getElementById('ch-tenant');
