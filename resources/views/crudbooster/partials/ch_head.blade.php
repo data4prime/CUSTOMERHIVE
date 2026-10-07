@@ -19,8 +19,13 @@
 <link href="{{ $ch_v('vendor/crudbooster/assets/rtl.css') }}" rel="stylesheet" type="text/css" />
 @endif
 <link href="{{ $ch_v('vendor/crudbooster/assets/css/main.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ $ch_v('vendor/crudbooster/assets/select2/dist/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ $ch_v('css/custom.css') }}" rel="stylesheet" type="text/css" />
 @if (!isset($ch_theme) || $ch_theme)
 <link href="{{ $ch_v('css/theme.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ $ch_v('css/ch-components.css') }}" rel="stylesheet" type="text/css" />
+@if (config('crudbooster.UI_V2'))
+{{-- Nuovo linguaggio visivo (intervento 234): override attivi solo con body.ch-ui2 --}}
+<link href="{{ $ch_v('css/ch-ui2.css') }}" rel="stylesheet" type="text/css" />
+@endif
 @endif

@@ -79,7 +79,10 @@
                 // solo mai riusate qui.
                 $sortAscTitle = trans('crudbooster.filter_sort_ascending');
                 $sortDescTitle = trans('crudbooster.filter_sort_descending');
-                echo "<th width='$width' $style>";
+                // 'align' => 'right' (opzionale, per colonne numeriche): intestazione a destra
+                // 'align' => 'center' idem, centrata
+                $thClass = (($col['align'] ?? '') === 'right') ? " class='text-end'" : ((($col['align'] ?? '') === 'center') ? " class='text-center'" : '');
+                echo "<th width='$width' $style$thClass>";
                 if (isset($sort_column[$field])) {
                     switch ($sort_column[$field]['sorting'] ?? '') {
                         case 'asc':
@@ -476,13 +479,13 @@ $total = $result->total();
                                     style="{{ (CRUDBooster::getTypeFilter($col['field_with'])=='between' )?'display:block':'display:none' }}">
                                     <div class='col-sm-6'>
                                         <div
-                                            class='input-group {{ ($col["type_data"] == "time")?"bootstrap-timepicker":"" }}'>
+                                            class='input-group'>
                                             <span class="input-group-text">{{trans("crudbooster.filter_from")}}:</span>
                                             @php
                                             if(in_array($col["type_data"], ["date","datetime","timestamp"])){
-                                            $class_td = "datepicker";
+                                            $class_td = "date";
                                             }else if(in_array($col["type_data"], ["time"])){
-                                            $class_td = "timepicker";
+                                            $class_td = "time";
                                             } else {
                                             $class_td = "";
                                             }
@@ -490,7 +493,7 @@ $total = $result->total();
                                             @endphp
                                             <input {{ (CRUDBooster::getTypeFilter($col["field_with"]) !='between'
                                                 )?"disabled":"" }} type='text'
-                                                class='filter-value-between form-control {{ $class_td}}' {{
+                                                class='filter-value-between form-control' {!! $class_td ? 'data-ch-picker="'.$class_td.'"' : '' !!} {{
                                                 (in_array($col["type_data"],["date","datetime","timestamp","time"]))?"readonly":""
                                                 }} placeholder='{{$col["label"]}} {{trans("crudbooster.filter_from")}}'
                                                 name='filter_column[{{$col["field_with"]}}][value][]' value='<?php
@@ -501,11 +504,11 @@ $total = $result->total();
                                     </div>
                                     <div class='col-sm-6'>
                                         <div
-                                            class='input-group {{ ($col["type_data"] == "time")?"bootstrap-timepicker":"" }}'>
+                                            class='input-group'>
                                             <span class="input-group-text">{{trans("crudbooster.filter_to")}}:</span>
                                             <input {{ (CRUDBooster::getTypeFilter($col["field_with"]) !='between'
                                                 )?"disabled":"" }} type='text'
-                                                class='filter-value-between form-control {{ $class_td}}' {{
+                                                class='filter-value-between form-control' {!! $class_td ? 'data-ch-picker="'.$class_td.'"' : '' !!} {{
                                                 (in_array($col["type_data"],["date","datetime","timestamp","time"]))?"readonly":""
                                                 }} placeholder='{{$col["label"]}} {{trans("crudbooster.filter_to")}}'
                                                 name='filter_column[{{$col["field_with"]}}][value][]' value='<?php
@@ -626,16 +629,16 @@ $total = $result->total();
 
                     <div class="mb-3 row">
                         <label>{{trans("crudbooster.export_dialog_format_export")}}</label>
-                        <div class="export-seg" role="radiogroup">
-                            <label class="export-seg-option">
+                        <div class="ch-seg ch-seg-block" role="radiogroup">
+                            <label>
                                 <input type="radio" name="fileformat" value="pdf" checked>
                                 <span><i class="bi bi-file-earmark-pdf"></i> PDF</span>
                             </label>
-                            <label class="export-seg-option">
+                            <label>
                                 <input type="radio" name="fileformat" value="xls">
                                 <span><i class="bi bi-file-earmark-excel"></i> Microsoft Excel (xls)</span>
                             </label>
-                            <label class="export-seg-option">
+                            <label>
                                 <input type="radio" name="fileformat" value="csv">
                                 <span><i class="bi bi-file-earmark-text"></i> CSV</span>
                             </label>
@@ -700,12 +703,12 @@ $total = $result->total();
 
                             <div class="mb-3 row">
                                 <label>{{trans("crudbooster.export_dialog_page_orientation")}}</label>
-                                <div class="export-seg export-seg-sm" role="radiogroup">
-                                    <label class="export-seg-option">
+                                <div class="ch-seg ch-seg-block ch-seg-sm" role="radiogroup">
+                                    <label>
                                         <input type="radio" name="page_orientation" value="potrait" checked>
                                         <span>Verticale</span>
                                     </label>
-                                    <label class="export-seg-option">
+                                    <label>
                                         <input type="radio" name="page_orientation" value="landscape">
                                         <span>Orizzontale</span>
                                     </label>
@@ -713,8 +716,14 @@ $total = $result->total();
                             </div>
                         </div>
 
-                        <div class='help-block export-default-paper-check'><label><input type='checkbox' name='default_paper_size' value='1' />
-                                {{trans("crudbooster.export_dialog_set_default")}}</label></div>
+                        <div class='help-block export-default-paper-check'>
+                            @include('crudbooster::partials.ch_check', [
+                                'name' => 'default_paper_size',
+                                'value' => '1',
+                                'label' => trans('crudbooster.export_dialog_set_default'),
+                                'switch' => true,
+                            ])
+                        </div>
                     </div>
 
                 </div>

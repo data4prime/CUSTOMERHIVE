@@ -67,10 +67,13 @@
     </div>
 
     <div class="mb-3 row">
-        <label>
-            <input type="checkbox" name="config[stacked]" value="1" {{ !empty($config->stacked) ? 'checked' : '' }} />
-            {{ trans('crudbooster.statistic_builder_chart_area_stacked') }}
-        </label>
+        @include('crudbooster::partials.ch_check', [
+            'name' => 'config[stacked]',
+            'value' => '1',
+            'label' => trans('crudbooster.statistic_builder_chart_area_stacked'),
+            'checked' => !empty($config->stacked),
+            'switch' => true,
+        ])
         <div class="help-block">{{ trans('crudbooster.statistic_builder_chart_area_stacked_help') }}</div>
     </div>
 

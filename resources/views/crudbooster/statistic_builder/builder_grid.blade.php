@@ -143,6 +143,13 @@
     .small-box .small-box-footer { display: block; padding: 5px; text-align: center; background: rgba(0,0,0,0.12); color: rgba(255,255,255,0.95); font-size: 11px; }
     .small-box .small-box-footer:hover { background: rgba(0,0,0,0.2); }
     .card { border: none; margin: 0; height: 100%; box-sizing: border-box; }
+    /* Gli angoli arrotondati li disegna solo la cella (overflow: auto la
+       fa ritagliare i figli): vedi il commento in show_grid.blade.php. */
+    body .grid-stack .grid-stack-item-content .border-box > .small-box,
+    body .grid-stack .grid-stack-item-content .border-box > .card.card-default,
+    body .grid-stack .grid-stack-item-content .border-box > .kpi-indicator-card { border-radius: 0; }
+    body .grid-stack .grid-stack-item-content .border-box > .card.card-default,
+    body .grid-stack .grid-stack-item-content .border-box > .card.card-default:hover { border: none; box-shadow: none; }
     .card-header { font-size: 12.5px; font-weight: 600; color: var(--ch-text); padding: 8px 4px; border-bottom: 1px solid var(--ch-border); margin-bottom: 6px; }
     .card-body { padding: 2px 4px; }
 

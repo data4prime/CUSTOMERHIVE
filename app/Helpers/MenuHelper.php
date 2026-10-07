@@ -154,10 +154,10 @@ class MenuHelper
         $title = '';
         $icon = IconMap::toBi($menu->icon);
       }
-      $result .= "<div class='$class' title='$title'>";
-      $result .= "<i class='$icon'></i>";
-      $result .= $menu->name;
-      $result .= "<span class='float-end'>";
+      $result .= "<div class='mm-row $class' title='$title'>";
+      $result .= "<div class='mm-line'><span class='mm-ico'><i class='$icon'></i></span>";
+      $result .= "<b class='mm-name'>" . e($menu->name) . "</b>";
+      $result .= "<span class='mm-actions'>";
       if ($can_edit_menu) {
         // route() richiede sempre il parametro 'id' (la rotta e'
         // admin/menu_management/edit/{id}, non opzionale): la versione
@@ -165,25 +165,24 @@ class MenuHelper
         // chiamata usata per l'href reale, causando un
         // UrlGenerationException su ogni voce di menu modificabile.
         $href = route("MenusControllerGetEdit", ["id" => $menu->id]) . "?return_url=" . $return_url;
-        //dd($href);
-        $result .= "<a class='bi bi-pencil-fill' title='Edit' href='$href'></a>";
+        $result .= "<a class='mm-act bi bi-pencil-fill' title='Edit' href='$href'></a>";
       }
-      $result .= "&nbsp;&nbsp;";
       if (UserHelper::can_menu('delete', $menu->id)) {
-        $onclick = CRUDBooster::deleteConfirm(route("MenusControllerGetDelete") . "/{$menu->id}", false);
-        $result .= "<a title='Delete' class='bi bi-trash-fill' onclick='$onclick' href='javascript:void(0)'></a>";
+        // Conferma sulla riga (come nel mockup) al posto del popup SweetAlert: il link
+        // finale e' lo stesso GET di prima.
+        $deleteUrl = route("MenusControllerGetDelete") . "/{$menu->id}";
+        $result .= "<span class='mm-confirm' hidden><span class='mm-confirm-q'>" . e(trans('crudbooster.adm_delete_confirm')) . "</span>"
+          . "<a class='btn btn-danger btn-sm' href='$deleteUrl'>" . e(trans('crudbooster.confirmation_yes')) . "</a>"
+          . "<button type='button' class='btn btn-secondary btn-sm mm-cancel' onclick='mmCancel(this)'>" . e(trans('crudbooster.button_cancel')) . "</button></span>";
+        $result .= "<a title='Delete' class='mm-act mm-del mm-ask bi bi-trash-fill' onclick='mmAsk(this)' href='javascript:void(0)'></a>";
       }
-      $result .= "</span>";
-      $result .= "<br/>";
-      $result .= "<em class='text-muted'>";
-      $privileges_html = implode(', ', $privileges);
-      $result .= "<small><i class='bi bi-people-fill'></i> &nbsp; $privileges_html</small>";
-      $result .= "</em>";
+      $result .= "</span></div>";
+      $privileges_html = e(implode(', ', $privileges));
+      $result .= "<div class='mm-meta'><span><i class='bi bi-people-fill'></i> $privileges_html</span>";
       if (CRUDBooster::isSuperadmin()) {
-        $result .= "<em class='text-muted float-end'>";
-        $result .= "<small><i class='bi bi-buildings-fill'></i> &nbsp; $tenants_name</small>";
-        $result .= "</em>";
+        $result .= "<span><i class='bi bi-buildings-fill'></i> " . e($tenants_name) . "</span>";
       }
+      $result .= "</div>";
       $result .= "</div>";
       $result .= "<ul>";
       //if this menu has children

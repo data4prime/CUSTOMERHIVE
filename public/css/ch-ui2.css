@@ -1,0 +1,1259 @@
+/*
+ * ch-ui2.css - nuovo linguaggio visivo (intervento 234).
+ *
+ * Foglio di OVERRIDE caricato dopo theme.css e ch-components.css, attivo solo
+ * quando il body ha la classe "ch-ui2" (flag config('crudbooster.UI_V2'), vedi
+ * admin_template.blade.php e partials/ch_head). Nessun markup cambia: tutto
+ * quello che segue ridefinisce i token --ch-* e restyla il guscio e i
+ * componenti che gia' li usano. Per tornare al vecchio aspetto basta
+ * CH_UI_V2=false nel .env (+ php artisan config:clear), oppure togliere questo file.
+ *
+ * Riferimento visivo: prototipo "Confronto UI CustomerHive" (pannello "Proposta").
+ */
+
+/* ==========================================================================
+   1. Token (chiaro)
+   Le variabili --bs-* e --ch-* che in theme.css puntano ad altri token
+   vengono risolte su :root: vanno quindi ridichiarate qui sul body perche'
+   seguano i nuovi valori.
+   ========================================================================== */
+body.ch-ui2 {
+  --ch-bg: #f4f5fb;
+  --ch-surface: #ffffff;
+  --ch-hover: #f7f7fd;
+  --ch-thead: #f7f8fc;
+  --ch-border: #e8e9f3;
+  --ch-border-strong: #d9dbee;
+  --ch-text: #12142a;
+  --ch-text-secondary: #575b78;
+  --ch-text-muted: #8a8fab;
+
+  --ch-accent: #5b4cf0;
+  --ch-accent-dark: #4338ca;
+  --ch-accent-soft: #eeedff;
+  --ch-accent-2: #8b5cf6;
+  --ch-grad: linear-gradient(135deg, var(--ch-accent), var(--ch-accent-2));
+  --ch-glow: 0 6px 16px -4px rgba(91, 76, 240, 0.5);
+
+  --ch-success: #0f9d6a;
+  --ch-success-soft: #e2f6ee;
+  --ch-warning: #b86e00;
+  --ch-warning-soft: #fff1d6;
+  --ch-danger: #d9344a;
+  --ch-danger-soft: #fde8eb;
+
+  --ch-radius-sm: 12px;
+  --ch-radius-md: 14px;
+  --ch-radius-lg: 20px;
+  --ch-shadow-sm: 0 1px 2px rgba(18, 20, 42, 0.04), 0 8px 24px -8px rgba(18, 20, 42, 0.08);
+  --ch-shadow-md: 0 12px 32px -8px rgba(18, 20, 42, 0.18), 0 2px 6px rgba(18, 20, 42, 0.06);
+  --ch-overlay: rgba(14, 16, 48, 0.5);
+
+  --ch-sidebar-width: 272px;
+  --ch-sb-bg: #0e1030;
+  --ch-sb-bg-top: #14163f;
+  --ch-sb-text: #aab0d8;
+  --ch-sb-muted: #6b71a3;
+
+  --ch-field-h: 44px;
+  --ch-field-px: 14px;
+  --ch-field-border: var(--ch-border);
+  --ch-field-bg: var(--ch-hover);
+  --ch-field-focus-ring: 0 0 0 4px var(--ch-accent-soft);
+  --ch-field-disabled-bg: var(--ch-thead);
+
+  /* Mappa Bootstrap (ridichiarata per seguire i token sopra) */
+  --bs-body-color: var(--ch-text);
+  --bs-body-bg: var(--ch-bg);
+  --bs-secondary-color: var(--ch-text-secondary);
+  --bs-tertiary-color: var(--ch-text-muted);
+  --bs-border-color: var(--ch-border);
+  --bs-border-radius: var(--ch-radius-sm);
+  --bs-border-radius-lg: var(--ch-radius-md);
+  --bs-link-color: var(--ch-accent);
+  --bs-link-hover-color: var(--ch-accent-dark);
+  --bs-success: var(--ch-success);
+  --bs-warning: var(--ch-warning);
+  --bs-danger: var(--ch-danger);
+  --bs-focus-ring-color: var(--ch-accent-soft);
+  --bs-primary: var(--ch-accent);
+  --bs-primary-rgb: 91, 76, 240;
+  --bs-success-rgb: 15, 157, 106;
+  --bs-warning-rgb: 184, 110, 0;
+  --bs-danger-rgb: 217, 52, 74;
+  --bs-primary-bg-subtle: var(--ch-accent-soft);
+  --bs-primary-text-emphasis: var(--ch-accent-dark);
+  --bs-primary-border-subtle: var(--ch-accent-soft);
+  --bs-success-bg-subtle: var(--ch-success-soft);
+  --bs-success-text-emphasis: var(--ch-success);
+  --bs-success-border-subtle: var(--ch-success-soft);
+  --bs-warning-bg-subtle: var(--ch-warning-soft);
+  --bs-warning-text-emphasis: var(--ch-warning);
+  --bs-warning-border-subtle: var(--ch-warning-soft);
+  --bs-danger-bg-subtle: var(--ch-danger-soft);
+  --bs-danger-text-emphasis: var(--ch-danger);
+  --bs-danger-border-subtle: var(--ch-danger-soft);
+}
+
+/* Accento di ruolo: il default segue il nuovo accento (le varianti
+   body[data-role-accent=...] di theme.css restano valide). */
+body.ch-ui2:not([data-role-accent]) {
+  --ch-role-accent: var(--ch-accent);
+  --ch-role-accent-dark: var(--ch-accent-dark);
+  --ch-role-accent-soft: var(--ch-accent-soft);
+}
+
+/* ==========================================================================
+   2. Token (scuro) - attivato da body[data-ch-theme="dark"] (intervento 235)
+   ========================================================================== */
+body.ch-ui2[data-ch-theme="dark"] {
+  --ch-bg: #0a0b1c;
+  --ch-surface: #141631;
+  --ch-hover: #191b3b;
+  --ch-thead: #101230;
+  --ch-border: #24274d;
+  --ch-border-strong: #31356a;
+  --ch-text: #eceefc;
+  --ch-text-secondary: #a9aed0;
+  --ch-text-muted: #7a7fa8;
+  --ch-accent: #7a6cff;
+  --ch-accent-dark: #a99cff;
+  --ch-accent-soft: #26235e;
+  --ch-success: #4ade9d;
+  --ch-success-soft: #0f3a2e;
+  --ch-warning: #f5b546;
+  --ch-warning-soft: #42300f;
+  --ch-danger: #ff7a8e;
+  --ch-danger-soft: #47172a;
+  --ch-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+  --ch-shadow-md: 0 12px 32px -8px rgba(0, 0, 0, 0.6);
+  --ch-overlay: rgba(0, 0, 0, 0.6);
+  --ch-sb-bg: #070817;
+  --ch-sb-bg-top: #0c0e26;
+  --ch-glow: 0 6px 16px -4px rgba(122, 108, 255, 0.45);
+  --bs-primary-rgb: 122, 108, 255;
+  --bs-success-rgb: 74, 222, 157;
+  --bs-warning-rgb: 245, 181, 70;
+  --bs-danger-rgb: 255, 122, 142;
+  color-scheme: dark;
+}
+
+/* ==========================================================================
+   3. Guscio: sfondo, sidebar scura, header trasparente
+   ========================================================================== */
+body.ch-shell.ch-ui2,
+body.ch-shell.ch-ui2 .wrapper,
+body.ch-shell.ch-ui2 .content-wrapper {
+  background: var(--ch-bg);
+}
+
+/* Niente bagliore viola in alto a destra: il contenitore parte sotto l'header, quindi il gradiente
+   veniva tagliato e sembrava un "mezzo header". */
+body.ch-shell.ch-ui2 .content-wrapper {
+  background: var(--ch-bg);
+}
+
+body.ch-shell.ch-ui2.ch-embed,
+body.ch-shell.ch-ui2.ch-embed .wrapper,
+body.ch-shell.ch-ui2.ch-embed .content-wrapper {
+  background: transparent;
+}
+
+/* --- Sidebar --- */
+body.ch-shell.ch-ui2 .main-sidebar {
+  background: linear-gradient(180deg, var(--ch-sb-bg-top) 0%, var(--ch-sb-bg) 55%);
+  border-right: 0;
+  color: var(--ch-sb-text);
+}
+
+body.ch-shell.ch-ui2 .main-sidebar .main-menu {
+  padding: 0 14px 16px;
+  scrollbar-width: none;
+}
+
+body.ch-shell.ch-ui2 .main-sidebar .main-menu::-webkit-scrollbar {
+  width: 0;
+}
+
+/* Il logo ha colori pensati per fondo chiaro (e quello dei tenant e' libero):
+   sta su una "pillola" chiara invece di essere ricolorato. */
+body.ch-shell.ch-ui2 .sidebar-logo {
+  height: auto;
+  margin: 16px 14px 6px;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: var(--ch-radius-md);
+  background: #ffffff;
+  justify-content: center;
+}
+
+body.ch-shell.ch-ui2 .sidebar-logo-img {
+  max-height: 32px;
+}
+
+/* Logo CustomerHive predefinito: PNG trasparente con testo chiaro, senza pillola bianca */
+body.ch-shell.ch-ui2 .sidebar-logo.sidebar-logo-bare {
+  background: transparent;
+  padding: 12px 8px;
+}
+
+body.ch-shell.ch-ui2 .sidebar-logo.sidebar-logo-bare .sidebar-logo-img {
+  max-height: 34px;
+  max-width: 100%;
+}
+
+body.ch-shell.ch-ui2 .sidebar-menu > li.header {
+  color: var(--ch-sb-muted);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  padding: 20px 12px 8px;
+}
+
+body.ch-shell.ch-ui2 .sidebar-menu li > a {
+  color: var(--ch-sb-text);
+  margin: 0 0 2px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+body.ch-shell.ch-ui2 .sidebar-menu li > a:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+}
+
+body.ch-shell.ch-ui2 .ch-nav-icon {
+  opacity: 0.85;
+}
+
+body.ch-shell.ch-ui2 .sidebar-menu > li.active::before {
+  display: none;
+}
+
+body.ch-shell.ch-ui2 .sidebar-menu > li.active > a,
+body.ch-shell.ch-ui2 .sidebar-menu > li.active > a:hover {
+  /* Gradiente indaco -> viola del mockup per tutti i ruoli: con il colore di ruolo (rosso per il
+     superadmin) si otteneva un fucsia. */
+  background: var(--ch-grad);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: var(--ch-glow);
+}
+
+body.ch-shell.ch-ui2 .sidebar-menu .treeview-menu {
+  margin-left: 18px;
+  padding-left: 0;
+}
+
+body.ch-shell.ch-ui2 .sidebar-menu .treeview-menu::before {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+body.ch-shell.ch-ui2 .sidebar-menu .treeview-menu > li > a {
+  color: var(--ch-sb-text);
+  margin: 1px 0 1px 6px;
+  font-size: 13px;
+}
+
+body.ch-shell.ch-ui2 .sidebar-menu .treeview-menu > li > a::before {
+  background: rgba(255, 255, 255, 0.12);
+  left: -6px;
+}
+
+body.ch-shell.ch-ui2 .sidebar-menu .treeview-menu > li > a:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+}
+
+body.ch-shell.ch-ui2 .sidebar-menu .treeview-menu > li.active > a {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* --- Header: trasparente, con pulsanti-icona bianchi --- */
+body.ch-shell.ch-ui2 .main-header {
+  background: transparent;
+  border-bottom: 0;
+}
+
+body.ch-shell.ch-ui2 .main-header .navbar {
+  min-height: 68px;
+  padding: 0 32px 0 28px !important;
+  gap: 12px;
+}
+
+body.ch-shell.ch-ui2 .main-header .sidebar-toggle,
+body.ch-shell.ch-ui2 .main-header .navbar-custom-menu .nav > li:not(.user-menu) > a {
+  width: 38px;
+  height: 38px;
+  margin: 0 3px;
+  border-radius: 12px;
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  color: var(--ch-text-secondary);
+}
+
+body.ch-shell.ch-ui2 .main-header .sidebar-toggle {
+  margin-left: 0;
+  box-shadow: var(--ch-shadow-sm);
+}
+
+body.ch-shell.ch-ui2 .main-header .sidebar-toggle:hover,
+body.ch-shell.ch-ui2 .main-header .navbar-custom-menu .nav > li:not(.user-menu) > a:hover {
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent);
+}
+
+body.ch-shell.ch-ui2 .main-header .navbar-custom-menu .nav > li > a {
+  position: relative;
+}
+
+body.ch-shell.ch-ui2 .main-header .navbar-custom-menu .user-menu > a {
+  height: 42px;
+  margin: 0 0 0 6px;
+  padding: 4px 14px 4px 4px;
+  border-radius: 999px;
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  color: var(--ch-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+body.ch-shell.ch-ui2 .main-header .navbar-custom-menu .user-menu > a:hover {
+  background: var(--ch-hover);
+  color: var(--ch-text);
+}
+
+body.ch-shell.ch-ui2 .main-header .user-menu .user-image,
+body.ch-shell.ch-ui2 .main-header .user-menu > a > img {
+  border: 0;
+  width: 32px;
+  height: 32px;
+}
+
+body.ch-shell.ch-ui2 .main-header .navbar-custom-menu .badge {
+  background: var(--ch-danger) !important;
+  color: #ffffff !important;
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  min-width: 16px;
+  padding: 2px 4px;
+  font-size: 9px;
+  border: 2px solid var(--ch-surface);
+}
+
+body.ch-shell.ch-ui2 .user-header {
+  background: var(--ch-thead) !important;
+}
+
+/* ==========================================================================
+   4. Intestazione di pagina
+   ========================================================================== */
+body.ch-shell.ch-ui2 .content-wrapper > .content-header {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 32px 0;
+  margin-bottom: 22px;
+}
+
+body.ch-shell.ch-ui2 .content-header .breadcrumb {
+  order: -1;
+  position: static;
+  float: none;
+  padding: 0;
+  margin: 0 0 10px;
+  font-size: 12.5px;
+}
+
+body.ch-shell.ch-ui2 .content-header .breadcrumb > li > a {
+  color: var(--ch-text-muted);
+}
+
+body.ch-shell.ch-ui2 .content-header .breadcrumb .active {
+  color: var(--ch-text-secondary);
+}
+
+body.ch-shell.ch-ui2 .content-header h1 {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  gap: 14px 16px;
+  margin: 0;
+}
+
+body.ch-shell.ch-ui2 .content-header h1 #title_icon {
+  display: none;
+}
+
+body.ch-shell.ch-ui2 .content-header h1 .btn {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+body.ch-shell.ch-ui2 .content-header h1 .btn-success {
+  background: var(--ch-grad);
+  border-color: transparent;
+  box-shadow: var(--ch-glow);
+}
+
+body.ch-shell.ch-ui2 .content-header h1 .btn-primary {
+  background: var(--ch-surface);
+  border-color: var(--ch-border);
+  color: var(--ch-text-secondary);
+  box-shadow: 0 1px 2px rgba(18, 20, 42, 0.04);
+}
+
+body.ch-shell.ch-ui2 .content-header h1 .btn-primary:hover {
+  border-color: var(--ch-border-strong);
+  background: var(--ch-surface);
+  color: var(--ch-text);
+}
+
+body.ch-shell.ch-ui2 .content-wrapper > .content,
+body.ch-shell.ch-ui2 .content-wrapper > section.content {
+  padding: 4px 32px 28px;
+}
+
+/* Modulo incorporato (iframe del widget): titolo piu' piccolo, niente margini di pagina */
+body.ch-shell.ch-ui2.ch-embed .content-wrapper > .content-header {
+  padding: 4px 4px 0;
+  margin-bottom: 10px;
+}
+
+body.ch-shell.ch-ui2.ch-embed .content-header h1 {
+  font-size: 20px;
+}
+
+body.ch-shell.ch-ui2.ch-embed .content-wrapper > .content,
+body.ch-shell.ch-ui2.ch-embed .content-wrapper > section.content {
+  padding: 0 4px 12px;
+}
+
+/* ==========================================================================
+   5. Pulsanti
+   ========================================================================== */
+body.ch-shell.ch-ui2 .btn {
+  --bs-btn-border-radius: var(--ch-radius-sm);
+  font-weight: 600;
+  transition: box-shadow .15s ease, border-color .15s ease, background-color .15s ease, color .15s ease;
+}
+
+body.ch-shell.ch-ui2 .btn-primary,
+body.ch-shell.ch-ui2 .btn-success {
+  background: var(--ch-grad);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: var(--ch-glow);
+}
+
+body.ch-shell.ch-ui2 .btn-primary:hover,
+body.ch-shell.ch-ui2 .btn-primary:focus,
+body.ch-shell.ch-ui2 .btn-primary:active,
+body.ch-shell.ch-ui2 .btn-primary.active,
+body.ch-shell.ch-ui2 .btn-success:hover,
+body.ch-shell.ch-ui2 .btn-success:focus,
+body.ch-shell.ch-ui2 .btn-success:active,
+body.ch-shell.ch-ui2 .btn-success.active {
+  background: var(--ch-grad);
+  border-color: transparent;
+  filter: brightness(1.06);
+  color: #ffffff;
+}
+
+body.ch-shell.ch-ui2 .btn-secondary,
+body.ch-shell.ch-ui2 .btn-default,
+body.ch-shell.ch-ui2 .btn-light,
+body.ch-shell.ch-ui2 .btn-outline-secondary {
+  background: var(--ch-surface);
+  border-color: var(--ch-border);
+  color: var(--ch-text);
+  box-shadow: 0 1px 2px rgba(18, 20, 42, 0.04);
+}
+
+body.ch-shell.ch-ui2 .btn-secondary:hover,
+body.ch-shell.ch-ui2 .btn-default:hover,
+body.ch-shell.ch-ui2 .btn-light:hover,
+body.ch-shell.ch-ui2 .btn-outline-secondary:hover {
+  background: var(--ch-surface);
+  border-color: var(--ch-border-strong);
+}
+
+body.ch-shell.ch-ui2 .btn-danger {
+  box-shadow: none;
+}
+
+/* Azioni di riga: restano icone "ghost" (il gradiente dei .btn-primary/.btn-success
+   non vale qui, theme.css le rende trasparenti). */
+body.ch-shell.ch-ui2 .button_action .btn,
+body.ch-shell.ch-ui2 .button_action .btn:hover,
+body.ch-shell.ch-ui2 .button_action .btn:focus,
+body.ch-shell.ch-ui2 .button_action .btn:active {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  filter: none;
+  color: var(--ch-text-muted);
+}
+
+body.ch-shell.ch-ui2 .button_action .btn:hover {
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent);
+}
+
+body.ch-shell.ch-ui2 .button_action .btn.btn-delete:hover {
+  background: var(--ch-danger-soft);
+  color: var(--ch-danger);
+}
+
+body.ch-shell.ch-ui2 .button_action .ba-wide .btn {
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  color: var(--ch-text-secondary);
+}
+
+body.ch-shell.ch-ui2 .btn:disabled,
+body.ch-shell.ch-ui2 .btn.disabled,
+body.ch-shell.ch-ui2 .btn[disabled] {
+  filter: none;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   6. Card, box, pannelli, modali
+   ========================================================================== */
+body.ch-shell.ch-ui2 .box,
+body.ch-shell.ch-ui2 .card,
+body.ch-shell.ch-ui2 .modal-content {
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-lg);
+  box-shadow: var(--ch-shadow-sm);
+}
+
+body.ch-shell.ch-ui2 .modal-content {
+  box-shadow: var(--ch-shadow-md);
+}
+
+body.ch-shell.ch-ui2 .modal-backdrop {
+  --bs-backdrop-bg: #0e1030;
+  --bs-backdrop-opacity: 0.5;
+}
+
+body.ch-shell.ch-ui2 .box-header {
+  padding: 18px 20px 14px;
+}
+
+body.ch-shell.ch-ui2 .box-body {
+  padding: 0 20px 20px;
+}
+
+body.ch-shell.ch-ui2 .box-footer {
+  background: var(--ch-thead);
+  border-top: 1px solid var(--ch-border);
+  border-radius: 0 0 var(--ch-radius-lg) var(--ch-radius-lg);
+  padding: 16px 24px;
+}
+
+body.ch-shell.ch-ui2 .box-footer .btn {
+  margin: 0 8px 0 0;
+}
+
+body.ch-shell.ch-ui2 .card.card-default {
+  border-radius: var(--ch-radius-lg);
+}
+
+body.ch-shell.ch-ui2 .card .card-header {
+  background: var(--ch-thead);
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell.ch-ui2 .dropdown-menu {
+  background: var(--ch-surface);
+  border-color: var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  box-shadow: var(--ch-shadow-md);
+}
+
+/* ==========================================================================
+   7. Campi
+   ========================================================================== */
+body.ch-shell.ch-ui2 .form-control,
+body.ch-shell.ch-ui2 .form-select {
+  border-radius: var(--ch-radius-sm);
+}
+
+body.ch-shell.ch-ui2 .form-control:focus,
+body.ch-shell.ch-ui2 .form-select:focus {
+  background-color: var(--ch-surface);
+}
+
+body.ch-shell.ch-ui2 .form-control:hover:not(:disabled):not([readonly]),
+body.ch-shell.ch-ui2 .form-select:hover:not(:disabled) {
+  border-color: var(--ch-border-strong);
+}
+
+body.ch-shell.ch-ui2 .ch-input:focus-within {
+  background-color: var(--ch-surface);
+}
+
+body.ch-shell.ch-ui2 label,
+body.ch-shell.ch-ui2 .form-label {
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   8. Tabelle di elenco
+   ========================================================================== */
+body.ch-shell.ch-ui2 #table_dashboard > thead > tr > th {
+  background: var(--ch-thead);
+  color: var(--ch-text-muted);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  padding: 12px 14px;
+  border-top: 1px solid var(--ch-border);
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell.ch-ui2 #table_dashboard > thead > tr > th:first-child {
+  border-left: 1px solid var(--ch-border);
+  border-radius: 12px 0 0 12px;
+}
+
+body.ch-shell.ch-ui2 #table_dashboard > thead > tr > th:last-child {
+  border-right: 1px solid var(--ch-border);
+  border-radius: 0 12px 12px 0;
+}
+
+body.ch-shell.ch-ui2 #table_dashboard > tbody > tr > td {
+  padding: 14px;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell.ch-ui2 #table_dashboard > tbody > tr:hover > td {
+  background: var(--ch-hover) !important;
+}
+
+/* Tabelle delle pagine relazione dei gruppi (membri/tenant/item), come il
+   mockup: card con margine interno e intestazione "a pillola" su fondo
+   diverso dalle righe (intervento 242). */
+body.ch-shell.ch-ui2 .rel-table {
+  border-radius: 20px;
+  padding: 20px 8px 8px;
+  box-shadow: var(--ch-shadow-sm);
+}
+
+body.ch-shell.ch-ui2 .rel-table th {
+  background: var(--ch-thead);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  padding: 12px 14px;
+  border-top: 1px solid var(--ch-border);
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell.ch-ui2 .rel-table th:first-child {
+  border-left: 1px solid var(--ch-border);
+  border-radius: 12px 0 0 12px;
+}
+
+body.ch-shell.ch-ui2 .rel-table th:last-child {
+  border-right: 1px solid var(--ch-border);
+  border-radius: 0 12px 12px 0;
+}
+
+body.ch-shell.ch-ui2 .rel-table td {
+  padding: 15px 12px;
+  font-size: 13.5px;
+  color: var(--ch-text);
+  background: transparent;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell.ch-ui2 .rel-table td:nth-child(2) {
+  font-weight: 600;
+}
+
+body.ch-shell.ch-ui2 .rel-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+body.ch-shell.ch-ui2 .rel-table tbody tr:hover > td {
+  background: var(--ch-hover) !important;
+}
+
+body.ch-shell.ch-ui2 .button_action .btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+}
+
+/* Gli stili con testo (.ba-wide: button_text, button_icon_text, dropdown "Azione")
+   non devono ereditare il riquadro fisso solo-icona di sopra. */
+body.ch-shell.ch-ui2 .button_action .ba-wide .btn {
+  width: auto;
+  height: auto;
+  border-radius: var(--ch-radius-md);
+}
+
+body.ch-shell.ch-ui2 .selected-action > .btn,
+body.ch-shell.ch-ui2 #btn_advanced_filter,
+body.ch-shell.ch-ui2 #form-limit-paging .form-control {
+  height: 36px;
+  border-radius: 12px;
+}
+
+/* select2 dentro l'input-group da 36px (che ha un suo bordo): altezza al 100% del
+   contenitore, non 36px fissi, altrimenti sborda e il valore scende. */
+body.ch-shell.ch-ui2 #form-limit-paging .select2-container,
+body.ch-shell.ch-ui2 #form-limit-paging .select2-container .selection {
+  display: block;
+  height: 100%;
+}
+
+body.ch-shell.ch-ui2 #form-limit-paging .select2-container--default .select2-selection--single {
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 12px;
+}
+
+body.ch-shell.ch-ui2 .box-tools .input-group {
+  height: 36px;
+  border-radius: 12px;
+  background: var(--ch-hover);
+}
+
+body.ch-shell.ch-ui2 .box-tools .input-group:focus-within {
+  border-color: var(--ch-accent);
+  box-shadow: 0 0 0 4px var(--ch-accent-soft);
+  background: var(--ch-surface);
+}
+
+/* ==========================================================================
+   9. Badge, schede, paginazione, footer
+   ========================================================================== */
+body.ch-shell.ch-ui2 .badge {
+  padding: 4px 11px;
+  font-weight: 700;
+}
+
+body.ch-shell.ch-ui2 .nav-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--ch-thead);
+  border: 1px solid var(--ch-border);
+  border-radius: 12px;
+  margin-bottom: 22px;
+}
+
+body.ch-shell.ch-ui2 .nav-tabs .nav-link,
+body.ch-shell.ch-ui2 .nav-tabs > li > a {
+  border: 0;
+  border-radius: 9px;
+  padding: 7px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ch-text-muted);
+}
+
+body.ch-shell.ch-ui2 .nav-tabs .nav-link.active,
+body.ch-shell.ch-ui2 .nav-tabs > li.active > a {
+  background: var(--ch-surface);
+  color: var(--ch-text);
+  box-shadow: 0 1px 3px rgba(18, 20, 42, 0.12);
+}
+
+body.ch-shell.ch-ui2 .pagination .page-link {
+  border-radius: 10px;
+}
+
+body.ch-shell.ch-ui2 .pagination .page-item.active .page-link {
+  background: var(--ch-grad);
+  border-color: transparent;
+}
+
+body.ch-shell.ch-ui2 .main-footer {
+  background: transparent;
+  border-top: 0;
+}
+
+body.ch-shell.ch-ui2 .main-footer::before {
+  display: none;
+}
+
+/* ==========================================================================
+   10. Mobile
+   ========================================================================== */
+@media (max-width: 767px) {
+  body.ch-shell.ch-ui2 .main-header .navbar {
+    padding: 0 16px !important;
+  }
+
+  body.ch-shell.ch-ui2 .content-wrapper > .content-header,
+  body.ch-shell.ch-ui2 .content-wrapper > .content,
+  body.ch-shell.ch-ui2 .content-wrapper > section.content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  body.ch-shell.ch-ui2 .content-header h1 {
+    font-size: 24px;
+  }
+}
+
+/* ==========================================================================
+   11. Pagine di form (aggiungi / modifica / dettaglio): come nel mockup
+   - niente titolo ripetuto dentro la card (c'e' gia' quello di pagina);
+   - "torna all'elenco" come pillola;
+   - card morbida, pulsanti in fondo: Indietro a sinistra, salvataggi a destra.
+   ========================================================================== */
+body.ch-shell.ch-ui2 .card.card-default:has(> .card-body > form#form) > .card-header {
+  display: none;
+}
+
+body.ch-shell.ch-ui2 .card.card-default:has(> .card-body > form#form) {
+  max-width: 1100px;
+  overflow: hidden;
+  border-radius: var(--ch-radius-lg);
+}
+
+body.ch-shell.ch-ui2 .card.card-default > .card-body:has(> form#form) {
+  padding: 18px 12px 0 !important;
+}
+
+body.ch-shell.ch-ui2 section.content a[title="Main Module"],
+body.ch-shell.ch-ui2 section.content a[title="Return"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 12px 7px 8px;
+  border-radius: 10px;
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+body.ch-shell.ch-ui2 section.content a[title="Main Module"]:hover,
+body.ch-shell.ch-ui2 section.content a[title="Return"]:hover {
+  color: var(--ch-accent-dark);
+}
+
+body.ch-shell.ch-ui2 section.content p:has(> a[title="Main Module"]),
+body.ch-shell.ch-ui2 section.content p:has(> a[title="Return"]) {
+  margin: 0 0 14px;
+}
+
+body.ch-shell.ch-ui2 #form .box-footer {
+  background: var(--ch-thead) !important;
+  padding: 16px 28px;
+}
+
+body.ch-shell.ch-ui2 #form .box-footer > .row {
+  margin: 0;
+}
+
+body.ch-shell.ch-ui2 #form .box-footer .col-form-label {
+  display: none;
+}
+
+body.ch-shell.ch-ui2 #form .box-footer [class*="col-sm-10"] {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  max-width: 100%;
+  width: 100%;
+  padding: 0;
+}
+
+body.ch-shell.ch-ui2 #form .box-footer .btn {
+  margin: 0;
+}
+
+body.ch-shell.ch-ui2 #form .box-footer .btn-secondary:first-child:not(:only-child) {
+  margin-right: auto;
+}
+
+/* Blocchi del form e del dettaglio a schede: come nel mockup, niente card dentro
+   la card della pagina - solo il titolo della sezione (grassetto) e i campi. */
+body.ch-shell.ch-ui2 .card.cb-card,
+body.ch-shell.ch-ui2 .card.cbd-card {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+body.ch-shell.ch-ui2 .cb-card > .card-header,
+body.ch-shell.ch-ui2 .cbd-card > .card-header {
+  padding: 4px 8px 16px;
+  background: transparent;
+  border: 0;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+
+body.ch-shell.ch-ui2 .cb-card > .card-header strong,
+body.ch-shell.ch-ui2 .cbd-card > .card-header strong {
+  font-weight: 800;
+}
+
+body.ch-shell.ch-ui2 .cb-card > .card-body,
+body.ch-shell.ch-ui2 .cbd-card > .card-body {
+  padding: 0 0 8px;
+}
+
+/* Blocchi impilati: un filo di separazione e respiro tra una sezione e l'altra */
+body.ch-shell.ch-ui2 .cb-layout,
+body.ch-shell.ch-ui2 .cbd-layout {
+  gap: 8px 24px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+body.ch-shell.ch-ui2 .cb-layout + .cb-layout {
+  border-top: 1px solid var(--ch-border);
+  padding-top: 20px;
+}
+
+/* Pagine con intestazione propria (flat-form: tenant, utenti...): non c'e' la card
+   esterna della pagina, quindi ogni blocco torna una card bianca con bordo sul
+   fondo grigio della pagina, come nel mockup. */
+body.ch-shell.ch-ui2 .flat-form .card.cb-card,
+body.ch-shell.ch-ui2 .flat-form .card.cbd-card {
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-lg);
+  box-shadow: var(--ch-shadow-sm);
+}
+
+body.ch-shell.ch-ui2 .flat-form .cb-card > .card-header,
+body.ch-shell.ch-ui2 .flat-form .cbd-card > .card-header {
+  padding: 16px 20px 12px;
+}
+
+body.ch-shell.ch-ui2 .flat-form .cb-card > .card-body,
+body.ch-shell.ch-ui2 .flat-form .cbd-card > .card-body {
+  padding: 16px 20px 4px;
+}
+
+/* Campi come nel mockup: etichetta piccola sopra, senza sfondo ne' rientri; campo
+   bianco alto 36px; 14px tra una riga e l'altra, 18px tra le colonne. */
+body.ch-shell.ch-ui2 .flat-form {
+  --ch-field-h: 36px;
+  --ch-field-px: 12px;
+  --ch-field-bg: var(--ch-surface);
+  --ch-field-border: var(--ch-border-strong);
+}
+
+/* Le larghezze dei campi (12 colonne) sono calcolate con il gap: se cambia il gap
+   va ricalcolato anche flex-basis, altrimenti i campi vanno a capo. */
+body.ch-shell.ch-ui2 .flat-form .cb-fields,
+body.ch-shell.ch-ui2 .flat-form .cbd-fields {
+  --ch-gap-x: 18px;
+  column-gap: var(--ch-gap-x);
+}
+
+body.ch-shell.ch-ui2 .flat-form .cb-field,
+body.ch-shell.ch-ui2 .flat-form .cbd-field {
+  flex-basis: calc((100% - 11 * var(--ch-gap-x)) / 12 * var(--cbw) + (var(--cbw) - 1) * var(--ch-gap-x));
+}
+
+body.ch-shell.ch-ui2 .flat-form .cb-field .row {
+  margin-bottom: 14px;
+}
+
+body.ch-shell.ch-ui2 .flat-form .cb-field .row > [class*="col-"] {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+body.ch-shell.ch-ui2 .flat-form .cb-field .col-form-label {
+  min-height: 0;
+  padding: 0 0 5px;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+body.ch-shell.ch-ui2 .flat-form .cbd-table {
+  margin-bottom: 14px;
+}
+
+body.ch-shell.ch-ui2 .flat-form .cbd-table tr td:first-child {
+  min-height: 0;
+  padding: 0 0 5px;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.ch-shell.ch-ui2 .flat-form .cb-layout + .cb-layout {
+  border-top: 0;
+  padding-top: 0;
+}
+
+body.ch-shell.ch-ui2 .cb-tabs,
+body.ch-shell.ch-ui2 .flat-form .nav-tabs {
+  margin-left: 20px;
+}
+
+/* Dettaglio (pagine con card standard): etichetta piccola in maiuscolo e valore in
+   evidenza, senza righe a zebra - come il dettaglio del mockup. */
+body.ch-shell.ch-ui2 .card.card-default .cbd-table,
+body.ch-shell.ch-ui2 .card.card-default .cbd-table td,
+body.ch-shell.ch-ui2 .card.card-default .cbd-table tr {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.ch-shell.ch-ui2 .card.card-default .cbd-table {
+  margin-bottom: 18px;
+}
+
+body.ch-shell.ch-ui2 .card.card-default .cbd-table tr td:first-child {
+  padding: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ch-text-muted);
+}
+
+body.ch-shell.ch-ui2 .card.card-default .cbd-table tr td:last-child {
+  padding: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ch-text);
+}
+
+/* Testata delle pagine relazione: briciola a pillola e titolo pesante, come il mockup */
+body.ch-shell.ch-ui2 .rel-crumb {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ch-text-muted);
+}
+
+body.ch-shell.ch-ui2 .rel-crumb a {
+  display: inline-block;
+  padding: 7px 12px 7px 8px;
+  border-radius: 10px;
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent);
+  font-weight: 600;
+}
+
+body.ch-shell.ch-ui2 .rel-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 14px 0 18px !important;
+}
+
+/* Pagine nuovo/modifica/dettaglio senza schede ne' blocchi (es. gruppi): card dei
+   campi, etichette sopra il campo, barra dei pulsanti senza fondo e dettaglio come
+   elenco chiave/valore, come il mockup (intervento 242). */
+body.ch-shell.ch-ui2 .flat-form .flat-card {
+  margin: 0 0 20px;
+  padding: 26px;
+  border: 1px solid var(--ch-border);
+  border-radius: 20px;
+  box-shadow: var(--ch-shadow-sm);
+}
+
+body.ch-shell.ch-ui2 .flat-form .flat-card .row > [class*="col-"] {
+  flex: 0 0 100%;
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+body.ch-shell.ch-ui2 .flat-form .flat-card .row > .col-form-label {
+  padding: 0 0 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ch-text-secondary);
+}
+
+body.ch-shell.ch-ui2 .flat-form .flat-card .row.mb-3 {
+  margin-bottom: 22px !important;
+}
+
+body.ch-shell.ch-ui2 .flat-form .flat-card .row.mb-3:last-child {
+  margin-bottom: 0 !important;
+}
+
+body.ch-shell.ch-ui2 .flat-form > form > .box-footer,
+body.ch-shell.ch-ui2 .flat-form #form .box-footer {
+  background: transparent !important;
+  padding: 6px 2px 10px;
+}
+
+body.ch-shell.ch-ui2 .flat-form .flat-card #table-detail,
+body.ch-shell.ch-ui2 .flat-form .flat-card #table-detail tbody,
+body.ch-shell.ch-ui2 .flat-form .flat-card #table-detail tr,
+body.ch-shell.ch-ui2 .flat-form .flat-card #table-detail td {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.ch-shell.ch-ui2 .flat-form .flat-card #table-detail {
+  margin: 0;
+}
+
+body.ch-shell.ch-ui2 .flat-form .flat-card #table-detail tr {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: center;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell.ch-ui2 .flat-form .flat-card #table-detail tr:last-child {
+  border-bottom: 0;
+}
+
+body.ch-shell.ch-ui2 .flat-form .flat-card #table-detail td {
+  padding: 16px 6px;
+  border: 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ch-text);
+}
+
+body.ch-shell.ch-ui2 .flat-form .flat-card #table-detail td:first-child {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ch-text-muted);
+}
+
+body.ch-shell.ch-ui2 .flat-form .flat-card .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Dettaglio standard di un modulo (senza schede/blocchi, es. Qlik Configuration):
+   elenco chiave/valore come il mockup - etichetta maiuscola tenue, valore in
+   grassetto, filo tra le righe, niente zebra (intervento 242). */
+body.ch-shell.ch-ui2 .card.card-default #table-detail,
+body.ch-shell.ch-ui2 .card.card-default #table-detail tbody,
+body.ch-shell.ch-ui2 .card.card-default #table-detail tr,
+body.ch-shell.ch-ui2 .card.card-default #table-detail td {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.ch-shell.ch-ui2 .card.card-default #table-detail {
+  margin: 0;
+}
+
+body.ch-shell.ch-ui2 .card.card-default #table-detail tr {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: center;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+body.ch-shell.ch-ui2 .card.card-default #table-detail tr:last-child {
+  border-bottom: 0;
+}
+
+body.ch-shell.ch-ui2 .card.card-default #table-detail td {
+  padding: 16px 6px;
+  border: 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ch-text);
+  overflow-wrap: anywhere;
+}
+
+body.ch-shell.ch-ui2 .card.card-default #table-detail td:first-child {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ch-text-muted);
+}
+
+body.ch-shell.ch-ui2 .card.card-default #table-detail,
+body.ch-shell.ch-ui2 .card.card-default #table-detail tbody {
+  display: block;
+  width: 100%;
+}
+
+body.ch-shell.ch-ui2 .card.card-default #table-detail tr td:first-child,
+body.ch-shell.ch-ui2 .flat-form .flat-card #table-detail tr td:first-child {
+  width: auto;
+}
+
+/* Link "Scarica file" del dettaglio (campo upload): pillola come il mockup */
+body.ch-shell.ch-ui2 a.ch-dl {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+body.ch-shell.ch-ui2 a.ch-dl:hover {
+  color: var(--ch-accent-dark);
+}
+
+/* Dettaglio a due colonne: le righe segnate con 'detail_half' nel form del controller
+   (classe dt-half) stanno due per riga, le altre occupano tutta la larghezza. */
+body.ch-shell.ch-ui2 .card.card-default #table-detail:has(tr.dt-half) tbody {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 32px;
+}
+
+body.ch-shell.ch-ui2 .card.card-default #table-detail tr {
+  grid-column: 1 / -1;
+}
+
+body.ch-shell.ch-ui2 .card.card-default #table-detail tr.dt-half {
+  grid-column: auto;
+  grid-template-columns: 120px 1fr;
+}
+
+@media (max-width: 767px) {
+  body.ch-shell.ch-ui2 .card.card-default #table-detail tr.dt-half {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Dettaglio raggruppato in due colonne: etichetta sopra e valore subito sotto, cosi'
+   si capisce a colpo d'occhio a cosa appartiene ogni valore. */
+body.ch-shell.ch-ui2 .card.card-default #table-detail:has(tr.dt-half) tr,
+body.ch-shell.ch-ui2 .card.card-default #table-detail:has(tr.dt-half) tr.dt-half {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  row-gap: 4px;
+  padding: 14px 6px;
+}
+
+body.ch-shell.ch-ui2 .card.card-default #table-detail:has(tr.dt-half) td {
+  padding: 0;
+}
+
+body.ch-shell.ch-ui2 .card.card-default #table-detail:has(tr.dt-half) td:first-child {
+  font-size: 11px;
+}

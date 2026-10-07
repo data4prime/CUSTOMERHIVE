@@ -1,0 +1,153 @@
+/* ch-icon-picker.css - stile del selettore di icone (intervento 236); markup: partials/ch_icon_picker. Solo token --ch-* di theme.css, caricato dal partial stesso (serve anche nelle pagine che non caricano ch-components.css, come il builder a griglia). */
+.ch-iconpick {
+  position: relative;
+  max-width: 420px;
+}
+
+.ch-ip-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: var(--ch-field-h);
+  padding: 0 var(--ch-field-px) 0 6px;
+  font-family: var(--ch-font);
+  font-size: var(--ch-font-size);
+  color: var(--ch-text);
+  background: var(--ch-field-bg);
+  border: 1px solid var(--ch-field-border);
+  border-radius: var(--ch-radius-sm);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.ch-ip-btn:hover {
+  border-color: var(--ch-text-muted);
+}
+
+.ch-ip-btn:focus-visible,
+.ch-ip-btn[aria-expanded="true"] {
+  outline: 0;
+  border-color: var(--ch-field-focus);
+  box-shadow: var(--ch-field-focus-ring);
+}
+
+.ch-ip-cur {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  font-size: 17px;
+  color: var(--ch-accent);
+  background: var(--ch-accent-soft);
+  border-radius: 9px;
+}
+
+.ch-ip-cur.is-empty {
+  background: var(--ch-border);
+}
+
+.ch-ip-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ch-ip-name.is-empty {
+  color: var(--ch-text-muted);
+}
+
+.ch-ip-chev {
+  flex: none;
+  color: var(--ch-text-muted);
+  font-size: 12px;
+}
+
+.ch-ip-pop {
+  position: absolute;
+  z-index: 1500;
+  top: calc(100% + 6px);
+  left: 0;
+  width: clamp(250px, 100%, 420px);
+  padding: 12px;
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  box-shadow: var(--ch-shadow-md);
+}
+
+.ch-ip-pop[hidden] {
+  display: none;
+}
+
+.ch-ip-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+  max-height: 232px;
+  margin-top: 10px;
+  overflow-y: auto;
+}
+
+.ch-ip-item {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  padding: 0;
+  font-size: 17px;
+  color: var(--ch-text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+.ch-ip-item:hover {
+  background: var(--ch-accent-soft);
+  color: var(--ch-accent);
+}
+
+.ch-ip-item.is-on {
+  background: var(--ch-accent);
+  color: #fff;
+}
+
+.ch-ip-empty {
+  grid-column: 1 / -1;
+  padding: 16px 0;
+  text-align: center;
+  font-size: var(--ch-font-size-sm);
+  color: var(--ch-text-muted);
+}
+
+.ch-ip-more {
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: var(--ch-text-muted);
+  text-align: center;
+}
+
+.ch-ip-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 4px 8px;
+  font-family: var(--ch-font);
+  font-size: var(--ch-font-size-sm);
+  font-weight: 600;
+  color: var(--ch-text-secondary);
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.ch-ip-clear:hover {
+  background: var(--ch-bg);
+  color: var(--ch-text);
+}

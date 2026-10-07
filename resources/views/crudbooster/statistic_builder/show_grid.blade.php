@@ -97,6 +97,17 @@
     .ch-grid-view .small-box .small-box-footer { display: block; padding: 6px; text-align: center; background: rgba(0,0,0,0.12); color: rgba(255,255,255,0.95); font-size: 11px; font-weight: 600; }
     .ch-grid-view .small-box .small-box-footer:hover { background: rgba(0,0,0,0.2); }
     .ch-grid-view .card { border: none; margin: 0; height: 100%; box-sizing: border-box; }
+    /* Gli angoli arrotondati li disegna solo la cella (overflow: auto la
+       fa ritagliare i figli): un widget con raggio proprio (10px/16px)
+       diverso da quello interno della cella (11px) lascerebbe intravedere
+       gli angoli dello sfondo della cella o del widget stesso. */
+    body .ch-grid-view .ch-grid-view-cell .border-box > .small-box,
+    body .ch-grid-view .ch-grid-view-cell .border-box > .card.card-default,
+    body .ch-grid-view .ch-grid-view-cell .border-box > .kpi-indicator-card { border-radius: 0; }
+    /* Bordo e ombra di .card.card-default (ch-ui2.css) dentro la cella
+       disegnerebbero un secondo riquadro arrotondato con raggio diverso. */
+    body .ch-grid-view .ch-grid-view-cell .border-box > .card.card-default,
+    body .ch-grid-view .ch-grid-view-cell .border-box > .card.card-default:hover { border: none; box-shadow: none; }
     .ch-grid-view .card-header { font-size: 13px; font-weight: 700; color: var(--ch-text); padding: 10px 6px; border-bottom: 1px solid var(--ch-border); margin-bottom: 8px; }
     .ch-grid-view .card-body { padding: 2px 6px; }
 </style>

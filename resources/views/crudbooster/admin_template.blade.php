@@ -86,7 +86,11 @@
 @endphp
 <body style="font-size: 14px;"
     @if($role_accent) data-role-accent="{{ $role_accent }}" @endif
-    class="ch-shell @php echo config('crudbooster.ADMIN_LAYOUT'); @endphp {{isset($sidebar_mode) ?: ''}} {{ !empty($ch_embed) ? 'ch-embed' : '' }}">
+    class="ch-shell @php echo config('crudbooster.ADMIN_LAYOUT'); @endphp {{isset($sidebar_mode) ?: ''}} {{ !empty($ch_embed) ? 'ch-embed' : '' }} {{ config('crudbooster.UI_V2') ? 'ch-ui2' : '' }}">
+    @if(config('crudbooster.UI_V2'))
+    {{-- Tema chiaro/scuro (intervento 235): subito dopo <body>, per applicare la scelta salvata prima del primo disegno --}}
+    <script src="{{ asset('js/ch-theme.js') }}?v={{ @filemtime(public_path('js/ch-theme.js')) }}"></script>
+    @endif
     <div id='app' class="wrapper">
 
         {{-- Modalita' embed (?embed=1, vedi CBBackend e docs/refactoring/162-*):
@@ -247,7 +251,7 @@
                 <div class="ch-toast-container" aria-live="polite" aria-atomic="true">
                     @if(@$alerts)
                     @foreach(@$alerts as $alert)
-                    <div class="toast ch-toast ch-toast-{{ $alert['type'] }}" role="alert" aria-live="assertive"
+                    <div class="toast fade ch-toast ch-toast-{{ $alert['type'] }}" role="alert" aria-live="assertive"
                         aria-atomic="true" data-bs-delay="6000">
                         <i class="bi {{ $ch_toast_icon[$alert['type']] ?? 'bi-info-circle-fill' }} ch-toast-icon"></i>
                         <div class="ch-toast-body">{!! $alert['message'] !!}</div>
@@ -257,7 +261,7 @@
                     @endif
 
                     @if (Session::get('message') != '')
-                    <div class="toast ch-toast ch-toast-{{ Session::get('message_type') }}" role="alert"
+                    <div class="toast fade ch-toast ch-toast-{{ Session::get('message_type') }}" role="alert"
                         aria-live="assertive" aria-atomic="true" data-bs-delay="6000">
                         <i class="bi {{ $ch_toast_icon[Session::get('message_type')] ?? 'bi-info-circle-fill' }} ch-toast-icon"></i>
                         <div class="ch-toast-body">
@@ -372,6 +376,12 @@
         // Toast di notifica (torna alla lista/salvataggio/errore ecc.) -
         // autohide nativo di Bootstrap 5, niente da gestire a mano oltre
         // all'inizializzazione.
+        // Il contenitore si sposta sotto <body>: dentro .content-wrapper un
+        // antenato con transform/overflow ne cambierebbe il riferimento del
+        // position:fixed (toast fuori posto, non in alto a destra).
+        document.querySelectorAll('.ch-toast-container').forEach(function (c) {
+            if (c.parentNode !== document.body) { document.body.appendChild(c); }
+        });
         document.querySelectorAll('.ch-toast').forEach(function (el) {
             new bootstrap.Toast(el).show();
         });

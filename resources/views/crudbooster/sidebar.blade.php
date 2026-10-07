@@ -8,8 +8,12 @@
          sempre sullo sfondo neutro della sidebar invece che sull'accento
          di ruolo di Privileges, che puo' essere un colore qualsiasi e non
          sta bene con tutti i colori fissi del logo. -->
-    <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}' class="sidebar-logo">
-        <img src="{{ CRUDBooster::getSetting('logo') ? asset(CRUDBooster::getSetting('logo')) : asset('/images/customerhive_trasparente.png') }}"
+    {{-- Senza logo personalizzato: logo + nome CustomerHive in PNG trasparente con testo chiaro
+         (images/customerhive_sidebar.png), direttamente sul fondo scuro. Con un logo caricato dal
+         cliente (colori liberi) resta la pillola chiara di prima. --}}
+    @php $sbCustomLogo = (bool) CRUDBooster::getSetting('logo'); @endphp
+    <a href="{{url(config('crudbooster.ADMIN_PATH'))}}" title='{{Session::get('appname')}}' class="sidebar-logo {{ $sbCustomLogo ? '' : 'sidebar-logo-bare' }}">
+        <img src="{{ $sbCustomLogo ? asset(CRUDBooster::getSetting('logo')) : asset('/images/customerhive_sidebar.png') }}"
             alt="{{ CRUDBooster::getSetting('appname') }}" class="sidebar-logo-img">
     </a>
 

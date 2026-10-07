@@ -32,80 +32,62 @@
     <div class="modal-content">
       <div class="modal-header" style="justify-content: space-between;">
         <h5 class="modal-title" id="licenseModalLabel"><i class="bi bi-key-fill"></i> {{ trans('crudbooster.license') }}</h5>
-
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-          
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ trans('crudbooster.license_modal_close') }}"></button>
       </div>
       <div class="modal-body">
-
-
-
-        <table class="table table-bordered">
+        <table class="ch-lic">
           <tr>
-            <th>Domain</th>
+            <th>{{ trans('crudbooster.license_modal_domain') }}</th>
             <td>{{ $license['domain'] }}</td>
           </tr>
           <tr>
-            <th>License Key</th>
+            <th>{{ trans('crudbooster.license_modal_key') }}</th>
             <td>{{ $license['license_key'] }}</td>
           </tr>
           <tr>
-            <th>Status</th>
+            <th>{{ trans('crudbooster.license_modal_status') }}</th>
             <td>{{ $license['status'] }}</td>
           </tr>
           <tr>
-            <th>Expiration Date</th>
-            <td>@if($license['expiration_date'])
-                  {{ date('d-m-Y h:i:s', strtotime($license['expiration_date'])) }}
-              @else
-                  <span></span>
-              @endif
-            </td>
+            <th>{{ trans('crudbooster.license_modal_expiration') }}</th>
+            <td>@if($license['expiration_date']){{ date('d-m-Y h:i:s', strtotime($license['expiration_date'])) }}@endif</td>
           </tr>
           <tr>
-            <th>Is Trial</th>
-            <td>{{ ($license['is_trial'] == 1) ? 'YES' : 'NO' }}</td>
+            <th>{{ trans('crudbooster.license_modal_trial') }}</th>
+            <td>{{ ($license['is_trial'] == 1) ? trans('crudbooster.license_modal_yes') : trans('crudbooster.license_modal_no') }}</td>
           </tr>
           <tr>
-            <th>Is Lifetime</th>
-            <td>{{ ($license['is_lifetime'] == 1) ? 'YES' : 'NO' }}</td>
+            <th>{{ trans('crudbooster.license_modal_lifetime') }}</th>
+            <td>{{ ($license['is_lifetime'] == 1) ? trans('crudbooster.license_modal_yes') : trans('crudbooster.license_modal_no') }}</td>
           </tr>
           <tr>
-            <th>Clients Number</th>
+            <th>{{ trans('crudbooster.license_modal_clients') }}</th>
             <td>{{ $license['clients_number'] }}</td>
           </tr>
           <tr>
-            <th>Tenants Number</th>
+            <th>{{ trans('crudbooster.license_modal_tenants') }}</th>
             <td>{{ $license['tenants_number'] }}</td>
           </tr>
-
           <tr>
-            <th>Path</th>
+            <th>{{ trans('crudbooster.license_modal_path') }}</th>
             <td>{{ $license['path'] }}</td>
           </tr>
           <tr>
-            <th>Expires In</th>
-            <td>{{ $license['expires_in'] }} days</td>
+            <th>{{ trans('crudbooster.license_modal_expires_in') }}</th>
+            <td>{{ trans('crudbooster.license_modal_days', ['n' => $license['expires_in']]) }}</td>
           </tr>
-
           <tr>
-            <th>Modules</th>
+            <th>{{ trans('crudbooster.license_modal_modules') }}</th>
             <td>
-                @foreach ($license['modules'] as $module)
-                  <span class="badge rounded-pill bg-light text-dark">{{$module['name']}}</span>
-                @endforeach
+              @foreach ($license['modules'] as $module)
+                <span class="ch-pill ch-pill-vio">{{ $module['name'] }}</span>
+              @endforeach
             </td>
           </tr>
-
         </table>
-
-
-        
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-     
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ trans('crudbooster.license_modal_close') }}</button>
       </div>
     </div>
   </div>

@@ -69,6 +69,13 @@ return [
     'ADMIN_LAYOUT' => '',
 
     /*
+    * Nuovo linguaggio visivo (intervento 234, public/css/ch-ui2.css).
+    * true = attivo; false = vecchio aspetto, senza altre modifiche.
+    * Dopo il cambio: php artisan config:clear
+    */
+    'UI_V2' => env('CH_UI_V2', true),
+
+    /*
     * NOTE :
     * Make sure yo clear your config cache by using command : php artisan config:clear
     */

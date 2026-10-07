@@ -278,12 +278,8 @@ if (!window.location.href.includes('statistic_builder/builder')) {
         <div class="ch-config-section-body">
             <div class="mb-3 row">
                 <label>Icona (opzionale)</label>
-                <select class="form-control" id="smallbox-icon-select" name='config[icon]' style="width:100%">
-                    <option value="">-- nessuna icona --</option>
-                    @foreach($biIconNames as $biIconName)
-                    <option value="{{ $biIconName }}" {{ ($currentIcon == $biIconName) ? 'selected' : '' }}>{{ $biIconName }}</option>
-                    @endforeach
-                </select>
+                {{-- Selettore di icone standard (intervento 236); il valore salvato resta il solo nome. --}}
+                @include('crudbooster::partials.ch_icon_picker', ['name' => 'config[icon]', 'current' => $currentIcon, 'prefix' => 'bi bi-', 'bare' => true, 'icons' => $biIconNames])
                 <div class="help-block">{{ trans('crudbooster.statistic_builder_smallbox_icon_help') }} <a target='_blank'
                     href='https://icons.getbootstrap.com/'>icons.getbootstrap.com</a></div>
             </div>
@@ -320,51 +316,6 @@ if (!window.location.href.includes('statistic_builder/builder')) {
     @include('crudbooster::statistic_builder.components._source_config', compact('componentID', 'config'))
 </form>
 
-{{-- Il CSS di select2 (usato dalla select Icona qui sotto) viene ormai
-     caricato una volta sola da _query_builder_fields.blade.php
-     (docs/refactoring/149-*, incluso da _source_config poco sopra) - non
-     serve ripeterlo qui, la pagina ne ha gia' una copia. --}}
-<script>
-    (function () {
-        // Picker icona+nome: stesso standard di list_icon.blade.php (menu/moduli),
-        // icona di Bootstrap Icons a sinistra e nome a destra.
-        function formatIcon(icon) {
-            var originalOption = icon.element;
-            var value = originalOption ? $(originalOption).val() : '';
-            if (!value) {
-                return icon.text;
-            }
-            var label = $(originalOption).text();
-            var $preview = $('<span></span>');
-            var $icon = $('<i></i>').addClass('bi bi-' + value).css({ marginRight: '6px', fontSize: '18px', verticalAlign: 'middle' });
-            return $preview.append($icon).append(label);
-        }
-        // Questa form viene iniettata via $.html() dentro #modal-statistic
-        // (builder legacy, statistic_builder/index.blade.php) OPPURE nella
-        // sidebar del builder a griglia (builder_grid.blade.php), che non
-        // ha nessuna modale - un push in coda pagina qui non avrebbe
-        // nessuno stack ad ascoltarlo in nessuno dei due casi, quindi lo
-        // script per il select2 va incluso ed eseguito direttamente qui.
-        // dropdownParent va agganciata a #modal-statistic SOLO se esiste
-        // (builder legacy): passare un dropdownParent a un elemento
-        // inesistente fa fallire select2 internamente ("Cannot read
-        // properties of undefined (reading 'top')") invece di limitarsi
-        // ad attaccare il dropdown al <body> come farebbe di default.
-        function initIconSelect() {
-            var options = {
-                width: '100%',
-                templateResult: formatIcon,
-                templateSelection: formatIcon,
-            };
-            var $modal = $('#modal-statistic');
-            if ($modal.length) {
-                options.dropdownParent = $modal;
-            }
-            $('#smallbox-icon-select').select2(options);
-        }
-        window.__chEnsureSelect2(initIconSelect);
-    })();
-</script>
 @elseif($command=='showFunction')
 <?php
     if ($key == 'sql') {

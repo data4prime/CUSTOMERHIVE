@@ -42,6 +42,9 @@
             .ch-module-open { font-size: 12px; font-weight: 600; white-space: nowrap; text-decoration: none; }
             .ch-module-frame { display: block; width: 100%; height: 600px; border: 0; }
             .ch-grid-view .ch-module-frame, #ch-grid-canvas .ch-module-frame { height: 100%; }
+            /* theme.css (.border-box iframe) darebbe all'iframe bordo e raggio: qui
+               la cornice e' gia' quella del widget, un raggio proprio lascia angoli visibili */
+            .border-box .ch-module-frame { border: 0; border-radius: 0; }
         </style>
 
         <div class='action float-end'>

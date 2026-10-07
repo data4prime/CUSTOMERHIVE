@@ -84,6 +84,997 @@ textarea.form-control {
   box-shadow: 0 0 0 3px var(--ch-danger-soft);
 }
 
+/* Campi testuali con addon (intervento 224): un unico riquadro con bordo,
+ * prefisso/suffisso come blocchi grigi ai lati, stepper dei numeri e occhio
+ * della password dentro il riquadro. Markup: partials/ch_input. Il bordo e'
+ * disegnato con box-shadow (non border) cosi' l'altezza resta quella dei campi. */
+.ch-input,
+.input-group:has(> .input-group-text) {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  overflow: hidden;
+  background-color: var(--ch-field-bg);
+  border-radius: var(--ch-radius-sm);
+  box-shadow: 0 0 0 1px var(--ch-field-border);
+  transition: box-shadow .15s ease;
+}
+
+.ch-input:hover,
+.input-group:has(> .input-group-text):hover {
+  box-shadow: 0 0 0 1px var(--ch-text-muted);
+}
+
+.ch-input:focus-within,
+.input-group:has(> .input-group-text):focus-within {
+  box-shadow: 0 0 0 1px var(--ch-field-focus), var(--ch-field-focus-ring);
+}
+
+.ch-input > .form-control,
+.ch-input > .form-control:hover,
+.ch-input > .form-control:focus,
+.input-group:has(> .input-group-text) > .form-control,
+.input-group:has(> .input-group-text) > .form-control:hover,
+.input-group:has(> .input-group-text) > .form-control:focus {
+  flex: 1 1 auto;
+  width: 1%;
+  min-width: 0;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.ch-input > .input-group-text,
+.input-group:has(> .input-group-text) > .input-group-text {
+  display: flex;
+  align-items: center;
+  min-height: 0;
+  padding: 0 12px;
+  font-weight: 500;
+  color: var(--ch-text-secondary);
+  background-color: var(--ch-bg);
+  border: 0;
+  border-radius: 0;
+}
+
+.ch-input > .ch-addon-pre,
+.input-group:has(> .input-group-text) > .input-group-text:first-child:not(:only-child) {
+  border-right: 1px solid var(--ch-field-border);
+}
+
+.ch-input > .ch-addon-suf,
+.input-group:has(> .input-group-text) > .input-group-text:last-child:not(:only-child) {
+  border-left: 1px solid var(--ch-field-border);
+}
+
+.ch-input > .ch-step {
+  display: flex;
+  flex-direction: column;
+  width: 28px;
+  border-left: 1px solid var(--ch-field-border);
+}
+
+.ch-step > button {
+  flex: 1 1 0;
+  padding: 0;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--ch-text-secondary);
+  background: var(--ch-bg);
+  border: 0;
+  cursor: pointer;
+}
+
+.ch-step > button:first-child {
+  border-bottom: 1px solid var(--ch-field-border);
+}
+
+.ch-step > button:hover {
+  color: var(--ch-accent-dark);
+  background: var(--ch-accent-soft);
+}
+
+.ch-input > .ch-eye {
+  display: grid;
+  place-items: center;
+  padding: 0 12px;
+  color: var(--ch-text-muted);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.ch-input > .ch-eye:hover {
+  color: var(--ch-text);
+}
+
+.ch-input input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.ch-input input[type="number"]::-webkit-inner-spin-button,
+.ch-input input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Campi di sola lettura che pero' si usano (selettore data/ora, datamodal, file): sfondo normale */
+.ch-input.ch-pick:has(> .form-control[readonly]),
+.ch-input.ch-file:has(> .form-control[readonly]),
+.ch-input:has(> input[data-ch-picker]:not([data-ch-locked]):not(:disabled)) {
+  background-color: var(--ch-field-bg);
+}
+
+.ch-input:has(> .form-control:disabled),
+.ch-input:has(> .form-control[readonly]) {
+  background-color: var(--ch-field-disabled-bg);
+}
+
+.has-error .ch-input,
+.has-error .input-group:has(> .input-group-text),
+.ch-input:has(> .form-control.is-invalid) {
+  box-shadow: 0 0 0 1px var(--ch-danger);
+}
+
+.has-error .ch-input:focus-within {
+  box-shadow: 0 0 0 1px var(--ch-danger), 0 0 0 4px var(--ch-danger-soft);
+}
+
+textarea.form-control {
+  resize: vertical;
+}
+
+.ch-counter {
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--ch-text-muted);
+  text-align: right;
+}
+
+/* Campi data / data e ora / ora (intervento 226): riquadro come i testuali, campo di
+ * sola lettura che apre il selettore (public/js/ch-datetime.js). */
+.ch-input > input[data-ch-picker] {
+  cursor: pointer;
+}
+
+.ch-input > input[data-ch-picker]:disabled,
+.ch-input > input[data-ch-picker][data-ch-locked] {
+  cursor: not-allowed;
+}
+
+.ch-input > .ch-clear {
+  display: none;
+  place-items: center;
+  padding: 0 10px;
+  font-size: 11px;
+  color: var(--ch-text-muted);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.ch-input.has-value > .ch-clear {
+  display: grid;
+}
+
+.ch-input > .ch-clear:hover {
+  color: var(--ch-text);
+}
+
+.ch-input.ch-open {
+  box-shadow: 0 0 0 1px var(--ch-field-focus), var(--ch-field-focus-ring);
+}
+
+.ch-picker {
+  position: fixed;
+  z-index: 2000;
+  width: 272px;
+  padding: 12px;
+  font-family: var(--ch-font);
+  font-size: var(--ch-font-size);
+  color: var(--ch-text);
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  box-shadow: var(--ch-shadow-md);
+}
+
+.ch-picker.ch-picker-small {
+  width: 170px;
+}
+
+.ch-picker button {
+  font-family: inherit;
+}
+
+.ch-pk-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.ch-pk-hd b {
+  font-size: 13.5px;
+}
+
+.ch-pk-nav {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: var(--ch-text-secondary);
+  background: none;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.ch-pk-nav:hover {
+  color: var(--ch-text);
+  background: var(--ch-bg);
+}
+
+.ch-cal {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
+}
+
+.ch-cal .ch-dw {
+  padding: 4px 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ch-text-muted);
+}
+
+.ch-cal button {
+  height: 32px;
+  color: var(--ch-text);
+  background: none;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.ch-cal button:hover {
+  background: var(--ch-bg);
+}
+
+.ch-cal button.oth {
+  color: var(--ch-text-muted);
+  opacity: .55;
+}
+
+.ch-cal button.today {
+  font-weight: 600;
+  color: var(--ch-accent-dark);
+  box-shadow: inset 0 0 0 1px var(--ch-accent);
+}
+
+.ch-cal button.sel {
+  font-weight: 600;
+  color: #fff;
+  background: var(--ch-accent);
+  box-shadow: none;
+}
+
+.ch-pk-time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ch-border);
+}
+
+.ch-pk-time label {
+  margin: 0 auto 0 0;
+  font-size: var(--ch-font-size-sm);
+  color: var(--ch-text-secondary);
+}
+
+.ch-pk-time select {
+  height: 30px;
+  padding: 0 6px;
+  font: inherit;
+  background: #fff;
+  border: 1px solid var(--ch-field-border);
+  border-radius: 7px;
+}
+
+.ch-pk-ft {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ch-border);
+}
+
+.ch-pk-ft button {
+  padding: 3px 10px;
+  font-size: var(--ch-font-size-sm);
+  color: var(--ch-text-secondary);
+  background: #fff;
+  border: 1px solid var(--ch-field-border);
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.ch-pk-ft button:hover {
+  color: var(--ch-accent-dark);
+  border-color: var(--ch-accent);
+}
+
+.ch-pk-cols {
+  display: flex;
+  gap: 8px;
+}
+
+.ch-pk-col {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1px;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.ch-pk-col button {
+  height: 30px;
+  color: var(--ch-text);
+  background: none;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.ch-pk-col button:hover {
+  background: var(--ch-bg);
+}
+
+.ch-pk-col button.sel {
+  font-weight: 600;
+  color: #fff;
+  background: var(--ch-accent);
+}
+/* Compatibilita' con il codice dei moduli che nasconde un campo con
+ * input.parentNode.parentNode.classList.add('hidden'): se i campi sono avvolti in un riquadro
+ * (.ch-input) l'elemento nascosto e' la colonna, non la riga; la label non deve restare orfana. */
+.mb-3.row:has(> [class*="col-"].hidden) > .col-form-label {
+  display: none;
+}
+/* File, datamodal, colore, multitext, editor (intervento 227) ----------------- */
+
+/* File: "Scegli file" come addon a sinistra, nome del file scelto accanto */
+.ch-file-btn {
+  gap: 6px;
+  margin: 0;
+  font-weight: 600;
+  color: var(--ch-text);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.ch-file-btn:hover {
+  color: var(--ch-accent-dark);
+  background-color: var(--ch-accent-soft);
+}
+
+.ch-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ch-input.ch-file {
+  min-height: var(--ch-field-h);
+}
+
+.ch-file .ch-fname {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  min-width: 0;
+  padding: 0 12px;
+  overflow: hidden;
+  color: var(--ch-text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ch-file .ch-fname.has-file {
+  color: var(--ch-text);
+}
+
+.ch-file > input.form-control[readonly] {
+  cursor: default;
+}
+
+.ch-file-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+}
+
+.ch-file-thumb {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  font-size: 22px;
+  color: var(--ch-accent-dark);
+  background: var(--ch-accent-soft);
+  border-radius: var(--ch-radius-sm);
+}
+
+.ch-file-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ch-file-meta {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ch-file-meta > b,
+.ch-file-meta > a {
+  display: block;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ch-file-meta > span,
+.ch-file-meta > a + a {
+  font-size: var(--ch-font-size-sm);
+  color: var(--ch-text-muted);
+}
+
+/* Campo immagine (type_component "image"): anteprima tonda o quadrata + azioni */
+.ch-image {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ch-image-preview {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--ch-image-size, 96px);
+  height: var(--ch-image-size, 96px);
+  overflow: hidden;
+  font-size: calc(var(--ch-image-size, 96px) * 0.4);
+  color: var(--ch-accent-dark);
+  background: var(--ch-accent-soft);
+  border: 1px solid var(--ch-border);
+}
+
+.ch-image-preview.is-circle {
+  border-radius: 50%;
+}
+
+.ch-image-preview.is-square {
+  border-radius: var(--ch-radius-md);
+}
+
+.ch-image-preview img,
+.ch-image-preview a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Anteprima quadrata (logo, icona, sfondo): l'immagine si vede intera, senza tagli */
+.ch-image-preview.is-square img {
+  object-fit: contain;
+}
+
+.ch-image-preview img[hidden],
+.ch-image-preview i[hidden],
+.ch-image-preview span[hidden] {
+  display: none;
+}
+
+/* Iniziali al posto dell'icona (foto profilo non impostata) */
+.ch-image-preview .ch-image-ini {
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ch-image-side {
+  min-width: 0;
+}
+
+.ch-image-fname {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Datamodal: una riga come un select, con la lente; si sceglie nella finestra */
+.ch-pick {
+  cursor: pointer;
+}
+
+.ch-pick > .form-control {
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+
+.ch-pick .ch-pick-lens {
+  color: var(--ch-text-muted);
+}
+
+.ch-pick:hover .ch-pick-lens {
+  color: var(--ch-accent-dark);
+  background-color: var(--ch-accent-soft);
+}
+
+.ch-pick .ch-pick-link:hover {
+  color: var(--ch-accent-dark);
+  background-color: var(--ch-accent-soft);
+}
+
+.ch-pick:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 1px var(--ch-field-focus), var(--ch-field-focus-ring);
+}
+
+/* Datamodal: lista dentro la finestra (iframe) */
+.ch-dm-search {
+  margin-bottom: 12px;
+}
+
+.ch-dm-table {
+  margin-bottom: 0;
+  font-size: var(--ch-font-size);
+}
+
+.ch-dm-table th {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ch-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+/* Finestra datamodal (parte nella pagina padre) */
+[id^="modal-datamodal-"] .modal-dialog:not(.modal-lg) {
+  max-width: 640px;
+}
+
+[id^="modal-datamodal-"] .modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+[id^="modal-datamodal-"] .modal-body {
+  padding: 14px 16px;
+}
+
+/* Dentro l'iframe: sfondo come la finestra, righe piu' alte, paginazione compatta */
+body.ch-dm-page {
+  padding: 3px;
+  background: var(--ch-surface);
+}
+
+table.ch-dm-table#table_dashboard th,
+table.ch-dm-table#table_dashboard td {
+  padding: 9px 12px;
+  font-size: var(--ch-font-size);
+  vertical-align: middle;
+}
+
+table.ch-dm-table#table_dashboard th {
+  font-size: 11px;
+}
+
+.ch-dm-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ch-pg-info {
+  font-size: var(--ch-font-size-sm);
+  color: var(--ch-text-muted);
+  white-space: nowrap;
+}
+
+.ch-pg {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ch-pg-btn {
+  display: grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  font-size: var(--ch-font-size-sm);
+  color: var(--ch-accent-dark);
+  text-decoration: none;
+  border-radius: 7px;
+}
+
+.ch-pg-btn:hover {
+  background: var(--ch-accent-soft);
+}
+
+.ch-pg-btn.active {
+  font-weight: 600;
+  color: #fff;
+  background: var(--ch-accent);
+}
+
+.ch-pg-btn.disabled {
+  color: var(--ch-text-muted);
+  pointer-events: none;
+  opacity: .5;
+}
+
+.ch-pg-gap {
+  color: var(--ch-text-muted);
+}
+.ch-dm-row {
+  cursor: pointer;
+}
+
+.ch-dm-row:hover > td,
+.ch-dm-row:focus > td {
+  background-color: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+}
+
+.ch-dm-row:focus {
+  outline: 0;
+}
+
+.ch-dm-empty {
+  padding: 18px;
+  text-align: center;
+  color: var(--ch-text-muted);
+}
+
+.ch-dm-pager {
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Colore: campione cliccabile + codice esadecimale */
+.ch-swatch-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  margin: 0;
+  background: var(--ch-bg);
+  border-right: 1px solid var(--ch-field-border);
+  cursor: pointer;
+}
+
+.ch-swatch {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12);
+}
+
+.ch-color-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ch-color > .form-control {
+  font-variant-numeric: tabular-nums;
+  text-transform: lowercase;
+}
+
+/* Multitext: una riga per voce, + / x a lato */
+.ch-multi-row {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+  margin-bottom: 8px;
+}
+
+.ch-multi-row > .ch-input {
+  flex: 1 1 auto;
+}
+
+.ch-sq-btn {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--ch-field-h);
+  color: var(--ch-text-secondary);
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-field-border);
+  border-radius: var(--ch-radius-sm);
+  cursor: pointer;
+}
+
+.ch-sq-btn:hover {
+  color: var(--ch-accent-dark);
+  border-color: var(--ch-accent);
+}
+
+/* Campo child (master -> dettaglio): griglia modificabile (intervento 228) */
+.ch-grid-card {
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+  overflow: hidden;
+}
+
+.ch-grid-hd {
+  padding: 10px 14px;
+  font-weight: 600;
+  background: var(--ch-bg);
+  border-bottom: 1px solid var(--ch-border);
+}
+
+.ch-grid {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+}
+
+.ch-grid th {
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ch-text-muted);
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  white-space: nowrap;
+  background: var(--ch-surface);
+  border-bottom: 1px solid var(--ch-border);
+}
+
+.ch-grid td {
+  padding: 4px 6px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--ch-border);
+}
+
+.ch-grid tr:last-child td {
+  border-bottom: 0;
+}
+
+.ch-grid tbody tr.ch-row:hover {
+  background: var(--ch-bg);
+}
+
+.ch-grid .ch-act {
+  width: 44px;
+  text-align: center;
+}
+
+.ch-grid-empty {
+  padding: 22px !important;
+  text-align: center;
+  color: var(--ch-text-muted);
+}
+
+/* le celle sono i campi: senza bordo finche' non si passa o si scrive */
+.ch-grid td .form-control,
+.ch-grid td .select2-container--default .select2-selection--single {
+  min-height: 34px;
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.ch-grid td textarea.form-control {
+  min-height: 34px;
+  padding-top: 6px;
+  resize: none;
+}
+
+.ch-grid td .form-control:hover:not([readonly]),
+.ch-grid td .select2-container--default:hover .select2-selection--single {
+  background-color: var(--ch-surface);
+  border-color: var(--ch-field-border);
+}
+
+.ch-grid td .form-control:focus,
+.ch-grid td .select2-container--default.select2-container--open .select2-selection--single,
+.ch-grid td .select2-container--default.select2-container--focus .select2-selection--single {
+  background-color: var(--ch-surface);
+  border-color: var(--ch-field-focus);
+  box-shadow: var(--ch-field-focus-ring);
+}
+
+.ch-grid td .form-control[readonly] {
+  color: var(--ch-text);
+  background-color: transparent;
+}
+
+.ch-grid td input[type="number"] {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.ch-grid .ch-cell-pick,
+.ch-grid .ch-cell-upload {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+}
+
+.ch-grid .ch-cell-pick {
+  cursor: pointer;
+}
+
+.ch-grid .ch-cell-pick > .form-control {
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+
+.ch-grid .ch-cell-pick > .bi {
+  flex: none;
+  padding-right: 8px;
+  color: var(--ch-text-muted);
+}
+
+.ch-grid .ch-cell-pick:hover > .bi {
+  color: var(--ch-accent-dark);
+}
+
+.ch-upl-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ch-upl-img img {
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.ch-upl-btn,
+.ch-icb {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: var(--ch-text-secondary);
+  background: none;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.ch-upl-btn:hover,
+.ch-icb:hover {
+  color: var(--ch-text);
+  background: var(--ch-bg);
+}
+
+.ch-icb.dng:hover {
+  color: var(--ch-danger);
+  background: var(--ch-danger-soft);
+}
+
+.ch-grid tfoot td {
+  padding: 8px 10px;
+  font-weight: 600;
+  background: var(--ch-bg);
+  border-top: 1px solid var(--ch-border);
+}
+
+.ch-grid tfoot .ch-sum {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.ch-grid-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ch-accent-dark);
+  background: none;
+  border: 0;
+  border-top: 1px dashed var(--ch-border-strong);
+  cursor: pointer;
+}
+
+.ch-grid-add:hover {
+  background: var(--ch-accent-soft);
+}
+
+.ch-grid-help {
+  margin: 0;
+  padding: 6px 14px;
+  border-top: 1px solid var(--ch-border);
+}
+
+/* Editor di testo (summernote, tinymce, ckeditor): riquadro e barra come i campi */
+.note-editor.note-frame,
+.tox.tox-tinymce,
+.ck.ck-editor__main > .ck-editor__editable,
+.ck.ck-editor .ck-toolbar {
+  border-color: var(--ch-field-border);
+}
+
+.note-editor.note-frame,
+.tox.tox-tinymce {
+  border-radius: var(--ch-radius-sm);
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.note-editor.note-frame .note-toolbar,
+.tox .tox-editor-header,
+.ck.ck-editor .ck-toolbar {
+  background: var(--ch-bg);
+}
+
+.ck.ck-editor .ck-toolbar {
+  border-radius: var(--ch-radius-sm) var(--ch-radius-sm) 0 0;
+}
+
+.ck.ck-editor__main > .ck-editor__editable {
+  border-radius: 0 0 var(--ch-radius-sm) var(--ch-radius-sm);
+}
+
+.note-editor.note-frame:focus-within,
+.tox.tox-tinymce:focus-within {
+  border-color: var(--ch-field-focus);
+  box-shadow: var(--ch-field-focus-ring);
+}
+
+.ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
+  border-color: var(--ch-field-focus);
+  box-shadow: var(--ch-field-focus-ring);
+}
+
 .form-label,
 label.control-label {
   font-size: var(--ch-font-size-sm);
@@ -114,24 +1105,294 @@ label.control-label {
   min-width: 0;
 }
 
-/* ---------- Checkbox, radio, switch ---------- */
-.form-check-input {
-  border-color: var(--ch-field-border);
+/* ---------- Checkbox, radio, switch ----------
+ * Standard unico per i campi checkbox (interventi 221+):
+ *   - A, checkbox quadrata: scelte multiple, tabelle, matrici (qualsiasi
+ *     <input type="checkbox"> senza role="switch", anche "nudo");
+ *   - B, switch: singolo booleano, markup
+ *     <div class="form-check form-switch"><input class="form-check-input"
+ *     type="checkbox" role="switch">...  (vedi partials/ch_check).
+ * L'<input> resta sempre l'elemento reale: nessun JS esistente si rompe. */
+:root {
+  --ch-check-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2.5 6.5l2.5 2.5 4.5-5.5'/%3e%3c/svg%3e");
+  --ch-check-dash: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-width='2' d='M3 6h6'/%3e%3c/svg%3e");
+  --ch-switch-knob: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3.4' fill='%23fff'/%3e%3c/svg%3e");
 }
 
-.form-check-input:checked {
-  background-color: var(--ch-accent);
+/* A — checkbox quadrata */
+input[type="checkbox"]:not(.btn-check):not([role="switch"]) {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  background-color: var(--ch-field-bg);
+  background-image: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
+  border: 1.5px solid var(--ch-field-border);
+  border-radius: 5px;
+  cursor: pointer;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  transition: background-color .12s ease, border-color .12s ease, box-shadow .12s ease;
+}
+
+input[type="checkbox"]:not(.btn-check):not([role="switch"]):not(.form-check-input) {
+  vertical-align: middle;
+}
+
+.form-check:not(.form-switch) {
+  padding-left: 28px;
+}
+
+.form-check:not(.form-switch) > .form-check-input {
+  margin-left: -28px;
+  margin-top: 2px;
+}
+
+input[type="checkbox"]:not(.btn-check):not([role="switch"]):hover:not(:disabled) {
   border-color: var(--ch-accent);
 }
 
-.form-check-input:focus {
-  border-color: var(--ch-field-focus);
-  box-shadow: var(--ch-field-focus-ring);
+input[type="checkbox"]:not(.btn-check):not([role="switch"]):checked {
+  background-color: var(--ch-accent);
+  background-image: var(--ch-check-icon);
+  border-color: var(--ch-accent);
 }
 
-input[type="checkbox"],
-input[type="radio"] {
-  accent-color: var(--ch-accent);
+input[type="checkbox"]:not(.btn-check):not([role="switch"]):indeterminate {
+  background-color: var(--ch-accent);
+  background-image: var(--ch-check-dash);
+  border-color: var(--ch-accent);
+}
+
+input[type="checkbox"]:not(.btn-check):not([role="switch"]):focus-visible {
+  border-color: var(--ch-field-focus);
+  box-shadow: var(--ch-field-focus-ring);
+  outline: 0;
+}
+
+input[type="checkbox"]:not(.btn-check):not([role="switch"]):disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.has-error input[type="checkbox"]:not(.btn-check):not([role="switch"]),
+input[type="checkbox"].is-invalid:not([role="switch"]) {
+  border-color: var(--ch-danger);
+}
+
+/* B — switch (singolo booleano) */
+.form-switch {
+  padding-left: 48px;
+}
+
+body .form-switch .form-check-input[role="switch"] {
+  width: 38px;
+  height: 22px;
+  margin-top: 0;
+  margin-left: -48px;
+  background-color: var(--ch-border-strong);
+  background-image: var(--ch-switch-knob);
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 0;
+  border-radius: var(--ch-radius-pill);
+  cursor: pointer;
+  transition: background-color .15s ease, background-position .15s ease, box-shadow .15s ease;
+}
+
+body .form-switch .form-check-input[role="switch"]:hover:not(:disabled) {
+  filter: brightness(.94);
+}
+
+body .form-switch .form-check-input[role="switch"]:checked {
+  background-color: var(--ch-accent);
+  background-image: var(--ch-switch-knob);
+  background-position: right center;
+}
+
+body .form-switch .form-check-input[role="switch"]:checked:hover:not(:disabled) {
+  background-color: var(--ch-accent-dark);
+  filter: none;
+}
+
+body .form-switch .form-check-input[role="switch"]:focus {
+  background-image: var(--ch-switch-knob);
+  box-shadow: var(--ch-field-focus-ring);
+  outline: 0;
+}
+
+body .form-switch .form-check-input[role="switch"]:disabled {
+  cursor: not-allowed;
+}
+
+.has-error .form-switch .form-check-input[role="switch"] {
+  box-shadow: 0 0 0 2px var(--ch-danger);
+}
+
+.form-switch .form-check-label {
+  cursor: pointer;
+}
+
+.form-switch .form-check-input:disabled ~ .form-check-label {
+  cursor: not-allowed;
+}
+
+/* ---------- Radio ----------
+ * Standard unico (intervento 222):
+ *   - B, controllo segmentato (.ch-seg): gruppi di 2-5 opzioni brevi
+ *     (partials/ch_radio sceglie da solo); markup:
+ *     <div class="ch-seg" role="radiogroup"><label><input type="radio"><span>..</span></label>..</div>
+ *   - radio tonda: elenchi lunghi o etichette lunghe, e ogni radio "nuda".
+ * Anche i vecchi gruppi bottone (.btn-group + .btn-check radio) hanno lo stesso aspetto. */
+
+/* Radio tonda */
+input[type="radio"]:not(.btn-check) {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  background-color: var(--ch-field-bg);
+  background-image: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: 1.5px solid var(--ch-field-border);
+  border-radius: 50%;
+  cursor: pointer;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  transition: border-color .12s ease, box-shadow .12s ease;
+}
+
+input[type="radio"]:not(.btn-check):not(.form-check-input) {
+  vertical-align: middle;
+}
+
+input[type="radio"]:not(.btn-check):hover:not(:disabled) {
+  border-color: var(--ch-accent);
+}
+
+input[type="radio"]:not(.btn-check):checked {
+  background-color: var(--ch-field-bg);
+  background-image: radial-gradient(circle, var(--ch-accent) 0, var(--ch-accent) 4px, transparent 4.5px);
+  border-color: var(--ch-accent);
+}
+
+input[type="radio"]:not(.btn-check):focus-visible {
+  border-color: var(--ch-field-focus);
+  box-shadow: var(--ch-field-focus-ring);
+  outline: 0;
+}
+
+input[type="radio"]:not(.btn-check):disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.has-error input[type="radio"]:not(.btn-check),
+input[type="radio"].is-invalid {
+  border-color: var(--ch-danger);
+}
+
+/* Controllo segmentato */
+.ch-seg,
+body .btn-group:has(> input.btn-check[type="radio"]) {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  max-width: 100%;
+  padding: 3px;
+  vertical-align: middle;
+  background: var(--ch-bg);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
+}
+
+.ch-seg > label {
+  position: relative;
+  margin: 0;
+  cursor: pointer;
+}
+
+.ch-seg label > input[type="radio"] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  margin: 0;
+  opacity: 0;
+}
+
+.ch-seg label > span,
+body .btn-group:has(> input.btn-check[type="radio"]) > .btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 16px;
+  font-size: var(--ch-font-size);
+  font-weight: 500;
+  color: var(--ch-text-secondary);
+  white-space: nowrap;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  box-shadow: none;
+  transition: background-color .12s ease, color .12s ease, box-shadow .12s ease;
+}
+
+body .btn-group:has(> input.btn-check[type="radio"]) > .btn {
+  margin: 0;
+}
+
+.ch-seg > label:hover > span,
+body .btn-group:has(> input.btn-check[type="radio"]) > .btn:hover {
+  color: var(--ch-text);
+  background: transparent;
+}
+
+.ch-seg label > input:checked + span,
+body .btn-group:has(> input.btn-check[type="radio"]) > .btn-check:checked + .btn {
+  font-weight: 600;
+  color: var(--ch-accent-dark);
+  background: var(--ch-surface);
+  box-shadow: 0 1px 2px rgba(16, 16, 24, .12), 0 0 0 1px var(--ch-border);
+}
+
+.ch-seg label > input:focus-visible + span,
+body .btn-group:has(> input.btn-check[type="radio"]) > .btn-check:focus-visible + .btn {
+  box-shadow: var(--ch-field-focus-ring), 0 0 0 1px var(--ch-accent);
+}
+
+.ch-seg > label:has(input:disabled) {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.has-error .ch-seg {
+  background: var(--ch-danger-soft);
+  border-color: var(--ch-danger);
+}
+
+/* Varianti: piccolo e a tutta larghezza (colonne uguali) */
+.ch-seg-sm label > span {
+  padding: 4px 10px;
+  font-size: var(--ch-font-size-sm);
+}
+
+.ch-seg-block {
+  display: flex;
+}
+
+.ch-seg-block > label {
+  flex: 1 1 0;
+}
+
+.ch-seg-block label > span {
+  justify-content: center;
 }
 
 /* ---------- Select2 (stessi bordi, altezza e fuoco dei campi nativi) ---------- */
@@ -186,24 +1447,127 @@ body .select2-container--default .select2-selection--multiple .select2-selection
   color: var(--ch-accent-dark);
 }
 
+/* Select standard (intervento 223): campo chiuso con chevron + pannello con
+ * ricerca, voce selezionata evidenziata con spunta. Il motore e' select2
+ * (type select2, type select e <select data-ch-select>): qui solo l'aspetto. */
+:root {
+  --ch-chevron: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2355555f' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.6' d='M4 6l4 4 4-4'/%3e%3c/svg%3e");
+  --ch-select-check: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%234f46e5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M3 8.5l3.2 3.2L13 4.8'/%3e%3c/svg%3e");
+}
+
+body .select2-container--default .select2-selection--single {
+  background-image: var(--ch-chevron);
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+}
+
+body .select2-container--default .select2-selection--single .select2-selection__arrow {
+  display: none;
+}
+
+body .select2-container--default .select2-selection--single .select2-selection__rendered {
+  padding-right: 36px;
+}
+
+body .select2-container--default.ch-select-compact .select2-selection--single {
+  background-position: right 8px center;
+  background-size: 12px;
+}
+
+body .select2-container--default.ch-select-compact .select2-selection--single .select2-selection__rendered {
+  padding-left: 10px;
+  padding-right: 26px;
+}
+
+body .select2-container--default .select2-selection--single .select2-selection__placeholder {
+  color: var(--ch-text-muted);
+}
+
+body .select2-container--default .select2-selection--single .select2-selection__clear {
+  margin-right: 4px;
+  color: var(--ch-text-muted);
+}
+
+body .select2-container--default.select2-container--disabled .select2-selection--single,
+body .select2-container--default.select2-container--disabled .select2-selection--multiple {
+  background-color: var(--ch-field-disabled-bg);
+  cursor: not-allowed;
+}
+
+body .select2-container--default.select2-container--disabled .select2-selection--single .select2-selection__rendered {
+  color: var(--ch-text-secondary);
+}
+
 body .select2-dropdown {
-  border: 1px solid var(--ch-field-border);
-  border-radius: var(--ch-radius-sm);
+  padding: 6px;
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-md);
   box-shadow: var(--ch-shadow-md);
   overflow: hidden;
 }
 
-body .select2-container--default .select2-results__option--highlighted[aria-selected],
-body .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
-  background-color: var(--ch-accent);
-  color: #fff;
+body .select2-container--default .select2-search--dropdown {
+  padding: 0 0 6px;
 }
 
 body .select2-container--default .select2-search--dropdown .select2-search__field {
+  height: 34px;
+  padding: 0 10px;
+  font-family: var(--ch-font);
+  font-size: var(--ch-font-size);
   border: 1px solid var(--ch-field-border);
-  border-radius: 6px;
+  border-radius: var(--ch-radius-sm);
 }
 
+body .select2-container--default .select2-search--dropdown .select2-search__field:focus {
+  border-color: var(--ch-field-focus);
+  box-shadow: var(--ch-field-focus-ring);
+  outline: 0;
+}
+
+body .select2-container--default .select2-results > .select2-results__options {
+  max-height: 240px;
+}
+
+body .select2-container--default .select2-results__option {
+  position: relative;
+  padding: 7px 10px;
+  color: var(--ch-text);
+  border-radius: 7px;
+  margin-bottom: 1px;
+}
+
+body .select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: var(--ch-bg);
+  color: var(--ch-text);
+}
+
+body .select2-container--default .select2-results__option[aria-selected="true"] {
+  background-color: var(--ch-accent-soft);
+  color: var(--ch-accent-dark);
+  font-weight: 600;
+}
+
+/* Nessuna spunta sulla voce selezionata (rimossa 2026-10-07, intervento 240):
+ * la voce resta evidenziata dal colore di sfondo. */
+
+body .select2-container--default .select2-results__option .ch-select-desc {
+  display: block;
+  font-size: var(--ch-font-size-sm);
+  font-weight: 400;
+  color: var(--ch-text-muted);
+}
+
+body .select2-container--default .select2-results__message {
+  color: var(--ch-text-muted);
+}
+
+.has-error .select2-container--default .select2-selection--single,
+.has-error .select2-container--default .select2-selection--multiple {
+  border-color: var(--ch-danger);
+}
 /* ---------- Datepicker / daterangepicker / timepicker (popup dei plugin) ---------- */
 .datepicker.dropdown-menu,
 .daterangepicker,
@@ -370,3 +1734,348 @@ body .select2-container--default .select2-search--dropdown .select2-search__fiel
 .ch-icon-5x { font-size: 5em; }
 .ch-spin { display: inline-block; animation: ch-spin 1s linear infinite; }
 @keyframes ch-spin { to { transform: rotate(360deg); } }
+
+/* ---------- Pill tenui (stato/livello nelle liste) ----------
+ * Come nei mockup di amministrazione (intervento 232): sfondo tenue + testo
+ * del colore semantico. Varianti: ok, warn, bad, vio, blue, gray. */
+.ch-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--ch-radius-pill);
+  font-family: var(--ch-font);
+  font-size: var(--ch-font-size-sm);
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  background: var(--ch-bg);
+  color: var(--ch-text-secondary);
+}
+.ch-pill-ok { background: var(--ch-success-soft); color: var(--ch-success); }
+.ch-pill-warn { background: var(--ch-warning-soft); color: var(--ch-warning); }
+.ch-pill-bad { background: var(--ch-danger-soft); color: var(--ch-danger); }
+.ch-pill-vio { background: var(--ch-violet-soft); color: var(--ch-violet); }
+.ch-pill-blue { background: var(--ch-blue-soft); color: var(--ch-blue); }
+.ch-pill-gray { background: var(--ch-border); color: var(--ch-text-secondary); }
+
+/* Griglia child in sola lettura (dettaglio): celle di testo, non campi */
+.ch-grid-ro td {
+  padding: 10px 12px;
+}
+
+/* ---------- Selettore di colore (intervento 237) ----------
+ * Markup: partials/ch_color. Pallini + colore libero + codice esadecimale. */
+.ch-colorpick {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 460px;
+}
+
+.ch-cp-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ch-cp-dot {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 2px solid var(--ch-surface);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--ch-border-strong);
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.ch-cp-dot:hover {
+  transform: scale(1.1);
+}
+
+.ch-cp-dot.is-on {
+  box-shadow: 0 0 0 2px var(--ch-text);
+}
+
+.ch-cp-free {
+  position: relative;
+  display: block;
+  width: 26px;
+  height: 26px;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  background: conic-gradient(#f43f5e, #f59e0b, #22c55e, #06b6d4, #6366f1, #d946ef, #f43f5e);
+  cursor: pointer;
+}
+
+.ch-cp-free input {
+  position: absolute;
+  inset: -6px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ch-colorpick .ch-cp-hex {
+  width: 120px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: var(--ch-font-size-sm);
+}
+
+.ch-cp-sw {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px var(--ch-border-strong);
+}
+
+/* Summernote (editor "wysiwyg": descrizione dell'endpoint API, campi wysiwyg dei moduli).
+   Il suo CSS e' scritto per Bootstrap 3, dove `.popover` e' nascosto finche' non si mostra:
+   con Bootstrap 5 i due popover (link e immagine) restavano visibili in fondo al <body>, sotto
+   il footer della pagina, come barre vuote. L'`display` in linea che Summernote imposta con
+   show()/hide() prevale su questa regola. */
+.note-popover.popover {
+  display: none;
+  position: absolute;
+  z-index: 1070;
+}
+
+/* Nota di avviso rossa (pagina chiavi segrete API, come .apinote.danger del mockup) */
+.api-note-danger {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  font-size: 13.5px;
+  color: var(--ch-danger);
+  background: var(--ch-danger-soft);
+  border: 1px solid var(--ch-danger);
+  border-left-width: 5px;
+  border-radius: var(--ch-radius-md);
+}
+
+.api-note-danger > i { flex: none; margin-top: 2px; font-size: 18px; }
+.api-note-danger p { margin: 6px 0 0; }
+.api-note-danger a { color: var(--ch-danger); }
+
+/* ---------- Anteprima nelle impostazioni (Application Setting / Login Register Style) ----------
+ * Pagina a due colonne: form a sinistra, anteprima a destra (come il mockup).
+ * Application Setting: interventi 237 (prima versione) e 249. */
+.ch-setgrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 991px) {
+  .ch-setgrid { grid-template-columns: minmax(0, 1fr); }
+}
+
+.ch-aprev,
+.ch-lprev {
+  padding: 22px;
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-lg);
+  box-shadow: var(--ch-shadow-sm);
+}
+
+.ch-aprev-t,
+.ch-lprev-t {
+  margin-bottom: 14px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.ch-aprev-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  max-width: 100%;
+  padding: 9px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: var(--ch-thead);
+  border: 1px solid var(--ch-border);
+  border-bottom: 0;
+  border-radius: 12px 12px 0 0;
+}
+
+.ch-aprev-tab img {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.ch-aprev-tt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ch-aprev-win {
+  display: flex;
+  height: 180px;
+  overflow: hidden;
+  border: 1px solid var(--ch-border);
+  border-radius: 0 14px 14px 14px;
+}
+
+.ch-aprev-sb {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  width: 40%;
+  padding: 14px;
+  background: linear-gradient(180deg, #14163f, #0e1030);
+}
+
+.ch-aprev-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  padding: 8px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.ch-aprev-logo img {
+  max-width: 100%;
+  max-height: 28px;
+}
+
+.ch-aprev-line {
+  height: 8px;
+  background: rgba(255, 255, 255, .16);
+  border-radius: 4px;
+}
+
+.ch-aprev-line.s { width: 60%; }
+
+.ch-aprev-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 9px;
+  padding: 14px;
+  background: var(--ch-bg);
+}
+
+.ch-aprev-bar {
+  height: 10px;
+  background: var(--ch-border);
+  border-radius: 5px;
+}
+
+.ch-aprev-bar.w { width: 70%; }
+.ch-aprev-bar.s { width: 45%; }
+
+.ch-aprev-meta {
+  display: flex;
+  align-items: flex-end;
+  gap: 28px;
+  margin-top: 18px;
+}
+
+.ch-aprev-k {
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ch-text-muted);
+}
+
+.ch-aprev-sheet {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  padding: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ch-text-secondary);
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border-strong);
+  border-radius: 4px;
+  box-shadow: var(--ch-shadow-sm);
+}
+
+.ch-aprev-cap {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--ch-text-muted);
+}
+
+.ch-lprev-box {
+  display: grid;
+  place-items: center;
+  height: 270px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06);
+  transition: background-color .2s;
+}
+
+.ch-lprev-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 72%;
+  padding: 18px;
+  text-align: center;
+  background: rgba(255, 255, 255, .16);
+  border: 1px solid rgba(255, 255, 255, .35);
+  border-radius: 14px;
+}
+
+.ch-lprev-card b { font-size: 15px; }
+.ch-lprev-card small { font-size: 11px; opacity: .85; }
+
+.ch-lprev-bar {
+  height: 26px;
+  background: rgba(255, 255, 255, .3);
+  border-radius: 8px;
+}
+
+.ch-lprev-btn {
+  display: grid;
+  place-items: center;
+  height: 30px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  border-radius: 8px;
+}
+
+.ch-lprev-cap {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--ch-text-muted);
+}
+
+/* Pill con puntino davanti (stato nelle liste Qlik, come .tg dei mockup) */
+.ch-pill-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px 4px 9px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ch-pill-dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}

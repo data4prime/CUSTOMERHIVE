@@ -1,5 +1,6 @@
 @extends('crudbooster::admin_template')
 @section('content')
+@include('crudbooster::menus._form_compact')
 @push('head')
 <style type="text/css">
     body.dragging,
@@ -22,27 +23,49 @@
         margin-top: 6px;
     }
 
-    .draggable-menu li div {
-        padding: 5px;
-        border: 1px solid var(--ch-border-strong);
-        background: var(--ch-bg);
-        cursor: move;
-    }
-
-    .draggable-menu li .is-dashboard {
-        background: var(--ch-warning-soft);
-    }
-
-    .draggable-menu li .icon-is-dashboard {
-        color: var(--ch-warning);
-    }
-
     .draggable-menu li {
         list-style-type: none;
-        margin-bottom: 4px;
+        margin-bottom: 8px;
         min-height: 35px;
     }
 
+    .draggable-menu li > .mm-row {
+        padding: 12px 14px;
+        border: 1px solid var(--ch-border);
+        border-radius: 14px;
+        background: var(--ch-surface);
+        cursor: move;
+        transition: border-color .15s, background .15s;
+    }
+
+    .draggable-menu li > .mm-row:hover {
+        border-color: var(--ch-border-strong);
+        background: var(--ch-hover);
+    }
+
+    .draggable-menu li > .mm-row.is-dashboard {
+        background: linear-gradient(135deg, var(--ch-accent-soft), transparent);
+        border-color: var(--ch-accent);
+    }
+
+    .mm-line { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+    .mm-name { font-weight: 700; }
+    .mm-ico { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 10px; background: var(--ch-accent-soft); color: var(--ch-accent); flex: none; }
+    .mm-actions { margin-left: auto; display: flex; gap: 4px; }
+    .mm-act { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 10px; color: var(--ch-text-muted); text-decoration: none; cursor: pointer; }
+    .mm-act:hover { background: var(--ch-accent-soft); color: var(--ch-accent); }
+    .mm-act.mm-del:hover { background: var(--ch-danger-soft, var(--ch-accent-soft)); color: var(--ch-danger); }
+    .mm-confirm { display: inline-flex; align-items: center; gap: 6px; }
+    .mm-confirm[hidden] { display: none; }
+    .mm-confirm-q { font-size: 12.5px; font-weight: 600; color: var(--ch-danger); margin-right: 2px; }
+    .mm-meta { display: flex; justify-content: space-between; gap: 14px; margin: 6px 0 0 40px; font-size: 12px; color: var(--ch-text-muted); }
+
+    .mm-card { border: 1px solid var(--ch-border); border-radius: 20px; background: var(--ch-surface); box-shadow: var(--ch-shadow-sm); overflow: hidden; }
+    .mm-card > .card-header { display: flex; align-items: center; gap: 10px; padding: 18px 22px; font-size: 16px; font-weight: 800; letter-spacing: -.01em; background: transparent; border-bottom: 1px solid var(--ch-border); }
+    .mm-card > .card-header:before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--ch-accent); }
+    .mm-card.mm-ok > .card-header:before { background: var(--ch-success); }
+    .mm-card.mm-ko > .card-header:before { background: var(--ch-danger); }
+    .mm-card > .card-body { padding: 16px; }
     .draggable-menu li.placeholder {
         position: relative;
         border: 1px dashed var(--ch-danger);
@@ -67,7 +90,21 @@
 @push('bottom')
 <script src='{{asset("vendor/crudbooster/assets/jquery-sortable-min.js")}}'></script>
 <script type="text/javascript">
-    
+    // Conferma di eliminazione sulla riga: "Eliminare? Si! / Annulla" (nessun popup).
+    // Gestori inline (onclick sul link): il drag&drop ferma la propagazione dei clic
+    // verso document, quindi un gestore delegato non scatterebbe.
+    function mmAsk(el) {
+        var $a = $(el).closest('.mm-actions');
+        $('.mm-actions').not($a).find('.mm-confirm').attr('hidden', true).end().find('.mm-act').show();
+        $a.find('.mm-act').hide();
+        $a.find('.mm-confirm').removeAttr('hidden');
+        return false;
+    }
+    function mmCancel(el) {
+        var $a = $(el).closest('.mm-actions');
+        $a.find('.mm-confirm').attr('hidden', true);
+        $a.find('.mm-act').show();
+    }
 $(function () {
     var id_cms_privileges = '{!! $id_cms_privileges !!}';
     var sortactive = $(".draggable-menu").sortable({
@@ -173,8 +210,8 @@ $(function () {
 <div class='row'>
     <div class="col-sm-5">
 
-        <div class="card border-success mb-3">
-            <div class="card-header bg-success text-white">
+        <div class="card mm-card mm-ok mb-3">
+            <div class="card-header">
                 <strong>{{ trans('crudbooster.menu_order_active') }}</strong>
                 <span id='menu-saved-info' style="display:none" class='float-end text-success'>
                     <i class='bi bi-check-lg'></i> {{ trans('crudbooster.menu_saved') }}
@@ -190,8 +227,8 @@ $(function () {
             </div>
         </div>
 
-        <div class="card border-danger">
-            <div class="card-header bg-danger text-white">
+        <div class="card mm-card mm-ko">
+            <div class="card-header">
                 <strong>{{ trans('crudbooster.menu_order_inactive') }}</strong>
             </div>
             <div class="card-body clearfix">
@@ -227,8 +264,8 @@ $(function () {
     ?>
 
     <div class="col-sm-7">
-        <div class="card border-primary">
-            <div class="card-header bg-primary text-white">
+        <div class="card mm-card">
+            <div class="card-header">
                 {{ trans('crudbooster.add_menu') }}
             </div>
             <div class="card-body">
@@ -236,7 +273,7 @@ $(function () {
                     action='{{CRUDBooster::mainpath("add-save")}}'>
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type='hidden' name='return_url' value='{{Request::fullUrl()}}' />
-                    @include("crudbooster::default.form_body")
+                    <div class="mm-form">@include("crudbooster::default.form_body")</div>
                     <p align="right"><input type='submit' class='btn btn-primary' value='{{ trans("crudbooster.add_menu") }}' /></p>
                 </form>
             </div>

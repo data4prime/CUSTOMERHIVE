@@ -120,7 +120,7 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
         </div><!--end-pull-left-->
         @endif
         <div class="box-tools pull-{{ trans('crudbooster.right') }}"
-            style="position: relative;margin-top: -5px;margin-right: -10px">
+            style="position: relative;margin-top: -5px;margin-right: -10px;display:flex;align-items:center;gap:8px">
             <?php
                                 $parameters = Request::all();
                                 unset($parameters['q']);
@@ -140,11 +140,11 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
             <form method='get' id='form-search-crud' style="display:inline-block;width: 260px;" action='{{Request::url()}}'>
                 <div class="input-group">
                     <input type="text" name="q" value="{{ Request::get('q') }}"
-                        class="form-control input-sm pull-{{ trans('crudbooster.right') }}"
+                        class="form-control form-control-sm pull-{{ trans('crudbooster.right') }}"
                         placeholder="{{trans('crudbooster.filter_search')}}" />
                     {!! CRUDBooster::getUrlParameters(['q']) !!}
                     <div class="input-group-btn">
-                        <button type='submit' class="btn btn-secondary"><i class="bi bi-search"></i></button>
+                        <button type='submit' class="btn btn-sm btn-secondary"><i class="bi bi-search"></i></button>
                     </div>
                 </div>
             </form>
@@ -176,8 +176,8 @@ if(strpos($module->path, 'mg_') !== false || $module->table_name == 'cms_users')
             <form method='get' id='form-limit-paging' style="display:inline-block" action='{{Request::url()}}'>
                 {!! CRUDBooster::getUrlParameters(['limit']) !!}
                 <div class="input-group">
-                    <select onchange="$('#form-limit-paging').submit()" name='limit' style="width: 56px;"
-                        class='form-control input-sm'>
+                    <select onchange="$('#form-limit-paging').submit()" name='limit' style="width: 76px;"
+                        class='form-select form-select-sm'>
                         <option {{($limit==5)?'selected':''}} value='5'>5</option>
                         <option {{($limit==10)?'selected':''}} value='10'>10</option>
                         <option {{($limit==20)?'selected':''}} value='20'>20</option>

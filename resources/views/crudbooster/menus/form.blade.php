@@ -40,6 +40,7 @@
 @endpush
 
 @section('content')
+@include('crudbooster::menus._form_compact')
 <div>
 
     @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel)
@@ -70,7 +71,7 @@
                 @if($hide_form)
                 <input type="hidden" name="hide_form" value='{!! serialize($hide_form) !!}'>
                 @endif
-                <div class="box-body" id="parent-form-area">
+                <div class="box-body mm-form" id="parent-form-area">
 
                     @if( isset($command) && isset($command) && $command == 'detail')
                     @include("crudbooster::default.form_detail")

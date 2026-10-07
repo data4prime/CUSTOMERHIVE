@@ -70,6 +70,15 @@ if ($method != 'content_view') {
                     </li>
                 @endif
 
+        @if(config('crudbooster.UI_V2'))
+        {{-- Tema chiaro/scuro: logica in public/js/ch-theme.js (intervento 235) --}}
+        <li class="nav-item">
+            <a href="#" class="nav-link" data-ch-toggle="theme" title="{{ trans('crudbooster.ui_theme_toggle') }}" role="button">
+                <i class="bi bi-moon-stars"></i>
+            </a>
+        </li>
+        @endif
+
         <!-- Notifications Menu -->
         <li class="nav-item dropdown notifications-menu">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" title="Notifications" aria-expanded="false">
@@ -95,14 +104,15 @@ if ($method != 'content_view') {
         <li class="nav-item dropdown user-menu">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <!-- The user image in the navbar-->
-                <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="rounded-circle" alt="User Image" width="30" height="30">
+                <?php $hd_photo = optional(CRUDBooster::me())->photo; ?>
+                {!! \App\Http\Controllers\System\LogsController::avatarHtml(CRUDBooster::myName(), $hd_photo, CRUDBooster::myId(), 30) !!}
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
                 <span class="d-none d-sm-inline">{{ CRUDBooster::myName() }}</span>
             </a>
             <ul class="dropdown-menu">
                 <!-- The user image in the menu -->
                 <li class="user-header">
-                    <img src="{{ UserHelper::icon(CRUDBooster::myId()) }}" class="rounded-circle" alt="User Image" width="80" height="80">
+                    {!! \App\Http\Controllers\System\LogsController::avatarHtml(CRUDBooster::myName(), $hd_photo, CRUDBooster::myId(), 80) !!}
                             <p>
                                 {{ CRUDBooster::myName() }}
                                 <small>{{ CRUDBooster::myPrivilegeName() }}</small>
