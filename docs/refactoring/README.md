@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 261**
+**Prossimo numero libero: 262**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,7 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [261](261-menu-wizard-tipo-module-e-titolo-senza-stile-link.md) | **Voce di menu creata dal wizard di tipo Module** (non Route) con migrazione delle esistenti; colonna titolo in lista senza stile link | Module generator / Menu | Completato | 2026-10-07 |
 | [260](260-formato-data-titolo-lista-tabelle-wizard.md) | **Formato data nelle Preferenze, colonna titolo in grassetto/link in lista, "Tabella collegata" e "Quale tabella?" solo dove ha senso** | Module generator / Liste / Profilo | Completato | 2026-10-07 |
 | [259](259-icona-menu-da-modulo-lingua-in-preferenze.md) | **Icona delle voci di menu "Module" presa dal modulo** (sola lettura, sincronizzata a ogni modifica del modulo) e **Lingua spostata in Preferenze** nel profilo | Menu / Module generator / Profilo | Completato | 2026-10-07 |
 | [258](258-importi-valuta-decimali-preferenze-separatore.md) | **Importi con valuta/decimali, preferenza separatore decimale, colonne di sistema in lista**: select valute e cifre decimali nel module generator, simbolo nel dettaglio, "Created by" -> nome utente, Tenant/Group non piu' automatici, sezione Preferenze nel profilo | Module generator / Liste / Profilo | Completato | 2026-10-07 |

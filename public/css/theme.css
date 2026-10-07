@@ -3964,3 +3964,12 @@ body > .select2-container { z-index: 100001; }
   border-color: var(--ch-danger, #d1373f);
   color: #fff;
 }
+
+/* Colonna titolo delle liste dei moduli (title_field): grassetto cliccabile ma senza lo stile dei link */
+a.ch-title-link,
+a.ch-title-link:hover,
+a.ch-title-link:focus {
+  color: inherit;
+  text-decoration: none;
+}
+a.ch-title-link:hover strong { text-decoration: underline; }

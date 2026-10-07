@@ -867,13 +867,15 @@ class ModulsController extends CBController
           'created_at' => date('Y-m-d H:i:s'),
           'name' => $name,
           'icon' => $icon,
-          'path' => $controller . 'GetIndex',
-          'type' => 'Route',
+          'path' => $path,
+          'type' => 'Module',
           'is_active' => 1,
           'id_cms_privileges' => CRUDBooster::myPrivilegeId(),
           'sorting' => $parent_menu_sort,
           'parent_id' => 0
         ]);
+        // come fa Menu Management per le voci Module: ?m=ID (layout di destinazione)
+        DB::table('cms_menus')->where('id', $id_cms_menus)->update(['path' => $path . '?m=' . $id_cms_menus]);
         $menu = Menu::find($id_cms_menus);
         $menu->assign_default_tenant();
         $menu->assign_default_group();
