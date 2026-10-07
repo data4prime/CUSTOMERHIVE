@@ -1972,7 +1972,8 @@ class CBController extends Controller
 
             $countRows = ($rows->count() > 0) ? $rows->first()->count() : 0;
 
-            Session::put('total_data_import', $countRows);
+            // righe di dati (esclusa l'intestazione): serve alla barra di avanzamento
+            Session::put('total_data_import', max(1, $rows->count() - 1));
 
             //$data_import_column = ($countRows > 0) ? $rows->first()->keys()->all() : [];
             $data_import_column = ($countRows > 0) ? $rows->first() : [];
@@ -1992,9 +1993,79 @@ class CBController extends Controller
 
             $data['table_columns'] = $table_columns;
             $data['data_import_column'] = $data_import_column;
+            $data['auto_map'] = $this->autoMapImportColumns($table_columns, $countRows > 0 ? $rows->first()->all() : []);
         }
 
         return view('crudbooster::import', $data);
+    }
+
+    /**
+     * Abbina da sola le intestazioni del file alle colonne del modulo: confronta
+     * (senza maiuscole, accenti, spazi e simboli) l'intestazione con il nome
+     * della colonna e con le etichette del modulo (form e lista). Ordine di
+     * preferenza: uguali, una contiene l'altra, molto simili. Ogni intestazione
+     * si usa una volta sola. Restituisce [indice colonna tabella => chiave intestazione].
+     */
+    protected function autoMapImportColumns(array $tableColumns, array $headers): array
+    {
+        $norm = function ($s) {
+            return preg_replace('/[^a-z0-9]/', '', strtolower(\Illuminate\Support\Str::ascii((string) $s)));
+        };
+
+        $labels = [];
+        foreach ([(array) $this->form, (array) $this->col] as $defs) {
+            foreach ($defs as $d) {
+                if (!empty($d['name']) && !empty($d['label'])) {
+                    $labels[$d['name']][] = $d['label'];
+                }
+            }
+        }
+
+        $skip = ['id', 'created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'];
+        $scores = [];
+        foreach ($tableColumns as $k => $column) {
+            if (in_array($column, $skip, true)) {
+                continue;
+            }
+            $cands = array_filter(array_map($norm, array_merge([$column], $labels[$column] ?? [])), 'strlen');
+            foreach ($headers as $hk => $header) {
+                $h = $norm($header);
+                if ($h === '') {
+                    continue;
+                }
+                $best = 0;
+                foreach ($cands as $c) {
+                    if ($c === $h) {
+                        $score = 100;
+                    } elseif (min(strlen($c), strlen($h)) >= 4 && (strpos($c, $h) !== false || strpos($h, $c) !== false)) {
+                        $score = 90;
+                    } else {
+                        similar_text($c, $h, $pct);
+                        $score = $pct >= 80 ? $pct : 0;
+                    }
+                    $best = max($best, $score);
+                }
+                if ($best > 0) {
+                    $scores[] = [$best, $k, $hk];
+                }
+            }
+        }
+
+        usort($scores, function ($a, $b) {
+            return $b[0] <=> $a[0];
+        });
+
+        $map = [];
+        $usedHeaders = [];
+        foreach ($scores as list($score, $k, $hk)) {
+            if (isset($map[$k]) || isset($usedHeaders[$hk])) {
+                continue;
+            }
+            $map[$k] = $hk;
+            $usedHeaders[$hk] = true;
+        }
+
+        return $map;
     }
 
     public function postDoneImport()
@@ -2003,6 +2074,25 @@ class CBController extends Controller
         $data['page_menu'] = Route::getCurrentRoute()->getActionName();
         $data['page_title'] = trans('crudbooster.import_page_title', ['module' => (isset($this->module->name) ? $this->module->name : '')]);
         Session::put('select_column', Request::get('select_column'));
+        // Modalita' di import: 'insert' (sempre nuovi record) oppure 'upsert'
+        // (aggiorna il record che ha gli stessi valori nelle colonne chiave,
+        // altrimenti lo inserisce). Le chiavi sono indici di colonna della
+        // tabella, come select_column, e devono essere colonne abbinate.
+        $upsert = Request::get('import_mode') === 'upsert';
+        $keys = [];
+        if ($upsert) {
+            $selected = array_filter((array) Request::get('select_column'), function ($v) {
+                return $v !== '' && $v !== null;
+            });
+            $keys = array_values(array_filter(array_keys((array) Request::get('key_column')), function ($k) use ($selected) {
+                return isset($selected[$k]);
+            }));
+            if (!$keys) {
+                $upsert = false;
+            }
+        }
+        Session::put('import_mode', $upsert ? 'upsert' : 'insert');
+        Session::put('import_key_columns', $keys);
 
         return view('crudbooster::import', $data);
     }
@@ -2131,9 +2221,9 @@ class CBController extends Controller
         $file_md5 = md5(Request::get('file'));
 
         if (Request::get('file') && Request::get('resume') == 1) {
-            $total = Session::get('total_data_import');
+            $total = max(1, intval(Session::get('total_data_import')));
             $prog = intval(Cache::get('success_' . $file_md5)) / $total * 100;
-            $prog = round($prog, 2);
+            $prog = round(min($prog, 100), 2);
             if ($prog >= 100) {
                 Cache::forget('success_' . $file_md5);
             }
@@ -2141,153 +2231,246 @@ class CBController extends Controller
             return response()->json(['progress' => $prog, 'last_error' => Cache::get('error_' . $file_md5)]);
         }
 
-        $select_column = Session::get('select_column');
+        Cache::forget('success_' . $file_md5);
+        Cache::forget('error_' . $file_md5);
 
-        $type = gettype($select_column);
-        //file_put_contents(__DIR__.'/sc.txt',$type."\n".json_encode($select_column)."\n", FILE_APPEND);
+        // Se qualcosa non va l'import si ferma e restituisce status=false con il
+        // motivo (e la riga del file): nulla viene scritto a meta' (transazione).
+        $fail = function ($message) {
+            return response()->json(['status' => false, 'error' => $message]);
+        };
 
-        // Filtra mantenendo lo "0"
-        $select_column = array_filter($select_column, function($value) {
-            return $value !== '' || $value === '0';
+        $select_column = array_filter((array) Session::get('select_column'), function ($value) {
+            return $value !== '' && $value !== null;
         });
-
-
-        //$select_column = array_filter($select_column);
-
-        $type = gettype($select_column);
-        //file_put_contents(__DIR__.'/sc.txt',$type."\n".json_encode($select_column)."\n", FILE_APPEND);
-
-
-
-
-        //$select_column = array_filter($select_column);
-        $table_columns = DB::getSchemaBuilder()->getColumnListing($this->table);
-        //file_put_contents(__DIR__.'/tc.txt',json_encode($table_columns)."\n", FILE_APPEND);
-        //file_put_contents(__DIR__.'/sc.txt',json_encode($select_column)."\n", FILE_APPEND);
-
-        $file = base64_decode(Request::get('file'));
-        $file = storage_path('app/public/' . $file);
-        //dd(file_get_contents($file));
-
-        //file_put_contents(__DIR__.'/test.txt', file_get_contents($file));
-
-        /*$rows = Excel::load($file, function ($reader) {
-        })->get();*/
-        $rows = Excel::toCollection(new ImportData, $file)[0];
-        
-
-        //remove first item from rows
-        $rows->shift();
-        //file_put_contents(__DIR__.'/rows.txt',json_encode($rows));
-
-        //dd($rows);
-
-        $has_created_at = false;
-        if (CRUDBooster::isColumnExists($this->table, 'created_at')) {
-            $has_created_at = true;
+        if (!$select_column) {
+            return $fail(trans('crudbooster.import_err_nomapping'));
         }
 
-        $data_import_column = [];
-        foreach ($rows as $value) {
-            $a = [];
+        $table_columns = DB::getSchemaBuilder()->getColumnListing($this->table);
+
+        $file = storage_path('app/public/' . base64_decode(Request::get('file')));
+        if (!is_file($file)) {
+            return $fail(trans('crudbooster.import_err_file'));
+        }
+        try {
+            $rows = Excel::toCollection(new ImportData, $file)[0];
+        } catch (\Throwable $e) {
+            return $fail(trans('crudbooster.import_err_file') . ' (' . $e->getMessage() . ')');
+        }
+
+        // prima riga = intestazioni (servono per nominare la colonna del file negli errori)
+        $headers = $rows->shift();
+        if ($rows->count() == 0) {
+            return $fail(trans('crudbooster.import_err_nodata'));
+        }
+
+        // nome colonna del modulo -> "colonna (file: intestazione)"
+        $columnLabel = function ($colname) use ($select_column, $table_columns, $headers) {
             foreach ($select_column as $sk => $s) {
-                /*if (!is_int($s)) {
-                    file_put_contents(__DIR__.'/s.txt',$s."\n", FILE_APPEND);
-                    continue;
-                }*/
-                //file_put_contents(__DIR__.'/sc.txt',$sk." - ".$s."\n", FILE_APPEND);
-                $colname = $table_columns[$sk];
-                //file_put_contents(__DIR__.'/colname.txt',$colname."\n", FILE_APPEND);
+                if (($table_columns[$sk] ?? null) === $colname) {
+                    $h = $headers ? trim((string) ($headers[$s] ?? '')) : '';
 
+                    return $h !== '' ? $colname . ' (' . trans('crudbooster.import_err_file_column') . ': ' . $h . ')' : $colname;
+                }
+            }
 
+            return $colname;
+        };
 
-                if (CRUDBooster::isForeignKey($colname)) {
+        // Colonne chiave per "aggiorna se esiste, altrimenti inserisci" (vuoto = solo inserimento)
+        $upsertKeys = [];
+        if (Session::get('import_mode') === 'upsert') {
+            foreach ((array) Session::get('import_key_columns') as $ki) {
+                if (isset($table_columns[$ki]) && isset($select_column[$ki])) {
+                    $upsertKeys[] = $table_columns[$ki];
+                }
+            }
+        }
 
-                    //file_put_contents(__DIR__.'/isForeignKey.txt',$colname."\n", FILE_APPEND);
+        $has_created_at = in_array('created_at', $table_columns, true);
+        $inserted = 0;
+        $updated = 0;
+        $blank = 0;
+        $rowNumber = 1;
 
-                    //Skip if value is empty
-                    if ($value[$s] == '') {
-                        continue;
+        DB::beginTransaction();
+        try {
+            foreach ($rows as $i => $value) {
+                $rowNumber = $i + 2; // riga 1 = intestazioni
+
+                foreach ($select_column as $s) {
+                    if (!$value->has($s)) {
+                        $value->put($s, null);
                     }
+                }
 
-                    if (intval($value[$s])) {
-                        $a[$colname] = $value[$s];
-                    } else {
-                        $relation_table = CRUDBooster::getTableForeignKey($colname);
-                        //file_put_contents(__DIR__.'/isForeignKey.txt',$relation_table."\n", FILE_APPEND);
-                        $relation_moduls = DB::table('cms_moduls')->where('table_name', $relation_table)->first();
-                        //file_put_contents(__DIR__.'/isForeignKey.txt',json_encode($relation_moduls)."\n", FILE_APPEND);
+                $isBlank = true;
+                foreach ($select_column as $s) {
+                    if (trim((string) $value[$s]) !== '') {
+                        $isBlank = false;
+                        break;
+                    }
+                }
+                if ($isBlank) {
+                    $blank++;
+                    continue;
+                }
 
-                        $relation_class = __NAMESPACE__ . '\\' . $relation_moduls->controller;
-                        if (!class_exists($relation_class)) {
-                            $relation_class = '\App\Http\Controllers\\' . $relation_moduls->controller;
-                        }
-                        $relation_class = new $relation_class;
-                        $relation_class->cbLoader();
+                $a = [];
+                foreach ($select_column as $sk => $s) {
+                    $colname = $table_columns[$sk];
 
-                        $title_field = $relation_class->title_field;
-
-                        $relation_insert_data = [];
-                        $relation_insert_data[$title_field] = $value[$s];
-
-                        if (CRUDBooster::isColumnExists($relation_table, 'created_at')) {
-                            $relation_insert_data['created_at'] = date('Y-m-d H:i:s');
+                    if (CRUDBooster::isForeignKey($colname)) {
+                        if ($value[$s] == '') {
+                            continue;
                         }
 
-                        try {
+                        if (intval($value[$s])) {
+                            $a[$colname] = $value[$s];
+                        } else {
+                            $relation_table = CRUDBooster::getTableForeignKey($colname);
+                            $relation_moduls = DB::table('cms_moduls')->where('table_name', $relation_table)->first();
+                            if (!$relation_moduls) {
+                                throw new \RuntimeException(trans('crudbooster.import_err_relation', ['column' => $columnLabel($colname)]));
+                            }
+
+                            $relation_class = __NAMESPACE__ . '\\' . $relation_moduls->controller;
+                            if (!class_exists($relation_class)) {
+                                $relation_class = '\App\Http\Controllers\\' . $relation_moduls->controller;
+                            }
+                            $relation_class = new $relation_class;
+                            $relation_class->cbLoader();
+
+                            $title_field = $relation_class->title_field;
+
+                            $relation_insert_data = [];
+                            $relation_insert_data[$title_field] = $value[$s];
+                            if (CRUDBooster::isColumnExists($relation_table, 'created_at')) {
+                                $relation_insert_data['created_at'] = date('Y-m-d H:i:s');
+                            }
+
                             $relation_exists = DB::table($relation_table)->where($title_field, $value[$s])->first();
-                            //file_put_contents(__DIR__.'/relation_exists.txt',json_encode($relation_exists)."\n", FILE_APPEND);
                             if ($relation_exists) {
                                 $relation_primary_key = $relation_class->primary_key;
                                 $relation_id = $relation_exists->$relation_primary_key;
                             } else {
                                 $relation_id = DB::table($relation_table)->insertGetId($relation_insert_data);
                             }
-                            //file_put_contents(__DIR__.'/relation_id.txt',$relation_id."\n", FILE_APPEND);
 
                             $a[$colname] = $relation_id;
-                        } catch (\Exception $e) {
-                            exit($e);
                         }
-                    } //END IS INT
-
-                } else {
-                    $a[$colname] = $value[$s];
+                    } else {
+                        $a[$colname] = $value[$s];
+                    }
                 }
-                //file_put_contents(__DIR__.'/a.txt',json_encode($a)."\n", FILE_APPEND);
-            }
 
-            $has_title_field = true;
-            foreach ($a as $k => $v) {
-                if ($k == $this->title_field && $v == '') {
-                    $has_title_field = false;
-                    //file_put_contents(__DIR__.'/htf.txt',$k."-".$v."\n", FILE_APPEND);
-                    break;
+                if (array_key_exists($this->title_field, $a) && trim((string) $a[$this->title_field]) === '') {
+                    throw new \RuntimeException(trans('crudbooster.import_err_title', ['column' => $columnLabel($this->title_field)]));
                 }
-            }
 
-            if ($has_title_field == false) {
-                continue;
-            }
+                if ($upsertKeys) {
+                    $where = [];
+                    foreach ($upsertKeys as $keyCol) {
+                        if (!array_key_exists($keyCol, $a) || $a[$keyCol] === null || $a[$keyCol] === '') {
+                            throw new \RuntimeException(trans('crudbooster.import_key_empty', ['column' => $columnLabel($keyCol)]));
+                        }
+                        $where[$this->table . '.' . $keyCol] = $a[$keyCol];
+                    }
 
-            try {
+                    $existing = DB::table($this->table)->where($where);
+                    if (in_array('deleted_at', $table_columns, true)) {
+                        $existing->whereNull($this->table . '.deleted_at');
+                    }
+                    \App\Dashboards\DatasetAccessScope::applyRowScope($existing, $this->table);
+
+                    if ($existing->exists()) {
+                        $changes = array_diff_key($a, array_flip($upsertKeys));
+                        if (in_array('updated_at', $table_columns, true)) {
+                            $changes['updated_at'] = date('Y-m-d H:i:s');
+                        }
+                        if ($changes) {
+                            $existing->update($changes);
+                        }
+                        $updated++;
+                        Cache::increment('success_' . $file_md5);
+                        continue;
+                    }
+                }
 
                 if ($has_created_at) {
                     $a['created_at'] = date('Y-m-d H:i:s');
                 }
 
-                //file_put_contents(__DIR__.'/test.txt',json_encode($a));
-
                 DB::table($this->table)->insert($a);
+                $inserted++;
                 Cache::increment('success_' . $file_md5);
-            } catch (\Exception $e) {
-                $e = (string) $e;
-                Cache::put('error_' . $file_md5, $e, 500);
             }
+
+            if ($inserted + $updated == 0) {
+                DB::rollBack();
+
+                return $fail(trans('crudbooster.import_err_all_blank'));
+            }
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Cache::forget('success_' . $file_md5);
+
+            return $fail(trans('crudbooster.import_err_row', [
+                'row' => $rowNumber,
+                'detail' => $this->describeImportError($e, $columnLabel),
+            ]));
         }
 
-        return response()->json(['status' => true]);
+        return response()->json([
+            'status' => true,
+            'summary' => trans('crudbooster.import_done_summary', ['inserted' => $inserted, 'updated' => $updated, 'blank' => $blank]),
+        ]);
     }
+
+    /**
+     * Messaggio comprensibile per un errore durante l'import di una riga: per gli
+     * errori di database riconosce i casi piu' comuni (valore non valido, testo
+     * troppo lungo, colonna obbligatoria, duplicato...) e nomina la colonna.
+     */
+    protected function describeImportError(\Throwable $e, callable $columnLabel): string
+    {
+        if (!($e instanceof \Illuminate\Database\QueryException)) {
+            return $e instanceof \RuntimeException ? $e->getMessage() : trans('crudbooster.import_err_generic', ['detail' => $e->getMessage()]);
+        }
+
+        $raw = (string) ($e->errorInfo[2] ?? $e->getMessage());
+        $col = function ($name) use ($columnLabel) {
+            $name = trim((string) $name, "`' ");
+            $name = trim(substr(strrchr('.' . $name, '.'), 1), "`' ");
+
+            return $columnLabel($name);
+        };
+
+        if (preg_match("/Incorrect \w+ value: '(.*?)' for column (.+?) at row/s", $raw, $m)) {
+            return trans('crudbooster.import_err_value', ['value' => $m[1], 'column' => $col($m[2])]);
+        }
+        if (preg_match('/Data too long for column (.+?) at row/s', $raw, $m)) {
+            return trans('crudbooster.import_err_toolong', ['column' => $col($m[1])]);
+        }
+        if (preg_match("/Column (.+?) cannot be null/s", $raw, $m) || preg_match("/Field (.+?) doesn't have a default value/s", $raw, $m)) {
+            return trans('crudbooster.import_err_null', ['column' => $col($m[1])]);
+        }
+        if (preg_match('/Out of range value for column (.+?) at row/s', $raw, $m)) {
+            return trans('crudbooster.import_err_range', ['column' => $col($m[1])]);
+        }
+        if (preg_match("/Duplicate entry '(.*?)' for key/s", $raw, $m)) {
+            return trans('crudbooster.import_err_duplicate', ['value' => $m[1]]);
+        }
+        if (preg_match("/Unknown column '(.+?)'/s", $raw, $m)) {
+            return trans('crudbooster.import_err_unknown_col', ['column' => $m[1]]);
+        }
+
+        return trans('crudbooster.import_err_generic', ['detail' => mb_substr($raw, 0, 300)]);
+    }
+
     public function postDoUploadImportData()
     {
         $this->cbLoader();

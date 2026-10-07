@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 268**
+**Prossimo numero libero: 272**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,10 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [271](271-import-dati-errori-visibili-e-transazione.md) | **Import dati: errori visibili e import tutto-o-niente** (si ferma al primo problema, indica riga e colonna) | Lista / Import | Completato | 2026-10-07 |
+| [270](270-import-dati-aggiorna-o-inserisci.md) | **Import dati: aggiorna se esiste, altrimenti inserisci** (scelta di una o piu' colonne chiave) | Lista / Import | Completato | 2026-10-07 |
+| [269](269-import-dati-abbinamento-automatico-colonne.md) | **Import dati: abbinamento automatico intestazioni/colonne** (nome + etichette, preselezione modificabile) | Lista / Import | Completato | 2026-10-07 |
+| [268](268-export-import-modulo-allineati-al-wizard.md) | **Export/Import di un modulo allineati al wizard** (chiavi colonne lista, tipi di colonna tabella) | Module generator | Completato | 2026-10-07 |
 | [267](267-export-tutte-le-colonne-del-modulo.md) | **Export: nel dialogo tutte le colonne del modulo** (lista + campi form + colonne tabella, si esportano solo le spuntate) | Lista / Export | Completato | 2026-10-07 |
 | [266](266-rimozione-ckeditor-sostituito-da-tinymce.md) | **Rimozione di CKEditor, sostituito da TinyMCE** (componente e asset eliminati, alias `ckeditor` → `tinymce`) | Form / Module generator | Completato | 2026-10-07 |
 | [265](265-wizard-step2-elimina-colonna.md) | **Wizard passo Campi: eliminazione definitiva di una colonna dal database** (conferma digitando il nome, pulizia di lista e ordinamento) | Module generator | Completato | 2026-10-07 |

@@ -2124,7 +2124,7 @@ class ModulsController extends CBController
       ],
       'table' => [
         'name' => $row->table_name,
-        'columns' => CRUDBooster::getTableStructure($row->table_name),
+        'columns' => $this->exportTableColumns($row->table_name),
       ],
       'config' => $config,
       'col' => $instance->col,
@@ -2242,6 +2242,67 @@ class ModulsController extends CBController
     return CRUDBooster::redirect(CRUDBooster::mainpath(), "Modulo \"{$name}\" importato con successo", 'success');
   }
 
+  // Colonne della tabella per l'export, con gli stessi tipi del generatore
+  // (text/number/boolean + plaintext/longtext/decimal/date/datetime/time, vedi
+  // ModuleGeneratorFields::SQL_BY_TYPE). getTableStructure() li riduce a
+  // text/number/boolean, quindi non va bene per ricreare la tabella fedelmente.
+  // I file esportati prima di questa modifica hanno solo i tre tipi base: l'import
+  // li gestisce ancora.
+  private function exportTableColumns($table_name)
+  {
+    $reserved = config('app.reserved_column_names');
+    $out = [];
+
+    foreach (CRUDBooster::getTableStructure($table_name, 'verbose') as $c) {
+      if (in_array($c['COLUMN_NAME'], $reserved)) {
+        continue;
+      }
+
+      $entry = ['name' => $c['COLUMN_NAME']];
+      switch ($c['DATA_TYPE']) {
+        case 'int':
+          $entry['type'] = 'number';
+          $entry['size'] = preg_match('/^int\((\d+)\)/', $c['COLUMN_TYPE'], $m) ? (int) $m[1] : null;
+          break;
+        case 'tinyint':
+          $entry['type'] = 'boolean';
+          $entry['size'] = 1;
+          break;
+        case 'text':
+        case 'mediumtext':
+          $entry['type'] = 'plaintext';
+          break;
+        case 'longtext':
+          $entry['type'] = 'longtext';
+          break;
+        case 'decimal':
+          $entry['type'] = 'decimal';
+          $entry['size'] = $c['NUMERIC_PRECISION'] . ',' . $c['NUMERIC_SCALE'];
+          break;
+        case 'date':
+          $entry['type'] = 'date';
+          break;
+        case 'datetime':
+        case 'timestamp':
+          $entry['type'] = 'datetime';
+          break;
+        case 'time':
+          $entry['type'] = 'time';
+          break;
+        case 'varchar':
+          $entry['type'] = 'text';
+          $entry['size'] = $c['CHARACTER_MAXIMUM_LENGTH'];
+          break;
+        default:
+          $entry['type'] = 'text';
+          break;
+      }
+      $out[] = $entry;
+    }
+
+    return $out;
+  }
+
   // Crea la tabella per un modulo importato: stesse colonne "di cornice"
   // (id/group/tenant/created_at/created_by/updated_at/updated_by/deleted_at/
   // deleted_by) aggiunte da save_table() quando crea una tabella nuova dal
@@ -2266,6 +2327,25 @@ class ModulsController extends CBController
             break;
           case 'boolean':
             $table->boolean($columnname)->nullable();
+            break;
+          case 'plaintext':
+            $table->text($columnname)->nullable();
+            break;
+          case 'longtext':
+            $table->longText($columnname)->nullable();
+            break;
+          case 'decimal':
+            $ps = array_pad(explode(',', (string) $size), 2, null);
+            $table->decimal($columnname, (int) ($ps[0] ?: 12), (int) ($ps[1] ?: 2))->nullable();
+            break;
+          case 'date':
+            $table->date($columnname)->nullable();
+            break;
+          case 'datetime':
+            $table->dateTime($columnname)->nullable();
+            break;
+          case 'time':
+            $table->time($columnname)->nullable();
             break;
           default:
             $table->string($columnname, $size ?: 255)->nullable();
@@ -2310,7 +2390,12 @@ class ModulsController extends CBController
   // il wizard stesso genera.
   private function writeImportedColumns($controller, array $columns)
   {
-    $allowed_keys = ['label', 'name', 'join', 'image', 'download', 'width', 'callback_php', 'query', 'visible'];
+    // Stesse chiavi che il passo Lista del wizard (ModuleGeneratorList) puo' scrivere.
+    $allowed_keys = [
+      'label', 'name', 'join', 'join_where', 'join_id', 'image', 'download', 'width', 'col_width',
+      'str_limit', 'format', 'badge', 'currency', 'decimals', 'calc', 'nl2br', 'color', 'style',
+      'callback', 'callback_php', 'query', 'visible',
+    ];
     $script_cols = ["\t\t\t" . '$this->col = [];'];
 
     foreach ($columns as $col) {

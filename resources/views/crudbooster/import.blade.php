@@ -71,15 +71,39 @@
 
                             }, 2500);
 
+                            var importFailTitle = {!! json_encode(trans('crudbooster.import_failed_title')) !!};
+                            var importFailNote = {!! json_encode(trans('crudbooster.import_failed_note')) !!};
+                            var importFailUnknown = {!! json_encode(trans('crudbooster.import_err_server')) !!};
+
+                            // Import interrotto: barra rossa, motivo ben visibile, nulla e' stato scritto
+                            function showImportError(message) {
+                                clearInterval(int_prog);
+                                $('#progress-import').removeClass('progress-bar-striped progress-bar-primary').addClass('bg-danger').css('width', '100%');
+                                $('#status-import').addClass('text-danger').html("<i class='bi bi-x-octagon-fill'></i> " + $('<div>').text(importFailTitle).html());
+                                $('#import-error-box').remove();
+                                $('#status-import').after(
+                                    $("<div id='import-error-box' class='alert alert-danger mt-3'></div>")
+                                        .append($('<strong>').text(message))
+                                        .append($('<div class="mt-2">').text(importFailNote))
+                                );
+                                $('#upload-footer').show();
+                            }
+
                             $.post("{{ CRUDBooster::mainpath('do-import-chunk').'?file='.Request::get('file') }}", function (resp) {
                                 if (resp.status == true) {
                                     $('#progress-import').css('width', '100%');
                                     $('#progress-import').attr('aria-valuenow', 100);
                                     $('#status-import').addClass('text-success').html("<i class='bi bi-check-square'></i> Import Data Completed !");
+                                    if (resp.summary) {
+                                        $('#status-import').after($("<div class='alert alert-success mt-3'></div>").text(resp.summary));
+                                    }
                                     clearInterval(int_prog);
                                     $('#upload-footer').show();
-                                    console.log('Import Success');
+                                } else {
+                                    showImportError(resp.error || importFailUnknown);
                                 }
+                            }).fail(function () {
+                                showImportError(importFailUnknown);
                             })
 
                         })
@@ -150,17 +174,33 @@
                         </ul>
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label">{{ trans('crudbooster.import_mode_label') }}</label>
+                        <div class="ch-seg ch-seg-block" role="radiogroup">
+                            <label>
+                                <input type="radio" name="import_mode" value="insert" checked>
+                                <span><i class="bi bi-plus-circle"></i> {{ trans('crudbooster.import_mode_insert') }}</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="import_mode" value="upsert">
+                                <span><i class="bi bi-arrow-repeat"></i> {{ trans('crudbooster.import_mode_upsert') }}</span>
+                            </label>
+                        </div>
+                        <div class="help-block" id="import-upsert-help" style="display:none">{{ trans('crudbooster.import_mode_upsert_help') }}</div>
+                    </div>
+
                     <div class="ch-map-table-wrap">
                         <table class="ch-map-table">
                             <thead>
                                 <tr>
                                     <th>Colonna nel file</th>
                                     <th>Corrispondenza</th>
+                                    <th class="import-key-cell" style="display:none">{{ trans('crudbooster.import_key_column') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($table_columns as $k=>$column)
-                                    @continue($column == 'id' || $column == 'created_at' || $column == 'updated_at' || $column == 'deleted_at')
+                                    @continue(in_array($column, ['id', 'created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'], true))
                                     <?php
                                         $help = '';
                                         if (substr($column, 0, 3) == 'id_') {
@@ -179,9 +219,15 @@
                                             <select class='form-control select_column' name='select_column[{{$k}}]'>
                                                 <option value=''>Non importare questa colonna</option>
                                                 @foreach($data_import_column as $dk=>$dcol)
-                                                    <option value='{{$dk}}'>{{$dcol}}</option>
+                                                    <option value='{{$dk}}' @if(isset($auto_map[$k]) && (string) $auto_map[$k] === (string) $dk) selected @endif>{{$dcol}}</option>
                                                 @endforeach
                                             </select>
+                                            @if(isset($auto_map[$k]))
+                                                <span class="ch-fk-hint" title="{{ trans('crudbooster.import_auto_mapped') }}"><i class="bi bi-magic"></i></span>
+                                            @endif
+                                        </td>
+                                        <td class="import-key-cell" style="display:none">
+                                            <input type="checkbox" class="form-check-input import-key-checkbox" name="key_column[{{$k}}]" value="1">
                                         </td>
                                     </tr>
                                 @endforeach
@@ -219,6 +265,9 @@
                             function updateMapSummary() {
                                 var mapped = $mapSelects.filter(function () { return $(this).val(); }).length;
                                 var text = mapped + ' di ' + mapTotal + ' colonne assegnate';
+                                @if(!empty($auto_map))
+                                text += ' &middot; ' + {!! json_encode(trans('crudbooster.import_auto_mapped_summary', ['count' => count($auto_map)])) !!};
+                                @endif
                                 if (mapped < mapTotal) {
                                     text += ' &middot; ' + (mapTotal - mapped) + ' verranno ignorate';
                                 }
@@ -226,6 +275,23 @@
                             }
                             $mapSelects.on('change', updateMapSummary);
                             updateMapSummary();
+
+                            // Modalita' "aggiorna o inserisci": la colonna Chiave compare solo
+                            // in quel caso, e solo le colonne abbinate si possono usare come chiave.
+                            function syncKeyColumn() {
+                                var upsert = $('input[name=import_mode]:checked').val() === 'upsert';
+                                $('.import-key-cell').toggle(upsert);
+                                $('#import-upsert-help').toggle(upsert);
+                                $mapSelects.each(function () {
+                                    var $cb = $(this).closest('tr').find('.import-key-checkbox');
+                                    var mapped = !!$(this).val();
+                                    $cb.prop('disabled', !mapped);
+                                    if (!mapped) { $cb.prop('checked', false); }
+                                });
+                            }
+                            $('input[name=import_mode]').on('change', syncKeyColumn);
+                            $mapSelects.on('change', syncKeyColumn);
+                            syncKeyColumn();
                         })
 
                         function check_selected_column() {
@@ -236,6 +302,9 @@
                             })
                             if (total_selected_column == 0) {
                                 chAlert({ title: {!! json_encode(trans('crudbooster.import_select_one_column_title')) !!}, text: {!! json_encode(trans('crudbooster.import_select_one_column')) !!}, type: "error" });
+                                return false;
+                            } else if ($('input[name=import_mode]:checked').val() === 'upsert' && $('.import-key-checkbox:checked').length == 0) {
+                                chAlert({ title: {!! json_encode(trans('crudbooster.import_select_one_column_title')) !!}, text: {!! json_encode(trans('crudbooster.import_key_required')) !!}, type: "error" });
                                 return false;
                             } else {
                                 return true;
