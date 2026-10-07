@@ -1059,13 +1059,14 @@ class CBController extends Controller
                 continue;
             }
 
-            if (isset($di['type']) && $di['type'] != 'upload') {
+            // 'image' (foto profilo, logo...) si salva come 'upload'
+            if (isset($di['type']) && !in_array($di['type'], ['upload', 'image'], true)) {
                 if (@$di['required']) {
                     $ai[] = 'required';
                 }
             }
 
-            if (isset($di['type']) && $di['type'] == 'upload') {
+            if (isset($di['type']) && in_array($di['type'], ['upload', 'image'], true)) {
                 if ($id) {
                     $row = DB::table($this->table)->where($this->primary_key, $id)->first();
                     if ($row->{$di['name']} == '') {
@@ -1233,7 +1234,7 @@ class CBController extends Controller
                 if ($inputdata != '') {
                     $this->arr[$name] = $inputdata;
                 } else {
-                    if (CB::isColumnNULL($this->table, $name) && isset($ro['type']) &&  $ro['type'] != 'upload') {
+                    if (CB::isColumnNULL($this->table, $name) && isset($ro['type']) &&  !in_array($ro['type'], ['upload', 'image'], true)) {
                         $this->arr[$name] = null;
                     } else {
                         $this->arr[$name] = "";
@@ -1295,7 +1296,7 @@ class CBController extends Controller
                 }
             }
 
-            if (@$ro['type'] == 'upload') {
+            if (in_array(@$ro['type'], ['upload', 'image'], true)) {
 
                 $this->arr[$name] = CRUDBooster::uploadFile($name, (isset($ro['encrypt']) ? $ro['encrypt'] : '')  || (isset($ro['upload_encrypt']) ? $ro['upload_encrypt'] : ''), (isset($ro['resize_width']) ? $ro['resize_width'] : ''), (isset($ro['resize_height']) ? $ro['resize_height'] : ''), CB::myId());
 
