@@ -2360,6 +2360,12 @@ class CBController extends Controller
 
                             $a[$colname] = $relation_id;
                         }
+                    } elseif (($sysJoin = \App\Helpers\ModuleGeneratorList::systemJoin($colname)) !== null && in_array($colname, ['tenant', 'group'], true)) {
+                        // tenant/group: nel file puo' esserci l'id oppure il nome
+                        if (trim((string) $value[$s]) === '') {
+                            continue;
+                        }
+                        $a[$colname] = $this->resolveImportSystemRef(explode(',', $sysJoin)[0], explode(',', $sysJoin)[1], $value[$s], $columnLabel($colname));
                     } else {
                         $a[$colname] = $value[$s];
                     }
@@ -2428,6 +2434,38 @@ class CBController extends Controller
             'status' => true,
             'summary' => trans('crudbooster.import_done_summary', ['inserted' => $inserted, 'updated' => $updated, 'blank' => $blank]),
         ]);
+    }
+
+    /**
+     * Id di un record di una tabella di sistema (tenants/groups) partendo da un
+     * valore del file che puo' essere l'id oppure il nome. Prima si cerca per id,
+     * poi per nome; se non si trova o il nome e' ambiguo l'import si ferma.
+     */
+    protected function resolveImportSystemRef(string $table, string $nameColumn, $raw, string $columnLabel)
+    {
+        $raw = trim((string) $raw);
+        $base = function () use ($table) {
+            $q = DB::table($table);
+            if (Schema::hasColumn($table, 'deleted_at')) {
+                $q->whereNull('deleted_at');
+            }
+
+            return $q;
+        };
+
+        if (ctype_digit($raw) && ($found = $base()->where('id', (int) $raw)->value('id')) !== null) {
+            return $found;
+        }
+
+        $ids = $base()->where($nameColumn, $raw)->pluck('id');
+        if ($ids->count() === 1) {
+            return $ids->first();
+        }
+
+        throw new \RuntimeException(trans($ids->count() > 1 ? 'crudbooster.import_err_ref_ambiguous' : 'crudbooster.import_err_ref_not_found', [
+            'value' => $raw,
+            'column' => $columnLabel,
+        ]));
     }
 
     /**

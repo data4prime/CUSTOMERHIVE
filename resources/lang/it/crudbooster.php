@@ -1650,6 +1650,8 @@ return [
     'import_done_summary' => ':inserted inserite, :updated aggiornate, :blank righe vuote ignorate',
     'import_err_row' => 'Riga :row del file: :detail',
     'import_err_file_column' => 'colonna del file',
+    'import_err_ref_not_found' => 'il valore ":value" per :column non corrisponde a nessun record esistente (né come id né come nome)',
+    'import_err_ref_ambiguous' => 'il nome ":value" per :column corrisponde a più di un record: usa l\'id',
     'import_err_value' => 'il valore ":value" non è valido per la colonna :column',
     'import_err_toolong' => 'il testo è troppo lungo per la colonna :column',
     'import_err_null' => 'la colonna :column non può essere vuota',

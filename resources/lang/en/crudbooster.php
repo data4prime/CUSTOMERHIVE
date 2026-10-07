@@ -1657,6 +1657,8 @@ return [
     'import_done_summary' => ':inserted inserted, :updated updated, :blank empty rows ignored',
     'import_err_row' => 'Row :row of the file: :detail',
     'import_err_file_column' => 'file column',
+    'import_err_ref_not_found' => 'the value ":value" for :column matches no existing record (neither as id nor as name)',
+    'import_err_ref_ambiguous' => 'the name ":value" for :column matches more than one record: use the id instead',
     'import_err_value' => 'the value ":value" is not valid for the column :column',
     'import_err_toolong' => 'the text is too long for the column :column',
     'import_err_null' => 'the column :column cannot be empty',
