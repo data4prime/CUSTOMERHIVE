@@ -280,13 +280,14 @@ class MfaHelper
     // --- Email OTP: baseline/step-up solo per chi non ha il TOTP attivo ---
 
     /**
-     * True se l'invio email e' configurato nei Settings: driver 'smtp' con un
-     * host valorizzato. E' un controllo sui setting, non una prova di
+     * True se l'invio email e' attivo e configurato nei Settings: flag
+     * "Email attiva" non a 'no', driver 'smtp' con un host valorizzato. E' un controllo sui setting, non una prova di
      * raggiungibilita' (un SMTP configurato ma irraggiungibile resta "configurato").
      */
     public static function isSmtpConfigured(): bool
     {
-        return trim((string) CRUDBooster::getSetting('smtp_driver')) === 'smtp'
+        return CRUDBooster::isEmailEnabled()
+            && trim((string) CRUDBooster::getSetting('smtp_driver')) === 'smtp'
             && trim((string) CRUDBooster::getSetting('smtp_host')) !== '';
     }
 
@@ -316,6 +317,12 @@ class MfaHelper
      */
     public static function sendEmailOtp(User $user, ?string $to = null): bool
     {
+        // Email disattivata dai Settings: nessun codice da generare, come
+        // un invio fallito (il login prosegue senza step-up).
+        if (! CRUDBooster::isEmailEnabled()) {
+            return false;
+        }
+
         $code = (string) random_int(100000, 999999);
 
         $id = DB::table('mfa_email_otp_codes')->insertGetId([

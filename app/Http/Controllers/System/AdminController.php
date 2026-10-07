@@ -641,7 +641,9 @@ $tenant_domain_name = env('APP_DOMAIN');
       // Stesso messaggio generico a prescindere dal fatto che l'account
       // esista o abbia l'MFA attivo (decisione presa in sessione): non
       // rivela se un'email e' registrata ne' se ha il TOTP attivo.
-      if ($user && $user->two_factor_confirmed_at) {
+      // Con l'email disattivata non si crea nemmeno la richiesta (il link non
+      // potrebbe arrivare); stesso messaggio generico in ogni caso.
+      if ($user && $user->two_factor_confirmed_at && CRUDBooster::isEmailEnabled()) {
           $token = MfaHelper::createRecoveryRequest($user);
           $recoveryUrl = CRUDBooster::adminPath('mfa-recovery-status/'.$token);
 
@@ -755,6 +757,11 @@ $tenant_domain_name = env('APP_DOMAIN');
       $message = $validator->errors()->all();
 
       return redirect()->back()->with(['message' => implode(', ', $message), 'message_type' => 'danger']);
+    }
+
+    // Email disattivata dai Settings: il link non partirebbe mai, meglio dirlo.
+    if (! CRUDBooster::isEmailEnabled()) {
+      return redirect()->back()->with(['message' => trans('crudbooster.email_disabled_notice'), 'message_type' => 'warning']);
     }
 
     $email = Request::input('email');

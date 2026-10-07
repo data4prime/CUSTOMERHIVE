@@ -169,6 +169,19 @@ class UserHelper
   }
 
   /**
+   * Iniziali del nome (prime due parole, maiuscole): mostrate al posto della foto
+   * quando l'utente non ne ha caricata una. Stringa vuota se il nome e' vuoto.
+   */
+  public static function initials($name)
+  {
+    $initials = '';
+    foreach (array_slice(preg_split('/\s+/u', trim((string) $name), -1, PREG_SPLIT_NO_EMPTY), 0, 2) as $w) {
+      $initials .= mb_strtoupper(mb_substr($w, 0, 1));
+    }
+    return $initials;
+  }
+
+  /**
    *	get current user's primary group
    *
    * @return int id of the group

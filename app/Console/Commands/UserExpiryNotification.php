@@ -32,6 +32,10 @@ class UserExpiryNotification extends Command
      */
     public function handle()
     {
+        // Email disattivata dai Settings: niente notifiche.
+        if (! CRUDBooster::isEmailEnabled()) {
+            return 0;
+        }
 
 
 

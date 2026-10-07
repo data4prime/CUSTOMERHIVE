@@ -969,8 +969,23 @@ return Request::segment($segment);
         return $string ? implode(', ', $string) . ' ' : 'just now';
     }
 
+    /**
+     * Interruttore "Email attiva" del gruppo Email Setting (cms_settings.
+     * email_enabled, yes/no). Solo un 'no' esplicito la disattiva: setting
+     * assente o vuoto (installazioni non ancora migrate) = attiva, cosi' il
+     * comportamento esistente non cambia.
+     */
+    public static function isEmailEnabled(): bool
+    {
+        return strtolower(trim((string) self::getSetting('email_enabled'))) !== 'no';
+    }
+
     public static function sendEmailQueue($queue)
     {
+        if (! self::isEmailEnabled()) {
+            return false;
+        }
+
         \Config::set('mail.driver', self::getSetting('smtp_driver'));
         \Config::set('mail.host', self::getSetting('smtp_host'));
         \Config::set('mail.port', self::getSetting('smtp_port'));
@@ -1011,6 +1026,11 @@ return Request::segment($segment);
 
     public static function sendEmail($config = [])
     {
+        // Email disattivata dai Settings: e' come se non ci fosse, nessun
+        // invio e nessun accodamento (neanche con send_at).
+        if (! self::isEmailEnabled()) {
+            return false;
+        }
 
         \Config::set('mail.driver', self::getSetting('smtp_driver'));
         \Config::set('mail.host', self::getSetting('smtp_host'));
