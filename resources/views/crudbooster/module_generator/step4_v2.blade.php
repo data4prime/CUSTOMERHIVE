@@ -181,7 +181,7 @@
     function ctl(f) {
         var t = f.type, d = ' disabled';
         if (['text', 'email', 'password', 'multitext'].indexOf(t) >= 0) { return '<input class="form-control form-control-sm"' + d + '>'; }
-        if (['textarea', 'ckeditor', 'tinymce', 'wysiwyg', 'json'].indexOf(t) >= 0) { return '<textarea class="form-control form-control-sm" rows="2"' + d + '></textarea>'; }
+        if (['textarea', 'tinymce', 'wysiwyg', 'json'].indexOf(t) >= 0) { return '<textarea class="form-control form-control-sm" rows="2"' + d + '></textarea>'; }
         if (['number', 'money', 'percent'].indexOf(t) >= 0) { return '<input type="number" class="form-control form-control-sm"' + d + '>'; }
         if (t === 'date') { return '<input type="date" class="form-control form-control-sm"' + d + '>'; }
         if (t === 'datetime') { return '<input type="datetime-local" class="form-control form-control-sm"' + d + '>'; }

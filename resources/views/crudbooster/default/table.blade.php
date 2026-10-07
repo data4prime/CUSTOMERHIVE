@@ -603,7 +603,7 @@ $total = $result->total();
                             <div class="export-disclosure-head">
                                 <i class="bi bi-layout-three-columns"></i>
                                 {{trans("crudbooster.export_dialog_columns")}}
-                                <span class="export-count-pill"><span class="export-columns-checked-count">{{ count($columns) }}</span> di {{ count($columns) }} selezionate</span>
+                                <span class="export-count-pill"><span class="export-columns-checked-count">{{ count($export_columns ?? $columns) }}</span> di {{ count($export_columns ?? $columns) }} selezionate</span>
                                 <span class="export-disclosure-spacer"></span>
                                 <i class="bi bi-chevron-down export-disclosure-chevron"></i>
                             </div>
@@ -613,7 +613,7 @@ $total = $result->total();
                                     <a href='javascript:void(0)' class='export-columns-toggle-all'>Deseleziona tutto</a>
                                 </div>
                                 <div class='export-columns-grid'>
-                                    @foreach($columns as $col)
+                                    @foreach(($export_columns ?? $columns) as $col)
                                     <div class='checkbox inline'><label><input type='checkbox' checked class='export-column-checkbox' name='columns[]'
                                                 value='{{$col["name"]}}'>{{$col["label"]}}</label></div>
                                     @endforeach

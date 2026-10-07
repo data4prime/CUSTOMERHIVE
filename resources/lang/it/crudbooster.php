@@ -1606,7 +1606,6 @@ return [
         "password" => ["Password", "Testo nascosto mentre si digita", "es. password di accesso"],
         "multitext" => ["Più testi (elenco di valori)", "Si possono inserire più valori di testo", "es. più numeri di telefono"],
         "hidden" => ["Campo nascosto", "Non visibile all'utente", "es. valore impostato dal sistema"],
-        "ckeditor" => ["Testo formattato (CKEditor)", "Editor con grassetto, elenchi, link…", "es. descrizione estesa"],
         "tinymce" => ["Testo formattato (TinyMCE)", "Editor con grassetto, elenchi, link…", "es. descrizione estesa"],
         "wysiwyg" => ["Testo formattato (WYSIWYG)", "Editor con grassetto, elenchi, link…", "es. descrizione estesa"],
         "json" => ["Dati JSON", "Editor di dati strutturati", "solo per sviluppatori"],

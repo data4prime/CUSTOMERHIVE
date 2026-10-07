@@ -57,7 +57,7 @@ class ModuleGeneratorFields
      */
     const SQL_BY_TYPE = [
         'textarea' => ['plaintext', ''], 'multitext' => ['plaintext', ''],
-        'ckeditor' => ['longtext', ''], 'tinymce' => ['longtext', ''], 'wysiwyg' => ['longtext', ''], 'json' => ['longtext', ''],
+        'tinymce' => ['longtext', ''], 'wysiwyg' => ['longtext', ''], 'json' => ['longtext', ''],
         'number' => ['number', '11'], 'money' => ['decimal', '12,2'], 'percent' => ['decimal', '5,2'],
         'date' => ['date', ''], 'datetime' => ['datetime', ''], 'time' => ['time', ''],
         'datamodal' => ['number', '11'], 'color' => ['text', '20'],
@@ -470,7 +470,10 @@ class ModuleGeneratorFields
 
     private static function type(array $entry): string
     {
-        return isset($entry['type']) && $entry['type'] !== '' ? (string) $entry['type'] : 'text';
+        $type = isset($entry['type']) && $entry['type'] !== '' ? (string) $entry['type'] : 'text';
+
+        // CKEditor non esiste piu': i campi salvati con quel tipo sono TinyMCE (vedi 266)
+        return $type === 'ckeditor' ? 'tinymce' : $type;
     }
 
     /* ------------------------------------------------------------------ */

@@ -148,6 +148,12 @@ class CBController extends Controller
 
         $this->cbInit();
 
+        // CKEditor rimosso (266): i moduli che dichiarano ancora type "ckeditor" usano TinyMCE
+        foreach ((array) $this->form as $i => $f) {
+            if (is_array($f) && ($f['type'] ?? null) === 'ckeditor') {
+                $this->form[$i]['type'] = 'tinymce';
+            }
+        }
 
         $this->checkHideForm();
         $this->checkFormLayout();
@@ -317,7 +323,28 @@ class CBController extends Controller
         $join_table_temp = [];
         $table = $this->table;
         $columns_table = $this->columns_table;
-        
+
+        // Export: nel dialogo si propongono tutte le colonne del modulo (non solo
+        // quelle della lista); in esportazione si aggiungono alla query solo le
+        // colonne extra effettivamente spuntate.
+        $extraExportColumns = $this->exportExtraColumns($columns_table, $table_columns);
+        $data['export_columns'] = array_merge(
+            array_map(function ($c) {
+                return ['name' => $c['name'] ?? '', 'label' => $c['label'] ?? ($c['name'] ?? '')];
+            }, array_values(array_filter($columns_table, function ($c) {
+                return !empty($c['name']);
+            }))),
+            array_map(function ($c) {
+                return ['name' => $c['name'], 'label' => $c['label']];
+            }, $extraExportColumns)
+        );
+        if ($this->index_return && is_array(Request::input('columns'))) {
+            foreach ($extraExportColumns as $extra) {
+                if (in_array($extra['name'], Request::input('columns'), true)) {
+                    $columns_table[] = $extra;
+                }
+            }
+        }
 
         // Le colonne Tenant/Group non si aggiungono piu' in automatico ai moduli
         // generati: si scelgono dal module generator (passo Lista).
@@ -787,6 +814,52 @@ class CBController extends Controller
         //dd($value);
 
         return $value;
+    }
+
+    /**
+     * Colonne del modulo non presenti in lista (campi del form e colonne della
+     * tabella), esportabili su richiesta. Stesso formato di $columns_table.
+     */
+    protected function exportExtraColumns(array $listColumns, array $tableColumns): array
+    {
+        $inList = [];
+        foreach ($listColumns as $c) {
+            $n = $c['name'] ?? '';
+            if (strpos($n, ' as ') !== false) {
+                $n = substr($n, strpos($n, ' as ') + 4);
+            }
+            $inList[] = strpos($n, '.') !== false ? explode('.', $n)[1] : $n;
+        }
+
+        $skipTypes = array_merge(\App\Helpers\ModuleGeneratorFields::NO_COLUMN, ['password']);
+        $skipNames = ['deleted_at', 'password', 'remember_token'];
+        $extra = [];
+        $seen = [];
+
+        foreach ((array) $this->form as $f) {
+            $name = $f['name'] ?? '';
+            $type = $f['type'] ?? '';
+            if ($name === '' || in_array($type, $skipTypes, true) || in_array($name, $skipNames, true)
+                || in_array($name, $inList, true) || isset($seen[$name]) || !in_array($name, $tableColumns, true)) {
+                continue;
+            }
+            $col = ['label' => $f['label'] ?? $name, 'name' => $name];
+            if (!empty($f['datatable']) && substr_count($f['datatable'], ',') === 1) {
+                $col['join'] = $f['datatable'];
+            }
+            $extra[] = $col;
+            $seen[$name] = true;
+        }
+
+        foreach ($tableColumns as $name) {
+            if (in_array($name, $skipNames, true) || in_array($name, $inList, true) || isset($seen[$name])) {
+                continue;
+            }
+            $extra[] = ['label' => ucfirst(str_replace('_', ' ', $name)), 'name' => $name];
+            $seen[$name] = true;
+        }
+
+        return $extra;
     }
 
     public function getExportData()

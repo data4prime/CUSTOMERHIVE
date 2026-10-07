@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 266**
+**Prossimo numero libero: 268**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,8 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [267](267-export-tutte-le-colonne-del-modulo.md) | **Export: nel dialogo tutte le colonne del modulo** (lista + campi form + colonne tabella, si esportano solo le spuntate) | Lista / Export | Completato | 2026-10-07 |
+| [266](266-rimozione-ckeditor-sostituito-da-tinymce.md) | **Rimozione di CKEditor, sostituito da TinyMCE** (componente e asset eliminati, alias `ckeditor` → `tinymce`) | Form / Module generator | Completato | 2026-10-07 |
 | [265](265-wizard-step2-elimina-colonna.md) | **Wizard passo Campi: eliminazione definitiva di una colonna dal database** (conferma digitando il nome, pulizia di lista e ordinamento) | Module generator | Completato | 2026-10-07 |
 | [264](264-anteprima-step3-nomi-multitext-elenco-percentuale.md) | **Anteprima step 3 con nomi utente, "Piu testi" come elenco in dettaglio, simbolo % sulle percentuali** | Module generator / Dettaglio / Liste | Completato | 2026-10-07 |
 | [263](263-select-opzioni-soft-delete.md) | **Campi select: opzioni senza record eliminati** (select a cascata, select2 multiplo, select dei campi child) | Form | Completato | 2026-10-07 |

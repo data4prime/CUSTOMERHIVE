@@ -7,7 +7,7 @@
     $typeTexts = is_array($typeTexts) ? $typeTexts : [];
     $groupDefs = [
         'text' => ['text', 'textarea', 'email', 'password', 'multitext', 'hidden'],
-        'formatted' => ['ckeditor', 'tinymce', 'wysiwyg', 'json'],
+        'formatted' => ['tinymce', 'wysiwyg', 'json'],
         'numbers' => ['number', 'money', 'percent'],
         'dates' => ['date', 'datetime', 'time'],
         'choices' => ['select', 'select2', 'radio', 'checkbox', 'datamodal'],

@@ -1613,7 +1613,6 @@ return [
         "password" => ["Password", "Text hidden while typing", "e.g. access password"],
         "multitext" => ["Multiple texts (list of values)", "Several text values can be entered", "e.g. several phone numbers"],
         "hidden" => ["Hidden field", "Not visible to the user", "e.g. value set by the system"],
-        "ckeditor" => ["Formatted text (CKEditor)", "Editor with bold, lists, links…", "e.g. extended description"],
         "tinymce" => ["Formatted text (TinyMCE)", "Editor with bold, lists, links…", "e.g. extended description"],
         "wysiwyg" => ["Formatted text (WYSIWYG)", "Editor with bold, lists, links…", "e.g. extended description"],
         "json" => ["JSON data", "Editor for structured data", "for developers only"],
