@@ -169,9 +169,9 @@ $(function () {
             if (val instanceof Object) {
               if (val.type && val.type == 'radio') {
                 form_group_html += "<div class='mg-opt-field'><label class='mg-opt-label'>" + key + required_badge + "</label>";
-                form_group_html += "<div class='mg-opt-seg' role='radiogroup'>";
+                form_group_html += "<div class='ch-seg' role='radiogroup'>";
                 $.each(val.enum, function (i, o) {
-                  form_group_html += "<label class='mg-opt-seg-option'><input type='radio' name='option[" + tr_index + "][" + key + "]' value='" + o + "'/><span>" + o + "</span></label>";
+                  form_group_html += "<label><input type='radio' name='option[" + tr_index + "][" + key + "]' value='" + o + "'/><span>" + o + "</span></label>";
                 })
                 form_group_html += "</div></div>";
               } else {
@@ -395,9 +395,9 @@ $(function () {
                           ?>
                           <div class="mg-opt-field">
                             <label class="mg-opt-label">{{$key}} <span class="mg-opt-required">Required</span></label>
-                            <div class="mg-opt-seg" role="radiogroup">
+                            <div class="ch-seg" role="radiogroup">
                               @foreach($val->enum as $enum)
-                              <label class="mg-opt-seg-option">
+                              <label>
                                 <input type="radio" name="option[{{$index}}][{{$key}}]"
                                 {{ ($enum == $value)?"checked":"" }} value="{{$enum}}"><span>{{$enum}}</span>
                               </label>

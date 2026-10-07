@@ -269,6 +269,32 @@ class ModulsController extends CBController
     return view('crudbooster::module_generator.edit', compact('row', 'module', 'tenants', 'page_title', 'page_menu'));
   }
 
+  /**
+   * Dettaglio di un modulo: stessi controlli di accesso del dettaglio standard
+   * (CBController::getDetail), vista dedicata con icona e matrice dei tenant.
+   */
+  public function getDetail($id)
+  {
+    $this->cbLoader();
+
+    $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+
+    if (!$row || !ModuleHelper::can_view($this, $row)) {
+      CRUDBooster::insertLog(trans("crudbooster.log_try_view", [
+        'name' => $this->table,
+        'module' => CRUDBooster::getCurrentModule()->name,
+      ]));
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+
+    $module = CRUDBooster::getCurrentModule();
+    $page_menu = Route::getCurrentRoute()->getActionName();
+    $page_title = trans("crudbooster.detail_data_page_title", ['module' => $module->name, 'name' => $row->{strtolower($this->title_field)}]);
+    $tenants = Tenant::all();
+
+    return view('crudbooster::module_generator.detail', compact('row', 'tenants', 'page_menu', 'page_title'));
+  }
+
   function enable()
   {
     $this->cbLoader();
@@ -1246,8 +1272,8 @@ class ModulsController extends CBController
 
     // dopo un errore di validazione si riparte da cio' che l'utente aveva inviato
     $old = json_decode((string) old('payload'), true);
-    if (is_array($old) && isset($old['blocks']) && is_array($old['blocks'])) {
-      $layout = ['v' => 1, 'blocks' => $old['blocks']];
+    if (is_array($old) && isset($old['tabs']) && is_array($old['tabs'])) {
+      $layout = ['v' => 2, 'tabs' => $old['tabs']];
       foreach ((array) ($old['help'] ?? []) as $n => $h) {
         if (isset($fields[$n]) && is_string($h)) {
           $fields[$n]['help'] = $h;
@@ -1259,7 +1285,7 @@ class ModulsController extends CBController
       'id' => $id,
       'active_tab' => 4,
       'fields' => array_values($fields),
-      'layout' => $layout,
+      'layout' => ModuleGeneratorLayout::normalize($layout),
       'has_layout' => $hasLayout,
       'system_fields' => ModuleGeneratorLayout::SYSTEM_FIELDS,
       'type_texts' => trans('crudbooster.mg_field_types'),
@@ -1834,6 +1860,11 @@ class ModulsController extends CBController
     }
     $data['active_tab'] = 5;
     $data['wizard_v2'] = (bool) config('module_generator.wizard_v2');
+    // Colonne della tabella del modulo: elenco del campo "titolo candidato" (select ricercabile).
+    // Se la tabella non esiste ancora, il campo resta con il solo valore attuale.
+    $data['title_candidates'] = (!empty($row->table_name) && Schema::hasTable($row->table_name))
+      ? Schema::getColumnListing($row->table_name)
+      : [];
 
     return view('crudbooster::module_generator.step5', $data);
   }

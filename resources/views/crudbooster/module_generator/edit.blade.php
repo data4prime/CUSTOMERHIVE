@@ -6,7 +6,9 @@
 
   @if(CRUDBooster::getCurrentMethod() != 'getProfile')
   <p>
-    <a href='{{CRUDBooster::mainpath()}}'>{{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
+    <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
+      <i class='bi bi-chevron-left'></i>&nbsp;
+      {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
   @endif
@@ -118,42 +120,70 @@
         <?php
                 }
                 ?>
-        <div id='privileges_configuration' class=''>
-          <label>Enable/Disable Module on Tenants</label>
-          <table class='table table-hover table-bordered'>
-            <thead>
-              <tr class='active'>
-                <?php foreach ($tenants as $tenant): ?>
-                <th style="text-align: center">{{ $tenant->name }}</th>
-                <?php endforeach; ?>
-              </tr>
-            </thead>
-            <tbody>
-              <?php $no = 1;?>
-              <tr>
-                <?php
-                                      $colors = ['active', 'warning', 'success', 'danger'];
-                                      foreach ($tenants as $key => $tenant){
-                                        if(ModuleHelper::is_enabled($module->id, $tenant->id))
-                                        {
-                                          $checked = 'checked';
-                                        }
-                                        else{
-                                          $checked = '';
-                                        }
-
-                                     ?>
-                <td class='<?php echo isset($colors[$key]) ? $colors[$key] : "" ?>' align="center">
-                  <input {{$checked}} type='checkbox' class="module_tenant_enabler" data-tenant-id='{{$tenant->id}}'
-                    data-module-id='{{$module->id}}' name='module_tenant_enabler[<?php echo $module->id?>][<?php echo $tenant->id?>]'
-                    value='1' />
-                </td>
-                <?php } ?>
-              </tr>
-            </tbody>
-          </table>
-
+        {{-- Matrice dei tenant come nel mockup: una colonna per tenant + "tutti" a inizio riga.
+             Stessi campi di prima (module_tenant_enabler[modulo][tenant] = 1). --}}
+        <div id='privileges_configuration' class='mt-4'>
+          <label class="fw-semibold mb-2">{{ trans('crudbooster.mg_enable_on_tenants') }}</label>
+          <div class="table-responsive rel-table">
+            <table class='table align-middle mb-0'>
+              <thead>
+                <tr>
+                  <th class="text-center" style="width:90px">{{ trans('crudbooster.mg_all_tenants') }}</th>
+                  @foreach ($tenants as $tenant)
+                  <th class="text-center">{{ $tenant->name }}</th>
+                  @endforeach
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  @php
+                    $mgEnabled = [];
+                    foreach ($tenants as $tenant) { $mgEnabled[$tenant->id] = ModuleHelper::is_enabled($module->id, $tenant->id); }
+                  @endphp
+                  <td class="text-center">
+                    <div class="d-flex justify-content-center">
+                    @include('crudbooster::partials.ch_check', [
+                      'name' => '', 'value' => '1', 'label' => '', 'switch' => false,
+                      'checked' => count($mgEnabled) > 0 && !in_array(false, $mgEnabled, true),
+                      'input_id' => 'mg-tenant-all', 'aria' => trans('crudbooster.mg_all_tenants'),
+                    ])
+                    </div>
+                  </td>
+                  @foreach ($tenants as $tenant)
+                  <td class="text-center">
+                    <div class="d-flex justify-content-center">
+                    @include('crudbooster::partials.ch_check', [
+                      'name' => 'module_tenant_enabler[' . $module->id . '][' . $tenant->id . ']',
+                      'value' => '1', 'label' => '', 'switch' => false,
+                      'checked' => $mgEnabled[$tenant->id],
+                      'input_class' => 'module_tenant_enabler',
+                      'input_attrs' => ['data-tenant-id' => $tenant->id, 'data-module-id' => $module->id],
+                      'aria' => $tenant->name,
+                    ])
+                    </div>
+                  </td>
+                  @endforeach
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+        @push('bottom')
+        <script>
+          (function () {
+            var all = document.getElementById('mg-tenant-all');
+            var boxes = document.querySelectorAll('.module_tenant_enabler');
+            if (!all) { return; }
+            // "Tutti": spunta o toglie la spunta a ogni tenant; si riallinea se i singoli cambiano.
+            all.addEventListener('change', function () { boxes.forEach(function (b) { b.checked = all.checked; }); });
+            boxes.forEach(function (b) {
+              b.addEventListener('change', function () {
+                all.checked = Array.prototype.every.call(boxes, function (x) { return x.checked; });
+              });
+            });
+          })();
+        </script>
+        @endpush
 
       </div><!-- /.box-body -->
       <div class="card-footer" align="right">

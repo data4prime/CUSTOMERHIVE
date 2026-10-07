@@ -1,237 +1,148 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>API Documentation</title>
+    <title>{{ trans('crudbooster.api_documentation') }} {{ Session::get('appname') }}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @include('crudbooster::partials.ch_head')
+    <link href="{{ asset('css/ch-api.css') }}?v={{ @filemtime(public_path('css/ch-api.css')) }}" rel="stylesheet" type="text/css" />
     @include('crudbooster::partials.ch_scripts', ['ch_shell' => false])
 </head>
 <body>
-<div class="container">
-    <div class="pb-2 mt-4 mb-3 border-bottom">
-        <h1>API Documentation {{Session::get('appname')}}</h1>
+@php
+    $actionLabels = [
+        'list' => trans('crudbooster.api_action_list'),
+        'detail' => trans('crudbooster.api_action_detail'),
+        'save_add' => trans('crudbooster.api_action_create'),
+        'save_edit' => trans('crudbooster.api_action_update'),
+        'delete' => trans('crudbooster.api_action_delete'),
+    ];
+    $apiSample = function ($type) {
+        $type = (string) $type;
+        if (in_array($type, ['integer', 'numeric', 'double'])) return 1;
+        if ($type === 'boolean') return true;
+        if (strpos($type, 'date') === 0) return '2026-01-31';
+        return '...';
+    };
+    $byTable = collect($apis)->groupBy('tabel');
+@endphp
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 px-4 py-3" style="background:var(--ch-surface);border-bottom:1px solid var(--ch-border)">
+    <div>
+        <div class="fw-bold" style="font-size:var(--ch-font-size-lg)">{{ trans('crudbooster.api_documentation') }} {{ Session::get('appname') }}</div>
+        <div class="api-help m-0">{{ trans('crudbooster.api_pub_count', ['n' => count($apis)]) }}</div>
     </div>
-
-    <div class='box'>
-
-        <div class='box-body'>
-
-            <style>
-                .table-api tbody tr td a {
-                    color: var(--ch-danger);
-                    font-family: var(--ch-font);
-                }
-            </style>
-
-            <script>
-                $(function () {
-                    $(".link_name_api").click(function () {
-                        $(".detail_api").slideUp();
-                        $(this).parent("td").find(".detail_api").slideDown();
-                    })
-                    $(".selected_text").each(function () {
-                        var n = $(this).text();
-                        if (n.indexOf('api_') == 0) {
-                            $(this).attr('class', 'selected_text text-danger');
-                        }
-                    })
-                })
-            </script>
-
-            <div class='mb-3 row'>
-                <label>API BASE URL</label>
-                <input type='text' readonly class='form-control' title='Hanya klik dan otomatis copy to clipboard (kecuali Safari)'
-                       onClick="this.setSelectionRange(0, this.value.length); document.execCommand('copy');" value='{{url('api')}}'/>
-            </div>
-            <div class='mb-3 row'>
-                <label>How To Use</label><br/>
-                SECRETKEY : ABCDEF123456 <br/>
-                TIME : UNIX CURRENT TIME <br/>
-                <label>Header :</label><br/>
-                X-Authorization-Token : md5( SECRETKEY + TIME + USER_AGENT )<br/>
-                X-Authorization-Time : TIME<br>
-                X-user : User Email
-            </div>
-
-            {{--
-                Binario api2 (Bearer token via Laravel Sanctum), additivo e
-                parallelo ad api/ sopra - vedi docs/refactoring/086/090.
-                Stesso permalink di ogni riga della tabella sotto, prefisso
-                diverso.
-            --}}
-            <div class='mb-3 row'>
-                <label>{{ trans('crudbooster.api_doc_api2_base_url_label') }}</label>
-                <input type='text' readonly class='form-control'
-                       onClick="this.setSelectionRange(0, this.value.length); document.execCommand('copy');" value='{{url('api2')}}'/>
-            </div>
-            <div class='mb-3 row'>
-                <label>{{ trans('crudbooster.api_doc_api2_howto_title') }}</label><br/>
-                <label>{{ trans('crudbooster.api_doc_api2_howto_header') }}</label><br/>
-                Authorization : Bearer &lt;token&gt;<br/>
-                {!! trans('crudbooster.api_doc_api2_howto_hint', [
-                    'link' => '<a href="'.url(config('crudbooster.ADMIN_PATH').'/api_tokens').'">'.trans('crudbooster.api_doc_api2_howto_hint_link_label').'</a>',
-                ]) !!}
-            </div>
-            <table class='table table-striped table-api table-bordered'>
-                <thead>
-                <tr class='info'>
-                    <th width='2%'>No</th>
-                    <th>API Name
-                        <span class='float-end'>
-                      <a class='btn btn-sm btn-warning' target="_blank" href='{{url("download-documentation-postman")}}'>Export For POSTMAN <sup>Beta</sup></a>
-                    </span>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php $no = 0;?>
-                @foreach($apis as $api)
-                    <?php
-                    $parameters = ($api->parameters) ? unserialize($api->parameters) : array();
-                    $responses = ($api->responses) ? unserialize($api->responses) : array();
-                    ?>
-                    <tr>
-                        <td><?= ++$no;?></td>
-                        <td>
-                            <a href='javascript:void(0)' title='API {{$ac->nama}}' style='color:var(--ch-blue)' class='link_name_api'><?=$api->nama;?></a> &nbsp;
-                            <div class='detail_api' style='display:none'>
-                                <table class='table table-bordered'>
-                                    <tr>
-                                        <td width='12%'><strong>URL</strong></td>
-                                        <td><input title='Click and copied !' type='text' class='form-control' readonly
-                                                   onClick="this.setSelectionRange(0, this.value.length); document.execCommand('copy');"
-                                                   value="/{{$api->permalink}}"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>METHOD</strong></td>
-                                        <td>{{strtoupper($api->method_type)}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>PARAMETER</strong></td>
-                                        <td>
-                                            <table class='table table-bordered table-hover'>
-                                                <thead>
-                                                <tr class='active'>
-                                                    <th width="3%">No</th>
-                                                    <th width="5%">Type</th>
-                                                    <th>Parameter Names</th>
-                                                    <th>Description / Validate / Rule</th>
-                                                    <th>Mandatory</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <?php $i = 0;?>
-                                                @foreach($parameters as $param)
-                                                    @if($param['used'])
-                                                        <?php
-                                                        $param_exception = ['in', 'not_in', 'digits_between'];
-                                                        if ($param['config'] && substr($param['config'], 0, 1) != '*' && ! in_array($param['type'], $param_exception)) continue;?>
-                                                        <tr>
-                                                            <td>{{++$i}}</td>
-                                                            <td width="5%"><em>{{$param['type']}}</em></td>
-                                                            <td>{{$param['name']}}</td>
-                                                            <td>
-
-                                                                @if(substr($param['config'],0,1) == '*')
-                                                                    <span class='text-info'>{{substr($param['config'],1)}}</span>
-                                                                @else
-                                                                    {{$param['config']}}
-                                                                @endif
-
-                                                            </td>
-                                                            <td>{!! ($param['required'])?"<span class='badge text-bg-primary'>REQUIRED</span>":"<span class='badge text-bg-secondary'>OPTIONAL</span>"!!}</td>
-                                                        </tr>
-                                                    @endif
-                                                @endforeach
-                                                @if($i == 0)
-                                                    <tr>
-                                                        <td colspan='4' align="center"><i class='bi bi-search'></i> There is no parameter</td>
-                                                    </tr>
-                                                @endif
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>RESPONSE</strong></td>
-                                        <td>
-                                            <table class='table table-bordered table-hover'>
-                                                <thead>
-                                                <tr class='active'>
-                                                    <th width="3%">No</th>
-                                                    <th width="5%">Type</th>
-                                                    <th>Response Names</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <?php $i = 1;?>
-                                                <tr>
-                                                    <td>{{$i++}}</td>
-                                                    <td><em>integer</em></td>
-                                                    <td>api_status</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{$i++}}</td>
-                                                    <td><em>string</em></td>
-                                                    <td>api_message</td>
-                                                </tr>
-
-                                                @if($api->aksi == 'list')
-                                                    <tr class='active'>
-                                                        <td>#</td>
-                                                        <td>Array</td>
-                                                        <td><strong>data</strong></td>
-                                                    </tr>
-                                                @endif
-
-                                                @if($api->aksi == 'list' || $api->aksi == 'detail')
-                                                    @foreach($responses as $resp)
-                                                        @if($resp['used'])
-                                                            <tr>
-                                                                <td>{{$i++}}</td>
-                                                                <td width="5%"><em>{{$resp['type']}}</em></td>
-                                                                <td>{{ ($api->aksi=='list')?'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- ':'' }} {{$resp['name']}}</td>
-                                                            </tr>
-                                                        @endif
-                                                    @endforeach
-                                                @endif
-
-                                                @if($api->aksi == 'save_add')
-                                                    <tr>
-                                                        <td width="5%">{{$i++}}</td>
-                                                        <td><em>integer</em></td>
-                                                        <td>id</td>
-                                                    </tr>
-                                                @endif
-                                                </tbody>
-                                            </table>
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>DESCRIPTION</strong></td>
-                                        <td><em>{!! $api->keterangan !!}</em></td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-
-                </tbody>
-            </table>
-
-
-        </div><!--END BODY-->
-    </div><!--END BOX-->
-
-    <hr>
-    <div align="center">
-        &copy; Copyright {{date('Y')}}. All Right Reserved. API Documentation
+    <div class="d-flex gap-2 flex-wrap align-items-center">
+        <span class="badge text-bg-primary">{{ trans('crudbooster.api_doc_api2_base_url_label') }}: {{ url('api2') }}</span>
+        <a class="btn btn-sm btn-secondary" target="_blank" href="{{ url('download-documentation-postman') }}"><i class="bi bi-download"></i> {{ trans('crudbooster.api_doc_export_postman') }}</a>
     </div>
-
-
 </div>
+
+<div class="api-pub">
+    <nav class="api-pub-nav">
+        <input type="search" id="pub-search" class="form-control form-control-sm mb-2" placeholder="{{ trans('crudbooster.api_doc_search') }}">
+        @foreach($byTable as $table => $list)
+            <div class="api-lbl mt-2 mb-1 px-2 pub-group">{{ $table }}</div>
+            @foreach($list as $api)
+                <a href="#{{ $api->permalink }}" data-slug="{{ $api->permalink }}" data-search="{{ strtolower($api->nama.' '.$api->permalink) }}">
+                    <span class="api-method {{ strtolower($api->method_type ?: 'get') }}" style="min-width:44px">{{ strtoupper($api->method_type ?: 'get') }}</span>
+                    <span class="text-truncate">{{ $api->nama }}</span>
+                </a>
+            @endforeach
+        @endforeach
+    </nav>
+
+    <main class="api-pub-main">
+        @forelse($apis as $api)
+            @php
+                $parameters = $api->parameters ? (unserialize($api->parameters) ?: []) : [];
+                $responses = $api->responses ? (unserialize($api->responses) ?: []) : [];
+                $method = strtolower($api->method_type ?: 'get');
+                $usedParams = array_values(array_filter($parameters, fn ($p) => !empty($p['used'])));
+                $obj = [];
+                foreach ($responses as $r) { if (!empty($r['used'])) $obj[$r['name']] = $apiSample($r['type'] ?? ''); }
+                $sample = ['api_status' => 1, 'api_message' => 'success'];
+                if ($api->aksi === 'list') $sample['data'] = [$obj];
+                elseif ($api->aksi === 'detail') $sample['data'] = $obj;
+                elseif ($api->aksi === 'save_add') $sample['id'] = 1;
+                $qs = '';
+                if ($method === 'get' && count($usedParams)) {
+                    $qs = '?'.implode('&', array_map(fn ($p) => $p['name'].'=', $usedParams));
+                }
+            @endphp
+            <section class="pub-section" id="sec-{{ $api->permalink }}" data-slug="{{ $api->permalink }}" hidden>
+                <div class="d-flex gap-2 align-items-center flex-wrap">
+                    <span class="api-method {{ $method }}">{{ strtoupper($method) }}</span>
+                    <h2 class="m-0" style="font-size:20px">{{ $api->nama }}</h2>
+                    <span class="badge text-bg-secondary">{{ $actionLabels[$api->aksi] ?? $api->aksi }}</span>
+                </div>
+                @if(!empty(trim(strip_tags((string) $api->keterangan))))
+                    <div class="my-3" style="max-width:65ch">{!! $api->keterangan !!}</div>
+                @endif
+                <div class="api-copy my-3">
+                    <input type="text" class="form-control" id="pub-url-{{ $api->id }}" readonly value="{{ url('api2/'.$api->permalink) }}">
+                    <button type="button" class="btn btn-secondary api-copy-btn" data-target="pub-url-{{ $api->id }}">{{ trans('crudbooster.api_doc_copy') }}</button>
+                </div>
+
+                <span class="api-lbl">{{ trans('crudbooster.api_doc_params') }}</span>
+                <div class="api-card">
+                    <div class="table-responsive">
+                        <table class="table table-sm api-table">
+                            <thead><tr><th>{{ trans('crudbooster.api_doc_col_name') }}</th><th>{{ trans('crudbooster.api_doc_col_type') }}</th><th>{{ trans('crudbooster.api_doc_col_rule') }}</th><th></th></tr></thead>
+                            <tbody>
+                            @forelse($usedParams as $param)
+                                <tr>
+                                    <td class="api-mono">{{ $param['name'] }}</td>
+                                    <td><span class="api-ty">{{ $param['type'] }}</span></td>
+                                    <td>{{ $param['config'] ?? '' }}</td>
+                                    <td>{!! !empty($param['required']) ? "<span class='badge text-bg-primary'>".e(trans('crudbooster.api_doc_required'))."</span>" : "<span class='badge text-bg-secondary'>".e(trans('crudbooster.api_doc_optional'))."</span>" !!}</td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="4" class="text-center api-help">{{ trans('crudbooster.api_doc_no_params') }}</td></tr>
+                            @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <span class="api-lbl">{{ trans('crudbooster.api_doc_example') }}</span>
+                <pre class="api-code mb-3">curl{{ $method === 'get' ? '' : ' -X '.strtoupper($method) }} "{{ url('api2/'.$api->permalink).$qs }}" \
+  -H "Authorization: Bearer &lt;token&gt;"</pre>
+                <span class="api-lbl">{{ trans('crudbooster.api_doc_response') }}</span>
+                <pre class="api-code">{{ json_encode($sample, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) }}</pre>
+            </section>
+        @empty
+            <p class="text-center api-help py-5">{{ trans('crudbooster.api_doc_no_endpoints') }}</p>
+        @endforelse
+    </main>
+</div>
+
+<script>
+$(function () {
+    var T = {copied: {!! json_encode(trans('crudbooster.api_doc_copied')) !!}, copy: {!! json_encode(trans('crudbooster.api_doc_copy')) !!}};
+    function show() {
+        var slug = decodeURIComponent(location.hash.slice(1)) || $('.pub-section:first').data('slug');
+        var found = false;
+        $('.pub-section').each(function () { var ok = $(this).data('slug') === slug; this.hidden = !ok; found = found || ok; });
+        if (!found) $('.pub-section:first').prop('hidden', false), slug = $('.pub-section:first').data('slug');
+        $('.api-pub-nav a').each(function () { $(this).toggleClass('active', $(this).data('slug') === slug); });
+    }
+    $(window).on('hashchange', show); show();
+
+    $('#pub-search').on('input', function () {
+        var q = $(this).val().toLowerCase().trim();
+        $('.api-pub-nav a').each(function () { this.hidden = q && String($(this).data('search')).indexOf(q) === -1; });
+    });
+
+    $(document).on('click', '.api-copy-btn', function () {
+        var btn = this, input = document.getElementById($(this).data('target'));
+        var done = function () { btn.textContent = T.copied; setTimeout(function () { btn.textContent = T.copy; }, 1500); };
+        input.select();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(input.value).then(done, function () { document.execCommand('copy'); done(); });
+        } else { document.execCommand('copy'); done(); }
+    });
+});
+</script>
 </body>
 </html>

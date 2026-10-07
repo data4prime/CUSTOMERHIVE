@@ -17,7 +17,7 @@ class Cms_settingsSeeder extends Seeder
                 'name' => 'login_background_color',
                 'label' => 'Login Background Color',
                 'content' => null,
-                'content_input_type' => 'text',
+                'content_input_type' => 'color',
                 'group_setting' => trans('crudbooster.login_register_style'),
                 'dataenum' => null,
                 'helper' => 'Input hexacode',
@@ -27,7 +27,7 @@ class Cms_settingsSeeder extends Seeder
                 'name' => 'login_font_color',
                 'label' => 'Login Font Color',
                 'content' => null,
-                'content_input_type' => 'text',
+                'content_input_type' => 'color',
                 'group_setting' => trans('crudbooster.login_register_style'),
                 'dataenum' => null,
                 'helper' => 'Input hexacode',
@@ -44,6 +44,16 @@ class Cms_settingsSeeder extends Seeder
             ],
 
             //EMAIL SETTING
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'name' => 'email_enabled',
+                'label' => 'Email Enabled',
+                'content' => 'yes',
+                'content_input_type' => 'radio',
+                'group_setting' => trans('crudbooster.email_setting'),
+                'dataenum' => 'yes,no',
+                'helper' => null,
+            ],
             [
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'email_sender',
@@ -122,9 +132,9 @@ class Cms_settingsSeeder extends Seeder
                 'label' => 'Default Paper Print Size',
                 'group_setting' => trans('crudbooster.application_setting'),
                 'content' => 'Legal',
-                'content_input_type' => 'text',
-                'dataenum' => null,
-                'helper' => 'Paper size, ex : A4, Legal, etc',
+                'content_input_type' => 'select',
+                'dataenum' => 'Letter,Legal,Ledger,A0,A1,A2,A3,A4,A5,A6,A7,A8,B0,B1,B2,B3,B4,B5,B6,B7,B8,B9,B10',
+                'helper' => null,
             ],
             [
                 'created_at' => date('Y-m-d H:i:s'),

@@ -29,6 +29,16 @@
         $orderby = implode(';', $parts);
     }
 
+    // Righe di interruttori affiancati: un solo form-check per colonna, descrizione sotto l'etichetta.
+    $swRow = function (array $items) use ($sw) {
+        $html = '<div class="row g-3 mb-1">';
+        foreach ($items as $it) {
+            $html .= '<div class="col">' . $sw(...$it) . '</div>';
+        }
+        $html .= '</div>';
+        return new \Illuminate\Support\HtmlString($html);
+    };
+
     $styles = [
         'button_icon'      => 'mg_cfg_style_icon',
         'button_icon_text' => 'mg_cfg_style_icon_text',
@@ -37,19 +47,34 @@
     ];
 @endphp
 
+@push('bottom')
+<script>
+    // Campo titolo candidato: select ricercabile anche con poche colonne.
+    // Dopo lo script generico di template.blade.php ($('.select2').select2()): il contenitore che
+    // select2 crea ha a sua volta classe "select2" e, se inizializzato prima, verrebbe ripreso e
+    // ridotto a 1px (campo che appare vuoto).
+    $(function () {
+        setTimeout(function () {
+            var el = document.getElementById('titleField');
+            if (el && window.chSelect) { window.chSelect(el, { minimumResultsForSearch: 0 }); }
+        }, 50);
+    });
+</script>
+@endpush
+
 @push('head')
 <style>
-    .cfg-style-card { display: block; border: 2px solid var(--ch-border); border-radius: .5rem; padding: .6rem; cursor: pointer; background: var(--ch-surface); height: 100%; }
-    .cfg-style-card.sel { border-color: var(--ch-accent); background: var(--ch-bg); }
+    .cfg-style-card { display: block; border: 1px solid var(--ch-border); border-radius: var(--ch-radius-md); padding: .6rem; cursor: pointer; background: var(--ch-surface); height: 100%; }
+    .cfg-style-card.sel { border-color: var(--ch-accent); background: var(--ch-bg); box-shadow: 0 0 0 2px var(--ch-accent-soft); }
     .cfg-style-card .cfg-style-preview { min-height: 32px; }
 </style>
 @endpush
 
-<div class="card card-default">
+<form method='post' action="{{Route('ModulsControllerPostStep5')}}">
+    <div class="card card-default">
     <div class="card-header mb-3">
         <h5 class="card-title">{{ trans('crudbooster.mg_cfg_title') }}</h5>
     </div>
-    <form method='post' action="{{Route('ModulsControllerPostStep5')}}">
         {{csrf_field()}}
         <input type="hidden" name="id" value='{{ $id }}'>
         <div class="card-body">
@@ -59,7 +84,17 @@
                 <div class="col-12">
                     <div class="mb-3">
                         <label for="titleField" class="form-label">{{ trans('crudbooster.mg_cfg_title_field') }}</label>
-                        <input type="text" id="titleField" name="title_field" value="{{ $cb_title_field ?? '' }}" class="form-control">
+                        @php
+                            // Il valore attuale resta selezionabile anche se non e' (piu') una colonna della tabella.
+                            $titleCur = (string) ($cb_title_field ?? '');
+                            $titleOpts = collect($title_candidates ?? [])->push($titleCur)->filter(fn ($v) => $v !== '')->unique()->values();
+                        @endphp
+                        <select id="titleField" name="title_field" class="form-select">
+                            @if($titleCur === '')<option value="" selected></option>@endif
+                            @foreach($titleOpts as $opt)
+                            <option value="{{ $opt }}" {{ $opt === $titleCur ? 'selected' : '' }}>{{ $opt }}</option>
+                            @endforeach
+                        </select>
                         <div class="form-text">{{ trans('crudbooster.mg_cfg_title_field_help') }}</div>
                     </div>
                 </div>
@@ -93,10 +128,14 @@
                     <div class="card h-100">
                         <div class="card-header fw-semibold"><i class="bi bi-grid-3x3-gap-fill"></i> {{ trans('crudbooster.mg_cfg_group_top') }}</div>
                         <div class="card-body">
-                            {{ $sw('button_add', !empty($cb_button_add), 'mg_cfg_button_add', 'mg_cfg_button_add_desc') }}
-                            {{ $sw('button_filter', !empty($cb_button_filter), 'mg_cfg_button_filter', 'mg_cfg_button_filter_desc') }}
-                            {{ $sw('button_import', !empty($cb_button_import), 'mg_cfg_button_import', 'mg_cfg_button_import_desc') }}
-                            {{ $sw('button_export', !empty($cb_button_export), 'mg_cfg_button_export', 'mg_cfg_button_export_desc') }}
+                            {{ $swRow([
+                                ['button_add', !empty($cb_button_add), 'mg_cfg_button_add', 'mg_cfg_button_add_desc'],
+                                ['button_filter', !empty($cb_button_filter), 'mg_cfg_button_filter', 'mg_cfg_button_filter_desc'],
+                            ]) }}
+                            {{ $swRow([
+                                ['button_import', !empty($cb_button_import), 'mg_cfg_button_import', 'mg_cfg_button_import_desc'],
+                                ['button_export', !empty($cb_button_export), 'mg_cfg_button_export', 'mg_cfg_button_export_desc'],
+                            ]) }}
                         </div>
                     </div>
                 </div>
@@ -107,9 +146,11 @@
                         <div class="card-body">
                             {{ $sw('button_table_action', !empty($cb_button_table_action), 'mg_cfg_button_table_action', 'mg_cfg_button_table_action_desc') }}
                             <hr>
-                            {{ $sw('button_detail', !empty($cb_button_detail), 'mg_cfg_button_detail') }}
-                            {{ $sw('button_edit', !empty($cb_button_edit), 'mg_cfg_button_edit') }}
-                            {{ $sw('button_delete', !empty($cb_button_delete), 'mg_cfg_button_delete') }}
+                            {{ $swRow([
+                                ['button_detail', !empty($cb_button_detail), 'mg_cfg_button_detail'],
+                                ['button_edit', !empty($cb_button_edit), 'mg_cfg_button_edit'],
+                                ['button_delete', !empty($cb_button_delete), 'mg_cfg_button_delete'],
+                            ]) }}
                             <hr>
                             <div class="small fw-semibold mb-2">{{ trans('crudbooster.mg_cfg_button_style') }}</div>
                             <div class="row g-2">
@@ -140,14 +181,15 @@
             </div>
 
         </div>
-        <div class="card-footer">
-            <div align="right">
-                <a href="{{CRUDBooster::mainpath('step4').'/'.$id}}" class="btn btn-secondary mg-nav">&laquo; {{ trans('crudbooster.button_back') }}</a>
-                <input type="submit" name="submit" class='btn btn-primary' value='{{ trans('crudbooster.mg_cfg_save') }}'>
-            </div>
-        </div>
-    </form>
-</div>
+    </div>
+
+    @include('crudbooster::module_generator._nav', [
+        'nav_back' => CRUDBooster::mainpath('step4') . '/' . $id,
+        'nav_back_ajax' => true,
+        'nav_next' => trans('crudbooster.mg_cfg_save'),
+        'nav_next_name' => 'submit',
+    ])
+</form>
 
 @push('bottom')
 <script>

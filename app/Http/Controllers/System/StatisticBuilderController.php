@@ -32,7 +32,9 @@ class StatisticBuilderController extends CBController
         $this->global_privilege = false;
 
         $this->button_table_action = true;
-        $this->button_action_style = "button_icon_text";
+        // Solo icone; "strict" perche' lo stile "button_icon" mostrerebbe il dettaglio al superadmin
+        // anche con button_detail = false (qui un dettaglio non esiste).
+        $this->button_action_style = "button_icon_strict";
         $this->button_add = true;
         $this->button_delete = true;
         $this->button_edit = true;
@@ -44,8 +46,8 @@ class StatisticBuilderController extends CBController
 
         $this->col = [];
         $this->col[] = ["label" => "Name", "name" => "name"];
-        //$this->col[] = ["label" => "Layout", "name" => "layout"];
-        $this->col[] = array("label" => "Layout", "name" => "layout", "join" => "dashboard_layouts,layoutname");
+        // Colonna "Layout" tolta dalla lista: le nuove dashboard sono sempre a griglia (vedi hide_form
+        // piu' sotto); il valore salvato resta in tabella e il campo e' ancora nascosto nel form.
 
         $this->form = [];
         $this->form[] = [

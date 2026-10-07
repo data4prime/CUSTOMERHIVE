@@ -17,31 +17,9 @@
 
 
 
-<div class='card'>
+@include('crudbooster::partials.api_nav', ['active' => 'editor'])
 
-    <div class="card-header">
-
-        <ul class="nav flex-row">
-            <li class="nav-item">
-                <a class="nav-link active" href="/admin/api_generator">
-                    <i class="bi bi-file-earmark-fill"></i> {{ trans('crudbooster.api_documentation') }}
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/api_generator/screet-key">
-                    <i class="bi bi-key-fill"></i> {{ trans('crudbooster.api_secret_key') }}
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/api_generator/generator">
-                    <i class="bi bi-gear-fill"></i> {{ trans('crudbooster.api_generator') }}
-                </a>
-            </li>
-        </ul>
-
-    </div>
-
-    <div class='card-body'>
+<div>
         @push('bottom')
         <script>
             $(function () {
@@ -126,9 +104,9 @@
                 if (tipe_action == '') return false;
 
                 no_params += 1;
-                $('#table-response tbody').append("<tr><td>" + no_params + "</td><td>api_status</td><td>boolean</td><td>-</td><td><select class='form-control' disabled><option>YES</option></select></td><td>-</td></tr>");
+                $('#table-response tbody').append("<tr><td>" + no_params + "</td><td>api_status</td><td>boolean</td><td>-</td><td><select class='form-select form-select-sm' disabled><option>YES</option></select></td><td>-</td></tr>");
                 no_params += 1;
-                $('#table-response tbody').append("<tr><td>" + no_params + "</td><td>api_message</td><td>string</td><td>-</td><td><select class='form-control' disabled><option>YES</option></select></td><td>-</td></tr>");
+                $('#table-response tbody').append("<tr><td>" + no_params + "</td><td>api_message</td><td>string</td><td>-</td><td><select class='form-select form-select-sm' disabled><option>YES</option></select></td><td>-</td></tr>");
 
                 if (tipe_action == 'list') {
                     $('#table-response tbody').append("<tr class='info' style='font-weight'><td>#</td><td>data</td><td>&nbsp;</td><td>-</td><td>-</td><td>-</td></tr>");
@@ -179,7 +157,7 @@
                         }
 
                         no_params += 1;
-                        $('#table-response tbody').append("<tr class='success tr-response'><td>" + no_params + "</td><td>&nbsp;&nbsp;- " + obj.name + "<input type='hidden' name='responses_name[]' value='" + obj.name + "'/></td><td>" + obj_type + "<input type='hidden' name='responses_type[]' value='" + obj_type + "'/></td><td>-<input type='hidden' name='responses_subquery[]' value=''/></td><td><select class='form-control responses_used' name='responses_used[]'><option value='1'>YES</option><option value='0'>NO</option></select></td><td><a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='bi bi-slash-circle'></i></a></td></tr>");
+                        $('#table-response tbody').append("<tr class='success tr-response'><td>" + no_params + "</td><td>&nbsp;&nbsp;- " + obj.name + "<input type='hidden' name='responses_name[]' value='" + obj.name + "'/></td><td>" + obj_type + "<input type='hidden' name='responses_type[]' value='" + obj_type + "'/></td><td>-<input type='hidden' name='responses_subquery[]' value=''/></td><td><select class='form-select form-select-sm responses_used' name='responses_used[]'><option value='1'>YES</option><option value='0'>NO</option></select></td><td><a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='bi bi-slash-circle'></i></a></td></tr>");
                     })
                 })
 
@@ -409,9 +387,9 @@
                 if (tipe_action == '') return false;
 
                 no_params += 1;
-                $('#table-response tbody').append("<tr><td>" + no_params + "</td><td>api_status</td><td>boolean</td><td>-</td><td><select class='form-control' disabled><option>YES</option></select></td><td>-</td></tr>");
+                $('#table-response tbody').append("<tr><td>" + no_params + "</td><td>api_status</td><td>boolean</td><td>-</td><td><select class='form-select form-select-sm' disabled><option>YES</option></select></td><td>-</td></tr>");
                 no_params += 1;
-                $('#table-response tbody').append("<tr><td>" + no_params + "</td><td>api_message</td><td>string</td><td>-</td><td><select class='form-control' disabled><option>YES</option></select></td><td>-</td></tr>");
+                $('#table-response tbody').append("<tr><td>" + no_params + "</td><td>api_message</td><td>string</td><td>-</td><td><select class='form-select form-select-sm' disabled><option>YES</option></select></td><td>-</td></tr>");
 
                 if (tipe_action == 'list') {
                     $('#table-response tbody').append("<tr class='info' style='font-weight'><td>#</td><td>data</td><td>&nbsp;</td><td>-</td><td>-</td><td>-</td></tr>");
@@ -479,7 +457,7 @@
                     delete_btn = "<a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='bi bi-slash-circle'></i></a>";
                 }
 
-                $('#table-response tbody').append("<tr class='" + tr_success + " tr-response'><td>" + no_params + "</td><td>&nbsp;&nbsp;- " + obj.name + "<input type='hidden' name='responses_name[]' value='" + obj.name + "'/></td><td>" + obj_type + "<input type='hidden' name='responses_type[]' value='" + obj_type + "'/></td><td>" + input_subquery + "</td><td><select class='form-control responses_used' name='responses_used[]'><option " + used_yes + " value='1'>YES</option><option " + used_no + " value='0'>NO</option></select></td><td>" + delete_btn + "</td></tr>");
+                $('#table-response tbody').append("<tr class='" + tr_success + " tr-response'><td>" + no_params + "</td><td>&nbsp;&nbsp;- " + obj.name + "<input type='hidden' name='responses_name[]' value='" + obj.name + "'/></td><td>" + obj_type + "<input type='hidden' name='responses_type[]' value='" + obj_type + "'/></td><td>" + input_subquery + "</td><td><select class='form-select form-select-sm responses_used' name='responses_used[]'><option " + used_yes + " value='1'>YES</option><option " + used_no + " value='0'>NO</option></select></td><td>" + delete_btn + "</td></tr>");
             })
 
             $('#table-response tfoot').show();
@@ -570,7 +548,7 @@
                 var htm = "<tr class='tr-response tr-additional'>";
                 htm += "<td>#</td>";
                 htm += "<td>&nbsp;&nbsp;- " + val + "<input type='hidden' name='responses_name[]' value='" + val + "'/></td><td>" + validation + "<input type='hidden' name='responses_type[]' value='" + validation + "'/></td><td>" + subquery + "<input type='hidden' name='responses_subquery[]' value='" + subquery + "'/></td>";
-                htm += "<td><select class='form-control responses_used' name='responses_used[]'><option " + check_yes + " value='1'>YES</option><option " + check_no + " value='0'>NO</option></select></td>";
+                htm += "<td><select class='form-select form-select-sm responses_used' name='responses_used[]'><option " + check_yes + " value='1'>YES</option><option " + check_no + " value='0'>NO</option></select></td>";
                 htm += "<td><a class='btn btn-danger' href='javascript:void(0)' onclick='deleteResponse(this)'><i class='bi bi-slash-circle'></i></a></td></tr>";
 
                 if (val == '') return false;
@@ -635,259 +613,288 @@
         <form method='post' action='{{ route("ApiCustomControllerPostSaveApiCustom")}}'>
             <input type="hidden" name="_token" value="{{ csrf_token() }}" />
             <input type="hidden" name="id" value="{{isset($row->id) ? $row->id : '' }}">
-            <div class='row'>
-                <div class='col-sm-8'>
-                    <div class='mb-3 row'>
-                        <label>API Name</label>
-                        <input type='text' class='form-control' value='{{isset($row->nama) ? $row->nama : '' }}'
-                            required name='nama' id='input-nama' />
-                    </div>
-                </div>
 
-                <div class='col-sm-4'>
-                    <div class='mb-3 row'>
-                        <label>Table</label>
-                        <select id='combo_tabel' name='tabel' required class='form-control'>
-                            <option value=''>** Choose a Table</option>
-                            @foreach($tables as $tab)
-                            <option {{(isset($row->tabel) && $row->tabel == $tab)?"selected":""}}
-                                value='{{$tab}}'>{{$tab}}</option>
-                            @endforeach
-                        </select>
+            <div class="api-editor">
+                <div>
+                    {{-- 1. Cosa espone --}}
+                    <div class="api-card">
+                        <div class="api-card-h"><span><span class="api-num">1</span>{{ trans('crudbooster.api_ed_sec_expose') }}</span></div>
+                        <div class="api-card-b">
+                            <div class="row g-3">
+                                <div class="col-md-8">
+                                    <label class="api-lbl" for="input-nama">{{ trans('crudbooster.api_ed_name') }}</label>
+                                    <input type='text' class='form-control' value='{{isset($row->nama) ? $row->nama : '' }}' required name='nama' id='input-nama' />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="api-lbl" for="combo_tabel">{{ trans('crudbooster.api_ed_table') }}</label>
+                                    <select id='combo_tabel' name='tabel' required class='form-select'>
+                                        <option value=''>{{ trans('crudbooster.api_ed_choose_table') }}</option>
+                                        @foreach($tables as $tab)
+                                        <option {{(isset($row->tabel) && $row->tabel == $tab)?"selected":""}} value='{{$tab}}'>{{$tab}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-8">
+                                    <label class="api-lbl" for="input-permalink">{{ trans('crudbooster.api_ed_slug') }}</label>
+                                    <div class='input-group'>
+                                        <span class="input-group-text">{{url("api")}}/</span>
+                                        <input type='text' class='form-control' value='{{isset($row->permalink) ? $row->permalink : ''}}' required name='permalink' id='input-permalink' />
+                                    </div>
+                                    <div class="api-help">{{ trans('crudbooster.api_ed_slug_help') }}</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="api-lbl">{{ trans('crudbooster.api_ed_method') }}</span>
+                                    <div class="btn-group" role="group">
+                                        <input type="radio" class="btn-check method_type" name="method_type" id="method-get" value="get" required {{ (isset($row->method_type) && $row->method_type == 'get') ? 'checked' : '' }}>
+                                        <label class="btn btn-secondary" for="method-get">GET</label>
+                                        <input type="radio" class="btn-check method_type" name="method_type" id="method-post" value="post" {{ (isset($row->method_type) && $row->method_type == 'post') ? 'checked' : '' }}>
+                                        <label class="btn btn-secondary" for="method-post">POST</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="api-lbl" for="tipe_action">{{ trans('crudbooster.api_ed_action') }}</label>
+                                    <select id='tipe_action' name='aksi' required class='form-select'>
+                                        <option value=''>{{ trans('crudbooster.api_ed_choose_action') }}</option>
+                                        <option value='list' {{ (isset($row->aksi) && $row->aksi == 'list')?"selected":"" }}>{{ trans('crudbooster.api_action_list') }}</option>
+                                        <option value='detail' {{ (isset($row->aksi) && $row->aksi == 'detail')?"selected":"" }}>{{ trans('crudbooster.api_action_detail') }}</option>
+                                        <option value='save_add' {{ (isset($row->aksi) && $row->aksi == 'save_add')?"selected":"" }}>{{ trans('crudbooster.api_action_create') }}</option>
+                                        <option value='save_edit' {{ (isset($row->aksi) && $row->aksi == 'save_edit')?"selected":"" }}>{{ trans('crudbooster.api_action_update') }}</option>
+                                        <option value='delete' {{ (isset($row->aksi) && $row->aksi == 'delete')?"selected":"" }}>{{ trans('crudbooster.api_action_delete') }}</option>
+                                    </select>
+                                    <div class="api-help">{{ trans('crudbooster.api_ed_action_help') }}</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class='row'>
-                <div class='col-sm-8'>
-                    <div class='mb-3 row'>
-                        <label>API Slug</label>
-                        <div class='input-group'>
-                            <span class="input-group-text" id="basic-addon1"
-                                style="background:var(--ch-bg)">{{url("api")}}/</span>
-                            <input type='text' class='form-control'
-                                value='{{isset($row->permalink) ? $row->permalink : ''}}' required name='permalink'
-                                id='input-permalink' />
+                    {{-- 2. Cosa riceve --}}
+                    <div class="api-card">
+                        <div class="api-card-h">
+                            <span><span class="api-num">2</span>{{ trans('crudbooster.api_ed_sec_receive') }}</span>
+                            <a class='btn btn-sm btn-secondary' href='javascript:void(0)' onclick="load_parameters()"><i class='bi bi-arrow-repeat'></i> {{ trans('crudbooster.api_ed_reset') }}</a>
+                        </div>
+                        <div class="api-card-b flush">
+                            <div class="table-responsive">
+                                <table id='table-parameters' class='table api-table mb-0'>
+                                    <thead>
+                                        <tr>
+                                            <th width="3%">#</th>
+                                            <th>{{ trans('crudbooster.api_doc_col_name') }}</th>
+                                            <th>{{ trans('crudbooster.api_doc_col_type') }}</th>
+                                            <th>{{ trans('crudbooster.api_ed_col_rule') }}</th>
+                                            <th width="9%">{{ trans('crudbooster.api_ed_col_mandatory') }}</th>
+                                            <th width="9%">{{ trans('crudbooster.api_ed_col_enable') }}</th>
+                                            <th width="5%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class='row-no-data'>
+                                            <td colspan='7' class="text-center api-help">{{ trans('crudbooster.api_ed_no_data') }}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot style="display:none">
+                                        <tr>
+                                            <td>#</td>
+                                            <td width="20%"><input class='form-control form-control-sm' name='params_name[]' type='text' /></td>
+                                            <td width="20%"><select class='form-select form-select-sm' name='params_type[]'>
+                                                    <optgroup label='Common Validation'>
+                                                        <option value='string'>String</option>
+                                                        <option value='integer'>Integer</option>
+                                                        <option value='email'>Email</option>
+                                                        <option value='image'>Image (jpeg, png, bmp, gif, or svg)</option>
+                                                        <option value='file'>File Upload</option>
+                                                        <option value='exists'>Exists (table,column)</option>
+                                                        <option value='unique'>Unique (table,column,except)</option>
+                                                        <option value='password'>Password</option>
+                                                        <option value='search'>Search</option>
+                                                        <option value='custom'>Custom (Not In Table)</option>
+                                                    </optgroup>
+                                                    <optgroup label='Other Validation'>
+                                                        <option value='array'>Array</option>
+                                                        <option value='alpha'>Alpha</option>
+                                                        <option value='alpha_num'>Alpha Numeric</option>
+                                                        <option value='alpha_spaces'>Alpha Spaces</option>
+                                                        <option value='base64_file'>Base64 File</option>
+                                                        <option value='boolean'>Boolean</option>
+                                                        <option value='date'>Date (Y-m-d)</option>
+                                                        <option value='date_format:Y-m-d H:i:s'>DateTime (Y-m-d H:i:s)</option>
+                                                        <option value='date_format'>Date Format Custom</option>
+                                                        <option value='digits'>Digits</option>
+                                                        <option value='digits_between'>Digits Between (Min,Max)</option>
+                                                        <option value='in'>In (a,b,c)</option>
+                                                        <option value='json'>Json Valid</option>
+                                                        <option value='mimes'>Mimes Type</option>
+                                                        <option value='min'>Min</option>
+                                                        <option value='max'>Max</option>
+                                                        <option value='numeric'>Numeric</option>
+                                                        <option value='not_in'>Not In (a,b,c)</option>
+                                                        <option value='url'>URL Valid</option>
+                                                    </optgroup>
+                                                    <optgroup label='Other'>
+                                                        <option value='ref'>Child Table References</option>
+                                                    </optgroup>
+                                                </select></td>
+                                            <td><input class='form-control form-control-sm' type='text' name='params_config[]'></td>
+                                            <td><select class='form-select form-select-sm params_required' name='params_required[]'>
+                                                    <option value='1'>{{ trans('crudbooster.api_yes') }}</option>
+                                                    <option value='0'>{{ trans('crudbooster.api_no') }}</option>
+                                                </select></td>
+                                            <td><select class='form-select form-select-sm params_used' name='params_used[]'>
+                                                    <option value='1'>{{ trans('crudbooster.api_yes') }}</option>
+                                                    <option value='0'>{{ trans('crudbooster.api_no') }}</option>
+                                                </select></td>
+                                            <td class='col-delete'><a class='btn btn-sm btn-primary' href='javascript:void(0)' onclick='addParam()'><i class='bi bi-plus-lg'></i></a></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="api-card-f api-help m-0">{{ trans('crudbooster.api_ed_params_help') }}</div>
+                    </div>
+
+                    {{-- 3. Cosa restituisce --}}
+                    <div class="api-card">
+                        <div class="api-card-h">
+                            <span><span class="api-num">3</span>{{ trans('crudbooster.api_ed_sec_return') }}</span>
+                            <a class='btn btn-sm btn-secondary' href='javascript:void(0)' onclick='load_response()'><i class='bi bi-arrow-repeat'></i> {{ trans('crudbooster.api_ed_reset') }}</a>
+                        </div>
+                        <div class="api-card-b">
+                            <label class="api-lbl" for="sql_where">{{ trans('crudbooster.api_ed_sql_where') }}</label>
+                            <textarea id="sql_where" name='sql_where' rows='3' class='form-control api-mono' placeholder="status = [paramStatus]">{{isset($row->sql_where) ? $row->sql_where : ''}}</textarea>
+                            <div class='api-help'>{!! trans('crudbooster.api_ed_sql_where_help') !!}</div>
+                        </div>
+                        <div class="api-card-b flush" id='response' style="border-top:1px solid var(--ch-border)">
+                            <div class="table-responsive">
+                                <table id='table-response' class='table api-table mb-0'>
+                                    <thead>
+                                        <tr>
+                                            <th width="3%">#</th>
+                                            <th>{{ trans('crudbooster.api_doc_col_name') }}</th>
+                                            <th>{{ trans('crudbooster.api_doc_col_type') }}</th>
+                                            <th>{{ trans('crudbooster.api_ed_col_subquery') }}</th>
+                                            <th width="9%">{{ trans('crudbooster.api_ed_col_enable') }}</th>
+                                            <th width="3%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class='row-no-data'>
+                                            <td colspan='6' class="text-center api-help">{{ trans('crudbooster.api_ed_no_data') }}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot style="display:none">
+                                        <tr class='tr-additional'>
+                                            <td>#</td>
+                                            <td width="20%"><input placeholder='{{ trans('crudbooster.api_ed_alias_placeholder') }}' name='responses_name[]' class='form-control form-control-sm' type='text' />
+                                                <small class="api-help">{{ trans('crudbooster.api_ed_alias_help') }}</small>
+                                            </td>
+                                            <td>
+                                                <select class='form-select form-select-sm' name='responses_type[]'>
+                                                    <option value='integer'>Integer</option>
+                                                    <option value='boolean'>Boolean</option>
+                                                    <option value='string'>String</option>
+                                                    <option value='file'>File</option>
+                                                    <option value='date'>Date</option>
+                                                    <option value='datetime'>DateTime</option>
+                                                    <option value='double'>Double</option>
+                                                    <option value='custom'>Custom (Not in Table)</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <textarea placeholder="E.g : select sum(total) from order_detail where id_order = order.id" name='responses_subquery[]' class='form-control form-control-sm' rows="2"></textarea>
+                                            </td>
+                                            <td><select class='form-select form-select-sm responses_used' name='responses_used[]'>
+                                                    <option value='1'>{{ trans('crudbooster.api_yes') }}</option>
+                                                    <option value='0'>{{ trans('crudbooster.api_no') }}</option>
+                                                </select></td>
+                                            <td class='col-delete'><a class='btn btn-sm btn-primary' href='javascript:void(0)' onclick='addResponse()'><i class='bi bi-plus-lg'></i></a></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- 4. Descrizione --}}
+                    <div class="api-card">
+                        <div class="api-card-h"><span><span class="api-num">4</span>{{ trans('crudbooster.api_doc_description') }}</span></div>
+                        <div class="api-card-b">
+                            <textarea name='keterangan' rows='3' class='form-control wysiwyg' placeholder='{{ trans('crudbooster.api_ed_description_placeholder') }}'>{{isset($row->keterangan) ? $row->keterangan : ''}}</textarea>
                         </div>
                     </div>
                 </div>
-                <div class='col-sm-2'>
-                    <div class='mb-3 row'>
-                        <label>Action Type</label>
-                        <select id='tipe_action' name='aksi' required class='form-control'>
-                            <option value=''>** Select Action</option>
-                            <option value='list' {{ (isset($row->aksi) && $row->aksi == 'list')?"selected":"" }}
-                                >LISTING</option>
-                            <option value='detail' {{ (isset($row->aksi) && $row->aksi == 'detail')?"selected":""
-                                }}>DETAIL / READ</option>
-                            <option value='save_add' {{ (isset($row->aksi) && $row->aksi == 'save_add')?"selected":""
-                                }}>CREATE / ADD
-                            </option>
-                            <option value='save_edit' {{ (isset($row->aksi) && $row->aksi == 'save_edit')?"selected":""
-                                }}>UPDATE</option>
-                            <option value='delete' {{ (isset($row->aksi) && $row->aksi == 'delete')?"selected":""
-                                }}>DELETE</option>
-                        </select>
+
+                {{-- Anteprima: si aggiorna mentre si compila --}}
+                <aside class="api-preview">
+                    <div class="api-card">
+                        <div class="api-card-h">{{ trans('crudbooster.api_ed_preview') }}</div>
+                        <div class="api-card-b d-flex flex-column gap-3">
+                            <div class="d-flex gap-2 align-items-center flex-wrap" style="min-width:0">
+                                <span class="api-method get" id="pv-method">GET</span>
+                                <code id="pv-url" style="word-break:break-all">{{ url('api2') }}/...</code>
+                            </div>
+                            <pre class="api-code" id="pv-json">{}</pre>
+                            <div class="api-help m-0">{{ trans('crudbooster.api_ed_preview_help') }}</div>
+                        </div>
                     </div>
-                </div>
-                <div class='col-sm-2'>
-                    <div class='mb-3 row'>
-                        <label>Method Type</label>
-                        <br />
-                        <label class='radio-inline'>
-                            <input type='radio' required class='method_type' {{ (isset($row->method_type) &&
-                            $row->method_type ==
-                            'get')?"checked":"" }} name='method_type'
-                            value='get'/> GET
-                        </label>
-                        <label class='radio-inline'>
-                            <input type='radio' class='method_type' {{ ( isset($row->method_type) && $row->method_type
-                            == 'post')?"checked":"" }}
-                            name='method_type' value='post'/> POST
-                        </label>
-
-                    </div>
-                </div>
+                </aside>
             </div>
 
-
-            <div class='mb-3 row'>
-                <div class="clearfix">
-                    <label><i class='bi bi-gear-fill'></i> Parameters</label>
-                    <a class='float-end btn btn-sm btn-primary' href='javascript:void(0)'
-                        onclick="load_parameters()"><i class='bi bi-arrow-repeat'></i>
-                        Reset</a>
-                </div>
-
-                <table id='table-parameters' class='table table-striped table-bordered'>
-                    <thead>
-                        <tr>
-                            <th width="3%">No</th>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Laravel Validation / Description / Value</th>
-                            <th width="8%" title='is Mandatory ?'>Mandatory</th>
-                            <th width="8%" title='is used ?'>Enable</th>
-                            <th width="5%">-</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class='row-no-data'>
-                            <td colspan='7'>There is no data</td>
-                        </tr>
-                    </tbody>
-                    <tfoot style="display:none">
-                        <tr>
-                            <td>#</td>
-                            <td width="20%"><input class='form-control' name='params_name[]' type='text' /></td>
-                            <td width="20%"><select class='form-control' name='params_type[]'>
-                                    <optgroup label='Common Validation'>
-                                        <option value='string'>String</option>
-                                        <option value='integer'>Integer</option>
-                                        <option value='email'>Email</option>
-                                        <option value='image'>Image (jpeg, png, bmp, gif, or svg)</option>
-                                        <option value='file'>File Upload</option>
-                                        <option value='exists'>Exists (table,column)</option>
-                                        <option value='unique'>Unique (table,column,except)</option>
-                                        <option value='password'>Password</option>
-                                        <option value='search'>Search</option>
-                                        <option value='custom'>Custom (Not In Table)</option>
-                                    </optgroup>
-                                    <optgroup label='Other Validation'>
-                                        <option value='array'>Array</option>
-                                        <option value='alpha'>Alpha</option>
-                                        <option value='alpha_num'>Alpha Numeric</option>
-                                        <option value='alpha_spaces'>Alpha Spaces</option>
-                                        <option value='base64_file'>Base64 File</option>
-                                        <option value='boolean'>Boolean</option>
-                                        <option value='date'>Date (Y-m-d)</option>
-                                        <option value='date_format:Y-m-d H:i:s'>DateTime (Y-m-d H:i:s)</option>
-                                        <option value='date_format'>Date Format Custom</option>
-                                        <option value='digits'>Digits</option>
-                                        <option value='digits_between'>Digits Between (Min,Max)</option>
-                                        <option value='in'>In (a,b,c)</option>
-                                        <option value='json'>Json Valid</option>
-                                        <option value='mimes'>Mimes Type</option>
-                                        <option value='min'>Min</option>
-                                        <option value='max'>Max</option>
-                                        <option value='numeric'>Numeric</option>
-                                        <option value='not_in'>Not In (a,b,c)</option>
-                                        <option value='url'>URL Valid</option>
-                                    </optgroup>
-                                    <optgroup label='Other'>
-                                        <option value='ref'>Child Table References</option>
-                                    </optgroup>
-                                </select></td>
-                            <td><input class='form-control' type='text' name='params_config[]'></td>
-                            <td><select class='form-control params_required' name='params_required[]'>
-                                    <option value='1'>YES</option>
-                                    <option value='0'>NO</option>
-                                </select></td>
-                            <td><select class='form-control params_used' name='params_used[]'>
-                                    <option value='1'>YES</option>
-                                    <option value='0'>NO</option>
-                                </select></td>
-                            <td class='col-delete'><a class='btn btn-primary' href='javascript:void(0)'
-                                    onclick='addParam()'><i class='bi bi-plus-lg'></i></a></td>
-                        </tr>
-                    </tfoot>
-                </table>
-
-                <div class="help-block">
-                    To set as comment at description. Add prefix * (asterisk) before description. Unless will be set as
-                    default value.
-                </div>
+            <div class="api-savebar">
+                <span class="api-help m-0">{{ trans('crudbooster.api_ed_save_hint') }}</span>
+                <span class="d-flex gap-2">
+                    <a class="btn btn-secondary" href="{{ CRUDBooster::mainpath() }}">{{ trans('crudbooster.api_cancel') }}</a>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> {{ trans('crudbooster.api_ed_save') }}</button>
+                </span>
             </div>
+        </form>
+</div>
 
-            <div class='mb-3 row'>
-                <label>SQL Where Query (Optional)</label>
-                <textarea name='sql_where' rows='3' class='form-control'
-                    placeholder="status = [paramStatus]">{{isset($row->sql_where) ? $row->sql_where : ''}}</textarea>
-                <div class='help-block'>Use [paramName] to get the parameter value. e.g : [id] or [email]. Do not use
-                    quotes or HTML entities.<br>Password
-                    parameters <strong>cannot</strong> be used.
-                </div>
-            </div>
+@push('bottom')
+<script>
+$(function () {
+    var base2 = {!! json_encode(url('api2')) !!};
+    function sample(t) {
+        if (['integer', 'numeric', 'double'].indexOf(t) !== -1) return 1;
+        if (t === 'boolean') return true;
+        if (String(t).indexOf('date') === 0) return '2026-01-31';
+        return '...';
+    }
+    function updatePreview() {
+        var m = ($('.method_type:checked').val() || 'get');
+        $('#pv-method').attr('class', 'api-method ' + m).text(m.toUpperCase());
+        var slug = $('#input-permalink').val() || '...';
+        var url = base2 + '/' + slug;
+        if (m === 'get') {
+            var qs = [];
+            $('#table-parameters tbody tr').each(function () {
+                var n = $(this).find('td:nth-child(2) input').val();
+                if (n && $(this).find('td:nth-child(6) select').val() === '1') qs.push(n + '=');
+            });
+            if (qs.length) url += '?' + qs.join('&');
+        }
+        $('#pv-url').text(url);
 
-            <div class='mb-3 row'>
-                <div class='clearfix'>
-                    <label><i class='bi bi-gear-fill'></i> Response</label>
-                    <a class='float-end btn btn-sm btn-primary' href='javascript:void(0)' onclick='load_response()'><i
-                            class='bi bi-arrow-repeat'></i> Reset</a>
-                </div>
-                <div id='response'>
-                    <table id='table-response' class='table table-striped table-bordered'>
-                        <thead>
-                            <tr>
-                                <th width="3%">No</th>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Sub Query</th>
-                                <th width="8%">Enable</th>
-                                <th width="3%">-</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class='row-no-data'>
-                                <td colspan='7'>There is no data</td>
-                            </tr>
-                        </tbody>
-                        <tfoot style="display:none">
-                            <tr class='tr-additional'>
-                                <td>#</td>
-                                <td width="20%"><input placeholder='E.g : grand_total' name='responses_name[]'
-                                        class='form-control' type='text' />
-                                    <small>Enter alias name</small>
-                                </td>
-                                <td>
-                                    <select class='form-control' name='responses_type[]'>
-                                        <option value='integer'>Integer</option>
-                                        <option value='boolean'>Boolean</option>
-                                        <option value='string'>String</option>
-                                        <option value='file'>File</option>
-                                        <option value='date'>Date</option>
-                                        <option value='datetime'>DateTime</option>
-                                        <option value='double'>Double</option>
-                                        <option value='custom'>Custom (Not in Table)</option>
-                                    </select>
-                                </td>
-                                <td>
-
-                                    <textarea placeholder="E.g : select sum(total) from order_detail where id_order = order.id"
-                                        name='responses_subquery[]' class='form-control' type='text'></textarea>
-
-                                    <!--<input
-                                        placeholder="E.g : select sum(total) from order_detail where id_order = order.id"
-                                        name='responses_subquery[]' class='form-control' type='text'>
-                                    <small>Enter sub query without alias name</small>-->
-                                </td>
-                                <td><select class='form-control responses_used' name='responses_used[]'>
-                                        <option value='1'>YES</option>
-                                        <option value='0'>NO</option>
-                                    </select></td>
-                                <td class='col-delete'><a class='btn btn-primary' href='javascript:void(0)'
-                                        onclick='addResponse()'><i class='bi bi-plus-lg'></i></a></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-
-            <div class='mb-3 row'>
-                <label>API Description</label>
-                <textarea name='keterangan' rows='3' class='form-control wysiwyg'
-                    placeholder='Optional'>{{isset($row->keterangan) ? $row->keterangan : ''}}</textarea>
-            </div>
-
-            
-
-
-    </div><!--END BODY-->
-    <div class="card-footer">
-        <div class='mb-3 row'>
-                <input type='submit' class='btn btn-success' value='SAVE & GENERATE API' />
-            </div>
-    </div>
-</div><!--END BOX-->
+        var act = $('#tipe_action').val(), obj = {};
+        $('#table-response tbody tr').each(function () {
+            var n = $(this).find("input[name='responses_name[]']").val();
+            var t = $(this).find("input[name='responses_type[]']").val();
+            if (n && $(this).find('.responses_used').val() === '1') obj[n] = sample(t);
+        });
+        var out = {api_status: 1, api_message: 'success'};
+        if (act === 'list') out.data = [obj];
+        else if (act === 'detail') out.data = obj;
+        else if (act === 'save_add') out.id = 1;
+        $('#pv-json').text(JSON.stringify(out, null, 2));
+    }
+    $('form').on('input change', updatePreview);
+    var obs = new MutationObserver(updatePreview);
+    ['table-parameters', 'table-response'].forEach(function (id) {
+        obs.observe(document.getElementById(id).tBodies[0], {childList: true, subtree: true});
+    });
+    setTimeout(updatePreview, 400);
+});
+</script>
+@endpush
 
 @endsection
+

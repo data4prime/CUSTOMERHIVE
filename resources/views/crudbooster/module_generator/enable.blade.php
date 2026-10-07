@@ -6,7 +6,9 @@
 
   @if(CRUDBooster::getCurrentMethod() != 'getProfile')
   <p>
-    <a href='{{CRUDBooster::mainpath()}}'>{{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
+    <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
+      <i class='bi bi-chevron-left'></i>&nbsp;
+      {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}
     </a>
   </p>
   @endif

@@ -56,7 +56,12 @@ class SettingsController extends CBController
             // schermo, e valore azzerato ad ogni salvataggio del gruppo), mentre
             // "upload_file" - usato da righe reali - non era selezionabile.
             // "password" e' nuovo: serve per non mostrare in chiaro le password.
-            "dataenum" => ["text", "password", "number", "email", "textarea", "wysiwyg", "upload_image", "upload_file", "datepicker", "radio", "select"],
+            // Intervento 237: etichette comprensibili ("valore|Etichetta"); il valore
+            // salvato resta quello tecnico di sempre. "color" e' nuovo (selettore colore).
+            "dataenum" => array_map(
+                fn ($t) => $t . '|' . trans('crudbooster.setting_type_' . $t),
+                ["text", "password", "number", "email", "textarea", "wysiwyg", "color", "upload_image", "upload_file", "datepicker", "radio", "select"]
+            ),
         ];
         $this->form[] = [
             "label" => "Radio / Select Data",

@@ -3,7 +3,10 @@
 @section('content')
 
 <p>
-    <a href='{{CRUDBooster::mainpath()}}'>{{trans("crudbooster.form_back_to_list",['module'=>'Module Generator'])}}</a>
+    <a title='Main Module' href='{{CRUDBooster::mainpath()}}'>
+        <i class='bi bi-chevron-left'></i>&nbsp;
+        {{trans("crudbooster.form_back_to_list",['module'=>'Module Generator'])}}
+    </a>
 </p>
 
 <div class="card card-primary">

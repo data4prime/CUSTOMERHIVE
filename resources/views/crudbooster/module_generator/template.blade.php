@@ -8,7 +8,6 @@
 @endpush
 
 @push('bottom')
-<script src='<?php echo asset("vendor/crudbooster/assets/select2/dist/js/select2.full.min.js")?>'></script>
 <script>
 $(function () {
   $('.select2').select2();
@@ -158,8 +157,11 @@ $(function () {
             }
         });
 
-        var scripts = Array.prototype.slice.call(doc.querySelectorAll('script'));
-        Array.prototype.forEach.call(neu.querySelectorAll('script'), function (s) { s.parentNode.removeChild(s); });
+        // I <script type="application/json"> (dati, es. elenco icone del selettore) non si eseguono:
+        // restano nel contenuto del passo, cosi' il selettore li trova anche dopo uno scambio.
+        var isData = function (s) { return (s.getAttribute('type') || '').toLowerCase() === 'application/json'; };
+        var scripts = Array.prototype.slice.call(doc.querySelectorAll('script')).filter(function (s) { return !isData(s); });
+        Array.prototype.forEach.call(neu.querySelectorAll('script'), function (s) { if (!isData(s)) { s.parentNode.removeChild(s); } });
         var old = document.getElementById('mg-wizard');
         old.parentNode.replaceChild(document.importNode(neu, true), old);
 

@@ -182,15 +182,16 @@ class Cms_modulsSeeder extends Seeder
                 // Mancava: il modulo veniva creato solo a mano da Module
                 // Generator sulle installazioni esistenti. Senza questa riga
                 // QlikAppController non ha nessuna rotta -> 404 su
-                // /admin/qlik_apps su un DB creato da zero. is_protected = 0
-                // come "Qlik Items" (visibile ai tenant admin via ModuleHelper).
+                // /admin/qlik_apps su un DB creato da zero. is_protected = 1
+                // come "Qlik Configuration": modulo di sistema, non deve
+                // comparire nell'elenco del Module Generator (vedi 217).
                 'created_at' => date('Y-m-d H:i:s'),
                 'name' => 'Qlik Apps',
                 'icon' => 'fa fa-cog',
                 'path' => 'qlik_apps',
                 'table_name' => 'qlik_apps',
                 'controller' => 'QlikAppController',
-                'is_protected' => 0,
+                'is_protected' => 1,
                 'is_active' => 1,
             ],
             [

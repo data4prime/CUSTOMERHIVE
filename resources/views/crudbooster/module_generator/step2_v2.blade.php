@@ -11,7 +11,7 @@
         'numbers' => ['number', 'money', 'percent'],
         'dates' => ['date', 'datetime', 'time'],
         'choices' => ['select', 'select2', 'radio', 'checkbox', 'datamodal'],
-        'files' => ['upload', 'filemanager', 'color', 'googlemaps'],
+        'files' => ['upload', 'image', 'filemanager', 'color', 'googlemaps'],
         'special' => ['child', 'custom'],
         'ch' => ['group_items_datamodal', 'group_members_datamodal', 'group_tenant_datamodal', 'item_access_datamodal', 'item_tenant_datamodal', 'tenant_group_datamodal', 'user_groups_datamodal'],
     ];
@@ -38,7 +38,7 @@
         'badge_nocolumn', 'badge_system', 'column', 'not_in_module', 'db_keeps', 'db_info', 'size', 'size_locked',
         'column_info', 'choices_title', 'src_enum', 'src_table', 'src_query', 'enum_add', 'enum_hint', 'table_which', 'table_col',
         'table_filter', 'table_note', 'query_help', 'modal_title', 'modal_cols', 'modal_size', 'size_large', 'size_small',
-        'file_which', 'file_file', 'file_image', 'maps_lat', 'maps_lng', 'maps_none', 'html', 'child_note', 'rules_title',
+        'file_which', 'file_file', 'file_image', 'img_shape', 'img_circle', 'img_square', 'img_size', 'maps_lat', 'maps_lng', 'maps_none', 'html', 'child_note', 'rules_title',
         'rules_none', 'rule_min_len', 'rule_max_len', 'rule_min_val', 'rule_max_val', 'rule_alpha', 'rule_alpha_any',
         'rule_alpha_letters', 'rule_alpha_alnum', 'rule_unique', 'rule_unique_desc', 'rule_date', 'rule_date_any',
         'rule_date_nopast', 'rule_date_nofuture', 'rule_file', 'rule_file_any', 'rule_file_image', 'rule_file_doc',
@@ -54,23 +54,23 @@
 
 @push('head')
 <style>
-    .fld-card { background: var(--ch-surface); border: 1px solid var(--ch-border); border-radius: .5rem; padding: .7rem .75rem; margin-bottom: .5rem; }
+    .fld-card { background: var(--ch-surface); border: 1px solid var(--ch-border); border-radius: var(--ch-radius-md); padding: .7rem .75rem; margin-bottom: .5rem; }
     .fld-card.nocol { background: var(--ch-bg); border-style: dashed; }
     .fld-card.off { background: var(--ch-bg); }
     .fld-card.off .handle, .fld-card.off .fld-dim { opacity: .55; }
     .fld-card .handle { cursor: grab; color: var(--ch-text-muted); }
     .fld-wl { font-size: .7rem; color: var(--ch-text-secondary); display: block; margin-bottom: 2px; }
-    .fld-panel { background: var(--ch-bg); border: 1px solid var(--ch-border); border-radius: .4rem; padding: .6rem .75rem; margin-bottom: .75rem; }
+    .fld-panel { background: var(--ch-bg); border: 1px solid var(--ch-border); border-radius: var(--ch-radius-md); padding: .6rem .75rem; margin-bottom: .75rem; }
     .fld-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--ch-accent); margin-left: 4px; }
 </style>
 @endpush
 
-<div class="card card-default">
+<form id="fieldsForm" method="post" action="{{ Route('ModulsControllerPostStep2') }}">
+    <div class="card card-default">
     <div class="card-header mb-3 with-border">
         <h5 class="card-title">{{ trans('crudbooster.mg_fld_title') }}</h5>
         <div class="small text-muted">{{ trans('crudbooster.mg_fld_subtitle') }}</div>
     </div>
-    <form id="fieldsForm" method="post" action="{{ Route('ModulsControllerPostStep2') }}">
         {{ csrf_field() }}
         <input type="hidden" name="id" value="{{ $id }}">
         <input type="hidden" name="payload" id="payload" value="">
@@ -83,14 +83,14 @@
             <div id="fldList"></div>
             <button type="button" class="btn btn-outline-primary" id="fldAdd"><i class="bi bi-plus-lg"></i> {{ trans('crudbooster.mg_fld_add') }}</button>
         </div>
-        <div class="card-footer">
-            <div class="float-end">
-                <a href="{{ CRUDBooster::mainpath('step1') . '/' . $id }}" class="btn btn-secondary mg-nav">&laquo; {{ trans('crudbooster.button_back') }}</a>
-                <input type="submit" class="btn btn-primary" value="{{ trans('crudbooster.mg_fld_next') }}">
-            </div>
-        </div>
-    </form>
-</div>
+    </div>
+
+    @include('crudbooster::module_generator._nav', [
+        'nav_back' => CRUDBooster::mainpath('step1') . '/' . $id,
+        'nav_back_ajax' => true,
+        'nav_next' => trans('crudbooster.mg_nav_next'),
+    ])
+</form>
 
 <div class="modal fade" id="fldAdvModal" tabindex="-1">
     <div class="modal-dialog modal-lg"><div class="modal-content">
@@ -149,7 +149,7 @@
             date: 'DATE', datetime: 'DATETIME', time: 'TIME'}[s[0]];
     }
     function emptyOpts() {
-        return {source: 'enum', enum: [''], table: '', column: '', where: '', query: '', mtable: '', mcols: [], msize: 'large', mwhere: '', ftype: 'file', lat: '', lng: '', html: ''};
+        return {source: 'enum', enum: [''], table: '', column: '', where: '', query: '', mtable: '', mcols: [], msize: 'large', mwhere: '', ftype: 'file', lat: '', lng: '', html: '', shape: 'circle', isize: '96'};
     }
     function emptyRules() {
         return {min: '', max: '', unique: false, unique_raw: '', alpha: '', datePolicy: '', fileKind: 'any', maxMb: '', extra: []};
@@ -209,7 +209,7 @@
         if (!r.in_module) {
             return '<div class="fld-card off" data-k="' + k + '"><div class="d-flex align-items-center gap-2">'
                 + '<i class="bi bi-grip-vertical handle"></i>'
-                + '<div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" data-k="' + k + '" data-f="in_module" title="' + esc(L.in_module) + '"></div>'
+                + '<div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" data-k="' + k + '" data-f="in_module" title="' + esc(L.in_module) + '"></div>'
                 + '<div class="flex-grow-1 fld-dim"><span class="fw-semibold">' + esc(r.label) + '</span> <code>' + esc(r.name) + '</code> <span class="badge text-bg-light border">' + esc(L.not_in_module) + '</span>'
                 + (r.db ? ' <span class="small text-muted">' + esc(L.db_info.replace(':type', dbText(r))) + '</span>' : '') + '</div></div></div>';
         }
@@ -218,7 +218,7 @@
         var h = '<div class="fld-card ' + (nc ? 'nocol' : '') + '" data-k="' + k + '"><div class="row g-2 align-items-start">'
             + '<div class="col-auto pt-4"><i class="bi bi-grip-vertical handle"></i></div>';
         if (!r.is_new) {
-            h += '<div class="col-auto pt-4"><div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" checked data-k="' + k + '" data-f="in_module" title="' + esc(L.in_module) + '"></div></div>';
+            h += '<div class="col-auto pt-4"><div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" checked data-k="' + k + '" data-f="in_module" title="' + esc(L.in_module) + '"></div></div>';
         }
         h += '<div class="col-md-3"><span class="fld-wl">' + esc(L.label) + '</span>'
             + '<input class="form-control" data-k="' + k + '" data-f="label" value="' + esc(r.label) + '">'
@@ -232,7 +232,7 @@
             h += '<div class="small text-muted mt-1"><i class="bi bi-info-circle-fill"></i> ' + esc(L.db_info.replace(':type', sqlLabel(r))) + '</div>';
         }
         h += '</div>';
-        h += '<div class="col-auto pt-4">' + (r.type === 'hidden' || r.type === 'header' || nc ? '' : '<div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" id="rq' + k + '" data-k="' + k + '" data-f="required"' + (r.required ? ' checked' : '') + '><label class="form-check-label" for="rq' + k + '">' + esc(L.required) + '</label></div>') + '</div>';
+        h += '<div class="col-auto pt-4">' + (r.type === 'hidden' || r.type === 'header' || nc ? '' : '<div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" id="rq' + k + '" data-k="' + k + '" data-f="required"' + (r.required ? ' checked' : '') + '><label class="form-check-label" for="rq' + k + '">' + esc(L.required) + '</label></div>') + '</div>';
         h += '<div class="col-auto ms-md-auto pt-3 text-nowrap">'
             + '<button type="button" class="btn btn-sm btn-outline-secondary" data-act="adv" data-k="' + k + '"><i class="bi bi-sliders"></i> ' + esc(L.advanced) + (hasAdv(r) ? '<span class="fld-dot"></span>' : '') + '</button> '
             + '<button type="button" class="btn btn-sm btn-outline-danger" data-act="del" data-k="' + k + '" title="' + esc(r.is_new ? L.remove_new : L.remove_existing) + '"><i class="bi bi-trash-fill"></i></button></div>';
@@ -347,6 +347,12 @@
                 + '<input type="radio" class="btn-check" name="ftype" id="ft-f" data-o="ftype" value="file"' + (o.ftype === 'file' ? ' checked' : '') + '><label class="btn btn-outline-secondary" for="ft-f">' + esc(L.file_file) + '</label>'
                 + '<input type="radio" class="btn-check" name="ftype" id="ft-i" data-o="ftype" value="image"' + (o.ftype === 'image' ? ' checked' : '') + '><label class="btn btn-outline-secondary" for="ft-i">' + esc(L.file_image) + '</label></div></div>';
         }
+        if (t === 'image') {
+            return '<div class="fld-panel"><div class="row g-2 align-items-end"><div class="col-md-6"><span class="small fw-semibold me-2">' + esc(L.img_shape) + '</span><div class="btn-group btn-group-sm">'
+                + '<input type="radio" class="btn-check" name="ishape" id="is-c" data-o="shape" value="circle"' + (o.shape !== 'square' ? ' checked' : '') + '><label class="btn btn-outline-secondary" for="is-c">' + esc(L.img_circle) + '</label>'
+                + '<input type="radio" class="btn-check" name="ishape" id="is-s" data-o="shape" value="square"' + (o.shape === 'square' ? ' checked' : '') + '><label class="btn btn-outline-secondary" for="is-s">' + esc(L.img_square) + '</label></div></div>'
+                + '<div class="col-md-6"><label class="small">' + esc(L.img_size) + '</label><input type="number" min="48" max="240" class="form-control form-control-sm" data-o="isize" value="' + esc(o.isize) + '"></div></div></div>';
+        }
         if (t === 'googlemaps') {
             var sel = function (key) {
                 return '<select class="form-select form-select-sm" data-o="' + key + '"><option value="">' + esc(L.maps_none) + '</option>' + ROWS.filter(function (x) { return x !== r && hasColumn(x.type) && x.in_module; }).map(function (x) {
@@ -377,7 +383,7 @@
             h += inp('min', L.rule_min_len) + inp('max', L.rule_max_len);
             if (t !== 'email' && t !== 'password') { h += sel('alpha', L.rule_alpha, [['', L.rule_alpha_any], ['letters', L.rule_alpha_letters], ['alnum', L.rule_alpha_alnum]]); }
             if (t === 'text' || t === 'email') {
-                h += '<div class="col-12"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="rUnique" data-r="unique"' + (x.unique ? ' checked' : '') + '><label class="form-check-label" for="rUnique">' + esc(L.rule_unique) + '<div class="small text-muted">' + esc(L.rule_unique_desc) + '</div></label></div></div>';
+                h += '<div class="col-12"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="rUnique" data-r="unique"' + (x.unique ? ' checked' : '') + '><label class="form-check-label" for="rUnique">' + esc(L.rule_unique) + '<div class="small text-muted">' + esc(L.rule_unique_desc) + '</div></label></div></div>';
             }
         } else if (NUMBERISH.indexOf(t) >= 0) {
             none = false;
@@ -390,6 +396,10 @@
             h += '<div class="col-6"><label class="small">' + esc(L.rule_file) + '</label><select class="form-select form-select-sm" data-r="fileKind">'
                 + [['any', L.rule_file_any], ['image', L.rule_file_image], ['doc', L.rule_file_doc]].map(function (i) { return '<option value="' + i[0] + '"' + (x.fileKind === i[0] ? ' selected' : '') + '>' + esc(i[1]) + '</option>'; }).join('') + '</select></div>'
                 + inp('maxMb', L.rule_max_mb);
+        } else if (t === 'image') {
+            // sempre e solo immagini: resta la dimensione massima
+            none = false;
+            h += inp('maxMb', L.rule_max_mb);
         }
         if (none) { h = '<div class="col-12 small text-muted">' + esc(L.rules_none) + '</div>'; }
         var extra = x.extra.length ? '<div class="small text-muted mt-1"><i class="bi bi-info-circle-fill"></i> ' + esc(L.rule_extra.replace(':list', x.extra.join(', '))) + '</div>' : '';

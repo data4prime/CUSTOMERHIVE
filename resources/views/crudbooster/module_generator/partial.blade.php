@@ -7,7 +7,7 @@
 @yield('content')
 @if (Session::get('message') != '')
 <div class="ch-toast-container" aria-live="polite" aria-atomic="true">
-    <div class="toast ch-toast ch-toast-{{ Session::get('message_type') }}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="6000">
+    <div class="toast fade ch-toast ch-toast-{{ Session::get('message_type') }}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="6000">
         <i class="bi {{ ['success' => 'bi-check-circle-fill', 'danger' => 'bi-x-circle-fill', 'warning' => 'bi-exclamation-triangle-fill'][Session::get('message_type')] ?? 'bi-info-circle-fill' }} ch-toast-icon"></i>
         <div class="ch-toast-body">
             <strong>{{ trans('crudbooster.alert_'.Session::get('message_type')) }}</strong>

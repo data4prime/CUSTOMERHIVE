@@ -28,7 +28,7 @@
 
 @push('head')
 <style>
-    .cfg-row { background: var(--ch-surface); border: 1px solid var(--ch-border); border-radius: .4rem; padding: .5rem .6rem; margin-bottom: .4rem; }
+    .cfg-row { background: var(--ch-surface); border: 1px solid var(--ch-border); border-radius: var(--ch-radius-md); padding: .5rem .6rem; margin-bottom: .4rem; }
     .cfg-row.calc { background: var(--ch-bg); border-color: var(--ch-warning); }
     .cfg-row.sys { background: var(--ch-bg); border-style: dashed; }
     .cfg-row.off .handle, .cfg-row.off .cfg-name { opacity: .5; }
@@ -37,16 +37,16 @@
     .cfg-sw { display: inline-block; width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid var(--ch-border); box-shadow: 0 0 0 1px #adb5bd; margin: 0 2px; }
     .btn-check:checked + .cfg-sw { box-shadow: 0 0 0 3px #0d6efd; }
     .cfg-swc { width: 26px; height: 26px; padding: 0; border: 0; background: none; }
-    .cfg-pv-frame { border: 1px solid var(--ch-border); border-radius: .4rem; overflow-x: auto; margin: 0 auto; background: var(--ch-surface); }
+    .cfg-pv-frame { border: 1px solid var(--ch-border); border-radius: var(--ch-radius-md); overflow-x: auto; margin: 0 auto; background: var(--ch-surface); }
     .cfg-pv-frame th, .cfg-pv-frame td { white-space: nowrap; }
 </style>
 @endpush
 
-<div class="card card-default">
+<form id="listForm" method="post" action="{{ Route('ModulsControllerPostStep3') }}">
+    <div class="card card-default">
     <div class="card-header mb-3 with-border">
         <h5 class="card-title">{{ trans('crudbooster.mg_list_title') }}</h5>
     </div>
-    <form id="listForm" method="post" action="{{ Route('ModulsControllerPostStep3') }}">
         {{ csrf_field() }}
         <input type="hidden" name="id" value="{{ $id }}">
         <input type="hidden" name="payload" id="payload" value="">
@@ -59,30 +59,34 @@
                     <button type="button" class="btn btn-sm btn-outline-secondary mt-1" id="cfgAddCalc"><i class="bi bi-calculator-fill"></i> {{ trans('crudbooster.mg_list_add_calc') }}</button>
                     <div class="small text-muted mt-1">{{ trans('crudbooster.mg_list_add_calc_help') }}</div>
 
-                    <div class="card mt-3">
+                </div>
+
+                <div class="col-lg-6">
+                    {{-- Ordinamento e pagine sopra l'anteprima (come il mockup), tre campi su una riga.
+                         Gli id (cfgLimit, cfgOrderField, cfgOrderDir) li usa il JS del passo. --}}
+                    <div class="card mb-3">
                         <div class="card-header fw-semibold">{{ trans('crudbooster.mg_list_settings_title') }}</div>
                         <div class="card-body">
                             <div class="row g-2">
-                                <div class="col-md-7">
-                                    <label class="small fw-semibold">{{ trans('crudbooster.mg_cfg_orderby') }}</label>
-                                    <div class="input-group input-group-sm">
-                                        <select class="form-select" id="cfgOrderField"></select>
-                                        <select class="form-select" id="cfgOrderDir">
-                                            <option value="asc">{{ trans('crudbooster.mg_list_order_asc') }}</option>
-                                            <option value="desc">{{ trans('crudbooster.mg_list_order_desc') }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-5">
+                                <div class="col-sm-4">
                                     <label class="small fw-semibold" for="cfgLimit">{{ trans('crudbooster.mg_cfg_limit') }}</label>
-                                    <input type="number" min="1" max="1000" class="form-control form-control-sm" id="cfgLimit">
+                                    <input type="number" min="1" max="1000" class="form-control" id="cfgLimit">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="small fw-semibold" for="cfgOrderField">{{ trans('crudbooster.mg_cfg_orderby') }}</label>
+                                    <select class="form-select" id="cfgOrderField"></select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="small fw-semibold" for="cfgOrderDir">{{ trans('crudbooster.mg_list_order_dir') }}</label>
+                                    <select class="form-select" id="cfgOrderDir">
+                                        <option value="asc">{{ trans('crudbooster.mg_list_order_asc') }}</option>
+                                        <option value="desc">{{ trans('crudbooster.mg_list_order_desc') }}</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-lg-6">
                     <div class="card position-sticky" style="top: 1rem">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -100,14 +104,14 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer">
-            <div class="float-end">
-                <a href="{{ CRUDBooster::mainpath('step2') . '/' . $id }}" class="btn btn-secondary mg-nav">&laquo; {{ trans('crudbooster.button_back') }}</a>
-                <input type="submit" class="btn btn-primary" value="{{ trans('crudbooster.mg_list_next') }}">
-            </div>
-        </div>
-    </form>
-</div>
+    </div>
+
+    @include('crudbooster::module_generator._nav', [
+        'nav_back' => CRUDBooster::mainpath('step2') . '/' . $id,
+        'nav_back_ajax' => true,
+        'nav_next' => trans('crudbooster.mg_nav_next'),
+    ])
+</form>
 
 <div class="modal fade" id="cfgJoinModal" tabindex="-1">
     <div class="modal-dialog"><div class="modal-content">
@@ -230,7 +234,7 @@
                     : '<i class="bi bi-exclamation-triangle-fill"></i> ' + esc(L.expr_missing)) + '</div>'
                 + '<div class="mt-2"><span class="cfg-wl">' + esc(L.label_width) + '</span>' + widthPills(r) + '</div></div>';
         }
-        var sw = '<div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" data-k="' + k + '" data-f="show"' + (r.show ? ' checked' : '') + '></div>';
+        var sw = '<div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" data-k="' + k + '" data-f="show"' + (r.show ? ' checked' : '') + '></div>';
         if (r.system) {
             return '<div class="cfg-row sys ' + (r.show ? '' : 'off') + '" data-k="' + k + '"><div class="d-flex align-items-center gap-2">'
                 + '<i class="bi bi-grip-vertical handle"></i>' + sw

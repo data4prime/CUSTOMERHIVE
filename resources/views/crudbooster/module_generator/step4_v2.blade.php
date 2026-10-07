@@ -12,10 +12,10 @@
         $sysLabels[$s] = trans('crudbooster.mg_lay_sys_' . $s);
     }
     $labelKeys = [
-        'badge_block', 'badge_tabs', 'title_ph', 'fit', 'delete', 'confirm_delete', 'drop_here', 'tab_name', 'tab_add', 'tab_delete',
-        'tab_default', 'no_blocks', 'field_settings', 'field_where', 'field_nowhere', 'field_width', 'w_full', 'w_full_t', 'w_half_t',
+        'badge_block', 'title_ph', 'fit', 'delete', 'confirm_delete', 'drop_here', 'tab_name', 'tab_add', 'tab_delete',
+        'tab_default', 'confirm_delete_tab', 'no_blocks', 'field_settings', 'field_where', 'field_nowhere', 'field_width', 'w_full', 'w_full_t', 'w_half_t',
         'w_third_t', 'w_quarter_t', 'field_help', 'field_help_ph', 'field_sys', 'field_remove', 'pool_title', 'pool_help', 'pool_empty',
-        'pool_sys', 'sys_note', 'add_title', 'add_block', 'add_block_d', 'add_tabs', 'add_tabs_d', 'mode_edit', 'mode_preview',
+        'pool_sys', 'sys_note', 'add_title', 'add_block', 'add_block_d', 'mode_edit', 'mode_preview',
         'pv_desktop', 'pv_phone', 'hint',
     ];
     $L = [];
@@ -30,7 +30,7 @@
 @push('head')
 <link rel="stylesheet" href="{{ asset('vendor/libs/gridstack/gridstack.min.css') }}">
 <style>
-    .lay-blk { height: 100%; overflow: auto; display: flex; flex-direction: column; background: var(--ch-surface); border: 1px solid var(--ch-border-strong); border-radius: .5rem; }
+    .lay-blk { height: 100%; overflow: auto; display: flex; flex-direction: column; background: var(--ch-surface); border: 1px solid var(--ch-border); border-radius: var(--ch-radius-md); }
     .lay-head { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: var(--ch-bg); border-bottom: 1px solid var(--ch-border-strong); cursor: move; }
     .lay-head .lay-title { flex: 1; min-width: 60px; }
     .lay-body { flex: 1; }
@@ -39,28 +39,29 @@
     .lay-list { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px; min-height: 56px; align-content: flex-start; }
     .lay-edit .lay-list { outline: 1px dashed var(--ch-border); outline-offset: -4px; }
     .lay-edit .lay-list:empty::before { content: attr(data-empty); color: var(--ch-text-muted); font-size: .85rem; margin: auto; }
-    .lay-fi { position: relative; border-radius: .3rem; }
+    .lay-fi { position: relative; border-radius: var(--ch-radius-sm); }
     .lay-edit .lay-fi:hover { outline: 1px solid var(--ch-blue); background: var(--ch-surface); }
-    .lay-tb { position: absolute; top: -4px; right: 0; display: flex; gap: 2px; background: var(--ch-surface); border: 1px solid var(--ch-border); border-radius: .3rem; padding: 0 4px; opacity: 0; z-index: 2; }
+    .lay-tb { position: absolute; top: -4px; right: 0; display: flex; gap: 2px; background: var(--ch-surface); border: 1px solid var(--ch-border); border-radius: var(--ch-radius-sm); padding: 0 4px; opacity: 0; z-index: 2; }
     .lay-fi:hover .lay-tb { opacity: 1; }
     .lay-grip { cursor: grab; color: var(--ch-text-muted); }
     .lay-lite { border: 0; background: none; padding: 0 4px; color: var(--ch-text-secondary); cursor: pointer; }
     .lay-lite:hover { color: var(--ch-accent); }
     .lay-pool { display: block; padding: 0; min-height: 36px; }
     .lay-pool:empty::before { content: attr(data-empty); color: var(--ch-text-muted); font-size: .85rem; }
-    .lay-pi { display: flex; align-items: center; gap: 6px; background: var(--ch-surface); border: 1px solid var(--ch-border); border-radius: .3rem; padding: 3px 8px; font-size: .85rem; margin-bottom: 4px; }
+    .lay-pi { display: flex; align-items: center; gap: 6px; background: var(--ch-surface); border: 1px solid var(--ch-border); border-radius: var(--ch-radius-sm); padding: 3px 8px; font-size: .85rem; margin-bottom: 4px; }
     .lay-phone-frame { max-width: 380px; margin: 0 auto; border: 8px solid var(--ch-border-strong); border-radius: 24px; padding: 8px; background: var(--ch-bg); }
-    .lay-ph { border: 1px dashed var(--ch-text-muted); border-radius: .4rem; padding: .4rem; text-align: center; color: var(--ch-text-secondary); font-size: .85rem; }
+    .lay-ph { border: 1px dashed var(--ch-text-muted); border-radius: var(--ch-radius-md); padding: .4rem; text-align: center; color: var(--ch-text-secondary); font-size: .85rem; }
+    .lay-tabs .nav-link { cursor: pointer; }
     #layGrid { min-height: 120px; }
     #layGrid .grid-stack-item-content { overflow: hidden; }
 </style>
 @endpush
 
-<div class="card card-default">
+<form id="layoutForm" method="post" action="{{ Route('ModulsControllerPostStep4') }}">
+    <div class="card card-default">
     <div class="card-header mb-3 with-border">
         <h5 class="card-title">{{ trans('crudbooster.mg_lay_title') }}</h5>
     </div>
-    <form id="layoutForm" method="post" action="{{ Route('ModulsControllerPostStep4') }}">
         {{ csrf_field() }}
         <input type="hidden" name="id" value="{{ $id }}">
         <input type="hidden" name="payload" id="payload" value="">
@@ -70,14 +71,14 @@
                 <div class="col-lg-9" id="layMain"><div id="layCanvas"></div></div>
             </div>
         </div>
-        <div class="card-footer">
-            <div class="float-end">
-                <a href="{{ CRUDBooster::mainpath('step3') . '/' . $id }}" class="btn btn-secondary mg-nav">&laquo; {{ trans('crudbooster.button_back') }}</a>
-                <input type="submit" class="btn btn-primary" value="{{ trans('crudbooster.mg_lay_next') }}">
-            </div>
-        </div>
-    </form>
-</div>
+    </div>
+
+    @include('crudbooster::module_generator._nav', [
+        'nav_back' => CRUDBooster::mainpath('step3') . '/' . $id,
+        'nav_back_ajax' => true,
+        'nav_next' => trans('crudbooster.mg_nav_next'),
+    ])
+</form>
 
 <div class="modal fade" id="layFieldModal" tabindex="-1">
     <div class="modal-dialog"><div class="modal-content">
@@ -99,7 +100,8 @@
     var L = {!! json_encode($L, $jf) !!};
     var WIDTHS = [[12, L.w_full, L.w_full_t], [6, '½', L.w_half_t], [4, '⅓', L.w_third_t], [3, '¼', L.w_quarter_t]];
 
-    var S = {blocks: [], nid: 1, mode: 'edit', pv: 'desktop', grid: null};
+    // Struttura: schede (S.tabs) -> blocchi (tab.blocks) -> campi (block.fields). S.cur = scheda aperta.
+    var S = {tabs: [], cur: 0, nid: 1, mode: 'edit', pv: 'desktop', grid: null};
     var current = null;
 
     function esc(s) {
@@ -109,7 +111,10 @@
     }
     function field(name) { for (var i = 0; i < FIELDS.length; i++) { if (FIELDS[i].name === name) { return FIELDS[i]; } } return null; }
     function keyOf(it) { return (it.sys ? 's:' : 'f:') + it.name; }
-    function blk(id) { for (var i = 0; i < S.blocks.length; i++) { if (S.blocks[i].id === id) { return S.blocks[i]; } } return null; }
+    function allBlocks() { return S.tabs.reduce(function (a, t) { return a.concat(t.blocks); }, []); }
+    function blk(id) { var all = allBlocks(); for (var i = 0; i < all.length; i++) { if (all[i].id === id) { return all[i]; } } return null; }
+    function tabLabel(t, i) { return t.title || L.tab_default.replace(':n', i + 1); }
+    function curTab() { if (S.cur >= S.tabs.length) { S.cur = 0; } return S.tabs[S.cur]; }
     function cleanItems(items) {
         return (items || []).filter(function (it) {
             return it.sys ? SYS.indexOf(it.name) >= 0 : !!field(it.name);
@@ -119,59 +124,41 @@
             return o;
         });
     }
+    function newTab(title) { return {id: 't' + (S.nid++), title: title, blocks: []}; }
     // layout ricevuto dal server -> stato dell'editor (id propri, campi non piu' validi scartati)
-    (LAYOUT.blocks || []).forEach(function (b) {
-        var nb = {id: 'b' + (S.nid++), kind: b.kind === 'tabs' ? 'tabs' : 'block', x: parseInt(b.x, 10) || 0, y: parseInt(b.y, 10) || 0, w: parseInt(b.w, 10) || 12, h: parseInt(b.h, 10) || 3, tab: 0};
-        if (nb.kind === 'tabs') {
-            nb.title = '';
-            nb.tabs = (b.tabs || []).map(function (t) { return {id: 't' + (S.nid++), title: t.title || '', fields: cleanItems(t.fields)}; });
-            if (!nb.tabs.length) { nb.tabs = [{id: 't' + (S.nid++), title: L.tab_default.replace(':n', 1), fields: []}]; }
-        } else {
-            nb.title = b.title || '';
-            nb.fields = cleanItems(b.fields);
-        }
-        S.blocks.push(nb);
+    (LAYOUT.tabs || []).forEach(function (t) {
+        var nt = newTab(t.title || '');
+        (t.blocks || []).forEach(function (b) {
+            nt.blocks.push({id: 'b' + (S.nid++), title: b.title || '', x: parseInt(b.x, 10) || 0, y: parseInt(b.y, 10) || 0, w: parseInt(b.w, 10) || 12, h: parseInt(b.h, 10) || 3, fields: cleanItems(b.fields)});
+        });
+        S.tabs.push(nt);
     });
+    if (!S.tabs.length) { S.tabs.push(newTab('')); }
 
     function placedKeys() {
         var s = {};
-        S.blocks.forEach(function (b) {
-            (b.kind === 'tabs' ? b.tabs.reduce(function (a, t) { return a.concat(t.fields); }, []) : b.fields).forEach(function (it) { s[keyOf(it)] = true; });
-        });
+        allBlocks().forEach(function (b) { b.fields.forEach(function (it) { s[keyOf(it)] = true; }); });
         return s;
     }
     function locOf(key) {
-        for (var i = 0; i < S.blocks.length; i++) {
-            var b = S.blocks[i];
-            if (b.kind === 'tabs') {
-                for (var j = 0; j < b.tabs.length; j++) { if (b.tabs[j].fields.some(function (it) { return keyOf(it) === key; })) { return b.id + ':' + b.tabs[j].id; } }
-            } else if (b.fields.some(function (it) { return keyOf(it) === key; })) { return b.id; }
-        }
+        var all = allBlocks();
+        for (var i = 0; i < all.length; i++) { if (all[i].fields.some(function (it) { return keyOf(it) === key; })) { return all[i].id; } }
         return '';
     }
     function takeItem(key) {
         var found = null;
-        S.blocks.forEach(function (b) {
-            var lists = b.kind === 'tabs' ? b.tabs.map(function (t) { return t.fields; }) : [b.fields];
-            lists.forEach(function (l) {
-                for (var i = l.length - 1; i >= 0; i--) { if (keyOf(l[i]) === key) { found = l.splice(i, 1)[0]; } }
-            });
+        allBlocks().forEach(function (b) {
+            for (var i = b.fields.length - 1; i >= 0; i--) { if (keyOf(b.fields[i]) === key) { found = b.fields.splice(i, 1)[0]; } }
         });
         return found;
-    }
-    function listFor(loc) {
-        var p = loc.split(':'), b = blk(p[0]);
-        if (!b) { return null; }
-        if (p[1]) { for (var i = 0; i < b.tabs.length; i++) { if (b.tabs[i].id === p[1]) { return b.tabs[i].fields; } } return null; }
-        return b.fields;
     }
     function moveItem(key, loc) {
         var it = takeItem(key);
         if (!it && key.indexOf('s:') !== 0 && key.indexOf('f:') !== 0) { return; }
         if (!it) { it = key.indexOf('s:') === 0 ? {name: key.slice(2), w: 12, sys: 1} : {name: key.slice(2), w: 12}; }
         if (!loc) { return; }
-        var l = listFor(loc);
-        if (l) { l.push(it); }
+        var b = blk(loc);
+        if (b) { b.fields.push(it); }
     }
     function savePos() {
         if (!S.grid) { return; }
@@ -181,15 +168,10 @@
         });
     }
     function estH(b) {
-        var lists = b.kind === 'tabs' ? b.tabs.map(function (t) { return t.fields; }) : [b.fields];
-        var rows = 1;
-        lists.forEach(function (l) {
-            var r = 0, line = 0;
-            l.forEach(function (it) { var u = it.w; if (line + u > 12) { r++; line = u; } else { line += u; } });
-            if (line > 0) { r++; }
-            rows = Math.max(rows, r);
-        });
-        return Math.max(2, Math.ceil(((b.kind === 'tabs' ? 110 : 52) + rows * 72 + 16) / 62));
+        var r = 0, line = 0;
+        b.fields.forEach(function (it) { var u = it.w; if (line + u > 12) { r++; line = u; } else { line += u; } });
+        if (line > 0) { r++; }
+        return Math.max(2, Math.ceil((52 + Math.max(1, r) * 72 + 16) / 62));
     }
 
     /* ---------- disegno ---------- */
@@ -227,23 +209,11 @@
         return '<div class="lay-list" ' + (pm ? '' : 'data-list="' + loc + '" data-empty="' + esc(L.drop_here) + '"') + '>' + items.map(function (it) { return fiHtml(it, pm, phone); }).join('') + '</div>';
     }
     function blockHtml(b, pm, phone) {
-        var head = pm ? '' : '<div class="lay-head"><i class="bi bi-grid-3x3-gap-fill"></i><span class="badge text-bg-secondary">' + esc(b.kind === 'tabs' ? L.badge_tabs : L.badge_block) + '</span>'
-            + (b.kind === 'tabs' ? '<span class="flex-grow-1"></span>' : '<input class="form-control form-control-sm lay-title" data-bt="' + b.id + '" value="' + esc(b.title) + '" placeholder="' + esc(L.title_ph) + '">')
+        var head = pm ? '' : '<div class="lay-head"><i class="bi bi-grid-3x3-gap-fill"></i><span class="badge text-bg-secondary">' + esc(L.badge_block) + '</span>'
+            + '<input class="form-control form-control-sm lay-title" data-bt="' + b.id + '" value="' + esc(b.title) + '" placeholder="' + esc(L.title_ph) + '">'
             + '<button type="button" class="lay-lite" data-act="fit" data-b="' + b.id + '" title="' + esc(L.fit) + '"><i class="bi bi-arrows-vertical"></i></button>'
             + '<button type="button" class="lay-lite text-danger" data-act="delBlk" data-b="' + b.id + '" title="' + esc(L.delete) + '"><i class="bi bi-trash-fill"></i></button></div>';
-        var body;
-        if (b.kind === 'tabs') {
-            if (b.tab >= b.tabs.length) { b.tab = 0; }
-            var t = b.tabs[b.tab];
-            body = '<ul class="nav nav-tabs px-2 pt-1">' + b.tabs.map(function (x, i) {
-                return '<li class="nav-item"><a href="#" class="nav-link py-1 ' + (i === b.tab ? 'active' : '') + '" data-act="tab" data-b="' + b.id + '" data-i="' + i + '" id="lt-' + b.id + '-' + x.id + '">' + esc(x.title || L.tab_default.replace(':n', i + 1)) + '</a></li>';
-            }).join('') + (pm ? '' : '<li class="nav-item"><a href="#" class="nav-link py-1" data-act="addTab" data-b="' + b.id + '" title="' + esc(L.tab_add) + '"><i class="bi bi-plus-lg"></i></a></li>') + '</ul>'
-                + (pm ? '' : '<div class="d-flex align-items-center gap-2 px-2 pt-2"><span class="small text-muted">' + esc(L.tab_name) + '</span><input class="form-control form-control-sm w-auto" data-tt="' + b.id + ':' + t.id + '" value="' + esc(t.title) + '">'
-                    + (b.tabs.length > 1 ? '<button type="button" class="btn btn-sm btn-outline-danger" data-act="delTab" data-b="' + b.id + '" title="' + esc(L.tab_delete) + '"><i class="bi bi-trash-fill"></i></button>' : '') + '</div>')
-                + listHtml(t.fields, b.id + ':' + t.id, pm, phone);
-        } else {
-            body = (pm && b.title ? '<div class="lay-title-pm">' + esc(b.title) + '</div>' : '') + listHtml(b.fields, b.id, pm, phone);
-        }
+        var body = (pm && b.title ? '<div class="lay-title-pm">' + esc(b.title) + '</div>' : '') + listHtml(b.fields, b.id, pm, phone);
         return '<div class="lay-blk">' + head + '<div class="lay-body">' + body + '</div></div>';
     }
     function poolItem(label, sub, key, icon) {
@@ -256,8 +226,7 @@
         }).join('');
         var sys = SYS.filter(function (s) { return !placed['s:' + s]; }).map(function (s) { return poolItem(SYS_LABELS[s] || s, '', 's:' + s, '<i class="bi bi-lock-fill text-muted"></i>'); }).join('');
         return '<div class="card mb-3"><div class="card-header fw-semibold">' + esc(L.add_title) + '</div><div class="card-body d-grid gap-2">'
-            + '<button type="button" class="btn btn-outline-primary btn-sm text-start" data-act="addBlk" data-kind="block"><i class="bi bi-square"></i> <strong>' + esc(L.add_block) + '</strong> <span class="small text-muted">— ' + esc(L.add_block_d) + '</span></button>'
-            + '<button type="button" class="btn btn-outline-primary btn-sm text-start" data-act="addBlk" data-kind="tabs"><i class="bi bi-folder"></i> <strong>' + esc(L.add_tabs) + '</strong> <span class="small text-muted">— ' + esc(L.add_tabs_d) + '</span></button></div></div>'
+            + '<button type="button" class="btn btn-outline-primary btn-sm text-start" data-act="addBlk"><i class="bi bi-square"></i> <strong>' + esc(L.add_block) + '</strong> <span class="small text-muted">— ' + esc(L.add_block_d) + '</span></button></div></div>'
             + '<div class="card"><div class="card-header fw-semibold">' + esc(L.pool_title) + '</div><div class="card-body">'
             + '<div class="small text-muted mb-2">' + esc(L.pool_help) + '</div>'
             + '<div class="lay-list lay-pool" data-list="pool" data-empty="' + esc(L.pool_empty) + '">' + norm + '</div>'
@@ -275,8 +244,18 @@
             + rad('laymode', 'data-lmode="1"', S.mode, [['edit', L.mode_edit, 'bi-pencil-fill'], ['preview', L.mode_preview, 'bi-eye-fill']])
             + (pm ? rad('laypv', 'data-lpv="1"', S.pv, [['desktop', L.pv_desktop, 'bi-display'], ['phone', L.pv_phone, 'bi-phone']]) : '<div class="small text-muted"><i class="bi bi-arrows-move"></i> ' + esc(L.hint) + '</div>') + '</div>';
     }
-    function sortedBlocks() {
-        return S.blocks.slice().sort(function (a, b) { return a.y - b.y || a.x - b.x; });
+    // barra delle schede in alto (navigazione orizzontale); in modifica ha anche "+" e il nome della scheda aperta
+    function tabsHtml(pm) {
+        var t = curTab();
+        var nav = '<ul class="nav nav-tabs lay-tabs mb-2">' + S.tabs.map(function (x, i) {
+            return '<li class="nav-item"><a href="#" class="nav-link ' + (i === S.cur ? 'active' : '') + '" data-act="tab" data-i="' + i + '" id="lt-' + x.id + '">' + esc(tabLabel(x, i)) + '</a></li>';
+        }).join('') + (pm ? '' : '<li class="nav-item"><a href="#" class="nav-link" data-act="addTab" title="' + esc(L.tab_add) + '"><i class="bi bi-plus-lg"></i></a></li>') + '</ul>';
+        if (pm) { return nav; }
+        return nav + '<div class="d-flex align-items-center gap-2 mb-2"><span class="small text-muted">' + esc(L.tab_name) + '</span><input class="form-control form-control-sm w-auto" data-tt="' + t.id + '" value="' + esc(t.title) + '">'
+            + (S.tabs.length > 1 ? '<button type="button" class="btn btn-sm btn-outline-danger" data-act="delTab" title="' + esc(L.tab_delete) + '"><i class="bi bi-trash-fill"></i></button>' : '') + '</div>';
+    }
+    function sortedBlocks(t) {
+        return t.blocks.slice().sort(function (a, b) { return a.y - b.y || a.x - b.x; });
     }
     function draw() {
         if (S.grid) { savePos(); try { S.grid.destroy(false); } catch (e) {} S.grid = null; }
@@ -285,9 +264,10 @@
         side.className = pm ? 'd-none' : 'col-lg-3';
         main.className = pm ? 'col-12' : 'col-lg-9';
         side.innerHTML = pm ? '' : sideHtml();
-        var c = toolbarHtml(pm);
-        var sorted = sortedBlocks();
-        if (!S.blocks.length) { c += '<div class="lay-ph py-4">' + esc(L.no_blocks) + '</div>'; }
+        var t = curTab();
+        var c = toolbarHtml(pm) + tabsHtml(pm);
+        var sorted = sortedBlocks(t);
+        if (!t.blocks.length) { c += '<div class="lay-ph py-4">' + esc(L.no_blocks) + '</div>'; }
         else if (phone) { c += '<div class="lay-phone lay-phone-frame">' + sorted.map(function (b) { return blockHtml(b, true, true); }).join('') + '</div>'; }
         else {
             c += '<div class="grid-stack ' + (pm ? '' : 'lay-edit') + '" id="layGrid">' + sorted.map(function (b) {
@@ -307,14 +287,12 @@
             });
         }
     }
-    // dopo un trascinamento lo stato si ricostruisce da cio' che c'e' nelle liste del DOM
-    // Le liste visibili prendono l'ordine del DOM; le liste non visibili (schede non
-    // attive) restano come sono, tranne i campi che nel DOM compaiono altrove.
+    // dopo un trascinamento lo stato si ricostruisce da cio' che c'e' nelle liste del DOM.
+    // Si vedono solo i blocchi della scheda aperta: le liste delle altre schede restano
+    // come sono, tranne i campi che nel DOM compaiono altrove.
     function readLists() {
         var all = {};
-        S.blocks.forEach(function (b) {
-            (b.kind === 'tabs' ? b.tabs.reduce(function (a, t) { return a.concat(t.fields); }, []) : b.fields).forEach(function (it) { all[keyOf(it)] = it; });
-        });
+        allBlocks().forEach(function (b) { b.fields.forEach(function (it) { all[keyOf(it)] = it; }); });
         var vis = {}, domKeys = {};
         var keysOf = function (el) { return Array.prototype.map.call(el.querySelectorAll(':scope > [data-key]'), function (n) { return n.getAttribute('data-key'); }); };
         document.querySelectorAll('#layGrid .lay-list').forEach(function (el) {
@@ -323,18 +301,15 @@
             ks.forEach(function (k) { domKeys[k] = true; });
         });
         document.querySelectorAll('#laySide .lay-list').forEach(function (el) { keysOf(el).forEach(function (k) { domKeys[k] = true; }); });
-        S.blocks.forEach(function (b) {
-            var lists = b.kind === 'tabs' ? b.tabs.map(function (t) { return {loc: b.id + ':' + t.id, l: t.fields}; }) : [{loc: b.id, l: b.fields}];
-            lists.forEach(function (o) {
-                var next;
-                if (vis[o.loc]) {
-                    next = vis[o.loc].map(function (k) { return all[k] || (k.indexOf('s:') === 0 ? {name: k.slice(2), w: 12, sys: 1} : {name: k.slice(2), w: 12}); });
-                } else {
-                    next = o.l.filter(function (it) { return !domKeys[keyOf(it)]; });
-                }
-                o.l.length = 0;
-                next.forEach(function (it) { o.l.push(it); });
-            });
+        allBlocks().forEach(function (b) {
+            var next;
+            if (vis[b.id]) {
+                next = vis[b.id].map(function (k) { return all[k] || (k.indexOf('s:') === 0 ? {name: k.slice(2), w: 12, sys: 1} : {name: k.slice(2), w: 12}); });
+            } else {
+                next = b.fields.filter(function (it) { return !domKeys[keyOf(it)]; });
+            }
+            b.fields.length = 0;
+            next.forEach(function (it) { b.fields.push(it); });
         });
         setTimeout(draw, 0);
     }
@@ -346,23 +321,19 @@
         if (!a) { return; }
         e.preventDefault();
         var act = a.getAttribute('data-act');
+        var t = curTab();
         if (act === 'addBlk') {
             savePos();
-            var kind = a.getAttribute('data-kind');
-            var bottom = S.blocks.reduce(function (m, b) { return Math.max(m, b.y + b.h); }, 0);
-            var nb = {id: 'b' + (S.nid++), kind: kind, x: 0, y: bottom, w: kind === 'tabs' ? 12 : 6, h: 3, tab: 0};
-            if (kind === 'tabs') {
-                nb.title = '';
-                nb.tabs = [{id: 't' + (S.nid++), title: L.tab_default.replace(':n', 1), fields: []}, {id: 't' + (S.nid++), title: L.tab_default.replace(':n', 2), fields: []}];
-            } else { nb.title = ''; nb.fields = []; }
+            var bottom = t.blocks.reduce(function (m, b) { return Math.max(m, b.y + b.h); }, 0);
+            var nb = {id: 'b' + (S.nid++), title: '', x: 0, y: bottom, w: 12, h: 3, fields: []};
             nb.h = estH(nb);
-            S.blocks.push(nb);
+            t.blocks.push(nb);
             draw();
         } else if (act === 'delBlk') {
             var b = blk(a.getAttribute('data-b'));
-            var n = (b.kind === 'tabs' ? b.tabs.reduce(function (s, t) { return s.concat(t.fields); }, []) : b.fields).length;
+            var n = b.fields.length;
             if (n && !confirm(L.confirm_delete.replace(':n', n))) { return; }
-            S.blocks = S.blocks.filter(function (x) { return x !== b; });
+            t.blocks = t.blocks.filter(function (x) { return x !== b; });
             draw();
         } else if (act === 'fit') {
             var item = document.querySelector('.grid-stack-item[data-bid="' + a.getAttribute('data-b') + '"]');
@@ -374,9 +345,16 @@
                 S.grid.update(item, {h: Math.max(2, Math.ceil((sh + 6) / 62))});
                 savePos();
             }
-        } else if (act === 'tab') { savePos(); blk(a.getAttribute('data-b')).tab = parseInt(a.getAttribute('data-i'), 10); draw(); }
-        else if (act === 'addTab') { savePos(); var tb = blk(a.getAttribute('data-b')); tb.tabs.push({id: 't' + (S.nid++), title: L.tab_default.replace(':n', tb.tabs.length + 1), fields: []}); tb.tab = tb.tabs.length - 1; draw(); }
-        else if (act === 'delTab') { savePos(); var db = blk(a.getAttribute('data-b')); db.tabs.splice(db.tab, 1); db.tab = 0; draw(); }
+        } else if (act === 'tab') { savePos(); S.cur = parseInt(a.getAttribute('data-i'), 10); draw(); }
+        else if (act === 'addTab') { savePos(); S.tabs.push(newTab('')); S.cur = S.tabs.length - 1; draw(); }
+        else if (act === 'delTab') {
+            var n2 = t.blocks.reduce(function (s, x) { return s + x.fields.length; }, 0);
+            if (n2 && !confirm(L.confirm_delete_tab.replace(':n', n2))) { return; }
+            savePos();
+            S.tabs.splice(S.cur, 1);
+            S.cur = Math.max(0, S.cur - 1);
+            draw();
+        }
         else if (act === 'fremove') { moveItem(a.getAttribute('data-key'), ''); draw(); }
         else if (act === 'fgear') { openField(a.getAttribute('data-key')); }
     }
@@ -386,10 +364,14 @@
         var t = e.target;
         if (t.hasAttribute('data-bt')) { blk(t.getAttribute('data-bt')).title = t.value; }
         else if (t.hasAttribute('data-tt')) {
-            var p = t.getAttribute('data-tt').split(':'), b = blk(p[0]);
-            for (var i = 0; i < b.tabs.length; i++) { if (b.tabs[i].id === p[1]) { b.tabs[i].title = t.value; } }
-            var link = document.getElementById('lt-' + p[0] + '-' + p[1]);
-            if (link) { link.textContent = t.value || L.tab_default.replace(':n', b.tabs.findIndex(function (x) { return x.id === p[1]; }) + 1); }
+            var id = t.getAttribute('data-tt');
+            S.tabs.forEach(function (x, i) {
+                if (x.id === id) {
+                    x.title = t.value;
+                    var link = document.getElementById('lt-' + id);
+                    if (link) { link.textContent = tabLabel(x, i); }
+                }
+            });
         }
     });
     canvas.addEventListener('change', function (e) {
@@ -402,9 +384,7 @@
     var fieldModal = new bootstrap.Modal(document.getElementById('layFieldModal'));
     function findItem(key) {
         var found = null;
-        S.blocks.forEach(function (b) {
-            (b.kind === 'tabs' ? b.tabs.reduce(function (a, t) { return a.concat(t.fields); }, []) : b.fields).forEach(function (it) { if (keyOf(it) === key) { found = it; } });
-        });
+        allBlocks().forEach(function (b) { b.fields.forEach(function (it) { if (keyOf(it) === key) { found = it; } }); });
         return found;
     }
     function openField(key) {
@@ -415,10 +395,9 @@
         document.getElementById('layFieldTitle').textContent = it.sys ? (SYS_LABELS[it.name] || it.name) : f.label;
         var cur = locOf(key);
         var opts = '<option value=""' + (cur === '' ? ' selected' : '') + '>' + esc(L.field_nowhere) + '</option>';
-        S.blocks.forEach(function (b) {
-            if (b.kind === 'tabs') {
-                b.tabs.forEach(function (t, i) { var v = b.id + ':' + t.id; opts += '<option value="' + v + '"' + (cur === v ? ' selected' : '') + '>' + esc(L.badge_tabs) + ' › ' + esc(t.title || L.tab_default.replace(':n', i + 1)) + '</option>'; });
-            } else { opts += '<option value="' + b.id + '"' + (cur === b.id ? ' selected' : '') + '>' + esc(L.badge_block) + ': ' + esc(b.title || '—') + '</option>'; }
+        S.tabs.forEach(function (t, ti) {
+            var inner = t.blocks.map(function (b) { return '<option value="' + b.id + '"' + (cur === b.id ? ' selected' : '') + '>' + esc(b.title || '—') + '</option>'; }).join('');
+            if (inner) { opts += '<optgroup label="' + esc(tabLabel(t, ti)) + '">' + inner + '</optgroup>'; }
         });
         document.getElementById('layFieldBody').innerHTML =
             '<div class="mb-3"><label class="small fw-semibold">' + esc(L.field_where) + '</label><select class="form-select form-select-sm" data-fw="loc">' + opts + '</select></div>'
@@ -447,15 +426,12 @@
     /* ---------- invio ---------- */
     document.getElementById('layoutForm').addEventListener('submit', function () {
         savePos();
-        var blocks = S.blocks.map(function (b) {
-            var o = {kind: b.kind, x: b.x, y: b.y, w: b.w, h: b.h};
-            if (b.kind === 'tabs') { o.tabs = b.tabs.map(function (t) { return {title: t.title, fields: t.fields}; }); }
-            else { o.title = b.title; o.fields = b.fields; }
-            return o;
+        var tabs = S.tabs.map(function (t) {
+            return {title: t.title, blocks: t.blocks.map(function (b) { return {title: b.title, x: b.x, y: b.y, w: b.w, h: b.h, fields: b.fields}; })};
         });
         var help = {};
         FIELDS.forEach(function (f) { help[f.name] = f.help || ''; });
-        document.getElementById('payload').value = JSON.stringify({blocks: blocks, help: help});
+        document.getElementById('payload').value = JSON.stringify({tabs: tabs, help: help});
     });
 
     draw();

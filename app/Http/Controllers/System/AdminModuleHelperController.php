@@ -67,7 +67,7 @@ class AdminModuleHelperController extends CBController
 				'datatable' => "cms_moduls,name", 
 			];
 
-		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|string', 'width' => 'col-sm-5', 'placeholder' => 'Url'];
+		$this->form[] = ['label' => 'Url', 'name' => 'url', 'type' => 'text', 'validation' => 'required|string', 'width' => 'col-sm-10', 'placeholder' => 'Url'];
 
 		# END FORM DO NOT REMOVE THIS LINE
 

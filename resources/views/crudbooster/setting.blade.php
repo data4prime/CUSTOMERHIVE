@@ -1,6 +1,7 @@
 @extends('crudbooster::admin_template')
 
 @section('content')
+@include('crudbooster::partials.ch_select2_assets')
 @push('bottom')
     <script src="{{ asset('vendor/laravel-filemanager/js/lfm.js') }}"></script>
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
@@ -86,13 +87,22 @@
     </script>
 @endpush
 
-<div style="width: 750px; margin: 0 auto;">
+{{-- Gruppo "Login Register Style" (riconosciuto dai campi, il nome varia con la lingua):
+     form + anteprima della pagina di login affiancati, come nel mockup. --}}
+{{-- Idem "Application Setting" (appname + logo): anteprima dell'applicazione a destra (intervento 237/249). --}}
+@php
+    $isLoginGroup = $settings->contains('name', 'login_background_color') && $settings->contains('name', 'button_color');
+    $isAppGroup = $settings->contains('name', 'appname') && $settings->contains('name', 'logo');
+    $hasSidePreview = $isLoginGroup || $isAppGroup;
+@endphp
+<div style="width: {{ $hasSidePreview ? '1100px; max-width: 100%' : '750px' }}; margin: 0 auto;">
     <p align="right">
         <a title="{{ trans('crudbooster.Add_Field_Setting') }}" class="btn btn-sm btn-primary" href="{{ route('SettingsControllerGetAdd') }}?group_setting={{ urlencode($page_title) }}">
             <i class="bi bi-plus-lg"></i> {{ trans('crudbooster.Add_Field_Setting') }}
         </a>
     </p>
 
+    @if($hasSidePreview)<div class="ch-setgrid">@endif
     <div class="card card-default">
         <div class="card-header">
             <i class="bi bi-gear-fill"></i> {{ $page_title }}
@@ -101,17 +111,24 @@
             <form method="post" id="form" enctype="multipart/form-data" action="{{ CRUDBooster::mainpath('save-setting?group_setting=' . urlencode($page_title)) }}">
                 @csrf
                 <div class="box-body">
+                    {{-- Il gruppo e' salvato tradotto (varia con la lingua del seed): si riconosce dai campi. --}}
                     {{-- $settings arriva da SettingsController::getShow(): prima la
                          query (e la UPDATE che ripara le label vuote) stavano qui. --}}
                     @foreach($settings as $s)
                         @php
                             $value = $s->content;
                             $dataenum = array_map('trim', explode(',', $s->dataenum));
+                            // Label/help tradotti per i setting che hanno le chiavi lang
+                            // (es. email_enabled); gli altri restano quelli salvati a DB.
+                            $label = \Illuminate\Support\Facades\Lang::has('crudbooster.setting_label_' . $s->name)
+                                ? trans('crudbooster.setting_label_' . $s->name) : $s->label;
+                            $helper = \Illuminate\Support\Facades\Lang::has('crudbooster.setting_helper_' . $s->name)
+                                ? trans('crudbooster.setting_helper_' . $s->name) : $s->helper;
                         @endphp
 
                         <div class="mb-3 row">
                             <label class="label-setting" title="{{ $s->name }}">
-                                {{ $s->label }}
+                                {{ $label }}
                                 <a style="visibility: hidden" href="{{ CRUDBooster::mainpath('edit/' . $s->id) }}" title="Edit This Meta Setting" class="btn btn-box-tool">
                                     <i class="bi bi-pencil-fill"></i>
                                 </a>
@@ -224,31 +241,68 @@
                                     @break
 
                                 @case('datepicker')
-                                    <input type="text" class="datepicker form-control" name="{{ $s->name }}" value="{{ $value }}" />
+                                    <input type="text" class="form-control" data-ch-picker="date" readonly name="{{ $s->name }}" value="{{ $value }}" />
                                     @break
 
                                 @case('radio')
-                                    @if ($dataenum)
-                                        <br />
-                                        @foreach ($dataenum as $enum)
-                                            <label class="radio-inline">
-                                                <input type="radio" name="{{ $s->name }}" value="{{ $enum }}" {{ $enum == $value ? 'checked' : '' }}> {{ $enum }}
-                                            </label>
-                                        @endforeach
+                                    @php
+                                        // yes/no -> switch standard (partials/ch_check). Il campo nascosto con
+                                        // il valore "off" serve perche' una checkbox spenta non viene inviata
+                                        // e postSaveSetting lascerebbe invariato il valore precedente.
+                                        $enumLower = array_map(fn ($e) => strtolower(trim($e)), (array) $dataenum);
+                                        $isYesNo = count($enumLower) === 2 && in_array('yes', $enumLower) && in_array('no', $enumLower);
+                                        if ($isYesNo) {
+                                            $onVal = (array) $dataenum;
+                                            $onVal = $onVal[array_search('yes', $enumLower)];
+                                            $offVal = ((array) $dataenum)[array_search('no', $enumLower)];
+                                        }
+                                    @endphp
+                                    @if ($isYesNo)
+                                        <input type="hidden" name="{{ $s->name }}" value="{{ $offVal }}">
+                                        @include('crudbooster::partials.ch_check', [
+                                            'name' => $s->name,
+                                            'value' => $onVal,
+                                            'label' => '',
+                                            'checked' => strtolower(trim((string) $value)) === 'yes',
+                                            'disabled' => false,
+                                            'switch' => true,
+                                            'aria' => $s->label,
+                                        ])
+                                    @elseif ($dataenum)
+                                        @include('crudbooster::partials.ch_radio', [
+                                            'name' => $s->name,
+                                            'disabled' => false,
+                                            'rd_options' => collect($dataenum)->map(fn ($enum) => [
+                                                'value' => $enum,
+                                                'label' => $enum,
+                                                'checked' => $enum == $value,
+                                            ])->all(),
+                                        ])
                                     @endif
                                     @break
 
                                 @case('select')
-                                    <select name="{{ $s->name }}" class="form-control">
+                                    <select name="{{ $s->name }}" class="form-control" data-ch-select>
                                         <option value="">Select {{ $s->label }}</option>
                                         @foreach ($dataenum as $enum)
-                                            <option value="{{ $enum }}" {{ $enum == $value ? 'selected' : '' }}>{{ $enum }}</option>
+                                            @php
+                                                // "valore|Etichetta" (intervento 237): senza "|" valore ed etichetta coincidono, come prima.
+                                                $enumParts = explode('|', $enum, 2);
+                                                $enumVal = $enumParts[0];
+                                                $enumLabel = $enumParts[1] ?? $enumParts[0];
+                                            @endphp
+                                            <option value="{{ $enumVal }}" {{ $enumVal == $value ? 'selected' : '' }}>{{ $enumLabel }}</option>
                                         @endforeach
                                     </select>
                                     @break
+
+                                @case('color')
+                                    {{-- Intervento 237: pallini + colore libero + codice (partials/ch_color) --}}
+                                    @include('crudbooster::partials.ch_color', ['name' => $s->name, 'value' => $value])
+                                    @break
                             @endswitch
 
-                            <div class="help-block">{{ $s->helper }}</div>
+                            <div class="help-block">{{ $helper }}</div>
                         </div>
                     @endforeach
 
@@ -284,6 +338,14 @@
             </form>
         </div>
     </div>
+    @if($isLoginGroup)
+    @include('crudbooster::partials.login_setting_preview', ['settings' => $settings])
+    @elseif($isAppGroup)
+    @include('crudbooster::partials.app_setting_preview', ['settings' => $settings])
+    @endif
+    @if($hasSidePreview)
+    </div>
+    @endif
 </div>
 
 @endsection
