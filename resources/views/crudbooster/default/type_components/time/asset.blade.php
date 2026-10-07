@@ -1,8 +1,1 @@
-@push('head')
-    <style type="text/css">
-        .bootstrap-timepicker .dropdown-menu {
-            left: 185px !important;
-            box-shadow: 0px 0px 20px #aaaaaa;
-        }
-    </style>
-@endpush
+{{-- Il selettore e' public/js/ch-datetime.js (caricato da partials/ch_scripts): nessun plugin da inizializzare. --}}

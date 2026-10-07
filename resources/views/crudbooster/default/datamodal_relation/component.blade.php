@@ -10,7 +10,7 @@
     Non va messo sotto type_components/: ogni cartella li' dentro viene
     elencata come "tipo di campo" dal module generator.
 --}}
-<div class='mb-3 row form-datepicker {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}'
+<div class='mb-3 row {{$header_group_class}} {{ ($errors->first($name))?"has-error":"" }}'
     id='form-group-{{$name}}' style="{{@$form['style']}}">
     <label class='col-form-label col-sm-2'>{{$form['label']}}
         @if($required)
@@ -27,26 +27,19 @@
         }
         @endphp
 
-        <div id='{{$name}}' class="input-group">
-            <input type="hidden" name="{{$name}}" class="input-id" value="{{$value}}">
-            <input type="text" class="form-control input-label {{$required ? 'required' : ''}}" {{$required ? 'required'
-                : '' }} value="{{$datamodal_value}}" readonly>
-            <span class="input-group-btn">
-                <button class="btn btn-primary" onclick="showModal{{$name}}()" type="button"><i
-                        class='bi bi-search'></i> {{trans('crudbooster.datamodal_browse_data')}}</button>
-                @if(isset($form['datamodal_module_path']) && strlen($form['datamodal_module_path']) > 1)
-                <a class="btn btn-info" href="{{CRUDBooster::adminPath()}}/{{$form['datamodal_module_path']}}"
-                    target="_blank"><i class='bi bi-pencil-square'></i> {{$form['label']}}</a>
-                @endif
-            </span>
-        </div><!-- /input-group -->
+        @include('crudbooster::partials.ch_datamodal_field', [
+            'dm_name' => $name,
+            'dm_value' => $value,
+            'dm_display' => $datamodal_value,
+            'dm_required' => !empty($required),
+            'dm_module_path' => (isset($form['datamodal_module_path']) && strlen($form['datamodal_module_path']) > 1) ? $form['datamodal_module_path'] : null,
+            'dm_module_label' => $form['label'],
+        ])
 
-        <div class="text-danger">{!! $errors->first($name) ? "<i class='bi bi-info-circle-fill'></i> ".$errors->first($name)
-            : "" !!}</div>
+        <div class="text-danger">{!! $errors->first($name) ? "<i class='bi bi-info-circle-fill'></i> ".e($errors->first($name)) : "" !!}</div>
         <p class='help-block'>{{ @$form['help'] }}</p>
     </div>
 </div>
-
 @push('bottom')
 <script type="text/javascript">
     var url_{{ $name }} = "{{CRUDBooster::mainpath('modal-data')}}?table={{$form['datamodal_table']}}&columns=id,{{$form['datamodal_columns']}}&name_column={{$name}}&where={{urlencode($form['datamodal_where'])}}&select_to={{ urlencode($form['datamodal_select_to']) }}&columns_name_alias={{ urlencode($form['datamodal_columns_alias']) }}&type={{ urlencode($form['type']) }}";
@@ -73,6 +66,7 @@
 
                 if (key == 'datamodal_label') {
                     $('#{{$name}} .input-label').val(val);
+                    $('#{{$name}}').toggleClass('has-value', !!val);
                 }
 
                 if (key == 'datamodal_description') {

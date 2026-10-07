@@ -144,7 +144,6 @@
                 ?>
             @foreach($dataenum as $enum)
             <?php
-echo $enum;
                     $val = $lab = '';
                     if (strpos($enum, '|') !== FALSE) {
                         $draw = explode("|", $enum);
@@ -155,7 +154,7 @@ echo $enum;
                     }
                     $select = ($value == $val) ? "selected" : "";
                     ?>
-            "<option {{$select}} value='{{$val}}'>{{$lab}}</option>";
+            <option {{$select}} value='{{$val}}'>{{$lab}}</option>
             @endforeach
             @endif
             @if(isset($form['datatable']))
@@ -200,7 +199,7 @@ echo $enum;
                       $option_label = $r->{$select_title};
                       $option_value = $r->id;
                       $selected = (is_array($value) && in_array($r->$table_pk_name, $value)) ? "selected" : "";
-                      echo "<option {$selected} value='{$option_value}'>{$option_label}</option>";
+                      echo "<option {$selected} value='".e($option_value)."'>".e($option_label)."</option>";
                     }
                     ?>
             @else
@@ -230,7 +229,7 @@ echo $enum;
                             $option_value = $r->$table_pk_name;
                             //TODO define $value
                             $selected = ($option_value == $value) ? "selected" : "";
-                            echo "<option $selected value='$option_value'>$option_label</option>";
+                            echo "<option $selected value='".e($option_value)."'>".e($option_label)."</option>";
                           }
                           ?>
             <!--end-datatable-ajax-->
@@ -243,7 +242,7 @@ echo $enum;
             @endif
         </select>
         <div class="text-danger">
-            {!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".$errors->first($name):"" !!}
+            {!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".e($errors->first($name)):"" !!}
         </div><!--end-text-danger-->
         <p class='help-block'>{{ @$form['help'] }}</p>
 

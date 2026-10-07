@@ -1,24 +1,20 @@
 <tr>
     <td colspan='2'>
-
-        <div class="card card-default">
-            <div class="card-header">
-                <i class='bi bi-list'></i> {{$form['label']}}
-            </div>
-            <div class="card-body">
-                <table id='table-{{$name}}' class='table table-striped table-bordered'>
+        {{-- Stessa grafica della griglia del form (ch-grid-*), in sola lettura (intervento 232) --}}
+        <div class="ch-grid-card">
+            <div class="ch-grid-hd"><i class='bi bi-list'></i> {{$form['label']}}</div>
+            <div class="table-responsive">
+                <table id='table-{{$name}}' class='ch-grid ch-grid-ro'>
                     <thead>
                     <tr>
                         @foreach($form['columns'] as $col)
                             <th>{{$col['label']}}</th>
                         @endforeach
-
                     </tr>
                     </thead>
                     <tbody>
 
                     <?php
-                    $columns_tbody = [];
                     $data_child = DB::table($form['table'])->where($form['foreign_key'], $id);
                     foreach ($form['columns'] as $i => $c) {
                         $data_child->addselect($form['table'].'.'.$c['name']);
@@ -41,7 +37,7 @@
                     $data_child = $data_child->orderby($form['table'].'.id', 'desc')->get();
                     foreach($data_child as $d):
                     ?>
-                    <tr>
+                    <tr class="ch-row">
                         @foreach($form['columns'] as $col)
                             <td class="{{$col['name']}}">
                                 <?php
@@ -49,60 +45,39 @@
                                     if ($col['datatable']) {
                                         $join_table = explode(',', $col['datatable'])[0];
                                         $join_field = explode(',', $col['datatable'])[1];
-                                        echo "<span class='td-label'>";
-                                        echo $d->{$join_table.'_'.$join_field};
-                                        echo "</span>";
-                                        echo "<input type='hidden' name='".$name."-".$col['name']."[]' value='".$d->{$col['name']}."'/>";
+                                        echo e($d->{$join_table.'_'.$join_field});
                                     }
                                     if ($col['dataenum']) {
-                                        echo "<span class='td-label'>";
-                                        echo $d->{$col['name']};
-                                        echo "</span>";
-                                        echo "<input type='hidden' name='".$name."-".$col['name']."[]' value='".$d->{$col['name']}."'/>";
+                                        echo e($d->{$col['name']});
                                     }
                                 } elseif ($col['type'] == 'datamodal') {
                                     $datamodal_title = explode(',', $col['datamodal_columns'])[0];
                                     $datamodal_table = $col['datamodal_table'];
-                                    echo "<span class='td-label'>";
-                                    echo $d->{$datamodal_table.'_'.$datamodal_title};
-                                    echo "</span>";
-                                    echo "<input type='hidden' name='".$name."-".$col['name']."[]' value='".$d->{$col['name']}."'/>";
+                                    echo e($d->{$datamodal_table.'_'.$datamodal_title});
                                 } elseif ($col['type'] == 'upload') {
                                     $filename = basename($d->{$col['name']});
                                     if ($col['upload_type'] == 'image') {
-                                        echo "<a href='".asset($d->{$col['name']})."' class='fancybox'><img data-label='$filename' src='".asset($d->{$col['name']})."' width='50px' height='50px'/></a>";
-                                        echo "<input type='hidden' name='".$name."-".$col['name']."[]' value='".$d->{$col['name']}."'/>";
+                                        echo "<a href='".e(asset($d->{$col['name']}))."' class='fancybox'><img data-label='".e($filename)."' src='".e(asset($d->{$col['name']}))."' width='50px' height='50px'/></a>";
                                     } else {
-                                        echo "<a data-label='$filename' href='".asset($d->{$col['name']})."'>$filename</a>";
-                                        echo "<input type='hidden' name='".$name."-".$col['name']."[]' value='".$d->{$col['name']}."'/>";
+                                        echo "<a data-label='".e($filename)."' href='".e(asset($d->{$col['name']}))."'>".e($filename)."</a>";
                                     }
                                 } else {
-                                    echo "<span class='td-label'>";
-                                    echo $d->{$col['name']};
-                                    echo "</span>";
-                                    echo "<input type='hidden' name='".$name."-".$col['name']."[]' value='".$d->{$col['name']}."'/>";
+                                    echo e($d->{$col['name']});
                                 }
                                 ?>
                             </td>
                         @endforeach
-
                     </tr>
-
                     <?php endforeach;?>
 
                     @if(count($data_child)==0)
                         <tr class="trNull">
-                            <td colspan="{{count($form['columns'])+1}}" align="center">{{trans('crudbooster.table_data_not_found')}}</td>
+                            <td colspan="{{count($form['columns'])}}" class="ch-grid-empty">{{trans('crudbooster.table_data_not_found')}}</td>
                         </tr>
                     @endif
                     </tbody>
                 </table>
-
-
             </div>
         </div>
-
-
     </td>
 </tr>
-

@@ -1,0 +1,18 @@
+{
+  "title": "Image Input",
+  "type": "image",
+  "attribute": {
+    "optional": {
+      "shape": "string circle|square (default circle)",
+      "size": "integer preview size in px, 48-240 (default 96)",
+      "icon": "string Bootstrap Icons class of the placeholder, e.g. bi-person-fill (default bi-image)",
+      "accept": "string file input accept (default image/*)",
+      "resize_width": "integer",
+      "resize_height": "integer",
+      "validation": "string e.g. image|max:1000",
+      "help": "string help-block",
+      "readonly": "boolean",
+      "disabled": "boolean"
+    }
+  }
+}

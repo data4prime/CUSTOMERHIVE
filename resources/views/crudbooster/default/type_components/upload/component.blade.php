@@ -14,34 +14,49 @@
             // un self-request non funziona quando l'host/porta visti dal browser
             // differiscono da quelli raggiungibili dal server stesso (es. sviluppo
             // locale via Docker con port mapping).
-            if(file_exists(public_path($value))):
-            $url = asset($value);
-            $ext = pathinfo($url, PATHINFO_EXTENSION);
-            $images_type = array('jpg', 'png', 'gif', 'jpeg', 'bmp', 'tiff');
-            if(in_array(strtolower($ext), $images_type)):
+            $file_ok = file_exists(public_path($value));
+            $url = $file_ok ? asset($value) : '';
+            $ext = $file_ok ? pathinfo($url, PATHINFO_EXTENSION) : '';
+            $is_image = in_array(strtolower($ext), ['jpg', 'png', 'gif', 'jpeg', 'bmp', 'tiff']);
             ?>
-            <p><a data-lightbox='roadtrip' href='{{$url}}'><img style='max-width:160px' title="Image For {{$form['label']}}" src='{{$url}}'/></a></p>
-            <?php else:?>
-            <p><a href='{{$url}}'>{{trans("crudbooster.button_download_file")}}</a></p>
-            <?php endif;
-            echo "<input type='hidden' name='_$name' value='$value'/>";
-            else:
-                echo "<p class='text-danger'><i class='bi bi-exclamation-triangle-fill'></i> ".trans("crudbooster.file_broken")."</p>";
-            endif;
-            ?>
-            @if(!$readonly || !$disabled)
-                <p><a class='btn btn-danger btn-delete btn-sm' onclick="if(!confirm('{{trans("crudbooster.delete_title_confirm")}}')) return false"
-                      href='{{url(CRUDBooster::mainpath("delete-image?image=".$value."&id=".$row->id."&column=".$name))}}'><i
-                                class='bi bi-slash-circle'></i> {{trans('crudbooster.text_delete')}} </a></p>
+            @if($file_ok)
+                <div class="ch-file-card">
+                    @if($is_image)
+                        <a data-lightbox='roadtrip' href='{{$url}}' class="ch-file-thumb"><img title="Image For {{$form['label']}}" src='{{$url}}'/></a>
+                    @else
+                        <span class="ch-file-thumb"><i class="bi bi-file-earmark"></i></span>
+                    @endif
+                    <div class="ch-file-meta">
+                        <b>{{ basename($value) }}</b>
+                        <a href='{{$url}}'>{{trans("crudbooster.button_download_file")}}</a>
+                    </div>
+                    @if(!$readonly || !$disabled)
+                        <a class='btn btn-danger btn-delete btn-sm' onclick="if(!confirm('{{trans("crudbooster.delete_title_confirm")}}')) return false"
+                           href='{{url(CRUDBooster::mainpath("delete-image?image=".$value."&id=".$row->id."&column=".$name))}}'><i
+                                    class='bi bi-slash-circle'></i> {{trans('crudbooster.text_delete')}} </a>
+                    @endif
+                </div>
+                <input type='hidden' name='_{{$name}}' value='{{$value}}'/>
+            @else
+                <p class='text-danger'><i class='bi bi-exclamation-triangle-fill'></i> {{trans("crudbooster.file_broken")}}</p>
+                @if(!$readonly || !$disabled)
+                    <p><a class='btn btn-danger btn-delete btn-sm' onclick="if(!confirm('{{trans("crudbooster.delete_title_confirm")}}')) return false"
+                          href='{{url(CRUDBooster::mainpath("delete-image?image=".$value."&id=".$row->id."&column=".$name))}}'><i
+                                    class='bi bi-slash-circle'></i> {{trans('crudbooster.text_delete')}} </a></p>
+                @endif
             @endif
         @endif
         @if(!$value)
-            <input type='file' id="{{$name}}" title="{{$form['label']}}" {{$required}} {{$readonly}} {{$disabled}} class='form-control' name="{{$name}}"/>
+            @include('crudbooster::partials.ch_file', [
+                'name' => $name,
+                'ch_label' => $form['label'],
+                'required' => !empty($required), 'readonly' => !empty($readonly), 'disabled' => !empty($disabled),
+            ])
             <p class='help-block'>{{ @$form['help'] }}</p>
         @else
             <p class='text-muted'><em>{{trans("crudbooster.notice_delete_file_upload")}}</em></p>
         @endif
-        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".$errors->first($name):"" !!}</div>
+        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".e($errors->first($name)):"" !!}</div>
 
     </div>
 

@@ -165,14 +165,14 @@ $fields_to_eliminate = ['multitext', 'password', 'child'];
         <p class='text-danger'>{{ $type }} is not found in type component system</p><br />
     @endif
 
-    <label class="ch-mass-edit-toggle">
-        @if($type == 'checkbox')
-            <input type="checkbox" class="form-check-input" name="mass_edit_{{ $name }}[]">
-        @else
-            <input type="checkbox" class="form-check-input" name="mass_edit_{{ $name }}">
-        @endif
-        <span>Aggiorna questo campo</span>
-    </label>
+    <div class="ch-mass-edit-toggle">
+        @include('crudbooster::partials.ch_check', [
+            'name' => 'mass_edit_' . $name . ($type == 'checkbox' ? '[]' : ''),
+            'value' => '1',
+            'label' => 'Aggiorna questo campo',
+            'switch' => true,
+        ])
+    </div>
 </div>
     @if($name == 'group')
                     </div>

@@ -7,10 +7,16 @@
     </label>
 
     <div class="{{$col_width?:'col-sm-10'}}">
-        <input type='password' title="{{$form['label']}}" id="{{$name}}" {{$required}} {!!$placeholder!!} {{$readonly}}
-            {{$disabled}} @php echo isset($validation['max'])?'maxlength="'.$validation['max'].'"':'' @endphp
-            class='form-control' name="{{$name}}" />
-        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".$errors->first($name):""
+        @include('crudbooster::partials.ch_input', [
+            'name' => $name,
+            'kind' => 'password',
+            'value' => '',
+            'ch_label' => $form['label'],
+            'placeholder' => $form['placeholder'] ?? '',
+            'required' => !empty($required), 'readonly' => !empty($readonly), 'disabled' => !empty($disabled),
+            'maxlength' => $validation['max'] ?? null,
+        ])
+        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".e($errors->first($name)):""
             !!}</div>
         <p class='help-block'>{{ @$form['help'] }}</p>
 

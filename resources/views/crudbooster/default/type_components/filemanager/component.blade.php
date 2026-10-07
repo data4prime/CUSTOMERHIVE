@@ -8,18 +8,16 @@
     <div class="{{$col_width?:'col-sm-10'}}">
 
         @if($value=='')
-            <div class="input-group">
-                <input id="thumbnail-{{$name}}" class="form-control" type="text" readonly value='{{$value}}' name="{{$name}}">
-                <span class="input-group-btn">
-			        <a id="lfm-{{$name}}" data-input="thumbnail-{{$name}}" data-preview="holder-{{$name}}" class="btn btn-primary">
-			          @if(@$form['filemanager_type'] == 'file')
-                            <i class="bi bi-file-earmark"></i> {{trans("crudbooster.chose_an_file")}}
-                        @else
-                            <i class='bi bi-image'></i> {{trans("crudbooster.chose_an_image")}}
-                        @endif
-			        </a>
-			      </span>
-
+            <div class="input-group ch-input ch-file">
+                <a id="lfm-{{$name}}" data-input="thumbnail-{{$name}}" data-preview="holder-{{$name}}" role="button" class="input-group-text ch-addon-pre ch-file-btn">
+                    @if(@$form['filemanager_type'] == 'file')
+                        <i class="bi bi-paperclip"></i> {{trans("crudbooster.chose_an_file")}}
+                    @else
+                        <i class='bi bi-image'></i> {{trans("crudbooster.chose_an_image")}}
+                    @endif
+                </a>
+                <input id="thumbnail-{{$name}}" class="form-control" type="text" readonly value='{{$value}}' name="{{$name}}"
+                       placeholder="{{ trans('crudbooster.file_none_selected') }}">
             </div>
         @endif
 
@@ -27,24 +25,26 @@
             <input id="thumbnail-{{$name}}" class="form-control" type="hidden" value='{{$value}}' name="{{$name}}">
             @if(@$form['filemanager_type'] == 'file')
                 @if($value)
-                    <div style='margin-top:15px'><a id='holder-{{$name}}' href='{{asset($value)}}' target='_blank'
-                                                    title=' {{trans("crudbooster.button_download_file")}} {{ basename($value)}}'><i
-                                    class='bi bi-download'></i> {{trans("crudbooster.button_download_file")}}  {{ basename($value)}}</a>
-                        &nbsp;<a class='btn btn-danger btn-delete btn-sm'
+                    <div class="ch-file-card"><span class="ch-file-thumb"><i class="bi bi-file-earmark"></i></span>
+                        <div class="ch-file-meta"><a id='holder-{{$name}}' href='{{asset($value)}}' target='_blank'
+                                                    title=' {{trans("crudbooster.button_download_file")}} {{ basename($value)}}'><b>{{ basename($value) }}</b></a>
+                        <span>{{trans("crudbooster.button_download_file")}}</span></div>
+                        <a class='btn btn-danger btn-delete btn-sm'
                                  onclick='swal({   title: "{{trans("crudbooster.delete_title_confirm")}}",   text: "{{trans("crudbooster.delete_description_confirm")}}",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "{{trans("crudbooster.confirmation_yes")}}",cancelButtonText: "{{trans('crudbooster.button_cancel')}}",   closeOnConfirm: false }, function(){  location.href="{{url($mainpath."/delete-filemanager?file=".$row->{$name}."&id=".$row->id."&column=".$name)}}" });'
                                  href='javascript:void(0)' title='{{trans('crudbooster.text_delete')}}'><i class='bi bi-slash-circle'></i></a>
                     </div>@endif
             @else
-                <p><a data-lightbox="roadtrip" href="{{ ($value)?asset($value):'' }}"><img id='holder-{{$name}}'
-                                                                                           {{ ($value)?'src='.asset($value):'' }} style="margin-top:15px;max-height:100px;"></a>
-                </p>
+                <div class="ch-file-card"><a class="ch-file-thumb" data-lightbox="roadtrip" href="{{ ($value)?asset($value):'' }}"><img id='holder-{{$name}}'
+                                                                                           {{ ($value)?'src='.asset($value):'' }}></a>
+                    <div class="ch-file-meta"><b>{{ basename($value) }}</b></div>
+                    @if(!$readonly || !$disabled)
+                    <a class='btn btn-danger btn-delete btn-sm'
+                      onclick='swal({   title: "{{trans("crudbooster.delete_title_confirm")}}",   text: "{{trans("crudbooster.delete_description_confirm")}}",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "{{trans("crudbooster.confirmation_yes")}}", cancelButtonText: "{{trans('crudbooster.button_cancel')}}",   closeOnConfirm: false }, function(){  location.href="{{url(CRUDBooster::mainpath("update-single?table=$table&column=$name&value=&id=$id"))}}" });'><i
+                                class='bi bi-slash-circle'></i> {{trans('crudbooster.text_delete')}} </a>
+                    @endif
+                </div>
             @endif
 
-            @if(!$readonly || !$disabled)
-                <p><a class='btn btn-danger btn-delete btn-sm'
-                      onclick='swal({   title: "{{trans("crudbooster.delete_title_confirm")}}",   text: "{{trans("crudbooster.delete_description_confirm")}}",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "{{trans("crudbooster.confirmation_yes")}}", cancelButtonText: "{{trans('crudbooster.button_cancel')}}",   closeOnConfirm: false }, function(){  location.href="{{url(CRUDBooster::mainpath("update-single?table=$table&column=$name&value=&id=$id"))}}" });'><i
-                                class='bi bi-slash-circle'></i> {{trans('crudbooster.text_delete')}} </a></p>
-            @endif
         @endif
 
 

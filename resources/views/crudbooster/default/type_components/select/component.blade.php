@@ -131,7 +131,7 @@ $query = DB::select($form['dataquery']);
             {
 
             $selected = ($value == $q->value) ? "selected" : "";
-            echo "<option {$selected} value='{$q->value}'>{$q->label}</option>";
+            echo "<option {$selected} value='".e($q->value)."'>".e($q->label)."</option>";
             }
             }
 
@@ -160,7 +160,7 @@ $query = DB::select($form['dataquery']);
             $select = ($value == $val) ? "selected" : "";
 
 
-            echo "<option {$select} value='{$val}'>{$lab}</option>";
+            echo "<option {$select} value='".e($val)."'>".e($lab)."</option>";
             }
             }
 
@@ -238,14 +238,19 @@ $query = DB::select($form['dataquery']);
             $select = ($value == $val) ? "selected" : "";
             $label = $d->label;
 
-            echo "<option {$select} value='{$val}'>{$d->label}</option>";
+            echo "<option {$select} value='".e($val)."'>".e($d->label)."</option>";
             }
             }
             //end if not parent select
             @endphp
         </select>
-        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".$errors->first($name):""
+        <div class="text-danger">{!! $errors->first($name)?"<i class='bi bi-info-circle-fill'></i> ".e($errors->first($name)):""
             !!}</div>
         <p class='help-block'>{{ @$form['help'] }}</p>
     </div>
 </div>
+@push('bottom')
+<script type="text/javascript">
+    $(function () { if (window.chSelect) { window.chSelect('#{{$name}}'); } });
+</script>
+@endpush

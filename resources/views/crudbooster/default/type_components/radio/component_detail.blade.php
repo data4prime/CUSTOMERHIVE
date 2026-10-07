@@ -62,7 +62,6 @@ if ((isset($form['datatable']) && isset($form['relationship_table'])) && $form['
     }
 }
 
-foreach ($value as $v) {
-    echo "<span class='badge'>$v</span> ";
-}
+// Testo semplice: un .badge senza colore di sfondo (Bootstrap 5) e' bianco su bianco.
+echo e(implode(', ', array_map('strval', (array) $value)));
 ?>

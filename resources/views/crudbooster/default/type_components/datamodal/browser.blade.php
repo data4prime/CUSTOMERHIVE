@@ -9,68 +9,36 @@ $coloms_alias = explode(',', 'ID,'.Request::get('columns_name_alias'));
 if (count($coloms_alias) < 2) {
     $coloms_alias = $columns;
 }
-?>
-<form method='get' action="">
-    {!! CRUDBooster::getUrlParameters(['q']) !!}
-    <input type="text" placeholder="{{trans('crudbooster.datamodal_search_and_enter')}}" name="q"
-        title="{{trans('crudbooster.datamodal_enter_to_search')}}" value="{{Request::get('q')}}" class="form-control">
-</form>
 
-<table id='table_dashboard' class='table table-striped table-bordered table-sm' style="margin-bottom: 0px">
-    <thead>
-        @foreach($coloms_alias as $col)
-        <th>{{ $col }}</th>
-        @endforeach
-        <th width="5%">{{trans('crudbooster.datamodal_select')}}</th>
-    </thead>
-    <tbody>
-        @foreach($result as $row)
-        <tr>
-            @foreach($columns as $col)
-            <?php
-                $img_extension = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
-                $ext = pathinfo($row->$col, PATHINFO_EXTENSION);
-                if ($ext && in_array($ext, $img_extension)) {
-                    echo "<td><a href='".asset($row->$col)."' data-lightbox='roadtrip'><img src='".asset($row->$col)."' width='50px' height='30px'/></a></td>";
-                } else {
-                    echo "<td>".str_limit(strip_tags($row->$col), 50)."</td>";
-                }
-                ?>
-            @endforeach
-            <?php
-            $select_data_result = [];
-            $select_data_result['datamodal_id'] = $row->id;
-            $select_data_result['datamodal_label'] = $row->{$columns[1]} ?: $row->id;
-            $select_data = Request::get('select_to');
-            if ($select_data) {
-                $select_data = explode(',', $select_data);
-                if ($select_data) {
-                    foreach ($select_data as $s) {
-                        $s_exp = explode(':', $s);
-                        // Alcuni chiamanti (i componenti "*_datamodal" per
-                        // collegare due entita', es. tenant_group_datamodal)
-                        // passano qui un id nudo per filtrare la lista
-                        // (vedi sopra), non coppie "campo:destinazione" -
-                        // senza questo controllo si otteneva una chiave
-                        // vuota nel JSON, che in JS ($('#' + chiave))
-                        // diventava il selettore invalido '#', mandando in
-                        // eccezione lo script prima che il popup potesse
-                        // chiudersi.
-                        if (!isset($s_exp[1]) || $s_exp[1] === '') {
-                            continue;
-                        }
-                        $field_name = $s_exp[0];
-                        $target_field_name = $s_exp[1];
-                        $select_data_result[$target_field_name] = isset($row->$field_name) ? $row->$field_name : '';
-                    }
-                }
+$dm_rows = [];
+foreach ($result as $row) {
+    $values = [];
+    foreach ($columns as $col) {
+        $values[] = $row->$col;
+    }
+    $payload = [];
+    $payload['datamodal_id'] = $row->id;
+    $payload['datamodal_label'] = $row->{$columns[1]} ?: $row->id;
+    $select_data = Request::get('select_to');
+    if ($select_data) {
+        foreach (explode(',', $select_data) as $s) {
+            $s_exp = explode(':', $s);
+            // Alcuni chiamanti passano un id nudo per filtrare la lista, non
+            // coppie "campo:destinazione": senza questo controllo si otteneva
+            // una chiave vuota nel JSON ($('#') = selettore invalido).
+            if (!isset($s_exp[1]) || $s_exp[1] === '') {
+                continue;
             }
-            ?>
-            <td><a class='btn btn-primary' href='javascript:void(0)'
-                    onclick='parent.selectAdditionalData{{$name}}({!! json_encode($select_data_result) !!})'><i
-                        class='bi bi-check-circle-fill'></i> {{trans('crudbooster.datamodal_select')}}</a></td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
-<div align="center">{!! str_replace("/?","?",$result->appends(Request::all())->render()) !!}</div>
+            $field_name = $s_exp[0];
+            $payload[$s_exp[1]] = isset($row->$field_name) ? $row->$field_name : '';
+        }
+    }
+    $dm_rows[] = ['values' => $values, 'payload' => $payload];
+}
+?>
+@include('crudbooster::partials.ch_datamodal_list', [
+    'dm_name' => $name,
+    'dm_headers' => $coloms_alias,
+    'dm_rows' => $dm_rows,
+    'dm_paginator' => $result->appends(Request::all()),
+])
