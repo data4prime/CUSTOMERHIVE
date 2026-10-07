@@ -691,6 +691,9 @@ class MenusController extends CBController
     } elseif ($postdata['type'] == 'Module') {
       $stat = CRUDBooster::first('cms_moduls', ['id' => $postdata['module_slug']]);
       $postdata['path'] = $stat->path;
+      // l'icona di una voce Module e' quella del modulo (si cambia dal module generator)
+      $postdata['icon'] = $stat->icon;
+      $postdata['is_custom'] = 0;
     } elseif ($postdata['type'] == 'Qlik') {
       $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
       $postdata['path'] = 'qlik_items/content/' . $postdata['qlik_slug'];
@@ -790,6 +793,8 @@ class MenusController extends CBController
     } elseif ($postdata['type'] == 'Module') {
       $stat = CRUDBooster::first('cms_moduls', ['id' => $postdata['module_slug']]);
       $postdata['path'] = $stat->path;
+      $postdata['icon'] = $stat->icon;
+      $postdata['is_custom'] = 0;
     } elseif ($postdata['type'] == 'Qlik') {
       $stat = CRUDBooster::first('qlik_items', ['id' => $postdata['qlik_slug']]);
       $postdata['path'] = 'qlik_items/content/' . $postdata['qlik_slug'];

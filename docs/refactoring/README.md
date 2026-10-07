@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 259**
+**Prossimo numero libero: 261**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,8 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [260](260-formato-data-titolo-lista-tabelle-wizard.md) | **Formato data nelle Preferenze, colonna titolo in grassetto/link in lista, "Tabella collegata" e "Quale tabella?" solo dove ha senso** | Module generator / Liste / Profilo | Completato | 2026-10-07 |
+| [259](259-icona-menu-da-modulo-lingua-in-preferenze.md) | **Icona delle voci di menu "Module" presa dal modulo** (sola lettura, sincronizzata a ogni modifica del modulo) e **Lingua spostata in Preferenze** nel profilo | Menu / Module generator / Profilo | Completato | 2026-10-07 |
 | [258](258-importi-valuta-decimali-preferenze-separatore.md) | **Importi con valuta/decimali, preferenza separatore decimale, colonne di sistema in lista**: select valute e cifre decimali nel module generator, simbolo nel dettaglio, "Created by" -> nome utente, Tenant/Group non piu' automatici, sezione Preferenze nel profilo | Module generator / Liste / Profilo | Completato | 2026-10-07 |
 | [257](257-swal-modale-proprio-icone-sidebar-wizard.md) | **SweetAlert sostituito dal modale del progetto** (`chConfirm`/`chAlert`, shim `swal` per i moduli dei clienti) + ricerca icone per nomi FA, sidebar module generator con una sola voce attiva, niente pulsanti lista nei passi, area di rilascio step 4 piu' grande | Frontend / Module generator | Completato | 2026-10-07 |
 | [256](256-sidebar-voce-attiva-header-licenza-logo.md) | **Sidebar e modale Licenza**: voce attiva indaco->viola (non piu' fucsia), tolto il bagliore tagliato a destra ("mezzo header"), modale Licenza ricostruita e tradotta (il CSS era corrotto), logo CustomerHive PNG trasparente per la sidebar | Frontend / Layout | Completato | 2026-10-07 |

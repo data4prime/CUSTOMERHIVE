@@ -243,6 +243,12 @@ class ModulsController extends CBController
     $this->index_button[] = ['label' => 'Import Module', 'icon' => 'bi bi-upload', 'url' => CRUDBooster::mainpath('import'), 'color' => 'info'];
   }
 
+  // Modifica del modulo dal form standard: l'icona va anche sulle voci di menu collegate
+  public function hook_after_edit($id)
+  {
+    \App\Helpers\MenuHelper::sync_module_icon($id);
+  }
+
   public function getEdit($id)
   {
     $this->cbLoader();
@@ -902,6 +908,7 @@ class ModulsController extends CBController
     } else {
       //update existing module
       $id = Request::get('id');
+      $oldPath = DB::table($this->table)->where('id', $id)->value('path');
       DB::table($this->table)
         ->where('id', $id)
         ->update(compact(
@@ -910,6 +917,8 @@ class ModulsController extends CBController
           "icon",
           "path"
         ));
+      // l'icona del modulo vale anche per le sue voci di menu
+      \App\Helpers\MenuHelper::sync_module_icon($id, $oldPath);
 
       $row = DB::table('cms_moduls')
         ->where('id', $id)
@@ -1059,7 +1068,11 @@ class ModulsController extends CBController
       'id' => $id,
       'active_tab' => 2,
       'rows' => $rows,
-      'table_list' => $tables,
+      // nel menu "Quale tabella?" solo le tabelle sensate (quelle gia' scelte nei campi restano)
+      'table_list' => ModuleGeneratorFields::selectableTables($tables, array_merge(
+        array_map(function ($r) { return (string) ($r['opts']['table'] ?? ''); }, $rows),
+        array_map(function ($r) { return (string) ($r['opts']['mtable'] ?? ''); }, $rows)
+      )),
       'table_name' => $table,
       'table_exists' => !empty($tableColumns),
       'type_names' => $this->componentTypeNames(),
@@ -1577,7 +1590,10 @@ class ModulsController extends CBController
       'active_tab' => 3,
       'rows' => $rows,
       'table_columns' => $columns,
-      'table_list' => $table_list,
+      // stesso criterio del passo Campi (le tabelle gia' collegate restano)
+      'table_list' => ModuleGeneratorFields::selectableTables($table_list, array_map(function ($r) {
+        return (string) ($r['join']['table'] ?? '');
+      }, $rows)),
       'limit' => $limit,
       'orderby' => $orderby,
     ]);

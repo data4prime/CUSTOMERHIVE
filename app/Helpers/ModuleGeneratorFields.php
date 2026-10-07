@@ -93,6 +93,45 @@ class ModuleGeneratorFields
         return self::SQL_BY_TYPE[$type] ?? ['text', '255'];
     }
 
+    /** Tabelle di sistema utili come sorgente di scelte/collegamenti (le altre tabelle di sistema si nascondono). */
+    const SELECTABLE_SYSTEM = ['cms_users', 'tenants', 'groups'];
+
+    /** Tabelle di infrastruttura: prefissi e nomi che non hanno senso come sorgente di scelte. */
+    const HIDDEN_PREFIXES = ['cms_', 'mfa_', 'qlik', 'chat_ai', 'chatai_', 'dashboard_', 'module_', 'menu_', 'items_', 'sync_'];
+    const HIDDEN_NAMES = ['migrations', 'failed_jobs', 'jobs', 'job_batches', 'password_resets', 'personal_access_tokens', 'license',
+        'log', 'sessions', 'cache', 'cache_locks', 'users', 'users_groups', 'group_tenants', 'tenants_allowed', 'attributes'];
+
+    /**
+     * Tabelle da proporre nelle select "Quale tabella?": quelle dei moduli e le tabelle utente,
+     * piu' cms_users, tenants e groups. Restano fuori tabelle di sistema, di servizio (log, code,
+     * licenza, MFA, Qlik...) e di collegamento. $keep = tabelle gia' in uso, da non togliere.
+     */
+    public static function selectableTables(array $all, array $keep = []): array
+    {
+        $out = [];
+        foreach ($all as $t) {
+            $t = (string) $t;
+            $hidden = false;
+            if (!in_array($t, self::SELECTABLE_SYSTEM, true)) {
+                if (in_array($t, self::HIDDEN_NAMES, true)) {
+                    $hidden = true;
+                } else {
+                    foreach (self::HIDDEN_PREFIXES as $p) {
+                        if (strpos($t, $p) === 0) {
+                            $hidden = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!$hidden || in_array($t, $keep, true)) {
+                $out[] = $t;
+            }
+        }
+
+        return $out;
+    }
+
     /** Tipo di campo suggerito per una colonna che non e' ancora nel form. */
     public static function guessType(string $dbType): string
     {

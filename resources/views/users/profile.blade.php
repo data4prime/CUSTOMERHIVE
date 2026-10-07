@@ -106,13 +106,6 @@
               </select>
               @if(!$canManage)<div class="ch-hint">{{ trans('crudbooster.profile_readonly_admin_only') }}</div>@endif
             </div>
-            <div>
-              <label for="ch-lang">{{ trans('crudbooster.profile_field_language') }}</label>
-              <select class="form-select" id="ch-lang" name="lang">
-                <option value="en" @if($row->lang === 'en') selected @endif>English</option>
-                <option value="it" @if($row->lang === 'it') selected @endif>Italiano</option>
-              </select>
-            </div>
           </div>
 
           <div class="ch-actions">
@@ -304,12 +297,28 @@
           @csrf
           <div class="ch-grid">
             <div>
+              <label for="ch-lang">{{ trans('crudbooster.profile_field_language') }}</label>
+              <select class="form-select" id="ch-lang" name="lang">
+                <option value="en" @if($row->lang === 'en') selected @endif>English</option>
+                <option value="it" @if($row->lang === 'it') selected @endif>Italiano</option>
+              </select>
+            </div>
+            <div>
               <label for="ch-decsep">{{ trans('crudbooster.profile_pref_decimal_separator') }}</label>
               <select class="form-select" id="ch-decsep" name="decimal_separator">
                 <option value="comma" @if($decSepPref === 'comma') selected @endif>{{ trans('crudbooster.profile_pref_decimal_comma') }}</option>
                 <option value="dot" @if($decSepPref === 'dot') selected @endif>{{ trans('crudbooster.profile_pref_decimal_dot') }}</option>
               </select>
               <div class="ch-hint">{{ trans('crudbooster.profile_pref_decimal_hint') }}</div>
+            </div>
+            <div>
+              <label for="ch-datefmt">{{ trans('crudbooster.profile_pref_date_format') }}</label>
+              <select class="form-select" id="ch-datefmt" name="date_format">
+                @foreach(\App\Helpers\DateFormat::FORMATS as $df)
+                  <option value="{{ $df }}" @if(($row->date_format ?? 'd/m/Y') === $df) selected @endif>{{ \App\Helpers\DateFormat::sample($df) }}</option>
+                @endforeach
+              </select>
+              <div class="ch-hint">{{ trans('crudbooster.profile_pref_date_hint') }}</div>
             </div>
           </div>
           <div class="ch-actions">

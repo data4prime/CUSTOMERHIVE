@@ -128,7 +128,8 @@ class UserProfileSectionsTest extends TestCase
 
         $response = $this->postJson($this->url('profile-general'), [
             'name' => 'Nome Aggiornato',
-            'lang' => 'it',
+            // la lingua ora e' nelle Preferenze: qui, anche se inviata, non si tocca
+            'lang' => $before->lang === 'it' ? 'en' : 'it',
             'status' => 'Active',
             'data_scadenza' => '2030-01-31',
             // Campi che questa sezione NON deve mai toccare, anche se inviati.
@@ -141,11 +142,27 @@ class UserProfileSectionsTest extends TestCase
 
         $after = DB::table('cms_users')->where('id', $actor['userId'])->first();
         $this->assertSame('Nome Aggiornato', $after->name);
-        $this->assertSame('it', $after->lang);
+        $this->assertSame($before->lang, $after->lang);
         $this->assertStringStartsWith('2030-01-31', (string) $after->data_scadenza);
         $this->assertSame($before->email, $after->email);
         $this->assertSame($before->password, $after->password);
         $this->assertSame($before->tenant, $after->tenant);
+    }
+
+    public function test_preferenze_salvano_lingua_e_separatore_decimale(): void
+    {
+        $actor = $this->actingAsSuperadmin();
+
+        $this->postJson($this->url('profile-preferences'), ['lang' => 'en', 'decimal_separator' => 'dot', 'date_format' => 'Y-m-d'])
+            ->assertStatus(200)->assertJson(['ok' => true]);
+
+        $after = DB::table('cms_users')->where('id', $actor['userId'])->first();
+        $this->assertSame('en', $after->lang);
+        $this->assertSame('.', $after->decimal_separator);
+        $this->assertSame('Y-m-d', $after->date_format);
+
+        $this->postJson($this->url('profile-preferences'), ['lang' => 'xx', 'decimal_separator' => 'dot', 'date_format' => 'Y-m-d'])
+            ->assertStatus(422);
     }
 
     public function test_generale_un_utente_base_non_puo_cambiare_stato_e_scadenza(): void

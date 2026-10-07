@@ -39,6 +39,29 @@ class MenuHelper
 
 
   /**
+   * Le voci di menu di tipo Module usano l'icona del modulo (module generator):
+   * la copia sulle voci che puntano a quel modulo. Il percorso della voce e'
+   * "path" oppure "path?m=ID". $oldPath serve se il percorso del modulo e'
+   * appena cambiato.
+   */
+  public static function sync_module_icon($moduleId, $oldPath = null)
+  {
+    $module = DB::table('cms_moduls')->where('id', $moduleId)->first();
+    if (!$module || $module->path === null || $module->path === '') {
+      return;
+    }
+    foreach (array_unique(array_filter([$module->path, $oldPath], 'strlen')) as $path) {
+      $like = addcslashes($path, '%_\\') . '?%';
+      DB::table('cms_menus')
+        ->where('type', 'Module')
+        ->where(function ($q) use ($path, $like) {
+          $q->where('path', $path)->orWhere('path', 'like', $like);
+        })
+        ->update(['icon' => $module->icon, 'is_custom' => 0]);
+    }
+  }
+
+  /**
    * When deleting a menu, remove the menu id as parent id from his children
    * promoting them, no need to check recursively for children's children
    *

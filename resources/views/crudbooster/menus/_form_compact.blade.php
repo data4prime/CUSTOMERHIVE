@@ -45,6 +45,7 @@
     .mm-form > #form-group-is_dashboard,
     .mm-form > #form-group-new_tab { order: 40; }
     .mm-form .help-block:empty { display: none; }
+    .mm-form .ch-iconpick.mm-ro .ch-ip-btn { opacity: .7; cursor: not-allowed; }
     .mm-form #form-group-color .select2-container,
     .mm-form #form-group-color select { display: none !important; }
     .mm-dots { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 4px; }
@@ -57,9 +58,45 @@
     }
 </style>
 @endpush
+@php
+    // Icona di ogni modulo (per le voci di tipo Module: l'icona e' quella del module generator)
+    $mmModuleIcons = DB::table('cms_moduls')->whereNull('deleted_at')->pluck('icon', 'id')
+        ->map(function ($i) { return \App\Helpers\IconMap::toBi($i); });
+@endphp
 @push('bottom')
 <script type="text/javascript">
     $(function () {
+        // Voce di tipo Module: l'icona si legge dal modulo e non si modifica da qui
+        var MOD_ICONS = {!! json_encode($mmModuleIcons) !!};
+        var MOD_HINT = {!! json_encode(trans('crudbooster.menu_icon_from_module')) !!};
+        function applyModuleIcon() {
+            var isMod = $('input[name=type]:checked').val() === 'Module';
+            var $pick = $('#form-group-icon .ch-iconpick');
+            var $hint = $('#mm-icon-hint');
+            if (isMod) {
+                var ic = MOD_ICONS[$('#module_slug').val()];
+                if (ic) {
+                    $pick.find('[data-ip-value]').val(ic);
+                    $pick.find('.ch-ip-cur').removeClass('is-empty').html('<i class="' + ic + '"></i>');
+                    $pick.find('.ch-ip-name').removeClass('is-empty').text(ic.replace(/^bi bi-/, ''));
+                }
+                $('#form-group-is_custom,#form-group-icon_upload').hide();
+                $('#form-group-icon').show();
+                if (!$hint.length) {
+                    $('<div class="help-block" id="mm-icon-hint"></div>').text(MOD_HINT).appendTo($('#form-group-icon').find('[class*="col-"]').last());
+                }
+            } else {
+                $hint.remove();
+                var custom = $('input[name=is_custom]:checked').val() == 1;
+                $('#form-group-is_custom').show();
+                $('#form-group-icon').toggle(!custom);
+                $('#form-group-icon_upload').toggle(custom);
+            }
+            $pick.toggleClass('mm-ro', isMod).find('[data-ip-open]').prop('disabled', isMod);
+        }
+        $(document).on('change', '#module_slug, input[name=type]', function () { setTimeout(applyModuleIcon, 0); });
+        setTimeout(applyModuleIcon, 100);
+
         // Colori delle voci di menu (stessi nomi salvati di prima; valori = quelli usati nella sidebar)
         var swatch = {
             'normal': 'var(--ch-text-muted)', 'red': 'var(--ch-danger)', 'green': 'var(--ch-success)',

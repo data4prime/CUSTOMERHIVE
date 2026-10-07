@@ -605,6 +605,9 @@ class CBController extends Controller
         $number = ($page - 1) * $limit + 1;
         // Campi numero/importo/percentuale del form: in lista si mostrano col separatore scelto
         // dall'utente (profilo > Preferenze), a meno che la colonna abbia un format o un callback suo.
+        // colonna "titolo" (title_field): solo se e' una colonna semplice della lista
+        // (solo moduli creati dal module generator: i moduli di sistema restano com'erano)
+        $titleColumn = (!empty($this->title_field) && is_string($this->title_field) && ModuleHelper::is_manually_generated($this->table)) ? $this->title_field : null;
         $numericForms = [];
         foreach ((array) ($this->form ?? []) as $nf) {
             if (!empty($nf['name']) && in_array($nf['type'] ?? '', ['money', 'percent', 'number'], true)) {
@@ -680,6 +683,10 @@ class CBController extends Controller
                     && isset($numericForms[$numName = substr(strrchr('.' . ($col['name'] ?? ''), '.'), 1)])) {
                     // $numName: nome della colonna senza l'eventuale prefisso "tabella."
                     $value = \App\Helpers\ModuleGeneratorList::formatNumericField($value, $numericForms[$numName]);
+                } elseif (in_array($col['type_data'] ?? '', ['date', 'datetime', 'timestamp'], true) && empty($col['join']) && empty($col['is_subquery'])
+                    && empty($col['callback']) && empty($col['callback_php']) && empty($col['query']) && is_string($value) && $value !== '') {
+                    // date: nel formato scelto dall'utente (profilo > Preferenze)
+                    $value = $col['type_data'] === 'date' ? \App\Helpers\DateFormat::date($value) : \App\Helpers\DateFormat::dateTime($value);
                 }
 
                 if (isset($col['str_limit']) && $col['str_limit']) {
@@ -720,6 +727,14 @@ class CBController extends Controller
                             $value = implode(", ", $prevalue);
                         }
                     }
+                }
+
+                // Colonna scelta come titolo (passo 5 del module generator): in grassetto e porta al dettaglio
+                if ($titleColumn !== null && ($col['name'] ?? null) === $titleColumn && $value !== null && $value !== '' && is_scalar($value)
+                    && strpos((string) $value, '<a ') === false && !isset($col['image']) && empty($col['download'])
+                    && CRUDBooster::isRead() && $this->button_detail) {
+                    $detailUrl = CRUDBooster::mainpath('detail/' . $row->{$tablePK}) . '?return_url=' . urlencode(Request::fullUrl());
+                    $value = "<a href='" . e($detailUrl) . "' class='ch-title-link'><strong>" . $value . "</strong></a>";
                 }
 
                 $html_content[] = $value;

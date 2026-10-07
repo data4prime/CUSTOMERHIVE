@@ -572,7 +572,6 @@ class AdminCmsUsersController extends CBController
 
 		$rules = [
 			'name' => 'required|alpha_spaces|min:3',
-			'lang' => 'required|in:en,it',
 			'photo' => 'nullable|image|max:1000',
 		];
 		if ($canManage) {
@@ -587,7 +586,6 @@ class AdminCmsUsersController extends CBController
 
 		$update = [
 			'name' => Request::input('name'),
-			'lang' => Request::input('lang'),
 		];
 		if ($canManage) {
 			$update['status'] = Request::input('status');
@@ -606,8 +604,6 @@ class AdminCmsUsersController extends CBController
 			$update['updated_by'] = $user->id;
 		}
 
-		$langChanged = $user->lang !== $update['lang'];
-
 		DB::table('cms_users')->where('id', $user->id)->update($update);
 
 		// Nome e foto nell'header/sidebar vengono dalla sessione (popolata al
@@ -619,7 +615,7 @@ class AdminCmsUsersController extends CBController
 		}
 
 		return $this->profileResponse(true, trans('crudbooster.profile_saved'), [
-			'reload' => $langChanged,
+			'reload' => false,
 			'photo_url' => $photo ? asset($photo) : null,
 		]);
 	}
@@ -842,17 +838,23 @@ class AdminCmsUsersController extends CBController
 		}
 
 		$validator = Validator::make(Request::all(), [
+			'lang' => 'required|in:en,it',
 			'decimal_separator' => 'required|in:comma,dot',
+			'date_format' => ['required', \Illuminate\Validation\Rule::in(\App\Helpers\DateFormat::FORMATS)],
 		]);
 		if ($validator->fails()) {
 			return $this->profileValidationError($validator);
 		}
 
 		$separator = Request::input('decimal_separator') === 'dot' ? '.' : ',';
-		$changed = ($user->decimal_separator ?? ',') !== $separator;
+		$lang = Request::input('lang');
+		$dateFormat = Request::input('date_format');
+		$changed = ($user->decimal_separator ?? ',') !== $separator || $user->lang !== $lang
+			|| ($user->date_format ?? 'd/m/Y') !== $dateFormat;
 
-		DB::table('cms_users')->where('id', $user->id)->update(['decimal_separator' => $separator]);
+		DB::table('cms_users')->where('id', $user->id)->update(['decimal_separator' => $separator, 'lang' => $lang, 'date_format' => $dateFormat]);
 		\App\Helpers\NumberFormat::flush();
+		\App\Helpers\DateFormat::flush();
 
 		return $this->profileResponse(true, trans('crudbooster.profile_preferences_saved'), ['reload' => $changed]);
 	}

@@ -215,6 +215,9 @@
         if (['tinyint', 'int', 'bigint', 'smallint', 'mediumint'].indexOf(t) >= 0) { return ['', 'badge']; }
         return ['', 'trunc', 'badge', 'image', 'download'];
     }
+    function joinable(r) {
+        return ['int', 'integer', 'bigint', 'smallint', 'mediumint'].indexOf(String(r.type || '').toLowerCase()) >= 0;
+    }
     function fmtLabel(f) { return f === '' ? L.fmt_raw : L['fmt_' + f]; }
 
     function widthPills(r) {
@@ -280,7 +283,9 @@
                 h += '</div>';
             }
             h += '<div class="col-md-7"><span class="cfg-wl">' + esc(L.label_width) + '</span>' + widthPills(r) + '</div>';
-            if (r.kind === 'col') {
+            // "Tabella collegata" ha senso solo per colonne che possono contenere l'id di un altro record
+            // (numeri interi), o se il collegamento c'e' gia': non per testo, email, date, importi...
+            if (r.kind === 'col' && (joinable(r) || (r.join && r.join.table))) {
                 h += '<div class="col-12"><button type="button" class="btn btn-sm btn-outline-secondary" data-act="join" data-k="' + k + '"><i class="bi bi-link-45deg"></i> ' + esc(L.btn_join) + '</button> '
                     + (r.join && r.join.table ? '<span class="small text-muted">' + esc(L.join_set.replace(':column', r.join.column).replace(':table', r.join.table)) + '</span>' : '') + '</div>';
             }

@@ -613,11 +613,11 @@ class ModuleGeneratorList
         try {
             switch ($format) {
                 case 'date_short':
-                    return Carbon::parse($value)->format('d/m/Y');
+                    return DateFormat::date($value);
                 case 'date_long':
                     return Carbon::parse($value)->translatedFormat('j F Y');
                 case 'datetime_short':
-                    return Carbon::parse($value)->format('d/m/Y H:i');
+                    return DateFormat::dateTime($value);
                 case 'money_eur':
                     return is_numeric($value) ? NumberFormat::money($value, 2, 'EUR') : $value;
                 case 'money':
