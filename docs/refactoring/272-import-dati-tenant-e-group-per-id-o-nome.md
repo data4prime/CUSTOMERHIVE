@@ -24,6 +24,10 @@ record esiste in `tenants`/`groups`, non eliminato), poi per nome. Nessun
 risultato o nome presente piu' volte: l'import si ferma con riga e colonna
 (vedi 271); i record non si creano. Cella vuota: colonna non valorizzata.
 
+Nello stesso intervento: le righe inserite dall'import hanno `created_by` =
+utente che importa; le righe aggiornate (modalita' "aggiorna o inserisci")
+hanno `updated_by` = utente che importa (solo se le colonne esistono).
+
 ## Motivazione
 
 Dati esportati/compilati a mano usano spesso il nome.

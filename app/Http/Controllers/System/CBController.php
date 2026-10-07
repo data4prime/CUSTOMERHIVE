@@ -2395,6 +2395,9 @@ class CBController extends Controller
                         if (in_array('updated_at', $table_columns, true)) {
                             $changes['updated_at'] = date('Y-m-d H:i:s');
                         }
+                        if (in_array('updated_by', $table_columns, true)) {
+                            $changes['updated_by'] = CRUDBooster::myId();
+                        }
                         if ($changes) {
                             $existing->update($changes);
                         }
@@ -2406,6 +2409,9 @@ class CBController extends Controller
 
                 if ($has_created_at) {
                     $a['created_at'] = date('Y-m-d H:i:s');
+                }
+                if (in_array('created_by', $table_columns, true)) {
+                    $a['created_by'] = CRUDBooster::myId();
                 }
 
                 DB::table($this->table)->insert($a);
