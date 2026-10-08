@@ -39,7 +39,7 @@
           <tr data-search="{{ strtolower($member->name.' '.$member->email) }}">
             <td>
               <div class="d-flex align-items-center gap-2">
-                <img width="32" height="32" style="border-radius:50%;object-fit:cover" src="{{UserHelper::icon($member->id)}}" alt="">
+                {!! \App\Http\Controllers\System\LogsController::avatarHtml($member->name, $member->photo, $member->id, 32) !!}
                 <div>{{$member->name}}<div class="small text-secondary">{{$member->email}}</div></div>
               </div>
             </td>

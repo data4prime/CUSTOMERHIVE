@@ -14,9 +14,8 @@ $images_type = array('jpg', 'png', 'gif', 'jpeg', 'bmp', 'tiff');
 // senso (UserHelper::icon() cerca uno user per id: su un'altra tabella
 // mostrerebbe l'avatar di uno user scelto a caso in base all'id).
 if ((!$value || !file_exists(public_path($value))) && $table === 'cms_users' && $name === 'photo'):
-$pic = UserHelper::icon(@$row->id);
 ?>
-<a data-lightbox='roadtrip' href='{{$pic}}'><img style='max-width:150px' title="Image For {{$form['label']}}" src='{{$pic}}'/></a>
+{!! \App\Http\Controllers\System\LogsController::avatarHtml(@$row->name, '', @$row->id, 96) !!}
 <?php elseif($value && file_exists(public_path($value))):
 if(in_array(strtolower($ext), $images_type)):?>
 <a data-lightbox='roadtrip' href='{{asset($value)}}'><img style='max-width:150px' title="Image For {{$form['label']}}" src='{{asset($value)}}'/></a>

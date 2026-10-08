@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 287**
+**Prossimo numero libero: 288**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,7 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [287](287-avatar-iniziali-al-posto-del-default.md) | **Avatar: iniziali al posto dell'immagine di default (lockscreen, membri gruppo, home, dettaglio utente)** | Frontend / Utenti | Completato | 2026-10-08 |
 | [286](286-login-nuovo-look-ui2.md) | **Login: nuovo look del mockup (esagoni + form senza card)** | Frontend / Auth | Completato | 2026-10-08 |
 | [285](285-utenti-edit-scheda-qlik-come-profilo.md) | **Modifica utente: scheda Qlik con le stesse card del profilo** | Frontend / Utenti | Completato | 2026-10-08 |
 | [284](284-api-allineamento-controlli-al-pannello.md) | **API: licenza modulo, campi scrivibili e eliminazione allineati al pannello** | API Generator / Sicurezza | Completato | 2026-10-08 |

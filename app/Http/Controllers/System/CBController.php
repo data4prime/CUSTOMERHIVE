@@ -679,7 +679,7 @@ class CBController extends Controller
                     // mostrerebbe l'avatar di uno user scelto a caso in base all'id,
                     // vedi lo stesso fix in type_components/upload/component_detail.blade.php).
                     if ($value == '' && $this->table === 'cms_users' && $col['field'] === 'photo') {
-                        $value = "<a  data-lightbox='roadtrip' rel='group_{{$table}}' title='$label: $title' href='" . UserHelper::icon(@$row->id) . "'><img width='40px' height='40px' src='" . UserHelper::icon(@$row->id) . "'/></a>";
+                        $value = \App\Http\Controllers\System\LogsController::avatarHtml(@$row->name, '', @$row->id, 40);
                     } elseif ($value == '') {
                         $value = '';
                     } else {

@@ -78,7 +78,7 @@
           <ul class="users-list clearfix">
             <?php foreach ($latest_users as $key => $user): ?>
             <li>
-              <img src="{{ $user->photo }}" alt="User Image">
+              <div class="d-flex justify-content-center">{!! \App\Http\Controllers\System\LogsController::avatarHtml($user->name, $user->photo, $user->id, 56) !!}</div>
               <a class="users-list-name" href="/admin/users/edit/{{ $user->id }}">{{ $user->name }}</a>
               <span class="users-list-date">{{ date('d-m-yy', strtotime($user->created_at)) }}</span>
             </li>

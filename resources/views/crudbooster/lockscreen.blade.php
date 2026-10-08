@@ -27,8 +27,10 @@
 
         <div class="ch-auth-formpanel">
             <div class="ch-auth-formbox" style="text-align:center;">
-                <img class="ch-lockscreen-avatar"
-                    src="{{ (Session::get('admin_photo'))?:asset('/images/user/user.png') }}" alt="user image" />
+                {{-- Foto vera dal DB (Session admin_photo ha sempre un'immagine di riserva): senza foto, le iniziali --}}
+                <div style="display:flex;justify-content:center;margin-bottom:16px;">
+                    {!! \App\Http\Controllers\System\LogsController::avatarHtml(Session::get('admin_name'), optional(CRUDBooster::me())->photo, CRUDBooster::myId(), 72) !!}
+                </div>
 
                 <div class="ch-lockscreen-name">{{Session::get('admin_name')}}</div>
 

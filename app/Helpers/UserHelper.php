@@ -142,13 +142,9 @@ class UserHelper
    */
   public static function latest_users($number = 8)
   {
-    $users = User::orderby('created_at', 'desc')->limit($number)->get();
-    foreach ($users as $key => $user) {
-      if (empty($user->photo)) {
-        $user->photo = UserHelper::icon($user->id);
-      }
-    }
-    return $users;
+    // $user->photo resta quello vero del DB (vuoto se non caricata): la vista
+    // mostra le iniziali, vedi LogsController::avatarHtml()
+    return User::orderby('created_at', 'desc')->limit($number)->get();
   }
 
   /**
