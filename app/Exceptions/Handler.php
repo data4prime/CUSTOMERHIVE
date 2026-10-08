@@ -99,7 +99,9 @@ class Handler extends ExceptionHandler
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        if ($request->expectsJson()) {
+        // Le API (v2, Sanctum) rispondono sempre in JSON, anche senza header
+        // "Accept: application/json": niente redirect al login HTML.
+        if ($request->expectsJson() || $request->is('api2/*')) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 
