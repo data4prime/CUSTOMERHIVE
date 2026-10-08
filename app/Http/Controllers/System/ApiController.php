@@ -842,6 +842,10 @@ class ApiController extends Controller
                     $result['api_authorization'] = $debug_mode_message;
                 }
                 $result['id'] = $id;
+                if ($id) {
+                    // Restituisce il record appena creato (come per la modifica).
+                    $result = $this->mergeSavedRow($result, $table, $pk, $id, $responses_fields, $uploads_format_candidate);
+                }
                 } else {
                     $result['api_status'] =0;
                     $result['api_message'] =  'failed';
@@ -881,21 +885,7 @@ class ApiController extends Controller
                     // Restituisce il record appena modificato, con i nuovi
                     // valori: stessi campi e stessa trasformazione degli
                     // upload del 'detail' (solo campi di risposta configurati).
-                    $updated = DB::table($table)->where($table . '.' . $pk, $row_assign['id'])->first();
-                    if ($updated) {
-                        foreach ($updated as $k => $v) {
-                            $ext = \File::extension((string) $v);
-                            if (in_array($ext, $uploads_format_candidate)) {
-                                $updated->$k = asset($v);
-                            }
-
-                            if (!in_array($k, $responses_fields)) {
-                                unset($updated->$k);
-                            }
-                        }
-                        // Le chiavi di sistema (api_status, ...) non si sovrascrivono.
-                        $result = array_merge($result, array_diff_key((array) $updated, $result));
-                    }
+                    $result = $this->mergeSavedRow($result, $table, $pk, $row_assign['id'], $responses_fields, $uploads_format_candidate);
                 } catch (\Exception $e) {
                     $result['api_status'] = 0;
                     $result['api_message'] = 'failed, ' . $e;
@@ -993,6 +983,33 @@ class ApiController extends Controller
         }
 
         return $result;
+    }
+
+    /**
+     * Aggiunge alla risposta il record appena creato/modificato, riletto dal
+     * DB: stessi campi e stessa trasformazione degli upload del 'detail'
+     * (solo campi di risposta configurati). Le chiavi di sistema (api_status,
+     * id, ...) gia' presenti nella risposta non si sovrascrivono.
+     */
+    private function mergeSavedRow(array $result, $table, $pk, $id, array $responsesFields, array $uploadsFormat)
+    {
+        $saved = DB::table($table)->where($table . '.' . $pk, $id)->first();
+        if (!$saved) {
+            return $result;
+        }
+
+        foreach ($saved as $k => $v) {
+            $ext = \File::extension((string) $v);
+            if (in_array($ext, $uploadsFormat)) {
+                $saved->$k = asset($v);
+            }
+
+            if (!in_array($k, $responsesFields)) {
+                unset($saved->$k);
+            }
+        }
+
+        return array_merge($result, array_diff_key((array) $saved, $result));
     }
 
     public function login()

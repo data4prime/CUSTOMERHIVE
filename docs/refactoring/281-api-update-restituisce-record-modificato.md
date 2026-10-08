@@ -23,6 +23,15 @@ criteri del `detail`: solo i campi di risposta configurati
 di sistema (`api_status`, `api_message`, ...) non vengono sovrascritte da
 colonne omonime. Vale per `api/*` e `api2/*`. `save_add` non e' toccato.
 
+### Aggiunta (stesso giorno): anche la creazione
+
+Anche `save_add` restituisce ora il record appena creato (stessi criteri:
+solo campi di risposta configurati, upload con `asset()`), oltre a `id` che
+resta come prima. La logica e' stata estratta in `mergeSavedRow()` e usata da
+creazione e modifica. Se la creazione fallisce (`id` vuoto) la risposta e'
+invariata. Rollback: togliere la chiamata a `mergeSavedRow()` nel ramo
+`save_add`.
+
 ## Motivazione
 
 Evita una seconda chiamata e restituisce lo stato reale del record dopo il
