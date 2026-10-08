@@ -930,7 +930,13 @@ class ApiController extends Controller
 
     public function login()
     {
+        // Su api2/* l'utente e' gia' autenticato da Sanctum (Bearer token):
+        // si usa quello, senza richiedere l'header X-User (che resta
+        // necessario solo sul binario v1 api/*).
         $x_user = Request::header('X-user');
+        if (Request::is('api2/*') && Request::user()) {
+            $x_user = Request::user()->email;
+        }
 
         $user = DB::table('cms_users')
             ->where('status', '=', 'Active')

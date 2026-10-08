@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 278**
+**Prossimo numero libero: 279**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,7 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [278](278-api2-utente-da-token-senza-header-x-user.md) | **API v2: utente dal Bearer token, header X-User non piu' necessario** | API Generator / Auth | Completato | 2026-10-08 |
 | [277](277-api2-senza-token-risposta-json-401.md) | **API v2: token mancante/errato → JSON 401 invece di 404 HTML** | API Generator / Auth | Completato | 2026-10-08 |
 | [276](276-generatore-api-crea-endpoint-per-modulo.md) | **Generatore API: "Crea endpoint per..." genera i 5 endpoint standard di un modulo** | API Generator | Completato | 2026-10-08 |
 | [275](275-generatore-api-conferma-eliminazione-curl-discreto-postman-api2.md) | **Elenco API: conferma eliminazione solo al click, curl discreto, Postman su /api2** | API Generator / UI | Completato | 2026-10-08 |
