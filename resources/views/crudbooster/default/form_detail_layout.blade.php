@@ -48,7 +48,7 @@ if ($sysRest) {
     .flat-form .nav-tabs { margin: 0 15px 12px; }
     .flat-form .cbd-layout { padding: 0 15px 15px; margin-bottom: 0; }
     /* Pagine con intestazione propria (utenti): il valore sta in un riquadro come il campo del form di modifica */
-    .flat-form .cbd-table tr td:last-child:not(:has(.ch-image)):not(:has(.ch-grid-card)) { min-height: var(--ch-field-h); padding: 7px var(--ch-field-px); border: 1px solid var(--ch-field-border); border-radius: var(--ch-radius-sm); background: var(--ch-field-bg); overflow-wrap: anywhere; }
+    .flat-form .cbd-table tr td:last-child:not(:has(.ch-image)):not(:has(.ch-grid-card)):not(:has(.ch-qlik-detail)) { min-height: var(--ch-field-h); padding: 7px var(--ch-field-px); border: 1px solid var(--ch-field-border); border-radius: var(--ch-radius-sm); background: var(--ch-field-bg); overflow-wrap: anywhere; }
     /* stessa altezza di etichetta e stessa distanza tra i campi del form di modifica (etichetta 32px, riga 102px) */
     .flat-form .cbd-table tr td:first-child { color: var(--ch-text); font-size: var(--ch-font-size-sm); min-height: 32px; padding: 6px 0 4px; }
     .flat-form .cbd-table { margin-bottom: 32px; }

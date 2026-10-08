@@ -1,5 +1,9 @@
 <tr>
     <td colspan='2'>
+        {{-- Il file DEVE iniziare con <tr>: form_detail_row lo controlla per non avvolgerlo in un'altra riga con label --}}
+        @if(!empty($form['view_detail']))
+        @include($form['view_detail'])
+        @else
         {{-- Stessa grafica della griglia del form (ch-grid-*), in sola lettura (intervento 232) --}}
         <div class="ch-grid-card">
             <div class="ch-grid-hd"><i class='bi bi-list'></i> {{$form['label']}}</div>
@@ -79,5 +83,6 @@
                 </table>
             </div>
         </div>
+        @endif
     </td>
 </tr>

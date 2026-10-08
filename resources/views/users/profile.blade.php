@@ -384,34 +384,7 @@
           @csrf
           <div id="ch-qlik-rows">
             @foreach($qlikUsers as $qu)
-              <div class="ch-qlik-row">
-                <div class="ch-grid">
-                  <div>
-                    <label>{{ trans('crudbooster.profile_qlik_field_conf') }}</label>
-                    <select class="form-select" data-f="qlik_conf_id" @if(!$canManage) disabled @endif>
-                      <option value="">{{ trans('crudbooster.profile_qlik_select_conf') }}</option>
-                      @foreach($qlikConfs as $c)
-                        <option value="{{ $c->id }}" data-type="{{ $c->type }}" @if((int) $c->id === (int) $qu->qlik_conf_id) selected @endif>{{ $c->confname }} ({{ $c->type }})</option>
-                      @endforeach
-                    </select>
-                  </div>
-                  <div>
-                    <label>{{ trans('crudbooster.profile_qlik_field_login') }}</label>
-                    <input type="text" class="form-control" data-f="qlik_login" value="{{ $qu->qlik_login }}" @if(!$canManage) disabled @endif>
-                  </div>
-                  <div>
-                    <label>{{ trans('crudbooster.profile_qlik_field_directory') }}</label>
-                    <input type="text" class="form-control" data-f="user_directory" value="{{ $qu->user_directory }}" @if(!$canManage) disabled @endif>
-                    <div class="ch-hint">{{ trans('crudbooster.profile_qlik_onprem_hint') }}</div>
-                  </div>
-                  <div>
-                    <label>{{ trans('crudbooster.profile_qlik_field_idp') }}</label>
-                    <input type="text" class="form-control" data-f="idp_qlik" value="{{ $qu->idp_qlik }}" readonly>
-                    <div class="ch-hint">{{ trans('crudbooster.profile_qlik_idp_hint') }}</div>
-                  </div>
-                </div>
-                @if($canManage)<button type="button" class="btn btn-secondary btn-sm ch-qlik-remove">{{ trans('crudbooster.profile_qlik_remove') }}</button>@endif
-              </div>
+              @include('users._qlik_row', ['qu' => $qu, 'qlikConfs' => $qlikConfs, 'canManage' => $canManage])
             @endforeach
           </div>
           <p class="ch-hint" id="ch-qlik-none" @if($qlikUsers->isNotEmpty()) hidden @endif>{{ trans('crudbooster.profile_qlik_none') }}</p>
@@ -426,34 +399,7 @@
 
         @if($canManage)
         <template id="ch-qlik-template">
-          <div class="ch-qlik-row">
-            <div class="ch-grid">
-              <div>
-                <label>{{ trans('crudbooster.profile_qlik_field_conf') }}</label>
-                <select class="form-select" data-f="qlik_conf_id">
-                  <option value="">{{ trans('crudbooster.profile_qlik_select_conf') }}</option>
-                  @foreach($qlikConfs as $c)
-                    <option value="{{ $c->id }}" data-type="{{ $c->type }}">{{ $c->confname }} ({{ $c->type }})</option>
-                  @endforeach
-                </select>
-              </div>
-              <div>
-                <label>{{ trans('crudbooster.profile_qlik_field_login') }}</label>
-                <input type="text" class="form-control" data-f="qlik_login">
-              </div>
-              <div>
-                <label>{{ trans('crudbooster.profile_qlik_field_directory') }}</label>
-                <input type="text" class="form-control" data-f="user_directory">
-                <div class="ch-hint">{{ trans('crudbooster.profile_qlik_onprem_hint') }}</div>
-              </div>
-              <div>
-                <label>{{ trans('crudbooster.profile_qlik_field_idp') }}</label>
-                <input type="text" class="form-control" data-f="idp_qlik" readonly>
-                <div class="ch-hint">{{ trans('crudbooster.profile_qlik_idp_hint') }}</div>
-              </div>
-            </div>
-            <button type="button" class="btn btn-secondary btn-sm ch-qlik-remove">{{ trans('crudbooster.profile_qlik_remove') }}</button>
-          </div>
+          @include('users._qlik_row', ['qu' => null, 'qlikConfs' => $qlikConfs, 'canManage' => true])
         </template>
         @endif
       </section>

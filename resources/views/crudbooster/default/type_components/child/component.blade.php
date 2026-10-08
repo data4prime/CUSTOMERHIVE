@@ -12,7 +12,10 @@
 @endphp
 <div class='mb-3 row {{$header_group_class}}' id='form-group-{{$name}}'>
 
-@if($chCols)
+@if(!empty($form['view']))
+    {{-- Resa personalizzata (es. scheda Qlik degli utenti): i dati si salvano comunque col contratto "child" sotto --}}
+    <div class="col-sm-12">@include($form['view'])</div>
+@elseif($chCols)
 @php
     // ---- normalizza le colonne ------------------------------------------------
     $visibleCols = [];
