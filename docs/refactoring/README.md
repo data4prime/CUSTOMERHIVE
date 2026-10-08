@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 279**
+**Prossimo numero libero: 284**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,11 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [283](283-generatore-api-documentazione-automatica.md) | **Generatore API: documentazione automatica dei parametri (Descrizione + Postman) e pulsante "Aggiorna doc"** | API Generator | Completato | 2026-10-08 |
+| [282](282-generatore-api-create-senza-colonne-by.md) | **Generatore API: endpoint di creazione senza created_by/updated_by/deleted_by** | API Generator | Completato | 2026-10-08 |
+| [281](281-api-update-restituisce-record-modificato.md) | **API update: la risposta contiene il record appena modificato** | API Generator | Completato | 2026-10-08 |
+| [280](280-soft-delete-detail-edit-delete-da-url-diretto.md) | **Soft delete: detail/edit/delete da URL diretto non aprono record eliminati** | CRUD | Completato | 2026-10-08 |
+| [279](279-api-detail-rimossa-api-response-fields.md) | **API detail: rimossa la chiave api_response_fields dalla risposta** | API Generator | Completato | 2026-10-08 |
 | [278](278-api2-utente-da-token-senza-header-x-user.md) | **API v2: utente dal Bearer token, header X-User non piu' necessario** | API Generator / Auth | Completato | 2026-10-08 |
 | [277](277-api2-senza-token-risposta-json-401.md) | **API v2: token mancante/errato → JSON 401 invece di 404 HTML** | API Generator / Auth | Completato | 2026-10-08 |
 | [276](276-generatore-api-crea-endpoint-per-modulo.md) | **Generatore API: "Crea endpoint per..." genera i 5 endpoint standard di un modulo** | API Generator | Completato | 2026-10-08 |

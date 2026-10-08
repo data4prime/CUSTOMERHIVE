@@ -668,7 +668,6 @@ class ApiController extends Controller
 
                     $result['api_status'] = 1;
                     $result['api_message'] = 'success';
-                    $result['api_response_fields'] = $responses_fields;
                     if (CRUDBooster::getSetting('api_debug_mode') == 'true') {
                         $result['api_authorization'] = $debug_mode_message;
                     }
@@ -828,6 +827,25 @@ class ApiController extends Controller
                     $result['api_message'] = 'success';
                     if (CRUDBooster::getSetting('api_debug_mode') == 'true') {
                         $result['api_authorization'] = $debug_mode_message;
+                    }
+
+                    // Restituisce il record appena modificato, con i nuovi
+                    // valori: stessi campi e stessa trasformazione degli
+                    // upload del 'detail' (solo campi di risposta configurati).
+                    $updated = DB::table($table)->where($table . '.' . $pk, $row_assign['id'])->first();
+                    if ($updated) {
+                        foreach ($updated as $k => $v) {
+                            $ext = \File::extension((string) $v);
+                            if (in_array($ext, $uploads_format_candidate)) {
+                                $updated->$k = asset($v);
+                            }
+
+                            if (!in_array($k, $responses_fields)) {
+                                unset($updated->$k);
+                            }
+                        }
+                        // Le chiavi di sistema (api_status, ...) non si sovrascrivono.
+                        $result = array_merge($result, array_diff_key((array) $updated, $result));
                     }
                 } catch (\Exception $e) {
                     $result['api_status'] = 0;

@@ -81,6 +81,11 @@ X-user: {{ trans('crudbooster.api_doc_key_user') }}</pre>
         @endforeach
     </div>
     <div class="ms-auto d-flex gap-2 flex-wrap">
+        @if(count($apis))
+            <form method="post" action="{{ CRUDBooster::mainpath('refresh-doc') }}" class="d-inline">
+                <button type="submit" class="btn btn-secondary btn-sm" title="{{ trans('crudbooster.api_autodoc_button_hint') }}"><i class="bi bi-arrow-repeat"></i> {{ trans('crudbooster.api_autodoc_button') }}</button>
+            </form>
+        @endif
         <a class="btn btn-secondary btn-sm" target="_blank" href="{{ CRUDBooster::mainpath('download-postman') }}"><i class="bi bi-download"></i> {{ trans('crudbooster.api_doc_export_postman') }}</a>
         @if(count($bulkModules))
             <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#api-bulk-modal"><i class="bi bi-magic"></i> {{ trans('crudbooster.api_bulk_button') }}</button>
@@ -142,6 +147,10 @@ X-user: {{ trans('crudbooster.api_doc_key_user') }}</pre>
                 <span class="api-ep-path">/{{ $api->permalink }}</span>
                 <span class="badge text-bg-secondary api-ep-action">{{ $actionLabels[$api->aksi] ?? $api->aksi }}</span>
                 <span class="api-ep-actions" data-stop>
+                    <form method="post" action="{{ CRUDBooster::mainpath('refresh-doc') }}" class="d-inline">
+                        <input type="hidden" name="id" value="{{ $api->id }}">
+                        <button type="submit" class="btn btn-sm btn-secondary" title="{{ trans('crudbooster.api_autodoc_button') }}"><i class="bi bi-arrow-repeat"></i></button>
+                    </form>
                     <a class="btn btn-sm btn-secondary" title="{{ trans('crudbooster.api_doc_edit') }}" href="{{ CRUDBooster::mainpath('edit-api/'.$api->id) }}"><i class="bi bi-pencil"></i></a>
                     <button type="button" class="btn btn-sm btn-secondary api-del-ask" title="{{ trans('crudbooster.api_doc_delete') }}"><i class="bi bi-trash"></i></button>
                 </span>

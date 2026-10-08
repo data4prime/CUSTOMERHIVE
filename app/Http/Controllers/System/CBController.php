@@ -1617,10 +1617,28 @@ class CBController extends Controller
         }
     }
 
+    /**
+     * Carica il record per id escludendo quelli eliminati (soft delete):
+     * aprire detail/edit/delete di un record con deleted_at valorizzato
+     * (es. da URL diretto) deve comportarsi come un record inesistente.
+     */
+    protected function findActiveRow($id)
+    {
+        $query = DB::table($this->table)->where($this->primary_key, $id);
+        if (CRUDBooster::isColumnExists($this->table, 'deleted_at')) {
+            $query->whereNull($this->table . '.deleted_at');
+        }
+
+        return $query->first();
+    }
+
     public function getEdit($id)
     {
         $this->cbLoader();
-        $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+        $row = $this->findActiveRow($id);
+        if (!$row) {
+            return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.missing_item'));
+        }
 
         //kicks out if user shouldn't view the record $row
         if (!ModuleHelper::can_edit($this, $row)) {
@@ -1656,7 +1674,10 @@ class CBController extends Controller
             $this->cbLoader();
         }
 
-        $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+        $row = $this->findActiveRow($id);
+        if (!$row) {
+            return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.missing_item'));
+        }
         //kicks out if user shouldn't edit the record $row
         if (!ModuleHelper::can_edit($this, $row)) {
             //log denied access
@@ -1831,7 +1852,10 @@ class CBController extends Controller
     public function getDelete($id)
     {
         $this->cbLoader();
-        $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+        $row = $this->findActiveRow($id);
+        if (!$row) {
+            return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.missing_item'));
+        }
 
         //kicks out if user shouldn't view the record $row
         if (!ModuleHelper::can_delete($this, $row)) {
@@ -1882,7 +1906,10 @@ class CBController extends Controller
     public function getDetail($id)
     {
         $this->cbLoader();
-        $row = DB::table($this->table)->where($this->primary_key, $id)->first();
+        $row = $this->findActiveRow($id);
+        if (!$row) {
+            return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.missing_item'));
+        }
 
         //kicks out if user shouldn't view the record $row
         if (!ModuleHelper::can_view($this, $row)) {

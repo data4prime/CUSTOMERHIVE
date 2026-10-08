@@ -4,6 +4,7 @@ namespace App\Http\Controllers\System;
 
 use crocodicstudio\crudbooster\controllers\CBController;
 
+use App\Helpers\ApiDocBuilder;
 use CRUDbooster;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Excel;
@@ -106,13 +107,18 @@ class ApiCustomController extends CBController
             $parameters = unserialize($a->parameters);
             $formdata = [];
             $httpbuilder = [];
+            $notes = $parameters ? ApiDocBuilder::notes((string) $a->tabel, $parameters) : [];
             if ($parameters) {
                 foreach ($parameters as $p) {
                     $enabled = ($p['used'] == 0) ? false : true;
                     $name = $p['name'];
                     $httpbuilder[$name] = '';
                     if ($enabled) {
-                        $formdata[] = ['key' => $name, 'value' => '', 'type' => 'text', 'enabled' => $enabled];
+                        $field = ['key' => $name, 'value' => '', 'type' => 'text', 'enabled' => $enabled];
+                        if (isset($notes[$name])) {
+                            $field['description'] = ApiDocBuilder::toText($notes[$name]);
+                        }
+                        $formdata[] = $field;
                     }
                 }
             }
@@ -141,7 +147,7 @@ class ApiCustomController extends CBController
                         'mode' => 'formdata',
                         'formdata' => $formdata,
                     ],
-                    'description' => $a->keterangan,
+                    'description' => ApiDocBuilder::toText($a->keterangan),
                 ],
             ];
         }
@@ -536,6 +542,11 @@ class ApiCustomController extends CBController
 
         $a['controller'] = 'Api'.$controllerName.'Controller.php';
 
+        // Descrizione: se non e' stata scritta, si popola con la
+        // documentazione automatica dei parametri (vedi ApiDocBuilder).
+        $params = !empty($a['parameters']) ? (@unserialize($a['parameters']) ?: []) : [];
+        $a['keterangan'] = ApiDocBuilder::merge($a['keterangan'] ?? '', ApiDocBuilder::build($a['tabel'], $a['aksi'] ?? '', $params));
+
         DB::table('cms_apicustom')->insert($a);
 
         return null;
@@ -625,7 +636,8 @@ class ApiCustomController extends CBController
             'detail' => ['suffix' => 'detail', 'method' => 'get', 'label' => 'api_action_detail',
                 'params' => $idParams],
             'save_add' => ['suffix' => 'create', 'method' => 'post', 'label' => 'api_action_create',
-                'params' => $cols->where('name', '!=', 'id')->map(fn ($c) => $param($c, $notNull[$c['name']] ?? false, true))->values()->all()],
+                // Colonne scritte dal sistema: non si espongono come parametri.
+                'params' => $cols->whereNotIn('name', ['id', 'created_by', 'updated_by', 'deleted_by'])->map(fn ($c) => $param($c, $notNull[$c['name']] ?? false, true))->values()->all()],
             'save_edit' => ['suffix' => 'update', 'method' => 'post', 'label' => 'api_action_update',
                 'params' => $cols->map(fn ($c) => $param($c, $c['name'] === 'id', true))->values()->all()],
             'delete' => ['suffix' => 'delete', 'method' => 'post', 'label' => 'api_action_delete',
@@ -663,6 +675,46 @@ class ApiCustomController extends CBController
         return redirect(CRUDBooster::mainpath())->with([
             'message' => trans('crudbooster.api_bulk_result', ['created' => $created, 'skipped' => $skipped]),
             'message_type' => $created ? 'success' : 'warning',
+        ]);
+    }
+
+    /**
+     * "Aggiorna doc": rigenera il blocco automatico della Descrizione (nuovi
+     * valori delle select, parametri cambiati...) di un endpoint (id) o di
+     * tutti. Il testo scritto a mano fuori dal blocco non viene toccato.
+     */
+    public function postRefreshDoc()
+    {
+        $this->cbLoader();
+        if ($denied = $this->denyUnlessSuperadmin('API Refresh Doc')) {
+            return $denied;
+        }
+
+        $query = DB::table('cms_apicustom');
+        if (Request::get('id')) {
+            $query->where('id', Request::get('id'));
+        }
+
+        $updated = 0;
+        $total = 0;
+        foreach ($query->get() as $api) {
+            $total++;
+            $params = $api->parameters ? (@unserialize($api->parameters) ?: []) : [];
+            $block = ApiDocBuilder::build((string) $api->tabel, (string) $api->aksi, $params);
+            if (ApiDocBuilder::sameBlock($api->keterangan, $block)) {
+                continue;
+            }
+            DB::table('cms_apicustom')->where('id', $api->id)->update([
+                'keterangan' => ApiDocBuilder::merge($api->keterangan, $block),
+            ]);
+            $updated++;
+        }
+
+        return redirect(CRUDBooster::mainpath())->with([
+            'message' => $updated
+                ? trans('crudbooster.api_autodoc_result', ['updated' => $updated, 'total' => $total])
+                : trans('crudbooster.api_autodoc_uptodate'),
+            'message_type' => $updated ? 'success' : 'info',
         ]);
     }
 
