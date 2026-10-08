@@ -66,6 +66,8 @@
 .api-secret { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12.5px; }
 .api-token { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; background: var(--ch-text); color: var(--ch-surface); padding: 14px; border-radius: var(--ch-radius-md); word-break: break-all; font-size: 13px; }
 .api-narrow { max-width: 640px; }
+/* Variante discreta del blocco codice (esempi di collegamento): chiaro, bordo sottile */
+.api-code.api-code-soft { background: var(--ch-bg); color: var(--ch-text-muted); border: 1px solid var(--ch-border); font-size: 11.5px; padding: 10px 12px; }
 .api-confirm { background: var(--ch-danger-soft); }
 
 /* Documentazione pubblica */

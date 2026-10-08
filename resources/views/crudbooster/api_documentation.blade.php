@@ -50,7 +50,7 @@
                     ]) !!}
                 </div>
             </div>
-            <pre class="api-code">curl {{ url('api2') }}/<span style="opacity:.6">{{ trans('crudbooster.api_doc_example_slug') }}</span> \
+            <pre class="api-code api-code-soft">curl {{ url('api2') }}/<span style="opacity:.6">{{ trans('crudbooster.api_doc_example_slug') }}</span> \
   -H "Authorization: Bearer &lt;token&gt;"</pre>
         </div>
         <div class="api-grid" data-pane="key" hidden>
@@ -62,7 +62,7 @@
                 </div>
                 <div class="api-help">{{ trans('crudbooster.api_doc_key_intro') }}</div>
             </div>
-            <pre class="api-code">X-Authorization-Token: md5(SECRETKEY + TIME + USER_AGENT)
+            <pre class="api-code api-code-soft">X-Authorization-Token: md5(SECRETKEY + TIME + USER_AGENT)
 X-Authorization-Time: TIME   # {{ trans('crudbooster.api_doc_key_time') }}
 X-user: {{ trans('crudbooster.api_doc_key_user') }}</pre>
         </div>
@@ -82,7 +82,36 @@ X-user: {{ trans('crudbooster.api_doc_key_user') }}</pre>
     </div>
     <div class="ms-auto d-flex gap-2 flex-wrap">
         <a class="btn btn-secondary btn-sm" target="_blank" href="{{ CRUDBooster::mainpath('download-postman') }}"><i class="bi bi-download"></i> {{ trans('crudbooster.api_doc_export_postman') }}</a>
+        @if(count($bulkModules))
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#api-bulk-modal"><i class="bi bi-magic"></i> {{ trans('crudbooster.api_bulk_button') }}</button>
+        @endif
         <a class="btn btn-primary btn-sm" href="{{ CRUDBooster::mainpath('generator') }}"><i class="bi bi-plus-lg"></i> {{ trans('crudbooster.api_tab_new_endpoint') }}</a>
+    </div>
+</div>
+
+{{-- Crea in automatico gli endpoint standard di un modulo --}}
+<div class="modal fade" id="api-bulk-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content" method="post" action="{{ CRUDBooster::mainpath('bulk-create') }}">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ trans('crudbooster.api_bulk_title') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ trans('crudbooster.api_cancel') }}"></button>
+            </div>
+            <div class="modal-body">
+                <label class="api-lbl" for="api-bulk-table">{{ trans('crudbooster.api_bulk_module') }}</label>
+                <select id="api-bulk-table" name="tabel" class="form-select" required>
+                    <option value="">{{ trans('crudbooster.api_bulk_choose') }}</option>
+                    @foreach($bulkModules as $m)
+                        <option value="{{ $m->table_name }}">{{ $m->name }}</option>
+                    @endforeach
+                </select>
+                <div class="api-help mt-2">{{ trans('crudbooster.api_bulk_help') }}</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ trans('crudbooster.api_cancel') }}</button>
+                <button type="submit" class="btn btn-primary">{{ trans('crudbooster.api_bulk_submit') }}</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -103,12 +132,12 @@ X-user: {{ trans('crudbooster.api_doc_key_user') }}</pre>
             elseif ($api->aksi === 'save_add') $sample['id'] = 1;
             $sampleJson = json_encode($sample, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         @endphp
-        <div class="api-ep" data-action="{{ $api->aksi }}" data-search="{{ strtolower($api->nama.' '.$api->permalink.' '.$api->tabel) }}">
+        <div class="api-ep" data-action="{{ $api->aksi }}" data-search="{{ strtolower($api->nama.' '.$api->permalink.' '.$api->tabel.' '.($moduleNames[$api->tabel] ?? '')) }}">
             <div class="api-ep-row" data-toggle="#api-detail-{{ $api->id }}">
                 <span class="api-method {{ $method }}">{{ strtoupper($method) }}</span>
                 <div>
                     <div class="api-ep-name">{{ $api->nama }}</div>
-                    <div class="api-ep-sub">{{ trans('crudbooster.api_doc_table') }} <code>{{ $api->tabel }}</code></div>
+                    <div class="api-ep-sub">{{ trans('crudbooster.api_bulk_module') }} <strong>{{ $moduleNames[$api->tabel] ?? $api->tabel }}</strong></div>
                 </div>
                 <span class="api-ep-path">/{{ $api->permalink }}</span>
                 <span class="badge text-bg-secondary api-ep-action">{{ $actionLabels[$api->aksi] ?? $api->aksi }}</span>
@@ -117,12 +146,15 @@ X-user: {{ trans('crudbooster.api_doc_key_user') }}</pre>
                     <button type="button" class="btn btn-sm btn-secondary api-del-ask" title="{{ trans('crudbooster.api_doc_delete') }}"><i class="bi bi-trash"></i></button>
                 </span>
             </div>
-            <div class="api-ep-confirm api-confirm px-3 py-2 d-flex justify-content-between align-items-center gap-2 flex-wrap" hidden>
-                <span><strong>{{ trans('crudbooster.api_doc_delete_confirm', ['name' => $api->nama]) }}</strong> {{ trans('crudbooster.api_doc_delete_warning') }}</span>
-                <span class="d-flex gap-2">
-                    <button type="button" class="btn btn-sm btn-secondary api-del-cancel">{{ trans('crudbooster.api_cancel') }}</button>
-                    <button type="button" class="btn btn-sm btn-danger api-del-do" data-url="{{ CRUDBooster::mainpath('delete-api/'.$api->id) }}">{{ trans('crudbooster.api_doc_delete') }}</button>
-                </span>
+            {{-- hidden sull'esterno: .d-flex (display:flex !important) lo annullerebbe --}}
+            <div class="api-ep-confirm" hidden>
+                <div class="api-confirm px-3 py-2 d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                    <span><strong>{{ trans('crudbooster.api_doc_delete_confirm', ['name' => $api->nama]) }}</strong> {{ trans('crudbooster.api_doc_delete_warning') }}</span>
+                    <span class="d-flex gap-2">
+                        <button type="button" class="btn btn-sm btn-secondary api-del-cancel">{{ trans('crudbooster.api_cancel') }}</button>
+                        <button type="button" class="btn btn-sm btn-danger api-del-do" data-url="{{ CRUDBooster::mainpath('delete-api/'.$api->id) }}">{{ trans('crudbooster.api_doc_delete') }}</button>
+                    </span>
+                </div>
             </div>
             <div class="api-ep-detail" id="api-detail-{{ $api->id }}" hidden>
                 <div style="grid-column:1/-1">

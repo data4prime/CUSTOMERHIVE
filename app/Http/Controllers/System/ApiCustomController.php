@@ -58,6 +58,9 @@ class ApiCustomController extends CBController
         $data['page_title'] = 'API Generator';
         $data['page_menu'] = Route::getCurrentRoute()->getActionName();
         $data['apis'] = DB::table('cms_apicustom')->orderby('nama', 'asc')->get();
+        $data['moduleNames'] = DB::table('cms_moduls')->whereNull('deleted_at')->pluck('name', 'table_name')->all();
+        $data['bulkModules'] =DB::table('cms_moduls')->whereNull('deleted_at')
+            ->whereIn('table_name', $this->apiTablesList())->orderBy('name')->get(['name', 'table_name']);
 
         foreach ($data['apis'] as $api) {
             //dd(unserialize($api->parameters));
@@ -95,6 +98,8 @@ class ApiCustomController extends CBController
             'schema' => 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json',
         ];
         $items = [];
+        $folders = [];
+        $moduleNames = DB::table('cms_moduls')->whereNull('deleted_at')->pluck('name', 'table_name')->all();
         $apis = DB::table('cms_apicustom')->orderby('nama', 'asc')->get();
 
         foreach ($apis as $a) {
@@ -122,12 +127,16 @@ class ApiCustomController extends CBController
                 $httpbuilder = '';
             }
 
-            $items[] = [
+            // Cartella Postman = nome del modulo (ripiego: nome tabella)
+            $folder = $moduleNames[$a->tabel] ?? $a->tabel;
+            $folders[$folder][] = [
                 'name' => $a->nama,
                 'request' => [
-                    'url' => url('api/'.$a->permalink).$httpbuilder,
+                    'url' => url('api2/'.$a->permalink).$httpbuilder,
                     'method' => $a->method_type ?: 'GET',
-                    'header' => [],
+                    'header' => [
+                        ['key' => 'Authorization', 'value' => 'Bearer <token>', 'type' => 'text'],
+                    ],
                     'body' => [
                         'mode' => 'formdata',
                         'formdata' => $formdata,
@@ -135,6 +144,10 @@ class ApiCustomController extends CBController
                     'description' => $a->keterangan,
                 ],
             ];
+        }
+        ksort($folders, SORT_NATURAL | SORT_FLAG_CASE);
+        foreach ($folders as $folder => $folderItems) {
+            $items[] = ['name' => (string) $folder, 'item' => $folderItems];
         }
         $data['item'] = $items;
 
@@ -171,17 +184,30 @@ class ApiCustomController extends CBController
         $data['page_title'] = 'API Generator';
         $data['page_menu'] = Route::getCurrentRoute()->getActionName();
 
-        $tables = CRUDBooster::listTables();
+        $data['tables'] = $this->apiTablesList();
+
+        return view('crudbooster::api_generator', $data);
+    }
+
+    /**
+     * Tabelle selezionabili nel generatore API: solo quelle dei moduli
+     * (prefisso module_generator_prefix), non le tabelle di sistema.
+     * Se l'API in modifica punta già a un'altra tabella, resta in elenco.
+     */
+    private function apiTablesList($currentTable = null)
+    {
         $tables_list = [];
-        foreach ($tables as $tab) {
-            foreach ($tab as $key => $value) {
+        foreach (CRUDBooster::listTables('mg') as $tab) {
+            foreach ($tab as $value) {
                 $tables_list[] = $value;
             }
         }
 
-        $data['tables'] = $tables_list;
+        if ($currentTable && ! in_array($currentTable, $tables_list, true)) {
+            $tables_list[] = $currentTable;
+        }
 
-        return view('crudbooster::api_generator', $data);
+        return $tables_list;
     }
 
     public function getEditApi($id)
@@ -201,15 +227,7 @@ class ApiCustomController extends CBController
         $data['page_title'] = 'API Generator';
         $data['page_menu'] = Route::getCurrentRoute()->getActionName();
 
-        $tables = CRUDBooster::listTables();
-        $tables_list = [];
-        foreach ($tables as $tab) {
-            foreach ($tab as $key => $value) {
-                $tables_list[] = $value;
-            }
-        }
-
-        $data['tables'] = $tables_list;
+        $data['tables'] = $this->apiTablesList($row->tabel ?? null);
 
         return view('crudbooster::api_generator', $data);
     }
@@ -471,49 +489,181 @@ class ApiCustomController extends CBController
 
 
         } else {
-
-            
-
-            $controllerName = ucwords(str_replace('_', ' ', $a['permalink']));
-            $controllerName = str_replace(' ', '', $controllerName);
-            // $controllerName finisce nel NOME CLASSE e nel NOME FILE del
-            // controller generato (non dentro una stringa PHP, quindi
-            // var_export() qui non aiuta): senza sanificazione, un permalink
-            // con '/', '.' o virgolette permetteva di scrivere il file fuori
-            // da app/Http/Controllers/ (path traversal) o di iniettare
-            // codice nel nome classe. Un nome classe PHP valido e' comunque
-            // solo lettere/cifre/underscore, quindi questo non toglie nulla
-            // a un permalink che produceva gia' un controller funzionante.
-            $controllerName = preg_replace('/[^A-Za-z0-9_]/', '', $controllerName);
-
-            //check if controller already exists
-            $controller = 'Api'.$controllerName.'Controller.php';
-            $controller_path = base_path("app/Http/Controllers/").$controller;
-            if (file_exists($controller_path)) {
-                // Se il file esiste ma non c'e' una riga cms_apicustom
-                // corrispondente (file orfano/collisione con un controller
-                // non generato da qui), ->first() torna null e ->id
-                // crashava con 500 invece di un errore gestito.
-                $collidingApi = DB::table('cms_apicustom')->where('controller', $controller)->first();
-                if (!$collidingApi) {
-                    return CRUDBooster::redirect(CRUDBooster::referer(), trans('crudbooster.api_controller_not_found'), 'error');
-                }
-                $controller_db = $collidingApi->id;
-                $controller = 'Api'.$controllerName.$controller_db.'Controller.php';
-                $controllerName = $controllerName.$controller_db;
-
-
+            if ($error = $this->storeNewApi($a)) {
+                return CRUDBooster::redirect(CRUDBooster::referer(), trans($error), 'error');
             }
-
-
-            CRUDBooster::generateAPI($controllerName, $a['tabel'], $a['permalink'], $a['method_type']);
-
-            $a['controller'] = 'Api'.$controllerName.'Controller.php';
-
-            DB::table('cms_apicustom')->insert($a);
         }
 
         return redirect(CRUDBooster::mainpath())->with(['message' => 'Yeay, your api has been saved successfully !', 'message_type' => 'success']);
+    }
+
+    /**
+     * Genera il controller dell'endpoint e inserisce la riga in cms_apicustom.
+     * Ritorna null se tutto ok, altrimenti la chiave di traduzione dell'errore.
+     */
+    private function storeNewApi(array $a)
+    {
+        $controllerName = ucwords(str_replace('_', ' ', $a['permalink']));
+        $controllerName = str_replace(' ', '', $controllerName);
+        // $controllerName finisce nel NOME CLASSE e nel NOME FILE del
+        // controller generato (non dentro una stringa PHP, quindi
+        // var_export() qui non aiuta): senza sanificazione, un permalink
+        // con '/', '.' o virgolette permetteva di scrivere il file fuori
+        // da app/Http/Controllers/ (path traversal) o di iniettare
+        // codice nel nome classe. Un nome classe PHP valido e' comunque
+        // solo lettere/cifre/underscore, quindi questo non toglie nulla
+        // a un permalink che produceva gia' un controller funzionante.
+        $controllerName = preg_replace('/[^A-Za-z0-9_]/', '', $controllerName);
+
+        //check if controller already exists
+        $controller = 'Api'.$controllerName.'Controller.php';
+        $controller_path = base_path("app/Http/Controllers/").$controller;
+        if (file_exists($controller_path)) {
+            // Se il file esiste ma non c'e' una riga cms_apicustom
+            // corrispondente (file orfano/collisione con un controller
+            // non generato da qui), ->first() torna null e ->id
+            // crashava con 500 invece di un errore gestito.
+            $collidingApi = DB::table('cms_apicustom')->where('controller', $controller)->first();
+            if (!$collidingApi) {
+                return 'crudbooster.api_controller_not_found';
+            }
+            $controller_db = $collidingApi->id;
+            $controller = 'Api'.$controllerName.$controller_db.'Controller.php';
+            $controllerName = $controllerName.$controller_db;
+        }
+
+        CRUDBooster::generateAPI($controllerName, $a['tabel'], $a['permalink'], $a['method_type']);
+
+        $a['controller'] = 'Api'.$controllerName.'Controller.php';
+
+        DB::table('cms_apicustom')->insert($a);
+
+        return null;
+    }
+
+    /**
+     * Tipo di validazione salvato per un tipo di colonna (stessa mappa usata
+     * dal JS dell'editor). $default: cosa restituire per i tipi non mappati.
+     */
+    private function apiMapType($type, $default = null)
+    {
+        switch ($type) {
+            case 'varchar':
+            case 'nvarchar':
+            case 'char':
+            case 'text':
+                return 'string';
+            case 'integer':
+                return 'integer';
+            case 'double':
+            case 'float':
+            case 'decimal':
+                return 'numeric';
+            case 'date':
+                return 'date';
+            case 'datetime':
+            case 'timestamp':
+                return 'date_format:Y-m-d H:i:s';
+            case 'email':
+            case 'image':
+            case 'password':
+                return $type;
+        }
+
+        return $default ?? $type;
+    }
+
+    /**
+     * Crea in un colpo solo gli endpoint standard (elenco, dettaglio,
+     * creazione, modifica, eliminazione) per un modulo. Le impostazioni sono
+     * quelle che l'editor propone di default: l'utente poi li ritocca uno
+     * per uno. Gli endpoint con permalink gia' esistente vengono saltati.
+     */
+    public function postBulkCreate()
+    {
+        $this->cbLoader();
+        if ($denied = $this->denyUnlessSuperadmin('API Bulk Create')) {
+            return $denied;
+        }
+
+        $table = (string) Request::get('tabel');
+        $module = DB::table('cms_moduls')->where('table_name', $table)->whereNull('deleted_at')->first();
+        if (! $module || ! in_array($table, $this->apiTablesList(), true)) {
+            return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.api_bulk_invalid_module'), 'warning');
+        }
+
+        // Colonne come le propone l'editor: per i parametri le colonne della
+        // tabella, per le risposte anche quelle collegate (id_xxx).
+        $cols = collect($this->getColumnTable($table, 'save_add')->getData(true));
+        $respCols = collect($this->getColumnTable($table, 'list')->getData(true));
+
+        // Obbligatorio in creazione = NOT NULL senza default e non auto_increment
+        $notNull = [];
+        foreach (DB::select('SHOW COLUMNS FROM `'.str_replace('`', '', $table).'`') as $c) {
+            $notNull[$c->Field] = $c->Null === 'NO' && $c->Default === null && stripos((string) $c->Extra, 'auto_increment') === false;
+        }
+
+        $param = fn ($c, $required, $used) => [
+            'name' => $c['name'],
+            'type' => $this->apiMapType($c['type'], 'string'),
+            'config' => '',
+            'required' => $required ? '1' : '0',
+            'used' => $used ? '1' : '0',
+        ];
+        $idParams = $cols->where('name', 'id')->map(fn ($c) => $param($c, true, true))->values()->all();
+
+        $responses = serialize($respCols->map(fn ($c) => [
+            'name' => $c['name'],
+            'type' => $this->apiMapType($c['type']),
+            'subquery' => '',
+            'used' => '1',
+        ])->values()->all());
+
+        $definitions = [
+            'list' => ['suffix' => 'list', 'method' => 'get', 'label' => 'api_action_list',
+                'params' => $cols->map(fn ($c) => $param($c, false, false))->values()->all()],
+            'detail' => ['suffix' => 'detail', 'method' => 'get', 'label' => 'api_action_detail',
+                'params' => $idParams],
+            'save_add' => ['suffix' => 'create', 'method' => 'post', 'label' => 'api_action_create',
+                'params' => $cols->where('name', '!=', 'id')->map(fn ($c) => $param($c, $notNull[$c['name']] ?? false, true))->values()->all()],
+            'save_edit' => ['suffix' => 'update', 'method' => 'post', 'label' => 'api_action_update',
+                'params' => $cols->map(fn ($c) => $param($c, $c['name'] === 'id', true))->values()->all()],
+            'delete' => ['suffix' => 'delete', 'method' => 'post', 'label' => 'api_action_delete',
+                'params' => $idParams],
+        ];
+
+        $created = 0;
+        $skipped = 0;
+        foreach ($definitions as $aksi => $d) {
+            $permalink = $table.'_'.$d['suffix'];
+            if (DB::table('cms_apicustom')->where('permalink', $permalink)->exists()) {
+                $skipped++;
+                continue;
+            }
+            $row = [
+                'nama' => $module->name.' - '.trans('crudbooster.'.$d['label']),
+                'tabel' => $table,
+                'aksi' => $aksi,
+                'permalink' => $permalink,
+                'method_type' => $d['method'],
+                'parameters' => serialize($d['params']),
+                'sql_where' => '',
+                'responses' => $responses,
+                'keterangan' => '',
+            ];
+            if ($this->storeNewApi($row) === null) {
+                $created++;
+            } else {
+                $skipped++;
+            }
+        }
+
+        CRUDBooster::insertLog(trans('crudbooster.api_bulk_log', ['module' => $module->name, 'created' => $created]));
+
+        return redirect(CRUDBooster::mainpath())->with([
+            'message' => trans('crudbooster.api_bulk_result', ['created' => $created, 'skipped' => $skipped]),
+            'message_type' => $created ? 'success' : 'warning',
+        ]);
     }
 
     function getDeleteApi($id)

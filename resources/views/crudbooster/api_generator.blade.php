@@ -164,6 +164,18 @@
                 $('#table-response tfoot').show();
             }
 
+            // La riga modello nel tfoot e' gia' potenziata da ch-select.js (select2): un clone si
+            // porta dietro il contenitore select2 "morto" e la classe che impedisce di
+            // reinizializzarlo, quindi i select della nuova riga non rispondono ai click.
+            function cloneParamRow() {
+                var $row = $('#table-parameters tfoot tr').clone();
+                $row.find('.select2-container').remove();
+                $row.find('select').removeClass('select2-hidden-accessible')
+                    .removeAttr('data-select2-id aria-hidden tabindex')
+                    .each(function () { $(this).find('option').removeAttr('data-select2-id'); });
+                return $row;
+            }
+
             function load_parameters() {
                 //console.log('load_parameters');
                 var t = $('#combo_tabel').val();
@@ -200,7 +212,7 @@
                     $('#table-parameters tbody').empty();
                     $.each(resp, function (i, obj) {
 
-                        var param_html = $('#table-parameters tfoot tr').clone();
+                        var param_html = cloneParamRow();
 
                         $('#table-parameters tbody').append(param_html);
 
@@ -299,7 +311,7 @@
             var no_params = 0;
             $('#table-parameters tbody').empty();
             $.each(resp, function (i, obj) {
-                var param_html = $('#table-parameters tfoot tr').clone();
+                var param_html = cloneParamRow();
                 $('#table-parameters tbody').append(param_html);
             })
 
@@ -499,7 +511,7 @@
 
             function addParam() {
 
-                var htm = $('#table-parameters tfoot tr').clone();
+                var htm = cloneParamRow();
 
                 var val = $('#table-parameters tfoot tr td:nth-child(2) input').val();
                 var validation = $('#table-parameters tfoot tr td:nth-child(3) select').val();

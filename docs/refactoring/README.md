@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 273**
+**Prossimo numero libero: 277**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,10 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [276](276-generatore-api-crea-endpoint-per-modulo.md) | **Generatore API: "Crea endpoint per..." genera i 5 endpoint standard di un modulo** | API Generator | Completato | 2026-10-08 |
+| [275](275-generatore-api-conferma-eliminazione-curl-discreto-postman-api2.md) | **Elenco API: conferma eliminazione solo al click, curl discreto, Postman su /api2** | API Generator / UI | Completato | 2026-10-08 |
+| [274](274-generatore-api-select-parametri-non-cliccabili.md) | **Generatore API: select Obbligatorio/Attivo dei parametri non cliccabili** (cloni select2 morti) | API Generator / UI | Completato | 2026-10-08 |
+| [273](273-generatore-api-solo-tabelle-moduli.md) | **Generatore API: nel campo Tabella solo le tabelle dei moduli** (non quelle di sistema) | API Generator | Completato | 2026-10-08 |
 | [272](272-import-dati-tenant-e-group-per-id-o-nome.md) | **Import dati: tenant e group per id o per nome** | Lista / Import | Completato | 2026-10-07 |
 | [271](271-import-dati-errori-visibili-e-transazione.md) | **Import dati: errori visibili e import tutto-o-niente** (si ferma al primo problema, indica riga e colonna) | Lista / Import | Completato | 2026-10-07 |
 | [270](270-import-dati-aggiorna-o-inserisci.md) | **Import dati: aggiorna se esiste, altrimenti inserisci** (scelta di una o piu' colonne chiave) | Lista / Import | Completato | 2026-10-07 |
