@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 284**
+**Prossimo numero libero: 285**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,7 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [284](284-api-allineamento-controlli-al-pannello.md) | **API: licenza modulo, campi scrivibili e eliminazione allineati al pannello** | API Generator / Sicurezza | Completato | 2026-10-08 |
 | [283](283-generatore-api-documentazione-automatica.md) | **Generatore API: documentazione automatica dei parametri (Descrizione + Postman) e pulsante "Aggiorna doc"** | API Generator | Completato | 2026-10-08 |
 | [282](282-generatore-api-create-senza-colonne-by.md) | **Generatore API: endpoint di creazione senza created_by/updated_by/deleted_by** | API Generator | Completato | 2026-10-08 |
 | [281](281-api-update-restituisce-record-modificato.md) | **API update: la risposta contiene il record appena modificato** | API Generator | Completato | 2026-10-08 |

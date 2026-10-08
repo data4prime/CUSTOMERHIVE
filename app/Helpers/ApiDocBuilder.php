@@ -25,6 +25,9 @@ class ApiDocBuilder
     /** @var array<string, array> cache voci FORM per tabella */
     private static $formCache = [];
 
+    /** @var array<string, string>|null nomi dei moduli per tabella */
+    private static $moduleNames = null;
+
     /** Blocco HTML della documentazione ('' se non c'e' nulla da dire). */
     public static function build(string $table, string $aksi, array $parameters): string
     {
@@ -121,7 +124,10 @@ class ApiDocBuilder
             }
         } elseif (!empty($entry['datatable'])) {
             $t = explode(',', (string) $entry['datatable']);
-            $parts[] = e(trans('crudbooster.api_autodoc_ref', ['table' => $t[0] ?? '', 'column' => $t[1] ?? '']));
+            $moduleName = self::moduleName((string) ($t[0] ?? ''));
+            $parts[] = $moduleName !== null
+                ? e(trans('crudbooster.api_autodoc_ref', ['module' => $moduleName, 'column' => $t[1] ?? '']))
+                : e(trans('crudbooster.api_autodoc_ref_table', ['table' => $t[0] ?? '', 'column' => $t[1] ?? '']));
         } elseif (!empty($entry['dataquery'])) {
             $parts[] = e(trans('crudbooster.api_autodoc_query'));
         } elseif ($type === 'date') {
@@ -137,6 +143,20 @@ class ApiDocBuilder
         }
 
         return implode('. ', $parts);
+    }
+
+    /** Nome del modulo che gestisce la tabella, o null (es. tabelle di sistema). */
+    private static function moduleName(string $table): ?string
+    {
+        if (self::$moduleNames === null) {
+            try {
+                self::$moduleNames = DB::table('cms_moduls')->whereNull('deleted_at')->pluck('name', 'table_name')->all();
+            } catch (\Throwable $e) {
+                self::$moduleNames = [];
+            }
+        }
+
+        return self::$moduleNames[$table] ?? null;
     }
 
     /** Voci del blocco FORM del controller del modulo, per nome campo. */

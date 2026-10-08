@@ -54,6 +54,14 @@ esistenti restano validi. Va eseguita (`php artisan migrate`) su ogni
 ambiente/cliente all'aggiornamento; senza, creazione automatica e "Aggiorna
 doc" falliscono. Il `down()` tronca a 255 caratteri.
 
+### Aggiunta (stesso giorno): nome del modulo al posto della tabella
+
+Per le select su un'altra tabella la nota dice ora "ID di un record del modulo
+**Aziende** (campo mostrato: nome)" invece del nome tabella (`mg_aziende`). Il
+nome viene da `cms_moduls.name` (solo moduli non eliminati); se la tabella non
+ha un modulo resta la dicitura con il nome tabella (chiave
+`api_autodoc_ref_table`). Chi ha gia' premuto "Aggiorna doc" deve ripremerlo.
+
 ## Motivazione
 
 Dare a chi integra le API le informazioni minime per usarle senza guardare il

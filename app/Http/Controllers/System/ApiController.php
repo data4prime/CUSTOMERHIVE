@@ -190,6 +190,16 @@ class ApiController extends Controller
 
         $debug[] = 'User is OK';
 
+        // Modulo a licenza (Qlik, ChatAI) non incluso nella licenza attiva:
+        // stesso blocco che il pannello applica via EnforceModuleLicense.
+        foreach (DB::table('cms_moduls')->where('table_name', $table)->whereNull('deleted_at')->pluck('path') as $modulePath) {
+            if (! \App\Http\Middleware\EnforceModuleLicense::isModuleLicensed((string) $modulePath)) {
+                $result['api_status'] = 0;
+                $result['api_message'] = trans('crudbooster.module_not_licensed');
+                goto show;
+            }
+        }
+
 
         /*
         | ----------------------------------------------
@@ -685,10 +695,31 @@ class ApiController extends Controller
                 $this->controller->cbInit();
                 if (ModuleHelper::can_delete($this->controller, $data2)) {
 
-                if (CRUDBooster::isColumnExists($table, 'deleted_at')) {
-                    $delete = $data->update(['deleted_at' => date('Y-m-d H:i:s')]);
-                } else {
-                    $delete = $data->delete();
+                // Come il pannello (CBController::getDelete): hook prima/dopo,
+                // log dell'operazione e deleted_by oltre al soft delete.
+                $deleteId = $data2->{$pk} ?? null;
+                $delete = false;
+                $hookResult = method_exists($this->controller, 'hook_before_delete') ? $this->controller->hook_before_delete($deleteId) : null;
+                if (!($hookResult instanceof \Symfony\Component\HttpFoundation\Response)) {
+                    $titleField = strtolower((string) ($this->controller->title_field ?? ''));
+                    CRUDBooster::insertLog(trans('crudbooster.log_delete', [
+                        'name' => ($titleField !== '' && isset($data2->{$titleField})) ? $data2->{$titleField} : $deleteId,
+                        'module' => DB::table('cms_moduls')->where('table_name', $table)->whereNull('deleted_at')->value('name') ?: $table,
+                    ]));
+
+                    if (CRUDBooster::isColumnExists($table, 'deleted_at')) {
+                        $softDelete = ['deleted_at' => date('Y-m-d H:i:s')];
+                        if (CRUDBooster::isColumnExists($table, 'deleted_by')) {
+                            $softDelete['deleted_by'] = CRUDBooster::myId();
+                        }
+                        $delete = $data->update($softDelete);
+                    } else {
+                        $delete = $data->delete();
+                    }
+
+                    if ($delete && method_exists($this->controller, 'hook_after_delete')) {
+                        $this->controller->hook_after_delete($deleteId);
+                    }
                 }
                 $result['api_status'] = ($delete) ? 1 : 0;
                 $result['api_message'] = ($delete) ? "success" : "failed";
@@ -713,6 +744,8 @@ class ApiController extends Controller
                     $row_assign[$k] = $v;
                 }
             }
+            // created_at lo imposta il sistema (in creazione) e non si cambia in modifica
+            unset($row_assign['created_at']);
             foreach ($parameters as $param) {
                 $name = $param['name'];
                 $used = $param['used'];
@@ -758,12 +791,28 @@ class ApiController extends Controller
                 }
             }
 
-            //Make sure if saving/updating data additional param included
-            $arrkeys = array_keys($row_assign);
-            foreach ($posts as $key => $value) {
-                if (!in_array($key, $arrkeys)) {
-                    $row_assign[$key] = $value;
+            // Si scrivono solo i parametri dichiarati nell'endpoint (e attivi):
+            // un campo extra nel body non finisce piu' sul record. Le colonne
+            // gestite dal sistema non si accettano dal client, le imposta
+            // l'API come fa il pannello.
+            foreach ($parameters as $param) {
+                $name = $param['name'];
+                if (!in_array($name, ['created_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'], true)
+                    && !array_key_exists($name, $row_assign) && isset($posts[$name]) && $posts[$name] !== '' && !is_array($posts[$name])
+                    && CRUDBooster::isColumnExists($table, $name)) {
+                    $row_assign[$name] = $posts[$name];
                 }
+            }
+            foreach (['created_by', 'updated_by', 'deleted_by', 'deleted_at'] as $systemColumn) {
+                unset($row_assign[$systemColumn]);
+            }
+            if ($action_type == 'save_add') {
+                if (CRUDBooster::isColumnExists($table, 'created_by')) {
+                    $row_assign['created_by'] = CRUDBooster::myId();
+                }
+            }
+            if (CRUDBooster::isColumnExists($table, 'updated_by')) {
+                $row_assign['updated_by'] = CRUDBooster::myId();
             }
 
 

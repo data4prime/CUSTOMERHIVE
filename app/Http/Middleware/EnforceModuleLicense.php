@@ -29,6 +29,23 @@ class EnforceModuleLicense
         'chat_ai' => 'isActiveChatAI',
     ];
 
+    /**
+     * True se il modulo (path relativo ad ADMIN_PATH, es. "qlik_items") e'
+     * utilizzabile con la licenza attiva. Stesso controllo del middleware, per
+     * chi non passa dalle route del pannello (es. API api2/*).
+     */
+    public static function isModuleLicensed(string $modulePath): bool
+    {
+        $modulePath = trim($modulePath, '/');
+        foreach (self::LICENSED_PREFIXES as $prefix => $check) {
+            if ($modulePath === $prefix || str_starts_with($modulePath, $prefix.'/')) {
+                return (bool) LicenseHelper::$check();
+            }
+        }
+
+        return true;
+    }
+
     public function handle($request, Closure $next)
     {
         $admin_path = trim(config('crudbooster.ADMIN_PATH') ?: 'admin', '/');
