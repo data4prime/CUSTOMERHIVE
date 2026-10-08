@@ -12,10 +12,14 @@
 
     @include('crudbooster::partials.ch_icons')
     <link rel='stylesheet' href="{{ asset('css/theme.css').'?r='.time() }}" type="text/css" />
+    @if (config('crudbooster.UI_V2'))
+    <link rel='stylesheet' href="{{ asset('css/ch-ui2.css').'?r='.time() }}" type="text/css" />
+    @endif
 </head>
 
-<body class="ch-auth">
+<body class="ch-auth {{ config('crudbooster.UI_V2') ? 'ch-ui2' : '' }}">
     <div class="ch-auth-shell">
+        @include('crudbooster::partials.ch_auth_art')
         <div class="ch-brand">
             <img src='{{ CRUDBooster::getSetting("logo")?asset(CRUDBooster::getSetting("logo")):asset("/images/customerhive_trasparente.png") }}'
                 alt="{{ isset($appname) ? $appname : 'CustomerHive' }}" style="max-width:200px;max-height:56px;">

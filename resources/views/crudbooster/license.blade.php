@@ -11,11 +11,15 @@
     <meta content='width=device-width, initial-scale=1, viewport-fit=cover' name='viewport'>
     @include('crudbooster::partials.ch_icons')
     <link rel='stylesheet' href="{{ asset('css/theme.css').'?v='.@filemtime(public_path('css/theme.css')) }}" type="text/css" />
+    @if (config('crudbooster.UI_V2'))
+    <link rel='stylesheet' href="{{ asset('css/ch-ui2.css').'?r='.time() }}" type="text/css" />
+    @endif
     {{-- Stesso linguaggio visivo delle pagine di accesso (classi ch-auth-*, vedi login.blade.php). --}}
 </head>
 
-<body class="ch-auth">
+<body class="ch-auth {{ config('crudbooster.UI_V2') ? 'ch-ui2' : '' }}">
     <div class="ch-auth-shell">
+        @include('crudbooster::partials.ch_auth_art')
         <div class="ch-brand">
             <a href="{{url('/')}}">
                 <img title=" {!! isset($appname) ? ($appname == 'CustomerHive' ? 'CustomerHive':$appname) : ''  !!}  "

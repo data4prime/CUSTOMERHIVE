@@ -16,6 +16,9 @@
 
     @include('crudbooster::partials.ch_icons')
     <link rel='stylesheet' href="{{ asset('css/theme.css').'?r='.time() }}" type="text/css" />
+    @if (config('crudbooster.UI_V2'))
+    <link rel='stylesheet' href="{{ asset('css/ch-ui2.css').'?r='.time() }}" type="text/css" />
+    @endif
     {{--
         Su richiesta esplicita dell'utente (2026-09-03): il pannello brand
         resta sempre quello scuro del mockup, senza l'immagine/colore di
@@ -26,8 +29,9 @@
     --}}
 </head>
 
-<body class="ch-auth">
+<body class="ch-auth {{ config('crudbooster.UI_V2') ? 'ch-ui2' : '' }}">
     <div class="ch-auth-shell">
+        @include('crudbooster::partials.ch_auth_art')
         <div class="ch-brand">
             <img src="{{ $logo }}" alt="{{ isset($tenant->name) ? $tenant->name : 'CustomerHive' }}"
                 style="max-width:200px;max-height:56px;">
