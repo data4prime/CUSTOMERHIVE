@@ -76,6 +76,15 @@ return [
     'UI_V2' => env('CH_UI_V2', true),
 
     /*
+    * Cartella dove il module builder / l'API generator scrivono i controller
+    * custom (namespace App\Http\Controllers, che non cambia mai). Non
+    * impostata = app/Http/Controllers (comportamento di sempre). Assoluta o
+    * relativa a base_path(): usata solo dalle istanze Docker
+    * (storage/app/custom-controllers). Vedi CRUDBooster::customControllersPath().
+    */
+    'CUSTOM_CONTROLLERS_PATH' => env('CUSTOM_CONTROLLERS_PATH'),
+
+    /*
     * NOTE :
     * Make sure yo clear your config cache by using command : php artisan config:clear
     */

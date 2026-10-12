@@ -35,6 +35,17 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+        $this->mapHealthRoute();
+
+        // Per GET /health si registra SOLO la rotta di salute: gli altri file
+        // di rotte interrogano il DB (cms_moduls...) e scandiscono/istanziano
+        // i controller custom a ogni richiesta, quindi con il DB giu' il
+        // controllo impiegherebbe decine di secondi invece di rispondere 503.
+        // Per ogni altro URL (e da riga di comando) non cambia nulla.
+        if (! $this->app->runningInConsole() && in_array(request()->method(), ['GET', 'HEAD'], true) && request()->is('health')) {
+            return;
+        }
+
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
@@ -42,6 +53,19 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapCrudboosterRoutes();
 
         //
+    }
+
+    /**
+     * Endpoint di salute per l'orchestratore (GET /health).
+     *
+     * Senza gruppo di middleware: niente "web" (sessione/cookie), niente
+     * CBBackend/EnforceModuleLicense, fuori da ADMIN_PATH.
+     *
+     * @return void
+     */
+    protected function mapHealthRoute()
+    {
+        Route::get('health', \App\Http\Controllers\System\HealthController::class);
     }
 
     /**

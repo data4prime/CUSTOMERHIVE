@@ -324,6 +324,88 @@ class UserHelper
   }
 
   /**
+   * L'account e' scaduto? data_scadenza e' una colonna date confrontata con
+   * now(): alla mezzanotte del giorno di scadenza l'utente risulta scaduto.
+   * NULL e '0000-00-00' (data zero legacy) non sono scadenze.
+   *
+   * Protezione dei superadmin: un superadmin risulta scaduto solo se esiste
+   * almeno un altro superadmin utilizzabile (attivo e non scaduto); l'ultimo
+   * non scade mai, cosi' nessuno resta senza chi possa riattivare gli account.
+   * Stessa regola usata da user:check-expiry (expiredActiveUserIds()).
+   *
+   * @param object $user riga/modello di cms_users (id, id_cms_privileges, data_scadenza)
+   */
+  public static function isAccountExpired($user): bool
+  {
+    if (! self::isDatePassed($user->data_scadenza ?? null)) {
+      return false;
+    }
+
+    if (self::isSuperadminPrivilege($user->id_cms_privileges)) {
+      return self::usableSuperadminsQuery()->where('cms_users.id', '!=', $user->id)->exists();
+    }
+
+    return true;
+  }
+
+  /**
+   * Id degli utenti attivi da disattivare per scadenza (usato da
+   * user:check-expiry), con la stessa protezione dei superadmin di
+   * isAccountExpired(): se nessun superadmin e' utilizzabile, quelli scaduti
+   * restano attivi.
+   *
+   * @return int[]
+   */
+  public static function expiredActiveUserIds(): array
+  {
+    $expired = DB::table('cms_users')
+      ->join('cms_privileges', 'cms_privileges.id', '=', 'cms_users.id_cms_privileges')
+      ->where('cms_users.status', 'Active')
+      ->whereNotNull('cms_users.data_scadenza')
+      ->where('cms_users.data_scadenza', '!=', '0000-00-00')
+      ->where('cms_users.data_scadenza', '<', now())
+      ->select('cms_users.id', 'cms_privileges.is_superadmin')
+      ->get();
+
+    $superadminsProtected = self::usableSuperadminsQuery()->doesntExist();
+
+    return $expired
+      ->reject(function ($user) use ($superadminsProtected) {
+        return $user->is_superadmin == 1 && $superadminsProtected;
+      })
+      ->pluck('id')
+      ->all();
+  }
+
+  private static function isDatePassed($date): bool
+  {
+    if (empty($date) || $date === '0000-00-00') {
+      return false;
+    }
+
+    return \Illuminate\Support\Carbon::parse($date)->lt(now());
+  }
+
+  private static function isSuperadminPrivilege($privilegeId): bool
+  {
+    return DB::table('cms_privileges')->where('id', $privilegeId)->where('is_superadmin', 1)->exists();
+  }
+
+  /** Superadmin attivi e non scaduti. */
+  private static function usableSuperadminsQuery()
+  {
+    return DB::table('cms_users')
+      ->join('cms_privileges', 'cms_privileges.id', '=', 'cms_users.id_cms_privileges')
+      ->where('cms_privileges.is_superadmin', 1)
+      ->where('cms_users.status', 'Active')
+      ->where(function ($query) {
+        $query->whereNull('cms_users.data_scadenza')
+          ->orWhere('cms_users.data_scadenza', '0000-00-00')
+          ->orWhere('cms_users.data_scadenza', '>=', now());
+      });
+  }
+
+  /**
    *	get user's primary group name
    *
    * @param int user's id

@@ -168,7 +168,7 @@ class ApiDocBuilder
         $byName = [];
         try {
             $module = DB::table('cms_moduls')->where('table_name', $table)->whereNull('deleted_at')->first();
-            $path = $module && $module->controller ? app_path('Http/Controllers/' . $module->controller . '.php') : null;
+            $path = $module && $module->controller ? CRUDBooster::customControllersPath() . '/' . $module->controller . '.php' : null;
             if ($path && file_exists($path)) {
                 foreach (ModuleGeneratorList::readBlock((string) file_get_contents($path), 'FORM') as $entry) {
                     if (!empty($entry['name'])) {

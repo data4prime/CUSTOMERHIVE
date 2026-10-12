@@ -1698,4 +1698,12 @@ return [
     'import_err_file' => 'File not found or unreadable: upload it again.',
     'import_err_all_blank' => 'All the rows are empty in the mapped columns: nothing was imported.',
     'import_err_server' => 'The server returned an unexpected error. Nothing was imported; check the file and try again.',
+
+    // Tabella degli utenti in scadenza nelle email di avviso (TenantHelper::build_utenti_scadenza_tenantadmin)
+    'user_expiry_col_name' => 'Name',
+    'user_expiry_col_email' => 'Email',
+    'user_expiry_col_date' => 'Expiry date',
+
+    // Login rifiutato dal controllo di licenza (AdminController::postLogin)
+    'license_missing_or_not_valid' => 'License is missing, expired or not valid',
 ];

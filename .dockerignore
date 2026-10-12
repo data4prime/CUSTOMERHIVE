@@ -1,12 +1,50 @@
-.git
-.github
-.idea
-node_modules
-vendor
-storage/logs
-storage/framework/cache
-storage/framework/sessions
-storage/framework/views
-tests
-*.md
-.env
+# COPY in Docker legge il FILESYSTEM, non git: in locale la cartella contiene
+# controller custom dei clienti, upload, script di lavoro, .env, ecc. che non
+# devono finire in nessuna immagine. Per questo si parte escludendo TUTTO e si
+# riammette solo cio' che serve (lista bianca). Un file nuovo in radice resta
+# fuori finche' non lo si aggiunge qui di proposito.
+# (Usato sia da docker/Dockerfile.prod sia dal build dev, dove il codice e' un
+# bind mount e questo file non ha effetto sul contenuto dell'app.)
+*
+
+# --- Lista bianca -----------------------------------------------------------
+!app/
+!bootstrap/
+!config/
+!database/
+!public/
+!resources/
+!routes/
+!artisan
+!composer.json
+!composer.lock
+# Servono al COPY del Dockerfile di produzione (non finiscono nell'immagine).
+!docker/
+
+# --- Eccezioni dentro la lista bianca ----------------------------------------
+# Controller creati da interfaccia (module builder) e controller dei clienti:
+# in app/Http/Controllers/ (radice) c'e' roba non tracciata da git e roba
+# storica tracciata specifica di singoli clienti. Entra solo il necessario;
+# in produzione i custom vivono in storage/app/custom-controllers (volume).
+app/Http/Controllers/*
+!app/Http/Controllers/System/
+!app/Http/Controllers/Controller.php
+!app/Http/Controllers/CBHook.php
+!app/Http/Controllers/Auth/
+
+# Cache/compilati locali, symlink dell'ambiente locale, DB locali.
+bootstrap/cache/*
+public/storage
+public/hot
+database/*.sqlite
+database/*.sqlite-journal
+
+
+# Rumore ovunque
+**/.git
+**/.DS_Store
+**/Thumbs.db
+**/.env
+**/.env.*
+**/*.log
+**/*.swp

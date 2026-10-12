@@ -224,19 +224,18 @@ controller custom dei clienti.
   del pannello si blocca senza una modifica di codice apparente, controllare
   prima se la tabella `license` ha una riga valida prima di sospettare un
   bug — dettagli in `docs/login-e-licensing.md`.
-- **`config/mail.php` conserva ancora la chiave top-level legacy `driver`**
-  (formato Laravel <= 6.x, mai migrato al formato moderno `mailers`).
-  `Illuminate\Mail\MailManager::getConfig()` ha un ramo di compatibilità
-  esplicito: se `mail.driver` è valorizzato, usa **sempre** l'intero array
-  `mail` (le chiavi piatte `host`/`port`/`username`/`password`/...) per
-  **qualunque** mailer richiesto, ignorando silenziosamente
-  `mail.mailers.<nome>` — impostare `config(['mail.mailers.foo' => ...])`
-  per personalizzare l'invio in questo progetto non ha alcun effetto.
-  Per controllare davvero il transport usato bisogna impostare le chiavi
-  piatte legacy (`mail.driver`/`mail.host`/`mail.port`/...), esattamente
-  come già fa `CRUDBooster::sendEmail()`/`sendEmailQueue()` e come fa
-  `SettingsController::postTestEmail()` (vedi
-  `docs/refactoring/101-settings-email-test-invio.md`).
+- **`config/mail.php` non esiste più: l'unico SMTP è quello dei Settings
+  (interfaccia, gruppo "Email Setting").** Il mailer si costruisce a ogni
+  invio con `App\Helpers\MailSettings` (`fromSettings()` per gli invii veri,
+  `configure()` per il test email dal form): `smtp_driver/host/port/
+  username/password`, `tls_ssl` (SSL → `smtps`, TLS → `smtp`, altro → dalla
+  porta) e mittente `email_sender` (poi l'username se è un indirizzo; un
+  template con `from_email` lo sovrascrive). Non ci sono valori di ripiego in
+  file o `.env` (`MAIL_*` non è letto): senza Settings validi l'invio fallisce
+  con "Unsupported mail transport []", non parte da un SMTP nascosto. Niente
+  `config(['mail.driver' => ...])` o `Config::set('mail.*')` sparsi: passare
+  da `MailSettings`. Nei test `Mail::fake()` è attivo per tutti
+  (`tests/TestCase.php`). Vedi `docs/refactoring/294-*`.
 - **Un commento Blade `{{-- ... --}}` va sempre chiuso con `--}}`, mai
   con la chiusura di un commento CSS (`*/`)** — capita facile per
   disattenzione quando il commento sta appena sopra una regola CSS

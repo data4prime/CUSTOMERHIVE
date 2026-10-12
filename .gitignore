@@ -30,6 +30,11 @@ app/Http/Controllers/*
 !app/Http/Controllers/System/
 !app/Http/Controllers/System/**
 
+# Controller custom delle istanze Docker (CUSTOM_CONTROLLERS_PATH): stesso
+# ruolo di app/Http/Controllers/ sopra, ma su un percorso persistente.
+# (storage/app/.gitignore li ignora gia'; qui e' esplicito.)
+/storage/app/custom-controllers/
+
 /.tokensave
 
 # Script locali di supporto (es. seed di dati di test), non fanno parte

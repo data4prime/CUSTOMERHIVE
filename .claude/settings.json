@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__tokensave__tokensave_search",
+      "mcp__tokensave__tokensave_context",
+      "mcp__tokensave__tokensave_status",
+      "mcp__tokensave__tokensave_impact",
+      "mcp__tokensave__tokensave_callees",
+      "mcp__tokensave__tokensave_callers",
+      "mcp__tokensave__tokensave_read",
+      "mcp__tokensave__tokensave_files",
+      "mcp__Claude_Browser__find",
+      "mcp__Claude_Browser__read_page",
+      "mcp__Claude_Browser__get_page_text",
+      "mcp__Claude_Browser__tabs_context",
+      "mcp__Claude_Browser__read_console_messages",
+      "mcp__Claude_Browser__read_network_requests",
+      "mcp__Claude_Browser__preview_logs",
+      "mcp__Claude_Browser__preview_list",
+      "PowerShell(Get-ChildItem *)"
+    ]
+  }
+}

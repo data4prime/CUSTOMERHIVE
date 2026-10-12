@@ -4,6 +4,7 @@ namespace App\Http\Controllers\System;
 
 use crocodicstudio\crudbooster\controllers\CBController;
 
+use App\Helpers\MailSettings;
 use CRUDBooster;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -261,15 +262,10 @@ class SettingsController extends CBController
      * non l'ha ritoccata: in quel caso si usa quella gia' salvata (stessa
      * convenzione di postSaveSetting()).
      *
-     * Le chiavi legacy 'mail.driver'/'mail.host'/... (non
-     * 'mail.mailers.*'): config/mail.php di questo progetto conserva
-     * ancora la chiave top-level 'driver' (mai migrato al formato
-     * 'mailers' moderno), e Illuminate\Mail\MailManager::getConfig() ha un
-     * ramo di compatibilita' esplicito - se 'mail.driver' e' valorizzato,
-     * usa SEMPRE l'intero array 'mail' con le chiavi piatte, ignorando
-     * qualunque 'mail.mailers.<nome>' per qualsiasi mailer richiesto.
-     * Stessa tecnica gia' usata da CRUDBooster::sendEmail()/
-     * sendEmailQueue() - qui e' quella giusta, non un ripiego.
+     * Il mailer si costruisce con App\Helpers\MailSettings::configure(), la
+     * stessa routine degli invii veri (config/mail.php non esiste piu', vedi
+     * docs/refactoring/294-*): cambia solo la provenienza dei valori (form
+     * invece di Settings salvati).
      */
     public function postTestEmail()
     {
@@ -311,22 +307,17 @@ class SettingsController extends CBController
             return response()->json(['success' => false, 'message' => trans('crudbooster.email_test_no_host')]);
         }
 
-        $scheme = null;
-        if ($encryption === 'SSL') {
-            $scheme = 'smtps';
-        } elseif ($encryption === 'TLS') {
-            $scheme = 'smtp';
-        }
-
-        config([
-            'mail.driver' => $driver,
-            'mail.host' => $host,
-            'mail.port' => $port ?: 587,
-            'mail.username' => $username,
-            'mail.password' => $password,
-            'mail.scheme' => $scheme,
-            'mail.from.address' => $fromEmail ?: 'no-reply@example.com',
-            'mail.from.name' => CRUDBooster::getSetting('appname') ?: 'CustomerHive',
+        // Stessa costruzione del mailer usata dagli invii veri
+        // (MailSettings), ma con i valori del form invece di quelli salvati.
+        $mailerName = MailSettings::configure([
+            'driver' => $driver,
+            'host' => $host,
+            'port' => $port ?: 587,
+            'username' => $username,
+            'password' => $password,
+            'encryption' => $encryption,
+            'from_email' => $fromEmail ?: 'no-reply@example.com',
+            'from_name' => CRUDBooster::getSetting('appname') ?: 'CustomerHive',
         ]);
 
         // MailManager nuovo (non il singleton nel container, che potrebbe
@@ -336,7 +327,7 @@ class SettingsController extends CBController
         $manager = new \Illuminate\Mail\MailManager(app());
 
         try {
-            $manager->mailer()->raw(
+            $manager->mailer($mailerName)->raw(
                 trans('crudbooster.email_test_body'),
                 function ($message) use ($to) {
                     $message->to($to)->subject(trans('crudbooster.email_test_subject'));

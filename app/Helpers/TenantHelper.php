@@ -113,15 +113,47 @@ class TenantHelper  {
       ->where('status', 'Active')
       ->get();
 
-    $ret = [];
+    // Tutti gli utenti trovati hanno lo stesso privilegio (2): una sola lettura del ruolo.
+    $role = $users_tenants->isEmpty() ? null : Role::find(2);
 
-    foreach ($users_tenants as $user) {
-      if (Role::find($user->id_cms_privileges)->is_tenantadmin == 1) {
-        $ret [] = $user;
-      }
+    if (! $role || $role->is_tenantadmin != 1) {
+      return [];
     }
 
-    return $ret;
+    return $users_tenants->all();
+  }
+
+  /**
+   * Tabella HTML (nome, email, data scadenza) degli utenti in scadenza, usata
+   * nelle email di avviso a tenant admin e superadmin al posto del segnaposto
+   * |CUSTOMFUNCTION|TenantHelper::build_utenti_scadenza_tenantadmin|CUSTOMFUNCTIONEND|.
+   * I valori degli utenti sono escapati: finiscono in un corpo email HTML.
+   *
+   * @param iterable $users oggetti con name, email, data_scadenza
+   */
+  public static function build_utenti_scadenza_tenantadmin($users)
+  {
+    $cell = "padding: 12px; border-bottom: 1px solid #ddd;text-align: center;";
+    $head = "padding: 12px; border-bottom: 2px solid #ddd;text-align: center;";
+
+    $table = "<table style='width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;'>";
+    $table .= "<tr style='background-color: #f2f2f2; '>";
+    $table .= "<th style='width: 35%; $head'>" . e(trans('crudbooster.user_expiry_col_name')) . "</th>";
+    $table .= "<th style='width: 35%; $head'>" . e(trans('crudbooster.user_expiry_col_email')) . "</th>";
+    $table .= "<th style='width: 30%; $head'>" . e(trans('crudbooster.user_expiry_col_date')) . "</th>";
+    $table .= "</tr>";
+
+    $index = 0;
+    foreach ($users as $user) {
+      $backgroundColor = ($index++ % 2 == 0) ? "#f9f9f9" : "#ffffff"; // Colore alternato per le righe
+      $table .= "<tr style='background-color: $backgroundColor;'>";
+      $table .= "<td style='$cell'>" . e($user->name) . "</td>";
+      $table .= "<td style='$cell'>" . e($user->email) . "</td>";
+      $table .= "<td style='$cell'>" . e($user->data_scadenza) . "</td>";
+      $table .= "</tr>";
+    }
+
+    return $table . "</table>";
   }
 
 

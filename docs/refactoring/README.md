@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 288**
+**Prossimo numero libero: 303**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,21 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [302](302-pipeline-build-e-push-immagine-docker-hub.md) | **Pipeline: build e push dell'immagine di produzione su Docker Hub (job build-and-push, tag vX.Y.Z)** | CI / Docker | Pronto, non eseguito | 2026-10-12 |
+| [301](301-correzioni-dopo-prova-generale-licenza-i18n-blueprint.md) | **Correzioni dopo la prova generale: licenza non cancellata su errori del server, messaggio di licenza i18n, correzioni al blueprint** | Licensing / Docker | Completato | 2026-10-09 |
+| [300](300-prova-generale-istanza-docker-end-to-end.md) | **Prova generale end-to-end di un'istanza Docker con LICENSES reale (solo prova, nessun codice modificato): 2 bug sul ciclo di vita della licenza, correzioni al blueprint** | Docker / Licensing | Completato | 2026-10-09 |
+| [299](299-bootstrap-istanza-docker-entrypoint-e-comandi.md) | **Istanza Docker di produzione: entrypoint con migrazioni (fail-stop), `instance:bootstrap`, `instance:password-link`** | Docker / Provisioning | Completato | 2026-10-08 |
+| [298](298-dockerfile-produzione.md) | **Dockerfile di produzione (docker/Dockerfile.prod, 3 stadi, www-data su 8080) e .dockerignore a lista bianca** | Docker | Completato | 2026-10-08 |
+| [297](297-docker-prod-versione-proxy-fidati-health.md) | **Immagine di produzione, parte codice: APP_VERSION, proxy fidati (TRUSTED_PROXIES), GET /health** | Docker / Config | Completato | 2026-10-08 |
+| [296](296-connessione-coda-mail-dedicata.md) | **Connessione di coda `mail` dedicata (MAIL_QUEUE_CONNECTION=mail al posto di qlik_sync)** | Code / Email | Completato | 2026-10-08 |
+| [295](295-servizio-scheduler-docker-locale.md) | **Servizio scheduler (schedule:work) nell'ambiente Docker locale** | Docker | Completato | 2026-10-08 |
+| [294](294-smtp-solo-da-settings-config-mail-rimosso.md) | **SMTP solo dai Settings (MailSettings, TLS/SSL e mittente inclusi), config/mail.php rimosso, Mail::fake() nei test** | Email / Config | Completato | 2026-10-08 |
+| [293](293-scadenza-account-al-login-e-protezione-superadmin.md) | **Scadenza account anche al login e sui token api2, protezione dei superadmin, rimosso MigrateLegacyCrudboosterExtends** | Auth / Utenti | Completato | 2026-10-08 |
+| [292](292-check-user-expiry-pulizia-e-test.md) | **user:check-expiry: un solo UPDATE, log e conteggio, 8 test (comportamento di scadenza invariato)** | Utenti / Console | Completato | 2026-10-08 |
+| [291](291-avvisi-scadenza-miglioramenti-e-test.md) | **Avvisi di scadenza: meno query, escape HTML, deduplica giornaliera, builder in TenantHelper, 19 test** | Email / Test | Completato | 2026-10-08 |
+| [290](290-avvisi-scadenza-utenti-su-job-in-coda.md) | **Avvisi di scadenza utenti su job in coda (MAIL_QUEUE_CONNECTION, default sync)** | Email / Code | Completato | 2026-10-08 |
+| [289](289-email-ritardate-con-job-in-coda.md) | **Email ritardate: job in coda con delay al posto di mailqueues e cms_email_queues (eliminati)** | Email / Code | Completato | 2026-10-08 |
+| [288](288-percorso-controller-custom-configurabile.md) | **Percorso dei controller custom configurabile (`CUSTOM_CONTROLLERS_PATH`, per le istanze Docker)** | Docker / Module builder | Completato | 2026-10-08 |
 | [287](287-avatar-iniziali-al-posto-del-default.md) | **Avatar: iniziali al posto dell'immagine di default (lockscreen, membri gruppo, home, dettaglio utente)** | Frontend / Utenti | Completato | 2026-10-08 |
 | [286](286-login-nuovo-look-ui2.md) | **Login: nuovo look del mockup (esagoni + form senza card)** | Frontend / Auth | Completato | 2026-10-08 |
 | [285](285-utenti-edit-scheda-qlik-come-profilo.md) | **Modifica utente: scheda Qlik con le stesse card del profilo** | Frontend / Utenti | Completato | 2026-10-08 |

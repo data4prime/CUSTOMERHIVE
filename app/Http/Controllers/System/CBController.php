@@ -2149,7 +2149,6 @@ class CBController extends Controller
         $file = storage_path('app/public/' . $file);
 
         $rows = Excel::toCollection(new ImportData, $file);
-        file_put_contents(__DIR__.'/test.txt',json_encode($select_column));
 
  
 

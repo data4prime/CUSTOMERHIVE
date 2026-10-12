@@ -18,6 +18,15 @@ return [
     'default' => env('QUEUE_DRIVER', 'sync'),
 
     /*
+    | Connessione delle email accodate (avvisi di scadenza utente, vedi
+    | App\Jobs\SendTemplateEmailJob). 'sync' = invio immediato nel comando,
+    | come prima; 'mail' = in coda 'mail', serve un worker attivo che la
+    | serva (queue:work qlik_sync --queue=qlik_sync,mail: la tabella 'jobs' e'
+    | la stessa, il worker legge per nome di coda).
+    */
+    'mail_connection' => env('MAIL_QUEUE_CONNECTION', 'sync'),
+
+    /*
     |--------------------------------------------------------------------------
     | Queue Connections
     |--------------------------------------------------------------------------
@@ -50,6 +59,18 @@ return [
             'table' => 'jobs',
             'queue' => 'qlik_sync',
             'retry_after' => 3900,
+        ],
+
+        // Email in coda (avvisi di scadenza, email ritardate): stessa tabella
+        // 'jobs' del driver database, coda 'mail'. Il nome della connessione
+        // serve solo a chi accoda; a prenderle e' il worker che serve la coda
+        // 'mail' (oggi quello di qlik_sync, il cui retry_after e' quello che
+        // vale per un job rimasto appeso).
+        'mail' => [
+            'driver' => 'database',
+            'table' => 'jobs',
+            'queue' => 'mail',
+            'retry_after' => 90,
         ],
 
         'beanstalkd' => [

@@ -67,7 +67,9 @@ class AppServiceProvider extends ServiceProvider
 
             $tokenable = $accessToken->tokenable;
 
-            return $tokenable && $tokenable->status === 'Active';
+            return $tokenable
+                && $tokenable->status === 'Active'
+                && ! \App\Helpers\UserHelper::isAccountExpired($tokenable);
         });
     }
 

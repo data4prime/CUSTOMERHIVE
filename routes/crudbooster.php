@@ -26,12 +26,13 @@ Route::group(['middleware' => ['api', '\App\Http\Middleware\CBAuthAPI'], 'namesp
 
 
 
-    $dir = scandir(base_path("app/Http/Controllers"));
+    $dir = CRUDBooster::customControllersScan();
     foreach ($dir as $v) {
         // is_dir() esclude anche System/ (controller "di sistema", non scandito
         // qui) oltre ad Auth/ - lo scan e' pensato solo per i file generati
-        // direttamente dentro app/Http/Controllers.
-        if ($v == '.' || $v == '..' || $v == 'Auth' || is_dir(base_path("app/Http/Controllers/{$v}"))) {
+        // direttamente dentro la cartella dei controller custom
+        // (app/Http/Controllers, o CUSTOM_CONTROLLERS_PATH se impostata).
+        if ($v == '.' || $v == '..' || $v == 'Auth' || is_dir(CRUDBooster::customControllersPath() . "/{$v}")) {
             continue;
         }
         $v = str_replace('.php', '', $v);
@@ -144,9 +145,9 @@ Route::group([
 // modo le rotte 'api/*' esistenti.
 Route::group(['middleware' => ['api', 'auth:sanctum'], 'namespace' => 'App\Http\Controllers'], function () {
     try {
-        $dir = scandir(base_path('app/Http/Controllers'));
+        $dir = CRUDBooster::customControllersScan();
         foreach ($dir as $v) {
-            if ($v == '.' || $v == '..' || $v == 'Auth' || is_dir(base_path("app/Http/Controllers/{$v}"))) {
+            if ($v == '.' || $v == '..' || $v == 'Auth' || is_dir(CRUDBooster::customControllersPath() . "/{$v}")) {
                 continue;
             }
             $v = str_replace('.php', '', $v);

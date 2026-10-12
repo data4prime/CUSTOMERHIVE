@@ -1,0 +1,163 @@
+# syntax=docker/dockerfile:1
+#
+# Immagine di PRODUZIONE di CustomerHive (una istanza per cliente).
+# Build dalla radice del repo:
+#   docker build -f docker/Dockerfile.prod --build-arg APP_VERSION=1.2.3 -t customerhive:1.2.3 .
+#
+# Differenze rispetto a docker/Dockerfile (sviluppo, NON toccare da qui):
+# codice e vendor sono COPIATI nell'immagine (niente bind mount), niente
+# git/composer/client MySQL/pdo_sqlite, niente entrypoint di sviluppo, php.ini
+# di produzione, processo come www-data (Apache ascolta su 8080).
+# Nessun segreto nell'immagine: .env e chiavi arrivano a runtime come variabili
+# d'ambiente. Vedi docs/refactoring/ (intervento sul Dockerfile di produzione).
+#
+# Tre stadi invece di due: "base" (PHP + estensioni) e' condiviso da "vendor"
+# e "runtime", cosi' composer verifica i requisiti di piattaforma contro le
+# estensioni VERE del runtime invece di ignorarli.
+
+# ---------------------------------------------------------------------------
+# base: php:8.3-apache + estensioni (stesse del Dockerfile dev, meno pdo_sqlite)
+# ---------------------------------------------------------------------------
+FROM php:8.3-apache AS base
+
+RUN set -eux; \
+    savedAptMark="$(apt-mark showmanual)"; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        libpng-dev \
+        libonig-dev \
+        libxml2-dev \
+        libzip-dev \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libicu-dev; \
+    docker-php-ext-configure gd --with-freetype --with-jpeg; \
+    docker-php-ext-install -j"$(nproc)" \
+        pdo_mysql \
+        mbstring \
+        exif \
+        pcntl \
+        bcmath \
+        gd \
+        zip \
+        intl \
+        opcache; \
+    # Come nell'immagine ufficiale php: tiene le librerie runtime richieste
+    # dalle estensioni appena compilate e rimuove i pacchetti -dev.
+    apt-mark auto '.*' > /dev/null; \
+    [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
+    # L'immagine php tiene compilatore e strumenti ($PHPIZE_DEPS) come "manuali":
+    # a runtime non servono, si tolgono.
+    apt-mark auto $PHPIZE_DEPS > /dev/null; \
+    find /usr/local -type f -executable -exec ldd '{}' ';' \
+        | awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' \
+        | sort -u \
+        | xargs -r dpkg-query --search \
+        | grep -v '^diversion by' \
+        | cut -d: -f1 \
+        | sort -u \
+        | xargs -r apt-mark manual; \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+    rm -rf /var/lib/apt/lists/* /usr/src/php.tar.xz*; \
+    php -m | grep -qi '^pdo_mysql$'
+
+# ---------------------------------------------------------------------------
+# vendor: composer install senza dev + autoload ottimizzato
+# ---------------------------------------------------------------------------
+FROM base AS vendor
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git unzip \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /app
+ENV COMPOSER_ALLOW_SUPERUSER=1 COMPOSER_NO_INTERACTION=1
+
+# --no-scripts: il post-autoload-dump lancia "php artisan package:discover",
+# che avvia l'intera app (provider, rotte che interrogano il DB) senza .env ne'
+# DB in fase di build. Il manifest dei pacchetti lo genera lo stadio runtime
+# senza avviare l'app (vedi sotto).
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --prefer-dist --no-scripts --no-autoloader
+
+# Serve il sorgente per costruire l'autoload ("files" + classmap database/ +
+# PSR-4 App\). NIENTE --classmap-authoritative: i controller creati dal module
+# builder vivono in storage/app/custom-controllers e si caricano via PSR-4
+# (composer.json, docs/refactoring/288): un autoload autoritativo li
+# escluderebbe. --optimize e' compatibile (il PSR-4 resta come ripiego).
+COPY app ./app
+COPY database ./database
+RUN composer dump-autoload --no-dev --optimize --no-scripts
+
+# ---------------------------------------------------------------------------
+# runtime
+# ---------------------------------------------------------------------------
+FROM base AS runtime
+
+ARG APP_VERSION=unknown
+ENV APP_VERSION=${APP_VERSION}
+LABEL org.opencontainers.image.title="CustomerHive" \
+      org.opencontainers.image.version="${APP_VERSION}"
+
+WORKDIR /var/www/html
+
+RUN a2enmod rewrite headers
+
+# Apache come www-data: porta 8080 (la 80 richiede root), pid/lock in cartelle
+# scrivibili. mod_ssl non e' abilitato, quindi nessuna 443.
+COPY docker/apache/000-default.prod.conf /etc/apache2/sites-available/000-default.conf
+COPY docker/apache/zz-prod.conf /etc/apache2/conf-available/zz-prod.conf
+RUN a2enconf zz-prod \
+    && sed -i 's/^Listen 80$/Listen 8080/' /etc/apache2/ports.conf \
+    && mkdir -p /var/run/apache2 /var/lock/apache2 \
+    && chown -R www-data:www-data /var/run/apache2 /var/lock/apache2
+
+COPY docker/php/prod.ini /usr/local/etc/php/conf.d/zz-prod.ini
+
+# Codice (di proprieta' di root: l'app non puo' riscrivere se' stessa) e vendor.
+# Elenco esplicito di cartelle (non "COPY . ."), in piu' il filtro di
+# .dockerignore: COPY legge il filesystem, non git.
+COPY app ./app
+COPY bootstrap ./bootstrap
+COPY config ./config
+COPY database ./database
+COPY public ./public
+COPY resources ./resources
+COPY routes ./routes
+COPY artisan composer.json composer.lock ./
+COPY --from=vendor /app/vendor ./vendor
+
+# Cartelle scrivibili da www-data + symlink public/storage (relativo, creato
+# qui: non dipende da "php artisan storage:link" ne' da un container avviato).
+# Con un volume su storage/: i volumi NOMINATI vuoti vengono popolati con
+# questo contenuto al primo avvio, i bind mount NO (vedi la documentazione).
+RUN mkdir -p \
+        storage/framework/sessions \
+        storage/framework/views \
+        storage/framework/cache \
+        storage/logs \
+        storage/app/public \
+        storage/app/custom-controllers \
+        bootstrap/cache \
+    && ln -sfn ../storage/app/public public/storage \
+    # Manifest dei pacchetti (bootstrap/cache/packages.php) senza avviare l'app:
+    # niente .env, niente DB.
+    && php -r 'require "vendor/autoload.php"; $app = require "bootstrap/app.php"; $app->make(Illuminate\Foundation\PackageManifest::class)->build();' \
+    && chown -R www-data:www-data storage bootstrap/cache
+
+# Entrypoint di produzione: decide il ruolo dal comando (solo apache2-foreground
+# = app, con controlli + migrazioni; scheduler e worker fanno solo exec). Lo
+# sed toglie eventuali CRLF (checkout su Windows) che romperebbero lo shebang.
+# NIENTE HEALTHCHECK qui: lo ereditano anche scheduler e worker, che non servono
+# la 8080; va nel compose, solo sul servizio app.
+COPY docker/entrypoint.prod.sh /usr/local/bin/entrypoint.prod.sh
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.prod.sh \
+    && chmod 0755 /usr/local/bin/entrypoint.prod.sh
+
+USER www-data
+
+EXPOSE 8080
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.prod.sh"]
+CMD ["apache2-foreground"]

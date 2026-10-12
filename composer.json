@@ -40,6 +40,7 @@
         "psr-4": {
 "Tests\\": "tests/",
             "App\\": "app/",
+            "App\\Http\\Controllers\\": ["app/Http/Controllers/", "storage/app/custom-controllers/"],
             "crocodicstudio\\crudbooster\\": "packages/crocodicstudio/crudbooster/src"
         }
     },

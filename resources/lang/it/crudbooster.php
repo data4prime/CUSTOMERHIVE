@@ -1691,4 +1691,12 @@ return [
     'import_err_file' => 'File non trovato o non leggibile: caricalo di nuovo.',
     'import_err_all_blank' => 'Tutte le righe sono vuote nelle colonne abbinate: non è stato importato nulla.',
     'import_err_server' => "Il server ha restituito un errore imprevisto. Non è stato importato nulla; controlla il file e riprova.",
+
+    // Tabella degli utenti in scadenza nelle email di avviso (TenantHelper::build_utenti_scadenza_tenantadmin)
+    'user_expiry_col_name' => 'Nome',
+    'user_expiry_col_email' => 'Email',
+    'user_expiry_col_date' => 'Data scadenza',
+
+    // Login rifiutato dal controllo di licenza (AdminController::postLogin)
+    'license_missing_or_not_valid' => 'La licenza è mancante, scaduta o non valida',
 ];

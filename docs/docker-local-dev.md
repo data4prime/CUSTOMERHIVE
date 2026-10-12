@@ -52,6 +52,14 @@ su una macchina remota separata, senza Docker.
 - Servizi definiti in `docker-compose.yml`:
   - `app` — PHP 8.3 + Apache
   - `db` — MySQL 8 (dati persistiti nel volume `customerhive-mysql`)
+  - `worker` — worker della coda (`queue:work qlik_sync --queue=qlik_sync,mail`):
+    sincronizzazione Qlik ed eventuali email in coda. Dopo aver cambiato il
+    codice: `docker compose restart worker`.
+  - `scheduler` — `php artisan schedule:work`: l'equivalente locale del cron
+    `schedule:run` dei server (scadenza utenti 00:00, avvisi 00:10, licenza ogni
+    ora, pulizia MFA 03:00; orari in `Europe/Rome`). Dopo aver cambiato il
+    codice: `docker compose restart scheduler`. Vedi
+    [295](refactoring/295-servizio-scheduler-docker-locale.md).
   - (il vecchio servizio `node` per la build gulp è stato rimosso: build
     morta, nessun output usato dal sito — vedi
     [082](refactoring/082-rimossa-build-gulp-e-package-json.md))
@@ -62,6 +70,10 @@ su una macchina remota separata, senza Docker.
 docker compose exec app php artisan ...      # comandi artisan
 docker compose exec app composer ...         # comandi composer
 docker compose logs -f app                   # log dell'applicazione
+docker compose up -d worker                  # ricrea il servizio dopo aver modificato docker-compose.yml (restart non basta)
+docker compose logs -f scheduler             # cosa esegue lo scheduler
+docker compose exec app php artisan schedule:list   # prossime esecuzioni
+docker compose stop scheduler                # ferma i job schedulati in locale
 docker compose down                          # ferma i container (i dati MySQL restano)
 docker compose down -v                       # ferma i container e cancella anche il DB
 ```

@@ -978,50 +978,6 @@ return Request::segment($segment);
         return strtolower(trim((string) self::getSetting('email_enabled'))) !== 'no';
     }
 
-    public static function sendEmailQueue($queue)
-    {
-        if (! self::isEmailEnabled()) {
-            return false;
-        }
-
-        \Config::set('mail.driver', self::getSetting('smtp_driver'));
-        \Config::set('mail.host', self::getSetting('smtp_host'));
-        \Config::set('mail.port', self::getSetting('smtp_port'));
-        \Config::set('mail.username', self::getSetting('smtp_username'));
-        \Config::set('mail.password', self::getSetting('smtp_password'));
-
-        $html = $queue->email_content;
-        $to = $queue->email_recipient;
-        $subject = $queue->email_subject;
-        $from_email = $queue->email_from_email;
-        $from_name = $queue->email_from_name;
-        $cc_email = $queue->email_cc_email;
-        $attachments = unserialize($queue->email_attachments);
-
-        \Mail::send("crudbooster::emails.blank", ['content' => $html], function ($message) use (
-            $html,
-            $to,
-            $subject,
-            $from_email,
-            $from_name,
-            $cc_email,
-            $attachments
-        ) {
-            $message->priority(1);
-            $message->to($to);
-            $message->from($from_email, $from_name);
-            $message->cc($cc_email);
-
-            if (count($attachments)) {
-                foreach ($attachments as $attachment) {
-                    $message->attach($attachment);
-                }
-            }
-
-            $message->subject($subject);
-        });
-    }
-
     public static function sendEmail($config = [])
     {
         // Email disattivata dai Settings: e' come se non ci fosse, nessun
@@ -1030,11 +986,8 @@ return Request::segment($segment);
             return false;
         }
 
-        \Config::set('mail.driver', self::getSetting('smtp_driver'));
-        \Config::set('mail.host', self::getSetting('smtp_host'));
-        \Config::set('mail.port', self::getSetting('smtp_port'));
-        \Config::set('mail.username', self::getSetting('smtp_username'));
-        \Config::set('mail.password', self::getSetting('smtp_password'));
+        // L'unico SMTP e' quello dei Settings (config/mail.php non esiste).
+        MailSettings::fromSettings();
 
         $to = $config['to'];
         $data = $config['data'];
@@ -1042,6 +995,11 @@ return Request::segment($segment);
 
         $template = CRUDBooster::first('cms_email_templates', ['slug' => $template]);
         $html = $template->content;
+        // Sostituzioni di blocchi interi nel contenuto (es. una tabella HTML
+        // generata dal chiamante), senza modificare il template nel DB.
+        foreach ($config['content_replace'] ?? [] as $search => $replace) {
+            $html = str_replace($search, $replace, $html);
+        }
         foreach ($data as $key => $val) {
             $html = str_replace('[' . $key . ']', $val, $html);
             $template->subject = str_replace('[' . $key . ']', $val, $template->subject);
@@ -1054,17 +1012,20 @@ return Request::segment($segment);
         $attachments = isset($config['attachments']) ? $config['attachments'] : [];
 
         if (isset($config['send_at']) && $config['send_at'] != null) {
-            $a = [];
-            $a['send_at'] = $config['send_at'];
-            $a['email_recipient'] = $to;
-            $a['email_from_email'] = $template->from_email ?: CRUDBooster::getSetting('email_sender');
-            $a['email_from_name'] = $template->from_name ?: CRUDBooster::getSetting('appname');
-            $a['email_cc_email'] = $template->cc_email;
-            $a['email_subject'] = $subject;
-            $a['email_content'] = $html;
-            $a['email_attachments'] = serialize($attachments);
-            $a['is_sent'] = 0;
-            DB::table('cms_email_queues')->insert($a);
+            // Il worker che serve la coda 'mail' lo invia alla data richiesta
+            // (connessione 'mail', vedi config/queue.php e docker-compose.yml).
+            \App\Jobs\SendDelayedEmailJob::dispatch([
+                'to' => $to,
+                'from_email' => $template->from_email ?: CRUDBooster::getSetting('email_sender'),
+                'from_name' => $template->from_name ?: CRUDBooster::getSetting('appname'),
+                'cc_email' => $template->cc_email,
+                'subject' => $subject,
+                'content' => $html,
+                'attachments' => $attachments,
+            ])
+                ->delay(\Carbon\Carbon::parse($config['send_at']))
+                ->onConnection('mail')
+                ->onQueue('mail');
 
             return true;
         }
@@ -1725,12 +1686,63 @@ return Request::segment($segment);
         return $name_col;
     }
 
+    /**
+     * Cartella (senza slash finale) dove il module builder / l'API generator
+     * scrivono e leggono i controller custom (App\Http\Controllers\X).
+     * Con CUSTOM_CONTROLLERS_PATH non impostata (o vuota) e' app/Http/Controllers,
+     * come sempre; se impostata puo' essere assoluta o relativa a base_path()
+     * (usata dalle istanze Docker, dove l'albero app/ e' immutabile).
+     * Il namespace dei controller non cambia mai. Vedi docs/refactoring/288-*.
+     */
+    public static function customControllersPath($create = false)
+    {
+        $path = self::resolveCustomControllersPath();
+        // Chi sta per scrivere un controller nuovo passa $create = true: la
+        // cartella custom (storage/app/custom-controllers) puo' non esistere
+        // ancora. Con il default (app/Http/Controllers) esiste sempre: no-op.
+        if ($create && ! is_dir($path)) {
+            @mkdir($path, 0755, true);
+        }
+
+        return $path;
+    }
+
+    private static function resolveCustomControllersPath()
+    {
+        $custom = config('crudbooster.CUSTOM_CONTROLLERS_PATH');
+        if (! is_string($custom) || trim($custom) === '') {
+            return base_path('app/Http/Controllers');
+        }
+
+        $custom = trim($custom);
+        $isAbsolute = preg_match('#^(/|\\\\|[A-Za-z]:[/\\\\])#', $custom) === 1;
+        $path = $isAbsolute ? $custom : base_path($custom);
+
+        // Niente slash finali, ma una radice ("/" o "C:\") resta com'e'.
+        $trimmed = rtrim($path, '/\\');
+        return $trimmed === '' || preg_match('#^[A-Za-z]:$#', $trimmed) ? $path : $trimmed;
+    }
+
+    /**
+     * Come scandir() sulla cartella dei controller custom, ma restituisce []
+     * (niente warning) se la cartella non esiste ancora.
+     */
+    public static function customControllersScan()
+    {
+        $dir = self::customControllersPath();
+        if (! is_dir($dir)) {
+            return [];
+        }
+
+        return scandir($dir) ?: [];
+    }
+
     public static function isExistsController($table)
     {
         $controllername = ucwords(str_replace('_', ' ', $table));
         $controllername = str_replace(' ', '', $controllername) . 'Controller';
-        $path = base_path("app/Http/Controllers/");
-        $path2 = base_path("app/Http/Controllers/ControllerMaster/");
+        $path = self::customControllersPath() . '/';
+        $path2 = self::customControllersPath() . '/ControllerMaster/';
         if (file_exists($path . 'Admin' . $controllername . '.php') || file_exists($path2 . 'Admin' . $controllername . '.php') || file_exists($path2 . $controllername . '.php')) {
             return true;
         } else {
@@ -1799,7 +1811,7 @@ crocodicstudio\crudbooster\controllers\
 		';
 
         $php = trim($php);
-        $path = base_path("app/Http/Controllers/");
+        $path = self::customControllersPath(true) . '/';
         file_put_contents($path . 'Api' . $controller_name . 'Controller.php', $php);
     }
 
@@ -1842,7 +1854,7 @@ crocodicstudio\crudbooster\controllers\
             $controllername = CRUDBooster::makeControllerName($table);
         }
 
-        $path = base_path("app/Http/Controllers/");
+        $path = self::customControllersPath(true) . '/';
         $countSameFile = count(glob($path . 'Admin' . $controllername . '.php'));
 
         if ($countSameFile != 0) {

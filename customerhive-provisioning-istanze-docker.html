@@ -1,0 +1,1171 @@
+<title>Blueprint provisioning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#EEF2F5; --paper-card:#FFFFFF;
+  --ink:#16232E; --ink-soft:#4B5C6B; --ink-faint:#8C9AA6;
+  --line:#C7D2DA; --line-soft:#E2E8EC;
+  --control:#5B4E8C; --control-bg:#ECE9F5;
+  --proxy:#1B7A67; --proxy-bg:#E1F3EE;
+  --workload:#C1502E; --workload-bg:#FBEAE3;
+  --gateway:#9A6B12; --gateway-bg:#F7EACB;
+  --danger:#A32D2D; --danger-bg:#FCEBEB;
+  --font-display:'IBM Plex Sans Condensed',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1720; --paper-card:#16212B;
+    --ink:#DCE6EE; --ink-soft:#93A5B4; --ink-faint:#5B6C7A;
+    --line:#2A3B4A; --line-soft:#1C2A36;
+    --control:#B6A9E6; --control-bg:#241F3D;
+    --proxy:#6FD9C4; --proxy-bg:#0E2E29;
+    --workload:#F0916B; --workload-bg:#3A2016;
+    --gateway:#F0C572; --gateway-bg:#3A2E10;
+    --danger:#F09595; --danger-bg:#3A1414;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1720; --paper-card:#16212B;
+  --ink:#DCE6EE; --ink-soft:#93A5B4; --ink-faint:#5B6C7A;
+  --line:#2A3B4A; --line-soft:#1C2A36;
+  --control:#B6A9E6; --control-bg:#241F3D;
+  --proxy:#6FD9C4; --proxy-bg:#0E2E29;
+  --workload:#F0916B; --workload-bg:#3A2016;
+  --gateway:#F0C572; --gateway-bg:#3A2E10;
+  --danger:#F09595; --danger-bg:#3A1414;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);padding-block:2.5rem;}
+.wrap{max-width:1000px;margin:0 auto;padding-inline:20px;display:flex;flex-direction:column;gap:2.5rem;}
+header{display:flex;flex-direction:column;gap:.5rem;max-width:640px;}
+.eyebrow{margin:0;font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);}
+h1{margin:0;font-family:var(--font-display);font-weight:700;font-size:clamp(28px,4vw,38px);line-height:1.1;text-wrap:balance;color:var(--ink);}
+.dek{margin:0;font-size:16px;line-height:1.6;color:var(--ink-soft);max-width:60ch;}
+
+.sheet{background:var(--paper-card);border:1px solid var(--line);border-radius:12px;padding:1.5rem;display:flex;flex-direction:column;gap:1.25rem;}
+.sheet-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line-soft);padding-bottom:.75rem;}
+.sheet-head .tag{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);}
+.sheet-head .meta{font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);}
+
+.diagram-scroll{overflow-x:auto;}
+.diagram-scroll svg{display:block;width:100%;height:auto;}
+svg .grid-line{stroke:var(--line-soft);stroke-width:1;}
+svg .outer-box{fill:var(--paper-card);stroke:var(--line);stroke-width:1;}
+svg .host-card{fill:var(--line-soft);stroke:var(--line);stroke-width:1;}
+svg .ext-box{fill:var(--paper);stroke:var(--line);stroke-width:1;}
+svg .docker-group{fill:none;stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:6 5;}
+svg .control-card{fill:var(--control-bg);stroke:var(--control);stroke-width:1;}
+svg .proxy-card{fill:var(--proxy-bg);stroke:var(--proxy);stroke-width:1;}
+svg .workload-card{fill:var(--workload-bg);stroke:var(--workload);stroke-width:1;}
+svg .gateway-card{fill:var(--gateway-bg);stroke:var(--gateway);stroke-width:1;}
+svg .danger-card{fill:var(--danger-bg);stroke:var(--danger);stroke-width:1;}
+svg .arrow{stroke:var(--ink-faint);stroke-width:1.5;fill:none;}
+svg .arrow-head{stroke:var(--ink-faint);}
+svg text{font-family:var(--font-body);fill:var(--ink);}
+svg .t-title{font-family:var(--font-display);font-weight:700;font-size:20px;}
+svg .t-region{font-family:var(--font-display);font-weight:600;font-size:18px;}
+svg .t-sub{font-size:13px;fill:var(--ink-soft);}
+svg .t-label{font-size:12px;fill:var(--ink-soft);}
+svg .t-mono{font-family:var(--font-mono);font-size:12px;fill:var(--ink-soft);}
+svg .t-mono-strong{font-family:var(--font-mono);font-size:13px;fill:var(--ink);}
+svg .c-control{fill:var(--control);}
+svg .c-proxy{fill:var(--proxy);}
+svg .c-workload{fill:var(--workload);}
+svg .c-gateway{fill:var(--gateway);}
+svg .c-danger{fill:var(--danger);}
+
+.legend{display:flex;flex-wrap:wrap;gap:1.25rem;padding-top:.25rem;}
+.legend .key{display:flex;align-items:center;gap:.5rem;font-size:13px;color:var(--ink-soft);}
+.legend .swatch{width:11px;height:11px;border-radius:3px;display:inline-block;}
+.swatch.control{background:var(--control);}
+.swatch.proxy{background:var(--proxy);}
+.swatch.workload{background:var(--workload);}
+.swatch.neutral{background:var(--ink-faint);}
+.swatch.gateway{background:var(--gateway);}
+.swatch.danger{background:var(--danger);}
+
+h2{font-family:var(--font-display);font-weight:600;font-size:22px;margin:0 0 1rem;color:var(--ink);}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;}
+.card{border-radius:10px;padding:1.1rem 1.2rem;border:1px solid var(--line);background:var(--paper-card);display:flex;flex-direction:column;gap:.4rem;}
+.card.control{border-color:var(--control);background:var(--control-bg);}
+.card.proxy{border-color:var(--proxy);background:var(--proxy-bg);}
+.card.workload{border-color:var(--workload);background:var(--workload-bg);}
+.card.gateway{border-color:var(--gateway);background:var(--gateway-bg);}
+.card h3{margin:0;font-family:var(--font-display);font-weight:600;font-size:17px;}
+.card.control h3{color:var(--control);}
+.card.proxy h3{color:var(--proxy);}
+.card.workload h3{color:var(--workload);}
+.card.gateway h3{color:var(--gateway);}
+.card .role{margin:0;font-size:12px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;}
+.card ul{margin:.3rem 0 0;padding-left:1.1rem;font-size:14px;line-height:1.6;color:var(--ink);}
+.card li::marker{color:var(--ink-faint);}
+
+.compare-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;}
+.compare-card{border-radius:12px;padding:1.3rem 1.4rem;display:flex;flex-direction:column;gap:1rem;border:1px solid var(--line);}
+.compare-card.managed{border-color:var(--workload);background:var(--workload-bg);}
+.compare-card.self-hosted{border-color:var(--gateway);background:var(--gateway-bg);}
+.compare-card.control{border-color:var(--control);background:var(--control-bg);}
+.compare-card.gateway{border-color:var(--gateway);background:var(--gateway-bg);}
+.compare-card h3{margin:0;font-family:var(--font-display);font-weight:600;font-size:18px;}
+.compare-card.managed h3{color:var(--workload);}
+.compare-card.self-hosted h3{color:var(--gateway);}
+.compare-card.control h3{color:var(--control);}
+.compare-card.gateway h3{color:var(--gateway);}
+.compare-card .role{margin:0;font-size:12px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;}
+.compare-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.7rem;counter-reset:step;}
+.compare-steps li{position:relative;padding-left:2rem;font-size:14px;line-height:1.5;color:var(--ink);}
+.compare-steps li::before{counter-increment:step;content:counter(step);position:absolute;left:0;top:-1px;width:22px;height:22px;border-radius:50%;background:var(--paper-card);border:1.5px solid var(--line);font-family:var(--font-mono);font-size:12px;display:flex;align-items:center;justify-content:center;}
+.compare-card.managed .compare-steps li::before{border-color:var(--workload);color:var(--workload);}
+.compare-card.self-hosted .compare-steps li::before{border-color:var(--gateway);color:var(--gateway);}
+.compare-card.control .compare-steps li::before{border-color:var(--control);color:var(--control);}
+.compare-card.gateway .compare-steps li::before{border-color:var(--gateway);color:var(--gateway);}
+.compare-steps code{font-family:var(--font-mono);font-size:.92em;background:var(--paper-card);color:var(--ink);padding:.1em .35em;border-radius:4px;}
+
+.flow-footer{margin-top:.25rem;padding:1rem 1.2rem;border-radius:10px;background:var(--paper);border:1px solid var(--line);font-size:14px;line-height:1.6;color:var(--ink-soft);}
+.flow-footer code{font-family:var(--font-mono);font-size:.92em;background:var(--line-soft);color:var(--ink);padding:.1em .35em;border-radius:4px;}
+
+.tree-block{font-family:var(--font-mono);font-size:13px;line-height:1.75;white-space:pre;overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:1.2rem 1.4rem;color:var(--ink-soft);margin:0;}
+.tree-block .folder{color:var(--ink);font-weight:600;}
+.tree-block .note{color:var(--ink-faint);font-style:italic;}
+
+.secrets-table{width:100%;border-collapse:collapse;font-size:14px;}
+.secrets-table th{text-align:left;font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);padding:.5rem .75rem;border-bottom:1px solid var(--line);}
+.secrets-table td{padding:.65rem .75rem;border-bottom:1px solid var(--line-soft);color:var(--ink-soft);vertical-align:top;line-height:1.5;}
+.secrets-table td:first-child{font-family:var(--font-mono);font-size:13px;color:var(--ink);white-space:nowrap;}
+.secrets-table tr:last-child td{border-bottom:none;}
+.secrets-table code{font-family:var(--font-mono);font-size:.92em;background:var(--line-soft);color:var(--ink);padding:.1em .35em;border-radius:4px;}
+
+.secrets-table.contract-table td:first-child{white-space:normal;min-width:8rem;}
+.table-scroll{overflow-x:auto;}
+.flow-footer.open-point{border-color:var(--danger);background:var(--danger-bg);color:var(--ink);}
+.flow-footer.proposal{border-color:var(--gateway);background:var(--gateway-bg);color:var(--ink);}
+footer{border-top:1px solid var(--line);padding-top:1rem;}
+footer p{margin:0;font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);}
+
+.toc{display:flex;flex-direction:column;gap:.5rem;padding:1.2rem 1.4rem;border:1px solid var(--line);border-radius:12px;background:var(--paper-card);}
+.toc-title{margin:0;font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);}
+.toc ol{margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:.35rem;counter-reset:toc;}
+.toc li{font-size:14px;line-height:1.5;}
+.toc a{color:var(--ink-soft);text-decoration:none;}
+.toc a:hover{color:var(--ink);text-decoration:underline;}
+section{scroll-margin-top:1rem;}
+
+@media print{
+  @page{margin:10mm;}
+  body{padding-block:0;}
+  .wrap{max-width:none;display:block;}
+  .wrap>*{margin-bottom:1rem;}
+  .sheet, section#responsabilita, .toc{break-inside:avoid-page;page-break-inside:avoid;display:block;}
+  .sheet>*, section#responsabilita>*{margin-bottom:1.25rem;}
+  .sheet>*:last-child, section#responsabilita>*:last-child{margin-bottom:0;}
+  header{break-after:avoid-page;page-break-after:avoid;}
+  table, tr, pre, .diagram-scroll, .compare-grid, .cards{break-inside:avoid-page;page-break-inside:avoid;}
+  p:has(+ pre), p:has(+ table), p:has(+ .diagram-scroll), p:has(+ .compare-grid){break-after:avoid-page;page-break-after:avoid;}
+  .sheet-head{break-after:avoid-page;page-break-after:avoid;}
+  .dek{break-before:avoid-page;break-after:avoid-page;break-inside:avoid-page;page-break-before:avoid;page-break-after:avoid;page-break-inside:avoid;orphans:10;widows:10;}
+  table{break-before:avoid-page;page-break-before:avoid;}
+  .keep-together{break-inside:avoid-page;page-break-inside:avoid;display:block;}
+  .secrets-table{font-size:11.5px;border-collapse:separate;border-spacing:0;}
+  .secrets-table th{padding:.35rem .6rem;}
+  .secrets-table td{padding:.4rem .6rem;line-height:1.3;}
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">CustomerHive — architettura</p>
+    <h1>Provisioning istanze Docker</h1>
+    <p class="dek">Chi fa cosa quando nasce una nuova istanza: dall'amministratore che preme il pulsante fino al container che serve il traffico.</p>
+  </header>
+
+  <nav class="toc">
+    <p class="toc-title">Indice</p>
+    <ol>
+      <li><a href="#architettura">Architettura (control plane / gateway / data plane)</a></li>
+      <li><a href="#responsabilita">Responsabilità per attore</a></li>
+      <li><a href="#control-plane">Funzionalità del control plane</a></li>
+      <li><a href="#gateway">Funzionalità del gateway</a></li>
+      <li><a href="#data-plane">Funzionalità del data plane</a></li>
+      <li><a href="#contratto-immagine">Il contratto dell'immagine</a></li>
+      <li><a href="#trigger-creazione">Chi avvia la creazione di un'istanza — amministratore vs richiesta demo</a></li>
+      <li><a href="#comandi-data-plane">Come funzionano i comandi verso il data plane</a></li>
+      <li><a href="#context-docker">Context Docker e Data Plane multipli</a></li>
+      <li><a href="#tabella-secret">Tabella dei secret</a></li>
+      <li><a href="#licenza">Come nasce la licenza — managed vs self-hosted</a></li>
+      <li><a href="#pacchetto-self-hosted">Il pacchetto per il cliente self-hosted</a></li>
+      <li><a href="#pipeline">Pipeline di build e rilascio</a></li>
+      <li><a href="#aggiornamento-rollback">Aggiornamento istanza e ripristino da backup</a></li>
+      <li><a href="#struttura-cartelle">Struttura cartelle: data plane e control plane</a></li>
+    </ol>
+  </nav>
+
+  <section class="sheet" id="architettura">
+    <div class="sheet-head">
+      <span class="tag">schema · architettura (control plane / gateway / data plane)</span>
+      <span class="meta">rev. 2026-10-08</span>
+    </div>
+    <div class="diagram-scroll">
+      <svg viewBox="0 0 960 830" role="img" aria-label="Diagramma dell'architettura: Control Plane privato con Chive CP, un Data Plane che contiene Traefik, le istanze (quattro container ciascuna) e il Gateway (container pubblico minimale instradato da Traefik), e un cliente self-hosted che raggiunge solo il Gateway">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path class="arrow-head" d="M2 1L8 5L2 9" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <rect class="ext-box" x="100" y="40" width="200" height="52" rx="8"/>
+        <text class="t-region" x="200" y="66" text-anchor="middle" dominant-baseline="central">Amministratore</text>
+
+        <rect class="ext-box" x="650" y="40" width="200" height="52" rx="8"/>
+        <text class="t-region" x="750" y="66" text-anchor="middle" dominant-baseline="central">Utenti finali</text>
+
+        <line class="arrow" x1="200" y1="92" x2="200" y2="150" marker-end="url(#arrow)"/>
+        <text class="t-label" x="213" y="118">VPN / accesso privato</text>
+
+        <line class="arrow" x1="750" y1="92" x2="750" y2="195" marker-end="url(#arrow)"/>
+        <text class="t-label" x="763" y="118">richieste https</text>
+
+        <rect class="control-card" x="70" y="150" width="260" height="330" rx="14"/>
+        <text class="t-region c-control" x="200" y="183" text-anchor="middle" dominant-baseline="central">Control Plane</text>
+        <text class="t-sub" x="200" y="203" text-anchor="middle" dominant-baseline="central">Chive CP — privato</text>
+        <text class="t-sub" x="95" y="240">· Gestione licenze</text>
+        <text class="t-sub" x="95" y="262">· Gestione istanze</text>
+        <text class="t-sub" x="95" y="284">· Creazione istanze</text>
+        <text class="t-label" x="95" y="320">Nessun listener pubblico:</text>
+        <text class="t-label" x="95" y="338">raggiunto solo da VPN e Gateway</text>
+
+        <rect class="host-card" x="580" y="150" width="340" height="410" rx="14"/>
+        <text class="t-region" x="750" y="183" text-anchor="middle" dominant-baseline="central">Data Plane</text>
+        <text class="t-sub" x="750" y="203" text-anchor="middle" dominant-baseline="central">Docker · host dedicato</text>
+
+        <rect class="proxy-card" x="605" y="230" width="290" height="80" rx="10"/>
+        <text class="t-region c-proxy" x="750" y="262" text-anchor="middle" dominant-baseline="central">Traefik</text>
+        <text class="t-sub" x="750" y="285" text-anchor="middle" dominant-baseline="central">Proxy + TLS, provider Docker</text>
+
+        <rect class="gateway-card" x="605" y="325" width="135" height="185" rx="10"/>
+        <text class="t-region c-gateway" x="672" y="360" text-anchor="middle" dominant-baseline="central">Gateway</text>
+        <text class="t-sub" x="672" y="385" text-anchor="middle" dominant-baseline="central">Slim (PHP)</text>
+        <text class="t-label" x="672" y="408" text-anchor="middle">no chiavi</text>
+
+        <rect class="workload-card" x="760" y="325" width="135" height="185" rx="10"/>
+        <text class="t-region c-workload" x="827" y="360" text-anchor="middle" dominant-baseline="central">Istanze</text>
+        <text class="t-sub" x="827" y="385" text-anchor="middle" dominant-baseline="central">4 container</text>
+        <text class="t-label" x="827" y="408" text-anchor="middle">app · db</text>
+        <text class="t-label" x="827" y="426" text-anchor="middle">scheduler · worker</text>
+
+        <line class="arrow" x1="760" y1="390" x2="740" y2="390" marker-end="url(#arrow)"/>
+
+        <line class="arrow" x1="330" y1="300" x2="580" y2="300" marker-end="url(#arrow)"/>
+        <text class="t-label" x="400" y="290" text-anchor="middle">SSH (Docker)</text>
+
+        <path class="arrow" d="M605 417 L330 417" marker-end="url(#arrow)"/>
+        <text class="t-label" x="467" y="405" text-anchor="middle">check-in (https, dal Gateway)</text>
+
+        <rect class="ext-box" x="430" y="730" width="200" height="60" rx="8"/>
+        <text class="t-region" x="530" y="760" text-anchor="middle" dominant-baseline="central">Cliente (self-hosted)</text>
+        <path class="arrow" d="M530 730 L530 570 L672 570 L672 510" marker-end="url(#arrow)"/>
+        <text class="t-label" x="543" y="650">check-in</text>
+
+        <rect class="ext-box" x="650" y="730" width="200" height="60" rx="8"/>
+        <text class="t-region" x="750" y="760" text-anchor="middle" dominant-baseline="central">CI/CD + registry</text>
+        <path class="arrow" d="M750 730 L750 570 L827 570 L827 510" marker-end="url(#arrow)"/>
+        <text class="t-label" x="763" y="650">pull immagine</text>
+      </svg>
+    </div>
+    <div class="legend">
+      <span class="key"><i class="swatch control"></i>Control plane (privato)</span>
+      <span class="key"><i class="swatch gateway"></i>Gateway (dentro il Data Plane, pubblico minimale)</span>
+      <span class="key"><i class="swatch proxy"></i>Proxy / TLS</span>
+      <span class="key"><i class="swatch workload"></i>Istanze (workload)</span>
+      <span class="key"><i class="swatch neutral"></i>Infrastruttura / attori esterni</span>
+    </div>
+    <p class="flow-footer">Il Gateway non è una macchina a sé: è un container in più sul Data Plane, instradato da Traefik esattamente come le istanze. Il Data Plane era già l'unica macchina esposta pubblicamente e senza chiavi permanenti, il profilo giusto per ospitarlo.</p>
+  </section>
+
+  <section id="responsabilita">
+    <h2>Responsabilità per attore</h2>
+    <div class="cards">
+      <article class="card control">
+        <h3>Control Plane</h3>
+        <p class="role">Chive CP · privato, nessun listener pubblico</p>
+        <ul>
+          <li>Gestione licenze (Managed: scadenza esplicita, rinnovo, revoca all'eliminazione)</li>
+          <li>Gestione istanze esistenti</li>
+          <li>Creazione di nuove istanze</li>
+          <li>Email al referente col link per impostare la password (e «Reinvia link»)</li>
+        </ul>
+      </article>
+      <article class="card gateway">
+        <h3>Gateway</h3>
+        <p class="role">Pubblico · minimale, nessuna chiave</p>
+        <ul>
+          <li>Riceve i check-in delle istanze (managed e self-hosted)</li>
+          <li>Riceve il webhook della pipeline CI</li>
+          <li>Riceverà anche le richieste demo pubbliche (futuro)</li>
+          <li>Inoltra al Control Plane su canale privato</li>
+        </ul>
+      </article>
+      <article class="card proxy">
+        <h3>Traefik</h3>
+        <p class="role">Container Docker, sul Data Plane</p>
+        <ul>
+          <li>Instrada il traffico per dominio via label</li>
+          <li>Emette TLS automaticamente</li>
+        </ul>
+      </article>
+      <article class="card workload">
+        <h3>Istanze</h3>
+        <p class="role">Dev, staging, cliente/demo</p>
+        <ul>
+          <li>Quattro container per istanza: db, app, scheduler, worker</li>
+          <li>Stessa immagine per app, scheduler e worker</li>
+          <li>Stesso meccanismo per tutte</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>CI/CD + registry</h3>
+        <p class="role">Pipeline esterna</p>
+        <ul>
+          <li>Build dell'immagine versionata</li>
+          <li>Pubblicazione sul registry (Docker Hub privato)</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="sheet" id="control-plane">
+    <div class="sheet-head">
+      <span class="tag">schema · funzionalità del control plane</span>
+      <span class="meta">rev. 2026-10-08</span>
+    </div>
+    <div class="diagram-scroll">
+      <svg viewBox="0 0 960 780" role="img" aria-label="Le quattro aree funzionali dentro il Control Plane (Chive CP): Amministrazione via pannello Filament, Licensing già esistente e riusato, Orchestrazione istanze nuova, Endpoint esterni nuovi — con le connessioni verso Amministratore, Data Plane, Backup cifrato offsite, Gateway e CI/CD">
+        <defs>
+          <marker id="arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path class="arrow-head" d="M2 1L8 5L2 9" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <rect class="ext-box" x="190" y="40" width="200" height="52" rx="8"/>
+        <text class="t-region" x="290" y="66" text-anchor="middle" dominant-baseline="central">Amministratore</text>
+        <line class="arrow" x1="290" y1="92" x2="290" y2="225" marker-end="url(#arrow2)"/>
+        <text class="t-label" x="303" y="130">VPN / accesso privato</text>
+
+        <rect class="outer-box" x="100" y="140" width="760" height="500" rx="20"/>
+        <text class="t-title" x="480" y="172" text-anchor="middle">Control Plane</text>
+        <text class="t-sub" x="480" y="192" text-anchor="middle">Chive CP — privato</text>
+
+        <rect class="control-card" x="130" y="225" width="320" height="190" rx="14"/>
+        <text class="t-region c-control" x="290" y="255" text-anchor="middle" dominant-baseline="central">Amministrazione</text>
+        <text class="t-sub" x="290" y="275" text-anchor="middle" dominant-baseline="central">Pannello Filament (admin panel PHP)</text>
+        <text class="t-sub" x="150" y="305">· License / Module / User</text>
+        <text class="t-sub" x="150" y="325">· Instance (nuovo)</text>
+        <text class="t-sub" x="150" y="345">· Widget e log richieste</text>
+        <text class="t-sub" x="150" y="365">· «Reinvia link» al referente</text>
+
+        <rect class="outer-box" x="490" y="225" width="320" height="190" rx="14"/>
+        <text class="t-region" x="650" y="255" text-anchor="middle" dominant-baseline="central">Licensing (esistente)</text>
+        <text class="t-sub" x="650" y="275" text-anchor="middle" dominant-baseline="central">riusato, non riscritto</text>
+        <text class="t-sub" x="510" y="305">· Modello License + Module</text>
+        <text class="t-sub" x="510" y="325">· Validazione, moduli attivi</text>
+        <text class="t-sub" x="510" y="345">· Licenza generata anche per le demo</text>
+        <text class="t-sub" x="510" y="365">· Managed: scadenza esplicita, IP-check off</text>
+        <text class="t-sub" x="510" y="385">· Rinnovo; revoca all'eliminazione</text>
+
+        <rect class="workload-card" x="130" y="435" width="320" height="190" rx="14"/>
+        <text class="t-region c-workload" x="290" y="465" text-anchor="middle" dominant-baseline="central">Orchestrazione istanze</text>
+        <text class="t-sub" x="290" y="485" text-anchor="middle" dominant-baseline="central">nuovo</text>
+        <text class="t-sub" x="150" y="515">· Modello Instance + job coda</text>
+        <text class="t-sub" x="150" y="535">· Comandi Docker via SSH</text>
+        <text class="t-sub" x="150" y="555">· Backup: cifra e archivia</text>
+        <text class="t-sub" x="150" y="575">· Pacchetto self-hosted (rimandato)</text>
+        <text class="t-sub" x="150" y="595">· Richiesta demo pubblica (futuro)</text>
+        <text class="t-sub" x="150" y="615">· Email col link di primo accesso</text>
+
+        <rect class="gateway-card" x="490" y="435" width="320" height="190" rx="14"/>
+        <text class="t-region c-gateway" x="650" y="465" text-anchor="middle" dominant-baseline="central">Endpoint esterni</text>
+        <text class="t-sub" x="650" y="485" text-anchor="middle" dominant-baseline="central">nuovo, pubblico controllato</text>
+        <text class="t-sub" x="510" y="515">· Check-in dal Gateway</text>
+        <text class="t-sub" x="510" y="535">· Webhook CI (dev + release)</text>
+        <text class="t-sub" x="510" y="555">· Richiesta demo dal Gateway (futuro)</text>
+
+        <line class="arrow" x1="450" y1="320" x2="490" y2="320" marker-end="url(#arrow2)"/>
+
+        <line class="arrow" x1="290" y1="415" x2="290" y2="435" marker-end="url(#arrow2)"/>
+
+        <line class="arrow" x1="650" y1="435" x2="650" y2="415" marker-end="url(#arrow2)"/>
+
+        <line class="arrow" x1="490" y1="475" x2="450" y2="475" marker-end="url(#arrow2)"/>
+
+        <line class="arrow" x1="155" y1="680" x2="155" y2="625" marker-end="url(#arrow2)"/>
+        <text class="t-label" x="168" y="655">SSH + dump + storage</text>
+        <rect class="ext-box" x="60" y="680" width="190" height="60" rx="10"/>
+        <text class="t-region" x="155" y="710" text-anchor="middle" dominant-baseline="central">Data Plane</text>
+
+        <line class="arrow" x1="365" y1="625" x2="365" y2="680" marker-end="url(#arrow2)"/>
+        <text class="t-label" x="378" y="655">cifrato</text>
+        <rect class="ext-box" x="270" y="680" width="190" height="60" rx="10"/>
+        <text class="t-region" x="365" y="710" text-anchor="middle" dominant-baseline="central">Backup offsite</text>
+
+        <line class="arrow" x1="650" y1="680" x2="650" y2="625" marker-end="url(#arrow2)"/>
+        <text class="t-label" x="663" y="655">check-in + trigger dev</text>
+        <rect class="ext-box" x="555" y="680" width="190" height="60" rx="10"/>
+        <text class="t-region" x="650" y="710" text-anchor="middle" dominant-baseline="central">Gateway</text>
+      </svg>
+    </div>
+    <div class="legend">
+      <span class="key"><i class="swatch control"></i>Amministrazione (Filament)</span>
+      <span class="key"><i class="swatch neutral"></i>Licensing (già esistente)</span>
+      <span class="key"><i class="swatch workload"></i>Orchestrazione istanze (nuovo)</span>
+      <span class="key"><i class="swatch gateway"></i>Endpoint esterni (nuovo)</span>
+    </div>
+    <p class="flow-footer">Il dump del database e l'archivio di <code>storage</code> arrivano dal Data Plane via SSH e vengono cifrati <strong>subito</strong> lato Control Plane, prima di toccare qualunque disco — non restano mai, nemmeno temporaneamente, sul Data Plane. La copia offsite riceve solo i file già cifrati, sempre in coppia. Per ogni istanza Managed Chive CP crea anche la licenza (con scadenza esplicita e controllo dell'IP disattivato), la rinnova su richiesta e la revoca quando l'istanza viene eliminata; il link per impostare la password lo spedisce al referente con la <em>propria</em> posta, anche quando si preme «Reinvia link». <strong>Nessun listener pubblico</strong>: anche il webhook CI passa dal Gateway, non arriva diretto. "Data Plane" e "Gateway" qui sotto sono due canali distinti (SSH per Docker/dump, HTTPS per il check-in) verso la <strong>stessa macchina fisica</strong> — il Gateway gira lì come container, non su un server a parte.</p>
+  </section>
+
+  <section class="sheet" id="gateway">
+    <div class="sheet-head">
+      <span class="tag">schema · funzionalità del gateway</span>
+      <span class="meta">rev. 2026-09-17</span>
+    </div>
+    <div class="diagram-scroll">
+      <svg viewBox="0 0 960 710" role="img" aria-label="Le funzioni del Gateway: due relay (check-in licenza/versione, webhook CI) con i rispettivi endpoint, scritto in Slim (PHP), difese comuni condivise (rate limit, validazione, log minimale, nessuno stato sensibile), un solo canale privato in uscita verso il Control Plane">
+        <defs>
+          <marker id="arrow3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path class="arrow-head" d="M2 1L8 5L2 9" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <rect class="ext-box" x="60" y="40" width="190" height="60" rx="8"/>
+        <text class="t-region" x="155" y="62" text-anchor="middle" dominant-baseline="central">Istanze</text>
+        <text class="t-sub" x="155" y="82" text-anchor="middle" dominant-baseline="central">stesso Data Plane</text>
+        <line class="arrow" x1="155" y1="100" x2="155" y2="230" marker-end="url(#arrow3)"/>
+
+        <rect class="ext-box" x="270" y="40" width="200" height="60" rx="8"/>
+        <text class="t-region" x="370" y="62" text-anchor="middle" dominant-baseline="central">Cliente</text>
+        <text class="t-sub" x="370" y="82" text-anchor="middle" dominant-baseline="central">self-hosted</text>
+        <line class="arrow" x1="370" y1="100" x2="370" y2="230" marker-end="url(#arrow3)"/>
+
+        <rect class="ext-box" x="600" y="40" width="200" height="52" rx="8"/>
+        <text class="t-region" x="700" y="66" text-anchor="middle" dominant-baseline="central">CI/CD + registry</text>
+        <line class="arrow" x1="700" y1="92" x2="700" y2="230" marker-end="url(#arrow3)"/>
+
+        <rect class="gateway-card" x="100" y="140" width="760" height="410" rx="20"/>
+        <text class="t-title" x="480" y="172" text-anchor="middle">Gateway</text>
+        <text class="t-sub" x="480" y="192" text-anchor="middle">Pubblico · minimale · nessuna chiave</text>
+        <text class="t-label" x="480" y="212" text-anchor="middle">Slim (PHP) — footprint minimo, indipendente da Laravel</text>
+
+        <rect class="outer-box" x="130" y="230" width="340" height="170" rx="14"/>
+        <text class="t-region" x="300" y="260" text-anchor="middle" dominant-baseline="central">Relay check-in</text>
+        <text class="t-sub" x="300" y="280" text-anchor="middle" dominant-baseline="central">licenza + versione</text>
+        <text class="t-sub" x="150" y="305">· Valida formato (UUID, host)</text>
+        <text class="t-sub" x="150" y="325">· Rate limit per IP / licenza</text>
+        <text class="t-mono" x="150" y="350">POST …/license-server/auth/login</text>
+        <text class="t-mono" x="150" y="370">POST …/license-server/license</text>
+
+        <rect class="outer-box" x="490" y="230" width="340" height="170" rx="14"/>
+        <text class="t-region" x="660" y="260" text-anchor="middle" dominant-baseline="central">Relay webhook CI</text>
+        <text class="t-sub" x="660" y="280" text-anchor="middle" dominant-baseline="central">aggiornamento dev + registrazione release</text>
+        <text class="t-sub" x="510" y="305">· Valida token (tempo costante)</text>
+        <text class="t-sub" x="510" y="325">· Rate limit per IP</text>
+        <text class="t-mono" x="510" y="350">POST /ci/webhook</text>
+
+        <line class="arrow" x1="300" y1="400" x2="300" y2="425" marker-end="url(#arrow3)"/>
+        <line class="arrow" x1="660" y1="400" x2="660" y2="425" marker-end="url(#arrow3)"/>
+
+        <rect class="outer-box" x="130" y="425" width="700" height="110" rx="14"/>
+        <text class="t-region" x="480" y="450" text-anchor="middle" dominant-baseline="central">Difese comuni</text>
+        <text class="t-sub" x="480" y="470" text-anchor="middle" dominant-baseline="central">nessuno stato sensibile persistente</text>
+        <text class="t-sub" x="150" y="500">· Log minimale (mai license_key/token in chiaro)</text>
+        <text class="t-sub" x="150" y="520">· Health check per il monitoraggio — GET /health</text>
+
+        <line class="arrow" x1="480" y1="535" x2="480" y2="610" marker-end="url(#arrow3)"/>
+        <text class="t-label" x="493" y="575">canale privato (token)</text>
+
+        <rect class="ext-box" x="380" y="610" width="200" height="60" rx="10"/>
+        <text class="t-region" x="480" y="640" text-anchor="middle" dominant-baseline="central">Control Plane</text>
+      </svg>
+    </div>
+    <div class="legend">
+      <span class="key"><i class="swatch gateway"></i>Gateway (contenitore, pubblico)</span>
+      <span class="key"><i class="swatch neutral"></i>Funzioni interne / Control Plane</span>
+    </div>
+    <p class="flow-footer">Il Gateway gira come <strong>container sul Data Plane</strong>, instradato da Traefik — non una terza macchina: il Data Plane era già l'unica esposta pubblicamente e senza chiavi permanenti. Il "canale privato" verso il Control Plane in fondo a questo schema è quindi l'unico salto che attraversa davvero una rete tra macchine diverse. Scritto in <strong>Slim</strong> (PHP) invece di Laravel: stesso linguaggio del resto dello stack, ma un nucleo molto più piccolo — solo routing e gestione richieste, niente ORM/code/sessioni installati per forza. Per un componente con due sole rotte reali, meno dipendenze da tenere aggiornate e nessuna vulnerabilità di Laravel/Chive CP che si ripercuote automaticamente qui. Se il Control Plane non risponde in tempo, il Gateway restituisce un errore chiaro al chiamante invece di restare appeso. <strong>Cosa significa "nessuna cache di riserva"</strong>: il Gateway potrebbe tenere una copia recente degli esiti di validazione, per rispondere comunque a un check-in anche se il Control Plane fosse irraggiungibile per un momento — abbiamo scelto di <em>non</em> farlo nella v1: un check-in fallito è solo un errore temporaneo (il prossimo, un'ora dopo, riprova), mentre una cache sarebbe un'altra copia di dati da tenere sincronizzata e protetta anche sul Gateway — esattamente il tipo di stato in più che vogliamo evitargli.</p>
+    <p class="flow-footer">Un terzo relay è già previsto ma non ancora costruito: quando esisterà la richiesta demo pubblica (vedi "Chi avvia la creazione di un'istanza"), sarà il Gateway a riceverla dalla landing page e a inoltrarla al Control Plane — stessa logica dei due relay qui sopra, nessun meccanismo nuovo da progettare.</p>
+
+    <p class="dek" style="max-width:none;">Tutti gli endpoint del Gateway, con i body reali che viaggiano in richiesta e risposta.</p>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>POST /api/api-license/license-server/auth/login</strong> — chi chiama: l'istanza stessa, al check-in e a ogni login di un utente. Il prefisso <code>/api/api-license</code> è quello che <strong>il codice dell'app ha già scritto dentro</strong> (e che usano anche i clienti di oggi): il Gateway deve rispondere esattamente su questi percorsi, non su una versione accorciata. Nelle note successive li abbrevio con <code>…</code>.</p>
+    <pre class="tree-block">// richiesta (header: x-host, x-host-name con l'URL e il nome dell'app)
+{
+  "license_key": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "ls_domain": "acme-corp.thecustomerhive.com"
+}
+
+// risposta (200) — busta fissa { success, message, data }
+{
+  "success": true,
+  "message": "Successfully logged in.",
+  "data": { "access_token": "xY9kLp3mZqRt7vWn2sHj8cBf..." }
+}
+
+// risposta (401 — chiave/dominio sbagliati, oppure IP non consentito)
+{ "success": false, "message": "Invalid license key or license source." }</pre>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>POST …/license-server/license</strong> — chi chiama: l'istanza, subito dopo aver ottenuto il token. Header <code>Authorization: Bearer &lt;token&gt;</code> più gli stessi header di sopra; nel corpo la chiave e il dominio.</p>
+    <pre class="tree-block">// richiesta
+{
+  "license_key": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "domain": "acme-corp.thecustomerhive.com"
+}
+
+// risposta (200) — l'app salva "data" in storage/app/license.json
+{
+  "success": true,
+  "data": {
+    "id": 42,
+    "domain": "acme-corp.thecustomerhive.com",
+    "license_key": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "path": "acme-corp",
+    "status": "active",
+    "expiration_date": "2027-10-08T15:45:17.000000Z",
+    "expires_in": 364,
+    "is_trial": false,
+    "is_lifetime": false,
+    "tenants_number": 3,
+    "clients_number": 50,
+    "created_at": "2026-10-08T15:45:17.000000Z",
+    "updated_at": "2026-10-08T15:45:17.000000Z",
+    "deleted_at": null,
+    "modules": [
+      { "id": 7, "name": "Qlik", "pivot": { "license_id": 42, "module_id": 1 } }
+    ]
+  }
+}</pre>
+    <p class="flow-footer">I campi qui sopra sono quelli che l'app legge davvero (<code>id</code>, <code>domain</code>, <code>path</code>, <code>status</code>, i limiti di tenant e utenti, i <code>modules</code>); il corpo qui sopra è la risposta <strong>reale</strong> del server di licenza, misurata in locale (le date sono in formato ISO 8601 UTC, <code>expires_in</code> sono giorni interi, <code>modules</code> è un elenco di oggetti e non di semplici nomi). Un dettaglio utile: un login con licenza scaduta <em>riesce comunque</em> — il server la marca <code>inactive</code> ed emette il token — ed è l'app a leggere lo stato dalla risposta di questa chiamata e a bloccare l'accesso, senza perdere la chiave: dopo il rinnovo il login torna a funzionare da solo (corretto in LICENSES e CustomerHive, docs 014 e 301). Il file <code>license.json</code> contiene anche la <code>license_key</code> in chiaro (sta nel volume storage). Il <code>domain</code> salvato nella licenza è l'<strong>host completo</strong> dell'istanza (il server di licenza ha i sottodomini abilitati), quindi coincide con il <code>APP_DOMAIN</code> dell'istanza. <strong>Il controllo dell'IP:</strong> il server di licenza lega la licenza al primo IP da cui la vede. Passando dal Gateway vedrebbe sempre l'IP del Gateway e non quello dell'istanza: se il Gateway o il Data Plane cambiano IP, tutte le licenze risponderebbero "IP non consentito" insieme. Per questo le licenze <strong>Managed</strong> vengono create con questo controllo <strong>disattivato</strong> (un flag sulla licenza, che Chive CP imposta alla creazione); per tutte le altre resta attivo come oggi.</p>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>POST /ci/webhook</strong> — chi chiama: la pipeline CI, non un'istanza.</p>
+    <pre class="tree-block">// richiesta (ramo dev)
+{ "tag": "dev-a1b2c3d", "branch": "dev" }
+
+// richiesta (ramo release)
+{ "tag": "v1.4.0", "branch": "release" }
+
+// risposta (202 — l'azione vera avviene dentro Chive CP, non nella risposta)
+{ "received": true }</pre>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>GET /health</strong> — chi chiama: un sistema di monitoraggio esterno. Nessun corpo in ingresso, nessuna autenticazione — non inoltra nulla a Chive CP, verifica solo che il processo del Gateway sia vivo.</p>
+    <pre class="tree-block">// risposta (200)
+{ "status": "ok" }</pre>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>POST /demo-request</strong> — futuro, non ancora costruito. Chi chiamerà: il modulo "Preparami una demo" sulla landing page.</p>
+    <pre class="tree-block">// richiesta
+{
+  "company": "Acme Corp",
+  "email": "mario.rossi@acmecorp.it"
+}
+
+// risposta (200)
+{ "message": "Richiesta ricevuta, ti contatteremo a breve." }</pre>
+  </section>
+
+  <section class="sheet" id="data-plane">
+    <div class="sheet-head">
+      <span class="tag">schema · funzionalità del data plane</span>
+      <span class="meta">rev. 2026-10-08</span>
+    </div>
+    <div class="diagram-scroll">
+      <svg viewBox="0 0 960 700" role="img" aria-label="Le funzioni del Data Plane: Traefik per l'instradamento e TLS che punta solo al container app (porta 8080) di ogni istanza; ogni istanza ha quattro container (app, scheduler, worker, db) su una rete privata isolata; il Gateway è un container aggiuntivo instradato dallo stesso Traefik; il pull dell'immagine avviene da Docker Hub privato">
+        <defs>
+          <marker id="arrow4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path class="arrow-head" d="M2 1L8 5L2 9" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <rect class="ext-box" x="190" y="40" width="200" height="52" rx="8"/>
+        <text class="t-region" x="290" y="66" text-anchor="middle" dominant-baseline="central">Utenti finali</text>
+        <line class="arrow" x1="290" y1="92" x2="290" y2="225" marker-end="url(#arrow4)"/>
+        <text class="t-label" x="303" y="130">richieste https</text>
+
+        <rect class="ext-box" x="550" y="40" width="200" height="52" rx="8"/>
+        <text class="t-region" x="650" y="66" text-anchor="middle" dominant-baseline="central">Control Plane</text>
+        <line class="arrow" x1="650" y1="92" x2="650" y2="140" marker-end="url(#arrow4)"/>
+        <text class="t-label" x="663" y="120">SSH (comandi)</text>
+
+        <rect class="outer-box" x="100" y="140" width="760" height="425" rx="20"/>
+        <text class="t-title" x="480" y="172" text-anchor="middle">Data Plane</text>
+        <text class="t-sub" x="480" y="192" text-anchor="middle">Docker · host dedicato</text>
+
+        <rect class="proxy-card" x="130" y="225" width="700" height="80" rx="14"/>
+        <text class="t-region c-proxy" x="480" y="255" text-anchor="middle" dominant-baseline="central">Traefik</text>
+        <text class="t-sub" x="480" y="278" text-anchor="middle" dominant-baseline="central">Discovery automatico (label) · Let's Encrypt per dominio</text>
+
+        <rect class="workload-card" x="130" y="340" width="340" height="205" rx="14"/>
+        <text class="t-region c-workload" x="300" y="370" text-anchor="middle" dominant-baseline="central">Istanze</text>
+        <text class="t-sub" x="300" y="393" text-anchor="middle" dominant-baseline="central">dev · staging · cliente/demo</text>
+
+        <rect class="docker-group" x="140" y="405" width="320" height="60" rx="8"/>
+        <rect class="outer-box" x="148" y="413" width="72" height="44" rx="6"/>
+        <text class="t-sub" x="184" y="428" text-anchor="middle" dominant-baseline="central">app</text>
+        <text class="t-label" x="184" y="446" text-anchor="middle" dominant-baseline="central">porta 8080</text>
+        <rect class="outer-box" x="228" y="413" width="72" height="44" rx="6"/>
+        <text class="t-sub" x="264" y="428" text-anchor="middle" dominant-baseline="central">scheduler</text>
+        <text class="t-label" x="264" y="446" text-anchor="middle" dominant-baseline="central">pianificati</text>
+        <rect class="outer-box" x="308" y="413" width="72" height="44" rx="6"/>
+        <text class="t-sub" x="344" y="428" text-anchor="middle" dominant-baseline="central">worker</text>
+        <text class="t-label" x="344" y="446" text-anchor="middle" dominant-baseline="central">coda</text>
+        <rect class="outer-box" x="388" y="413" width="64" height="44" rx="6"/>
+        <text class="t-sub" x="420" y="428" text-anchor="middle" dominant-baseline="central">db</text>
+        <text class="t-label" x="420" y="446" text-anchor="middle" dominant-baseline="central">MySQL</text>
+
+        <text class="t-sub" x="150" y="485">· Rete privata per istanza, isolata</text>
+        <text class="t-sub" x="150" y="505">· Stessa immagine, tre comandi diversi</text>
+        <text class="t-sub" x="150" y="525">· Pull da Docker Hub privato</text>
+
+        <line class="arrow" x1="184" y1="305" x2="184" y2="413" marker-end="url(#arrow4)"/>
+        <text class="t-label" x="196" y="326">solo app (8080)</text>
+
+        <rect class="gateway-card" x="490" y="340" width="340" height="205" rx="14"/>
+        <text class="t-region c-gateway" x="660" y="370" text-anchor="middle" dominant-baseline="central">Gateway</text>
+        <text class="t-sub" x="660" y="393" text-anchor="middle" dominant-baseline="central">Slim (PHP), su questa macchina</text>
+        <text class="t-sub" x="510" y="418">· Riceve check-in (istanze+cliente)</text>
+        <text class="t-sub" x="510" y="438">· Relay webhook CI</text>
+        <text class="t-sub" x="510" y="458">· Nessuna chiave propria</text>
+
+        <line class="arrow" x1="660" y1="305" x2="660" y2="340" marker-end="url(#arrow4)"/>
+
+        <line class="arrow" x1="470" y1="500" x2="490" y2="500" marker-end="url(#arrow4)"/>
+
+        <line class="arrow" x1="300" y1="545" x2="300" y2="610" marker-end="url(#arrow4)"/>
+        <text class="t-label" x="313" y="585">pull immagine</text>
+        <rect class="ext-box" x="190" y="610" width="220" height="60" rx="10"/>
+        <text class="t-region" x="300" y="632" text-anchor="middle" dominant-baseline="central">Docker Hub</text>
+        <text class="t-sub" x="300" y="652" text-anchor="middle" dominant-baseline="central">registry privato</text>
+      </svg>
+    </div>
+    <div class="legend">
+      <span class="key"><i class="swatch proxy"></i>Traefik</span>
+      <span class="key"><i class="swatch workload"></i>Istanze</span>
+      <span class="key"><i class="swatch gateway"></i>Gateway</span>
+      <span class="key"><i class="swatch neutral"></i>Attori esterni</span>
+    </div>
+    <p class="flow-footer">Ogni istanza è un gruppo di <strong>quattro container</strong>: <code>db</code>, <code>app</code>, <code>scheduler</code> e <code>worker</code>. App, scheduler e worker usano la <strong>stessa immagine</strong> e cambia solo il comando; scheduler e worker sono sempre accesi e partono solo quando l'app è <code>healthy</code>. Il gruppo sta sulla propria rete Docker privata; solo il container <code>app</code> si aggancia anche alla rete condivisa con Traefik, che punta solo a lui (porta 8080) — il DB, lo scheduler e il worker non sono mai raggiungibili dall'esterno né da un'altra istanza. Il Gateway è un container in più sulla stessa macchina, instradato dallo stesso Traefik: il check-in da un'istanza verso il Gateway è una chiamata interna al Data Plane, non un salto di rete verso un'altra macchina. Nessuna porta oltre 80/443/22 è esposta sull'host. Provato in locale (Chive CP, LICENSES 016): le etichette generate funzionano con Traefik <strong>v3.6 o successivo</strong> (la 3.1 non parla con Docker 29), <code>TRUSTED_PROXIES</code> con il CIDR reale della rete Traefik fa uscire i redirect e i link in https; Let's Encrypt e l'IP reale del client vanno ancora verificati su un host Linux. Tutto quello che l'immagine si aspetta da Chive CP è nella sezione successiva.</p>
+  </section>
+
+  <section class="sheet" id="contratto-immagine">
+    <div class="sheet-head">
+      <span class="tag">schema · il contratto dell'immagine</span>
+      <span class="meta">rev. 2026-10-08</span>
+    </div>
+    <div class="keep-together">
+    <p class="dek" style="max-width:none;">Cosa l'immagine si aspetta da Chive CP: Chive CP genera <code>docker-compose.yml</code> e <code>.env</code> di ogni istanza rispettando questa tabella.</p>
+    <div class="table-scroll">
+    <table class="secrets-table contract-table">
+      <thead>
+        <tr><th>Voce</th><th>Contenuto</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Immagine</td><td>Una sola, su un repository privato di Docker Hub: tag <code>dev-latest</code>, <code>dev-&lt;sha&gt;</code>, <code>vX.Y.Z</code>. <code>APP_VERSION</code> la imposta il build, non il <code>.env</code>.</td></tr>
+        <tr><td>Servizio <code>app</code></td><td>Apache, porta 8080, come <code>www-data</code>. L'unico che esegue le migrazioni (all'avvio) e l'unico con healthcheck. Nell'immagine non c'è <code>tinker</code> (dipendenza di sviluppo): per la diagnosi si usano i comandi <code>php artisan</code> o uno script PHP che avvia l'applicazione.</td></tr>
+        <tr><td>Servizio <code>scheduler</code></td><td><code>php artisan schedule:work</code> — scadenza utenti, avvisi, rinfresco orario della licenza, pulizia MFA. Orari secondo <code>app.timezone</code> = Europe/Rome, non l'ora UTC del container.</td></tr>
+        <tr><td>Servizio <code>worker</code></td><td><code>php artisan queue:work qlik_sync --queue=qlik_sync,mail --sleep=3 --tries=1 --timeout=3600</code> — sync Qlik ed email in coda (avvisi di scadenza, email ritardate). Attenzione: il primo argomento di <code>queue:work</code> è la <em>connessione</em> (<code>qlik_sync</code>), le code si elencano con <code>--queue</code>; la forma <code>queue:work qlik_sync,mail</code> non parte.</td></tr>
+        <tr><td>Servizio <code>db</code></td><td>MySQL con credenziali per istanza; dati nel volume <code>db-data</code>. Le credenziali di root stanno in un file <code>db.env</code> <strong>separato</strong>, letto solo dal servizio <code>db</code>: app, scheduler e worker leggono il <code>.env</code> applicativo, che <strong>non</strong> contiene <code>MYSQL_ROOT_PASSWORD</code> (l'app si collega solo con l'utente dell'istanza).</td></tr>
+        <tr><td>Avvio</td><td>Scheduler e worker sempre accesi in ogni istanza; <code>depends_on</code> con <code>condition: service_healthy</code> sull'app. Su entrambi <code>stop_signal: SIGTERM</code> (senza, <code>docker stop</code> manda SIGWINCH, che ignorano: exit 137 dopo il timeout). Healthcheck dell'app con <code>start_period: 240s</code>.</td></tr>
+        <tr><td>Porta e healthcheck</td><td>L'etichetta Traefik punta a 8080. L'healthcheck sta nel compose, solo su <code>app</code> (<code>php</code> chiama <code>http://127.0.0.1:8080/health</code>; nell'immagine non c'è <code>curl</code>): nell'immagine lo erediterebbero scheduler e worker.</td></tr>
+        <tr><td>Variabili: app e database</td><td><code>APP_KEY</code> (per istanza), <code>APP_URL</code>, <code>APP_DOMAIN</code> (host completo <code>&lt;slug&gt;.&lt;dominio base&gt;</code>), <code>APP_PATH</code> (= slug), <code>APP_ENV=production</code>, <code>APP_DEBUG=false</code>, <code>DB_*</code> (credenziali per istanza).</td></tr>
+        <tr><td>Variabili: code e licenza</td><td><code>QUEUE_DRIVER=database</code>, <code>MAIL_QUEUE_CONNECTION=mail</code>, <code>CUSTOM_CONTROLLERS_PATH=storage/app/custom-controllers</code>, <code>LICENSE_SERVER_URL</code> (il Gateway). La chiave di licenza <strong>non</strong> sta nel <code>.env</code> delle istanze Managed.</td></tr>
+        <tr><td>Variabili: log e rete</td><td><code>LOG_CHANNEL=stderr</code> (altrimenti i log vanno in un file dentro storage e <code>docker logs</code> è vuoto), <code>TRUSTED_PROXIES</code> (Traefik; le reti delle istanze sono isolate).</td></tr>
+        <tr><td>Volumi</td><td><code>storage</code>: upload, cache della licenza (<code>license.json</code>), controller custom, eventuali log su file. <code>db-data</code>: dati MySQL.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    </div>
+    <p class="flow-footer">Questa tabella è il punto di incontro tra chi costruisce l'immagine e chi costruisce Chive CP: tenerla in un posto solo evita che i due lati divergano senza accorgersene. L'healthcheck sta nel compose perché altrimenti scheduler e worker, che non servono la porta 8080, risulterebbero sempre non sani; scheduler e worker aspettano l'app sana perché solo lei esegue le migrazioni; <code>LOG_CHANNEL=stderr</code> serve a leggere i log con <code>docker logs</code>. Il <code>.env</code> lo genera Chive CP alla creazione dell'istanza.</p>
+  </section>
+
+  <section class="sheet" id="trigger-creazione">
+    <div class="sheet-head">
+      <span class="tag">schema · chi avvia la creazione di un'istanza — amministratore vs richiesta demo</span>
+      <span class="meta">rev. 2026-10-08</span>
+    </div>
+    <div class="compare-grid">
+      <article class="compare-card control">
+        <h3>Amministratore</h3>
+        <p class="role">Oggi — priorità attuale</p>
+        <ol class="compare-steps">
+          <li>Compila il modulo "Instance" nel pannello Filament (nome cliente, Data Plane su cui farla nascere, <strong>email del referente</strong>, <strong>scadenza della licenza</strong>, ecc.) — Chive CP propone già uno slug valido, modificabile</li>
+          <li>Il record Instance nasce già "approvato" — è lui stesso l'amministratore a deciderlo</li>
+          <li>Parte subito il job di creazione in coda — gli stessi comandi della sezione successiva</li>
+          <li>Da qui in poi: stesso ciclo di vita di ogni istanza (check-in, aggiornamenti, backup)</li>
+        </ol>
+      </article>
+      <article class="compare-card gateway">
+        <h3>Richiesta demo pubblica</h3>
+        <p class="role">Futuro — non ancora costruito</p>
+        <ol class="compare-steps">
+          <li>Un visitatore compila il modulo "Preparami una demo" sulla landing page (nome azienda, non uno slug)</li>
+          <li>La richiesta passa dal <strong>Gateway</strong> (Chive CP non ha listener pubblico) e crea un record Instance con stato "in attesa", con uno slug generato per intero da Chive CP</li>
+          <li>L'amministratore la vede nel pannello e la approva con un click</li>
+          <li>Da quel click in poi: <strong>lo stesso identico job</strong> di creazione della modalità amministratore — nessun meccanismo nuovo</li>
+          <li>Da qui in poi: stesso ciclo di vita di ogni istanza (check-in, aggiornamenti, backup)</li>
+        </ol>
+      </article>
+    </div>
+    <p class="flow-footer">Le due modalità condividono lo stesso motore: cambia solo <strong>chi/cosa crea il record Instance e come viene validato prima di entrare in coda</strong>, non come l'istanza viene poi effettivamente creata. Per questo la richiesta demo pubblica si potrà aggiungere in un secondo momento senza toccare nulla di quanto già costruito per l'amministratore — è solo un secondo innesco verso lo stesso job. Il click di approvazione non è burocrazia fine a sé stessa: finché esiste, un modulo pubblico raggiungibile da chiunque non ha bisogno di anti-abuso sofisticato (rate limit aggressivi, verifica email, CAPTCHA) per restare sicuro, perché nessun container nasce davvero senza che un amministratore l'abbia guardato — un'approvazione automatica, se mai servirà, potrà arrivare più avanti come passo successivo, non come condizione per partire.</p>
+    <p class="flow-footer"><strong>Lo slug</strong> (es. <code>acme-corp</code>) non è mai testo libero: finisce nel sottodominio pubblico, nel nome del progetto Docker (<code>-p &lt;slug&gt;</code> in ogni comando della sezione successiva) e nei percorsi di due macchine diverse — un carattere sbagliato lì dentro può rompere silenziosamente uno di questi usi. Per questo è <strong>Chive CP a generarlo</strong>, non chi scrive il modulo: lo calcola dal nome digitato (solo minuscolo, lettere/numeri/trattini), controlla che non sia già in uso e aggiunge da sola un suffisso (<code>-2</code>, <code>-3</code>...) se serve. Per l'amministratore è un suggerimento modificabile, ma sempre dentro queste regole; per la richiesta demo pubblica il visitatore non sceglie nulla — lo slug è generato per intero da Chive CP, e resta comunque correggibile dall'amministratore al momento dell'approvazione.</p>
+  </section>
+
+  <section class="sheet" id="comandi-data-plane">
+    <div class="sheet-head">
+      <span class="tag">come funzionano i comandi verso il data plane</span>
+      <span class="meta">rev. 2026-10-08</span>
+    </div>
+    <p class="dek" style="max-width:none;">Tutte le operazioni sotto avvengono solo tramite un job in coda, mai come azione istantanea al click. Se un passaggio fallisce, si ferma lì — nessun tentativo automatico di ripeterlo. <code>dataplane</code> negli esempi è il nome di un context — vedi la sezione successiva per cosa significa.</p>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Creazione istanza</strong> — fa partire i quattro container (<code>db</code>, <code>app</code>, <code>scheduler</code>, <code>worker</code>); scheduler e worker aspettano che l'app sia <code>healthy</code>. Le tabelle del database le prepara l'app stessa, <strong>all'avvio</strong> (le migrazioni girano ad ogni avvio del container, quindi anche dopo ogni aggiornamento): non c'è più un comando separato per questo.</p>
+    <pre class="tree-block">docker --context dataplane compose -f /opt/chivecp/instances/&lt;slug&gt;/docker-compose.yml -p &lt;slug&gt; up -d</pre>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Verifica che sia pronta</strong> — guarda solo il container <code>app</code> (l'unico con healthcheck) e ripete questo controllo ogni 5 secondi finché non risulta <code>healthy</code>, o finché non scade un tempo massimo (<strong>300 secondi</strong>: la prima partenza misurata dura 65–145 secondi; un fallimento di migrazione resta <code>starting</code> fino a fine <code>start_period</code>, 240 s, quindi conviene leggere anche l'ultima riga di <code>docker logs</code>, <code>[entrypoint] ERRORE</code>, per accorgersene prima): non è un nuovo tentativo dopo un fallimento, è solo l'attesa che il normale avvio del container — migrazioni comprese — finisca. Il controllo vero è la pagina <code>/health</code> dell'app (risponde 200 se l'app e il database funzionano, 503 altrimenti); se il database non risolve, la risposta può metterci diversi secondi, quindi il controllo ha un suo timeout e lo tratta come "non sano".</p>
+    <pre class="tree-block">docker --context dataplane inspect --format='{{.State.Health.Status}}' &lt;slug&gt;-app-1</pre>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Primo avvio dell'istanza</strong> — eseguito <strong>una sola volta</strong>, quando l'app risulta <code>healthy</code>. Crea i dati di base, il superadmin (senza password nota) e la riga di licenza, e stampa il link per impostare la password. La chiave e l'indirizzo del referente viaggiano solo in questo comando, non finiscono mai nel <code>.env</code> dell'istanza.</p>
+    <pre class="tree-block">docker --context dataplane compose -p &lt;slug&gt; exec -T app php artisan instance:bootstrap \
+  --admin-email=&lt;email del referente&gt; --license-key=&lt;chiave&gt;
+// uscita: il link https://&lt;slug&gt;.&lt;dominio&gt;/admin/reset-password/&lt;token&gt;?email=...</pre>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Reinvia link</strong> — pulsante nel pannello. Genera un nuovo link (il precedente scade dopo 60 minuti) senza toccare nient'altro dell'istanza.</p>
+    <pre class="tree-block">docker --context dataplane compose -p &lt;slug&gt; exec -T app php artisan instance:password-link \
+  --admin-email=&lt;email del referente&gt;</pre>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Se la creazione fallisce</strong> (l'avvio dell'app non diventa mai <code>healthy</code> entro il tempo massimo — una migrazione fallita ne è la causa più probabile — oppure il primo avvio dell'istanza dà errore) — nessun rollback da fare, perché non esiste ancora nessun dato reale da proteggere: il job si limita a <strong>fermare</strong> i container (stessa azione di "Stop" qui sotto) e segna l'istanza come "creazione fallita", senza cancellare nulla in automatico. Se una migrazione fallisce, l'app <strong>non</strong> riprova da sola in ciclo (resta ferma, con l'errore nei log e la salute rossa), coerentemente con il principio di nessun tentativo automatico. Restano lì, ferme, finché l'amministratore non ispeziona i log per capire cosa non ha funzionato — solo a quel punto decide se eliminarla per sempre e riprovare da zero, o lasciarla così com'è.</p>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Stop (reversibile)</strong> — ferma tutti e quattro i container (<code>down</code> agisce su tutti i servizi del compose), i dati salvati restano intatti.</p>
+    <pre class="tree-block">docker --context dataplane compose -f /opt/chivecp/instances/&lt;slug&gt;/docker-compose.yml -p &lt;slug&gt; down</pre>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Eliminazione definitiva</strong> — stessa cosa su tutti e quattro i container, ma rimuove anche i dati salvati.</p>
+    <pre class="tree-block">docker --context dataplane compose -f /opt/chivecp/instances/&lt;slug&gt;/docker-compose.yml -p &lt;slug&gt; down -v</pre>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Aggiornamento</strong> — Scheduler e worker sono processi di lunga durata: dopo un <code>pull</code> tengono in memoria il vecchio codice, quindi vanno ricreati. Sequenza: backup → si fermano scheduler e worker (niente job né pianificazioni durante la migrazione) → pull → si ricrea solo l'app, che esegue da sola le migrazioni prima di mettersi in ascolto → si attende <code>healthy</code> e lo smoke test → si ricreano scheduler e worker col nuovo codice. Il database resta sempre acceso. Se la migrazione o lo smoke test falliscono, scheduler e worker <strong>restano fermi</strong> e si segue il ripristino manuale descritto più avanti.</p>
+    <pre class="tree-block">// 1. dopo il backup: ferma scheduler e worker
+docker --context dataplane compose -f /opt/chivecp/instances/&lt;slug&gt;/docker-compose.yml -p &lt;slug&gt; stop scheduler worker
+// 2. scarica la nuova versione (app, scheduler e worker usano la stessa immagine)
+docker --context dataplane compose -f /opt/chivecp/instances/&lt;slug&gt;/docker-compose.yml -p &lt;slug&gt; pull app
+// 3. ricrea solo l'app: le migrazioni girano all'avvio
+docker --context dataplane compose -f /opt/chivecp/instances/&lt;slug&gt;/docker-compose.yml -p &lt;slug&gt; up -d --no-deps app
+// 4. attende healthy (stesso controllo della creazione) + smoke test; solo se riusciti:
+docker --context dataplane compose -f /opt/chivecp/instances/&lt;slug&gt;/docker-compose.yml -p &lt;slug&gt; up -d --no-deps scheduler worker</pre>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Backup</strong> — un backup è sempre una <strong>coppia di file</strong> con lo stesso nome e la stessa data e ora: il <strong>database</strong> e il volume <strong>storage</strong> (upload, controller custom del module builder, cache della licenza). Il database senza i suoi file non basta: i moduli custom sono scritti nel database ma i loro controller stanno in <code>storage</code>, quindi un ripristino parziale lascerebbe moduli rotti. Ogni file viene estratto, compresso e cifrato in un unico flusso continuo con la chiave dedicata a questa istanza, mai in chiaro su disco.</p>
+    <pre class="tree-block">// 1. database
+docker --context dataplane compose -p &lt;slug&gt; exec -T db sh -c 'mysqldump --single-transaction --add-drop-database --databases &lt;slug&gt;_db -u root -p"$MYSQL_ROOT_PASSWORD"' \
+  | gzip \
+  | openssl enc -aes-256-cbc -salt -pbkdf2 -pass env:BACKUP_ENCRYPTION_KEY \
+  -out /tmp/&lt;slug&gt;_$(date +%F_%H%M%S).sql.gz.enc
+
+// 2. storage: un container usa-e-getta (la stessa immagine dell'istanza, con il solo comando tar al posto dell'avvio normale) legge la cartella in sola lettura
+docker --context dataplane run --rm --entrypoint tar -v /opt/customerhive/instances/&lt;slug&gt;/storage:/data:ro &lt;immagine dell'istanza&gt; \
+  -C /data --exclude=./logs --exclude=./framework -czf - . \
+  | openssl enc -aes-256-cbc -salt -pbkdf2 -pass env:BACKUP_ENCRYPTION_KEY \
+  -out /tmp/&lt;slug&gt;_$(date +%F_%H%M%S).storage.tar.gz.enc</pre>
+    <p class="flow-footer"><strong>Regole del backup.</strong> (1) I due file portano lo <strong>stesso identico nome</strong> (data e ora comprese, non solo il giorno: un backup di sicurezza prima di un aggiornamento e uno pianificato nello stesso giorno non si devono sovrascrivere) e valgono <strong>solo insieme</strong>: se uno dei due non arriva allo storage offsite il job fallisce e il backup non conta, senza tentativi automatici. (2) Si esclude da <code>storage</code> ciò che si rigenera da solo (log e cache del framework). (3) Il dump e l'archivio sono presi a pochi secondi di distanza, non nello stesso istante: se in quell'intervallo un utente carica un file, il database e lo storage possono differire di quel solo file — accettato, perché fermare l'istanza a ogni backup costerebbe di più. (4) La chiave di cifratura è la stessa per i due file dell'istanza. (5) In questa v1 ogni backup è <strong>completo</strong>: se gli upload crescono molto, un archivio sempre completo diventa lento e pesante — un backup incrementale è un'evoluzione possibile, non una decisione presa.</p>
+    <p class="flow-footer open-point"><strong>Punto aperto — chi fa il backup di Chive CP stesso.</strong> Il database di Chive CP contiene le chiavi di cifratura di tutti i backup (cifrate con la sua <code>APP_KEY</code>), e sul suo disco stanno i <code>.env</code> delle istanze (con la loro <code>APP_KEY</code>) e la chiave SSH: se andasse perso senza copia, tutti i backup delle istanze diventerebbero illeggibili. Come e dove salvarli non è ancora deciso.</p>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Ripristino</strong> — la stessa catena al contrario, per tornare a un backup precedente. Prima si fermano app, scheduler e worker (il database resta acceso); poi si riportano <strong>entrambi</strong> i file della coppia: il database e il volume <code>storage</code>, che viene svuotato e riempito di nuovo con il contenuto del backup (a tornare indietro devono essere anche i file, altrimenti restano controller più nuovi del database); infine si riavvia con il tag immagine coerente. Le cartelle escluse dal backup (log e cache) l'app le ricrea da sola all'avvio.</p>
+    <pre class="tree-block">// 0. verifica d'integrità PRIMA di toccare qualcosa: il dump decifrato e decompresso deve finire con "-- Dump completed", l'archivio deve elencarsi senza errori
+openssl enc -d -aes-256-cbc -pbkdf2 -pass env:BACKUP_ENCRYPTION_KEY -in &lt;slug&gt;_&lt;data_ora&gt;.sql.gz.enc | gunzip | tail -c 200 | grep -q -- "-- Dump completed"
+openssl enc -d -aes-256-cbc -pbkdf2 -pass env:BACKUP_ENCRYPTION_KEY -in &lt;slug&gt;_&lt;data_ora&gt;.storage.tar.gz.enc | tar -tz &gt; /dev/null
+
+// 1. database (dopo aver fermato app, scheduler e worker)
+openssl enc -d -aes-256-cbc -pbkdf2 -pass env:BACKUP_ENCRYPTION_KEY -in &lt;slug&gt;_&lt;data_ora&gt;.sql.gz.enc \
+  | gunzip \
+  | docker --context dataplane compose -p &lt;slug&gt; exec -T db sh -c 'mysql -u root -p"$MYSQL_ROOT_PASSWORD"'   # il dump contiene DROP/CREATE DATABASE: ricrea il database da zero
+
+// 2. storage
+openssl enc -d -aes-256-cbc -pbkdf2 -pass env:BACKUP_ENCRYPTION_KEY -in &lt;slug&gt;_&lt;data_ora&gt;.storage.tar.gz.enc \
+  | docker --context dataplane run --rm -i --entrypoint sh -v /opt/customerhive/instances/&lt;slug&gt;/storage:/data &lt;immagine dell'istanza&gt; \
+    -c 'find /data -mindepth 1 -delete && tar -xzf - -C /data'</pre>
+  </section>
+
+  <section class="sheet" id="context-docker">
+    <div class="sheet-head">
+      <span class="tag">schema · context Docker e Data Plane multipli</span>
+      <span class="meta">rev. 2026-10-08</span>
+    </div>
+    <p class="dek" style="max-width:none;">Cosa significa <code>--context dataplane</code> nei comandi appena visti, e come Chive CP gestisce più di un Data Plane.</p>
+    <p style="margin:0;font-size:14px;line-height:1.6;">Chive CP può gestire <strong>più Data Plane</strong> — alla creazione di un'istanza, l'amministratore sceglie da un elenco su quale farla nascere, e quella scelta resta scritta nel fascicolo dell'istanza per tutti i comandi futuri.</p>
+    <p style="margin:0;font-size:14px;line-height:1.6;">Cos'è di preciso un "context": è solo un nome comodo, salvato una volta su Chive CP, che tiene la corrispondenza "questo nome → questa macchina, raggiunta così". Non è il Data Plane in sé — è l'indicazione per trovarlo. Ogni Data Plane registrato ha il suo, distinto dagli altri: quando un comando dice <code>--context dataplane-2</code>, Chive CP va a guardare quella corrispondenza salvata e sa subito a quale macchina indirizzare l'ordine, senza doverlo cercare o indovinare ogni volta.</p>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Registrazione di un nuovo Data Plane</strong> — fatta una volta sola, quando se ne aggiunge uno (non ad ogni istanza).</p>
+    <pre class="tree-block">docker context create dataplane-2 --docker "host=ssh://deploy@10.0.4.12"</pre>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Elenco dei Data Plane registrati</strong> — è la lista da cui l'amministratore sceglie alla creazione di un'istanza.</p>
+    <pre class="tree-block">docker context ls</pre>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;">Il file <code>docker-compose.yml</code> (e il <code>.env</code> a fianco) <strong>non lasciano mai Chive CP</strong> — nessun trasferimento verso il Data Plane. Chive CP li legge in locale e li trasforma in istruzioni già complete ("crea un container con queste caratteristiche, con queste variabili già dentro") che manda al Docker del Data Plane attraverso il context: è quello a eseguirle davvero, senza aver mai bisogno di una sua copia dei file. I due file restano sul disco di Chive CP per tutta la vita dell'istanza — servono di nuovo a ogni aggiornamento futuro — e vengono cancellati solo quando elimini l'istanza per sempre. L'unica accortezza: le cartelle da montare (storage — upload, cache della licenza, controller custom — e dati del database) vanno scritte nel file come percorsi validi <strong>sul Data Plane</strong>.</p>
+  </section>
+
+  <section class="sheet" id="tabella-secret">
+    <div class="sheet-head">
+      <span class="tag">schema · tabella dei secret</span>
+      <span class="meta">rev. 2026-10-08</span>
+    </div>
+    <div class="keep-together">
+    <p class="dek" style="max-width:none;">Elenco progressivo di ogni secret coinvolto nel sistema, aggiornato via via che si approfondiscono le varie parti.</p>
+    <div class="table-scroll">
+    <table class="secrets-table contract-table">
+      <thead>
+        <tr><th>Secret</th><th>Dove vive</th><th>Dove/come viene creato</th><th>A cosa serve</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>MYSQL_ROOT_PASSWORD</td>
+          <td>nel <code>.env</code> dell'istanza, letto dal container <code>db</code></td>
+          <td>generata da Chive CP alla creazione; l'immagine MySQL la usa da sola al primo avvio</td>
+          <td>root nel database: dump in Backup, reimport in Ripristino</td>
+        </tr>
+        <tr>
+          <td>DB_USERNAME / DB_PASSWORD</td>
+          <td>nel <code>.env</code> dell'istanza, letto da <code>db</code> e <code>app</code></td>
+          <td>generate da Chive CP insieme alla precedente; MySQL crea l'utente con accesso solo al database di quell'istanza</td>
+          <td>l'app si collega con queste, mai come root: meno danno se viene compromessa</td>
+        </tr>
+        <tr>
+          <td>BACKUP_ENCRYPTION_KEY</td>
+          <td>colonna cifrata sul record <code>Instance</code> (database di Chive CP); mai nel <code>.env</code>, non esiste sul Data Plane</td>
+          <td>generata da Chive CP alla creazione, <strong>diversa per ogni istanza</strong>; cifrata con la <code>APP_KEY</code> di Chive CP</td>
+          <td>cifra dump e archivio di storage in Backup e li decifra in Ripristino: un backup rubato è inutilizzabile</td>
+        </tr>
+        <tr>
+          <td>APP_KEY (istanza)</td>
+          <td>nel <code>.env</code> dell'istanza, che resta su Chive CP</td>
+          <td>generata da Chive CP alla creazione, <strong>diversa per ogni istanza</strong></td>
+          <td>cifra dati e sessioni dell'app: perderla li rende illeggibili</td>
+        </tr>
+        <tr>
+          <td>Chiave privata SSH di Chive CP</td>
+          <td>solo su Chive CP; la pubblica negli <code>authorized_keys</code> di <code>deploy</code> su ogni Data Plane</td>
+          <td>generata una tantum, condivisa da tutti i Data Plane</td>
+          <td>autentica ogni connessione SSH dei context <code>docker --context ...</code></td>
+        </tr>
+        <tr>
+          <td>$CI_WEBHOOK_TOKEN</td>
+          <td>nei "Secrets" di GitHub Actions e sul Gateway/Chive CP</td>
+          <td>generato una tantum, condiviso da entrambi i rami (dev e release)</td>
+          <td>autentica <code>POST /ci/webhook</code> verso il Gateway; senza token valido la richiesta è scartata</td>
+        </tr>
+        <tr>
+          <td>Token Docker Hub (scrittura)</td>
+          <td>nei "Secrets" di GitHub Actions</td>
+          <td>creato una tantum su Docker Hub</td>
+          <td>la pipeline pubblica l'immagine sul repository privato</td>
+        </tr>
+        <tr>
+          <td>Token Docker Hub (sola lettura)</td>
+          <td>sui Data Plane, nel <code>docker login</code> fatto una volta su ciascuno</td>
+          <td>creato una tantum, distinto da quello di scrittura</td>
+          <td>i Data Plane scaricano l'immagine (pull) senza poterla modificare</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    </div>
+  </section>
+
+  <section class="sheet" id="licenza">
+    <div class="sheet-head">
+      <span class="tag">schema · come nasce la licenza e il primo accesso — managed vs self-hosted</span>
+      <span class="meta">rev. 2026-10-08</span>
+    </div>
+    <div class="compare-grid">
+      <article class="compare-card managed">
+        <h3>Managed</h3>
+        <p class="role">Istanza su infrastruttura nostra — v1</p>
+        <ol class="compare-steps">
+          <li>Chive CP crea la licenza nel proprio database (è lo stesso applicativo delle licenze): dominio e <code>path</code> esatti dell'istanza, limiti di tenant e utenti, moduli. Ottiene la chiave</li>
+          <li>Chive CP fa partire i quattro container (SSH sul Data Plane). All'avvio l'app esegue da sola le migrazioni e diventa <code>healthy</code></li>
+          <li>Solo allora Chive CP lancia <strong>un comando</strong> dentro il container, <code>instance:bootstrap</code>: crea i dati di base, il superadmin con una password che nessuno conosce, inserisce la chiave nella tabella <code>license</code> e stampa il link per impostare la password</li>
+          <li>Chive CP invia quel link al referente del cliente con la <strong>propria</strong> posta (l'istanza non ha ancora la posta configurata) e non lo conserva</li>
+          <li>Il cliente imposta la sua password; al primo login e poi ogni ora l'app scarica la licenza. Il <strong>primo check-in</strong> arrivato al Gateway segna l'istanza "attiva"</li>
+        </ol>
+      </article>
+      <article class="compare-card self-hosted">
+        <h3>Self-hosted</h3>
+        <p class="role">Istanza su infrastruttura del cliente — rimandato, non fa parte della v1</p>
+        <ol class="compare-steps">
+          <li>Chive CP genera la licenza per il dominio (stessa funzione)</li>
+          <li>La chiave e il contatto del referente finiscono nel file <code>.env</code> del pacchetto</li>
+          <li>Il pacchetto va all'IT del cliente, che lo scarica e fa partire il container</li>
+          <li>Qui non c'è nessun Chive CP a lanciare un comando: lo stesso <code>instance:bootstrap</code> dovrà partire da solo al primo avvio leggendo il <code>.env</code> — ancora da progettare</li>
+          <li>Da qui in poi: check-in orario verso il Gateway — l'unico segnale che abbiamo</li>
+        </ol>
+      </article>
+    </div>
+    <p class="flow-footer"><strong>Cosa esiste già e cosa no.</strong> Oggi l'app non legge nessuna chiave dal <code>.env</code>: l'unico modo per registrarla è la schermata "Ho già una licenza" nel browser. Il comando <code>instance:bootstrap</code> è quindi <strong>nuovo</strong>: salta quella schermata e inserisce la riga nella tabella <code>license</code> direttamente — senza nessuna chiamata di rete, perché al primo login l'app scarica già da sola il resto della licenza (lo fa ad ogni login e poi ogni ora). Per l'istanza Managed la chiave non finisce nemmeno nel <code>.env</code>: sta solo nel database di Chive CP e in quello dell'istanza. Il comando si rifiuta di girare se l'istanza è già stata inizializzata.</p>
+    <p class="flow-footer"><strong>Il link per impostare la password.</strong> Non esiste nessuna password iniziale da consegnare: l'app ha già il meccanismo del "password dimenticata" (token monouso, stessa policy: almeno 12 caratteri, nessuna password comune), e <code>instance:bootstrap</code> lo riusa. Il link vale <strong>60 minuti</strong> come ogni reset. Se il cliente non fa in tempo, l'amministratore preme <strong>"Reinvia link"</strong> nel pannello di Chive CP: parte un nuovo comando che genera un nuovo token e una nuova email. Il link è un segreto in transito: Chive CP lo legge dall'uscita del comando, lo manda per email e non lo scrive né nei log né nel database.</p>
+    <p class="flow-footer"><strong>Come si crea la licenza di un'istanza Managed.</strong> (1) Il <code>domain</code> è l'<strong>host completo</strong> dell'istanza, <code>&lt;slug&gt;.&lt;dominio base&gt;</code>, identico al <code>APP_DOMAIN</code> scritto nel suo <code>.env</code>. (2) Il <code>path</code> non ha un significato fisico in Docker: si usa lo slug, lo stesso valore in licenza e in <code>APP_PATH</code>. (3) Il controllo dell'IP è disattivato (vedi sopra). (4) La <strong>scadenza</strong> va scelta sempre in modo esplicito — per contratto, o in giorni per una demo — perché il valore di default del server è 30 giorni; Chive CP ha un'azione "Rinnova", perché una licenza scaduta blocca il login dell'intera istanza. Il rinnovo basta: l'istanza conserva la chiave e il login riparte da solo. Se in via eccezionale la chiave cambia (licenza ricreata) o va persa, non c'è un comando dedicato: Chive CP la re-registra con una POST a <code>/admin/activate-existing-license</code> (campo <code>license_key</code>, senza login) oppure con un <code>UPDATE</code> della tabella <code>license</code>. (5) Quando un'istanza viene <strong>eliminata per sempre</strong>, Chive CP revoca anche la sua licenza: il server rifiuta una seconda licenza per lo stesso dominio, quindi senza revoca lo slug non si potrebbe riutilizzare.</p>
+    <p class="flow-footer">Il "check-in orario" non è l'unico momento di validazione: la licenza viene controllata anche ad ogni login e quando si crea un nuovo tenant o utente dentro l'istanza — questo schema si concentra sul check-in periodico perché è quello rilevante per sapere se un'istanza è ancora viva e su che versione gira.</p>
+  </section>
+
+  <section class="sheet" id="pacchetto-self-hosted">
+    <div class="sheet-head">
+      <span class="tag">schema · il pacchetto per il cliente self-hosted — rimandato</span>
+      <span class="meta">rev. 2026-10-08</span>
+    </div>
+    <pre class="tree-block"><span class="folder">pacchetto-&lt;slug&gt;/</span>
+├── docker-compose.yml                  <span class="note">db, app, scheduler, worker — immagine pinnata alla versione di release</span>
+├── .env                                <span class="note">LICENSE_KEY, APP_KEY, credenziali DB — già compilato</span>
+└── ISTRUZIONI.txt                      <span class="note">comando da lanciare, requisiti minimi</span></pre>
+    <p class="flow-footer"><strong>Rimandato: non fa parte della v1.</strong> Quando verrà fatto, il <code>docker-compose.yml</code> del pacchetto avrà gli stessi servizi di un'istanza Managed (<code>db</code>, <code>app</code>, <code>scheduler</code>, <code>worker</code>), con lo stesso contratto dell'immagine.</p>
+    <p class="flow-footer">Solo tre file, niente di più: nessuna cartella <code>storage/</code> o <code>db-data/</code> nel pacchetto — Docker le crea vuote da sé al primo avvio, sulla macchina del cliente. Il file <code>.env</code> è già compilato da Chive CP (licenza, chiave applicativa, credenziali del database generate per quell'installazione) — il cliente non deve scrivere né decidere nulla, solo eseguire il comando indicato in <code>ISTRUZIONI.txt</code>.</p>
+  </section>
+
+  <section class="sheet" id="pipeline">
+    <div class="sheet-head">
+      <span class="tag">schema · pipeline di build e rilascio</span>
+      <span class="meta">rev. 2026-10-08</span>
+    </div>
+    <div class="diagram-scroll">
+      <svg viewBox="0 0 960 960" role="img" aria-label="Pipeline di build e rilascio: sviluppo, diverse suite di test automatici che devono passare tutte, build-and-push solo in caso di successo, poi due percorsi separati che passano entrambi dal Gateway (la pipeline non può chiamare il Control Plane direttamente) — dev continuo automatico, e release taggata che registra l'ultima versione disponibile e poi aspetta un aggiornamento manuale dal pannello per staging e istanze cliente">
+        <defs>
+          <marker id="arrow5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path class="arrow-head" d="M2 1L8 5L2 9" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <rect class="ext-box" x="380" y="40" width="200" height="52" rx="8"/>
+        <text class="t-region" x="480" y="66" text-anchor="middle" dominant-baseline="central">Sviluppatore</text>
+        <line class="arrow" x1="480" y1="92" x2="480" y2="130" marker-end="url(#arrow5)"/>
+
+        <rect class="outer-box" x="350" y="130" width="260" height="80" rx="12"/>
+        <text class="t-region" x="480" y="158" text-anchor="middle" dominant-baseline="central">tests</text>
+        <text class="t-sub" x="480" y="182" text-anchor="middle" dominant-baseline="central">diverse suite automatiche (PHPUnit)</text>
+        <text class="t-label" x="625" y="164">se anche una fallisce:</text>
+        <text class="t-label" x="625" y="182">la pipeline si ferma qui,</text>
+        <text class="t-label" x="625" y="200">nessuna immagine viene buildata</text>
+
+        <line class="arrow" x1="480" y1="210" x2="480" y2="250" marker-end="url(#arrow5)"/>
+        <text class="t-label" x="493" y="234">tutte superate</text>
+
+        <rect class="outer-box" x="330" y="250" width="300" height="70" rx="12"/>
+        <text class="t-region" x="480" y="275" text-anchor="middle" dominant-baseline="central">build-and-push</text>
+        <text class="t-sub" x="480" y="295" text-anchor="middle" dominant-baseline="central">builda e pubblica su Docker Hub privato</text>
+
+        <path class="arrow" d="M480 320 L480 360 L230 360 L230 410" marker-end="url(#arrow5)"/>
+        <path class="arrow" d="M480 320 L480 360 L730 360 L730 410" marker-end="url(#arrow5)"/>
+
+        <rect class="outer-box" x="110" y="410" width="240" height="70" rx="12"/>
+        <text class="t-region" x="230" y="435" text-anchor="middle" dominant-baseline="central">Push su dev</text>
+        <text class="t-sub" x="230" y="455" text-anchor="middle" dominant-baseline="central">tag dev-latest + dev-sha</text>
+
+        <line class="arrow" x1="230" y1="480" x2="230" y2="520" marker-end="url(#arrow5)"/>
+
+        <rect class="gateway-card" x="110" y="520" width="240" height="70" rx="12"/>
+        <text class="t-region c-gateway" x="230" y="545" text-anchor="middle" dominant-baseline="central">Gateway</text>
+        <text class="t-sub" x="230" y="565" text-anchor="middle" dominant-baseline="central">relay webhook CI (token)</text>
+
+        <line class="arrow" x1="230" y1="590" x2="230" y2="630" marker-end="url(#arrow5)"/>
+
+        <rect class="control-card" x="110" y="630" width="240" height="70" rx="12"/>
+        <text class="t-region c-control" x="230" y="655" text-anchor="middle" dominant-baseline="central">Chive CP</text>
+        <text class="t-sub" x="230" y="675" text-anchor="middle" dominant-baseline="central">aggiorna dev — automatico</text>
+
+        <line class="arrow" x1="230" y1="700" x2="230" y2="740" marker-end="url(#arrow5)"/>
+
+        <rect class="workload-card" x="110" y="740" width="240" height="70" rx="12"/>
+        <text class="t-region c-workload" x="230" y="765" text-anchor="middle" dominant-baseline="central">dev aggiornata</text>
+        <text class="t-sub" x="230" y="785" text-anchor="middle" dominant-baseline="central">pull, riavvio, migrazioni</text>
+
+        <rect class="outer-box" x="610" y="410" width="240" height="70" rx="12"/>
+        <text class="t-region" x="730" y="435" text-anchor="middle" dominant-baseline="central">Tag Git vX.Y.Z</text>
+        <text class="t-sub" x="730" y="455" text-anchor="middle" dominant-baseline="central">immagine semver pubblicata</text>
+
+        <line class="arrow" x1="730" y1="480" x2="730" y2="520" marker-end="url(#arrow5)"/>
+
+        <rect class="gateway-card" x="610" y="520" width="240" height="70" rx="12"/>
+        <text class="t-region c-gateway" x="730" y="545" text-anchor="middle" dominant-baseline="central">Gateway</text>
+        <text class="t-sub" x="730" y="565" text-anchor="middle" dominant-baseline="central">relay webhook CI (token)</text>
+
+        <line class="arrow" x1="730" y1="590" x2="730" y2="630" marker-end="url(#arrow5)"/>
+
+        <rect class="control-card" x="610" y="630" width="240" height="70" rx="12"/>
+        <text class="t-region c-control" x="730" y="655" text-anchor="middle" dominant-baseline="central">Chive CP</text>
+        <text class="t-sub" x="730" y="675" text-anchor="middle" dominant-baseline="central">registra: ultima release disponibile</text>
+
+        <line class="arrow" x1="730" y1="700" x2="730" y2="740" marker-end="url(#arrow5)"/>
+        <text class="t-label" x="743" y="724">più avanti, quando decidi tu</text>
+
+        <rect class="control-card" x="610" y="740" width="240" height="70" rx="12"/>
+        <text class="t-region c-control" x="730" y="765" text-anchor="middle" dominant-baseline="central">Chive CP</text>
+        <text class="t-sub" x="730" y="785" text-anchor="middle" dominant-baseline="central">click manuale dal pannello</text>
+
+        <line class="arrow" x1="730" y1="810" x2="730" y2="850" marker-end="url(#arrow5)"/>
+
+        <rect class="workload-card" x="610" y="850" width="240" height="70" rx="12"/>
+        <text class="t-region c-workload" x="730" y="875" text-anchor="middle" dominant-baseline="central">Istanza aggiornata</text>
+        <text class="t-sub" x="730" y="895" text-anchor="middle" dominant-baseline="central">staging o cliente, quando decidi tu</text>
+      </svg>
+    </div>
+    <div class="legend">
+      <span class="key"><i class="swatch gateway"></i>Gateway</span>
+      <span class="key"><i class="swatch control"></i>Chive CP</span>
+      <span class="key"><i class="swatch workload"></i>Istanza aggiornata</span>
+      <span class="key"><i class="swatch neutral"></i>Fasi della pipeline</span>
+    </div>
+    <p class="flow-footer">Il ramo sinistro (dev) parte da solo a ogni push. Il ramo destro (release) parte solo quando <strong>tu</strong> crei un tag Git — nessuna immagine semver arriva mai a staging o a un cliente senza un'azione esplicita. In entrambi i casi la pipeline (GitHub Actions, che gira fuori dalla nostra infrastruttura) non può chiamare Chive CP direttamente — non ha alcun listener pubblico — quindi passa sempre dal <strong>Gateway</strong>, con lo stesso token di servizio usato per il webhook di dev. Questo valore è quello con cui Chive CP confronta la versione in uso su ogni istanza per segnalare chi è rimasto indietro: per le managed lo sa già da sé — è stata lei a eseguire l'ultimo aggiornamento, quindi il proprio fascicolo dice già che tag gira; per le self-hosted invece il check-in è l'unica fonte, perché è il cliente a decidere se e quando applicare l'aggiornamento, e Chive CP non ha altra visibilità su cosa sia realmente in esecuzione.</p>
+
+    <p style="margin:0;font-size:14px;line-height:1.6;"><strong>Come la pipeline chiama davvero il webhook</strong> — non c'è nulla di speciale: GitHub Actions esegue la pipeline su una macchina temporanea con accesso a internet come qualunque altra, quindi l'ultimo passo del job (subito dopo il push riuscito dell'immagine) è solo una richiesta HTTP in uscita, la stessa cosa che farebbe un browser.</p>
+    <pre class="tree-block">curl -X POST https://gateway.thecustomerhive.com/ci/webhook \
+  -H "Authorization: Bearer $CI_WEBHOOK_TOKEN" \
+  -d '{"tag":"dev-a1b2c3d"}'</pre>
+    <p class="flow-footer"><strong>Il registry.</strong> Docker Hub privato, piano gratuito, con <strong>un solo repository</strong> che contiene tutti i tag (<code>dev-latest</code>, <code>dev-&lt;sha&gt;</code>, <code>vX.Y.Z</code>). Servono due token nuovi: uno di <strong>scrittura</strong>, nei "Secrets" di GitHub Actions, usato dalla pipeline per pubblicare; uno di <strong>sola lettura</strong>, con cui si fa <code>docker login</code> una volta su ogni Data Plane, usato dal pull. Per ora solo istanze Managed: il self-hosted è rimandato.</p>
+    <p class="flow-footer">Il Gateway riceve questa richiesta come una qualsiasi altra sulla sua rotta pubblica <code>POST /ci/webhook</code> — non sa né gli interessa che ad averla mandata sia stato uno script invece di una persona. Il token (<code>$CI_WEBHOOK_TOKEN</code>) non è mai scritto nel codice della pipeline: vive una volta sola nei "Secrets" di GitHub Actions, e viene inserito automaticamente come variabile d'ambiente solo durante l'esecuzione — così non compare mai in chiaro nel repository.</p>
+  </section>
+
+  <section class="sheet" id="aggiornamento-rollback">
+    <div class="sheet-head">
+      <span class="tag">schema · aggiornamento istanza e ripristino da backup</span>
+      <span class="meta">rev. 2026-10-08</span>
+    </div>
+    <div class="diagram-scroll">
+      <svg viewBox="0 0 960 1190" role="img" aria-label="Flusso di aggiornamento di un'istanza: click amministratore, backup di sicurezza, stop di scheduler e worker, pull e riavvio della sola app (che se fallisce non ha ancora toccato nulla), migrazioni — che in caso di successo portano a smoke test, riavvio di scheduler e worker e istanza aggiornata, mentre un fallimento delle migrazioni o dello smoke test lascia scheduler e worker fermi e apre lo stesso percorso di ripristino manuale dal backup precedente">
+        <defs>
+          <marker id="arrow6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path class="arrow-head" d="M2 1L8 5L2 9" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <rect class="ext-box" x="310" y="40" width="340" height="60" rx="10"/>
+        <text class="t-region" x="480" y="62" text-anchor="middle" dominant-baseline="central">Amministratore clicca «Aggiorna»</text>
+        <text class="t-sub" x="480" y="82" text-anchor="middle" dominant-baseline="central">sceglie il tag di destinazione</text>
+
+        <line class="arrow" x1="480" y1="100" x2="480" y2="140" marker-end="url(#arrow6)"/>
+
+        <rect class="control-card" x="310" y="140" width="340" height="70" rx="12"/>
+        <text class="t-region c-control" x="480" y="165" text-anchor="middle" dominant-baseline="central">Chive CP</text>
+        <text class="t-sub" x="480" y="188" text-anchor="middle" dominant-baseline="central">backup di sicurezza (DB + storage)</text>
+
+        <line class="arrow" x1="480" y1="210" x2="480" y2="250" marker-end="url(#arrow6)"/>
+
+        <rect class="outer-box" x="310" y="250" width="340" height="70" rx="12"/>
+        <text class="t-region" x="480" y="275" text-anchor="middle" dominant-baseline="central">Ferma scheduler e worker</text>
+        <text class="t-sub" x="480" y="298" text-anchor="middle" dominant-baseline="central">nessun job né pianificazione in corso</text>
+
+        <line class="arrow" x1="480" y1="320" x2="480" y2="360" marker-end="url(#arrow6)"/>
+
+        <rect class="outer-box" x="310" y="360" width="340" height="70" rx="12"/>
+        <text class="t-region" x="480" y="385" text-anchor="middle" dominant-baseline="central">Pull + riavvio solo dell'app</text>
+        <text class="t-sub" x="480" y="408" text-anchor="middle" dominant-baseline="central">il DB resta acceso; scheduler e worker fermi</text>
+
+        <path class="arrow" d="M310 395 L280 395" marker-end="url(#arrow6)"/>
+        <rect class="ext-box" x="60" y="360" width="220" height="70" rx="10"/>
+        <text class="t-region" x="170" y="385" text-anchor="middle" dominant-baseline="central">Pull fallito</text>
+        <text class="t-sub" x="170" y="406" text-anchor="middle" dominant-baseline="central">nulla è cambiato, riprova quando vuoi</text>
+
+        <line class="arrow" x1="480" y1="430" x2="480" y2="470" marker-end="url(#arrow6)"/>
+
+        <rect class="outer-box" x="310" y="470" width="340" height="70" rx="12"/>
+        <text class="t-region" x="480" y="495" text-anchor="middle" dominant-baseline="central">Migrazioni all'avvio dell'app</text>
+        <text class="t-sub" x="480" y="518" text-anchor="middle" dominant-baseline="central">il punto in cui può fallire</text>
+
+        <path class="arrow" d="M480 540 L480 570 L230 570 L230 610" marker-end="url(#arrow6)"/>
+        <text class="t-label" x="243" y="594">riuscite</text>
+        <path class="arrow" d="M480 540 L480 570 L730 570 L730 610" marker-end="url(#arrow6)"/>
+        <text class="t-label" x="638" y="594">fallite</text>
+
+        <rect class="outer-box" x="80" y="610" width="300" height="60" rx="10"/>
+        <text class="t-region" x="230" y="632" text-anchor="middle" dominant-baseline="central">Smoke test</text>
+        <text class="t-sub" x="230" y="652" text-anchor="middle" dominant-baseline="central">verifica che risponda</text>
+
+        <line class="arrow" x1="230" y1="670" x2="230" y2="710" marker-end="url(#arrow6)"/>
+
+        <rect class="outer-box" x="80" y="710" width="300" height="70" rx="12"/>
+        <text class="t-region" x="230" y="735" text-anchor="middle" dominant-baseline="central">Riavvia scheduler e worker</text>
+        <text class="t-sub" x="230" y="758" text-anchor="middle" dominant-baseline="central">ricreati col nuovo codice</text>
+
+        <line class="arrow" x1="230" y1="780" x2="230" y2="820" marker-end="url(#arrow6)"/>
+
+        <rect class="workload-card" x="80" y="820" width="300" height="70" rx="12"/>
+        <text class="t-region c-workload" x="230" y="845" text-anchor="middle" dominant-baseline="central">Istanza aggiornata</text>
+        <text class="t-sub" x="230" y="868" text-anchor="middle" dominant-baseline="central">tag e audit registrati</text>
+
+        <path class="arrow" d="M380 638 L580 638" marker-end="url(#arrow6)"/>
+        <text class="t-label" x="480" y="626" text-anchor="middle">non risponde</text>
+
+        <rect class="danger-card" x="580" y="610" width="300" height="70" rx="12"/>
+        <text class="t-region c-danger" x="730" y="635" text-anchor="middle" dominant-baseline="central">Aggiornamento fallito</text>
+        <text class="t-sub" x="730" y="658" text-anchor="middle" dominant-baseline="central">update_failed, scheduler e worker fermi</text>
+
+        <line class="arrow" x1="730" y1="680" x2="730" y2="720" marker-end="url(#arrow6)"/>
+
+        <rect class="ext-box" x="580" y="720" width="300" height="70" rx="12"/>
+        <text class="t-region" x="730" y="745" text-anchor="middle" dominant-baseline="central">Ispezioni e confermi</text>
+        <text class="t-sub" x="730" y="768" text-anchor="middle" dominant-baseline="central">digiti lo slug per confermare</text>
+
+        <line class="arrow" x1="730" y1="790" x2="730" y2="830" marker-end="url(#arrow6)"/>
+
+        <rect class="control-card" x="580" y="830" width="300" height="100" rx="12"/>
+        <text class="t-region c-control" x="730" y="855" text-anchor="middle" dominant-baseline="central">Chive CP prepara il ripristino</text>
+        <text class="t-sub" x="600" y="882">· backup dello stato attuale</text>
+        <text class="t-sub" x="600" y="904">· decifra e applica DB + storage</text>
+
+        <line class="arrow" x1="730" y1="930" x2="730" y2="970" marker-end="url(#arrow6)"/>
+
+        <rect class="outer-box" x="580" y="970" width="300" height="70" rx="12"/>
+        <text class="t-region" x="730" y="995" text-anchor="middle" dominant-baseline="central">Riparte</text>
+        <text class="t-sub" x="730" y="1018" text-anchor="middle" dominant-baseline="central">tag precedente: app, scheduler, worker</text>
+
+        <line class="arrow" x1="730" y1="1040" x2="730" y2="1080" marker-end="url(#arrow6)"/>
+
+        <rect class="workload-card" x="580" y="1080" width="300" height="70" rx="12"/>
+        <text class="t-region c-workload" x="730" y="1105" text-anchor="middle" dominant-baseline="central">Istanza ripristinata</text>
+        <text class="t-sub" x="730" y="1128" text-anchor="middle" dominant-baseline="central">tag e audit ripristinati</text>
+      </svg>
+    </div>
+    <div class="legend">
+      <span class="key"><i class="swatch control"></i>Chive CP</span>
+      <span class="key"><i class="swatch danger"></i>Fallimento</span>
+      <span class="key"><i class="swatch workload"></i>Istanza (esito)</span>
+      <span class="key"><i class="swatch neutral"></i>Fasi del processo / azioni manuali</span>
+    </div>
+    <p class="flow-footer"><strong>La sequenza.</strong> Scheduler e worker sono processi di lunga durata: dopo un pull tengono il vecchio codice in memoria, quindi vanno ricreati; si fermano prima della migrazione perché nessun job o pianificazione deve girare mentre lo schema del database cambia, e si riavviano solo quando app e smoke test hanno dato esito positivo. Se qualcosa fallisce restano fermi. <strong>Il pull che fallisce</strong> è il caso più innocuo: succede prima che il container dell'app venga toccato, quindi quello vecchio sta ancora girando, intatto (restano da riaccendere solo scheduler e worker, già fermati prima del pull: il job li riavvia col codice che già avevano) — non serve nessun ripristino, basta segnare il tentativo come fallito e riprovare quando vuoi. <strong>Migrazioni e smoke test falliti</strong> finiscono invece nello stesso percorso di ripristino, anche se solo la migrazione cambia davvero lo schema del database: tenerli uniti evita di dover costruire e verificare due percorsi diversi, e riporta sempre a una combinazione immagine+database di cui sai già che funzionano insieme. Il ripristino non usa "l'immagine precedente" da sola: applica di nuovo il <strong>database</strong> del backup pre-aggiornamento, perché MySQL non annulla da solo una modifica di struttura a metà, insieme al volume <strong>storage</strong> della stessa coppia (così database e file, controller custom compresi, tornano allo stesso momento) — poi riporta anche il tag immagine coerente con quei dati. Questo ramo non parte mai da solo: dopo un aggiornamento fallito tutto si ferma e aspetta — solo l'avvio del ripristino richiede una tua azione esplicita (ispezione + conferma), poi Chive CP esegue il resto in automatico, come un job qualunque. La conferma richiede di <strong>digitare lo slug</strong> dell'istanza, non un semplice "Sì": un click per abitudine è facile su un "Sei sicuro?", mentre scrivere il nome esatto ti costringe a verificare consapevolmente su quale istanza stai per sovrascrivere il database — l'ultima rete contro un click sulla riga sbagliata, prima che diventi irreversibile.</p>
+  </section>
+
+  <section class="sheet" id="struttura-cartelle">
+    <div class="sheet-head">
+      <span class="tag">schema · struttura cartelle: data plane e control plane</span>
+      <span class="meta">rev. 2026-10-08</span>
+    </div>
+    <pre class="tree-block"><span class="folder">/opt/customerhive/</span>                       <span class="note">sul Data Plane</span>
+├── <span class="folder">traefik/</span>                            <span class="note">proxy Docker — persistente tra i redeploy</span>
+│   ├── docker-compose.yml
+│   └── <span class="folder">letsencrypt/</span>                   <span class="note">certificati TLS</span>
+└── <span class="folder">instances/</span>
+    ├── <span class="folder">dev/</span>                            <span class="note">stesso meccanismo di un'istanza cliente</span>
+    │   ├── <span class="folder">storage/</span>                    <span class="note">upload, cache licenza, controller custom, eventuali log su file</span>
+    │   └── <span class="folder">db-data/</span>                    <span class="note">dati MySQL</span>
+    ├── <span class="folder">staging/</span>                        <span class="note">stessa struttura di dev/</span>
+    └── <span class="folder">&lt;slug-cliente&gt;/</span>                <span class="note">istanza cliente/demo — stessa struttura</span></pre>
+    <p class="flow-footer">Solo dati, nessun file di configurazione: <code>docker-compose.yml</code> e <code>.env</code> non stanno qui — restano su Chive CP (vedi sotto) e non vengono mai trasferiti, come già spiegato. Nessun backup qui: se il Data Plane viene compromesso o perso, non c'è nulla di cifrato da recuperare su questa macchina — solo container e dati correnti.</p>
+    <pre class="tree-block"><span class="folder">/opt/chivecp/</span>                            <span class="note">sul Control Plane</span>
+└── <span class="folder">instances/</span>
+    ├── <span class="folder">dev/</span>
+    │   ├── docker-compose.yml               <span class="note">4 servizi: db, app, scheduler, worker — letto da Chive CP, mai inviato</span>
+    │   └── .env                             <span class="note">APP_KEY, APP_DOMAIN, credenziali DB... (senza chiave di licenza)</span>
+    ├── <span class="folder">staging/</span>
+    └── <span class="folder">&lt;slug-cliente&gt;/</span></pre>
+    <p class="flow-footer">Il <code>docker-compose.yml</code> definisce i quattro servizi di ogni istanza (<code>db</code>, <code>app</code>, <code>scheduler</code>, <code>worker</code>), con i volumi <code>storage</code> e <code>db-data</code> e le variabili elencate nel <a href="#contratto-immagine">contratto dell'immagine</a>; il <code>.env</code> a fianco lo genera Chive CP alla creazione. La chiave di licenza di un'istanza Managed non è nel <code>.env</code>.</p>
+    <p class="flow-footer">Ogni cartella qui rispecchia una in <code>instances/</code> sul Data Plane, stesso slug — ma il contenuto è complementare: qui la configurazione, là i dati. Restano entrambe finché l'istanza esiste, e vengono rimosse insieme solo con l'eliminazione definitiva.</p>
+    <pre class="tree-block"><span class="folder">storage offsite/</span>                          <span class="note">non su Chive CP, non sul Data Plane</span>
+└── <span class="folder">backups/</span>
+    └── <span class="folder">&lt;slug-cliente&gt;/</span>
+        ├── &lt;slug-cliente&gt;_2026-09-17_031500.sql.gz.enc           <span class="note">database, già cifrato prima di lasciare Chive CP</span>
+        └── &lt;slug-cliente&gt;_2026-09-17_031500.storage.tar.gz.enc   <span class="note">storage (upload, controller custom), stessa coppia</span></pre>
+    <p class="flow-footer">Chive CP non trattiene una copia locale del backup: cifra il dump e l'archivio appena arrivano e li inoltra subito allo storage offsite, senza conservarne un'altra copia sul proprio disco — meno dati sensibili fermi su una singola macchina. <strong>Chiusura</strong> (reversibile): il container si ferma, <code>instances/&lt;slug&gt;/</code> resta intatta sul Data Plane. <strong>Eliminazione definitiva</strong>: quella cartella viene rimossa dal Data Plane e da Chive CP, ma il backup offsite resta (database e storage, sempre in coppia) — è l'ultima rete di sicurezza anche dopo la cancellazione, e sopravvive pure a un problema sul Data Plane o sul Control Plane, perché vive su una terza destinazione.</p>
+  </section>
+
+  <footer>
+    <p>CustomerHive · piano provisioning istanze Docker · docs/piano-provisioning-istanze-docker.md</p>
+  </footer>
+</div>

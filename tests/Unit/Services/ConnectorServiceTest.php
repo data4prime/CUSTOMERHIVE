@@ -344,4 +344,32 @@ class ConnectorServiceTest extends TestCase
         $this->assertFalse($service->validateLicense());
         $this->assertDatabaseMissing('license', ['license_key' => 'my-key']);
     }
+
+    public function test_writeLicense_con_errore_5xx_non_cancella_il_file_locale(): void
+    {
+        $this->writeLicenseFile(['id' => 1, 'status' => 'active', 'license_key' => 'my-key']);
+        Http::fake([
+            self::AUTH_URL => Http::response(['success' => true, 'data' => ['access_token' => 'tok']], 200),
+            self::LICENSE_URL => Http::response(['message' => 'boom'], 500),
+        ]);
+
+        $service = new ConnectorService('my-key');
+
+        $this->assertFalse($service->writeLicense(['license_key' => 'my-key']));
+        $this->assertFileExists($this->licenseFilePath);
+    }
+
+    public function test_validateLicense_con_server_in_errore_5xx_non_cancella_la_riga_license(): void
+    {
+        DB::table('license')->insert(['license_key' => 'my-key']);
+        Http::fake([
+            self::AUTH_URL => Http::response(['success' => true, 'data' => ['access_token' => 'tok']], 200),
+            self::LICENSE_URL => Http::response(['message' => 'boom'], 500),
+        ]);
+
+        $service = new ConnectorService('my-key');
+
+        $this->assertFalse($service->validateLicense());
+        $this->assertDatabaseHas('license', ['license_key' => 'my-key']);
+    }
 }

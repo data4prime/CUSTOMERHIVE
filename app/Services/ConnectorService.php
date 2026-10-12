@@ -23,6 +23,14 @@ class ConnectorService
     private $licenseKey;
     private $accessToken;
 
+    /**
+     * true se l'ultimo tentativo di scaricare la licenza e' fallito per un
+     * problema TRANSITORIO del server (timeout, irraggiungibile, 5xx): in quel
+     * caso non si puo' dire che la licenza non esista piu', quindi non si
+     * cancella nulla (vedi docs/refactoring/301).
+     */
+    private bool $serverUnavailable = false;
+
     public function __construct(string $licenseKey, bool $forceTokenRefresh = false)
     {
         $this->licenseKey = $licenseKey;
@@ -45,7 +53,12 @@ class ConnectorService
         if (!$license) {
             // Nessuna licenza locale valida: la entry per questa chiave non
             // ha piu' senso, ripulisce lo stato invece di lasciarla orfana.
-            DB::table('license')->where('license_key', $this->licenseKey)->delete();
+            // Ma solo se il server ha risposto in modo definitivo: con server
+            // irraggiungibile o in errore (5xx) la chiave NON va persa, altrimenti
+            // un guasto temporaneo blocca l'istanza fino a una nuova registrazione.
+            if (!$this->serverUnavailable) {
+                DB::table('license')->where('license_key', $this->licenseKey)->delete();
+            }
 
             return false;
         }
@@ -121,6 +134,15 @@ class ConnectorService
                 $license = $body['data'] ?? null;
                 Log::info($body);
 
+                if ($response->serverError()) {
+                    // 5xx: problema del server, non una risposta sulla licenza.
+                    // Il file locale (eventualmente obsoleto) resta com'e'.
+                    $this->serverUnavailable = true;
+                    Log::error('License server error ' . $response->status() . ' on license request');
+
+                    return false;
+                }
+
 
                 if ($license && isset($license['id'])) {
                     if (!Storage::disk('license')->put('license.json', json_encode($license))) {
@@ -142,8 +164,10 @@ class ConnectorService
                 Storage::disk('license')->delete('license.json');
 
             } catch (ConnectionException | RequestException $e) {
+                $this->serverUnavailable = true;
                 Log::error("License server timeout or request failed: " . $e->getMessage());
             } catch (\Exception $e) {
+                $this->serverUnavailable = true;
                 Log::error("Unexpected license validation error: " . $e->getMessage());
             }
         }

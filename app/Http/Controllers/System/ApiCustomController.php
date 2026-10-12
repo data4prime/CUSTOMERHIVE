@@ -452,7 +452,7 @@ class ApiCustomController extends CBController
             //$controller = "App\Http\Controllers\\".$controller;
             //$controller = app($controller);
             //dd($a);
-            $controller_path = base_path("app/Http/Controllers/").$controller;
+            $controller_path = CRUDBooster::customControllersPath() . '/' . $controller;
             $contents = file_get_contents($controller_path);
 
             // $a['permalink']/$a['tabel']/$a['method_type'] finiscono nel
@@ -523,7 +523,7 @@ class ApiCustomController extends CBController
 
         //check if controller already exists
         $controller = 'Api'.$controllerName.'Controller.php';
-        $controller_path = base_path("app/Http/Controllers/").$controller;
+        $controller_path = CRUDBooster::customControllersPath(true) . '/' . $controller;
         if (file_exists($controller_path)) {
             // Se il file esiste ma non c'e' una riga cms_apicustom
             // corrispondente (file orfano/collisione con un controller
@@ -734,7 +734,7 @@ class ApiCustomController extends CBController
 
         $controller = $row->controller;
 
-        $controller = base_path("app/Http/Controllers/".$controller);
+        $controller = CRUDBooster::customControllersPath() . '/' . $controller;
 
         DB::table('cms_apicustom')->where('id', $id)->delete();
 

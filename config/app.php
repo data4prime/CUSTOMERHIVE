@@ -57,7 +57,10 @@ return [
     * #RAMA version
     */
 
-    'version' => \App\Helpers\MyHelper::version(),
+    // APP_VERSION (impostata dall'immagine Docker di produzione, dove non ci
+    // sono ne' .git ne' il binario git) ha la precedenza; se vuota/assente,
+    // comportamento di sempre (git describe).
+    'version' => env('APP_VERSION') ?: \App\Helpers\MyHelper::version(),
 
     /*
     |--------------------------------------------------------------------------

@@ -62,7 +62,40 @@ services:
     restart: unless-stopped
     command: >
       su -s /bin/sh www-data -c
-      "php artisan queue:work qlik_sync --queue=qlik_sync --sleep=3 --tries=1 --timeout=3600"
+      "php artisan queue:work qlik_sync --queue=qlik_sync,mail --sleep=3 --tries=1 --timeout=3600"
+    volumes:
+      - .:/var/www/html
+      - customerhive-vendor:/var/www/html/vendor
+      - customerhive-storage-framework:/var/www/html/storage/framework
+      - customerhive-bootstrap-cache:/var/www/html/bootstrap/cache
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+    depends_on:
+      db:
+        condition: service_healthy
+      app:
+        condition: service_started
+    networks:
+      - laravel
+
+  # Scheduler Laravel: equivalente del cron "* * * * * php artisan
+  # schedule:run" dei server (app/Console/Kernel.php: scadenza utenti, avvisi,
+  # licenza oraria, pulizia MFA). "schedule:work" gira in un ciclo ogni minuto,
+  # senza installare cron nell'immagine. Gli orari seguono app.timezone
+  # (Europe/Rome), non l'ora UTC del container. Stessa immagine e stessi
+  # volumi dell'app; www-data come per il worker. Dopo ogni aggiornamento del
+  # codice: docker compose restart scheduler.
+  scheduler:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: customerhive_scheduler
+    restart: unless-stopped
+    command: >
+      su -s /bin/sh www-data -c
+      "php artisan schedule:work"
     volumes:
       - .:/var/www/html
       - customerhive-vendor:/var/www/html/vendor

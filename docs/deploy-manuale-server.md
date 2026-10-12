@@ -190,8 +190,9 @@ server {
 
 ## 11. Scheduler Laravel (cron di sistema)
 
-A differenza dell'ambiente Docker locale (dove non gira), su un server
-persistente va configurato il cron di sistema per far funzionare i job
+Nell'ambiente Docker locale lo scheduler è il servizio `scheduler` di
+`docker-compose.yml` (`schedule:work`); su un server persistente va invece
+configurato il cron di sistema per far funzionare i job
 schedulati dell'app (controllo scadenza utenti, notifiche, refresh della
 licenza ogni ora — vedi `app/Console/Kernel.php`):
 - [ ] Aggiungere al crontab dell'utente applicativo:

@@ -335,7 +335,7 @@ $tenant_domain_name = env('APP_DOMAIN');
       $isLicenseValid = LicenseHelper::canLicenseLogin();
 
       if (!$isLicenseValid) {
-        return redirect()->route('getLicenseScreen')->with('message', 'License is missing or not valid');
+        return redirect()->route('getLicenseScreen')->with('message', trans('crudbooster.license_missing_or_not_valid'));
       }
 
 
@@ -380,7 +380,10 @@ $tenant_domain_name = env('APP_DOMAIN');
 
     if (
           \Hash::check($password, $users->password) && $users->status == "Active" &&
-            ( ($tenant_domain_name == $tenant || !$tenant_domain_name) || $priv->is_superadmin == 1)
+            // Scadenza account applicata anche al login, non solo dal cron
+            // user:check-expiry (docs/refactoring/293-*).
+            ! UserHelper::isAccountExpired($users) &&
+            (($tenant_domain_name == $tenant || !$tenant_domain_name) || $priv->is_superadmin == 1)
         ) {
       // Gate MFA (piano discusso con l'utente, vedi docs/refactoring/095-*
       // e 097-*): controllato PRIMA di popolare qualunque sessione/guard,
@@ -483,7 +486,7 @@ $tenant_domain_name = env('APP_DOMAIN');
 
 
       if (!$isLicenseValid) {
-        return redirect()->route('getLicenseScreen')->with('message', 'License is missing or not valid');
+        return redirect()->route('getLicenseScreen')->with('message', trans('crudbooster.license_missing_or_not_valid'));
       }
 
 

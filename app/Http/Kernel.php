@@ -14,6 +14,9 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
+        // Legge config('trustedproxy.proxies') (env TRUSTED_PROXIES): non
+        // impostata = nessun proxy fidato = comportamento di sempre.
+        \Illuminate\Http\Middleware\TrustProxies::class,
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Http\Middleware\HandleCors::class,
     ];

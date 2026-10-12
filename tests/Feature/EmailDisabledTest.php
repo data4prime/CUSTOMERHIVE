@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
 use Tests\Concerns\SeedsCmsData;
 use Tests\TestCase;
 
@@ -132,6 +133,7 @@ class EmailDisabledTest extends TestCase
     public function test_con_il_flag_spento_send_email_non_invia_ne_accoda(): void
     {
         Mail::fake();
+        Queue::fake();
         $this->setEmailEnabled('no');
 
         $this->assertFalse(CRUDBooster::sendEmail(['to' => 'a@example.com', 'data' => [], 'template' => 'forgot_password_backend']));
@@ -143,7 +145,7 @@ class EmailDisabledTest extends TestCase
         ]));
 
         Mail::assertNothingSent();
-        $this->assertSame(0, DB::table('cms_email_queues')->count());
+        Queue::assertNothingPushed();
     }
 
     public function test_con_il_flag_spento_lo_smtp_conta_come_non_configurato(): void

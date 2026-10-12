@@ -419,8 +419,8 @@ class ModulsController extends CBController
     //foreach module load controller
     foreach ($modules_list as $key => $value) {
       //foreach column check if has a join with current module's table
-      if (file_exists(app_path('Http/Controllers/' . str_replace('.', '', $value->controller) . '.php'))) {
-        $response = file_get_contents(app_path('Http/Controllers/' . $value->controller . '.php'));
+      if (file_exists(CRUDBooster::customControllersPath() . '/' . str_replace('.', '', $value->controller) . '.php')) {
+        $response = file_get_contents(CRUDBooster::customControllersPath() . '/' . $value->controller . '.php');
         $column_datas = extract_unit($response, "# START COLUMNS DO NOT REMOVE THIS LINE", "# END COLUMNS DO NOT REMOVE THIS LINE");
         $column_datas = str_replace('$this->', '$cb_', $column_datas);
         eval($column_datas);
@@ -590,7 +590,7 @@ class ModulsController extends CBController
       return;
     }
     // basename(): il nome arriva dal DB ma finisce in un unlink
-    @unlink(app_path('Http/Controllers/' . basename($module->controller) . '.php'));
+    @unlink(CRUDBooster::customControllersPath() . '/' . basename($module->controller) . '.php');
   }
 
   private function refreshSessionPrivilegesRoles()
@@ -926,8 +926,8 @@ class ModulsController extends CBController
         ->where('id', $id)
         ->first();
 
-      if (file_exists(app_path('Http/Controllers/' . $row->controller . '.php'))) {
-        $response = file_get_contents(app_path('Http/Controllers/' . str_replace('.', '', $row->controller) . '.php'));
+      if (file_exists(CRUDBooster::customControllersPath() . '/' . $row->controller . '.php')) {
+        $response = file_get_contents(CRUDBooster::customControllersPath() . '/' . str_replace('.', '', $row->controller) . '.php');
       } else {
         $response = file_get_contents(__DIR__ . '/' . str_replace('.', '', $row->controller) . '.php');
       }
@@ -1044,7 +1044,7 @@ class ModulsController extends CBController
     $structure = ($table == 'new') ? [] : CRUDBooster::getTableStructure($table);
     $tableColumns = ($table == 'new') ? [] : CRUDBooster::getTableColumns($table);
 
-    $path = app_path('Http/Controllers/' . $module->controller . '.php');
+    $path = CRUDBooster::customControllersPath() . '/' . $module->controller . '.php';
     $contents = file_exists($path) ? file_get_contents($path) : '';
     $form = ModuleGeneratorList::readBlock($contents, 'FORM');
 
@@ -1103,7 +1103,7 @@ class ModulsController extends CBController
       return redirect()->back()->with(['message' => trans('crudbooster.mg_list_err_payload'), 'message_type' => 'warning']);
     }
 
-    $path = app_path('Http/Controllers/' . $module->controller . '.php');
+    $path = CRUDBooster::customControllersPath() . '/' . $module->controller . '.php';
     if (!file_exists($path)) {
       return redirect()->back();
     }
@@ -1380,7 +1380,7 @@ class ModulsController extends CBController
   private function getStep4V2($id, $row)
   {
     $this->applyWizardDraft($id, 4);
-    $path = app_path('Http/Controllers/' . $row->controller . '.php');
+    $path = CRUDBooster::customControllersPath() . '/' . $row->controller . '.php';
     $contents = file_exists($path) ? file_get_contents($path) : '';
     $form = ModuleGeneratorList::readBlock($contents, 'FORM');
     $layout = ModuleGeneratorList::readBlock($contents, 'FORM LAYOUT');
@@ -1428,7 +1428,7 @@ class ModulsController extends CBController
     if (!$row) {
       return redirect()->back();
     }
-    $path = app_path('Http/Controllers/' . $row->controller . '.php');
+    $path = CRUDBooster::customControllersPath() . '/' . $row->controller . '.php';
     if (!file_exists($path)) {
       return redirect()->back();
     }
@@ -1526,8 +1526,8 @@ class ModulsController extends CBController
       }
     }
 
-    if (file_exists(app_path('Http/Controllers/' . str_replace('.', '', $row->controller) . '.php'))) {
-      $response = file_get_contents(app_path('Http/Controllers/' . $row->controller . '.php'));
+    if (file_exists(CRUDBooster::customControllersPath() . '/' . str_replace('.', '', $row->controller) . '.php')) {
+      $response = file_get_contents(CRUDBooster::customControllersPath() . '/' . $row->controller . '.php');
       $column_datas = extract_unit($response, "# START COLUMNS DO NOT REMOVE THIS LINE", "# END COLUMNS DO NOT REMOVE THIS LINE");
       $column_datas = str_replace('$this->', '$cb_', $column_datas);
       eval($column_datas);
@@ -1652,7 +1652,7 @@ class ModulsController extends CBController
     }
 
     $scripts = implode("\n", $script_cols);
-    $raw = file_get_contents(app_path('Http/Controllers/' . $row->controller . '.php'));
+    $raw = file_get_contents(CRUDBooster::customControllersPath() . '/' . $row->controller . '.php');
     $raw = explode("# START COLUMNS DO NOT REMOVE THIS LINE", $raw);
     $rraw = explode("# END COLUMNS DO NOT REMOVE THIS LINE", $raw[1]);
 
@@ -1663,7 +1663,7 @@ class ModulsController extends CBController
     $file_controller .= "\t\t\t# END COLUMNS DO NOT REMOVE THIS LINE\n\n";
     $file_controller .= "\t\t\t" . trim($rraw[1]);
 
-    file_put_contents(app_path('Http/Controllers/' . $row->controller . '.php'), $file_controller);
+    file_put_contents(CRUDBooster::customControllersPath() . '/' . $row->controller . '.php', $file_controller);
 
     //return redirect(Route("ModulsControllerGetStep4", ["id" => $id]));
     return redirect(Route("ModulsControllerGetStep4") . "/{$id}");
@@ -1677,7 +1677,7 @@ class ModulsController extends CBController
   private function getStep3V2($id, $row, array $columns, array $table_list)
   {
     $this->applyWizardDraft($id, 3);
-    $path = app_path('Http/Controllers/' . $row->controller . '.php');
+    $path = CRUDBooster::customControllersPath() . '/' . $row->controller . '.php';
     $contents = file_exists($path) ? file_get_contents($path) : '';
     $table = $row->table_name;
 
@@ -1722,7 +1722,7 @@ class ModulsController extends CBController
     if (!$row) {
       return redirect()->back();
     }
-    $path = app_path('Http/Controllers/' . $row->controller . '.php');
+    $path = CRUDBooster::customControllersPath() . '/' . $row->controller . '.php';
     if (!file_exists($path)) {
       return redirect()->back();
     }
@@ -1824,8 +1824,8 @@ class ModulsController extends CBController
 
     $columns = CRUDBooster::getTableColumns($row->table_name);
 
-    if (file_exists(app_path('Http/Controllers/' . $row->controller . '.php'))) {
-      $response = file_get_contents(app_path('Http/Controllers/' . $row->controller . '.php'));
+    if (file_exists(CRUDBooster::customControllersPath() . '/' . $row->controller . '.php')) {
+      $response = file_get_contents(CRUDBooster::customControllersPath() . '/' . $row->controller . '.php');
       $column_datas = extract_unit($response, "# START FORM DO NOT REMOVE THIS LINE", "# END FORM DO NOT REMOVE THIS LINE");
       $column_datas = str_replace('$this->', '$cb_', $column_datas);
       eval($column_datas);
@@ -1908,7 +1908,7 @@ class ModulsController extends CBController
     }
 
     $scripts = implode("\n", $script_form);
-    $raw = file_get_contents(app_path('Http/Controllers/' . $row->controller . '.php'));
+    $raw = file_get_contents(CRUDBooster::customControllersPath() . '/' . $row->controller . '.php');
     $raw = explode("# START FORM DO NOT REMOVE THIS LINE", $raw);
     $rraw = explode("# END FORM DO NOT REMOVE THIS LINE", $raw[1]);
 
@@ -1948,7 +1948,7 @@ class ModulsController extends CBController
     $file_controller .= "\t\t\t" . trim($bottom_script);
 
     //CREATE FILE CONTROLLER
-    file_put_contents(app_path('Http/Controllers/' . $row->controller . '.php'), $file_controller);
+    file_put_contents(CRUDBooster::customControllersPath() . '/' . $row->controller . '.php', $file_controller);
 
     //return redirect(Route("ModulsControllerGetStep5", ["id" => $id]));
     return redirect(Route("ModulsControllerGetStep5") . "/{$id}");
@@ -1978,8 +1978,8 @@ class ModulsController extends CBController
 
     $data = [];
     $data['id'] = $id;
-    if (file_exists(app_path('Http/Controllers/' . $row->controller . '.php'))) {
-      $response = file_get_contents(app_path('Http/Controllers/' . $row->controller . '.php'));
+    if (file_exists(CRUDBooster::customControllersPath() . '/' . $row->controller . '.php')) {
+      $response = file_get_contents(CRUDBooster::customControllersPath() . '/' . $row->controller . '.php');
       $column_datas = extract_unit($response, "# START CONFIGURATION DO NOT REMOVE THIS LINE", "# END CONFIGURATION DO NOT REMOVE THIS LINE");
       $column_datas = str_replace('$this->', '$data[\'cb_', $column_datas);
       $column_datas = str_replace(' = ', '\'] = ', $column_datas);
@@ -2054,7 +2054,7 @@ class ModulsController extends CBController
     }
 
     $scripts = implode("\n", $script_config);
-    $raw = file_get_contents(app_path('Http/Controllers/' . $row->controller . '.php'));
+    $raw = file_get_contents(CRUDBooster::customControllersPath() . '/' . $row->controller . '.php');
     $raw = explode("# START CONFIGURATION DO NOT REMOVE THIS LINE", $raw);
     $rraw = explode("# END CONFIGURATION DO NOT REMOVE THIS LINE", $raw[1]);
 
@@ -2064,7 +2064,7 @@ class ModulsController extends CBController
     $file_controller .= "\t\t\t# END CONFIGURATION DO NOT REMOVE THIS LINE\n\n";
     $file_controller .= "\t\t\t" . trim($rraw[1]);
 
-    file_put_contents(app_path('Http/Controllers/' . $row->controller . '.php'), $file_controller);
+    file_put_contents(CRUDBooster::customControllersPath() . '/' . $row->controller . '.php', $file_controller);
 
     // #RAMA sposta creazione tabella qui?
 
@@ -2370,7 +2370,7 @@ class ModulsController extends CBController
   // postStep5() per riscrivere i rispettivi blocchi.
   private function replaceControllerBlock($controller, $start_marker, $end_marker, $body)
   {
-    $path = app_path('Http/Controllers/' . $controller . '.php');
+    $path = CRUDBooster::customControllersPath() . '/' . $controller . '.php';
     $raw = explode($start_marker, file_get_contents($path));
     $rraw = explode($end_marker, $raw[1]);
 
@@ -2453,7 +2453,7 @@ class ModulsController extends CBController
     } catch (\InvalidArgumentException $e) {
       return;
     }
-    $path = app_path('Http/Controllers/' . $controller . '.php');
+    $path = CRUDBooster::customControllersPath() . '/' . $controller . '.php';
     file_put_contents($path, ModuleGeneratorLayout::replaceLayoutBlock(file_get_contents($path), $clean));
   }
 
