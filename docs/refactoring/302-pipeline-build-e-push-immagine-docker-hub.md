@@ -50,3 +50,20 @@ Alternativa scartata: un workflow separato (non potrebbe dipendere dal job dei t
 ## Rollback
 
 Rimuovere il job `build-and-push` e il blocco `tags` da `deploy.yml`.
+
+## Esito del primo giro (2026-10-12)
+
+- Push su `dev` (commit `ce3d491`): test verdi, `build-and-push` verde, su Docker Hub `donicid4p/customerhive:dev-latest` e `dev-ce3d491`
+  (stesso digest `sha256:fed87d86…`); repository privato (verificato dall'utente); `deploy-dev` verde.
+- **Immagine scaricata da Docker Hub e provata** (`docker pull` con login dell'utente): amd64, utente `www-data`, label versione `dev-ce3d491`,
+  solo `app artisan bootstrap composer.* config database public resources routes storage vendor` (nessun controller custom, `.env`, `.git`,
+  `tests`, `docs`), 139 migrazioni, comandi `Instance*` presenti. **Build da checkout pulito in CI: verificata.**
+- Giro completo guidato da Chive CP con questa immagine (`donicid4p/customerhive:dev-ce3d491`, `CHIVECP_IMAGE_REPOSITORY`): creazione 1 min 2 s,
+  email, link, password, login contro LICENSES, dashboard con footer `dev-ce3d491`, eliminazione pulita.
+- **Scoperta sul `pull` di un'immagine privata**: l'aggiornamento con `pull_images` attivo è fallito con «pull access denied ... may require
+  'docker login'» perché il `docker` del worker non aveva credenziali (il login era solo sul Docker Desktop dell'host). Con `docker --context`
+  verso il Data Plane è il **client** a inviare le credenziali al daemon remoto: il `docker login` va fatto dove gira il comando docker
+  (Chive CP / il suo worker), **non sul Data Plane**. Corretto il blueprint (tabella dei secret e paragrafo sul registry).
+  Il fallimento del pull è stato gestito come previsto: backup fatto, tag invariato, istanza `active`, scheduler e worker riavviati, evento `failed`.
+- Non verificato: il caso positivo del pull con login nel worker (serve un `docker login` dentro il container del worker, da fare con il token
+  di sola lettura), release `vX.Y.Z` (nessun tag pubblicato), webhook verso il Gateway.

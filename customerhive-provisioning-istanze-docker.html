@@ -863,9 +863,9 @@ openssl enc -d -aes-256-cbc -pbkdf2 -pass env:BACKUP_ENCRYPTION_KEY -in &lt;slug
         </tr>
         <tr>
           <td>Token Docker Hub (sola lettura)</td>
-          <td>sui Data Plane, nel <code>docker login</code> fatto una volta su ciascuno</td>
+          <td>sulla macchina che esegue il comando <code>docker</code>, cioè <strong>Chive CP</strong> (nel suo container worker), con un <code>docker login</code> fatto una volta. <strong>Non</strong> sul Data Plane: con <code>docker --context</code> è il client a inviare le credenziali al daemon remoto per il pull, e un login fatto sul Data Plane non viene usato (provato in locale: senza login nel client il pull dà «pull access denied»)</td>
           <td>creato una tantum, distinto da quello di scrittura</td>
-          <td>i Data Plane scaricano l'immagine (pull) senza poterla modificare</td>
+          <td>Chive CP fa scaricare l'immagine ai Data Plane (pull) senza poterla modificare</td>
         </tr>
       </tbody>
     </table>
@@ -1019,7 +1019,7 @@ openssl enc -d -aes-256-cbc -pbkdf2 -pass env:BACKUP_ENCRYPTION_KEY -in &lt;slug
     <pre class="tree-block">curl -X POST https://gateway.thecustomerhive.com/ci/webhook \
   -H "Authorization: Bearer $CI_WEBHOOK_TOKEN" \
   -d '{"tag":"dev-a1b2c3d"}'</pre>
-    <p class="flow-footer"><strong>Il registry.</strong> Docker Hub privato, piano gratuito, con <strong>un solo repository</strong> che contiene tutti i tag (<code>dev-latest</code>, <code>dev-&lt;sha&gt;</code>, <code>vX.Y.Z</code>). Servono due token nuovi: uno di <strong>scrittura</strong>, nei "Secrets" di GitHub Actions, usato dalla pipeline per pubblicare; uno di <strong>sola lettura</strong>, con cui si fa <code>docker login</code> una volta su ogni Data Plane, usato dal pull. Per ora solo istanze Managed: il self-hosted è rimandato.</p>
+    <p class="flow-footer"><strong>Il registry.</strong> Docker Hub privato, piano gratuito, con <strong>un solo repository</strong> che contiene tutti i tag (<code>dev-latest</code>, <code>dev-&lt;sha&gt;</code>, <code>vX.Y.Z</code>). Servono due token nuovi: uno di <strong>scrittura</strong>, nei "Secrets" di GitHub Actions, usato dalla pipeline per pubblicare; uno di <strong>sola lettura</strong>, con cui si fa <code>docker login</code> una volta sul client che esegue i comandi docker (Chive CP, non il Data Plane), usato dal pull. Per ora solo istanze Managed: il self-hosted è rimandato.</p>
     <p class="flow-footer">Il Gateway riceve questa richiesta come una qualsiasi altra sulla sua rotta pubblica <code>POST /ci/webhook</code> — non sa né gli interessa che ad averla mandata sia stato uno script invece di una persona. Il token (<code>$CI_WEBHOOK_TOKEN</code>) non è mai scritto nel codice della pipeline: vive una volta sola nei "Secrets" di GitHub Actions, e viene inserito automaticamente come variabile d'ambiente solo durante l'esecuzione — così non compare mai in chiaro nel repository.</p>
   </section>
 

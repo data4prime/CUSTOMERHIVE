@@ -16,9 +16,9 @@
 # estensioni VERE del runtime invece di ignorarli.
 
 # ---------------------------------------------------------------------------
-# base: php:8.3-apache + estensioni (stesse del Dockerfile dev, meno pdo_sqlite)
+# base: php:8.5-apache + estensioni (stesse del Dockerfile dev, meno pdo_sqlite)
 # ---------------------------------------------------------------------------
-FROM php:8.3-apache AS base
+FROM php:8.5-apache AS base
 
 RUN set -eux; \
     savedAptMark="$(apt-mark showmanual)"; \
@@ -40,8 +40,7 @@ RUN set -eux; \
         bcmath \
         gd \
         zip \
-        intl \
-        opcache; \
+        intl; \
     # Come nell'immagine ufficiale php: tiene le librerie runtime richieste
     # dalle estensioni appena compilate e rimuove i pacchetti -dev.
     apt-mark auto '.*' > /dev/null; \
@@ -59,7 +58,10 @@ RUN set -eux; \
         | xargs -r apt-mark manual; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     rm -rf /var/lib/apt/lists/* /usr/src/php.tar.xz*; \
-    php -m | grep -qi '^pdo_mysql$'
+    php -m | grep -qi '^pdo_mysql$'; \
+    # Da PHP 8.5 OPcache e' compilato nel core (docker-php-ext-install opcache
+    # fallisce: nessun modulo da installare): basta verificare che ci sia.
+    php -r 'exit(function_exists("opcache_get_status") ? 0 : 1);'
 
 # ---------------------------------------------------------------------------
 # vendor: composer install senza dev + autoload ottimizzato

@@ -122,13 +122,22 @@ class ConnectorService
             Log::info(json_encode($url));
 
             try {
-                $response = Http::withHeaders([
+                $headers = [
                     'x-host' => Config::get('app.url'),
                     'x-host-name' => Config::get('app.name'),
                     'Authorization' => "Bearer {$this->accessToken}",
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
-                ])->timeout(5)->post($url, $data);
+                ];
+
+                // Versione dell'app (tag dell'immagine o versione git): serve a Chive CP per sapere cosa gira.
+                // Informativa: si manda solo se ha il formato che il server accetta, altrimenti si omette.
+                $appVersion = (string) Config::get('app.version');
+                if (preg_match('/^[A-Za-z0-9][A-Za-z0-9._+-]{0,63}$/D', $appVersion) === 1) {
+                    $headers['x-app-version'] = $appVersion;
+                }
+
+                $response = Http::withHeaders($headers)->timeout(5)->post($url, $data);
 
                 $body = $response->json();
                 $license = $body['data'] ?? null;

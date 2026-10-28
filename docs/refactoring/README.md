@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 303**
+**Prossimo numero libero: 307**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,10 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [306](306-aggiornamento-laravel-13-30.md) | **Aggiornamento di `laravel/framework` 13.29.0 → 13.30.1 (solo quel pacchetto, Symfony resta 7.4): `composer audit` senza advisory** | Dipendenze / Sicurezza | Completato | 2026-10-16 |
+| [305](305-header-x-app-version-nel-check-in-della-licenza.md) | **Header `x-app-version` nel check-in della licenza (versione in uso per Chive CP, solo informativa)** | Licensing / Chive CP | Completato (provato con Docker vero) | 2026-10-16 |
+| [304](304-aggiornamento-patch-dipendenze-advisory-sicurezza.md) | **Aggiornamento di patch di `symfony/http-foundation` e `league/commonmark` (advisory `composer audit` da 4 a 1; Laravel resta, serve Symfony 8)** | Dipendenze / Sicurezza | Completato | 2026-10-16 |
+| [303](303-passaggio-a-php-8-5.md) | **Passaggio a PHP 8.5: composer.json `^8.5`, immagini Docker dev/prod e CI su 8.5** | Dipendenze / Docker / CI | Completato | 2026-10-12 |
 | [302](302-pipeline-build-e-push-immagine-docker-hub.md) | **Pipeline: build e push dell'immagine di produzione su Docker Hub (job build-and-push, tag vX.Y.Z)** | CI / Docker | Pronto, non eseguito | 2026-10-12 |
 | [301](301-correzioni-dopo-prova-generale-licenza-i18n-blueprint.md) | **Correzioni dopo la prova generale: licenza non cancellata su errori del server, messaggio di licenza i18n, correzioni al blueprint** | Licensing / Docker | Completato | 2026-10-09 |
 | [300](300-prova-generale-istanza-docker-end-to-end.md) | **Prova generale end-to-end di un'istanza Docker con LICENSES reale (solo prova, nessun codice modificato): 2 bug sul ciclo di vita della licenza, correzioni al blueprint** | Docker / Licensing | Completato | 2026-10-09 |
