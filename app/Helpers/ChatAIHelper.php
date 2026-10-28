@@ -21,6 +21,29 @@ use App\Helpers\UserHelper;
 class ChatAIHelper
 {
 
+  /**
+   * Avatar della Chat AI: le iniziali "AI" in un cerchio, nello stesso stile
+   * di LogsController::avatarHtml() (nessuna immagine).
+   */
+  public static function aiAvatarHtml($size = 36)
+  {
+    return '<span style="display:inline-grid;place-items:center;flex:none;width:' . $size . 'px;height:' . $size . 'px;border-radius:50%;font-weight:700;font-size:' . round($size * 0.38) . 'px;background:var(--ch-accent-soft);color:var(--ch-accent)">AI</span>';
+  }
+
+  /**
+   * Avatar dell'utente che sta chattando: la foto se caricata, altrimenti le
+   * iniziali (stessa logica del lockscreen, foto letta dal DB).
+   */
+  public static function userAvatarHtml($size = 36)
+  {
+    return \App\Http\Controllers\System\LogsController::avatarHtml(
+      Session::get('admin_name'),
+      optional(CRUDBooster::me())->photo,
+      CRUDBooster::myId(),
+      $size
+    );
+  }
+
   public static function getConfFromItem($id_item) {
 
 

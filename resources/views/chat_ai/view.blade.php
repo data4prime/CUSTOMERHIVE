@@ -34,7 +34,7 @@ App\Helpers\ChatAIHelper::getToken($row->id);
 
 
         <div class="media media-chat">
-                  <img class="avatar" src="/images/user/chatai.jpg" alt="...">
+                  <span class="d-inline-block align-top me-2">{!! \App\Helpers\ChatAIHelper::aiAvatarHtml(36) !!}</span>
                     <div class="media-body">
                     <p>{!! __('crudbooster.hello') !!}</p>
 
@@ -54,14 +54,14 @@ App\Helpers\ChatAIHelper::getToken($row->id);
     @if ($chat_messages)
         @foreach ($chat_messages as $chat_message)
             <div class="media media-chat media-chat-reverse">
-                <img class="avatar" src="/images/user/admin.jpeg" alt="...">
+                <span class="d-inline-block align-top me-2">{!! \App\Helpers\ChatAIHelper::userAvatarHtml(36) !!}</span>
                 <div class="media-body">
-                    @php echo $chat_message['message'] @endphp
+                    {{ $chat_message['message'] }}
                 </div>
             </div>
 
             <div class="media media-chat">
-                <img class="avatar" src="/images/user/chatai.jpg" alt="...">
+                <span class="d-inline-block align-top me-2">{!! \App\Helpers\ChatAIHelper::aiAvatarHtml(36) !!}</span>
                 <div class="media-body">
                     @php echo $chat_message['response'] @endphp
 
@@ -73,7 +73,7 @@ App\Helpers\ChatAIHelper::getToken($row->id);
     </div>
     <div class="chat-footer">
         <div class="chat-input">
-            <input type="text" id="publisher-input-{{$row->id}}" style="margin-right: 5px ;" class="form-control" placeholder="Chiedi qualcosa...">
+            <input type="text" id="publisher-input-{{$row->id}}" class="form-control me-2" placeholder="{{ trans('crudbooster.chatai_placeholder') }}">
             <div class="input-group-append">
                 <button id="send-btn-{{$row->id}}" class="btn btn-primary" type="button">{!! __('crudbooster.send') !!}</button>
             </div>
@@ -97,19 +97,46 @@ document.getElementById('publisher-input-{{$row->id}}').addEventListener('keypre
     }
 });
 
+var CHATAI_AVATAR_USER_{{$row->id}} = {!! json_encode(\App\Helpers\ChatAIHelper::userAvatarHtml(36)) !!};
+var CHATAI_AVATAR_AI_{{$row->id}} = {!! json_encode(\App\Helpers\ChatAIHelper::aiAvatarHtml(36)) !!};
+var CHATAI_ERROR_HTML_{{$row->id}} = {!! json_encode(
+    e(trans('crudbooster.chatai_error_check_title'))
+    . '<br><ul><li>' . e(trans('crudbooster.chatai_error_check_workflow')) . '</li>'
+    . '<li>' . e(trans('crudbooster.chatai_error_check_url')) . '</li>'
+    . '<li>' . e(trans('crudbooster.chatai_error_check_passphrase')) . '</li></ul>'
+) !!};
+
+function chatAIEscape{{$row->id}}(text) {
+    var el = document.createElement('div');
+    el.textContent = text;
+    return el.innerHTML;
+}
+
+// Stesso markup del rendering lato server (sopra): i messaggi hanno lo stesso
+// aspetto prima e dopo il ricaricamento della pagina.
+function chatAIAppendUser{{$row->id}}(textHtml) {
+    var html = '<div class="media media-chat media-chat-reverse"><span class="d-inline-block align-top me-2">' + CHATAI_AVATAR_USER_{{$row->id}} + '</span><div class="media-body">' + textHtml + '</div></div>';
+    document.querySelector('.chat-body-{{$row->id}}').insertAdjacentHTML('beforeend', html);
+}
+
+function chatAIAppendAI{{$row->id}}(textHtml) {
+    var html = '<div class="media media-chat"><span class="d-inline-block align-top me-2">' + CHATAI_AVATAR_AI_{{$row->id}} + '</span><div class="media-body">' + textHtml + '</div></div>';
+    document.querySelector('.chat-body-{{$row->id}}').insertAdjacentHTML('beforeend', html);
+}
+
 function sendMessage{{$row->id}}(event) {
     event.preventDefault();
 
-    console.log('clicked');
-
-    var message = document.querySelector('#publisher-input-{{$row->id}}').value;
+    var input = document.querySelector('#publisher-input-{{$row->id}}');
+    var message = input.value;
     var agent_id = '{{$row->id}}';
-    console.log(message);
-    if(message != ''){
-        var html = '<div class="media media-chat media-chat-reverse"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body">'+message+'</div></div>';
-        document.querySelector('.chat-body-{{$row->id}}').insertAdjacentHTML('beforeend', html);
-        document.querySelector('#publisher-input-{{$row->id}}').value = '';
+
+    if (message.trim() === '') {
+        return;
     }
+
+    chatAIAppendUser{{$row->id}}(chatAIEscape{{$row->id}}(message));
+    input.value = '';
 
     fetch('/admin/chat_ai/send_message_agent', {
       method: 'POST',
@@ -120,21 +147,16 @@ function sendMessage{{$row->id}}(event) {
     })
     .then((response) => response.json())
     .then((data) => {
-        console.log('Success:', data);
-        //if data.text exists
-        if(data.text){
-            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body">'+data.text+'</div></div>';
-            document.querySelector('.chat-body-{{$row->id}}').insertAdjacentHTML('beforeend', html);
+        if (data.text) {
+            chatAIAppendAI{{$row->id}}(data.text);
         }
 
-        if(data.message){
-            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body">'+data.message+'</div></div>';
-            document.querySelector('.chat-body-{{$row->id}}').insertAdjacentHTML('beforeend', html);
+        if (data.message) {
+            chatAIAppendAI{{$row->id}}(data.message);
         }
 
         if (!data.text && !data.message) {
-            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body">Errore.<br>Assicuratiche che:<br><ul><li>Il workflow N8N è attivo</li><li>L\'url è corretto</li><li>La passphrase è corretta</li></ul></div></div>';
-            document.querySelector('.chat-body-{{$row->id}}').insertAdjacentHTML('beforeend', html);
+            chatAIAppendAI{{$row->id}}(CHATAI_ERROR_HTML_{{$row->id}});
         }
 
         var objDiv = document.querySelector('.chat-body-{{$row->id}}');
@@ -142,6 +164,9 @@ function sendMessage{{$row->id}}(event) {
     })
     .catch((error) => {
         console.error('Error:', error);
+        chatAIAppendAI{{$row->id}}(CHATAI_ERROR_HTML_{{$row->id}});
+        var objDiv = document.querySelector('.chat-body-{{$row->id}}');
+        objDiv.scrollTop = objDiv.scrollHeight;
     });
 
     var objDiv = document.querySelector('.chat-body-{{$row->id}}');
@@ -164,7 +189,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
             /*height: 400px;
             min-height: 200px;*/
             border: 1px solid var(--ch-border-strong);
-            background-color: white;
+            background-color: var(--ch-surface);
             /*position: fixed;
             top: 100px;
             right: 0;
@@ -245,6 +270,11 @@ width: inherit;
     white-space: normal;
     /*display: block;*/
     margin-bottom: 10px;
+}
+
+.media-chat-reverse .media-body {
+    background-color: var(--ch-blue);
+    color: var(--ch-surface);
 }
 
 .media-chat .media-body p {

@@ -58,10 +58,16 @@ $("#draggable").resizable();
         $("#chatWindow").draggable({
             handle: ".chat-header",
             containment: ".content-wrapper" 
-        }).resizable();
+        }).resizable({
+            // Tutti i lati e gli angoli (la finestra e' ancorata a destra: si allarga verso sinistra).
+            // Gli stili degli handle sono in chat3.blade.php.
+            handles: "n, e, s, w, ne, se, sw, nw",
+            minWidth: 280,
+            minHeight: 260
+        });
 
         $("#openChat").click(function() {
-            $("#chatWindow").toggle();
+            toggleChatWindow();
         });
 
     })
@@ -74,11 +80,20 @@ $("#draggable").resizable();
 // Presenti solo nelle pagine dove il widget ChatAI e' attivo/renderizzato -
 // null-check perche' su tutte le altre pagine admin questi elementi non
 // esistono nel DOM.
+// Apre/chiude la finestra Chat AI; all'apertura scorre in fondo ai messaggi
+// (da nascosta il contenitore non ha altezza, lo scroll fatto prima non vale).
+function toggleChatWindow() {
+    $("#chatWindow").toggle();
+    if (typeof chatAIScrollToBottom === 'function') {
+        chatAIScrollToBottom();
+    }
+}
+
 var xCloseChatai = document.querySelector('#x-close-chatai');
 if (xCloseChatai) {
     xCloseChatai.addEventListener('click', function () {
 
-$("#chatWindow").toggle();
+toggleChatWindow();
 
 
 
@@ -89,7 +104,7 @@ var toggleSidebarBtn = document.querySelector('.toggle-sidebar-btn');
 if (toggleSidebarBtn) {
     toggleSidebarBtn.addEventListener('click', function () {
 
-$("#chatWindow").toggle();
+toggleChatWindow();
 
 /*
   var chatai = document.querySelector('.main-sidebar-right');

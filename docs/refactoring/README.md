@@ -44,7 +44,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 307**
+**Prossimo numero libero: 311**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -52,6 +52,10 @@ Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [310](310-chat-ai-finestra-flottante-ridimensionabile.md) | **Chat AI (finestra flottante) ridimensionabile: stili degli handle jQuery UI che mancavano nelle pagine admin** | Frontend / Chat AI | Completato (solo compilazione Blade) | 2026-10-28 |
+| [309](309-menu-qlik-agent-ai-end-explode-php85.md) | **Voci di menu Qlik / Agent AI non cliccabili con PHP 8.5: `end(explode())` lanciava `ErrorException` e la voce diventava "rotta"** | Frontend / Menu, PHP 8.5 | Completato (lint + prova funzione) | 2026-10-28 |
+| [308](308-chat-ai-finestra-flottante-fix-interfaccia.md) | **Chat AI (finestra flottante): testi tradotti, messaggi coerenti prima/dopo il reload, no invio vuoto, scroll all'apertura, errori visibili, tema scuro** | Frontend / Chat AI | Completato (solo lint/compilazione) | 2026-10-28 |
+| [307](307-migrazione-personal-access-tokens-guardia-tabella-esistente.md) | **Migrazione `personal_access_tokens`: non fallisce se la tabella esiste già (trovato nella prova di aggiornamento su un dump reale)** | Database / Aggiornamento clienti | Completato | 2026-10-28 |
 | [306](306-aggiornamento-laravel-13-30.md) | **Aggiornamento di `laravel/framework` 13.29.0 → 13.30.1 (solo quel pacchetto, Symfony resta 7.4): `composer audit` senza advisory** | Dipendenze / Sicurezza | Completato | 2026-10-16 |
 | [305](305-header-x-app-version-nel-check-in-della-licenza.md) | **Header `x-app-version` nel check-in della licenza (versione in uso per Chive CP, solo informativa)** | Licensing / Chive CP | Completato (provato con Docker vero) | 2026-10-16 |
 | [304](304-aggiornamento-patch-dipendenze-advisory-sicurezza.md) | **Aggiornamento di patch di `symfony/http-foundation` e `league/commonmark` (advisory `composer audit` da 4 a 1; Laravel resta, serve Symfony 8)** | Dipendenze / Sicurezza | Completato | 2026-10-16 |

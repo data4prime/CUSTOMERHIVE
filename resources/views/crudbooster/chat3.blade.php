@@ -16,14 +16,36 @@ $chat_messages = Session::get('chat_messages');
             min-width: 200px;
             height: 400px;
             min-height: 200px;
+            max-width: calc(100vw - 16px);
+            max-height: calc(100vh - 16px);
             border: 1px solid var(--ch-border-strong);
-            background-color: white;
+            background-color: var(--ch-surface);
             position: fixed; /* Cambiato a fixed per posizione iniziale */
             top: 100px;
             right: 0; /* Posizione iniziale a destra */
             display: none; /* Nascondi la chat all'inizio */
             box-shadow: 0 0 10px rgba(0,0,0,0.2);
             z-index: 1000; /* Assicurati che la finestra di chat sia sopra altri elementi */
+        }
+
+        {{-- Handle di ridimensionamento (jQuery UI resizable, vedi admin_template_plugins).
+             jquery-ui.css non e' caricato nelle pagine admin: qui solo gli stili degli handle --}}
+        #chatWindow .ui-resizable-handle {
+            position: absolute;
+            display: block;
+            z-index: 10;
+            font-size: 0.1px;
+        }
+        #chatWindow .ui-resizable-n  { top: -4px;    left: 8px;  right: 8px;  height: 8px; cursor: n-resize; }
+        #chatWindow .ui-resizable-s  { bottom: -4px; left: 8px;  right: 8px;  height: 8px; cursor: s-resize; }
+        #chatWindow .ui-resizable-e  { right: -4px;  top: 8px;   bottom: 8px; width: 8px;  cursor: e-resize; }
+        #chatWindow .ui-resizable-w  { left: -4px;   top: 8px;   bottom: 8px; width: 8px;  cursor: w-resize; }
+        #chatWindow .ui-resizable-ne { top: -4px;    right: -4px;  width: 14px; height: 14px; cursor: ne-resize; }
+        #chatWindow .ui-resizable-nw { top: -4px;    left: -4px;   width: 14px; height: 14px; cursor: nw-resize; }
+        #chatWindow .ui-resizable-sw { bottom: -4px; left: -4px;   width: 14px; height: 14px; cursor: sw-resize; }
+        #chatWindow .ui-resizable-se {
+            bottom: 0; right: 0; width: 14px; height: 14px; cursor: se-resize;
+            background: linear-gradient(135deg, transparent 50%, var(--ch-border-strong) 50%, var(--ch-border-strong) 60%, transparent 60%, transparent 75%, var(--ch-border-strong) 75%, var(--ch-border-strong) 85%, transparent 85%);
         }
 
         .chat-header {
@@ -89,12 +111,6 @@ $chat_messages = Session::get('chat_messages');
     width: inherit;
     min-width: 0;
 }
-.media-chat-reverse > .media-body{
-    clear: right;
-    background-color: var(--ch-blue);
-    color: var(--ch-surface);
-}
-
 .media-body {
 width: inherit;
     min-width: 0;
@@ -109,6 +125,12 @@ width: inherit;
     white-space: normal;
     /*display: block;*/
     margin-bottom: 10px;
+}
+
+{{-- Messaggio dell'utente: stesso aspetto sia se reso dal server sia se aggiunto via JS --}}
+.media-chat-reverse .media-body {
+    background-color: var(--ch-blue);
+    color: var(--ch-surface);
 }
 
 .media-chat .media-body p {
@@ -229,7 +251,7 @@ h4.chat-title {
 
     <div class="card-body chat-body">
         <div class="d-flex mb-3 media-chat">
-            <img class="avatar me-2" src="/images/user/chatai.jpg" alt="Avatar AI">
+            <div class="me-2">{!! \App\Helpers\ChatAIHelper::aiAvatarHtml(36) !!}</div>
             <div>
                 <div class="media-body">{!! __('crudbooster.hello') !!}</div>
                 <div class="media-body">{!! __('crudbooster.i_am_your_chatai') !!}</div>
@@ -242,24 +264,24 @@ h4.chat-title {
                 <!-- Messaggio dell'utente -->
                 <div class="d-flex mb-3 justify-content-end media-chat media-chat-reverse">
                     <div>
-                        <div class="media-body">{!! $chat_message['message'] !!}</div>
+                        <div class="media-body">{{ $chat_message['message'] }}</div>
                     </div>
-                    <img class="avatar ms-2" src="/images/user/admin.jpeg" alt="Avatar utente">
+                    <div class="ms-2">{!! \App\Helpers\ChatAIHelper::userAvatarHtml(36) !!}</div>
                 </div>
 
                 <!-- Risposta AI -->
                 <div class="d-flex mb-3 media-chat">
-                    <img class="avatar me-2" src="/images/user/chatai.jpg" alt="Avatar AI">
+                    <div class="me-2">{!! \App\Helpers\ChatAIHelper::aiAvatarHtml(36) !!}</div>
                     <div class="media-body">{!! $chat_message['response'] !!}</div>
                 </div>
             @endforeach
         @endif
     </div>
 
-    <div class="card-footer chat-footer" style="margin-right: 20px;">
+    <div class="card-footer chat-footer">
         <div class="input-group">
-            <input type="text" id="publisher-input" class="form-control" placeholder="Chiedi qualcosa...">
-            <button id="send-btn" class="btn btn-primary" type="button">Invia</button>
+            <input type="text" id="publisher-input" class="form-control" placeholder="{{ trans('crudbooster.chatai_placeholder') }}">
+            <button id="send-btn" class="btn btn-primary" type="button">{{ trans('crudbooster.send') }}</button>
         </div>
     </div>
 </div>
@@ -279,18 +301,48 @@ document.getElementById('publisher-input').addEventListener('keypress', function
     }
 });
 
+var CHATAI_ERROR_TEXT = {!! json_encode(trans('crudbooster.chatai_error_generic')) !!};
+var CHATAI_AVATAR_USER = {!! json_encode(\App\Helpers\ChatAIHelper::userAvatarHtml(36)) !!};
+var CHATAI_AVATAR_AI = {!! json_encode(\App\Helpers\ChatAIHelper::aiAvatarHtml(36)) !!};
+
+function chatAIScrollToBottom() {
+    var body = document.querySelector('#chatWindow .chat-body');
+    if (body) {
+        body.scrollTop = body.scrollHeight;
+    }
+}
+
+function chatAIEscape(text) {
+    var el = document.createElement('div');
+    el.textContent = text;
+    return el.innerHTML;
+}
+
+// Stesso markup del rendering lato server (vedi sopra), cosi' i messaggi
+// hanno lo stesso aspetto prima e dopo il ricaricamento della pagina.
+function chatAIAppendUser(textHtml) {
+    var html = '<div class="d-flex mb-3 justify-content-end media-chat media-chat-reverse"><div><div class="media-body">' + textHtml + '</div></div><div class="ms-2">' + CHATAI_AVATAR_USER + '</div></div>';
+    document.querySelector('#chatWindow .chat-body').insertAdjacentHTML('beforeend', html);
+}
+
+function chatAIAppendAI(textHtml) {
+    var html = '<div class="d-flex mb-3 media-chat"><div class="me-2">' + CHATAI_AVATAR_AI + '</div><div class="media-body">' + textHtml + '</div></div>';
+    document.querySelector('#chatWindow .chat-body').insertAdjacentHTML('beforeend', html);
+}
+
 function sendMessage(event) {
     event.preventDefault();
 
-    console.log('clicked');
+    var input = document.querySelector('#publisher-input');
+    var message = input.value;
 
-    var message = document.querySelector('#publisher-input').value;
-    console.log(message);
-    if(message != ''){
-        var html = '<div class="media media-chat media-chat-reverse"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+message+'</p></div></div>';
-        document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
-        document.querySelector('#publisher-input').value = '';
+    if (message.trim() === '') {
+        return;
     }
+
+    chatAIAppendUser(chatAIEscape(message));
+    input.value = '';
+    chatAIScrollToBottom();
 
     fetch('/admin/chat_ai/send_message', {
       method: 'POST',
@@ -301,36 +353,30 @@ function sendMessage(event) {
     })
     .then((response) => response.json())
     .then((data) => {
-        console.log('Success:', data);
-        //if data.text exists
-        if(data.text){
-            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
-            document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
+        if (data.text) {
+            chatAIAppendAI(data.text);
         }
 
-        if(data.message){
-            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body"><p>'+data.message+'</p></div></div>';
-            document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
+        if (data.message) {
+            chatAIAppendAI(data.message);
         }
 
-        var objDiv = document.querySelector('.chat-body');
-        objDiv.scrollTop = objDiv.scrollHeight;
+        if (!data.text && !data.message) {
+            chatAIAppendAI(chatAIEscape(CHATAI_ERROR_TEXT));
+        }
+
+        chatAIScrollToBottom();
     })
     .catch((error) => {
         console.error('Error:', error);
+        chatAIAppendAI(chatAIEscape(CHATAI_ERROR_TEXT));
+        chatAIScrollToBottom();
     });
-
-    var objDiv = document.querySelector('.chat-body');
-    objDiv.scrollTop = objDiv.scrollHeight;
 }
 
-
-
-//on document ready
-document.addEventListener("DOMContentLoaded", function(event) {
-    var objDiv = document.querySelector('.chat-body');
-    objDiv.scrollTop = objDiv.scrollHeight;
-});
+// La finestra parte nascosta (display: none): qui lo scroll non ha effetto,
+// viene rifatto ogni volta che la si apre (vedi toggleChatWindow()).
+document.addEventListener("DOMContentLoaded", chatAIScrollToBottom);
 
 
 </script>

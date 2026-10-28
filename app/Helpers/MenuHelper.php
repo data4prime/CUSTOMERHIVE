@@ -78,14 +78,16 @@ class MenuHelper
 
   public static function parse_path_for_qlik_item_id($URI)
   {
-    $last_element = end(explode('/', $URI));
+    $segments = explode('/', $URI);
+    $last_element = end($segments);
     $last_element_exploded = explode('?', $last_element);
     return $last_element_exploded[0];
   }
 
   public static function parse_path_for_chat_ai_id($URI)
   {
-    $last_element = end(explode('/', $URI));
+    $segments = explode('/', $URI);
+    $last_element = end($segments);
     $last_element_exploded = explode('?', $last_element);
     return $last_element_exploded[0];
   }

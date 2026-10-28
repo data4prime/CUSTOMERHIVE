@@ -11,6 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Alcune installazioni hanno gia' la tabella ma la migrazione non e'
+        // registrata: senza guardia l'aggiornamento si ferma qui.
+        if (Schema::hasTable('personal_access_tokens')) {
+            return;
+        }
+
         Schema::create('personal_access_tokens', function (Blueprint $table) {
             $table->id();
             $table->morphs('tokenable');

@@ -16,8 +16,9 @@ $chat_messages = Session::get('chat_messages');
             min-width: 200px;
             height: 400px;
             min-height: 200px;
+            max-width: calc(100vw - 16px);
             border: 1px solid var(--ch-border-strong);
-            background-color: white;
+            background-color: var(--ch-surface);
             position: fixed; /* Cambiato a fixed per posizione iniziale */
             top: 100px;
             right: 0; /* Posizione iniziale a destra */
@@ -192,7 +193,7 @@ h4.chat-title {
 
 
         <div class="media media-chat">
-                  <img class="avatar" src="/images/user/chatai.jpg" alt="...">
+                  <span class="d-inline-block align-top">{!! \App\Helpers\ChatAIHelper::aiAvatarHtml(36) !!}</span>
                   <div class="media-body">
                     <p>{!! __('crudbooster.hello') !!}</p>
                     <p>{!! __('crudbooster.i_am_your_chatai') !!}</p>
@@ -202,16 +203,16 @@ h4.chat-title {
     @if ($chat_messages)
         @foreach ($chat_messages as $chat_message)
             <div class="media media-chat media-chat-reverse">
-                <img class="avatar" src="/images/user/admin.jpeg" alt="...">
+                <span class="d-inline-block align-top">{!! \App\Helpers\ChatAIHelper::userAvatarHtml(36) !!}</span>
                 <div class="media-body">
                     <p>{{ $chat_message['message'] }}</p>
                 </div>
             </div>
 
             <div class="media media-chat">
-                <img class="avatar" src="/images/user/chatai.jpg" alt="...">
+                <span class="d-inline-block align-top">{!! \App\Helpers\ChatAIHelper::aiAvatarHtml(36) !!}</span>
                 <div class="media-body">
-                    <p>{{$chat_message['response']}}</p>
+                    <p>{!! $chat_message['response'] !!}</p>
 
                 </div>
             </div>
@@ -221,7 +222,7 @@ h4.chat-title {
     </div>
     <div class="chat-footer">
         <div class="chat-input">
-            <input type="text" id="publisher-input" style="margin-right: 5px ;" class="form-control" placeholder="Chiedi qualcosa...">
+            <input type="text" id="publisher-input" class="form-control me-2" placeholder="{{ trans('crudbooster.chatai_placeholder') }}">
             <div class="input-group-append">
                 <button id="send-btn" class="btn btn-primary" type="button">{!! __('crudbooster.send') !!}</button>
             </div>
@@ -243,18 +244,46 @@ document.getElementById('publisher-input').addEventListener('keypress', function
     }
 });
 
+var CHATAI_ERROR_TEXT = {!! json_encode(trans('crudbooster.chatai_error_generic')) !!};
+var CHATAI_AVATAR_USER = {!! json_encode(\App\Helpers\ChatAIHelper::userAvatarHtml(36)) !!};
+var CHATAI_AVATAR_AI = {!! json_encode(\App\Helpers\ChatAIHelper::aiAvatarHtml(36)) !!};
+
+function chatAIScrollToBottom() {
+    var body = document.querySelector('.chat-body');
+    body.scrollTop = body.scrollHeight;
+}
+
+function chatAIEscape(text) {
+    var el = document.createElement('div');
+    el.textContent = text;
+    return el.innerHTML;
+}
+
+// Stesso markup del rendering lato server (sopra): i messaggi hanno lo stesso
+// aspetto prima e dopo il ricaricamento della pagina.
+function chatAIAppendUser(textHtml) {
+    var html = '<div class="media media-chat media-chat-reverse"><span class="d-inline-block align-top">' + CHATAI_AVATAR_USER + '</span><div class="media-body"><p>' + textHtml + '</p></div></div>';
+    document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
+}
+
+function chatAIAppendAI(textHtml) {
+    var html = '<div class="media media-chat"><span class="d-inline-block align-top">' + CHATAI_AVATAR_AI + '</span><div class="media-body"><p>' + textHtml + '</p></div></div>';
+    document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
+}
+
 function sendMessage(event) {
     event.preventDefault();
 
-    console.log('clicked');
+    var input = document.querySelector('#publisher-input');
+    var message = input.value;
 
-    var message = document.querySelector('#publisher-input').value;
-    console.log(message);
-    if(message != ''){
-        var html = '<div class="media media-chat media-chat-reverse"><img class="avatar" src="/images/user/admin.jpeg" alt="..."><div class="media-body"><p>'+message+'</p></div></div>';
-        document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
-        document.querySelector('#publisher-input').value = '';
+    if (message.trim() === '') {
+        return;
     }
+
+    chatAIAppendUser(chatAIEscape(message));
+    input.value = '';
+    chatAIScrollToBottom();
 
     fetch('/admin/chat_ai/send_message', {
       method: 'POST',
@@ -265,27 +294,25 @@ function sendMessage(event) {
     })
     .then((response) => response.json())
     .then((data) => {
-        console.log('Success:', data);
-        //if data.text exists
-        if(data.text){
-            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body"><p>'+data.text+'</p></div></div>';
-            document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
+        if (data.text) {
+            chatAIAppendAI(data.text);
         }
 
-        if(data.message){
-            var html = '<div class="media media-chat"><img class="avatar" src="/images/user/chatai.jpg" alt="..."><div class="media-body"><p>'+data.message+'</p></div></div>';
-            document.querySelector('.chat-body').insertAdjacentHTML('beforeend', html);
+        if (data.message) {
+            chatAIAppendAI(data.message);
         }
 
-        var objDiv = document.querySelector('.chat-body');
-        objDiv.scrollTop = objDiv.scrollHeight;
+        if (!data.text && !data.message) {
+            chatAIAppendAI(chatAIEscape(CHATAI_ERROR_TEXT));
+        }
+
+        chatAIScrollToBottom();
     })
     .catch((error) => {
         console.error('Error:', error);
+        chatAIAppendAI(chatAIEscape(CHATAI_ERROR_TEXT));
+        chatAIScrollToBottom();
     });
-
-    var objDiv = document.querySelector('.chat-body');
-    objDiv.scrollTop = objDiv.scrollHeight;
 }
 
 var objDiv = document.querySelector('.chat-body');
