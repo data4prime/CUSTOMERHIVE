@@ -18,6 +18,8 @@ use App\Helpers\ModuleGeneratorLayout;
 use ModuleHelper;
 use UserHelper;
 use App\Menu;
+use App\Actions\Menus\AssignDefaultMenuGroup;
+use App\Actions\Menus\AssignDefaultMenuTenant;
 use App\Modules;
 use App\Tenant;
 use App\DynamicTable;
@@ -877,8 +879,8 @@ class ModulsController extends CBController
         // come fa Menu Management per le voci Module: ?m=ID (layout di destinazione)
         DB::table('cms_menus')->where('id', $id_cms_menus)->update(['path' => $path . '?m=' . $id_cms_menus]);
         $menu = Menu::find($id_cms_menus);
-        $menu->assign_default_tenant();
-        $menu->assign_default_group();
+        app(AssignDefaultMenuTenant::class)->handle($menu, UserHelper::current_user_tenant());
+        app(AssignDefaultMenuGroup::class)->handle($menu, UserHelper::current_user_primary_group());
         DB::table('cms_menus_privileges')->insert(['id_cms_menus' => $id_cms_menus, 'id_cms_privileges' => CRUDBooster::myPrivilegeId()]);
       }
 

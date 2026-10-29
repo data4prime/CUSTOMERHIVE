@@ -1320,7 +1320,7 @@ class AdminCmsUsersController extends CBController
 			return CRUDBooster::redirect(CRUDBooster::adminPath('users'), trans('crudbooster.delete_self'));
 		}
 		//cascade delete users_groups
-		UsersGroup::where('user_id', $id)->delete();
+		UsersGroup::ofUser($id)->delete();
 	}
 
 	public function hook_query_index(&$query)
@@ -1449,7 +1449,7 @@ class AdminCmsUsersController extends CBController
 			return redirect($return_url . '/alert/1');
 		}
 		//check if user is already in group
-		$membership = \App\UsersGroup::where('group_id', $group_id)
+		$membership = \App\UsersGroup::ofGroup($group_id)
 			->where('user_id', $user_id)
 			->count();
 

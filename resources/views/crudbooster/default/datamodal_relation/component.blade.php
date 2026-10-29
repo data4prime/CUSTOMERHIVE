@@ -42,7 +42,7 @@
 </div>
 @push('bottom')
 <script type="text/javascript">
-    var url_{{ $name }} = "{{CRUDBooster::mainpath('modal-data')}}?table={{$form['datamodal_table']}}&columns=id,{{$form['datamodal_columns']}}&name_column={{$name}}&where={{urlencode($form['datamodal_where'])}}&select_to={{ urlencode($form['datamodal_select_to']) }}&columns_name_alias={{ urlencode($form['datamodal_columns_alias']) }}&type={{ urlencode($form['type']) }}";
+    var url_{{ $name }} = "{{CRUDBooster::mainpath('modal-data')}}?table={{$form['datamodal_table']}}&columns=id,{{$form['datamodal_columns']}}&name_column={{$name}}&where={{urlencode($form['datamodal_where'])}}&select_to={{ urlencode($form['datamodal_select_to']) }}&columns_name_alias={{ urlencode($form['datamodal_columns_alias']) }}&type={{ urlencode($form['type']) }}@if(!empty($form['datamodal_allowed_scope']))&allowed_scope={{ urlencode($form['datamodal_allowed_scope']) }}@endif";
 
     function showModal{{ $name }}() {
         $('#iframe-modal-{{$name}}').attr('src', url_{{ $name }});

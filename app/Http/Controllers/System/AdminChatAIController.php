@@ -16,14 +16,16 @@ use App\Helpers\ChatAIHelper;
 use App\Helpers\LicenseHelper;
 
 use App\ChatAIConf;
-use App\ItemsAllowed;
-use App\TenantsAllowed;
+use App\ChatAIGroupAllowed;
+use App\ChatAITenantAllowed;
+use App\Http\Controllers\System\Concerns\SafeRedirectTarget;
 use App\Menu;
 
 use MyHelper;
 
 class AdminChatAIController extends CBController
 {
+	use SafeRedirectTarget;
 
 	public function cbInit()
 	{
@@ -384,7 +386,9 @@ class AdminChatAIController extends CBController
 	    */
 	public function hook_before_delete($id)
 	{
-
+		// Cascata sulle sole tabelle ChatAI: le righe Qlik con lo stesso id non c'entrano
+		ChatAIGroupAllowed::where('chatai_conf_id', $id)->delete();
+		ChatAITenantAllowed::where('chatai_conf_id', $id)->delete();
 	}
 
 	/*
@@ -410,8 +414,10 @@ class AdminChatAIController extends CBController
 		}
 		$data['item_id'] = $item_id;
 		$data['chat_ai'] = ChatAIConf::find($item_id);
-		$data['groups'] = ItemsAllowed::where('item_id', $item_id)
-			->join('groups', 'groups.id', '=', 'items_allowed.group_id')
+		$data['groups'] = DB::table('chatai_groups_allowed')
+			->where('chatai_groups_allowed.chatai_conf_id', $item_id)
+			->join('groups', 'groups.id', '=', 'chatai_groups_allowed.group_id')
+			->select('groups.*')
 			->get();
 		$data['page_title'] = 'Authorize Group';
 
@@ -425,7 +431,7 @@ class AdminChatAIController extends CBController
 		}
 		//add group form
 		$data['forms'] = [];
-		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'item_access_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'groups', 'datamodal_where' => '', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $item_id, 'required' => true];
+		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'item_access_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'groups', 'datamodal_where' => '', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $item_id, 'datamodal_allowed_scope' => 'chatai', 'required' => true];
 		$data['forms'][] = ['label' => 'Description', 'name' => 'description', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-6', 'placeholder' => 'Group description', 'readonly' => true];
 		$data['action'] = CRUDBooster::mainpath($item_id . "/auth");
 		$data['return_url'] = CRUDBooster::mainpath('access/' . $item_id);
@@ -444,8 +450,10 @@ class AdminChatAIController extends CBController
 
 		$data['item_id'] = $item_id;
 		$data['chat_ai'] = ChatAIConf::find($item_id);
-		$data['tenants'] = TenantsAllowed::where('item_id', $item_id)
-			->join('tenants', 'tenants.id', '=', 'tenants_allowed.tenant_id')
+		$data['tenants'] = DB::table('chatai_tenants_allowed')
+			->where('chatai_tenants_allowed.chatai_conf_id', $item_id)
+			->join('tenants', 'tenants.id', '=', 'chatai_tenants_allowed.tenant_id')
+			->select('tenants.*')
 			->get();
 		$data['page_title'] = 'Authorize Tenant';
 
@@ -460,7 +468,7 @@ class AdminChatAIController extends CBController
 
 		//add tenant form
 		$data['forms'] = [];
-		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'item_tenant_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'tenants', 'datamodal_where' => '', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $item_id, 'required' => true];
+		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'item_tenant_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'tenants', 'datamodal_where' => '', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $item_id, 'datamodal_allowed_scope' => 'chatai', 'required' => true];
 		$data['forms'][] = ['label' => 'Description', 'name' => 'description', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-6', 'placeholder' => 'Tenant description', 'readonly' => true];
 		$data['action'] = CRUDBooster::mainpath($item_id . "/add_tenant");
 		$data['return_url'] = CRUDBooster::mainpath('tenant/' . $item_id);
@@ -476,21 +484,25 @@ class AdminChatAIController extends CBController
 		if (!CRUDBooster::isSuperadmin()) {
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
-		$tenant_id = $_POST['name'];
-		$return_url = $_POST['return_url'];
-		$ref_mainpath = $_POST['ref_mainpath'];
+		$tenant_id = request()->input('name');
+		$ref_mainpath = $this->safeRedirectTarget(request()->input('ref_mainpath'), CRUDBooster::mainpath());
+		$return_url = $this->safeRedirectTarget(request()->input('return_url'), '');
 
-		if (empty($tenant_id)) {
+		if (!MyHelper::is_int($item_id) || !ChatAIConf::find($item_id)) {
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+		}
+
+		if (empty($tenant_id) || !MyHelper::is_int($tenant_id) || !DB::table('tenants')->where('id', $tenant_id)->exists()) {
 			return redirect($return_url . '/alert/1');
 		}
 		//check if tenant is already allowed
-		$allowed = TenantsAllowed::where('item_id', $item_id)
+		$allowed = ChatAITenantAllowed::where('chatai_conf_id', $item_id)
 			->where('tenant_id', $tenant_id)
 			->count();
 
 		if ($allowed == 0) {
-			$add_tenant = new TenantsAllowed;
-			$add_tenant->item_id = $item_id;
+			$add_tenant = new ChatAITenantAllowed;
+			$add_tenant->chatai_conf_id = $item_id;
 			$add_tenant->tenant_id = $tenant_id;
 			$add_tenant->save();
 		}
@@ -513,7 +525,7 @@ class AdminChatAIController extends CBController
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
-		$data['delete'] = TenantsAllowed::where('item_id', $item_id)
+		$data['delete'] = ChatAITenantAllowed::where('chatai_conf_id', $item_id)
 			->where('tenant_id', $tenant_id)
 			->delete();
 
@@ -527,21 +539,25 @@ class AdminChatAIController extends CBController
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
-		$group_id = $_POST['name'];
-		$return_url = $_POST['return_url'];
-		$ref_mainpath = $_POST['ref_mainpath'];
+		$group_id = request()->input('name');
+		$ref_mainpath = $this->safeRedirectTarget(request()->input('ref_mainpath'), CRUDBooster::mainpath());
+		$return_url = $this->safeRedirectTarget(request()->input('return_url'), '');
 
-		if (empty($group_id)) {
+		if (!MyHelper::is_int($item_id) || !ChatAIConf::find($item_id)) {
+			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+		}
+
+		if (empty($group_id) || !MyHelper::is_int($group_id) || !DB::table('groups')->where('id', $group_id)->exists()) {
 			return redirect($return_url . '/alert/1');
 		}
-		//check if item is already in group
-		$access = ItemsAllowed::where('item_id', $item_id)
+		//check if conf is already authorized for the group
+		$access = ChatAIGroupAllowed::where('chatai_conf_id', $item_id)
 			->where('group_id', $group_id)
 			->count();
 
 		if ($access == 0) {
-			$add_group = new ItemsAllowed;
-			$add_group->item_id = $item_id;
+			$add_group = new ChatAIGroupAllowed;
+			$add_group->chatai_conf_id = $item_id;
 			$add_group->group_id = $group_id;
 			$add_group->save();
 		}
@@ -565,7 +581,7 @@ class AdminChatAIController extends CBController
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
-		$data['delete'] = ItemsAllowed::where('item_id', $item_id)
+		$data['delete'] = ChatAIGroupAllowed::where('chatai_conf_id', $item_id)
 			->where('group_id', $group_id)
 			->delete();
 
@@ -737,14 +753,14 @@ class AdminChatAIController extends CBController
 
 	}
 
-	public function content_view($qlik_item_id)
+	public function content_view($chat_ai_id)
 	{
-		$allowed = ChatAIHelper::can_see_item($qlik_item_id);
+		$allowed = ChatAIHelper::can_see_item($chat_ai_id);
 		if (!$allowed) {
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$data = [];
-		$data['row'] = ChatAIConf::find($qlik_item_id);
+		$data['row'] = ChatAIConf::find($chat_ai_id);
 		//dd($data);
 		if (empty($data['row'])) {
 
@@ -756,7 +772,7 @@ class AdminChatAIController extends CBController
 		if (isset($_GET['m'])) {
 			$menu = Menu::find($_GET['m']);
 		} else {
-			$menu = Menu::where('name', 'Dashboard')->where('is_active', 1)->where('is_dashboard', 1)->first();
+			$menu = Menu::activeDashboard()->first();
 		}
 		//dd($menu);
 		//$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '89');

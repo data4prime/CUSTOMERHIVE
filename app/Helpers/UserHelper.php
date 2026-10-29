@@ -194,7 +194,8 @@ class UserHelper
    */
   public static function current_user_primary_group_name()
   {
-    return UserHelper::me()->primary_group()->name;
+    //gruppo primario soft-deleted o inesistente: stringa vuota (= "nessun default" nei form) invece di un errore
+    return UserHelper::me()->primary_group()?->name ?? '';
   }
 
   /**
@@ -225,7 +226,7 @@ class UserHelper
   public static function current_user_groups()
   {
     $user_id = CRUDBooster::myId();
-    $groups = UsersGroup::where('user_id', $user_id)->pluck('group_id')->all();
+    $groups = UsersGroup::ofUser($user_id)->pluck('group_id')->all();
     $primary_group = self::current_user_primary_group();
     if (!in_array($primary_group, $groups)) {
       array_push($groups, $primary_group);
@@ -435,7 +436,7 @@ class UserHelper
       return false;
     }
 
-    $result = UsersGroup::where('user_id', $user_id)
+    $result = UsersGroup::ofUser($user_id)
       ->where('deleted_at', null)
       ->delete();
 

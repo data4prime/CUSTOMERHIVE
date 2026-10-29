@@ -2,12 +2,21 @@
 
 <?php
 
+  // Tabella delle autorizzazioni scelta da una whitelist fissa (mai dalla query
+  // string): 'qlik' (default) = items_allowed, 'chatai' = chatai_groups_allowed.
+  $allowedSources = [
+    'qlik' => ['table' => 'items_allowed', 'key' => 'item_id'],
+    'chatai' => ['table' => 'chatai_groups_allowed', 'key' => 'chatai_conf_id'],
+  ];
+  $allowedScope = Request::get('allowed_scope');
+  $allowedSource = $allowedSources[is_string($allowedScope) ? $allowedScope : ''] ?? $allowedSources['qlik'];
+
   //bypass CBController getModalData per custom query
   $result = DB::table('groups')
-                ->whereNotExists(function ($query) {
+                ->whereNotExists(function ($query) use ($allowedSource) {
                 $query->select(DB::raw(1))
-                      ->from('items_allowed')
-                      ->whereRaw('items_allowed.item_id = '.(int) Request::get('select_to').' AND items_allowed.group_id = groups.id');
+                      ->from($allowedSource['table'])
+                      ->whereRaw($allowedSource['table'].'.'.$allowedSource['key'].' = '.(int) Request::get('select_to').' AND '.$allowedSource['table'].'.group_id = groups.id');
             });
   if($q){
     //filtra la lista in base alla ricerca fatta dall'utente

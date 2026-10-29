@@ -2,11 +2,11 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
-use \App\Group;
-use \App\Tenant;
 
 class User extends Authenticatable
 {
@@ -33,9 +33,33 @@ class User extends Authenticatable
         'password', 'remember_token', 'two_factor_secret',
     ];
 
-    protected $casts = [
-        'two_factor_confirmed_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'two_factor_confirmed_at' => 'datetime',
+        ];
+    }
+
+    //nomi diversi da tenant/primary_group: una relazione omonima verrebbe
+    //oscurata dall'attributo (colonna) con lo stesso nome
+    public function tenantRecord(): BelongsTo
+    {
+      return $this->belongsTo(Tenant::class, 'tenant');
+    }
+
+    public function primaryGroupRecord(): BelongsTo
+    {
+      return $this->belongsTo(Group::class, 'primary_group');
+    }
+
+    /**
+     * Groups the user belongs to (pivot users_groups, memberships not soft-deleted).
+     */
+    public function memberGroups(): BelongsToMany
+    {
+      return $this->belongsToMany(Group::class, 'users_groups', 'user_id', 'group_id')
+                  ->wherePivotNull('deleted_at');
+    }
 
     public function primary_group(){
       return Group::find($this->primary_group);

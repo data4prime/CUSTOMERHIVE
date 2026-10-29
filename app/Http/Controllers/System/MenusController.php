@@ -17,6 +17,7 @@ use \App\Helpers\UserHelper;
 use \App\Helpers\MenuHelper;
 use \App\Helpers\LicenseHelper;
 use \App\Menu;
+use App\Actions\Menus\AssignDefaultMenuTenant;
 use \App\MenuTenants;
 
 
@@ -527,9 +528,9 @@ class MenusController extends CBController
       "default" => '** ' . trans('crudbooster.mm_select_agent'),
       "dataquery" => "SELECT chatai_confs.title as label, chatai_confs.id as value
                             FROM chatai_confs
-                            LEFT JOIN tenants_allowed
-                            ON tenants_allowed.item_id = chatai_confs.id
-                            WHERE (tenants_allowed.tenant_id=" . UserHelper::current_user_tenant() . ")
+                            LEFT JOIN chatai_tenants_allowed
+                            ON chatai_tenants_allowed.chatai_conf_id = chatai_confs.id
+                            WHERE (chatai_tenants_allowed.tenant_id=" . UserHelper::current_user_tenant() . ")
                             AND chatai_confs.deleted_at IS NULL",
       "value" => $id_chat_ai,
     ];
@@ -738,7 +739,7 @@ class MenusController extends CBController
   {
     if (!UserHelper::isSuperAdmin()) {
       //user didn't set menu's tenants, add user's tenant as menu default tenant
-      Menu::find($menu_id)->assign_default_tenant();
+      app(AssignDefaultMenuTenant::class)->handle(Menu::find($menu_id), UserHelper::current_user_tenant());
     }
   }
 

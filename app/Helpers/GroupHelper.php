@@ -21,7 +21,7 @@ class GroupHelper  {
     public static function myGroups()
     {
 			$user_id = CRUDBooster::myId();
-			$groups = \App\UsersGroup::where('user_id',$user_id)
+			$groups = \App\UsersGroup::ofUser($user_id)
 																	->pluck('group_id')
 																	->toArray();
 			return $groups;
@@ -44,7 +44,7 @@ class GroupHelper  {
         add_log_ch('add membership', 'group '.$group_id.' or user '.$user_id.' not found','error');
         return false;
       }
-      $exists = UsersGroup::where('user_id',$user_id)
+      $exists = UsersGroup::ofUser($user_id)
       ->where('group_id',$group_id)
       ->count();
       if($exists>0)
@@ -81,7 +81,7 @@ class GroupHelper  {
         add_log_ch('remove membership', 'group '.$group_id.' or user '.$user_id.' not found','error');
         return false;
       }
-      $exists = UsersGroup::where('user_id',$user_id)
+      $exists = UsersGroup::ofUser($user_id)
       ->where('group_id',$group_id)
       ->where('deleted_at',null)
       ->count();
@@ -91,7 +91,7 @@ class GroupHelper  {
         return false;
       }
 
-      $result = UsersGroup::where('user_id',$user_id)
+      $result = UsersGroup::ofUser($user_id)
       ->where('group_id',$group_id)
       ->delete();
 

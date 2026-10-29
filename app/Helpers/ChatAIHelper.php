@@ -74,14 +74,16 @@ class ChatAIHelper
       return true;
     }
 
+    // il controllo di tipo prima del find, come in QlikHelper
+    if (!MyHelper::is_int($chat_ai_id)) {
+      add_log_ch('can see item', 'Chat AI id is not int: ' . $chat_ai_id);
+      return false;
+    }
+
     $chat_ai = \App\ChatAIConf::find($chat_ai_id);
 
     if (empty($chat_ai)) {
       add_log_ch('can see item', 'Chat AI not found id: ' . $chat_ai_id);
-      return false;
-    }
-    if (!MyHelper::is_int($chat_ai_id)) {
-      add_log_ch('can see item', 'Chat AI id is not int: ' . $chat_ai_id);
       return false;
     }
 

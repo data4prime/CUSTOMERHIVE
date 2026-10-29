@@ -10,6 +10,7 @@ use DB;
 use CRUDBooster;
 use \App\UsersGroup;
 use \App\Group;
+use App\Actions\Groups\AddTenantToGroup;
 use \App\GroupTenants;
 use \App\Helpers\UserHelper;
 use \App\Helpers\MyHelper;
@@ -55,7 +56,7 @@ class AdminGroupsController extends CBController
 			"align" => "right",
 			"name" => "id",
 			"callback" => function ($row) {
-				return '<div class="text-end" style="font-variant-numeric:tabular-nums">' . (int) UsersGroup::where('group_id', $row->id)->count() . '</div>';
+				return '<div class="text-end" style="font-variant-numeric:tabular-nums">' . (int) UsersGroup::ofGroup($row->id)->count() . '</div>';
 			},
 		];
 		$this->col[] = [
@@ -329,7 +330,7 @@ class AdminGroupsController extends CBController
 	public function hook_after_add($id)
 	{
 		//Your code here
-		Group::find($id)->add_tenant(UserHelper::current_user_tenant());
+		app(AddTenantToGroup::class)->handle(Group::find($id), UserHelper::current_user_tenant());
 	}
 
 	/*
@@ -367,7 +368,7 @@ class AdminGroupsController extends CBController
 	    */
 	public function hook_before_delete($id)
 	{
-		$members_count = UsersGroup::where('group_id', $id)->count();
+		$members_count = UsersGroup::ofGroup($id)->count();
 		//esclude i tenant soft-deleted (tenants.deleted_at): la pagina
 		//"tenant" del gruppo li nasconde gia' (stesso filtro), quindi un
 		//gruppo il cui unico tenant associato e' stato cancellato non deve
@@ -475,7 +476,7 @@ class AdminGroupsController extends CBController
 		}
 
 		//check if user is already in group
-		$member = \App\UsersGroup::where('group_id', $group_id)
+		$member = \App\UsersGroup::ofGroup($group_id)
 			->where('user_id', $user_id)
 			->count();
 
@@ -511,7 +512,7 @@ class AdminGroupsController extends CBController
 			CRUDBooster::redirectBack(trans("crudbooster.cant_delete_primary_group"));
 		}
 
-		$data['delete'] = UsersGroup::where('group_id', $group_id)
+		$data['delete'] = UsersGroup::ofGroup($group_id)
 			->where('user_id', $user_id)
 			->delete();
 

@@ -24,12 +24,14 @@ use Illuminate\Support\Facades\Log;
 use App\Helpers\ModuleHelperHelper;
 use App\Helpers\LicenseHelper;
 use App\Http\Controllers\System\Concerns\HandlesQlikSyncStart;
+use App\Http\Controllers\System\Concerns\SafeRedirectTarget;
 use App\QlikSyncRun;
 use App\Services\QlikSync\QlikSyncUi;
 
 class AdminQlikItemsController extends CBController
 {
 	use HandlesQlikSyncStart;
+	use SafeRedirectTarget;
 
 	public function cbInit()
 	{
@@ -513,26 +515,6 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 			->delete();
 	}
 
-	/**
-	 * Accetta solo URL relativi o dello stesso host (evita open redirect
-	 * dal return_url/ref_mainpath arrivati via POST); altrimenti $fallback.
-	 */
-	private function safeRedirectTarget($url, $fallback)
-	{
-		$url = trim((string) $url);
-		if ($url === '' || str_starts_with($url, '//') || str_contains($url, '\\')) {
-			return $fallback;
-		}
-		$host = parse_url($url, PHP_URL_HOST);
-		if ($host !== null && $host !== false && $host !== request()->getHost()) {
-			return $fallback;
-		}
-		if ($host === null && parse_url($url, PHP_URL_SCHEME) !== null) {
-			return $fallback;
-		}
-		return $url;
-	}
-
 	/*
 	    | ----------------------------------------------------------------------
 	    | Hook for execute command after delete public static function called
@@ -573,7 +555,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		//$type = CRUDBooster::getSetting('type');
 		//add menu settings
 
-		$menu = Menu::where('path', 'qlik_items/content/' . $qlik_item_id)->first();
+		$menu = Menu::qlikItemContent($qlik_item_id)->first();
 
 		//Log::debug('Menu found: ' . $menu);
 
@@ -581,7 +563,7 @@ $this->col[] = array("label" => "Qlik Conf", "name" => "qlik_conf", "join" => "q
 		/*if (isset($_GET['m'])) {
 			$menu = Menu::find($_GET['m']);
 		} else {
-			$menu = Menu::where('name', 'Dashboard')->where('is_active', 1)->where('is_dashboard', 1)->first();
+			$menu = Menu::activeDashboard()->first();
 		}*/
 		//$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '89');
 		if (empty($menu) || !isset($menu)) {

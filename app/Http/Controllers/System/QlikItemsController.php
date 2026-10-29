@@ -28,7 +28,7 @@ class QlikItemsController extends Controller
     $page_title = $qlik_item->title;
     $subtitle = $qlik_item->subtitle;
     $debug = $qlik_item->debug_url;
-    $menu = Menu::where('path', 'qlik_items/content/' . $qlik_item->id)->first();
+    $menu = Menu::qlikItemContent($qlik_item->id)->first();
     if (empty($menu)) {
       $frame_width = '100%';
       $frame_height = '100%';

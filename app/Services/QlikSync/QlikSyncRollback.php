@@ -108,7 +108,7 @@ class QlikSyncRollback
             return trans('crudbooster.qlik_sync_rb_assigned');
         }
 
-        if (Menu::where('path', 'qlik_items/content/'.$itemId)->exists()) {
+        if (Menu::qlikItemContent($itemId)->exists()) {
             return trans('crudbooster.qlik_sync_rb_in_menu');
         }
 
