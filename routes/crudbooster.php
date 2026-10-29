@@ -72,10 +72,15 @@ Route::group(['middleware' => ['api', '\App\Http\Middleware\CBAuthAPI'], 'namesp
     }
 });
 
-/* ROUTER FOR UPLOADS */
-Route::group(['middleware' => ['web'], 'namespace' => $namespace], function () {
+/* ROUTER FOR API DOCUMENTATION: login obbligatorio (CBBackend), prima solo 'web'.
+   Vedi docs/refactoring/piani/324-rotte-custom-sotto-login.md */
+Route::group(['middleware' => ['web', '\App\Http\Middleware\CBBackend'], 'namespace' => $namespace], function () {
     Route::get('api-documentation', ['uses' => 'ApiCustomController@apiDocumentation', 'as' => 'apiDocumentation']);
     Route::get('download-documentation-postman', ['uses' => 'ApiCustomController@getDownloadPostman', 'as' => 'downloadDocumentationPostman']);
+});
+
+/* ROUTER FOR UPLOADS */
+Route::group(['middleware' => ['web'], 'namespace' => $namespace], function () {
     Route::get('uploads/{one?}/{two?}/{three?}/{four?}/{five?}', ['uses' => 'FileController@getPreview', 'as' => 'fileControllerPreview']);
 });
 

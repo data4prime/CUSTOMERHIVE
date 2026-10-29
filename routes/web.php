@@ -82,6 +82,12 @@ Route::middleware($licensed_module_middleware)->group(function () use ($controll
     Route::get('qi/{proxy_token}', $controllers_base_path . 'QlikItemsController@show');
 
 
+// Route custom di sistema (menu, tenant, gruppi, utenti, moduli, mashup): login obbligatorio
+// (solo CBBackend, non EnforceModuleLicense: nessuno di questi path e' un modulo a licenza).
+// Prima avevano solo il middleware 'web', quindi erano raggiungibili da ospiti.
+// Vedi docs/refactoring/piani/324-rotte-custom-sotto-login.md.
+Route::middleware([\App\Http\Middleware\CBBackend::class])->group(function () use ($controllers_base_path) {
+
 //menù edit customization
 // Route::get('admin/menu_management', '\App\Http\Controllers\System\MenusController@getIndex');
 Route::get('admin/menu_management/edit/{id}', $controllers_base_path . 'MenusController@customEdit')->name('MenusControllerGetEdit');
@@ -131,6 +137,8 @@ Route::post('admin/module_generator/save_enable', $controllers_base_path . 'Modu
 Route::get('/mashup/{componentID}',$controllers_base_path . 'StatisticBuilderController@mashup');
 
 Route::get('/mashup-objects/{mashup}/{componentID}/{objectid}',$controllers_base_path .'StatisticBuilderController@mashup_objects' );
+
+});
 
 
 //maass editing

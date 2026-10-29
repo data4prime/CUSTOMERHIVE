@@ -310,7 +310,7 @@ class ModulsController extends CBController
     //only superadmin can edit modules
     if (!CRUDBooster::isSuperadmin()) {
       CRUDBooster::insertLog(trans("crudbooster.log_try_edit", [
-        'name' => $row->{$this->title_field},
+        'name' => CRUDBooster::getCurrentModule()->name,
         'module' => CRUDBooster::getCurrentModule()->name,
       ]));
       return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
@@ -327,6 +327,15 @@ class ModulsController extends CBController
 
   function saveEnable()
   {
+    $this->cbLoader();
+
+    // Come enable(): solo superadmin. Senza questo controllo update_enabled_tenants
+    // (TRUNCATE di module_tenants) era eseguibile da chiunque.
+    // Vedi docs/refactoring/piani/324-rotte-custom-sotto-login.md.
+    if (!CRUDBooster::isSuperadmin()) {
+      return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+    }
+
     //if (isset($_POST['module_tenant_enabler']) && !empty($_POST['module_tenant_enabler'])) {
     ModuleHelper::update_enabled_tenants($_POST['module_tenant_enabler']);
     //}

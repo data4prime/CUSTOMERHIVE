@@ -45,7 +45,7 @@ esplicitamente documentare un intervento o consultarne la storia passata.
 
 ## Indice degli interventi
 
-**Prossimo numero libero: 323**
+**Prossimo numero libero: 325**
 
 Voci 001–068 (26 agosto – 3 settembre 2026, uscita di CRUDBooster da
 `packages/` + prime correzioni UI/bug) archiviate in
@@ -56,6 +56,8 @@ Voci 069–289 (3 settembre – 8 ottobre 2026) archiviate in
 
 | N.  | Titolo | Area | Stato | Data |
 |-----|--------|------|-------|------|
+| [324](324-rotte-custom-sotto-login.md) | **Rotte custom di sistema sotto login (B1): 28 rotte in `web.php` + `api-documentation`/postman con `CBBackend`, `saveEnable` solo superadmin (prima un ospite poteva svuotare `module_tenants`), fix `$row` in `enable()`; cambio visibile per ospiti e non superadmin, mashup non più pubbliche (ribalta il 076)** | Sicurezza / Rotte | Completato (42 test nuovi verdi, suite non lanciata) | 2026-10-29 |
+| [323](323-audit-compatibilita-php-85-curl-close-blade-immagini-worker.md) | **Audit compatibilità PHP 8.5: rimosse 10 `curl_close()` deprecate, corrette due viste Blade non compilabili (`modules/index`, `menus/form_body`), ricostruite le immagini worker/scheduler (ferme a PHP 8.3); cambio visibile solo in `form_body` (valore del join)** | PHP 8.5 / Qualità / Docker | Completato (verifiche statiche, suite non lanciata) | 2026-10-29 |
 | [322](322-prime-action-e-local-scope-batch-3.md) | **Prime Action del repo (`app/Actions/`: `AssignDefaultMenuTenant`, `AssignDefaultMenuGroup`, `AddTenantToGroup`, wrapper nei modelli) e local scope su `Menu`/`UsersGroup` (batch 3 del piano 317); nessun cambio di comportamento** | Architettura / Modelli | Completato (123 test verdi nel container) | 2026-10-29 |
 | [321](321-user-primary-group-name-gruppo-orfano.md) | **`UserHelper::current_user_primary_group_name()` con gruppo primario soft-deleted/inesistente: stringa vuota invece di `ErrorException` (batch 2b del piano 317); cambio visibile solo nel caso orfano** | Architettura / Modelli | Completato (100 test verdi nel container con il 320) | 2026-10-29 |
 | [320](320-menu-tenants-name-senza-virgola-finale.md) | **`Menu::tenants_name()` senza virgola finale quando l'ultimo tenant è soft-deleted/mancante (`"Alfa, "` → `"Alfa"`, batch 2b del piano 317); visibile solo al superadmin in Menu Management** | Architettura / Modelli | Completato (100 test verdi nel container) | 2026-10-29 |

@@ -48,6 +48,17 @@ Conseguenze per qualunque refactoring:
   Per nascondere: `hide_form`.
 - Il codice del motore non ha DI: usa la facade statica `CRUDBooster::`, `CB::`,
   `Session`, `Request`, funzioni globali (`g()`, `add_log_ch()`).
+- **Ogni metodo pubblico di una sottoclasse di `CBController` diventa una
+  rotta** (`routeController`, `routes/crudbooster.php`, ~600 rotte di System):
+  un helper nuovo, anche da trait, deve essere `protected` o `private`.
+  `CBBackend` controlla solo il login, **non** il permesso sul modulo.
+- Le rotte custom di `web.php` (membri di gruppi/tenant, `module_generator/enable`,
+  mashup) stanno sotto `CBBackend` dal doc 324; restano pubbliche di proposito
+  solo login/forgot/MFA, `health`, `qi/{proxy_token}` e `uploads/*`.
+- `AdminController`, `SettingsController`, `NotificationsController`,
+  `LogsController`, `DashboardLayoutController` estendono `CBController`
+  (gli standalone veri sono solo 4); `EmailTemplatesController`,
+  `FileController`, `QlikItemsController` estendono tramite gli alias legacy.
 
 ## 3. Autenticazione, multi-tenant, licenza
 
@@ -86,7 +97,7 @@ Conseguenze per qualunque refactoring:
 - Locale **sempre Docker** (`customerhive_app`, `customerhive_db`). Comandi con
   `docker compose exec app …`.
 - Test su **MySQL vero** (`customerhive_testing`). Suite in `tests/Feature/`
-  (24 file, per lo più test HTTP di CRUD e login) + 2 unit. Si lanciano **solo su
+  (37 file, per lo più test HTTP di CRUD e login) + 2 unit. Si lanciano **solo su
   richiesta** (`/refactor-verify`).
 - ⚠️ `tokensave_test_risk` riporta copertura 0%: i test sono HTTP e non
   chiamano i metodi direttamente, quindi il grafo non li associa. Usarlo per
@@ -115,6 +126,16 @@ colonne/campi), non logica: non vanno "spezzati" per principio.
 `postAddSave`, `postEditSave`, `input_assignment`.
 I test esistenti coprono i flussi CRUD a livello HTTP: un test di
 caratterizzazione per questi metodi si scrive come test HTTP, non unit.
+
+**Sicurezza aperta, scelta consapevole (2026-10-29, doc 324)**: gli endpoint
+generici di `CBController` — `postDataQuery` (`DB::select(Request::get('query'))`),
+`getUpdateSingle` (update con tabella/colonna/valore da input, via GET),
+`whereRaw` da input in `getModalData`/`getDataTable` — sono raggiungibili da
+qualunque utente loggato su ogni modulo. Lasciati com'è su decisione della
+persona; non rimuoverli senza prima cercarne l'uso nel JS dei clienti. Aperti
+anche S2 (controllo tenant su `add_member`/`remove_member`/`add_item`/`add_group`)
+e la pubblicità di `uploads/*` (B1b). Metriche cc: `complexity` dà
+`execute_api` 146 e `getIndex` 89, `test_risk` 198 e 132 (metriche diverse).
 
 ## 6. Dove è facile (e dove no) introdurre struttura nuova
 

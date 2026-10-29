@@ -18,6 +18,48 @@
 
 ## Voci
 
+### 2026-10-29 — Rotte custom di sistema sotto login (doc 324, piano 324)
+- **Piano prevedeva:** `CBBackend` sulle rotte custom di `web.php` e su
+  `api-documentation`, controllo `isSuperadmin` in `saveEnable`; test scritti
+  prima per il comportamento obiettivo (rossi di proposito sul codice vecchio).
+- **È successo:** primo run 21 rossi/21 verdi: 20 rossi attesi e 1 falso rosso
+  (`AdminCmsUsersController::cbInit()` legge `$_SERVER['REQUEST_URI']`, il client
+  di test non lo imposta). Dopo la modifica 42/42. La correzione di un bug
+  (`$row` in `enable()`) ha reso **obsoleta** una voce della baseline Larastan,
+  che esce con errore (`ignore.unmatched`): la voce va tolta nello stesso
+  intervento. Il report dell'analyst era giusto sui punti verificati; il
+  reviewer ha anche trovato che il piano non copriva il log del rifiuto.
+- **Sfuggito al reviewer / ai test:** nulla; resta non rilanciata la regressione
+  correlata (`ModuleGeneratorCrudTest`, `MenusCrudTest`, `GroupsCrudTest`,
+  `UsersCrudTest`, `CBBackendTest`) e non coperti `remove_member` sul gruppo
+  primario (`redirectBack` fa `exit`) e le `add_item`/`add_tenant` di Groups.
+- **Regola per la prossima volta:** (1) i metodi di `System/` che leggono
+  `$_POST`/`$_SERVER` direttamente non vedono il client di test: i test li
+  simulano con un helper che ripristina in `finally`; (2) un test che innesca un
+  `TRUNCATE`/DDL rompe il rollback di `RefreshDatabase`: serve un tearDown che
+  ripulisca; (3) una rotta messa sotto `CBBackend` non basta a dire "protetta":
+  controllare anche il permesso per modulo, che `CBBackend` non fa (S3, S2 aperti);
+  (4) quando si corregge un bug citato in `phpstan-baseline.neon`, togliere la
+  voce nello stesso intervento e dirlo.
+
+### 2026-10-29 — Audit compatibilità PHP 8.5 (doc 323)
+- **Piano prevedeva:** nessun piano scritto: audit richiesto dalla persona, poi
+  "fai tutto" sui 4 punti emersi (10 `curl_close()`, due blade rotti, immagini).
+- **È successo:** `php -l` su 450 file e sul vendor era pulito, ma **non vede i
+  Blade**: compilandoli col compilatore reale sono usciti 2 parse error veri
+  (preesistenti, non di 8.5). `scheduler`/`worker` erano in crash-loop da
+  settimane su un'immagine PHP 8.3 mai ricostruita dopo il passaggio a 8.5 (il
+  compose li costruisce dallo stesso Dockerfile di `app`, ma non da solo).
+- **Sfuggito al reviewer / ai test:** nulla di nuovo; resta non coperto il
+  render di `menus/form_body.blade.php` (ora compila, ramo `join` mai provato).
+- **Regola per la prossima volta:** (1) un controllo di sintassi/compatibilità
+  senza compilare i Blade è incompleto: usare lo script di compilazione + lint
+  (compileString, poi `php -l`); (2) dopo ogni cambio di versione PHP/immagine
+  controllare `docker compose ps` **di tutti i servizi**, non solo `app`;
+  (3) le deprecazioni solo-runtime non si vedono staticamente e
+  `config/logging.php` non ha il canale `deprecations`: per coprirle serve una
+  run della suite con deprecazioni loggate (solo su richiesta).
+
 ### 2026-10-29 — Relazioni additive, due fix, prime Action e scope (doc 319-322, piano 317 batch 2-3)
 - **Piano prevedeva:** batch 2 relazioni additive con wrapper; 2b i due fix con
   i test del batch 0 rovesciati di proposito; 3 prima Action e local scope.
