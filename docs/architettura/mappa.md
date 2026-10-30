@@ -13,17 +13,19 @@
 | `app/Http/Controllers/System/` | 28 controller del "motore" (ex CRUDBooster). `CBController` è la base di quasi tutti. |
 | `app/Http/Controllers/` (fuori da `System/`) | Controller/moduli **per cliente**: gitignored, non visibili qui. |
 | `app/Helpers/` | 25 classi statiche. `CRUDBooster` (88 metodi), `MfaHelper`, `UserHelper`, `ModuleGenerator*`, `TenantHelper`, `MailSettings`, `LicenseHelper`, `QlikHelper`, `functions.php` (funzioni globali). |
-| `app/Services/` | Solo l'integrazione Qlik (`QlikSync/*`: driver On-Prem/SaaS + factory) e `ConnectorService`. |
+| `app/Services/` | L'integrazione Qlik (`QlikSync/*`: driver On-Prem/SaaS + factory), `ConnectorService`, `ChatAI/ChatAIClient` (client della chat, doc 331) e `ModuleGenerator/` (`ModuleExporter`, `ModuleImporter`, `ModuleTransferException`: import/export dei moduli, doc 334). |
 | `app/Jobs/` | 3 job: mail ritardata, mail da template, sync Qlik. |
 | `app/Console/Commands/` | Istanza Docker (`InstanceBootstrap`, `InstancePasswordLink`), licenza (`GetLicense`), scadenza utenti, pulizia MFA. |
 | `app/Dashboards/` | Dataset e builder dei grafici/widget. |
-| `app/*.php` (root di `app/`) | Modelli Eloquent (24): `User`, `Tenant`, `Group`, `Menu*`, `Modules`, `Qlik*`… |
+| `app/Models/` e `app/*.php` (root di `app/`) | Modelli Eloquent (24). **`User`** (doc 336), **`Tenant`, `Group`, `Role`, `UsersGroup`** (doc 337) e le 8 pivot/autorizzazioni più **`Modules`** (`GroupTenants`, `MenuTenants`, `MenuGroups`, `ModuleTenants`, `TenantsAllowed`, `ItemsAllowed`, `ChatAIGroupAllowed`, `ChatAITenantAllowed`; doc 338) sono in `app/Models/` con alias sui vecchi nomi, come anche `Menu`, `ChatAIConf`, `QlikItem`, `QlikSyncRun`, `QlikSyncRunRecord`, `Log`, `AccessLog` (doc 339): **tutti i modelli di sistema sono in `App\Models`**. Restano nella root di `app/` solo `Clienti`/`Ordini`/`Righe` (modelli di esempio/per cliente, esclusi per scelta della persona; `AdminOrdiniController` li usa) e `DynamicTable`/`DynamicColumn` (non sono modelli Eloquent). Gli alias non vanno tolti finché ogni cliente non è migrato (`AdminOrdiniController` cita ancora `\App\Menu`) (ADR A17). |
 | `app/Support/legacy_crudbooster_aliases.php` | `class_alias()` che tengono vivi i vecchi namespace. **API congelata.** |
 | `routes/` | `web.php`, `crudbooster.php` (rotte del motore), `api.php`, `console.php`. |
 
-**Esistono da poco**: `app/Actions/` (3 Action, piano 317 batch 3, doc 322),
-relazioni Eloquent additive e local scope sui modelli di sistema.
-**Non esistono** (oggi): Form Request, Policy, Event/Listener di
+**Esistono da poco**: `app/Actions/` (9 Action: 3 del piano 317 batch 3, doc 322; `ApiTokens/GenerateApiToken`, doc 328; 5 in `ChatAI/`, doc 330),
+`app/Http/Requests/` (7 Form Request: `ApiTokens/StoreApiTokenRequest` (doc 327), `ChatAI/SendChatMessageRequest`/`SendAgentMessageRequest` (doc 333)
+e `Profile/Profile{Qlik,General,System,Preferences}Request` con il trait `Concerns/RespondsWithProfileJson` (doc 335); vedi ADR A14), relazioni Eloquent additive e local scope sui modelli
+di sistema.
+**Non esistono** (oggi): Policy, Event/Listener di
 dominio, Resource, Observer. Validazione, autorizzazione ed effetti collaterali
 vivono dentro i controller e gli helper statici.
 
