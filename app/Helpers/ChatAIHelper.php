@@ -9,7 +9,7 @@ use Cache;
 use DB;
 use Route;
 use Validator;
-use App\ChatAIConf;
+use App\Models\ChatAIConf;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Carbon;
 use Firebase\JWT\JWT;
@@ -80,7 +80,7 @@ class ChatAIHelper
       return false;
     }
 
-    $chat_ai = \App\ChatAIConf::find($chat_ai_id);
+    $chat_ai = \App\Models\ChatAIConf::find($chat_ai_id);
 
     if (empty($chat_ai)) {
       add_log_ch('can see item', 'Chat AI not found id: ' . $chat_ai_id);

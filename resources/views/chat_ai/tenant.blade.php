@@ -6,10 +6,10 @@
   <div>
     @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel)
     @if(g('return_url'))
-    <p><a title='Return' href='{{g("return_url")}}'><i class='bi bi-chevron-left'></i>
+    <p><a title='{{ trans("crudbooster.chatai_tooltip_return") }}' href='{{g("return_url")}}'><i class='bi bi-chevron-left'></i>
         &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
     @else
-    <p><a title='Main Module' href='{{CRUDBooster::mainpath()}}'><i class='bi bi-chevron-left'></i>
+    <p><a title='{{ trans("crudbooster.chatai_tooltip_main_module") }}' href='{{CRUDBooster::mainpath()}}'><i class='bi bi-chevron-left'></i>
         &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
     @endif
     @endif
@@ -78,7 +78,7 @@
   <!-- List tenants -->
   <div class="box">
     <div class="box-header mb-3 mb-3">
-      <h4>Authorized Tenants</h4>
+      <h4>{!! __('crudbooster.chatai_authorized_tenants') !!}</h4>
     </div>
     <div class="box-body table-responsive no-padding">
       <form id='form-table' method='post' action='{{CRUDBooster::mainpath("action-selected")}}'>
@@ -99,7 +99,7 @@
               <td>{{$tenant->description}}</td>
               <td>
                 @if(CRUDBooster::isDelete() && $button_edit)
-                <a title='Remove' class='btn btn-danger btn-sm'
+                <a title='{{ trans("crudbooster.adm_remove") }}' class='btn btn-danger btn-sm'
                   href='{{CRUDBooster::mainpath("$item_id/remove_tenant/$tenant->id")}}'><i class="bi bi-trash-fill"></i></a>
                 @endif
               </td>

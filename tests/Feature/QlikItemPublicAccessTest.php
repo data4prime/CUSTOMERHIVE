@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\QlikItem;
+use App\Models\QlikItem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;

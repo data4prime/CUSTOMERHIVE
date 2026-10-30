@@ -222,7 +222,7 @@ trait SeedsCmsData
             // (es. MenusController) la leggono via CRUDBooster::
             // myPrivilegeId() per risalire alla privilege dell'attore.
             'admin_privileges' => $superadminPrivilegeId,
-        ])->actingAs(\App\User::find($user['id']));
+        ])->actingAs(\App\Models\User::find($user['id']));
 
         return ['userId' => $user['id'], 'tenantId' => $tenantId];
     }
@@ -286,7 +286,7 @@ trait SeedsCmsData
             'admin_is_superadmin' => 0,
             'admin_privileges_roles' => $roles,
             'admin_privileges' => $privilegeId,
-        ])->actingAs(\App\User::find($user['id']));
+        ])->actingAs(\App\Models\User::find($user['id']));
 
         return ['userId' => $user['id'], 'tenantId' => $tenantId, 'privilegeId' => $privilegeId];
     }

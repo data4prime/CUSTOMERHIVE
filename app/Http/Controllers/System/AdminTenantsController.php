@@ -8,16 +8,18 @@ use Session;
 use Request;
 use DB;
 use CRUDBooster;
-use \App\Tenant;
-use \App\User;
-use \App\GroupTenants;
+use \App\Models\Tenant;
+use \App\Models\User;
+use \App\Models\GroupTenants;
 use Illuminate\Support\Facades\Route;
 use TenantHelper;
 use MyHelper;
 use App\Helpers\LicenseHelper;
+use App\Http\Controllers\System\Concerns\SafeRedirectTarget;
 
 class AdminTenantsController extends CBController
 {
+	use SafeRedirectTarget;
 
 	public function cbInit()
 	{
@@ -550,8 +552,11 @@ class AdminTenantsController extends CBController
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$group_id = $_POST['name'];
-		$return_url = $_POST['return_url'];
-		$ref_mainpath = $_POST['ref_mainpath'];
+		$return_url = $this->safeRedirectTarget(request()->input('return_url'), '');
+		$ref_mainpath = $this->safeRedirectTarget(request()->input('ref_mainpath'), '');
+		if (empty($return_url)) {
+			$return_url = $ref_mainpath ?: CRUDBooster::mainpath();
+		}
 
 		if (empty($group_id)) {
 			return redirect($return_url . '/alert/1');
@@ -568,10 +573,6 @@ class AdminTenantsController extends CBController
 			$add_group->save();
 		}
 
-		//redirect
-		if (empty($return_url)) {
-			$return_url = $ref_mainpath;
-		}
 		return redirect($return_url);
 	}
 

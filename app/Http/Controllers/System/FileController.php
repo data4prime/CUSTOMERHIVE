@@ -40,7 +40,12 @@ class FileController extends Controller
 
         
 
-        if (! Storage::exists($fullFilePath)) {
+        // Storage::exists() guarda nel disco di default (storage/app/public),
+        // ma il file viene poi aperto da storage/app/<path>: se esiste solo
+        // nel primo, Symfony File lanciava un'eccezione (500). I file caricati
+        // dall'app escono da /storage/uploads/... (symlink), non da questa
+        // rotta: qui basta rispondere 404 senza servire nulla di nuovo.
+        if (! Storage::exists($fullFilePath) || ! is_file($fullStoragePath)) {
             abort(404);
         }
 

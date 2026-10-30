@@ -1586,7 +1586,6 @@ return Request::segment($segment);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $chresult = curl_exec($ch);
-        curl_close($ch);
 
         return $chresult;
     }

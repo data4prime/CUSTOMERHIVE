@@ -2,9 +2,9 @@
 
 namespace App\Services\QlikSync;
 
-use App\Menu;
-use App\QlikSyncRun;
-use App\QlikSyncRunRecord;
+use App\Models\Menu;
+use App\Models\QlikSyncRun;
+use App\Models\QlikSyncRunRecord;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 

@@ -14,14 +14,17 @@ use App\Helpers\Fontawesome;
 use App\Helpers\ModuleGeneratorList;
 use App\Helpers\ModuleGeneratorFields;
 use App\Helpers\ModuleGeneratorLayout;
+use App\Services\ModuleGenerator\ModuleExporter;
+use App\Services\ModuleGenerator\ModuleImporter;
+use App\Services\ModuleGenerator\ModuleTransferException;
 // #RAMA
 use ModuleHelper;
 use UserHelper;
-use App\Menu;
+use App\Models\Menu;
 use App\Actions\Menus\AssignDefaultMenuGroup;
 use App\Actions\Menus\AssignDefaultMenuTenant;
-use App\Modules;
-use App\Tenant;
+use App\Models\Modules;
+use App\Models\Tenant;
 use App\DynamicTable;
 use App\DynamicColumn;
 //use App\Facades\Schema;
@@ -1370,18 +1373,7 @@ class ModulsController extends CBController
   // di tipo hidden e quelli gestiti dal sistema (tenant/group/primary_group).
   private function layoutPlaceableFields(array $form)
   {
-    $fields = [];
-    foreach ($form as $e) {
-      $name = (string) ($e['name'] ?? '');
-      $type = $e['type'] ?? 'text';
-      if ($name === '' || $type === 'hidden' || in_array($name, ModuleGeneratorLayout::ALWAYS_NAMES, true) || isset($fields[$name])) {
-        continue;
-      }
-      $required = !empty($e['required']) || in_array('required', explode('|', (string) ($e['validation'] ?? '')), true);
-      $fields[$name] = ['name' => $name, 'label' => (string) ($e['label'] ?? $name), 'type' => $type, 'required' => $required, 'help' => (string) ($e['help'] ?? '')];
-    }
-
-    return $fields;
+    return ModuleGeneratorLayout::placeableFields($form);
   }
 
   /**
@@ -2101,56 +2093,15 @@ class ModulsController extends CBController
       return CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
     }
 
-    $row = DB::table('cms_moduls')->where('id', $id)->whereNull('deleted_at')->first();
-
-    if (!$row || $row->is_protected) {
-      return CRUDBooster::redirect(CRUDBooster::mainpath(), 'Questo modulo non e\' esportabile', 'warning');
+    try {
+      $export = (new ModuleExporter())->export($id);
+    } catch (ModuleTransferException $e) {
+      return CRUDBooster::redirect(CRUDBooster::mainpath(), $e->getMessage(), $e->type());
     }
 
-    $controller_class = 'App\\Http\\Controllers\\' . $row->controller;
-
-    if (!class_exists($controller_class)) {
-      return CRUDBooster::redirect(CRUDBooster::mainpath(), 'Controller del modulo non trovato sul disco', 'danger');
-    }
-
-    $instance = new $controller_class;
-    $instance->cbInit();
-
-    $config = ['table' => $row->table_name];
-    foreach ([
-      'title_field', 'limit', 'orderby', 'global_privilege',
-      'button_table_action', 'button_bulk_action', 'button_action_style',
-      'button_add', 'button_edit', 'button_delete', 'button_detail',
-      'button_filter', 'button_import', 'button_export',
-    ] as $key) {
-      $config[$key] = $instance->$key;
-    }
-
-    $export = [
-      'format_version' => 1,
-      'exported_at' => now(),
-      'module' => [
-        'name' => $row->name,
-        'icon' => $row->icon,
-      ],
-      'table' => [
-        'name' => $row->table_name,
-        'columns' => $this->exportTableColumns($row->table_name),
-      ],
-      'config' => $config,
-      'col' => $instance->col,
-      'form' => $instance->form,
-    ];
-    // layout a blocchi del form (docs/refactoring/197): chiave opzionale, assente nei moduli senza layout
-    if (ModuleGeneratorLayout::isActive($instance->form_layout)) {
-      $export['form_layout'] = $instance->form_layout;
-    }
-
-    $filename = ModuleHelper::sql_name_encode($row->table_name) . '_module_export.json';
-
-    return response(json_encode($export, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, [
+    return response($export['json'], 200, [
       'Content-Type' => 'application/json',
-      'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+      'Content-Disposition' => 'attachment; filename="' . $export['filename'] . '"',
     ]);
   }
 
@@ -2188,315 +2139,22 @@ class ModulsController extends CBController
     }
 
     if (!Request::hasFile('json_file') || !Request::file('json_file')->isValid()) {
-      return redirect()->back()->with(['message' => 'Seleziona un file JSON valido', 'message_type' => 'warning']);
+      return redirect()->back()->with(['message' => trans('crudbooster.module_import_invalid_file'), 'message_type' => 'warning']);
     }
 
     $file = Request::file('json_file');
 
     if (strtolower($file->getClientOriginalExtension()) !== 'json') {
-      return redirect()->back()->with(['message' => 'Il file deve avere estensione .json', 'message_type' => 'warning']);
+      return redirect()->back()->with(['message' => trans('crudbooster.module_import_bad_extension'), 'message_type' => 'warning']);
     }
 
-    $data = json_decode(file_get_contents($file->getRealPath()), true);
-
-    if (json_last_error() !== JSON_ERROR_NONE || !is_array($data) || empty($data['module']['name']) || empty($data['table']['name'])) {
-      return redirect()->back()->with(['message' => 'File JSON non valido o incompleto', 'message_type' => 'danger']);
-    }
-
-    $name = $data['module']['name'];
-    $icon = $data['module']['icon'] ?? 'bi bi-box';
-    $table_name = ModuleHelper::sql_name_encode($data['table']['name']);
-
-    if (DB::table('cms_moduls')->where('name', $name)->whereNull('deleted_at')->count()) {
-      return redirect()->back()->with(['message' => "Esiste gia' un modulo chiamato \"{$name}\"", 'message_type' => 'warning']);
-    }
-
-    // stesso divieto di save_table() sulle tabelle riservate del framework
-    if (substr($table_name, 0, strlen(config('app.reserved_tables_prefix'))) === config('app.reserved_tables_prefix')) {
-      return redirect()->back()->with(['message' => 'Nome tabella riservato, non importabile', 'message_type' => 'danger']);
-    }
-
-    if (DB::table('cms_moduls')->where('table_name', $table_name)->whereNull('deleted_at')->count()) {
-      return redirect()->back()->with(['message' => "La tabella \"{$table_name}\" e' gia' usata da un altro modulo", 'message_type' => 'warning']);
-    }
-
-    if (!Schema::hasTable($table_name)) {
-      $columns = $data['table']['columns'] ?? [];
-
-      if (empty($columns)) {
-        return redirect()->back()->with(['message' => 'Il file JSON non contiene colonne per creare la tabella', 'message_type' => 'danger']);
-      }
-
-      $this->createImportedTable($table_name, $columns);
-    }
-
-    $controller = CRUDBooster::generateController($table_name, $name);
-
-    $id = DB::table('cms_moduls')->max('id') + 1;
-    DB::table('cms_moduls')->insert([
-      'id' => $id,
-      'name' => $name,
-      'icon' => $icon,
-      'path' => $table_name,
-      'table_name' => $table_name,
-      'controller' => $controller,
-      'is_protected' => 0,
-      'is_active' => 1,
-      'created_at' => now(),
-    ]);
-
-    $this->writeImportedColumns($controller, $data['col'] ?? []);
-    $this->writeImportedForm($controller, $data['form'] ?? []);
-    $this->writeImportedLayout($controller, $data['form_layout'] ?? null, $data['form'] ?? []);
-    $this->writeImportedConfig($controller, $table_name, $data['config'] ?? []);
-
-    return CRUDBooster::redirect(CRUDBooster::mainpath(), "Modulo \"{$name}\" importato con successo", 'success');
-  }
-
-  // Colonne della tabella per l'export, con gli stessi tipi del generatore
-  // (text/number/boolean + plaintext/longtext/decimal/date/datetime/time, vedi
-  // ModuleGeneratorFields::SQL_BY_TYPE). getTableStructure() li riduce a
-  // text/number/boolean, quindi non va bene per ricreare la tabella fedelmente.
-  // I file esportati prima di questa modifica hanno solo i tre tipi base: l'import
-  // li gestisce ancora.
-  private function exportTableColumns($table_name)
-  {
-    $reserved = config('app.reserved_column_names');
-    $out = [];
-
-    foreach (CRUDBooster::getTableStructure($table_name, 'verbose') as $c) {
-      if (in_array($c['COLUMN_NAME'], $reserved)) {
-        continue;
-      }
-
-      $entry = ['name' => $c['COLUMN_NAME']];
-      switch ($c['DATA_TYPE']) {
-        case 'int':
-          $entry['type'] = 'number';
-          $entry['size'] = preg_match('/^int\((\d+)\)/', $c['COLUMN_TYPE'], $m) ? (int) $m[1] : null;
-          break;
-        case 'tinyint':
-          $entry['type'] = 'boolean';
-          $entry['size'] = 1;
-          break;
-        case 'text':
-        case 'mediumtext':
-          $entry['type'] = 'plaintext';
-          break;
-        case 'longtext':
-          $entry['type'] = 'longtext';
-          break;
-        case 'decimal':
-          $entry['type'] = 'decimal';
-          $entry['size'] = $c['NUMERIC_PRECISION'] . ',' . $c['NUMERIC_SCALE'];
-          break;
-        case 'date':
-          $entry['type'] = 'date';
-          break;
-        case 'datetime':
-        case 'timestamp':
-          $entry['type'] = 'datetime';
-          break;
-        case 'time':
-          $entry['type'] = 'time';
-          break;
-        case 'varchar':
-          $entry['type'] = 'text';
-          $entry['size'] = $c['CHARACTER_MAXIMUM_LENGTH'];
-          break;
-        default:
-          $entry['type'] = 'text';
-          break;
-      }
-      $out[] = $entry;
-    }
-
-    return $out;
-  }
-
-  // Crea la tabella per un modulo importato: stesse colonne "di cornice"
-  // (id/group/tenant/created_at/created_by/updated_at/updated_by/deleted_at/
-  // deleted_by) aggiunte da save_table() quando crea una tabella nuova dal
-  // wizard - vedi save_table() sopra. Duplicato intenzionalmente invece di
-  // richiamare save_table() (pensata per leggere da $_POST del wizard, non
-  // da un array gia' pronto) per non rischiare di alterare il comportamento
-  // del wizard esistente.
-  private function createImportedTable($table_name, array $columns)
-  {
-    Schema::create($table_name, function (Blueprint $table) use ($columns) {
-      foreach ($columns as $col) {
-        if (empty($col['name'])) {
-          continue;
-        }
-
-        $columnname = ModuleHelper::sql_name_encode($col['name']);
-        $size = $col['size'] ?? null;
-
-        switch ($col['type'] ?? 'text') {
-          case 'number':
-            $table->integer($columnname)->length($size ?: 11)->nullable();
-            break;
-          case 'boolean':
-            $table->boolean($columnname)->nullable();
-            break;
-          case 'plaintext':
-            $table->text($columnname)->nullable();
-            break;
-          case 'longtext':
-            $table->longText($columnname)->nullable();
-            break;
-          case 'decimal':
-            $ps = array_pad(explode(',', (string) $size), 2, null);
-            $table->decimal($columnname, (int) ($ps[0] ?: 12), (int) ($ps[1] ?: 2))->nullable();
-            break;
-          case 'date':
-            $table->date($columnname)->nullable();
-            break;
-          case 'datetime':
-            $table->dateTime($columnname)->nullable();
-            break;
-          case 'time':
-            $table->time($columnname)->nullable();
-            break;
-          default:
-            $table->string($columnname, $size ?: 255)->nullable();
-            break;
-        }
-      }
-
-      $table->increments('id');
-      $table->unsignedInteger('group')->nullable();
-      $table->unsignedInteger('tenant')->nullable();
-      $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-      $table->unsignedInteger('created_by')->nullable();
-      $table->dateTime('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
-      $table->unsignedInteger('updated_by')->nullable();
-      $table->dateTime('deleted_at')->nullable();
-      $table->unsignedInteger('deleted_by')->nullable();
-    });
-  }
-
-  // Sostituisce il contenuto tra due marcatori "# START ... # END" nel
-  // controller generato, stesso schema usato da postStep3()/postStep4()/
-  // postStep5() per riscrivere i rispettivi blocchi.
-  private function replaceControllerBlock($controller, $start_marker, $end_marker, $body)
-  {
-    $path = CRUDBooster::customControllersPath() . '/' . $controller . '.php';
-    $raw = explode($start_marker, file_get_contents($path));
-    $rraw = explode($end_marker, $raw[1]);
-
-    $file_controller = trim($raw[0]) . "\n\n";
-    $file_controller .= "\t\t\t{$start_marker}\n";
-    $file_controller .= $body . "\n";
-    $file_controller .= "\t\t\t{$end_marker}\n\n";
-    $file_controller .= "\t\t\t" . trim($rraw[1]);
-
-    file_put_contents($path, $file_controller);
-  }
-
-  // Scrive il blocco colonne ($this->col[]) da un array importato. Stessa
-  // whitelist di chiavi che postStep3() sa scrivere - non e' un confine di
-  // sicurezza (min_var_export() esclude gia' qualunque interpolazione
-  // grezza, stesso fix di docs/refactoring/068), solo coerenza con cio' che
-  // il wizard stesso genera.
-  private function writeImportedColumns($controller, array $columns)
-  {
-    // Stesse chiavi che il passo Lista del wizard (ModuleGeneratorList) puo' scrivere.
-    $allowed_keys = [
-      'label', 'name', 'join', 'join_where', 'join_id', 'image', 'download', 'width', 'col_width',
-      'str_limit', 'format', 'badge', 'currency', 'decimals', 'calc', 'nl2br', 'color', 'style',
-      'callback', 'callback_php', 'query', 'visible',
-    ];
-    $script_cols = ["\t\t\t" . '$this->col = [];'];
-
-    foreach ($columns as $col) {
-      if (empty($col['name']) || !isset($col['label'])) {
-        continue;
-      }
-
-      $filtered = array_intersect_key($col, array_flip($allowed_keys));
-      $script_cols[] = "\t\t\t" . '$this->col[] = ' . min_var_export($filtered) . ';';
-    }
-
-    $this->replaceControllerBlock(
-      $controller,
-      '# START COLUMNS DO NOT REMOVE THIS LINE',
-      '# END COLUMNS DO NOT REMOVE THIS LINE',
-      implode("\n", $script_cols)
-    );
-  }
-
-  // Scrive il blocco form ($this->form[]) da un array importato. Stessa
-  // whitelist minima di postStep4() (label/name obbligatori), il resto
-  // delle chiavi passa cosi' com'e' - stesso motivo di sicurezza di sopra:
-  // min_var_export() e' la protezione reale, la whitelist e' solo pulizia.
-  private function writeImportedForm($controller, array $fields)
-  {
-    $script_form = ["\t\t\t" . '$this->form = [];'];
-
-    foreach ($fields as $field) {
-      if (empty($field['label']) || empty($field['name'])) {
-        continue;
-      }
-
-      $script_form[] = "\t\t\t" . '$this->form[] = ' . min_var_export($field) . ';';
-    }
-
-    $this->replaceControllerBlock(
-      $controller,
-      '# START FORM DO NOT REMOVE THIS LINE',
-      '# END FORM DO NOT REMOVE THIS LINE',
-      implode("\n", $script_form)
-    );
-  }
-
-  // Scrive il blocco FORM LAYOUT di un modulo importato (se il JSON lo
-  // contiene), dopo averlo ripulito con la stessa validazione del wizard:
-  // nomi che esistono nel form importato, posizioni nella griglia. Un layout
-  // non valido si scarta (il modulo resta con il form piatto).
-  private function writeImportedLayout($controller, $layout, array $form)
-  {
-    if (!is_array($layout)) {
-      return;
-    }
     try {
-      $clean = ModuleGeneratorLayout::build($layout, $this->layoutPlaceableFields($form));
-    } catch (\InvalidArgumentException $e) {
-      return;
-    }
-    $path = CRUDBooster::customControllersPath() . '/' . $controller . '.php';
-    file_put_contents($path, ModuleGeneratorLayout::replaceLayoutBlock(file_get_contents($path), $clean));
-  }
-
-  // Scrive il blocco configurazione, stessa whitelist di chiavi di
-  // postStep5() (l'unica differenza: qui non c'e' un $post da cui leggere,
-  // i valori arrivano gia' pronti dal JSON importato).
-  private function writeImportedConfig($controller, $table_name, array $config)
-  {
-    $allowed_keys = [
-      'title_field', 'limit', 'orderby', 'global_privilege',
-      'button_table_action', 'button_bulk_action', 'button_action_style',
-      'button_add', 'button_edit', 'button_delete', 'button_detail',
-      'button_filter', 'button_import', 'button_export',
-    ];
-
-    $script_config = ["\t\t\t" . '$this->table = ' . var_export($table_name, true) . ';'];
-
-    foreach ($allowed_keys as $key) {
-      if (!array_key_exists($key, $config)) {
-        continue;
-      }
-
-      $value = $config[$key];
-      $script_config[] = "\t\t\t" . '$this->' . $key . ' = ' . var_export($value, true) . ';';
+      $name = (new ModuleImporter())->import(file_get_contents($file->getRealPath()));
+    } catch (ModuleTransferException $e) {
+      return redirect()->back()->with(['message' => $e->getMessage(), 'message_type' => $e->type()]);
     }
 
-    $this->replaceControllerBlock(
-      $controller,
-      '# START CONFIGURATION DO NOT REMOVE THIS LINE',
-      '# END CONFIGURATION DO NOT REMOVE THIS LINE',
-      implode("\n", $script_config)
-    );
+    return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.module_import_success', ['name' => $name]), 'success');
   }
 
   public function postAddSave()

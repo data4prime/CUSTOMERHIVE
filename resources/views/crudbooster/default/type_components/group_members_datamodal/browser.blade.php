@@ -2,7 +2,7 @@
 
 <?php
 //array dei tenant id del gruppo di cui sto modificando i membri
-$group_tenants = \App\GroupTenants::where('group_id',Request::get('select_to'))->pluck('tenant_id')->all();
+$group_tenants = \App\Models\GroupTenants::where('group_id',Request::get('select_to'))->pluck('tenant_id')->all();
 
 //bypass CBController getModalData per custom query
 $result = DB::table('cms_users')

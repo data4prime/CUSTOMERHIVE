@@ -33,7 +33,7 @@ foreach($forms as $index=>$form) {
   if($name == 'public_access') {
     if($is_public){
       $checked = "checked";
-      $qlik_item = App\QlikItem::find($row->id);
+      $qlik_item = App\Models\QlikItem::find($row->id);
       $link = $qlik_item->publicUrl();
     }
     else{

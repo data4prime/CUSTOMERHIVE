@@ -3,7 +3,7 @@
 namespace App\Console\Commands\Concerns;
 
 use App\Helpers\CRUDBooster;
-use App\User;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Password;
 

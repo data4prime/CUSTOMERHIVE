@@ -1259,7 +1259,7 @@ class StatisticBuilderController extends CBController
 
         $comp = DB::table('cms_statistic_components')->where('componentID', $componentID)->first();
         $config = $comp ? json_decode($comp->config) : null;
-        $item = ($config && !empty($config->item)) ? \App\QlikItem::find((int) $config->item) : null;
+        $item = ($config && !empty($config->item)) ? \App\Models\QlikItem::find((int) $config->item) : null;
         $conf = $item ? HelpersQlikHelper::getConfFromItem($item->id) : null;
 
         if (!$item || !$conf || $conf->auth !== 'JWT') {

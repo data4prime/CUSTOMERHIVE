@@ -1,0 +1,163 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Array has 2 duplicate keys with value ''table'' \("table", "table"\)\.$#'
+			identifier: array.duplicateKey
+			count: 1
+			path: app/Helpers/CRUDBooster.php
+
+		-
+			message: '#^Instantiated class App\\Helpers\\Exception not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Helpers/CRUDBooster.php
+
+		-
+			message: '#^Static method Illuminate\\Database\\Connection\:\:select\(\) invoked with 0 parameters, 1\-4 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: app/Helpers/CRUDBooster.php
+
+		-
+			message: '#^Undefined variable\: \$id$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Helpers/CRUDBooster.php
+
+		-
+			message: '#^Array has 2 duplicate keys with value ''pencil\-square'' \(''pencil\-square'', ''pencil\-square''\)\.$#'
+			identifier: array.duplicateKey
+			count: 1
+			path: app/Helpers/IconMap.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 6
+			path: app/Helpers/LicenseHelper.php
+
+		-
+			message: '#^Method App\\Helpers\\ModuleHelper\:\:update_enabled_tenants\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: app/Helpers/ModuleHelper.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 5
+			path: app/Http/Controllers/System/AdminController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Helpers\\QlikHelper\:\:getTicket\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/Http/Controllers/System/AdminQlikItemsController.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 1
+			path: app/Http/Controllers/System/AdminTenantsController.php
+
+		-
+			message: '#^Call to static method error\(\) on an unknown class App\\Http\\Controllers\\System\\Log\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/System/ApiController.php
+
+		-
+			message: '#^Call to static method info\(\) on an unknown class App\\Http\\Controllers\\System\\Log\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Http/Controllers/System/ApiController.php
+
+		-
+			message: '#^Undefined variable\: \$lastId$#'
+			identifier: variable.undefined
+			count: 2
+			path: app/Http/Controllers/System/ApiController.php
+
+		-
+			message: '#^Undefined variable\: \$row$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Controllers/System/ApiController.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Controllers\\System\\ApiCustomController\:\:\$button_new\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/System/ApiCustomController.php
+
+		-
+			message: '#^Undefined variable\: \$module$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Controllers/System/CBController.php
+
+		-
+			message: '#^Call to static method cache\(\) on an unknown class Image\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/System/FileController.php
+
+		-
+			message: '#^Call to function compact\(\) contains undefined variable \$cb_form\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Controllers/System/ModulsController.php
+
+		-
+			message: '#^Result of static method Illuminate\\Database\\Schema\\Builder\:\:create\(\) \(void\) is used\.$#'
+			identifier: staticMethod.void
+			count: 1
+			path: app/Http/Controllers/System/ModulsController.php
+
+		-
+			message: '#^Result of static method Illuminate\\Database\\Schema\\Builder\:\:table\(\) \(void\) is used\.$#'
+			identifier: staticMethod.void
+			count: 5
+			path: app/Http/Controllers/System/ModulsController.php
+
+		-
+			message: '#^Undefined variable\: \$cb_col$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Controllers/System/ModulsController.php
+
+		-
+			message: '#^Undefined variable\: \$columnname$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Controllers/System/ModulsController.php
+
+		-
+			message: '#^Undefined variable\: \$dynamic_column$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Controllers/System/ModulsController.php
+
+		-
+			message: '#^Undefined variable\: \$module$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Controllers/System/ModulsController.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Controllers\\System\\NotificationsController\:\:\$index_orderby\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/System/NotificationsController.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 1
+			path: app/Http/Controllers/System/QlikConfController.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Controllers\\System\\SettingsController\:\:\$index_orderby\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/System/SettingsController.php

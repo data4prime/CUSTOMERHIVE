@@ -2,8 +2,8 @@
 
 namespace App\Actions\Menus;
 
-use App\Menu;
-use App\MenuTenants;
+use App\Models\Menu;
+use App\Models\MenuTenants;
 
 class AssignDefaultMenuTenant
 {

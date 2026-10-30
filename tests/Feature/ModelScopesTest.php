@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Menu;
-use App\UsersGroup;
+use App\Models\Menu;
+use App\Models\UsersGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\Concerns\SeedsCmsData;

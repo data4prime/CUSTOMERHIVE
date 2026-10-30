@@ -10,8 +10,8 @@
         $photoInitials .= mb_strtoupper(mb_substr($w, 0, 1));
     }
     $photoInitials = $photoInitials ?: '?';
-    $currentTenant = \App\Tenant::find($row->tenant);
-    $currentGroup = \App\Group::find($row->primary_group);
+    $currentTenant = \App\Models\Tenant::find($row->tenant);
+    $currentGroup = \App\Models\Group::find($row->primary_group);
     $hasTotp = !empty($row->two_factor_confirmed_at);
 @endphp
 

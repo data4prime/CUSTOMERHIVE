@@ -2,11 +2,11 @@
 
 namespace App\Helpers;
 
-use \App\User;
-use \App\Group;
-use \App\Tenant;
-use \App\UsersGroup;
-use \App\Role;
+use \App\Models\User;
+use \App\Models\Group;
+use \App\Models\Tenant;
+use \App\Models\UsersGroup;
+use \App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\MyHelper;
 use App\Helpers\CRUDBooster;
@@ -89,7 +89,7 @@ class UserHelper
   public static function can_menu($mode, $menu_id)
   {
 
-    $menu = \App\Menu::find($menu_id);
+    $menu = \App\Models\Menu::find($menu_id);
     if (empty($menu_id) or empty($menu)) {
       return false;
     }

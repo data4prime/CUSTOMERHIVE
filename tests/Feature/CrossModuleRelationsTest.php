@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\Concerns\SeedsCmsData;
@@ -177,7 +177,7 @@ class CrossModuleRelationsTest extends TestCase
      * Deciso esplicitamente con l'utente in docs/refactoring/044 e 046-047:
      * PrivilegesController::getDelete() non controlla se la privilege e'
      * ancora assegnata a qualche utente (nessun guard "in uso"), e
-     * App\User::isSuperAdmin()/isTenantAdmin() tollerano un
+     * App\Models\User::isSuperAdmin()/isTenantAdmin() tollerano un
      * id_cms_privileges ormai orfano trattando l'utente come privo di
      * permessi speciali, senza crash.
      */

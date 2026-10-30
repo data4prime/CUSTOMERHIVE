@@ -374,6 +374,16 @@ return [
     'module_not_licensed' => 'Questa funzionalità non è inclusa nella tua licenza',
     'chatai_passphrase_help' => 'Almeno 32 caratteri. Deve coincidere con la passphrase configurata sul servizio AI che verifica il token.',
     'chatai_token_error' => 'Impossibile autenticarsi con il servizio AI: la passphrase configurata non è valida (servono almeno 32 caratteri). Chiedi a un amministratore di aggiornare la configurazione Chat AI.',
+    'chatai_request_error' => 'Errore nella richiesta. Verifica la configurazione attiva!',
+    'chatai_authorize_group' => 'Autorizza gruppo',
+    'chatai_authorize_tenant' => 'Autorizza tenant',
+    'chatai_select_element_to_add' => 'Seleziona un elemento da aggiungere...',
+    'chatai_group_description_placeholder' => 'Descrizione del gruppo',
+    'chatai_tenant_description_placeholder' => 'Descrizione del tenant',
+    'chatai_authorized_tenants' => 'Tenant autorizzati',
+    'chatai_tooltip_return' => 'Indietro',
+    'chatai_tooltip_main_module' => 'Modulo principale',
+    'chatai_invalid_request' => 'Richiesta non valida: serve un messaggio valido.',
     'denied_update' => 'Spiacente, non hai il permesso di aggiornare questi dati',
     'denied_create' => 'Spiacente, non hai il permesso di creare questi dati',
     'denied_delete' => 'Spiacente, non hai il permesso di eliminare questi dati',
@@ -1705,4 +1715,16 @@ return [
 
     // Login rifiutato dal controllo di licenza (AdminController::postLogin)
     'license_missing_or_not_valid' => 'La licenza è mancante, scaduta o non valida',
+
+    // Export/import dei moduli del Module Generator (ModuleExporter/ModuleImporter, ModulsController)
+    'module_export_not_exportable' => 'Questo modulo non e\' esportabile',
+    'module_export_controller_missing' => 'Controller del modulo non trovato sul disco',
+    'module_import_invalid_file' => 'Seleziona un file JSON valido',
+    'module_import_bad_extension' => 'Il file deve avere estensione .json',
+    'module_import_invalid_json' => 'File JSON non valido o incompleto',
+    'module_import_name_exists' => 'Esiste gia\' un modulo chiamato ":name"',
+    'module_import_reserved_table' => 'Nome tabella riservato, non importabile',
+    'module_import_table_used' => 'La tabella ":table" e\' gia\' usata da un altro modulo',
+    'module_import_no_columns' => 'Il file JSON non contiene colonne per creare la tabella',
+    'module_import_success' => 'Modulo ":name" importato con successo',
 ];

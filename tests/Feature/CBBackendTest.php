@@ -44,7 +44,7 @@ class CBBackendTest extends TestCase
         $request = $this->withSession($extraSession);
 
         if ($authenticatedUserId !== null) {
-            $request = $request->actingAs(\App\User::find($authenticatedUserId));
+            $request = $request->actingAs(\App\Models\User::find($authenticatedUserId));
         }
 
         return $request->get('http://localhost/admin');

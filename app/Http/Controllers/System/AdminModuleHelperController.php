@@ -14,10 +14,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Helpers\ChatAIHelper;
 
-use App\ChatAIConf;
-use App\ItemsAllowed;
-use App\TenantsAllowed;
-use App\Menu;
+use App\Models\ChatAIConf;
+use App\Models\Menu;
 
 use MyHelper;
 

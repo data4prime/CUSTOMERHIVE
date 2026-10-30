@@ -11,10 +11,10 @@ use CRUDBooster;
 use GroupHelper;
 use QlikHelper;
 use Illuminate\Support\Facades\Route;
-use App\QlikItem;
-use App\ItemsAllowed;
-use App\TenantsAllowed;
-use App\Menu;
+use App\Models\QlikItem;
+use App\Models\ItemsAllowed;
+use App\Models\TenantsAllowed;
+use App\Models\Menu;
 use App\Helpers\QlikHelper as HelpersQlikHelper;
 use MyHelper;
 
@@ -25,7 +25,7 @@ use App\Helpers\ModuleHelperHelper;
 use App\Helpers\LicenseHelper;
 use App\Http\Controllers\System\Concerns\HandlesQlikSyncStart;
 use App\Http\Controllers\System\Concerns\SafeRedirectTarget;
-use App\QlikSyncRun;
+use App\Models\QlikSyncRun;
 use App\Services\QlikSync\QlikSyncUi;
 
 class AdminQlikItemsController extends CBController

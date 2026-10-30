@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Helpers\CRUDBooster;
 use App\Helpers\MfaHelper;
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;

@@ -26,9 +26,11 @@
         "unisharp/laravel-filemanager": "^2.15"
     },
     "require-dev": {
+        "filp/whoops": "~2.0",
+        "larastan/larastan": "^3.13",
+        "laravel/pint": "^1.32",
         "mockery/mockery": "^1.4.4",
-        "phpunit/phpunit": "^12.0",
-        "filp/whoops": "~2.0"
+        "phpunit/phpunit": "^12.0"
     },
     "autoload": {
         "classmap": [

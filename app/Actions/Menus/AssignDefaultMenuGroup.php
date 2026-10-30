@@ -2,8 +2,8 @@
 
 namespace App\Actions\Menus;
 
-use App\Menu;
-use App\MenuGroups;
+use App\Models\Menu;
+use App\Models\MenuGroups;
 
 class AssignDefaultMenuGroup
 {

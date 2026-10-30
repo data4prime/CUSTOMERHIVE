@@ -8,7 +8,7 @@ use Cache;
 use DB;
 use Route;
 use Validator;
-use \App\UsersGroup;
+use \App\Models\UsersGroup;
 use App\Helpers\CRUDBooster;
 
 class GroupHelper  {
@@ -21,7 +21,7 @@ class GroupHelper  {
     public static function myGroups()
     {
 			$user_id = CRUDBooster::myId();
-			$groups = \App\UsersGroup::ofUser($user_id)
+			$groups = \App\Models\UsersGroup::ofUser($user_id)
 																	->pluck('group_id')
 																	->toArray();
 			return $groups;

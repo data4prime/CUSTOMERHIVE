@@ -3,9 +3,9 @@
 namespace App\Services\QlikSync;
 
 use App\Jobs\SyncQlikRunJob;
-use App\QlikSyncRun;
-use App\QlikSyncRunRecord;
-use App\User;
+use App\Models\QlikSyncRun;
+use App\Models\QlikSyncRunRecord;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 

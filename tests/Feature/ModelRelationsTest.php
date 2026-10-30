@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Group;
-use App\Menu;
-use App\QlikItem;
-use App\User;
+use App\Models\Menu;
+use App\Models\Group;
+use App\Models\User;
+use App\Models\QlikItem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\Concerns\SeedsCmsData;

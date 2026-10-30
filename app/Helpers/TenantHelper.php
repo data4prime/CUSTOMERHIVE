@@ -1,10 +1,9 @@
 <?php
 namespace App\Helpers;
 
-use \App\Tenant;
-use \App\Modules;
-use \App\ModuleTenants;
-use \App\Role;
+use \App\Models\Tenant;
+use \App\Models\ModuleTenants;
+use \App\Models\Role;
 use DB;
 use App\Helpers\CRUDBooster;
 use App\Helpers\ModuleHelper;

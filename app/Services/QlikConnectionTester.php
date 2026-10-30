@@ -42,7 +42,7 @@ class QlikConnectionTester
      * @param  array  $input  valori della configurazione (come nel form): type, auth, url, endpoint, keyid, issuer, web_int_id, private_key (path salvato)
      * @param  string|null  $uploadedKey  contenuto di una chiave appena caricata nel form (non ancora salvata)
      * @param  object|null  $savedConf  riga di qlik_confs se la configurazione esiste gia'
-     * @param  object|null  $user  utente corrente (\App\User)
+     * @param  object|null  $user  utente corrente (\App\Models\User)
      * @return array {ok, summary, steps[]}
      */
     public function run(array $input, $uploadedKey, $savedConf, $user): array
@@ -548,8 +548,6 @@ class QlikConnectionTester
             }
             $this->addStep('api', $me['status'], $me['t0'], $me['details'], $me['hints']);
         }
-
-        curl_close($curl);
     }
 
     /**
@@ -567,7 +565,6 @@ class QlikConnectionTester
 
         $curl = curl_init();
         $r = $this->httpStep($curl, 'qrs', 'GET', $url, $headers);
-        curl_close($curl);
 
         $decoded = json_decode($r['body'], true);
         if ($r['status'] === 'ok' && is_array($decoded)) {

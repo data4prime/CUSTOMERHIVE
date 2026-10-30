@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Group;
 use App\Helpers\UserHelper;
-use App\Tenant;
-use App\User;
+use App\Models\Group;
+use App\Models\Tenant;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\Concerns\SeedsCmsData;

@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use App\User;
+use App\Models\User;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;

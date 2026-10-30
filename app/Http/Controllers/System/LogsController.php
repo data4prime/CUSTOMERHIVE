@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Session;
 use \App\Helpers\UserHelper;
 use \App\Helpers\ModuleHelper;
 use \App\Helpers\CRUDBooster;
-use \App\User;
+use \App\Models\User;
 
 class LogsController extends CBController
 {

@@ -117,7 +117,7 @@ function add_log_ch($category, $description, $type='log')
 {
   //evito errore di scrittura in DB se la descrizione supera i limiti di SQL TEXT
   $description = substr(trim(addslashes($description)), 0, 65000);
-  $log = new App\Log;
+  $log = new App\Models\Log;
 	$log->created_at = date('Y-m-d H:i:s');
 	$log->created_by = CRUDBooster::myId();
 	// REMOTE_ADDR/HTTP_USER_AGENT possono mancare (es. richieste simulate

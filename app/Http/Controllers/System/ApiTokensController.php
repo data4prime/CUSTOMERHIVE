@@ -6,10 +6,9 @@ use crocodicstudio\crudbooster\controllers\CBController;
 
 use CRUDBooster;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Carbon;
-use App\User;
+use App\Actions\ApiTokens\GenerateApiToken;
+use App\Http\Requests\ApiTokens\StoreApiTokenRequest;
+use App\Models\User;
 
 /**
  * Gestione dei token Sanctum del binario api2 (vedi docs/refactoring/086 e
@@ -109,37 +108,22 @@ class ApiTokensController extends CBController
     {
         $this->cbLoader();
 
-        if (!CRUDBooster::isCreate() && $this->global_privilege == false) {
-            return CRUDBooster::redirect(CRUDBooster::mainpath(), trans('crudbooster.denied_access'));
-        }
+        // Permesso `create` e validazione, in quest'ordine: vedi
+        // StoreApiTokenRequest (il Form Request non puo' stare nella firma).
+        $data = StoreApiTokenRequest::validateCurrent()->validated();
 
-        $validator = Validator::make(Request::all(), [
-            'tokenable_id' => 'required|integer|exists:cms_users,id',
-            'name' => 'required|string|max:255',
-            'expiry_choice' => 'required|in:30,90,365,never,custom',
-            'expiry_custom_date' => 'required_if:expiry_choice,custom|nullable|date|after:today',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $user = User::find(Request::input('tokenable_id'));
+        $user = User::find($data['tokenable_id']);
         if (!$user) {
             return redirect()->back()->withErrors(['tokenable_id' => trans('crudbooster.api_tokens_invalid_user')])->withInput();
         }
 
-        $expiryChoice = Request::input('expiry_choice');
-        $expiresAt = match ($expiryChoice) {
-            '30' => now()->addDays(30),
-            '90' => now()->addDays(90),
-            '365' => now()->addDays(365),
-            'custom' => Carbon::parse(Request::input('expiry_custom_date'))->endOfDay(),
-            default => null,
-        };
-
-        $tokenName = Request::input('name');
-        $token = $user->createToken($tokenName, ['*'], $expiresAt);
+        $tokenName = $data['name'];
+        $token = (new GenerateApiToken())->handle(
+            $user,
+            $tokenName,
+            $data['expiry_choice'],
+            $data['expiry_custom_date'] ?? null
+        );
 
         CRUDBooster::insertLog(trans('crudbooster.api_tokens_log_generated', ['name' => $tokenName, 'user' => $user->name]));
 

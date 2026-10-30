@@ -367,6 +367,16 @@ return [
     'module_not_licensed' => 'This feature is not included in your license',
     'chatai_passphrase_help' => 'At least 32 characters. It must match the passphrase configured on the AI service that verifies the token.',
     'chatai_token_error' => 'Unable to authenticate with the AI service: the configured passphrase is not valid (at least 32 characters are required). Ask an administrator to update the Chat AI configuration.',
+    'chatai_request_error' => 'Request failed. Check the active configuration!',
+    'chatai_authorize_group' => 'Authorize Group',
+    'chatai_authorize_tenant' => 'Authorize Tenant',
+    'chatai_select_element_to_add' => 'Select an element to add...',
+    'chatai_group_description_placeholder' => 'Group description',
+    'chatai_tenant_description_placeholder' => 'Tenant description',
+    'chatai_authorized_tenants' => 'Authorized Tenants',
+    'chatai_tooltip_return' => 'Return',
+    'chatai_tooltip_main_module' => 'Main Module',
+    'chatai_invalid_request' => 'Invalid request: a valid message is required.',
     'denied_update' => 'Sorry, you are not allowed to update this data',
     'denied_create' => 'Sorry, you are not allowed to create this data',
     'denied_delete' => 'Sorry, you are not allowed to delete this data',
@@ -1712,4 +1722,16 @@ return [
 
     // Login rifiutato dal controllo di licenza (AdminController::postLogin)
     'license_missing_or_not_valid' => 'License is missing, expired or not valid',
+
+    // Module Generator module export/import (ModuleExporter/ModuleImporter, ModulsController)
+    'module_export_not_exportable' => 'This module cannot be exported',
+    'module_export_controller_missing' => 'Module controller not found on disk',
+    'module_import_invalid_file' => 'Select a valid JSON file',
+    'module_import_bad_extension' => 'The file must have a .json extension',
+    'module_import_invalid_json' => 'Invalid or incomplete JSON file',
+    'module_import_name_exists' => 'A module named ":name" already exists',
+    'module_import_reserved_table' => 'Reserved table name, cannot be imported',
+    'module_import_table_used' => 'The table ":table" is already used by another module',
+    'module_import_no_columns' => 'The JSON file contains no columns to create the table',
+    'module_import_success' => 'Module ":name" imported successfully',
 ];

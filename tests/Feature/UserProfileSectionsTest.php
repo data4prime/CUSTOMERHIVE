@@ -359,7 +359,7 @@ class UserProfileSectionsTest extends TestCase
         // actingAs() tiene in memoria il modello caricato prima dell'update
         // (session_version = 0): ricaricarlo, come fa il guard a ogni
         // richiesta reale.
-        $this->actingAs(\App\User::find($actor['userId']));
+        $this->actingAs(\App\Models\User::find($actor['userId']));
 
         // La sessione del test non ha 'admin_session_version' (= 0): e'
         // rimasta indietro rispetto al DB, come un'altra sessione aperta

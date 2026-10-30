@@ -5,8 +5,8 @@ namespace App\Http\Controllers\System;
 use crocodicstudio\crudbooster\controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\QlikItem;
-use App\Menu;
+use App\Models\QlikItem;
+use App\Models\Menu;
 
 use App\Helpers\QlikHelper;
 use App\Helpers\QlikHelper as HelpersQlikHelper;

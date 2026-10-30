@@ -16,9 +16,8 @@ use App\Helpers\Fontawesome;
 use \App\Helpers\UserHelper;
 use \App\Helpers\MenuHelper;
 use \App\Helpers\LicenseHelper;
-use \App\Menu;
+use \App\Models\Menu;
 use App\Actions\Menus\AssignDefaultMenuTenant;
-use \App\MenuTenants;
 
 
 class MenusController extends CBController

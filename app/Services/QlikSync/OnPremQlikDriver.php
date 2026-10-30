@@ -37,11 +37,7 @@ class OnPremQlikDriver extends AbstractQlikDriver
         ];
 
         $curl = curl_init();
-        try {
-            $response = $this->request($curl, 'GET', $url, $headers);
-        } finally {
-            curl_close($curl);
-        }
+        $response = $this->request($curl, 'GET', $url, $headers);
 
         return $this->decode($response, 'qrs/'.$path);
     }

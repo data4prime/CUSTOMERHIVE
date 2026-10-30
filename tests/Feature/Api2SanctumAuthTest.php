@@ -39,7 +39,7 @@ class Api2SanctumAuthTest extends TestCase
         });
     }
 
-    private function seedNormalUser(array $overrides = []): \App\User
+    private function seedNormalUser(array $overrides = []): \App\Models\User
     {
         $tenantId = $this->seedTenant();
         $privilegeId = $this->seedPrivilege();
@@ -48,7 +48,7 @@ class Api2SanctumAuthTest extends TestCase
             'id_cms_privileges' => $privilegeId,
         ], $overrides));
 
-        return \App\User::find($data['id']);
+        return \App\Models\User::find($data['id']);
     }
 
     public function test_api2_senza_token_viene_rifiutato(): void

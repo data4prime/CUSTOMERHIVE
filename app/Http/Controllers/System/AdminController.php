@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
-use \App\Tenant;
-use \App\Modules;
-use \App\QlikItem;
-use \App\Group;
-use \App\AccessLog;
+use \App\Models\Tenant;
+use \App\Models\Modules;
+use \App\Models\QlikItem;
+use \App\Models\Group;
+use \App\Models\AccessLog;
 use App\Helpers\UserHelper;
 
 use App\Helpers\LicenseHelper;
@@ -389,7 +389,7 @@ $tenant_domain_name = env('APP_DOMAIN');
       // e 097-*): controllato PRIMA di popolare qualunque sessione/guard,
       // cosi' un utente con MFA attivo non risulta mai loggato (ne' sulla
       // sessione legacy ne' su Auth::) finche' non ha superato la verifica.
-      $userModelForMfa = \App\User::find($users->id);
+      $userModelForMfa = \App\Models\User::find($users->id);
 
       if ($userModelForMfa) {
         // Applica in modo lazy un'eventuale recovery gia' scaduta (Fase 3,
@@ -461,12 +461,12 @@ $tenant_domain_name = env('APP_DOMAIN');
       Session::put("appname", CRUDBooster::getSetting('appname'));
 
       // Aggiuntivo, non sostituisce niente sopra: popola anche il guard
-      // Laravel standard (config/auth.php: guard 'web' -> App\User, gia'
+      // Laravel standard (config/auth.php: guard 'web' -> App\Models\User, gia'
       // mappato su cms_users) in vista della migrazione dell'auth verso i
       // guard nativi. Il codice esistente continua a leggere le chiavi di
       // sessione admin_* esattamente come prima - vedi
       // docs/refactoring/README.md per il piano.
-      $userModel = \App\User::find($users->id);
+      $userModel = \App\Models\User::find($users->id);
       if ($userModel) {
           Auth::login($userModel);
       }
@@ -536,7 +536,7 @@ $tenant_domain_name = env('APP_DOMAIN');
 
       $method = Session::get('mfa_pending_method');
       $code = trim((string) Request::input('code'));
-      $userModel = \App\User::find($pendingUserId);
+      $userModel = \App\Models\User::find($pendingUserId);
 
       if (! $userModel) {
           Session::forget(['mfa_pending_user_id', 'mfa_pending_method']);
@@ -594,7 +594,7 @@ $tenant_domain_name = env('APP_DOMAIN');
 
       RateLimiter::hit($rateLimitKey, 60);
 
-      $userModel = \App\User::find($pendingUserId);
+      $userModel = \App\Models\User::find($pendingUserId);
       $sent = $userModel && MfaHelper::sendEmailOtp($userModel);
 
       if (! $sent) {
@@ -639,7 +639,7 @@ $tenant_domain_name = env('APP_DOMAIN');
 
       RateLimiter::hit($rateLimitKey, 3600);
 
-      $user = \App\User::where('email', $email)->first();
+      $user = \App\Models\User::where('email', $email)->first();
 
       // Stesso messaggio generico a prescindere dal fatto che l'account
       // esista o abbia l'MFA attivo (decisione presa in sessione): non
@@ -715,7 +715,7 @@ $tenant_domain_name = env('APP_DOMAIN');
       if ($row && ! $row->cancelled_at && ! $row->completed_at) {
           MfaHelper::cancelRecoveryRequest($row);
 
-          $user = \App\User::find($row->user_id);
+          $user = \App\Models\User::find($row->user_id);
           if ($user) {
               CRUDBooster::insertLog(trans('crudbooster.log_mfa_recovery_cancelled', ['email' => $user->email]));
           }

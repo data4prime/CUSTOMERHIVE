@@ -639,7 +639,7 @@ JS;
 
 		$input = Request::only(['type', 'auth', 'url', 'port', 'endpoint', 'keyid', 'issuer', 'web_int_id']);
 
-		$report = (new \App\Services\QlikConnectionTester())->run($input, $uploadedKey, $savedConf, \App\User::find(CRUDBooster::myId()));
+		$report = (new \App\Services\QlikConnectionTester())->run($input, $uploadedKey, $savedConf, \App\Models\User::find(CRUDBooster::myId()));
 
 		return response()->json($report);
 	}

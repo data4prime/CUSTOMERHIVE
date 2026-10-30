@@ -5,21 +5,27 @@ namespace App\Http\Controllers\System;
 use crocodicstudio\crudbooster\controllers\CBController;
 
 use Session;
-use Request;
 use DB;
 use CRUDBooster;
-use GroupHelper;
 
 use Illuminate\Support\Facades\Route;
 
 use App\Helpers\ChatAIHelper;
 use App\Helpers\LicenseHelper;
 
-use App\ChatAIConf;
-use App\ChatAIGroupAllowed;
-use App\ChatAITenantAllowed;
+use App\Actions\ChatAI\AllowGroupForChatAI;
+use App\Actions\ChatAI\AllowTenantForChatAI;
+use App\Actions\ChatAI\RevokeGroupForChatAI;
+use App\Actions\ChatAI\RevokeTenantForChatAI;
+use App\Actions\ChatAI\SetPrimaryChatAIConf;
+use App\Models\ChatAIConf;
+use App\Models\ChatAIGroupAllowed;
+use App\Models\ChatAITenantAllowed;
 use App\Http\Controllers\System\Concerns\SafeRedirectTarget;
-use App\Menu;
+use App\Http\Requests\ChatAI\SendAgentMessageRequest;
+use App\Http\Requests\ChatAI\SendChatMessageRequest;
+use App\Models\Menu;
+use App\Services\ChatAI\ChatAIClient;
 
 use MyHelper;
 
@@ -290,15 +296,16 @@ class AdminChatAIController extends CBController
 	    */
 	public function hook_before_add(&$postdata)
 	{
-		if ($postdata['primary'] == "primary") {
+		$this->normalizePrimary($postdata);
+	}
 
-			$postdata['primary'] = 1;
-
-		} else {
-
-			$postdata['primary'] = 0;
-
-		}
+	/**
+	 * Checkbox "primary": il form invia la stringa "primary", il DB vuole 1/0.
+	 * Privato: ogni metodo pubblico di un controller CB diventa una rotta.
+	 */
+	private function normalizePrimary(array &$postdata): void
+	{
+		$postdata['primary'] = $postdata['primary'] == "primary" ? 1 : 0;
 	}
 
 	/*
@@ -310,20 +317,11 @@ class AdminChatAIController extends CBController
 	    */
 	public function hook_after_add($id)
 	{
-		//Your code here
-
-
 		//get record with id = $id
 		$record = ChatAIConf::find($id);
 
-		//if primary = 1
-		if ($record->primary == 1) {
-			//edit all configuration, set primary to 0
-			ChatAIConf::where('id', '!=', $id)
-				->update(['primary' => 0]);
-		}
-
-
+		//se primary = 1 azzera le altre configurazioni
+		(new SetPrimaryChatAIConf())->handle($record);
 	}
 
 	/*
@@ -337,18 +335,7 @@ class AdminChatAIController extends CBController
 	public function hook_before_edit(&$postdata, $id)
 	{
 
-		//dd($postdata);
-
-		if ($postdata['primary'] == "primary") {
-
-			$postdata['primary'] = 1;
-
-		} else {
-
-			$postdata['primary'] = 0;
-
-		}
-
+		$this->normalizePrimary($postdata);
 
 	}
 
@@ -361,20 +348,11 @@ class AdminChatAIController extends CBController
 	    */
 	public function hook_after_edit($id)
 	{
-		//Your code here
-
 		//get record with id = $id
 		$record = ChatAIConf::find($id);
 
-		//if primary = 1
-		if ($record->primary == 1) {
-			//edit all configuration, set primary to 0
-			ChatAIConf::where('id', '!=', $id)
-				->update(['primary' => 0]);
-		}
-
-
-
+		//se primary = 1 azzera le altre configurazioni
+		(new SetPrimaryChatAIConf())->handle($record);
 	}
 
 	/*
@@ -412,31 +390,16 @@ class AdminChatAIController extends CBController
 		if (!CRUDBooster::isSuperadmin()) {
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
-		$data['item_id'] = $item_id;
-		$data['chat_ai'] = ChatAIConf::find($item_id);
-		$data['groups'] = DB::table('chatai_groups_allowed')
-			->where('chatai_groups_allowed.chatai_conf_id', $item_id)
-			->join('groups', 'groups.id', '=', 'chatai_groups_allowed.group_id')
-			->select('groups.*')
-			->get();
-		$data['page_title'] = 'Authorize Group';
-
-		//prendo $_GET &alert=
-		if (!empty($alert_id)) {
-			//se è alert=1
-			if ($alert_id == '1') {
-				//mostra messaggio di warning per tasto add premuto senza valori required
-				$data['alerts'][] = ['message' => '<h4><i class="icon bi bi-exclamation-triangle-fill"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
-			}
-		}
-		//add group form
-		$data['forms'] = [];
-		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'item_access_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'groups', 'datamodal_where' => '', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $item_id, 'datamodal_allowed_scope' => 'chatai', 'required' => true];
-		$data['forms'][] = ['label' => 'Description', 'name' => 'description', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-6', 'placeholder' => 'Group description', 'readonly' => true];
-		$data['action'] = CRUDBooster::mainpath($item_id . "/auth");
-		$data['return_url'] = CRUDBooster::mainpath('access/' . $item_id);
-		$data['command'] = 'add';
-		$data['button_addmore'] = false;
+		$data = $this->authorizationPageData($item_id, $alert_id, [
+			'pivot' => 'chatai_groups_allowed',
+			'entity' => 'groups',
+			'foreignKey' => 'group_id',
+			'fieldType' => 'item_access_datamodal',
+			'titleKey' => 'chatai_authorize_group',
+			'placeholderKey' => 'chatai_group_description_placeholder',
+			'actionPath' => '/auth',
+			'returnPath' => 'access/',
+		]);
 
 		$this->cbView('chat_ai.access', $data);
 	}
@@ -448,34 +411,58 @@ class AdminChatAIController extends CBController
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
+		$data = $this->authorizationPageData($item_id, $alert_id, [
+			'pivot' => 'chatai_tenants_allowed',
+			'entity' => 'tenants',
+			'foreignKey' => 'tenant_id',
+			'fieldType' => 'item_tenant_datamodal',
+			'titleKey' => 'chatai_authorize_tenant',
+			'placeholderKey' => 'chatai_tenant_description_placeholder',
+			'actionPath' => '/add_tenant',
+			'returnPath' => 'tenant/',
+		]);
+
+		$this->cbView('chat_ai.tenant', $data);
+	}
+
+	/**
+	 * Dati comuni delle pagine access() e tenant(): elenco gia' autorizzato,
+	 * eventuale alert e form di aggiunta. La chiave dell'elenco ('groups' /
+	 * 'tenants') coincide con la tabella, come si aspettano le viste. Privato:
+	 * ogni metodo pubblico di un controller CB diventa una rotta. Piano 332.
+	 *
+	 * @param array{pivot:string,entity:string,foreignKey:string,fieldType:string,titleKey:string,placeholderKey:string,actionPath:string,returnPath:string} $cfg
+	 */
+	private function authorizationPageData($item_id, $alert_id, array $cfg): array
+	{
 		$data['item_id'] = $item_id;
 		$data['chat_ai'] = ChatAIConf::find($item_id);
-		$data['tenants'] = DB::table('chatai_tenants_allowed')
-			->where('chatai_tenants_allowed.chatai_conf_id', $item_id)
-			->join('tenants', 'tenants.id', '=', 'chatai_tenants_allowed.tenant_id')
-			->select('tenants.*')
+		$data[$cfg['entity']] = DB::table($cfg['pivot'])
+			->where($cfg['pivot'] . '.chatai_conf_id', $item_id)
+			->join($cfg['entity'], $cfg['entity'] . '.id', '=', $cfg['pivot'] . '.' . $cfg['foreignKey'])
+			->select($cfg['entity'] . '.*')
 			->get();
-		$data['page_title'] = 'Authorize Tenant';
+		$data['page_title'] = trans('crudbooster.' . $cfg['titleKey']);
 
 		//prendo $_GET &alert=
 		if (!empty($alert_id)) {
 			//se è alert=1
 			if ($alert_id == '1') {
 				//mostra messaggio di warning per tasto add premuto senza valori required
-				$data['alerts'][] = ['message' => '<h4><i class="icon bi bi-exclamation-triangle-fill"></i> Warning!</h4>Select an element to add...', 'type' => 'warning'];
+				$data['alerts'][] = ['message' => '<h4><i class="icon bi bi-exclamation-triangle-fill"></i> ' . trans('crudbooster.qlik_warning') . '</h4>' . trans('crudbooster.chatai_select_element_to_add'), 'type' => 'warning'];
 			}
 		}
 
-		//add tenant form
+		//form di aggiunta (gruppo o tenant)
 		$data['forms'] = [];
-		$data['forms'][] = ['label' => 'Name', 'name' => 'name', 'type' => 'item_tenant_datamodal', 'width' => 'col-sm-6', 'datamodal_table' => 'tenants', 'datamodal_where' => '', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => 'Name', 'datamodal_select_to' => $item_id, 'datamodal_allowed_scope' => 'chatai', 'required' => true];
-		$data['forms'][] = ['label' => 'Description', 'name' => 'description', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-6', 'placeholder' => 'Tenant description', 'readonly' => true];
-		$data['action'] = CRUDBooster::mainpath($item_id . "/add_tenant");
-		$data['return_url'] = CRUDBooster::mainpath('tenant/' . $item_id);
-
+		$data['forms'][] = ['label' => trans('crudbooster.name'), 'name' => 'name', 'type' => $cfg['fieldType'], 'width' => 'col-sm-6', 'datamodal_table' => $cfg['entity'], 'datamodal_where' => '', 'datamodal_columns' => 'name', 'datamodal_columns_alias' => trans('crudbooster.name'), 'datamodal_select_to' => $item_id, 'datamodal_allowed_scope' => 'chatai', 'required' => true];
+		$data['forms'][] = ['label' => trans('crudbooster.description'), 'name' => 'description', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-6', 'placeholder' => trans('crudbooster.' . $cfg['placeholderKey']), 'readonly' => true];
+		$data['action'] = CRUDBooster::mainpath($item_id . $cfg['actionPath']);
+		$data['return_url'] = CRUDBooster::mainpath($cfg['returnPath'] . $item_id);
 		$data['command'] = 'add';
 		$data['button_addmore'] = false;
-		$this->cbView('chat_ai.tenant', $data);
+
+		return $data;
 	}
 
 	public function add_tenant($item_id)
@@ -488,24 +475,16 @@ class AdminChatAIController extends CBController
 		$ref_mainpath = $this->safeRedirectTarget(request()->input('ref_mainpath'), CRUDBooster::mainpath());
 		$return_url = $this->safeRedirectTarget(request()->input('return_url'), '');
 
-		if (!MyHelper::is_int($item_id) || !ChatAIConf::find($item_id)) {
+		$conf = MyHelper::is_int($item_id) ? ChatAIConf::find($item_id) : null;
+		if (!$conf) {
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		if (empty($tenant_id) || !MyHelper::is_int($tenant_id) || !DB::table('tenants')->where('id', $tenant_id)->exists()) {
 			return redirect($return_url . '/alert/1');
 		}
-		//check if tenant is already allowed
-		$allowed = ChatAITenantAllowed::where('chatai_conf_id', $item_id)
-			->where('tenant_id', $tenant_id)
-			->count();
 
-		if ($allowed == 0) {
-			$add_tenant = new ChatAITenantAllowed;
-			$add_tenant->chatai_conf_id = $item_id;
-			$add_tenant->tenant_id = $tenant_id;
-			$add_tenant->save();
-		}
+		(new AllowTenantForChatAI())->handle($conf, $tenant_id);
 
 		//redirect
 		if (empty($return_url)) {
@@ -525,9 +504,7 @@ class AdminChatAIController extends CBController
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
-		$data['delete'] = ChatAITenantAllowed::where('chatai_conf_id', $item_id)
-			->where('tenant_id', $tenant_id)
-			->delete();
+		(new RevokeTenantForChatAI())->handle($item_id, $tenant_id);
 
 		return redirect('admin/chat_ai/tenant/' . $item_id);
 	}
@@ -543,24 +520,16 @@ class AdminChatAIController extends CBController
 		$ref_mainpath = $this->safeRedirectTarget(request()->input('ref_mainpath'), CRUDBooster::mainpath());
 		$return_url = $this->safeRedirectTarget(request()->input('return_url'), '');
 
-		if (!MyHelper::is_int($item_id) || !ChatAIConf::find($item_id)) {
+		$conf = MyHelper::is_int($item_id) ? ChatAIConf::find($item_id) : null;
+		if (!$conf) {
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
 		if (empty($group_id) || !MyHelper::is_int($group_id) || !DB::table('groups')->where('id', $group_id)->exists()) {
 			return redirect($return_url . '/alert/1');
 		}
-		//check if conf is already authorized for the group
-		$access = ChatAIGroupAllowed::where('chatai_conf_id', $item_id)
-			->where('group_id', $group_id)
-			->count();
 
-		if ($access == 0) {
-			$add_group = new ChatAIGroupAllowed;
-			$add_group->chatai_conf_id = $item_id;
-			$add_group->group_id = $group_id;
-			$add_group->save();
-		}
+		(new AllowGroupForChatAI())->handle($conf, $group_id);
 
 		//redirect
 		if (empty($return_url)) {
@@ -581,9 +550,7 @@ class AdminChatAIController extends CBController
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 
-		$data['delete'] = ChatAIGroupAllowed::where('chatai_conf_id', $item_id)
-			->where('group_id', $group_id)
-			->delete();
+		(new RevokeGroupForChatAI())->handle($item_id, $group_id);
 
 		return redirect('admin/chat_ai/access/' . $item_id);
 	}
@@ -646,94 +613,27 @@ class AdminChatAIController extends CBController
 		return view('chat_ai.form', compact('row', 'page_menu', 'page_title', 'command', 'id'));
 	}
 
-	public function send_message() {
+	public function send_message(SendChatMessageRequest $request) {
 
 		//check if in the session exists chat_messages array
 		if (!Session::has('chat_messages')) {
 			Session::put('chat_messages', []);
 		}
 
-		
-
-		$message = Request::all()['message'];
-
-		$chatai_conf = DB::table('chatai_confs')->where('primary', 1)->first();
 
 
-		$url = $chatai_conf->url;
-		//$token = $chatai_conf->token;
+		$message = $request->validated()['message'];
 
-		$token = ChatAIHelper::getToken($chatai_conf->id);
+		// Le conf soft-deleted non partecipano (getToken() le esclude gia' con find())
+		$chatai_conf = DB::table('chatai_confs')->where('primary', 1)->whereNull('deleted_at')->first();
 
-		// Passphrase non utilizzabile (es. < 32 caratteri con php-jwt 7.x):
-		// stesso formato di risposta dell'errore di rete sotto. Vedi
-		// docs/refactoring/083.
-		if (!$token) {
-			echo json_encode(["message" => trans('crudbooster.chatai_token_error')]);
+		// Nessuna conf primary attiva: prima era un 500 su $chatai_conf->url
+		if (!$chatai_conf) {
+			echo json_encode(["message" => trans('crudbooster.missing_item')]);
 			return;
 		}
 
-		// Imposta i dati da inviare nel corpo della richiesta
-		$data = [
-			"action" => "sendMessage",
-			"sessionId" => '"'.CRUDBooster::myId().'"',
-			"chatInput" => $message
-		];
-
-		// Inizializza cURL
-		$ch = curl_init($url);
-
-		// Configura le opzioni cURL
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, [
-			'Accept: application/json',
-			'Content-Type: application/json',
-			"Authorization: Bearer $token"
-		]);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-
-
-		$response = curl_exec($ch);
-
-
-		if ($response === false) {
-			//echo json_encode(['message' => 'Errore nella richiesta. Verifica la configurazione attiva!']);
-
-
-			//$response->message = 'Errore nella richiesta. Verifica la configurazione attiva!';
-
-			//$response_message = ['message' => 'Errore nella richiesta. Verifica la configurazione attiva!'];
-			$response_message = 'Errore nella richiesta. Verifica la configurazione attiva!';
-
-			$response = json_encode(["message" => $response_message]);
-
-
-		} else {
-			$response_message = json_decode($response, true);
-			if (isset($response_message["text"])) {
-				$response_message = $response_message["text"];
-			} else {
-				$response_message = $response_message["message"];
-			}
-		}
-
-
-
-		curl_close($ch);
-
-		
-
-		$chat_messages = Session::get('chat_messages');
-		$chat_messages[] = ['message' => $message, 'response' => $response_message];
-
-		Session::put('chat_messages', $chat_messages);
-		ChatAIHelper::saveChatHistory(null, ['message' => $message, 'response' => $response_message]);
-
-		//echo json_encode($response_message);
-
-		// Stampa la risposta
-		echo $response;
+		$this->relayToAgent($chatai_conf, $message, 'chat_messages', null);
 
 
 	}
@@ -759,140 +659,111 @@ class AdminChatAIController extends CBController
 		if (!$allowed) {
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
-		$data = [];
-		$data['row'] = ChatAIConf::find($chat_ai_id);
-		//dd($data);
-		if (empty($data['row'])) {
+		$row = ChatAIConf::find($chat_ai_id);
+		if (empty($row)) {
 
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.missing_item"));
 		}
 
-		//$type = CRUDBooster::getSetting('type');
-		//add menu settings
-		if (isset($_GET['m'])) {
-			$menu = Menu::find($_GET['m']);
+		//menu: quello indicato da ?m= (anche se vuoto, come isset) oppure la dashboard attiva
+		$menu = request()->query->has('m')
+			? Menu::find(request()->query('m'))
+			: Menu::activeDashboard()->first();
+
+		$data = $this->frameData($row, $menu);
+
+		if (isset($menu->target_layout) && $menu->target_layout == 1) {
+			$this->cbView('chat_ai.fullscreen_view', $data);
 		} else {
-			$menu = Menu::activeDashboard()->first();
+			$this->cbView('chat_ai.view', $data);
 		}
-		//dd($menu);
-		//$menu = Menu::find(isset($_GET['m']) ? $_GET['m'] : '89');
-		if (empty($menu)) {
-			$data['row']->frame_width = '100%';
-			$data['row']->frame_height = '100%';
-		} else {
-			$data['row']->frame_width = $menu->frame_width;
-			$data['row']->frame_height = $menu->frame_height;
-		}
-		$data['row']->target_layout = isset($menu) ? $menu->target_layout : '';
 
-		$data['page_icon'] = '';
-		$data['page_title'] = $data['row']->title;
-		$data['help'] = $data['row']->url_help;
-		$data['subtitle'] = $data['row']->subtitle;
-
-
-			if (isset($menu->target_layout) && $menu->target_layout == 1) {
-				$this->cbView('chat_ai.fullscreen_view', $data);
-			} else {
-				$this->cbView('chat_ai.view', $data);
-			}
-		
 	}
 
-	public function send_message_agent() {
+	/**
+	 * Dimensioni del frame, layout e dati di pagina di content_view(): dal menu
+	 * se c'e', altrimenti 100%. Privato: ogni metodo pubblico di un controller CB
+	 * diventa una rotta. Piano 332.
+	 */
+	private function frameData(ChatAIConf $row, $menu): array
+	{
+		if (empty($menu)) {
+			$row->frame_width = '100%';
+			$row->frame_height = '100%';
+		} else {
+			$row->frame_width = $menu->frame_width;
+			$row->frame_height = $menu->frame_height;
+		}
+		$row->target_layout = isset($menu) ? $menu->target_layout : '';
+
+		return [
+			'row' => $row,
+			'page_icon' => '',
+			'page_title' => $row->title,
+			'help' => $row->url_help,
+			'subtitle' => $row->subtitle,
+		];
+	}
+
+	public function send_message_agent(SendAgentMessageRequest $request) {
 		//check if in the session exists chat_messages array
 
+		// Il controllo can_see_item($agent_id) (doc 329) e la validazione sono nel
+		// Form Request: un rifiuto risponde in JSON prima di toccare la sessione.
+		$validated = $request->validated();
 
-		
+		$message = $validated['message'];
 
-		$message = Request::all()['message'];
-
-		$agent_id = Request::all()['agent_id'];
+		$agent_id = $validated['agent_id'];
 
 		if (!Session::has('chat_messages_'.$agent_id)) {
 			Session::put('chat_messages_'.$agent_id, []);
 		}
 
-		$chatai_conf = DB::table('chatai_confs')->where('id', $agent_id)->first();
+		$chatai_conf = DB::table('chatai_confs')->where('id', $agent_id)->whereNull('deleted_at')->first();
+
+		// Raggiungibile solo dal superadmin (can_see_item e' sempre vero per lui):
+		// un id inesistente dava un 500 su $chatai_conf->url.
+		if (!$chatai_conf) {
+			echo json_encode(["message" => trans('crudbooster.missing_item')]);
+			return;
+		}
 
 
-		$url = $chatai_conf->url;
-		//$token = $chatai_conf->token;
+		$this->relayToAgent($chatai_conf, $message, 'chat_messages_'.$agent_id, $agent_id);
+
+
+	}
+
+	/**
+	 * Parte comune di send_message() e send_message_agent(): token, richiesta
+	 * all'agente, sessione, storico, risposta. Privato: ogni metodo pubblico di un
+	 * controller CB diventa una rotta. Piano 331.
+	 *
+	 * @param object      $chatai_conf     riga di chatai_confs gia' scelta dal chiamante
+	 * @param string      $sessionKey      chiave di sessione della conversazione
+	 * @param int|null    $historyConfId   chat_ai_id dello storico (null per la chat flottante)
+	 */
+	private function relayToAgent($chatai_conf, $message, string $sessionKey, $historyConfId) {
+
 		$token = ChatAIHelper::getToken($chatai_conf->id);
 
-		// Vedi send_message(): passphrase non utilizzabile.
+		// Passphrase non utilizzabile (es. < 32 caratteri con php-jwt 7.x). Vedi
+		// docs/refactoring/083.
 		if (!$token) {
 			echo json_encode(["message" => trans('crudbooster.chatai_token_error')]);
 			return;
 		}
 
-		// Imposta i dati da inviare nel corpo della richiesta
-		$data = [
-			"action" => "sendMessage",
-			"sessionId" => '"'.CRUDBooster::myId().'"',
-			"chatInput" => $message
-		];
+		$result = (new ChatAIClient())->send($chatai_conf->url, $token, $message, CRUDBooster::myId());
 
-		// Inizializza cURL
-		$ch = curl_init($url);
+		$chat_messages = Session::get($sessionKey);
+		$chat_messages[] = ['message' => $message, 'response' => $result['message']];
 
-		// Configura le opzioni cURL
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, [
-			'Accept: application/json',
-			'Content-Type: application/json',
-			"Authorization: Bearer $token"
-		]);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		Session::put($sessionKey, $chat_messages);
+		ChatAIHelper::saveChatHistory($historyConfId, ['message' => $message, 'response' => $result['message']]);
 
-
-		$response = curl_exec($ch);
-
-		//dd($response);
-
-		if ($response === false) {
-			//echo json_encode(['message' => 'Errore nella richiesta. Verifica la configurazione attiva!']);
-
-
-			//$response->message = 'Errore nella richiesta. Verifica la configurazione attiva!';
-
-			//$response_message = ['message' => 'Errore nella richiesta. Verifica la configurazione attiva!'];
-			$response_message = 'Errore nella richiesta. Verifica la configurazione attiva!';
-
-			$response = json_encode(["message" => $response_message]);
-
-
-		} else {
-			$response_message = json_decode($response, true);
-			if (isset($response_message["text"])) {
-				$response_message = $response_message["text"];
-			} else if (isset($response_message["message"])) {
-				$response_message = $response_message["message"];
-			} else {
-				$response = json_encode(["message" => $response_message]);
-			}
-		}
-
-
-
-		curl_close($ch);
-
-		
-
-		$chat_messages = Session::get('chat_messages_'.$agent_id);
-		$chat_messages[] = ['message' => $message, 'response' => $response_message];
-
-		Session::put('chat_messages_'.$agent_id, $chat_messages);
-
-		ChatAIHelper::saveChatHistory($agent_id, ['message' => $message, 'response' => $response_message]);
-
-		//echo json_encode($response_message);
-
-		// Stampa la risposta
-		echo $response;
-
-
+		echo $result['raw'];
 	}
 
 

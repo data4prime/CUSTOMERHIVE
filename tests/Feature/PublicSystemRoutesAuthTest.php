@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Concerns\SeedsCmsData;
@@ -436,6 +437,45 @@ class PublicSystemRoutesAuthTest extends TestCase
 
         foreach (['MenusControllerGetEdit', 'apiDocumentation', 'downloadDocumentationPostman', 'fileControllerPreview'] as $name) {
             $this->assertNotNull($routes->getByName($name), "Rotta '{$name}' non registrata.");
+        }
+    }
+
+    /**
+     * File presente solo in storage/app/public/uploads (dove li salva l'app e
+     * da dove escono via /storage/uploads/...): la rotta uploads/* non lo
+     * serve e risponde 404, prima andava in 500 perche' lo apriva da
+     * storage/app/uploads.
+     */
+    public function test_uploads_con_file_solo_nella_cartella_pubblica_risponde_404(): void
+    {
+        $relative = 'uploads/phpunit-b1b/file.txt';
+        Storage::put($relative, 'contenuto di prova');
+
+        try {
+            $this->get('http://localhost/uploads/phpunit-b1b/file.txt')->assertStatus(404);
+        } finally {
+            Storage::deleteDirectory('uploads/phpunit-b1b');
+        }
+    }
+
+    /**
+     * Non regressione: con il file in entrambe le cartelle (public/uploads e
+     * storage/app/uploads) la rotta continua a servirlo come prima.
+     */
+    public function test_uploads_con_file_in_entrambe_le_cartelle_viene_servito(): void
+    {
+        Storage::put('uploads/phpunit-b1b/doppio.txt', 'contenuto di prova');
+        $legacyDir = storage_path('app/uploads/phpunit-b1b');
+        mkdir($legacyDir, 0777, true);
+        file_put_contents($legacyDir.'/doppio.txt', 'contenuto di prova');
+
+        try {
+            $this->get('http://localhost/uploads/phpunit-b1b/doppio.txt')->assertOk();
+        } finally {
+            Storage::deleteDirectory('uploads/phpunit-b1b');
+            @unlink($legacyDir.'/doppio.txt');
+            @rmdir($legacyDir);
+            @rmdir(storage_path('app/uploads'));
         }
     }
 

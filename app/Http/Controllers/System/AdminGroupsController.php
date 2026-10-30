@@ -8,16 +8,18 @@ use Session;
 use Request;
 use DB;
 use CRUDBooster;
-use \App\UsersGroup;
-use \App\Group;
+use \App\Models\UsersGroup;
+use \App\Models\Group;
 use App\Actions\Groups\AddTenantToGroup;
-use \App\GroupTenants;
+use \App\Models\GroupTenants;
 use \App\Helpers\UserHelper;
 use \App\Helpers\MyHelper;
 use \App\Helpers\LicenseHelper;
+use App\Http\Controllers\System\Concerns\SafeRedirectTarget;
 
 class AdminGroupsController extends CBController
 {
+	use SafeRedirectTarget;
 
 	public function cbInit()
 	{
@@ -428,7 +430,7 @@ class AdminGroupsController extends CBController
 		$data['members'] = $data['members']->select('cms_users.id', 'cms_users.name', 'cms_users.email', 'cms_users.photo', 'cms_privileges.name as privilege', 'cms_users.primary_group')
 			->get();
 
-		$data['group'] = \App\Group::find($group_id);
+		$data['group'] = \App\Models\Group::find($group_id);
 		$data['group_id'] = $group_id;
 		//prendo $_GET &alert=
 		if (!empty($alert_id)) {
@@ -468,29 +470,28 @@ class AdminGroupsController extends CBController
 		}
 
 		$user_id = $_POST['name'];
-		$return_url = $_POST['return_url'];
-		$ref_mainpath = $_POST['ref_mainpath'];
+		$return_url = $this->safeRedirectTarget(request()->input('return_url'), '');
+		$ref_mainpath = $this->safeRedirectTarget(request()->input('ref_mainpath'), '');
+		if (empty($return_url)) {
+			$return_url = $ref_mainpath ?: CRUDBooster::mainpath();
+		}
 
 		if (empty($user_id)) {
 			return redirect($return_url . '/alert/1');
 		}
 
 		//check if user is already in group
-		$member = \App\UsersGroup::ofGroup($group_id)
+		$member = \App\Models\UsersGroup::ofGroup($group_id)
 			->where('user_id', $user_id)
 			->count();
 
 		if ($member == 0) {
-			$add_member = new \App\UsersGroup;
+			$add_member = new \App\Models\UsersGroup;
 			$add_member->group_id = $group_id;
 			$add_member->user_id = $user_id;
 			$add_member->save();
 		}
 
-		//redirect
-		if (empty($return_url)) {
-			$return_url = $ref_mainpath;
-		}
 		return redirect($return_url);
 	}
 
@@ -541,7 +542,7 @@ class AdminGroupsController extends CBController
 			->whereNull('qlik_items.deleted_at')
 			->get();
 
-		$data['group'] = \App\Group::find($group_id);
+		$data['group'] = \App\Models\Group::find($group_id);
 		$data['group_id'] = $group_id;
 
 		//prendo $_GET &alert=
@@ -579,11 +580,14 @@ class AdminGroupsController extends CBController
 		}
 
 		$item_id = $_POST['title'];
-		$return_url = $_POST['return_url'];
-		$ref_mainpath = $_POST['ref_mainpath'];
+		$return_url = $this->safeRedirectTarget(request()->input('return_url'), '');
+		$ref_mainpath = $this->safeRedirectTarget(request()->input('ref_mainpath'), '');
+		if (empty($return_url)) {
+			$return_url = $ref_mainpath ?: CRUDBooster::mainpath();
+		}
 
 		//check if item is already allowed in group
-		$item = \App\ItemsAllowed::where('group_id', $group_id)
+		$item = \App\Models\ItemsAllowed::where('group_id', $group_id)
 			->where('item_id', $item_id)
 			->count();
 
@@ -592,16 +596,12 @@ class AdminGroupsController extends CBController
 		}
 
 		if ($item == 0) {
-			$add_item = new \App\ItemsAllowed;
+			$add_item = new \App\Models\ItemsAllowed;
 			$add_item->group_id = $group_id;
 			$add_item->item_id = $item_id;
 			$add_item->save();
 		}
 
-		//redirect
-		if (empty($return_url)) {
-			$return_url = $ref_mainpath;
-		}
 		return redirect($return_url);
 	}
 
@@ -676,8 +676,11 @@ class AdminGroupsController extends CBController
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$tenant_id = $_POST['name'];
-		$return_url = $_POST['return_url'];
-		$ref_mainpath = $_POST['ref_mainpath'];
+		$return_url = $this->safeRedirectTarget(request()->input('return_url'), '');
+		$ref_mainpath = $this->safeRedirectTarget(request()->input('ref_mainpath'), '');
+		if (empty($return_url)) {
+			$return_url = $ref_mainpath ?: CRUDBooster::mainpath();
+		}
 
 		if (empty($tenant_id)) {
 			return redirect($return_url . '/alert/1');
@@ -694,10 +697,6 @@ class AdminGroupsController extends CBController
 			$add_tenant->save();
 		}
 
-		//redirect
-		if (empty($return_url)) {
-			$return_url = $ref_mainpath;
-		}
 		return redirect($return_url);
 	}
 

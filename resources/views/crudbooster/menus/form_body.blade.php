@@ -65,7 +65,7 @@ foreach($forms as $index=>$form) {
 //$join_query_{$join_table} = DB::table($join_table)->select($join_title)->where("id", $row->{"id_{$join_table}"})->first();
 ${"join_query_".$join_table} = DB::table($join_table)->select($join_title)->where("id", $row->{"id_{$join_table}"})->first();
 
-    $value = @$join_query_{$join_table}->{$join_title};
+    $value = @${"join_query_".$join_table}->{$join_title};
   }
   $form['type'] = ($form['type']) ?: 'text';
   $type = @$form['type'];

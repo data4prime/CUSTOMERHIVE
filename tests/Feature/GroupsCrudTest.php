@@ -59,7 +59,7 @@ class GroupsCrudTest extends TestCase
         $this->assertNull($row->deleted_at);
 
         // hook_after_add() associa sempre il nuovo gruppo al tenant di chi
-        // lo ha creato - vedi AdminGroupsController e App\Group::add_tenant().
+        // lo ha creato - vedi AdminGroupsController e App\Models\Group::add_tenant().
         $this->assertDatabaseHas('group_tenants', [
             'group_id' => $row->id,
             'tenant_id' => $actor['tenantId'],

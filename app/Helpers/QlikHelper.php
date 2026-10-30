@@ -9,7 +9,7 @@ use Cache;
 use DB;
 use Route;
 use Validator;
-use App\QlikItem;
+use App\Models\QlikItem;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Carbon;
 use Firebase\JWT\JWT;
@@ -72,7 +72,7 @@ class QlikHelper
       return false;
     }
 
-    $qlik_item = \App\QlikItem::find($qlik_item_id);
+    $qlik_item = \App\Models\QlikItem::find($qlik_item_id);
 
     if (empty($qlik_item)) {
       add_log_ch('can see item', 'qlik item not found id: ' . $qlik_item_id);
@@ -165,7 +165,7 @@ class QlikHelper
   public static function getJWTTokenOP($id, $conf_id)
   {
 
-    $current_user = \App\User::find($id);
+    $current_user = \App\Models\User::find($id);
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
@@ -214,7 +214,7 @@ class QlikHelper
   public static function getJWTToken($id, $conf_id)
   {
 
-    $current_user = \App\User::find($id);
+    $current_user = \App\Models\User::find($id);
 
     $qlik_conf = DB::table('qlik_confs')->where('id', $conf_id)->first();
 
@@ -339,13 +339,11 @@ class QlikHelper
 
     if ($response === false) {
       \Log::warning('Qlik createUser: login fallito (conf ' . $conf_id . '): ' . curl_error($curl));
-      curl_close($curl);
       return null;
     }
 
     if ($response != "OK") {
       \Log::warning('Qlik createUser: login rifiutato (conf ' . $conf_id . ', HTTP ' . curl_getinfo($curl, CURLINFO_HTTP_CODE) . ')');
-      curl_close($curl);
       return null;
     }
 
@@ -356,7 +354,6 @@ class QlikHelper
     ));
 
     $response = curl_exec($curl);
-    curl_close($curl);
 
     $user = ($response === false) ? null : json_decode($response);
 

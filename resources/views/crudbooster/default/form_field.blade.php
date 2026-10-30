@@ -16,7 +16,7 @@
   * #RAMA add default value for group on mg_ for edit form
   */
   if($form['name']=='group' AND isset($row) AND isset($row->group)){
-    $form['default']=\App\Group::find($row->group)->name;
+    $form['default']=\App\Models\Group::find($row->group)->name;
   }
 
   $name = $form['name'];

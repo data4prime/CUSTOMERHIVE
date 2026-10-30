@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
-use App\Menu;
+use App\Models\Menu;
 use App\Helpers\CRUDBooster;
 use App\Helpers\UserHelper;
 
@@ -149,7 +149,7 @@ class MenuHelper
         ->pluck('cms_privileges.name')
         ->toArray();
 
-      $tenants_name = \App\Menu::find($menu->id)->tenants_name();
+      $tenants_name = \App\Models\Menu::find($menu->id)->tenants_name();
 
       $can_edit_menu = false;
       $disable = 'ui-state-disabled';

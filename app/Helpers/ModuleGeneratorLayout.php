@@ -299,6 +299,27 @@ class ModuleGeneratorLayout
         return (string) $v;
     }
 
+    /**
+     * Campi del form che si possono posizionare nel layout: tutti tranne quelli
+     * di tipo hidden e quelli gestiti dal sistema (tenant/group/primary_group).
+     * Usato dal wizard V2 e dall'import dei moduli.
+     */
+    public static function placeableFields(array $form)
+    {
+        $fields = [];
+        foreach ($form as $e) {
+            $name = (string) ($e['name'] ?? '');
+            $type = $e['type'] ?? 'text';
+            if ($name === '' || $type === 'hidden' || in_array($name, self::ALWAYS_NAMES, true) || isset($fields[$name])) {
+                continue;
+            }
+            $required = !empty($e['required']) || in_array('required', explode('|', (string) ($e['validation'] ?? '')), true);
+            $fields[$name] = ['name' => $name, 'label' => (string) ($e['label'] ?? $name), 'type' => $type, 'required' => $required, 'help' => (string) ($e['help'] ?? '')];
+        }
+
+        return $fields;
+    }
+
     /* ------------------------------------------------------------------ */
     /*  Costruzione e modifica                                              */
     /* ------------------------------------------------------------------ */

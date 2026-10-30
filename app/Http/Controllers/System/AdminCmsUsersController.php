@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\DB;
 //use CRUDbooster;
 use \App\Helpers\CRUDBooster;
 use Illuminate\Support\Facades\Route;
-use \App\Tenant;
-use \App\Group;
-use \App\UsersGroup;
+use \App\Models\Tenant;
+use \App\Models\Group;
+use \App\Models\UsersGroup;
 use \App\Helpers\GroupHelper;
 use \App\Helpers\UserHelper;
 use \App\Helpers\MyHelper;
@@ -24,9 +24,15 @@ use App\Helpers\MfaHelper;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\System\Concerns\SafeRedirectTarget;
+use App\Http\Requests\Profile\ProfileGeneralRequest;
+use App\Http\Requests\Profile\ProfilePreferencesRequest;
+use App\Http\Requests\Profile\ProfileQlikRequest;
+use App\Http\Requests\Profile\ProfileSystemRequest;
 
 class AdminCmsUsersController extends CBController
 {
+	use SafeRedirectTarget;
 
 	public function cbInit()
 	{
@@ -461,23 +467,10 @@ class AdminCmsUsersController extends CBController
 	 * prepare_qlik_users() (IDP generato per le conf SaaS se vuoto), ma sul
 	 * solo utente del profilo e senza passare dal form generico.
 	 */
-	public function postProfileQlik()
+	public function postProfileQlik(ProfileQlikRequest $request)
 	{
+		// Permesso e validazione: ProfileQlikRequest.
 		$user = UserHelper::me();
-
-		if (! $user || (! UserHelper::isSuperAdmin() && ! UserHelper::isTenantAdmin()) || ! LicenseHelper::isActiveQlik()) {
-			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
-		}
-
-		$validator = Validator::make(Request::all(), [
-			'rows' => 'nullable|array',
-			'rows.*.qlik_conf_id' => 'required|integer|distinct|exists:qlik_confs,id',
-			'rows.*.qlik_login' => 'nullable|string|max:255',
-			'rows.*.user_directory' => 'nullable|string|max:255',
-		]);
-		if ($validator->fails()) {
-			return $this->profileValidationError($validator);
-		}
 
 		// L'IDP non e' modificabile dall'utente: si ignora quello ricevuto e
 		// si tiene quello gia' salvato per la stessa configurazione.
@@ -561,28 +554,12 @@ class AdminCmsUsersController extends CBController
 	 * suo flusso (postProfileEmail*) e la password il suo: nessuno dei due
 	 * passa da qui, anche se arrivano nella richiesta.
 	 */
-	public function postProfileGeneral()
+	public function postProfileGeneral(ProfileGeneralRequest $request)
 	{
+		// Permesso e validazione: ProfileGeneralRequest.
 		$user = UserHelper::me();
-		if (! $user) {
-			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
-		}
 
 		$canManage = UserHelper::isSuperAdmin() || UserHelper::isTenantAdmin();
-
-		$rules = [
-			'name' => 'required|alpha_spaces|min:3',
-			'photo' => 'nullable|image|max:1000',
-		];
-		if ($canManage) {
-			$rules['status'] = 'required|in:Active,Inactive';
-			$rules['data_scadenza'] = 'nullable|date';
-		}
-
-		$validator = Validator::make(Request::all(), $rules);
-		if ($validator->fails()) {
-			return $this->profileValidationError($validator);
-		}
 
 		$update = [
 			'name' => Request::input('name'),
@@ -776,22 +753,11 @@ class AdminCmsUsersController extends CBController
 	 * cambia si tolgono tutti i gruppi, se cambia il primary group si
 	 * aggiunge il nuovo e si toglie il vecchio.
 	 */
-	public function postProfileSystem()
+	public function postProfileSystem(ProfileSystemRequest $request)
 	{
+		// Permesso e validazione: ProfileSystemRequest.
 		$user = UserHelper::me();
 		$isSuperadmin = UserHelper::isSuperAdmin();
-
-		if (! $user || (! $isSuperadmin && ! UserHelper::isTenantAdmin())) {
-			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
-		}
-
-		$validator = Validator::make(Request::all(), [
-			'tenant' => 'nullable|integer|exists:tenants,id',
-			'primary_group' => 'required|integer|exists:groups,id',
-		]);
-		if ($validator->fails()) {
-			return $this->profileValidationError($validator);
-		}
 
 		$oldTenant = (int) $user->tenant;
 		$oldGroup = (int) $user->primary_group;
@@ -830,21 +796,10 @@ class AdminCmsUsersController extends CBController
 	 * (',' italiano - default - oppure '.'). Vale per qualunque ruolo, ma solo
 	 * sul proprio profilo.
 	 */
-	public function postProfilePreferences()
+	public function postProfilePreferences(ProfilePreferencesRequest $request)
 	{
+		// Permesso e validazione: ProfilePreferencesRequest.
 		$user = UserHelper::me();
-		if (! $user) {
-			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
-		}
-
-		$validator = Validator::make(Request::all(), [
-			'lang' => 'required|in:en,it',
-			'decimal_separator' => 'required|in:comma,dot',
-			'date_format' => ['required', \Illuminate\Validation\Rule::in(\App\Helpers\DateFormat::FORMATS)],
-		]);
-		if ($validator->fails()) {
-			return $this->profileValidationError($validator);
-		}
 
 		$separator = Request::input('decimal_separator') === 'dot' ? '.' : ',';
 		$lang = Request::input('lang');
@@ -992,7 +947,7 @@ class AdminCmsUsersController extends CBController
 	 */
 	public function postUserResetPassword($id)
 	{
-		$target = \App\User::find($id);
+		$target = \App\Models\User::find($id);
 
 		if (! $target || (int) $target->id === (int) CRUDBooster::myId() || ! UserHelper::can_do_on_user('edit', $target->id)) {
 			return $this->profileResponse(false, trans('crudbooster.denied_access'), [], 403);
@@ -1200,7 +1155,7 @@ class AdminCmsUsersController extends CBController
 			// cambiate sotto i suoi piedi).
 			$old_email = DB::table('cms_users')->where('id', $user_id)->value('email');
 			if ($old_email !== null && strcasecmp((string) $old_email, (string) $postdata['email']) !== 0) {
-				$target = \App\User::find($user_id);
+				$target = \App\Models\User::find($user_id);
 				if ($target) {
 					MfaHelper::revokeAllTrustedDevices($target);
 					MfaHelper::bumpSessionVersion($target->id);
@@ -1384,7 +1339,7 @@ class AdminCmsUsersController extends CBController
 			->select('groups.id', 'groups.name', 'groups.description')
 			->get();
 
-		$data['user'] = \App\User::find($user_id);
+		$data['user'] = \App\Models\User::find($user_id);
 		$data['user_id'] = $user_id;
 
 		// Gruppi non ancora assegnati all'utente: elenco della modale "Aggiungi gruppo".
@@ -1442,28 +1397,27 @@ class AdminCmsUsersController extends CBController
 			return CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
 		}
 		$group_id = $_POST['name'];
-		$return_url = $_POST['return_url'];
-		$ref_mainpath = $_POST['ref_mainpath'];
+		$return_url = $this->safeRedirectTarget(request()->input('return_url'), '');
+		$ref_mainpath = $this->safeRedirectTarget(request()->input('ref_mainpath'), '');
+		if (empty($return_url)) {
+			$return_url = $ref_mainpath ?: CRUDBooster::mainpath();
+		}
 
 		if (empty($group_id)) {
 			return redirect($return_url . '/alert/1');
 		}
 		//check if user is already in group
-		$membership = \App\UsersGroup::ofGroup($group_id)
+		$membership = \App\Models\UsersGroup::ofGroup($group_id)
 			->where('user_id', $user_id)
 			->count();
 
 		if ($membership == 0) {
-			$add_member = new \App\UsersGroup;
+			$add_member = new \App\Models\UsersGroup;
 			$add_member->group_id = $group_id;
 			$add_member->user_id = $user_id;
 			$add_member->save();
 		}
 
-		//redirect
-		if (empty($return_url)) {
-			$return_url = $ref_mainpath;
-		}
 		return redirect($return_url);
 	}
 

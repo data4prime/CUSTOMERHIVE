@@ -39,7 +39,7 @@ class LoginTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('admin_id', $user['id']);
         $response->assertSessionHas('admin_is_superadmin', 0);
-        // Guard Laravel nativo (config/auth.php: 'web' -> App\User, gia'
+        // Guard Laravel nativo (config/auth.php: 'web' -> App\Models\User, gia'
         // mappato su cms_users), popolato in aggiunta alla sessione legacy
         // sopra - vedi la nota nel controller e docs/refactoring/README.md.
         $this->assertTrue(Auth::check());

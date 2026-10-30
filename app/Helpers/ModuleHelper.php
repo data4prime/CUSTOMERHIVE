@@ -2,9 +2,9 @@
 
 namespace App\Helpers;
 
-use App\ModuleTenants;
-use App\Tenant;
-use App\GroupTenants;
+use App\Models\ModuleTenants;
+use App\Models\Tenant;
+use App\Models\GroupTenants;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Session;

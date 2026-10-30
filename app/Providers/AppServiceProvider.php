@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\QlikItem;
 use App\Observers\QlikItemObserver;
 use App\Helpers\PasswordPolicy;
 use Illuminate\Support\ServiceProvider;

@@ -2,8 +2,8 @@
 
 namespace App\Actions\Groups;
 
-use App\Group;
-use App\GroupTenants;
+use App\Models\Group;
+use App\Models\GroupTenants;
 
 class AddTenantToGroup
 {

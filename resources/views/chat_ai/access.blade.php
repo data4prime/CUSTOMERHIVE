@@ -5,10 +5,10 @@
   <div>
     @if(CRUDBooster::getCurrentMethod() != 'getProfile' && $button_cancel)
     @if(g('return_url'))
-    <p><a title='Return' href='{{g("return_url")}}'><i class='bi bi-chevron-left'></i>
+    <p><a title='{{ trans("crudbooster.chatai_tooltip_return") }}' href='{{g("return_url")}}'><i class='bi bi-chevron-left'></i>
         &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
     @else
-    <p><a title='Main Module' href='{{CRUDBooster::mainpath()}}'><i class='bi bi-chevron-left'></i>
+    <p><a title='{{ trans("crudbooster.chatai_tooltip_main_module") }}' href='{{CRUDBooster::mainpath()}}'><i class='bi bi-chevron-left'></i>
         &nbsp; {{trans("crudbooster.form_back_to_list",['module'=>CRUDBooster::getCurrentModule()->name])}}</a></p>
     @endif
     @endif
@@ -98,7 +98,7 @@
               <td>{{$group->description}}</td>
               <td>
                 @if(CRUDBooster::isDelete() && $button_edit)
-                <a title='Remove' class='btn btn-danger btn-sm'
+                <a title='{{ trans("crudbooster.adm_remove") }}' class='btn btn-danger btn-sm'
                   href='{{CRUDBooster::mainpath("$item_id/deauth/$group->id")}}'><i class="bi bi-trash-fill"></i></a>
                 @endif
               </td>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\System\Concerns;
 
 use App\Helpers\CRUDBooster;
-use App\QlikSyncRun;
+use App\Models\QlikSyncRun;
 use App\Services\QlikSync\QlikDriverFactory;
 use App\Services\QlikSync\QlikSyncException;
 use App\Services\QlikSync\QlikSyncService;

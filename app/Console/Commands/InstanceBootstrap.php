@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Console\Commands\Concerns\InstanceCommandSupport;
-use App\User;
+use App\Models\User;
 use Database\Seeders\InstanceBaseSeeder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;

@@ -10,7 +10,7 @@
       <thead>
           <tr>
             <th>{!! __('crudbooster.name') !!}</th>
-            <th>{!! __('crudbooster.description) !!}</th>
+            <th>{!! __('crudbooster.description') !!}</th>
             <th>{!! __('crudbooster.price') !!}</th>
             <th>{!! __('crudbooster.action') !!}</th>
            </tr>
